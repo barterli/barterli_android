@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BarterLi</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    
+    <!-- menu strings  -->
+    <string name="search">Search</string>
+    <string name="my_books">My Books</string>
+    <string name="wishlist">My WishList</string>
+    <string name="settings">Settings</string>
+    
+    <!-- Web URLs  -->
+    <string name="suggestion_url">http://162.243.198.171/book_suggestions.json</string>
+    <string name="book_info_url">http://162.243.198.171/book_info.json</string>
+    <string name="post_to_mybooks_url">https://dazzling-fire-1319.firebaseio.com/BarterLi/mybooks.json</string>
+    
+    <!-- Strings for AddBookActivity -->
+    <string name="search_by_title_hint">Search by Title</string>
+    <string name="search_by_author_hint">Search by Author</string>
+    <string name="scan_barcode_button_label">Scan ISBN BarCode</string>
+    <string name="add_new_book_label">Enter New Book</string>
+    <string name="add_books">My Books | Add a Book</string>
+    
+    <!-- Strings for EditBookDetailsActivity -->
+    <string name="title_label">Title</string>
+    <string name="author_label">Author</string>
+    <string name="description_label">Description</string>
+    <string name="publication_year_label">Publication Year</string>
+    <string name="barter_type_label">Barter Type</string>
+    
+    <string name="barter_type_label_lend">Lend</string>
+    <string name="barter_type_label_barter">Barter</string>
+    <string name="barter_type_label_give_away">Give Away</string>
+    <string name="barter_type_label_for_reading">For Reading</string>
+    <string name="submit">Submit</string>
+    
+
+</resources>

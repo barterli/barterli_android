@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#FFFFFF" >
+    
+    <RelativeLayout     
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">  
+     
+     <RelativeLayout 
+       android:layout_width="fill_parent"
+       android:background="#4178e9"
+       android:id="@+id/top_bar"  
+       android:layout_height="wrap_content">  
+   
+    <Button
+        android:id="@+id/open_left_panel"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="8dp"
+        android:background="@drawable/format_indent_more" />
+    
+    <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="@string/app_name"/> 
+    </RelativeLayout> 
+           
+      <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/second_bar"
+        android:layout_below="@+id/top_bar"
+        android:orientation="vertical">   
+        
+      <TextView 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        android:text="@string/add_books"/> 
+
+        <EditText 
+            android:id="@+id/title_search"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+         	android:inputType="text"
+         	android:background="@drawable/backwithborder"
+         	android:hint="@string/search_by_title_hint"
+         	android:padding="7dp"/>
+               
+        <EditText 
+            android:id="@+id/author_search"
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+         	android:inputType="text"
+         	android:background="@drawable/backwithborder"
+         	android:hint="@string/search_by_author_hint"
+         	android:padding="7dp"/>
+        
+          <Button 
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+         	android:background="@drawable/backwithborder_dark"
+         	android:padding="7dp"
+         	android:text="@string/scan_barcode_button_label"
+         	android:onClick="scanBarCode"/>  
+         
+          <Button 
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+         	android:background="@drawable/backwithborder_dark"
+         	android:padding="7dp"
+         	android:text="@string/add_new_book_label"
+         	android:onClick="addNewBook"/> 	
+          
+    </LinearLayout>
+    
+            
+     <ListView android:id="@+id/list_data"
+              android:layout_height="match_parent"
+              android:layout_width="match_parent"
+              android:layout_below="@+id/second_bar"/>
+      
+    </RelativeLayout>
+
+    <com.darvds.ribbonmenu.RibbonMenuView
+        android:id="@+id/ribbonMenuView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </com.darvds.ribbonmenu.RibbonMenuView>
+
+</FrameLayout>

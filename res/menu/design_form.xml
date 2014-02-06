@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/ribbon_menu_search" android:title="@string/search" android:icon="@drawable/search_icon"></item>
+    <item android:id="@+id/ribbon_menu_my_books" android:title="@string/my_books" android:icon="@drawable/my_books"></item>
+    <item android:id="@+id/ribbon_menu_my_wish_list" android:title="@string/wishlist" android:icon="@drawable/wishlist"></item>
+    <item android:id="@+id/ribbon_menu_settings" android:title="@string/settings" android:icon="@drawable/settings"></item>
+</menu>
