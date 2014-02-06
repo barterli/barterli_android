@@ -19,6 +19,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,7 +49,11 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 	private EditText authorText;
 	private EditText descriptionText;
 	private EditText publicationYearText;
-	private RadioGroup barterChoiceGroup;
+	private Button barterChoiceGroup;
+	private String[] barterOptions;
+	private String chosenBarterOption = "";
+	private ProgressDialogManager myProgressDialogManager = new ProgressDialogManager();
+	
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,21 +65,40 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 		authorText = (EditText)findViewById(R.id.author);
 		descriptionText = (EditText)findViewById(R.id.description);
 		publicationYearText = (EditText)findViewById(R.id.publication);
-		barterChoiceGroup = (RadioGroup) findViewById(R.id.barter_type);
+		barterChoiceGroup = (Button) findViewById(R.id.barter_option_button);
 		rbmView.setMenuClickCallback(this);
         rbmView.setMenuItems(R.menu.design_form);
+        barterOptions = getResources().getStringArray(R.array.barterOptions);
+		final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(EditBookDetailsActivity.this, android.R.layout.simple_spinner_dropdown_item, barterOptions);
         
 		Intent _i = getIntent();
 		if(_i.hasExtra("TITLE")){
 			titleText.setText(_i.getExtras().getString("TITLE").toString());
 			new getBookInfoFromServerTask().execute(_i.getExtras().getString("TITLE").toString());		
 		}
+			
+		// Set Listeners
+		barterChoiceGroup.setOnClickListener(new OnClickListener(){
+			public void onClick(View v) {
+				new AlertDialog.Builder(EditBookDetailsActivity.this)
+				  .setTitle("Select Valid Option")
+				  .setAdapter(spinnerArrayAdapter, new DialogInterface.OnClickListener() {
+				    public void onClick(DialogInterface dialog, int which) {
+				      chosenBarterOption = barterOptions[which];
+				      barterChoiceGroup.setText(chosenBarterOption);
+				      dialog.dismiss();
+				    }
+				  }).create().show();
+			}
+		});	
 		
         openLeftPanelButton.setOnClickListener(new OnClickListener(){
 			public void onClick(View v) {
 				rbmView.toggleMenu();		
 			}    	
         });
+        // End of setting Listeners
+        
 	} //End of oncreate
 
 	@Override
@@ -94,98 +120,54 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 		}
 		String _description = descriptionText.getText().toString();
 		String _publication_year = publicationYearText.getText().toString();
-		String _barter_type ="";
-		int _selected_barter_id = barterChoiceGroup.getCheckedRadioButtonId();
-		if (_selected_barter_id == -1){
-			Toast.makeText(EditBookDetailsActivity.this, "Please Enter Barter Type" , Toast.LENGTH_SHORT).show();
+		if(TextUtils.isEmpty(chosenBarterOption)){
+			Toast.makeText(EditBookDetailsActivity.this, "Please enter what you want to do with the book!" , Toast.LENGTH_SHORT).show();
 			return;
 		}
-		RadioButton _selected_barter_button = (RadioButton) findViewById(_selected_barter_id);
-		_barter_type = _selected_barter_button.getText().toString();	
-		new saveMyBookToServerTask().execute(_title, _author, _description, _publication_year, _barter_type);		
-		//Toast.makeText(EditBookDetailsActivity.this, "" + _title + "::" + _author + "::" + _description + "::" + _publication_year + "::" 
-				//+ _barter_type, Toast.LENGTH_SHORT).show();
+
+		new saveMyBookToServerTask().execute(_title, _author, _description, _publication_year, chosenBarterOption);		
 	} // End of addBook
 	
 	private class saveMyBookToServerTask extends AsyncTask<String, Void, String> {
 		protected void onPreExecute() {
-        }
+			super.onPreExecute();
+			myProgressDialogManager.showProgresDialog(EditBookDetailsActivity.this, "Saving...");
+		}
 		protected String doInBackground(String... parameters) {
+			String post_to_mybooks_url = getResources().getString(R.string.post_to_mybooks_url);
+			HTTPHelper myHTTPHelper = new HTTPHelper();
+			String responseString = "";
 			String _title = parameters[0];
 			String _author = parameters[1];
 			String _description = parameters[2];
 			String _publication_year = parameters[3];
 			String _barter_type = parameters[4];
-			JSONObject bookJsonObject = new JSONObject();
-			try {
-				bookJsonObject.put("title", _title);
-				bookJsonObject.put("author", _author);
-				bookJsonObject.put("description", _description);
-				bookJsonObject.put("publication_year", _publication_year);
-				bookJsonObject.put("barter_type", _barter_type);
-				
-				String post_to_mybooks_url = getResources().getString(R.string.post_to_mybooks_url);				
-				final String _url_final = post_to_mybooks_url;
-				URL url = new URL(_url_final);
-				HttpClient httpClient = new DefaultHttpClient();
-				HttpPost httpPost = new HttpPost(url.toURI());
-				// Prepare JSON to send by setting the entity
-				Log.v("HTTPPOST", bookJsonObject.toString());
-				httpPost.setEntity(new StringEntity(bookJsonObject.toString(), "UTF-8"));
-				// Set up the header types needed to properly transfer JSON
-				httpPost.setHeader("Content-Type", "application/json");
-				httpPost.setHeader("Accept-Encoding", "application/json");
-				httpPost.setHeader("Accept-Language", "en-US");
-				// Execute POST			
-				HttpResponse response = httpClient.execute(httpPost);
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			
-			return null;
-
+			responseString = myHTTPHelper.postBookToMyList(post_to_mybooks_url, _title, _author, _description, _publication_year, _barter_type);
+	        return responseString;
 		}
 		protected void onPostExecute(String result) {
+			myProgressDialogManager.dismissProgresDialog();
 			Toast.makeText(EditBookDetailsActivity.this, "Successfully Added!. Will see where to go now!", Toast.LENGTH_SHORT).show();
+			resetViews();
 		}
 	} // End of askServerForSuggestionsTask
 
 	private class getBookInfoFromServerTask extends AsyncTask<String, Void, String> {
 		protected void onPreExecute() {
+			myProgressDialogManager.showProgresDialog(EditBookDetailsActivity.this, "Retrieving...");
         }
 		protected String doInBackground(String... parameters) {
 			
 			String suggestion_url = getResources().getString(R.string.book_info_url);
-			//String suggestion_url = "http://162.243.198.171/book_info.json/?q=truth";
 			suggestion_url += "?q=" + parameters[0];
-							
-			HttpClient httpclient = new DefaultHttpClient();
-	        HttpResponse response;
-	        String responseString = null;
-	        try {
-	            response = httpclient.execute(new HttpGet(suggestion_url));
-	            StatusLine statusLine = response.getStatusLine();
-	            if(statusLine.getStatusCode() == HttpStatus.SC_OK){
-	                ByteArrayOutputStream out = new ByteArrayOutputStream();
-	                response.getEntity().writeTo(out);
-	                out.close();
-	                responseString = out.toString();
-	            } else{
-	                //Closes the connection.
-	                response.getEntity().getContent().close();
-	                throw new IOException(statusLine.getReasonPhrase());
-	            }
-	        } catch (ClientProtocolException e) {
-	        	e.printStackTrace();
-	        } catch (IOException e) {
-	            e.printStackTrace();e.printStackTrace();
-	        }
+			
+			HTTPHelper myHTTPHelper = new HTTPHelper();
+			String responseString = "";
+			responseString = myHTTPHelper.getHelper(suggestion_url);
 	        return responseString;
 		}
 		protected void onPostExecute(String result) {
-			Log.v("BOOK_INFO", result);
+			myProgressDialogManager.dismissProgresDialog();
 			try {
 				JSONObject bookObject = new JSONObject(result);
 				if(bookObject.has(AllConstants.DESCRIPTION_KEY)){
@@ -214,5 +196,14 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 			}
 		}
 	} // End of getBookInfoFromServerTask
+	
+	public void resetViews(){
+		titleText.setText("");
+		authorText.setText("");
+		descriptionText.setText("");
+		publicationYearText.setText("");
+		barterChoiceGroup.setText(R.string.barter_type_button_label);
+		chosenBarterOption = "";
+	}
 	
 }

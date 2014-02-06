@@ -13,11 +13,13 @@
 	<uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
 	<uses-permission android:name="android.permission.CAMERA"/>
 	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        
          >
         <activity
             android:name="com.koramangala.barterli.AddBookActivity"
@@ -38,10 +40,26 @@
         
         <activity
             android:name="com.koramangala.barterli.EditBookDetailsActivity"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
             android:screenOrientation="portrait"
             android:label="@string/app_name" >
         </activity>
+        
+        <activity
+            android:name="com.koramangala.barterli.LoginActivity"
+            android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="oauth" android:host="barterLi"/>
+            </intent-filter>
+        </activity>
+        
+        <meta-data android:value="@string/app_id" android:name="com.facebook.sdk.ApplicationId"/>
+         <activity android:label="@string/app_name" android:name="com.facebook.LoginActivity"></activity>
         
     </application>
 

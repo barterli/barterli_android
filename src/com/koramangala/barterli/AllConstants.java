@@ -6,4 +6,28 @@ public class AllConstants {
  public static String PUBLICATION_AUTHORS = "authors";
  public static String PUBLICATION_AUTHOR = "author";
  public static String PUBLICATION_AUTHOR_NAME = "name";
+ 
+ static String TWITTER_CONSUMER_KEY = ""; // place your twitter consumer key here
+ static String TWITTER_CONSUMER_SECRET = ""; //// place your twitter consumer secret here
+
+ // Preference Constants
+ static String PREFERENCE_NAME = "twitter_oauth";
+ static final String PREF_KEY_OAUTH_TOKEN = "oauth_token";
+ static final String PREF_KEY_OAUTH_SECRET = "oauth_token_secret";
+ static final String PREF_KEY_TWITTER_LOGIN = "isTwitterLogedIn";
+
+ static final String TWITTER_CALLBACK_URL = "oauth://barterLi";
+
+ // Twitter oauth urls
+ static final String URL_TWITTER_AUTH = "auth_url";
+ static final String URL_TWITTER_OAUTH_VERIFIER = "oauth_verifier";
+ static final String URL_TWITTER_OAUTH_TOKEN = "oauth_token";
+ 
+ // Facebook Keys
+ static final String FB_USERNAME = "fb_user_name";
+ static final String FB_USERID = "fb_user_id";
+ static final String FB_USER_EMAIL = "fb_user_email";
+ 
+ static final String FB_ACCESS_TOKEN = "fb_access_token";
+ 
 }

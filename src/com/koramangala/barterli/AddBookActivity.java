@@ -76,7 +76,12 @@ public class AddBookActivity extends Activity implements iRibbonMenuCallback {
 
 	@Override
 	public void RibbonMenuItemClick(int itemId) {
-		// TODO Auto-generated method status	
+		switch(itemId){
+		  case R.id.ribbon_menu_search:
+			  Intent loginintent = new Intent(AddBookActivity.this, LoginActivity.class);
+			  startActivity(loginintent);
+		  break;	  
+		}
 	}
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -85,7 +90,6 @@ public class AddBookActivity extends Activity implements iRibbonMenuCallback {
 				String _isbn = data.getStringExtra("ISBN"); 
 				String _type = data.getStringExtra("TYPE");
 				if(_type.contentEquals("ISBN")){
-					//Toast.makeText(AddBookActivity.this, "I shall soon make a HTTP request for " +  _type + "::" + _isbn, Toast.LENGTH_SHORT).show();
 					 new askServerForSuggestionsTask().execute(_type, _isbn);
 				} else {
 					Toast.makeText(AddBookActivity.this, "The content " + _isbn + " is not an ISBN " + _type, Toast.LENGTH_SHORT).show();
@@ -114,10 +118,8 @@ public class AddBookActivity extends Activity implements iRibbonMenuCallback {
         	}
         	if((s.length() >=5) && (s.length()%2!=0)){
         		if(titleSearch.hasFocus()){
-        			//Toast.makeText(AddBookActivity.this,"I shall soon make a HTTP request for title::" + s, Toast.LENGTH_SHORT).show();
         			new askServerForSuggestionsTask().execute("title", s.toString());
         		} else if(authorSearch.hasFocus()){
-        			//Toast.makeText(AddBookActivity.this,"I shall soon make a HTTP request for author:" + s, Toast.LENGTH_SHORT).show();
         			new askServerForSuggestionsTask().execute("author", s.toString());
         		}	
         	}
@@ -127,44 +129,19 @@ public class AddBookActivity extends Activity implements iRibbonMenuCallback {
 	
 	private class askServerForSuggestionsTask extends AsyncTask<String, Void, String> {
 		protected String doInBackground(String... parameters) {
-			Log.v("ASYNCTASK-TYPE", parameters[0]);
-			Log.v("ASYNCTASK-VALUE", parameters[1]);
 			String suggestion_url = getResources().getString(R.string.suggestion_url);
-			//String suggestion_url = "http://162.243.198.171/book_info.json/?q=truth";
 			suggestion_url += "?q=" + parameters[1];
 			if(parameters[0].contentEquals("title")){
 				suggestion_url +="&t=" + "title";
 			} else if(parameters[0].contentEquals("ISBN")){
 				suggestion_url +="&t=" + "isbn";
 			}
-				
-			
-			HttpClient httpclient = new DefaultHttpClient();
-	        HttpResponse response;
-	        String responseString = null;
-	        try {
-	            response = httpclient.execute(new HttpGet(suggestion_url));
-	            StatusLine statusLine = response.getStatusLine();
-	            if(statusLine.getStatusCode() == HttpStatus.SC_OK){
-	                ByteArrayOutputStream out = new ByteArrayOutputStream();
-	                response.getEntity().writeTo(out);
-	                out.close();
-	                responseString = out.toString();
-	            } else{
-	                //Closes the connection.
-	                response.getEntity().getContent().close();
-	                throw new IOException(statusLine.getReasonPhrase());
-	            }
-	        } catch (ClientProtocolException e) {
-	        	e.printStackTrace();
-	        } catch (IOException e) {
-	            e.printStackTrace();e.printStackTrace();
-	        }
+			HTTPHelper myHTTPHelper = new HTTPHelper();
+			String responseString = "";
+			responseString = myHTTPHelper.getHelper(suggestion_url);
 	        return responseString;
 		}
 		protected void onPostExecute(String result) {
-			//Toast.makeText(AddBookActivity.this, "Execution Complete!", Toast.LENGTH_SHORT).show();  
-			Log.v("ASYNC_RESULT", result);
 			JSONArray array;
 			try {
 				array = new JSONArray(result);
@@ -175,13 +152,11 @@ public class AddBookActivity extends Activity implements iRibbonMenuCallback {
 				}
 				for (int i = 0; i < array.length(); i++){
 				    sentences[i] = array.getString(i);
-				    //Log.v("ASYNC_RESULT", sentences[i]);
 				}
 				adapter = new ArrayAdapter<String>(AddBookActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, sentences);
 				listView.setAdapter(adapter);
 				listView.setOnItemClickListener(new OnItemClickListener() {
 					public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-						//Toast.makeText(getApplicationContext(), sentences[position]  , Toast.LENGTH_LONG).show();
 						Intent editBookIntent = new Intent(AddBookActivity.this, EditBookDetailsActivity.class);
 						editBookIntent.putExtra("TITLE", sentences[position]);
 						startActivity(editBookIntent);

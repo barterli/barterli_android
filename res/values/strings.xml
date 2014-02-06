@@ -15,6 +15,7 @@
     <string name="suggestion_url">http://162.243.198.171/book_suggestions.json</string>
     <string name="book_info_url">http://162.243.198.171/book_info.json</string>
     <string name="post_to_mybooks_url">https://dazzling-fire-1319.firebaseio.com/BarterLi/mybooks.json</string>
+    <string name="app_id">Your ID Here</string>
     
     <!-- Strings for AddBookActivity -->
     <string name="search_by_title_hint">Search by Title</string>
@@ -30,11 +31,29 @@
     <string name="publication_year_label">Publication Year</string>
     <string name="barter_type_label">Barter Type</string>
     
-    <string name="barter_type_label_lend">Lend</string>
+    <string name="barter_type_label_free">Free</string>
     <string name="barter_type_label_barter">Barter</string>
-    <string name="barter_type_label_give_away">Give Away</string>
-    <string name="barter_type_label_for_reading">For Reading</string>
+    <string name="barter_type_label_sale">Sale</string>
+    <string name="barter_type_label_read">Read</string>
+    <string name="barter_type_label_keep">Keep</string>
+    <string name="barter_type_label_wish">Wish</string>
+    <string name="barter_type_button_label">Click for Options</string>
     <string name="submit">Submit</string>
+    
+      <!-- Strings for LoginActivity -->
+    <string name="facebook_login">Login through Facebook</string>
+    <string name="twitter_login">Login through Twitter</string>
+    <string name="description_label">Description</string>
+    
+    <!-- Barter Type Options -->
+    <string-array name="barterOptions">  
+        <item>Free</item>  
+        <item>Barter</item>  
+        <item>Sale</item>  
+        <item>Read</item>  
+        <item>Keep</item>  
+        <item>Wish</item> 
+   </string-array>
     
 
 </resources>
