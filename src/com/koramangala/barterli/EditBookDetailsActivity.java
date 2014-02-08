@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -54,6 +55,9 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 	private String chosenBarterOption = "";
 	private ProgressDialogManager myProgressDialogManager = new ProgressDialogManager();
 	private HTTPHelper myHelper;
+	private static SharedPreferences mSharedPreferences;
+	private String Auth_Token="";
+	private String FB_Email="";
 	
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +76,12 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
         rbmView.setMenuItems(R.menu.design_form);
         barterOptions = getResources().getStringArray(R.array.barterOptions);
 		final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(EditBookDetailsActivity.this, android.R.layout.simple_spinner_dropdown_item, barterOptions);
-        
+		mSharedPreferences = getApplicationContext().getSharedPreferences("BarterLiPref", 0);
+        if(mSharedPreferences.contains(AllConstants.PREF_BARTER_LI_AUTHO_TOKEN) && mSharedPreferences!=null){
+        	Auth_Token = mSharedPreferences.getString(AllConstants.PREF_BARTER_LI_AUTHO_TOKEN, "empty");
+        	FB_Email = mSharedPreferences.getString(AllConstants.FB_USER_EMAIL, "");
+        	//Toast.makeText(this, "You are aloready Logged in with Auth_token:" + Auth_Token, Toast.LENGTH_SHORT).show();
+        }
 		
 		Intent _i = getIntent();
 		if(_i.hasExtra("TITLE")){
@@ -135,7 +144,7 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 			return;
 		}
 
-		new saveMyBookToServerTask().execute(_title, _author, _description, _publication_year, chosenBarterOption);		
+		new saveMyBookToServerTask().execute(_title, _author, _description, _publication_year, chosenBarterOption, Auth_Token, FB_Email);		
 	} // End of addBook
 	
 	
@@ -155,7 +164,9 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 			String _description = parameters[2];
 			String _publication_year = parameters[3];
 			String _barter_type = parameters[4];
-			responseString = myHTTPHelper.postBookToMyList(post_to_mybooks_url, _title, _author, _description, _publication_year, _barter_type);
+			String _user_token =  parameters[5];
+			String _fb_Email = parameters[6];
+			responseString = myHTTPHelper.postBookToMyList(post_to_mybooks_url, _title, _author, _description, _publication_year, _barter_type, _user_token, _fb_Email);
 	        return responseString;
 		}
 		protected void onPostExecute(String result) {

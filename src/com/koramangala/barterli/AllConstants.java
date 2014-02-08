@@ -32,5 +32,5 @@ public class AllConstants {
  
  // BarterLi keys
  static final String PREF_BARTER_LI_AUTHO_TOKEN = "barter_li_auth_token";
- 
+ static final String IS_PREF_LOCATION_SET = "is_pref_location_set";
 }

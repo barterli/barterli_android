@@ -75,6 +75,8 @@ public class LoginActivity extends Activity {
         if(mSharedPreferences.contains(AllConstants.PREF_BARTER_LI_AUTHO_TOKEN) && mSharedPreferences!=null){
         	Auth_Token = mSharedPreferences.getString(AllConstants.PREF_BARTER_LI_AUTHO_TOKEN, "empty");
         	Toast.makeText(this, "You are aloready Logged in with Auth_token:" + Auth_Token, Toast.LENGTH_SHORT).show();
+			Intent latLongIntent = new Intent(LoginActivity.this, TakeLatLongActivity.class);
+			startActivity(latLongIntent);
         }
         
         authButton.setOnErrorListener(new OnErrorListener() {
@@ -222,8 +224,8 @@ public class LoginActivity extends Activity {
 					if(userObject.has("auth_token") && !userObject.getString("auth_token").contentEquals("null")){
 						sharedPrefEditor.putString(AllConstants.PREF_BARTER_LI_AUTHO_TOKEN, userObject.getString("auth_token"));
 						sharedPrefEditor.commit();
-						Log.v("AUTHO",  userObject.getString("auth_token"));
-						Toast.makeText(getApplicationContext(), "Registration Success!::" + userObject.getString("auth_token"), Toast.LENGTH_LONG).show();
+						//Log.v("AUTHO",  userObject.getString("auth_token"));
+						Toast.makeText(getApplicationContext(), "Registration Success!", Toast.LENGTH_LONG).show();
 					}
 					Intent latLongIntent = new Intent(LoginActivity.this, TakeLatLongActivity.class);
 					startActivity(latLongIntent);

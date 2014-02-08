@@ -81,20 +81,52 @@ public class HTTPHelper {
 		String _description = parameters[3];
 		String _publication_year = parameters[4];
 		String _barter_type = parameters[5];
+		String _user_token = parameters[6];
+		String _fb_Email = parameters[7];
 		
 		String returnString = "";
-		JSONObject bookJsonObject = new JSONObject();
+			JSONObject bookJsonObject = new JSONObject();
+			JSONObject userJsonObject = new JSONObject();
+			JSONObject masterJsonObject = new JSONObject();
 		try {
 			bookJsonObject.put("title", _title);
 			bookJsonObject.put("author", _author);
 			bookJsonObject.put("description", _description);
 			bookJsonObject.put("publication_year", _publication_year);
 			bookJsonObject.put("barter_type", _barter_type);
-			returnString = PostJson(post_to_mybooks_url, bookJsonObject);
+			userJsonObject.put("user_token", _user_token);
+			userJsonObject.put("user_email", _fb_Email);
+			masterJsonObject = userJsonObject;
+			masterJsonObject.put("book", bookJsonObject);
+			returnString = PostJson(post_to_mybooks_url, masterJsonObject);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} 
 		return returnString; 	
+	}
+	
+	public String postPreferredLocation(String... parameters){
+		String returnString = "";
+		JSONObject locationJsonObject = new JSONObject();
+		JSONObject userJsonObject = new JSONObject();
+		JSONObject masterJsonObject = new JSONObject();
+	try {
+		String post_to_mypref_loc_url = parameters[0];
+		locationJsonObject.put("latitude", parameters[1]);
+		locationJsonObject.put("longitude", parameters[2]);
+		locationJsonObject.put("city", parameters[3]);
+		locationJsonObject.put("country", parameters[4]);
+		locationJsonObject.put("locality", parameters[5]);
+		userJsonObject.put("user_token", parameters[6]);
+		userJsonObject.put("user_email", parameters[7]);
+		masterJsonObject = userJsonObject;
+		masterJsonObject.put("location", locationJsonObject);
+		Log.v("REQUESTXX", masterJsonObject.toString());
+		returnString = PostJson(post_to_mypref_loc_url, masterJsonObject);
+	} catch (Exception e) {
+		e.printStackTrace();
+	} 
+	return returnString; 	
 	}
 	
 	public String postNewUser(String... parameters){
@@ -144,7 +176,7 @@ public class HTTPHelper {
 		is = entity.getContent();
 		response = convertStreamToString(is);
 		Log.v("RESPONSEXX",  response);
-		Log.v("RESPONSEYY",  EntityUtils.toString(my_response.getEntity()));
+		//Log.v("RESPONSEYY",  EntityUtils.toString(my_response.getEntity()));
 		//String responseStr = EntityUtils.toString(response.getEntity());
 		
 	} catch (Exception e) {
@@ -152,23 +184,7 @@ public class HTTPHelper {
 	}
 		return response;	
 	}
-	
-	/* private class asyncHelper extends AsyncTask<String, Void, String> {
-		protected void onPreExecute() {
-			super.onPreExecute();
-			myProgressDialogManager.showProgresDialog(localContext, "Saving...");
-		}
-		protected String doInBackground(String... params) {
-			Log.v("getHelperTest", "here2");
-			String url = params[0];
-			String response = getHelper(url);
-			return response;
-		}
-		protected void onPostExecute(String result) {
-			myProgressDialogManager.dismissProgresDialog();
-		}
-		
-	}  */
+
 	private static String convertStreamToString(InputStream is) {
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 	    StringBuilder sb = new StringBuilder();
