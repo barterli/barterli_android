@@ -74,9 +74,10 @@ public class LoginActivity extends Activity {
         
         if(mSharedPreferences.contains(AllConstants.PREF_BARTER_LI_AUTHO_TOKEN) && mSharedPreferences!=null){
         	Auth_Token = mSharedPreferences.getString(AllConstants.PREF_BARTER_LI_AUTHO_TOKEN, "empty");
-        	Toast.makeText(this, "You are aloready Logged in with Auth_token:" + Auth_Token, Toast.LENGTH_SHORT).show();
+        	Toast.makeText(this, "Welcome back!", Toast.LENGTH_SHORT).show();
 			Intent latLongIntent = new Intent(LoginActivity.this, TakeLatLongActivity.class);
 			startActivity(latLongIntent);
+			finish();
         }
         
         authButton.setOnErrorListener(new OnErrorListener() {

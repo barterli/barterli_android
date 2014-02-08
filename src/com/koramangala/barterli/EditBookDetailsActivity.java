@@ -58,6 +58,7 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 	private static SharedPreferences mSharedPreferences;
 	private String Auth_Token="";
 	private String FB_Email="";
+	private boolean Is_Loc_Set = false;
 	
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,9 +78,10 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
         barterOptions = getResources().getStringArray(R.array.barterOptions);
 		final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(EditBookDetailsActivity.this, android.R.layout.simple_spinner_dropdown_item, barterOptions);
 		mSharedPreferences = getApplicationContext().getSharedPreferences("BarterLiPref", 0);
-        if(mSharedPreferences.contains(AllConstants.PREF_BARTER_LI_AUTHO_TOKEN) && mSharedPreferences!=null){
+        if(mSharedPreferences!=null){
         	Auth_Token = mSharedPreferences.getString(AllConstants.PREF_BARTER_LI_AUTHO_TOKEN, "empty");
         	FB_Email = mSharedPreferences.getString(AllConstants.FB_USER_EMAIL, "");
+        	Is_Loc_Set = mSharedPreferences.getBoolean(AllConstants.IS_PREF_LOCATION_SET, false);
         	//Toast.makeText(this, "You are aloready Logged in with Auth_token:" + Auth_Token, Toast.LENGTH_SHORT).show();
         }
 		
@@ -127,6 +129,10 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 	}
 	
 	public void addBook (View v){
+        if(TextUtils.isEmpty(Auth_Token) || !Is_Loc_Set){
+        	Toast.makeText(this, "You havent yet made account and/or not yet set preferred location.\nPlease complete all steps!", Toast.LENGTH_SHORT).show();
+        	return;
+        }
 		String _title = titleText.getText().toString();
 		if(TextUtils.isEmpty(_title)){
 			Toast.makeText(EditBookDetailsActivity.this, "Please Enter Title" , Toast.LENGTH_SHORT).show();

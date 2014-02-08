@@ -61,9 +61,6 @@ public class TakeLatLongActivity extends Activity {
         if(mSharedPreferences.contains(AllConstants.IS_PREF_LOCATION_SET) && mSharedPreferences!=null){
         	is_loc_pref_set = mSharedPreferences.getBoolean(AllConstants.IS_PREF_LOCATION_SET, false);
         }
-        if(is_loc_pref_set){
-        	Toast.makeText(TakeLatLongActivity.this, "Earlier you have set", Toast.LENGTH_SHORT).show();
-        }
         
         gps = new GPSTracker(TakeLatLongActivity.this);
         if(gps.canGetLocation()){
@@ -120,13 +117,17 @@ public class TakeLatLongActivity extends Activity {
 			listView.setAdapter(adapter);
 			listView.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-					
+					//Log.v("DETAILS1", place_suggestions[position]);
 					Address my_address = gps.getMyLocationAddress(place_suggestions[position]);
+					if(my_address == null) {
+						Toast.makeText(getApplicationContext(), "Not able to reverse geocode!", Toast.LENGTH_SHORT).show();
+						return;
+					} 
+					//Log.v("DETAILS2", my_address.toString());
 					double _lat = my_address.getLatitude();
 					double _long = my_address.getLongitude();
 					String _country = my_address.getCountryName();
 					String _city = my_address.getSubAdminArea();
-					Log.v("DETAILS", my_address.toString());
 					new savePreferredTask().execute(post_to_my_preferred_loc, Double.toString(_lat), Double.toString(_long), _city, _country, place_suggestions[position], Auth_Token, FB_Email);
 				}				 
 			 });
