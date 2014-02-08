@@ -10,7 +10,7 @@
      
      <RelativeLayout 
        android:layout_width="fill_parent"
-       android:background="#4178e9"
+	   android:background="#FFFFFF"
        android:id="@+id/top_bar"  
        android:layout_height="wrap_content">  
    
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="22sp"
-        android:textColor="#FFFFFF"
+        android:textColor="#FFA500"
         android:textStyle="bold"
         android:layout_centerInParent="true"
         android:gravity="center"
@@ -52,6 +52,7 @@
         android:textSize="20sp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:textColor="#BBBBBB"
         android:layout_gravity="center"
         android:text="@string/add_books"/>      
        

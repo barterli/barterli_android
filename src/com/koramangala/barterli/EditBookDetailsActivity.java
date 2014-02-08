@@ -53,12 +53,14 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 	private String[] barterOptions;
 	private String chosenBarterOption = "";
 	private ProgressDialogManager myProgressDialogManager = new ProgressDialogManager();
+	private HTTPHelper myHelper;
 	
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_book);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+		myHelper = new HTTPHelper(EditBookDetailsActivity.this);
 		rbmView = (RibbonMenuView) findViewById(R.id.ribbonMenuView1);
 		openLeftPanelButton = (Button) findViewById(R.id.open_left_panel);
 		titleText = (EditText)findViewById(R.id.title);
@@ -71,6 +73,7 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
         barterOptions = getResources().getStringArray(R.array.barterOptions);
 		final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(EditBookDetailsActivity.this, android.R.layout.simple_spinner_dropdown_item, barterOptions);
         
+		
 		Intent _i = getIntent();
 		if(_i.hasExtra("TITLE")){
 			titleText.setText(_i.getExtras().getString("TITLE").toString());
@@ -101,10 +104,17 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
         
 	} //End of oncreate
 
-	@Override
 	public void RibbonMenuItemClick(int itemId) {
-		// TODO Auto-generated method stub
-		
+		switch(itemId){
+		  case R.id.ribbon_menu_signup:
+			  Intent loginintent = new Intent(EditBookDetailsActivity.this, LoginActivity.class);
+			  startActivity(loginintent);
+		  break;
+		  case R.id.ribbon_menu_build_library:
+			  Intent libintent = new Intent(EditBookDetailsActivity.this, AddBookActivity.class);
+			  startActivity(libintent);
+		  break;	
+		}
 	}
 	
 	public void addBook (View v){
@@ -127,6 +137,9 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 
 		new saveMyBookToServerTask().execute(_title, _author, _description, _publication_year, chosenBarterOption);		
 	} // End of addBook
+	
+	
+	//Synctask helper to post book to server
 	
 	private class saveMyBookToServerTask extends AsyncTask<String, Void, String> {
 		protected void onPreExecute() {
@@ -152,15 +165,17 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 		}
 	} // End of askServerForSuggestionsTask
 
+	
+	
+	//Synctask helper to get book suggestion
+	
 	private class getBookInfoFromServerTask extends AsyncTask<String, Void, String> {
 		protected void onPreExecute() {
 			myProgressDialogManager.showProgresDialog(EditBookDetailsActivity.this, "Retrieving...");
         }
 		protected String doInBackground(String... parameters) {
-			
 			String suggestion_url = getResources().getString(R.string.book_info_url);
 			suggestion_url += "?q=" + parameters[0];
-			
 			HTTPHelper myHTTPHelper = new HTTPHelper();
 			String responseString = "";
 			responseString = myHTTPHelper.getHelper(suggestion_url);
@@ -168,6 +183,7 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 		}
 		protected void onPostExecute(String result) {
 			myProgressDialogManager.dismissProgresDialog();
+			barterChoiceGroup.performClick();
 			try {
 				JSONObject bookObject = new JSONObject(result);
 				if(bookObject.has(AllConstants.DESCRIPTION_KEY)){
@@ -189,13 +205,16 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 							authorText.setText(firstAuthorObject.getString(AllConstants.PUBLICATION_AUTHOR_NAME));
 						}
 					}
-				}
-				
+				}	
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
 	} // End of getBookInfoFromServerTask
+	
+	
+	
+	
 	
 	public void resetViews(){
 		titleText.setText("");
@@ -204,6 +223,6 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 		publicationYearText.setText("");
 		barterChoiceGroup.setText(R.string.barter_type_button_label);
 		chosenBarterOption = "";
-	}
+	} //End of resetViews
 	
 }

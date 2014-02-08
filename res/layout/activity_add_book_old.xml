@@ -10,7 +10,7 @@
      
      <RelativeLayout 
        android:layout_width="fill_parent"
-       android:background="#FFFFFF"
+       android:background="#4178e9"
        android:id="@+id/top_bar"  
        android:layout_height="wrap_content">  
    
@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="22sp"
-        android:textColor="#FFA500"
+        android:textColor="#FFFFFF"
         android:textStyle="bold"
         android:layout_centerInParent="true"
         android:gravity="center"
@@ -47,47 +47,19 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_gravity="center"
-        android:textColor="#BBBBBB"
         android:text="@string/add_books"/> 
-        
-        <Button 
-            android:id="@+id/scanButton"
-            android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-         	android:background="#3D62B3"
-         	android:textColor="#FFFFFF"
-         	android:padding="7dp"
-         	android:text="@string/scan_barcode_button_label"
-         	android:onClick="scanBarCode"/>  
-         	
-       <TextView 
-           android:id="@+id/first_or" 
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="@string/or_label"
-           android:textColor="#BBBBBB"
-           android:textSize="20sp"
-           android:layout_gravity="center"
-           /> 
 
         <EditText 
-            android:id="@+id/book_search"
+            android:id="@+id/title_search"
             android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
          	android:inputType="text"
          	android:background="@drawable/backwithborder"
          	android:hint="@string/search_hint"
          	android:padding="7dp"/>
                
-   <!--      <EditText 
+        <EditText 
             android:id="@+id/author_search"
             android:layout_width="fill_parent"
             android:layout_height="35dp"
@@ -95,28 +67,23 @@
          	android:inputType="text"
          	android:background="@drawable/backwithborder"
          	android:hint="@string/search_by_author_hint"
-         	android:padding="7dp"/>  -->
+         	android:padding="7dp"/>
         
-		 <TextView 
-		   android:id="@+id/second_or"  
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="@string/or_label"
-           android:textColor="#BBBBBB"
-           android:textSize="20sp"
-           android:layout_gravity="center"/> 
+          <Button 
+            android:layout_width="fill_parent"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+         	android:background="@drawable/backwithborder_dark"
+         	android:padding="7dp"
+         	android:text="@string/scan_barcode_button_label"
+         	android:onClick="scanBarCode"/>  
          
           <Button 
-            android:id="@+id/manual_entry_button"
             android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_height="35dp"
+            android:layout_margin="5dp"
+         	android:background="@drawable/backwithborder_dark"
          	android:padding="7dp"
-         	android:background="#3D62B3"
-         	android:textColor="#FFFFFF"
          	android:text="@string/add_new_book_label"
          	android:onClick="addNewBook"/> 	
           

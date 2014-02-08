@@ -1,0 +1,50 @@
+<RelativeLayout 
+    	xmlns:android="http://schemas.android.com/apk/res/android"
+    	xmlns:fb="http://schemas.android.com/apk/res-auto"
+    
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">  
+  
+
+    <TextView 
+        android:id="@+id/app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:layout_marginTop="15dp"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:textColor="#FFA500"
+        android:text="@string/app_name"
+        /> 
+        
+       <TextView 
+        android:id="@+id/location_hint_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="#BBBBBB"
+        android:layout_margin="20dp"
+        android:layout_below="@+id/app_name"
+        android:text="@string/select_preferred_location_hint"/> 
+        
+      <ListView android:id="@+id/list_data"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/location_hint_text"/>
+        
+   <!-- <TextView 
+        android:id="@+id/lat_long_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="#BBBBBB"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:text="@string/lat_long"/> -->
+        
+ </RelativeLayout>
+	
