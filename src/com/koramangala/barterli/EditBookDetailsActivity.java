@@ -184,11 +184,18 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 			String _barter_type = parameters[4];
 			String _user_token =  parameters[5];
 			String _fb_Email = parameters[6];
-			responseString = myHTTPHelper.postBookToMyList(post_to_mybooks_url, _title, _author, _description, _publication_year, _barter_type, _user_token, _fb_Email);
+			if(TextUtils.isEmpty(BOOK_ID)){
+				responseString = myHTTPHelper.postBookToMyList(post_to_mybooks_url, _title, _author, _description, _publication_year, _barter_type, _user_token, _fb_Email);
+			} else {
+				String put_to_mybooks_url = post_to_mybooks_url + BOOK_ID;
+				responseString = myHTTPHelper.putBookToMyList(put_to_mybooks_url, _title, _author, _description, _publication_year, _barter_type, _user_token, _fb_Email);
+			}
+			
 	        return responseString;
 		}
 		protected void onPostExecute(String result) {
 			myProgressDialogManager.dismissProgresDialog();
+			//** STILL TO DO:- Verify that result is success **//
 			Toast.makeText(EditBookDetailsActivity.this, "Successfully Added!. Will see where to go now!", Toast.LENGTH_SHORT).show();
 			resetViews();
 		}

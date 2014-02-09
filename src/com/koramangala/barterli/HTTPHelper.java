@@ -16,6 +16,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -153,6 +154,37 @@ public class HTTPHelper {
 		return returnString; 	
 	}
 	
+	public String putBookToMyList(String... parameters){
+		String post_to_mybooks_url = parameters[0];
+		String _title = parameters[1];
+		String _author = parameters[2];
+		String _description = parameters[3];
+		String _publication_year = parameters[4];
+		String _barter_type = parameters[5];
+		String _user_token = parameters[6];
+		String _fb_Email = parameters[7];
+		
+		String returnString = "";
+			JSONObject bookJsonObject = new JSONObject();
+			JSONObject userJsonObject = new JSONObject();
+			JSONObject masterJsonObject = new JSONObject();
+		try {
+			bookJsonObject.put("title", _title);
+			bookJsonObject.put("author", _author);
+			bookJsonObject.put("description", _description);
+			bookJsonObject.put("publication_year", _publication_year);
+			bookJsonObject.put("barter_type", _barter_type);
+			userJsonObject.put("user_token", _user_token);
+			userJsonObject.put("user_email", _fb_Email);
+			masterJsonObject = userJsonObject;
+			masterJsonObject.put("book", bookJsonObject);
+			returnString = PutJson(post_to_mybooks_url, masterJsonObject);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return returnString; 	
+	}
+	
 	//Helper Methods
 	
 	public String PostJson(String url, JSONObject object){
@@ -163,6 +195,7 @@ public class HTTPHelper {
 		URL my_url = new URL(url);	
 		HttpClient httpClient = new DefaultHttpClient();
 		HttpPost httpPost = new HttpPost(my_url.toURI());
+		//HttpPut httpPut = new HttpPut(my_url.toURI());
 		// Prepare JSON to send by setting the entity
 		//Log.v("HTTPPOST", object.toString());
 		Log.v("REQUESTXX", object.toString());
@@ -186,6 +219,34 @@ public class HTTPHelper {
 		return response;	
 	}
 
+	public String PutJson(String url, JSONObject object){
+		HttpResponse my_response= null;
+		String response="";
+		InputStream is=null;
+		try{	
+		URL my_url = new URL(url);	
+		HttpClient httpClient = new DefaultHttpClient();
+		HttpPut httpPut = new HttpPut(my_url.toURI());
+		Log.v("REQUESTGG", url);
+		Log.v("REQUESTXX", object.toString());
+		httpPut.setEntity(new StringEntity(object.toString(), "UTF-8"));
+		// Set up the header types needed to properly transfer JSON
+		httpPut.setHeader("Content-Type", "application/json");
+		httpPut.setHeader("Accept-Encoding", "application/json");
+		httpPut.setHeader("Accept-Language", "en-US");
+		// Execute PUT			
+		my_response = httpClient.execute(httpPut);
+		HttpEntity entity = my_response.getEntity();
+		is = entity.getContent();
+		response = convertStreamToString(is);
+		Log.v("RESPONSEXX",  response);
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+		return response;	
+	}
+	
 	private static String convertStreamToString(InputStream is) {
 	    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 	    StringBuilder sb = new StringBuilder();
