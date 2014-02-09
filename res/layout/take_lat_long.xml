@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:textColor="#BBBBBB"
-        android:layout_margin="20dp"
+        android:layout_margin="6dp"
         android:layout_below="@+id/app_name"
         android:text="@string/select_preferred_location_hint"/> 
         

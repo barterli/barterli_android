@@ -44,6 +44,7 @@ public class TakeLatLongActivity extends Activity {
 	private String FB_Email="";
 	private Editor sharedPrefEditor;
 	private boolean is_loc_pref_set;
+	private String my_Pref_loc;
 	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +87,11 @@ public class TakeLatLongActivity extends Activity {
 		protected void onPostExecute(String result) {
 			myProgressDialogManager.dismissProgresDialog();
 			sharedPrefEditor.putBoolean(AllConstants.IS_PREF_LOCATION_SET, true);
+			sharedPrefEditor.putString(AllConstants.MY_PREF_LOCATION, my_Pref_loc);
 			sharedPrefEditor.commit();
 			Toast.makeText(getApplicationContext(), "Location Preference successfully set!", Toast.LENGTH_SHORT).show();
+			//Intent profileIntent = new Intent(TakeLatLongActivity.this, MyProfileActivity.class);
+			//startActivity(profileIntent);
 		}
     }
     
@@ -128,6 +132,7 @@ public class TakeLatLongActivity extends Activity {
 					double _long = my_address.getLongitude();
 					String _country = my_address.getCountryName();
 					String _city = my_address.getSubAdminArea();
+					my_Pref_loc = place_suggestions[position];
 					new savePreferredTask().execute(post_to_my_preferred_loc, Double.toString(_lat), Double.toString(_long), _city, _country, place_suggestions[position], Auth_Token, FB_Email);
 				}				 
 			 });

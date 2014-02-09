@@ -55,10 +55,11 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 	private String chosenBarterOption = "";
 	private ProgressDialogManager myProgressDialogManager = new ProgressDialogManager();
 	private HTTPHelper myHelper;
-	private static SharedPreferences mSharedPreferences;
+	private SharedPreferences mSharedPreferences;
 	private String Auth_Token="";
 	private String FB_Email="";
 	private boolean Is_Loc_Set = false;
+	private String BOOK_ID = "";
 	
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +87,21 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
         }
 		
 		Intent _i = getIntent();
-		if(_i.hasExtra("TITLE")){
-			titleText.setText(_i.getExtras().getString("TITLE").toString());
-			new getBookInfoFromServerTask().execute(_i.getExtras().getString("TITLE").toString());		
+		if(_i.hasExtra("BOOK_ID")){ 
+			BOOK_ID = _i.getExtras().getString("BOOK_ID").toString();	
+			Toast.makeText(this, "ID Received: " + BOOK_ID, Toast.LENGTH_SHORT).show();
+		} 
+		if(_i.hasExtra("TITLE")){titleText.setText(_i.getExtras().getString("TITLE").toString());}
+		if(_i.hasExtra("TITLE") && !_i.hasExtra("BOOK_ID")){
+			new getBookInfoFromServerTask().execute(_i.getExtras().getString("TITLE").toString());
 		}
+		if(_i.hasExtra("AUTHOR")){ authorText.setText(_i.getExtras().getString("AUTHOR").toString());	}
+		if(_i.hasExtra("DESCRIPTION")){ descriptionText.setText(_i.getExtras().getString("DESCRIPTION").toString());	}
+		if(_i.hasExtra("PUBLICATION_YEAR")){ publicationYearText.setText(_i.getExtras().getString("PUBLICATION_YEAR").toString());	}
+		if(_i.hasExtra("BARTER_TYPE")){ 
+			barterChoiceGroup.setText(_i.getExtras().getString("BARTER_TYPE").toString());
+			chosenBarterOption = _i.getExtras().getString("BARTER_TYPE").toString();
+		 }
 			
 		// Set Listeners
 		barterChoiceGroup.setOnClickListener(new OnClickListener(){
@@ -121,8 +133,8 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 			  Intent loginintent = new Intent(EditBookDetailsActivity.this, LoginActivity.class);
 			  startActivity(loginintent);
 		  break;
-		  case R.id.ribbon_menu_build_library:
-			  Intent libintent = new Intent(EditBookDetailsActivity.this, AddBookActivity.class);
+		  case R.id.ribbon_menu_my_profile:
+			  Intent libintent = new Intent(EditBookDetailsActivity.this, MyProfileActivity.class);
 			  startActivity(libintent);
 		  break;	
 		}

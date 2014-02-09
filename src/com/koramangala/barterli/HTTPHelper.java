@@ -121,7 +121,7 @@ public class HTTPHelper {
 		userJsonObject.put("user_email", parameters[7]);
 		masterJsonObject = userJsonObject;
 		masterJsonObject.put("location", locationJsonObject);
-		Log.v("REQUESTXX", masterJsonObject.toString());
+		//Log.v("REQUESTXX", masterJsonObject.toString());
 		returnString = PostJson(post_to_mypref_loc_url, masterJsonObject);
 	} catch (Exception e) {
 		e.printStackTrace();
@@ -165,6 +165,7 @@ public class HTTPHelper {
 		HttpPost httpPost = new HttpPost(my_url.toURI());
 		// Prepare JSON to send by setting the entity
 		//Log.v("HTTPPOST", object.toString());
+		Log.v("REQUESTXX", object.toString());
 		httpPost.setEntity(new StringEntity(object.toString(), "UTF-8"));
 		// Set up the header types needed to properly transfer JSON
 		httpPost.setHeader("Content-Type", "application/json");

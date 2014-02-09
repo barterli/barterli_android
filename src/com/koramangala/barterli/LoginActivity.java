@@ -46,7 +46,7 @@ public class LoginActivity extends Activity {
 	private static Twitter twitter;
 	private static RequestToken requestToken;
 	// Shared Preferences
-	private static SharedPreferences mSharedPreferences;
+	private SharedPreferences mSharedPreferences;
 	// Internet Connection detector
 	private ConnectionDetector connection_status_detector;
 	// Alert Dialog Manager
@@ -218,7 +218,7 @@ public class LoginActivity extends Activity {
 			myProgressDialogManager.dismissProgresDialog();
 			//Toast.makeText(LoginActivity.this, result, Toast.LENGTH_SHORT).show();
 			try {
-				
+				Log.v("FB_AUTH_RETURN", result);
 				JSONObject userObject = new JSONObject(result);
 				if(userObject.has("status") && userObject.getString("status").contentEquals("success")){
 					
@@ -227,6 +227,7 @@ public class LoginActivity extends Activity {
 						sharedPrefEditor.commit();
 						//Log.v("AUTHO",  userObject.getString("auth_token"));
 						Toast.makeText(getApplicationContext(), "Registration Success!", Toast.LENGTH_LONG).show();
+						Log.v("FB_AUTH_RETURN", result);
 					}
 					Intent latLongIntent = new Intent(LoginActivity.this, TakeLatLongActivity.class);
 					startActivity(latLongIntent);

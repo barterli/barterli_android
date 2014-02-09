@@ -59,7 +59,7 @@ public class AddBookActivity extends Activity implements iRibbonMenuCallback {
 	private TextView orLable2;
 	private Button manualButton;
 	private int RequestCounter = 0;
-	private static SharedPreferences mSharedPreferences;
+	private SharedPreferences mSharedPreferences;
 	private String Auth_Token="";
 	private boolean Is_Loc_Set = false;
 	
@@ -70,7 +70,7 @@ public class AddBookActivity extends Activity implements iRibbonMenuCallback {
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		connection_status_detector = new ConnectionDetector(getApplicationContext());
 		connectionStatus = connection_status_detector.isConnectingToInternet();
-		Log.v("CONNECTION", connectionStatus.toString());
+		//Log.v("CONNECTION", connectionStatus.toString());
 		rbmView = (RibbonMenuView) findViewById(R.id.ribbonMenuView1);
 		openLeftPanelButton = (Button) findViewById(R.id.open_left_panel);
 		scanButton = (Button) findViewById(R.id.scanButton);
@@ -120,7 +120,9 @@ public class AddBookActivity extends Activity implements iRibbonMenuCallback {
 			  Intent loginintent = new Intent(AddBookActivity.this, LoginActivity.class);
 			  startActivity(loginintent);
 		  break;
-		  case R.id.ribbon_menu_build_library:
+		  case R.id.ribbon_menu_my_profile:
+			  Intent libintent = new Intent(AddBookActivity.this, MyProfileActivity.class);
+			  startActivity(libintent);
 		  break;	
 		}
 	}
