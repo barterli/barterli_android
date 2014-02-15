@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="fontStyle" format="enum">
+        <enum name="alegreya_black_italic" value="0" />
+        <enum name="alegreya_bold" value="1" />
+        <enum name="alegreya_italic" value="2" />
+        <enum name="alegreya_regular" value="3" />
+    </attr>
+
+    <declare-styleable name="TypefacedTextView">
+        <attr name="fontStyle" />
+    </declare-styleable>
+
+</resources>

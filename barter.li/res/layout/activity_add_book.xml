@@ -17,8 +17,9 @@
 
    <Button 
        android:id="@+id/button_add_manually"
-       android:layout_width="match_parent"
+       android:layout_width="wrap_content"
        android:layout_height="wrap_content"
+       android:layout_centerHorizontal="true"
        android:layout_margin="@dimen/activity_vertical_margin"
        android:text="@string/add_new_book_label"
        android:layout_alignParentBottom="true"/>
