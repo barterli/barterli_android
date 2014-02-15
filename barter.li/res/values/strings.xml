@@ -9,8 +9,11 @@
     <string name="signup">Sign Up</string>
     <string name="build_library">Build Library</string>
     <string name="search">Search Books</string>
-    <string name="profile">My Profile</string>
-    <string name="library">My Library</string>
+    
+    <string name="profile">Profile</string>
+    <string name="library">My Books</string>
+    <string name="scan_book">Scan Book</string>
+    <string name="add_book">Add Book</string>
 
     <!-- Web URLs -->
     <string name="suggestion_url">http://162.243.198.171/api/v1/book_suggestions.json</string>
@@ -32,6 +35,7 @@
     <string name="add_new_book_label">Manual Entry</string>
     <string name="add_books">Build Library | Add a Book</string>
     <string name="or_label">Or</string>
+    <string name="placeholder_books_around_me">This screen is under implementation. Why don\'t you try tapping one of the items on the action bar? :-)</string>
 
     <!-- Strings for EditBookDetailsActivity -->
     <string name="title_label">Title</string>

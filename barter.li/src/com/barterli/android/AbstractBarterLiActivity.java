@@ -25,6 +25,12 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 			setActionBarTitle(getTitle().toString());
 		}
 	}
+	
+	protected void setActionBarDisplayOptions(int displayOptions) {
+		if(getActionBar() != null) {
+			getActionBar().setDisplayOptions(displayOptions, ACTION_BAR_DISPLAY_MASK);
+		}
+	}
 
 	protected final void setActionBarTitle(final String title) {
 
