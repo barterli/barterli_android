@@ -57,12 +57,14 @@
         <activity
             android:name=".EditBookDetailsActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:parentActivityName=".BooksAroundMeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTICITY"
+                android:value=".BooksAroundMeActivity" />
         </activity>
         <activity
             android:name=".TakeLatLongActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+            android:label="@string/app_name" >
         </activity>
         <activity
             android:name=".LoginActivity"
