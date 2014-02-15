@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Group to hide action items when navigation drawer is opened -->
+    <group android:id="@+id/group_hide_on_drawer_open" >
+        <item
+            android:id="@+id/action_add_manually"
+            android:orderInCategory="1"
+            android:showAsAction="never"
+            android:title="@string/add_manually"/>
+    </group>
+
+</menu>

@@ -14,6 +14,7 @@
     <string name="library">My Books</string>
     <string name="scan_book">Scan Book</string>
     <string name="add_book">Add Book</string>
+    <string name="add_manually">Add Book Manually</string>
 
     <!-- Web URLs -->
     <string name="suggestion_url">http://162.243.198.171/api/v1/book_suggestions.json</string>
