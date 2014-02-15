@@ -14,6 +14,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_books_around_me);
 		setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
+		getActionBar().setHomeButtonEnabled(false);
 	}
 
 	@Override
