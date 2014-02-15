@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.widget.Toast;
 
 import com.barterli.android.widgets.TypefaceCache;
 import com.barterli.android.widgets.TypefacedSpan;
@@ -41,6 +42,14 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 		// Update the action bar title with the TypefaceSpan instance
 		final ActionBar actionBar = getActionBar();
 		actionBar.setTitle(s);
+	}
+	
+	protected void showToast(String toastMessage, boolean isLong) {
+		Toast.makeText(this, toastMessage, isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+	}
+	
+	protected void showToast(int toastMessageResId, boolean isLong) {
+		Toast.makeText(this, toastMessageResId, isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();;
 	}
 
 }
