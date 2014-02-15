@@ -97,10 +97,6 @@
       
     </RelativeLayout>
 
-    <com.darvds.ribbonmenu.RibbonMenuView
-        android:id="@+id/ribbonMenuView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </com.darvds.ribbonmenu.RibbonMenuView>
+    
 
 </FrameLayout>
