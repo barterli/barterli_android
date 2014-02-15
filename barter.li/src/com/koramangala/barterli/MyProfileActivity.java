@@ -54,7 +54,7 @@ public class MyProfileActivity extends Activity {
         my_name_text.setText(my_name);
         my_email_text.setText(my_email);
         my_pref_location_text.setText(my_pref_location);
-        get_profile_url = getResources().getString(R.string.get_my_details);
+        get_profile_url = getResources().getString(R.string.preferred_location);
 		connection_status_detector = new ConnectionDetector(getApplicationContext());
 		connectionStatus = connection_status_detector.isConnectingToInternet();
         listView = (ListView) findViewById(R.id.list_my_books);

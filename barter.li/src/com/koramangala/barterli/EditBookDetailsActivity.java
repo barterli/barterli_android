@@ -1,50 +1,27 @@
 package com.koramangala.barterli;
 
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URL;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
-import com.darvds.ribbonmenu.RibbonMenuView;
-import com.darvds.ribbonmenu.iRibbonMenuCallback;
-
-public class EditBookDetailsActivity extends Activity implements iRibbonMenuCallback{
-	private RibbonMenuView rbmView;
+public class EditBookDetailsActivity extends Activity {
 	private Button openLeftPanelButton;
 	private EditText titleText;
 	private EditText authorText;
@@ -67,15 +44,11 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 		setContentView(R.layout.activity_edit_book);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		myHelper = new HTTPHelper(EditBookDetailsActivity.this);
-		rbmView = (RibbonMenuView) findViewById(R.id.ribbonMenuView1);
-		openLeftPanelButton = (Button) findViewById(R.id.open_left_panel);
 		titleText = (EditText)findViewById(R.id.title);
 		authorText = (EditText)findViewById(R.id.author);
 		descriptionText = (EditText)findViewById(R.id.description);
 		publicationYearText = (EditText)findViewById(R.id.publication);
 		barterChoiceGroup = (Button) findViewById(R.id.barter_option_button);
-		rbmView.setMenuClickCallback(this);
-        rbmView.setMenuItems(R.menu.design_form);
         barterOptions = getResources().getStringArray(R.array.barterOptions);
 		final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(EditBookDetailsActivity.this, android.R.layout.simple_spinner_dropdown_item, barterOptions);
 		mSharedPreferences = getApplicationContext().getSharedPreferences("BarterLiPref", 0);
@@ -118,12 +91,6 @@ public class EditBookDetailsActivity extends Activity implements iRibbonMenuCall
 			}
 		});	
 		
-        openLeftPanelButton.setOnClickListener(new OnClickListener(){
-			public void onClick(View v) {
-				rbmView.toggleMenu();		
-			}    	
-        });
-        // End of setting Listeners
         
 	} //End of oncreate
 
