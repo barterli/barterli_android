@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/decoder
+END
+DecodedBitStreamParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/decoder/DecodedBitStreamParser.java
+END
+BitMatrixParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/decoder/BitMatrixParser.java
+END
+DataBlock.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/22/trunk/src/com/jwetherell/quick_response_code/qrcode/decoder/DataBlock.java
+END
+Mode.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/22/trunk/src/com/jwetherell/quick_response_code/qrcode/decoder/Mode.java
+END
+DataMask.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/decoder/DataMask.java
+END
+Version.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/decoder/Version.java
+END
+Decoder.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/decoder/Decoder.java
+END
+ErrorCorrectionLevel.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/22/trunk/src/com/jwetherell/quick_response_code/qrcode/decoder/ErrorCorrectionLevel.java
+END
+FormatInformation.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/22/trunk/src/com/jwetherell/quick_response_code/qrcode/decoder/FormatInformation.java
+END

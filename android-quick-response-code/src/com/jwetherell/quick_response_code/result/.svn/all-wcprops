@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result
+END
+SMSResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result/SMSResultHandler.java
+END
+TextResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result/TextResultHandler.java
+END
+TelResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result/TelResultHandler.java
+END
+ResultHandlerFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result/ResultHandlerFactory.java
+END
+CalendarResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result/CalendarResultHandler.java
+END
+GeoResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/22/trunk/src/com/jwetherell/quick_response_code/result/GeoResultHandler.java
+END
+ISBNResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result/ISBNResultHandler.java
+END
+EmailAddressResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/22/trunk/src/com/jwetherell/quick_response_code/result/EmailAddressResultHandler.java
+END
+WifiResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result/WifiResultHandler.java
+END
+URIResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result/URIResultHandler.java
+END
+ResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/22/trunk/src/com/jwetherell/quick_response_code/result/ResultHandler.java
+END
+ProductResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result/ProductResultHandler.java
+END
+AddressBookResultHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/result/AddressBookResultHandler.java
+END

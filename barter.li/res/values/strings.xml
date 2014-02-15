@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Barter.li</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- menu strings -->
+    <string name="signup">Sign Up</string>
+    <string name="build_library">Build Library</string>
+    <string name="search">Search Books</string>
+    <string name="profile">My Profile</string>
+    <string name="library">My Library</string>
+
+    <!-- Web URLs -->
+    <string name="suggestion_url">http://162.243.198.171/api/v1/book_suggestions.json</string>
+    <string name="book_info_url">http://162.243.198.171/api/v1/book_info.json</string>
+    <!-- <string name="post_to_mybooks_url">https://dazzling-fire-1319.firebaseio.com/BarterLi/mybooks.json</string> -->
+    <string name="post_to_mybooks_url">http://162.243.198.171/api/v1/books.json</string>
+    <string name="create_account">http://162.243.198.171/api/v1/create_user.json</string>
+    <!-- <string name="create_account">https://dazzling-fire-1319.firebaseio.com/BarterLi/create_user.json</string> -->
+    <string name="hangouts_location">http://162.243.198.171/api/v1/hangouts.json</string>
+    <string name="preferred_location">http://162.243.198.171/api/v1/user_preferred_location.json</string>
+    <!-- <string name="preferred_location">https://dazzling-fire-1319.firebaseio.com/BarterLi/mylocs.json</string> -->
+
+    <string name="app_id">458716080895923</string>
+
+    <!-- Strings for AddBookActivity -->
+    <string name="search_hint">Search by Title|Author|ISBN</string>
+    <string name="search_by_author_hint">Search by Author</string>
+    <string name="scan_barcode_button_label">Scan ISBN BarCode</string>
+    <string name="add_new_book_label">Manual Entry</string>
+    <string name="add_books">Build Library | Add a Book</string>
+    <string name="or_label">Or</string>
+
+    <!-- Strings for EditBookDetailsActivity -->
+    <string name="title_label">Title</string>
+    <string name="author_label">Author</string>
+    <string name="description_label">Description</string>
+    <string name="publication_year_label">Publication Year</string>
+    <string name="barter_type_label">Barter Type</string>
+    <!-- Barter Type Options -->
+    <string-array name="barterOptions">
+        <item>Free/Give Away</item>
+        <item>Barter</item>
+        <item>Sale</item>
+        <item>Read</item>
+        <item>Private</item>
+        <item>WishList</item>
+    </string-array>
+
+    <string name="barter_type_button_label">Click for Options</string>
+    <string name="submit">Submit</string>
+
+    <!-- Strings for LoginActivity -->
+    <string name="facebook_login">Login with Facebook</string>
+    <string name="facebook_logout">Logout</string>
+    <string name="twitter_login">Login with Twitter</string>
+    <string name="description">Please note that we are taking facebook credentials only for Authorization.</string>
+
+    <!-- Strings for TakeLatLongActivity -->
+    <string name="lat_long">Location</string>
+    <string name="select_preferred_location_hint">Select your preferred Meeting Location</string>
+
+</resources>
