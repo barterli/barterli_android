@@ -63,6 +63,7 @@ public final class ViewfinderView extends View {
     public ViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        
         // Initialize these once for performance rather than calling them every
         // time in onDraw().
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -83,6 +84,7 @@ public final class ViewfinderView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
+    	
         Rect frame = cameraManager.getFramingRect();
         if (frame == null) {
             return;

@@ -16,16 +16,17 @@
 
 package com.jwetherell.quick_response_code.camera;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
-
 import java.io.IOException;
-
 import com.jwetherell.quick_response_code.PlanarYUVLuminanceSource;
 import com.jwetherell.quick_response_code.data.Preferences;
 
@@ -93,7 +94,8 @@ public final class CameraManager {
        openDriver( holder, -1 );
     }
     
-    public void openDriver(SurfaceHolder holder, int cameraID) throws IOException {
+	@SuppressLint("NewApi")
+	public void openDriver(SurfaceHolder holder, int cameraID) throws IOException {
        Camera theCamera = camera;
        if (theCamera == null) {
            if ( cameraID == -1 ) {

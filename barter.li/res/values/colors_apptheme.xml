@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="apptheme_color">#2c7e9c</color>
+    <color name="global_bg">#DCE0DA</color>
 </resources>

@@ -1,14 +1,22 @@
 package com.barterli.android;
 
+import com.google.zxing.Result;
+import com.jwetherell.quick_response_code.DecoderActivity;
+import com.jwetherell.quick_response_code.result.ResultHandler;
+import com.jwetherell.quick_response_code.result.ResultHandlerFactory;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -19,25 +27,19 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddBookActivity extends AbstractBarterLiActivity {
+public class AddBookActivity extends DecoderActivity {
 
 	private static final int READ_ISBN_SCAN_CODE = 0;
-	private Button scanButton;
-	private EditText bookSearch;
-	private ListView listView;
-	private ArrayAdapter<String> adapter;
 	private ConnectionDetector connection_status_detector;
 	private AlertDialogManager alert = new AlertDialogManager();
 	private Boolean connectionStatus;
-	private TextView orLable1;
-	private TextView orLable2;
-	private Button manualButton;
 	private int RequestCounter = 0;
 	private SharedPreferences mSharedPreferences;
 	private String Auth_Token = "";
 	private boolean Is_Loc_Set = false;
 
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_book);
 		getWindow().setSoftInputMode(
@@ -45,12 +47,7 @@ public class AddBookActivity extends AbstractBarterLiActivity {
 		connection_status_detector = new ConnectionDetector(
 				getApplicationContext());
 		connectionStatus = connection_status_detector.isConnectingToInternet();
-		// Log.v("CONNECTION", connectionStatus.toString());
-		scanButton = (Button) findViewById(R.id.scanButton);
-		bookSearch = (EditText) findViewById(R.id.book_search);
-		orLable1 = (TextView) findViewById(R.id.first_or);
-		orLable2 = (TextView) findViewById(R.id.second_or);
-		manualButton = (Button) findViewById(R.id.manual_entry_button);
+		
 		mSharedPreferences = getApplicationContext().getSharedPreferences(
 				"BarterLiPref", 0);
 		if (mSharedPreferences != null) {
@@ -69,23 +66,28 @@ public class AddBookActivity extends AbstractBarterLiActivity {
 					"You havent yet made account and/or not yet set preferred location.\nPlease complete all steps!",
 					Toast.LENGTH_SHORT).show();
 		}
+		//scanBarCode(viewfinderView);
 
-		// authorSearch = (EditText) findViewById(R.id.author_search);
-		listView = (ListView) findViewById(R.id.list_data);
-
-		bookSearch.addTextChangedListener(mTextEditorWatcher);
-		bookSearch.setOnTouchListener(new View.OnTouchListener() {
-			public boolean onTouch(View v, MotionEvent event) {
-				scanButton.setVisibility(View.GONE);
-				orLable1.setVisibility(View.GONE);
-				orLable2.setVisibility(View.GONE);
-				manualButton.setVisibility(View.GONE);
-				return false;
-			}
-		});
 		// End of setting Listeners
 
 	}
+	
+	@Override
+    public void handleDecode(Result rawResult, Bitmap barcode) {
+        //drawResultPoints(barcode, rawResult);
+
+        ResultHandler resultHandler = ResultHandlerFactory.makeResultHandler(this, rawResult);
+        handleDecodeInternally(rawResult, resultHandler, barcode);
+    }
+	
+	private void handleDecodeInternally(Result rawResult, ResultHandler resultHandler, Bitmap barcode) {
+        onPause();
+        //Toast.makeText(this, resultHandler.getDisplayContents().toString(), Toast.LENGTH_SHORT).show();
+        Log.v("RAWRESULT", resultHandler.getDisplayContents().toString());
+        Log.v("FORMAT", rawResult.getBarcodeFormat().toString());
+        Log.v("TYPE", resultHandler.getType().toString());
+        
+    }
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == READ_ISBN_SCAN_CODE) {
@@ -112,11 +114,6 @@ public class AddBookActivity extends AbstractBarterLiActivity {
 		}
 	} // End of onActivityResult
 
-	public void scanBarCode(View v) {
-		Intent scanIntent = new Intent(AddBookActivity.this, ScanActivity.class);
-		startActivityForResult(scanIntent, READ_ISBN_SCAN_CODE);
-	}
-
 	public void addNewBook(View v) {
 		Intent editBookIntent = new Intent(AddBookActivity.this,
 				EditBookDetailsActivity.class);
@@ -139,7 +136,7 @@ public class AddBookActivity extends AbstractBarterLiActivity {
 						"Please connect to working Internet connection", false);
 				return;
 			}
-			if (s.length() == 0 && before == 1) {
+			/*if (s.length() == 0 && before == 1) {
 				scanButton.setVisibility(View.VISIBLE);
 				orLable1.setVisibility(View.VISIBLE);
 				orLable2.setVisibility(View.VISIBLE);
@@ -147,7 +144,7 @@ public class AddBookActivity extends AbstractBarterLiActivity {
 			}
 			if (s.length() < 5) {
 				listView.setAdapter(null);
-			}
+			}*/
 			if ((s.length() == 10) || (s.length() >= 5)
 					&& (s.length() % 2 != 0)) {
 				new askServerForSuggestionsTask().execute(s.toString());
@@ -186,7 +183,7 @@ public class AddBookActivity extends AbstractBarterLiActivity {
 			}
 			final String[] book_suggestions = new JSONHelper()
 					.JsonStringofArraysToArray(result);
-			adapter = new ArrayAdapter<String>(AddBookActivity.this,
+			/*adapter = new ArrayAdapter<String>(AddBookActivity.this,
 					android.R.layout.simple_list_item_1, android.R.id.text1,
 					book_suggestions);
 			listView.setAdapter(adapter);
@@ -199,7 +196,7 @@ public class AddBookActivity extends AbstractBarterLiActivity {
 							.putExtra("TITLE", book_suggestions[position]);
 					startActivity(editBookIntent);
 				}
-			});
+			});*/
 		}
 	} // End of askServerForSuggestionsTask
 
