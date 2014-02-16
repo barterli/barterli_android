@@ -11,6 +11,10 @@ import android.text.Spanned;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ImageLoader;
+import com.barterli.android.http.IVolleyHelper;
 import com.barterli.android.utils.UtilityMethods;
 import com.barterli.android.widgets.TypefaceCache;
 import com.barterli.android.widgets.TypefacedSpan;
@@ -23,6 +27,9 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 	private static final int ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
 			| ActionBar.DISPLAY_SHOW_TITLE;
 
+	private RequestQueue mRequestQueue;
+	private ImageLoader mImageLoader;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,6 +37,23 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 			getActionBar().setDisplayOptions(ACTION_BAR_DISPLAY_MASK);
 			setActionBarTitle(getTitle().toString());
 		}
+
+		mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
+		mImageLoader = ((IVolleyHelper) getApplication()).getImageLoader();
+	}
+
+	protected ImageLoader getImageLoader() {
+		return mImageLoader;
+	}
+
+	protected void addRequestToQueue(Request request) {
+		mRequestQueue.add(request);
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		mRequestQueue.cancelAll(this);
 	}
 
 	protected void setActionBarDisplayOptions(int displayOptions) {
@@ -38,7 +62,7 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 					ACTION_BAR_DISPLAY_MASK);
 		}
 	}
-	
+
 	protected boolean isConnectedToInternet() {
 		return UtilityMethods.isNetworkConnected(this);
 	}

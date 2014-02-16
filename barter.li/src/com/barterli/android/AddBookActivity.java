@@ -25,6 +25,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.barterli.android.http.HttpConstants;
+import com.barterli.android.http.HttpConstants.ApiEndpoints;
 import com.barterli.android.utils.PreferenceKeys;
 import com.barterli.android.utils.SharedPreferenceHelper;
 import com.google.zxing.BarcodeFormat;
@@ -65,7 +67,8 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 
 		Auth_Token = SharedPreferenceHelper.getString(this,
 				PreferenceKeys.BARTER_LI_AUTH_TOKEN);
-		final String prefferedLocation = SharedPreferenceHelper.getString(this, PreferenceKeys.MY_PREFERRED_LOCATION);
+		final String prefferedLocation = SharedPreferenceHelper.getString(this,
+				PreferenceKeys.MY_PREFERRED_LOCATION);
 		Is_Loc_Set = !TextUtils.isEmpty(prefferedLocation);
 
 		handler = null;
@@ -344,8 +347,8 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 		}
 
 		protected String doInBackground(String... parameters) {
-			String suggestion_url = getResources().getString(
-					R.string.suggestion_url);
+			String suggestion_url = HttpConstants.getApiBaseUrl()
+					+ ApiEndpoints.BOOK_SUGGESTIONS;
 			suggestion_url += "?q=" + parameters[0];
 			suggestion_url += "&t=" + "title";
 

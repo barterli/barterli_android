@@ -21,17 +21,6 @@
     <string name="add_book">Add Book</string>
     <string name="add_manually">Add Book Manually</string>
 
-    <!-- Web URLs -->
-    <string name="suggestion_url">http://162.243.198.171/api/v1/book_suggestions.json</string>
-    <string name="book_info_url">http://162.243.198.171/api/v1/book_info.json</string>
-    <!-- <string name="post_to_mybooks_url">https://dazzling-fire-1319.firebaseio.com/BarterLi/mybooks.json</string> -->
-    <string name="post_to_mybooks_url">http://162.243.198.171/api/v1/books.json</string>
-    <string name="create_account">http://162.243.198.171/api/v1/create_user.json</string>
-    <!-- <string name="create_account">https://dazzling-fire-1319.firebaseio.com/BarterLi/create_user.json</string> -->
-    <string name="hangouts_location">http://162.243.198.171/api/v1/hangouts.json</string>
-    <string name="preferred_location">http://162.243.198.171/api/v1/user_preferred_location.json</string>
-    <!-- <string name="preferred_location">https://dazzling-fire-1319.firebaseio.com/BarterLi/mylocs.json</string> -->
-
     <string name="app_id">458716080895923</string>
 
     <!-- Strings for AddBookActivity -->
