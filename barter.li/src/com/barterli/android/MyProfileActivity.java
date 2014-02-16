@@ -42,9 +42,9 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
 		my_name = SharedPreferenceHelper
 				.getString(this, PreferenceKeys.FB_USERNAME);
 		my_pref_location = SharedPreferenceHelper.getString(this,
-				PreferenceKeys.MY_PREF_LOCATION);
+				PreferenceKeys.MY_PREFERRED_LOCATION);
 		Auth_Token = SharedPreferenceHelper.getString(this,
-				PreferenceKeys.PREF_BARTER_LI_AUTHO_TOKEN);
+				PreferenceKeys.BARTER_LI_AUTH_TOKEN);
 		my_name_text = (TextView) findViewById(R.id.my_name);
 		my_email_text = (TextView) findViewById(R.id.my_email);
 		my_pref_location_text = (TextView) findViewById(R.id.my_pref_loc);

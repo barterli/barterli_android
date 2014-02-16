@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -63,9 +64,9 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		Auth_Token = SharedPreferenceHelper.getString(this,
-				PreferenceKeys.PREF_BARTER_LI_AUTHO_TOKEN);
-		Is_Loc_Set = SharedPreferenceHelper.getBoolean(this,
-				PreferenceKeys.IS_PREF_LOCATION_SET);
+				PreferenceKeys.BARTER_LI_AUTH_TOKEN);
+		final String prefferedLocation = SharedPreferenceHelper.getString(this, PreferenceKeys.MY_PREFERRED_LOCATION);
+		Is_Loc_Set = !TextUtils.isEmpty(prefferedLocation);
 
 		handler = null;
 		hasSurface = false;

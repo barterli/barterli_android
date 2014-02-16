@@ -54,11 +54,11 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 				EditBookDetailsActivity.this,
 				android.R.layout.simple_spinner_dropdown_item, barterOptions);
 		Auth_Token = SharedPreferenceHelper.getString(this,
-				PreferenceKeys.PREF_BARTER_LI_AUTHO_TOKEN);
+				PreferenceKeys.BARTER_LI_AUTH_TOKEN);
 		FB_Email = SharedPreferenceHelper.getString(this,
 				PreferenceKeys.FB_USER_EMAIL);
-		Is_Loc_Set = SharedPreferenceHelper.getBoolean(this,
-				PreferenceKeys.IS_PREF_LOCATION_SET);
+		final String prefferedLocation = SharedPreferenceHelper.getString(this, PreferenceKeys.MY_PREFERRED_LOCATION);
+		Is_Loc_Set = !TextUtils.isEmpty(prefferedLocation);
 		// Toast.makeText(this, "You are aloready Logged in with Auth_token:" +
 		// Auth_Token, Toast.LENGTH_SHORT).show();
 

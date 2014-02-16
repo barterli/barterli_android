@@ -62,7 +62,7 @@ public class LoginActivity extends AbstractBarterLiActivity {
 		registration_url = getResources().getString(R.string.create_account);
 
 		Auth_Token = SharedPreferenceHelper.getString(this,
-				PreferenceKeys.PREF_BARTER_LI_AUTHO_TOKEN);
+				PreferenceKeys.BARTER_LI_AUTH_TOKEN);
 		if (!TextUtils.isEmpty(Auth_Token)) {
 			showToast(R.string.welcome_back, true);
 			Intent latLongIntent = new Intent(LoginActivity.this,
@@ -96,10 +96,6 @@ public class LoginActivity extends AbstractBarterLiActivity {
 										final String email = user.asMap()
 												.get("email").toString();
 										final String name = user.getName();
-										SharedPreferenceHelper
-												.set(LoginActivity.this,
-														PreferenceKeys.PREF_KEY_FB_LOGIN,
-														true);
 										SharedPreferenceHelper.set(
 												LoginActivity.this,
 												PreferenceKeys.FB_USERNAME,
@@ -167,8 +163,8 @@ public class LoginActivity extends AbstractBarterLiActivity {
 
 	private boolean isTwitterLoggedInAlready() {
 
-		return SharedPreferenceHelper.getBoolean(this,
-				PreferenceKeys.PREF_KEY_TWITTER_LOGIN);
+		return !TextUtils.isEmpty(SharedPreferenceHelper.getString(this,
+				PreferenceKeys.TWITTER_OAUTH_TOKEN));
 	}
 
 	private class twitterAsyncTaskFirstRound extends
@@ -203,13 +199,11 @@ public class LoginActivity extends AbstractBarterLiActivity {
 						requestToken, verifier);
 				// Save details in Preferences
 				SharedPreferenceHelper.set(LoginActivity.this,
-						PreferenceKeys.PREF_KEY_OAUTH_TOKEN,
+						PreferenceKeys.TWITTER_OAUTH_TOKEN,
 						accessToken.getToken());
 				SharedPreferenceHelper.set(LoginActivity.this,
-						PreferenceKeys.PREF_KEY_OAUTH_SECRET,
+						PreferenceKeys.TWITTER_OAUTH_SECRET,
 						accessToken.getTokenSecret());
-				SharedPreferenceHelper.set(LoginActivity.this,
-						PreferenceKeys.PREF_KEY_TWITTER_LOGIN, true);
 				Log.e("Twitter OAuth Token", "> " + accessToken.getToken());
 				long userID = accessToken.getUserId();
 				User user = twitter.showUser(userID);
@@ -270,7 +264,7 @@ public class LoginActivity extends AbstractBarterLiActivity {
 									.contentEquals("null")) {
 
 						SharedPreferenceHelper.set(LoginActivity.this,
-								PreferenceKeys.PREF_BARTER_LI_AUTHO_TOKEN,
+								PreferenceKeys.BARTER_LI_AUTH_TOKEN,
 								userObject.getString("auth_token"));
 						// Log.v("AUTHO", userObject.getString("auth_token"));
 
