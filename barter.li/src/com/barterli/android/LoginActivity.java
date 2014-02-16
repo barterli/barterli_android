@@ -2,40 +2,40 @@ package com.barterli.android;
 
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
-import twitter4j.auth.RequestToken;
 import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
-import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import com.barterli.android.R;
-import com.facebook.*;
-import com.facebook.model.*;
-import com.facebook.widget.LoginButton;
-import com.facebook.widget.LoginButton.OnErrorListener;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+
+import com.facebook.FacebookException;
+import com.facebook.Request;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
+import com.facebook.widget.LoginButton.OnErrorListener;
 
 public class LoginActivity extends AbstractBarterLiActivity {
 	
@@ -45,7 +45,6 @@ public class LoginActivity extends AbstractBarterLiActivity {
 	// Shared Preferences
 	private SharedPreferences mSharedPreferences;
 	// Internet Connection detector
-	private ConnectionDetector connection_status_detector;
 	// Alert Dialog Manager
 	private AlertDialogManager alert = new AlertDialogManager();
 	private TextView welcome;
@@ -62,7 +61,6 @@ public class LoginActivity extends AbstractBarterLiActivity {
         setContentView(R.layout.login_activity);  
         mSharedPreferences = getApplicationContext().getSharedPreferences("BarterLiPref", 0);
 
-        connection_status_detector = new ConnectionDetector(getApplicationContext());
         sharedPrefEditor = mSharedPreferences.edit();
         permissions = new ArrayList<String>();
         permissions.add("email");
@@ -129,7 +127,7 @@ public class LoginActivity extends AbstractBarterLiActivity {
 	
 	public void loginToTwitter(View v){
 		if (!isTwitterLoggedInAlready()) {
-			if (!connection_status_detector.isConnectingToInternet()) {
+			if (!isConnectedToInternet()) {
 				alert.showAlertDialog(LoginActivity.this, "Internet Connection Error","Please connect to working Internet connection", false);
 				return;
 			}

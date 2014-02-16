@@ -50,11 +50,6 @@
                 android:value=".BooksAroundMeActivity" />
         </activity>
         <activity
-            android:name=".ScanActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape" >
-        </activity>
-        <activity
             android:name=".EditBookDetailsActivity"
             android:label="@string/app_name"
             android:parentActivityName=".BooksAroundMeActivity" >

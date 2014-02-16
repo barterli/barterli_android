@@ -2,22 +2,18 @@ package com.barterli.android;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-import android.app.Activity;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import com.barterli.android.R;
 
 public class MyProfileActivity extends AbstractBarterLiActivity {
 	
@@ -30,7 +26,6 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
 	private TextView my_email_text;
 	private TextView my_pref_location_text;
 	private ListView listView;
-	private ConnectionDetector connection_status_detector;
 	private AlertDialogManager alert = new AlertDialogManager();
 	private Boolean connectionStatus;
 	private String Auth_Token;
@@ -55,15 +50,13 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
         my_email_text.setText(my_email);
         my_pref_location_text.setText(my_pref_location);
         get_profile_url = getResources().getString(R.string.preferred_location);
-		connection_status_detector = new ConnectionDetector(getApplicationContext());
-		connectionStatus = connection_status_detector.isConnectingToInternet();
         listView = (ListView) findViewById(R.id.list_my_books);
         new askServerForMyDetails().execute(get_profile_url, my_email, Auth_Token);
 	}    
 	
 	private class askServerForMyDetails extends AsyncTask<String, Void, String> {
 		protected void onPreExecute(){
-			if (!connection_status_detector.isConnectingToInternet()) {
+			if (!isConnectedToInternet()) {
 				alert.showAlertDialog(MyProfileActivity.this, "Internet Connection Error","Please connect to working Internet connection", false);
 				return;
 			}

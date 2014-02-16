@@ -36,25 +36,24 @@ import com.jwetherell.quick_response_code.camera.CameraManager;
 import com.jwetherell.quick_response_code.result.ResultHandler;
 import com.jwetherell.quick_response_code.result.ResultHandlerFactory;
 
-public class AddBookActivity extends AbstractBarterLiActivity implements IDecoderActivity, SurfaceHolder.Callback {
+public class AddBookActivity extends AbstractBarterLiActivity implements
+		IDecoderActivity, SurfaceHolder.Callback {
 
 	private static final String TAG = "AddBookActivity";
-	
+
 	private static final int READ_ISBN_SCAN_CODE = 0;
-	private ConnectionDetector connection_status_detector;
 	private AlertDialogManager alert = new AlertDialogManager();
-	private Boolean connectionStatus;
 	private int RequestCounter = 0;
 	private SharedPreferences mSharedPreferences;
 	private String Auth_Token = "";
 	private boolean Is_Loc_Set = false;
-	
+
 	protected DecoderActivityHandler handler = null;
-    protected ViewfinderView viewfinderView = null;
-    protected CameraManager cameraManager = null;
-    protected boolean hasSurface = false;
-    protected Collection<BarcodeFormat> decodeFormats = null;
-    protected String characterSet = null;
+	protected ViewfinderView viewfinderView = null;
+	protected CameraManager cameraManager = null;
+	protected boolean hasSurface = false;
+	protected Collection<BarcodeFormat> decodeFormats = null;
+	protected String characterSet = null;
 
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
@@ -63,9 +62,6 @@ public class AddBookActivity extends AbstractBarterLiActivity implements IDecode
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		connection_status_detector = new ConnectionDetector(
-				getApplicationContext());
-		connectionStatus = connection_status_detector.isConnectingToInternet();
 
 		mSharedPreferences = getApplicationContext().getSharedPreferences(
 				"BarterLiPref", 0);
@@ -85,9 +81,9 @@ public class AddBookActivity extends AbstractBarterLiActivity implements IDecode
 					"You havent yet made account and/or not yet set preferred location.\nPlease complete all steps!",
 					Toast.LENGTH_SHORT).show();
 		}
-		
+
 		handler = null;
-        hasSurface = false;
+		hasSurface = false;
 		// scanBarCode(viewfinderView);
 
 		// End of setting Listeners
@@ -99,55 +95,56 @@ public class AddBookActivity extends AbstractBarterLiActivity implements IDecode
 		getMenuInflater().inflate(R.menu.menu_scan_book, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
-    protected void onResume() {
-        super.onResume();
-        Log.v(TAG, "onResume()");
+	protected void onResume() {
+		super.onResume();
+		Log.v(TAG, "onResume()");
 
-        // CameraManager must be initialized here, not in onCreate().
-        if (cameraManager == null) cameraManager = new CameraManager(getApplication());
+		// CameraManager must be initialized here, not in onCreate().
+		if (cameraManager == null)
+			cameraManager = new CameraManager(getApplication());
 
-        if (viewfinderView == null) {
-            viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-            viewfinderView.setCameraManager(cameraManager);
-        }
+		if (viewfinderView == null) {
+			viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
+			viewfinderView.setCameraManager(cameraManager);
+		}
 
-        showScanner();
+		showScanner();
 
-        SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
-        SurfaceHolder surfaceHolder = surfaceView.getHolder();
-        if (hasSurface) {
-            // The activity was paused but not stopped, so the surface still
-            // exists. Therefore
-            // surfaceCreated() won't be called, so init the camera here.
-            initCamera(surfaceHolder);
-        } else {
-            // Install the callback and wait for surfaceCreated() to init the
-            // camera.
-            surfaceHolder.addCallback(this);
-            surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        }
-    }
+		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+		SurfaceHolder surfaceHolder = surfaceView.getHolder();
+		if (hasSurface) {
+			// The activity was paused but not stopped, so the surface still
+			// exists. Therefore
+			// surfaceCreated() won't be called, so init the camera here.
+			initCamera(surfaceHolder);
+		} else {
+			// Install the callback and wait for surfaceCreated() to init the
+			// camera.
+			surfaceHolder.addCallback(this);
+			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		}
+	}
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.v(TAG, "onPause()");
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.v(TAG, "onPause()");
 
-        if (handler != null) {
-            handler.quitSynchronously();
-            handler = null;
-        }
+		if (handler != null) {
+			handler.quitSynchronously();
+			handler = null;
+		}
 
-        cameraManager.closeDriver();
+		cameraManager.closeDriver();
 
-        if (!hasSurface) {
-            SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
-            SurfaceHolder surfaceHolder = surfaceView.getHolder();
-            surfaceHolder.removeCallback(this);
-        }
-    }
+		if (!hasSurface) {
+			SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
+			SurfaceHolder surfaceHolder = surfaceView.getHolder();
+			surfaceHolder.removeCallback(this);
+		}
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -160,102 +157,111 @@ public class AddBookActivity extends AbstractBarterLiActivity implements IDecode
 
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_FOCUS || keyCode == KeyEvent.KEYCODE_CAMERA) {
-            // Handle these events so they don't launch the Camera app
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_FOCUS
+				|| keyCode == KeyEvent.KEYCODE_CAMERA) {
+			// Handle these events so they don't launch the Camera app
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        if (holder == null)
-            Log.e(TAG, "*** WARNING *** surfaceCreated() gave us a null surface!");
-        if (!hasSurface) {
-            hasSurface = true;
-            initCamera(holder);
-        }
-    }
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		if (holder == null)
+			Log.e(TAG,
+					"*** WARNING *** surfaceCreated() gave us a null surface!");
+		if (!hasSurface) {
+			hasSurface = true;
+			initCamera(holder);
+		}
+	}
 
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        hasSurface = false;
-    }
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		hasSurface = false;
+	}
 
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        // Ignore
-    }
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
+		// Ignore
+	}
 
-    @Override
-    public ViewfinderView getViewfinder() {
-        return viewfinderView;
-    }
+	@Override
+	public ViewfinderView getViewfinder() {
+		return viewfinderView;
+	}
 
-    @Override
-    public Handler getHandler() {
-        return handler;
-    }
+	@Override
+	public Handler getHandler() {
+		return handler;
+	}
 
-    @Override
-    public CameraManager getCameraManager() {
-        return cameraManager;
-    }
+	@Override
+	public CameraManager getCameraManager() {
+		return cameraManager;
+	}
 
-    protected void drawResultPoints(Bitmap barcode, Result rawResult) {
-        ResultPoint[] points = rawResult.getResultPoints();
-        if (points != null && points.length > 0) {
-            Canvas canvas = new Canvas(barcode);
-            Paint paint = new Paint();
-            paint.setColor(getResources().getColor(R.color.result_image_border));
-            paint.setStrokeWidth(3.0f);
-            paint.setStyle(Paint.Style.STROKE);
-            Rect border = new Rect(2, 2, barcode.getWidth() - 2, barcode.getHeight() - 2);
-            canvas.drawRect(border, paint);
+	protected void drawResultPoints(Bitmap barcode, Result rawResult) {
+		ResultPoint[] points = rawResult.getResultPoints();
+		if (points != null && points.length > 0) {
+			Canvas canvas = new Canvas(barcode);
+			Paint paint = new Paint();
+			paint.setColor(getResources().getColor(R.color.result_image_border));
+			paint.setStrokeWidth(3.0f);
+			paint.setStyle(Paint.Style.STROKE);
+			Rect border = new Rect(2, 2, barcode.getWidth() - 2,
+					barcode.getHeight() - 2);
+			canvas.drawRect(border, paint);
 
-            paint.setColor(getResources().getColor(R.color.result_points));
-            if (points.length == 2) {
-                paint.setStrokeWidth(4.0f);
-                drawLine(canvas, paint, points[0], points[1]);
-            } else if (points.length == 4 && (rawResult.getBarcodeFormat() == BarcodeFormat.UPC_A || rawResult.getBarcodeFormat() == BarcodeFormat.EAN_13)) {
-                // Hacky special case -- draw two lines, for the barcode and
-                // metadata
-                drawLine(canvas, paint, points[0], points[1]);
-                drawLine(canvas, paint, points[2], points[3]);
-            } else {
-                paint.setStrokeWidth(10.0f);
-                for (ResultPoint point : points) {
-                    canvas.drawPoint(point.getX(), point.getY(), paint);
-                }
-            }
-        }
-    }
+			paint.setColor(getResources().getColor(R.color.result_points));
+			if (points.length == 2) {
+				paint.setStrokeWidth(4.0f);
+				drawLine(canvas, paint, points[0], points[1]);
+			} else if (points.length == 4
+					&& (rawResult.getBarcodeFormat() == BarcodeFormat.UPC_A || rawResult
+							.getBarcodeFormat() == BarcodeFormat.EAN_13)) {
+				// Hacky special case -- draw two lines, for the barcode and
+				// metadata
+				drawLine(canvas, paint, points[0], points[1]);
+				drawLine(canvas, paint, points[2], points[3]);
+			} else {
+				paint.setStrokeWidth(10.0f);
+				for (ResultPoint point : points) {
+					canvas.drawPoint(point.getX(), point.getY(), paint);
+				}
+			}
+		}
+	}
 
-    protected static void drawLine(Canvas canvas, Paint paint, ResultPoint a, ResultPoint b) {
-        canvas.drawLine(a.getX(), a.getY(), b.getX(), b.getY(), paint);
-    }
+	protected static void drawLine(Canvas canvas, Paint paint, ResultPoint a,
+			ResultPoint b) {
+		canvas.drawLine(a.getX(), a.getY(), b.getX(), b.getY(), paint);
+	}
 
-    protected void showScanner() {
-        viewfinderView.setVisibility(View.VISIBLE);
-    }
+	protected void showScanner() {
+		viewfinderView.setVisibility(View.VISIBLE);
+	}
 
-    protected void initCamera(SurfaceHolder surfaceHolder) {
-        try {
-            cameraManager.openDriver(surfaceHolder);
-            // Creating the handler starts the preview, which can also throw a
-            // RuntimeException.
-            if (handler == null) handler = new DecoderActivityHandler(this, decodeFormats, characterSet, cameraManager);
-        } catch (IOException ioe) {
-            Log.w(TAG, ioe);
-        } catch (RuntimeException e) {
-            // Barcode Scanner has seen crashes in the wild of this variety:
-            // java.?lang.?RuntimeException: Fail to connect to camera service
-            Log.w(TAG, "Unexpected error initializing camera", e);
-        }
-    }
+	protected void initCamera(SurfaceHolder surfaceHolder) {
+		try {
+			cameraManager.openDriver(surfaceHolder);
+			// Creating the handler starts the preview, which can also throw a
+			// RuntimeException.
+			if (handler == null)
+				handler = new DecoderActivityHandler(this, decodeFormats,
+						characterSet, cameraManager);
+		} catch (IOException ioe) {
+			Log.w(TAG, ioe);
+		} catch (RuntimeException e) {
+			// Barcode Scanner has seen crashes in the wild of this variety:
+			// java.?lang.?RuntimeException: Fail to connect to camera service
+			Log.w(TAG, "Unexpected error initializing camera", e);
+		}
+	}
 
 	@Override
 	public void handleDecode(Result rawResult, Bitmap barcode) {
@@ -283,7 +289,7 @@ public class AddBookActivity extends AbstractBarterLiActivity implements IDecode
 				String _isbn = data.getStringExtra("ISBN");
 				String _type = data.getStringExtra("TYPE");
 				if (_type.contentEquals("ISBN")) {
-					if (!connectionStatus) {
+					if (!isConnectedToInternet()) {
 						alert.showAlertDialog(
 								AddBookActivity.this,
 								"Internet Connection Error",
@@ -318,7 +324,7 @@ public class AddBookActivity extends AbstractBarterLiActivity implements IDecode
 
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			if (!connectionStatus) {
+			if (!isConnectedToInternet()) {
 				alert.showAlertDialog(AddBookActivity.this,
 						"Internet Connection Error",
 						"Please connect to working Internet connection", false);
@@ -343,7 +349,7 @@ public class AddBookActivity extends AbstractBarterLiActivity implements IDecode
 	private class askServerForSuggestionsTask extends
 			AsyncTask<String, Void, String> {
 		protected void onPreExecute() {
-			if (!connection_status_detector.isConnectingToInternet()) {
+			if (!isConnectedToInternet()) {
 				alert.showAlertDialog(AddBookActivity.this,
 						"Internet Connection Error",
 						"Please connect to working Internet connection", false);

@@ -11,6 +11,7 @@ import android.text.Spanned;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.barterli.android.utils.UtilityMethods;
 import com.barterli.android.widgets.TypefaceCache;
 import com.barterli.android.widgets.TypefacedSpan;
 
@@ -36,6 +37,10 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 			getActionBar().setDisplayOptions(displayOptions,
 					ACTION_BAR_DISPLAY_MASK);
 		}
+	}
+	
+	protected boolean isConnectedToInternet() {
+		return UtilityMethods.isNetworkConnected(this);
 	}
 
 	@Override
