@@ -44,10 +44,10 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		myHelper = new HTTPHelper(EditBookDetailsActivity.this);
-		titleText = (EditText) findViewById(R.id.title);
-		authorText = (EditText) findViewById(R.id.author);
-		descriptionText = (EditText) findViewById(R.id.description);
-		publicationYearText = (EditText) findViewById(R.id.publication);
+		titleText = (EditText) findViewById(R.id.edit_text_title);
+		authorText = (EditText) findViewById(R.id.edit_text_author);
+		descriptionText = (EditText) findViewById(R.id.edit_text_description);
+		publicationYearText = (EditText) findViewById(R.id.edit_text_publication_year);
 		barterChoiceGroup = (Button) findViewById(R.id.barter_option_button);
 		barterOptions = getResources().getStringArray(R.array.barterOptions);
 		final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
@@ -260,7 +260,7 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		authorText.setText("");
 		descriptionText.setText("");
 		publicationYearText.setText("");
-		barterChoiceGroup.setText(R.string.barter_type_button_label);
+		barterChoiceGroup.setText(R.string.barter_type_label);
 		chosenBarterOption = "";
 	} // End of resetViews
 

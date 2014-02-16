@@ -11,9 +11,14 @@
     <declare-styleable name="TypefacedTextView">
         <attr name="fontStyle" />
     </declare-styleable>
-    
     <declare-styleable name="TypefacedButton">
-        <attr name="fontStyle"/>
+        <attr name="fontStyle" />
+    </declare-styleable>
+    <declare-styleable name="TypefacedAutoCompleteTextView">
+        <attr name="fontStyle" />
+    </declare-styleable>
+    <declare-styleable name="TypefacedEditText">
+        <attr name="fontStyle" />
     </declare-styleable>
 
 </resources>

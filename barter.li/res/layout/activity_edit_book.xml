@@ -1,154 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#FFFFFF" >
-    
-    <RelativeLayout     
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">  
-     
-     <RelativeLayout 
-       android:layout_width="fill_parent"
-	   android:background="#FFFFFF"
-       android:id="@+id/top_bar"  
-       android:layout_height="wrap_content">  
-   
-    <Button
-        android:id="@+id/open_left_panel"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="8dp"
-        android:background="@drawable/format_indent_more" />
-    
-    <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:textColor="#FFA500"
-        android:textStyle="bold"
-        android:layout_centerInParent="true"
-        android:gravity="center"
-        android:text="@string/app_name"/> 
-    </RelativeLayout> 
-           
-	 <ScrollView 
-     android:id="@+id/scroll"   
-     android:layout_below="@+id/top_bar"
-     android:layout_width="fill_parent"
-     android:layout_height="wrap_content">
-     <LinearLayout 
-       android:layout_width="fill_parent"
-       android:layout_height="wrap_content"
-       android:orientation="vertical"
-       android:layout_marginLeft="15dp"
-       android:layout_marginRight="15dp"
-       android:id="@+id/layout_container"> 
-       
-     <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:textColor="#BBBBBB"
-        android:layout_gravity="center"
-        android:text="@string/add_books"/>      
-       
-     <TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_margin="5dp"
-        android:textStyle="bold"
-        android:text="@string/title_label"/> 
-	<EditText 
-        android:id="@+id/title"
-        android:layout_width="fill_parent"
-        android:layout_height="35dp"
-        android:inputType="text"
-        android:background="@drawable/backwithborder"
-        android:padding="7dp"/>
-	
-	<TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_margin="5dp"
-        android:textStyle="bold"
-        android:text="@string/author_label"/> 
-	<EditText 
-        android:id="@+id/author"
-        android:layout_width="fill_parent"
-        android:layout_height="35dp"
-        android:inputType="text"
-        android:background="@drawable/backwithborder"
-        android:padding="7dp"/>
-	
-	<TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_margin="5dp"
-        android:textStyle="bold"
-        android:text="@string/description_label"/> 
-	<EditText 
-        android:id="@+id/description"
-        android:layout_width="fill_parent"
-        android:layout_height="75dp"
-        android:inputType="textMultiLine"
-        android:scrollbars="vertical"
-        android:background="@drawable/backwithborder"
-        android:padding="5dp"/>
-	
-	<TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_margin="5dp"
-        android:textStyle="bold"
-        android:text="@string/publication_year_label"/> 
-	<EditText 
-        android:id="@+id/publication"
-        android:layout_width="fill_parent"
-        android:layout_height="35dp"
-        android:inputType="number"
-        android:background="@drawable/backwithborder"
-        android:padding="7dp"/>
-	
-	<TextView 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_margin="5dp"
-        android:textStyle="bold"
-        android:text="@string/barter_type_label"/> 
-        
-	<Button 
-	    android:id="@+id/barter_option_button"
-	    android:layout_width="fill_parent"
-		android:layout_height="40dp" 
-		android:textSize="16sp"
-        android:textStyle="bold"
-        android:onClick="addBook"
-        android:text="@string/barter_type_button_label" />
-	
- 	
-	<Button 
-	    android:layout_width="fill_parent"
-		android:layout_height="40dp" 
-		android:textSize="20sp"
-        android:textColor="#FFFFFF"
-        android:textStyle="bold"
-        android:layout_marginTop="15dp"
-        android:background="#4178e9"
-        android:onClick="addBook"
-        android:text="@string/submit" />
-	
-	</LinearLayout>    
-    </ScrollView> 
-      
-    </RelativeLayout>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:padding="@dimen/activity_horizontal_margin" >
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/layout_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <com.barterli.android.widgets.TypefacedAutoCompleteTextView
+            android:id="@+id/edit_text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:inputType="textCapWords"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/title_label"
+            app:fontStyle="alegreya_regular" />
+        
+        <com.barterli.android.widgets.TypefacedAutoCompleteTextView
+            android:id="@+id/edit_text_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:inputType="textCapWords"
+            android:hint="@string/author_label"
+            app:fontStyle="alegreya_regular" />
+        
+         <com.barterli.android.widgets.TypefacedEditText
+            android:id="@+id/edit_text_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:inputType="textCapSentences|textAutoComplete|textMultiLine"
+            android:maxLines="8"
+            android:lines="3"
+            android:hint="@string/description_label"
+            app:fontStyle="alegreya_regular" />
+         
+         <com.barterli.android.widgets.TypefacedEditText
+            android:id="@+id/edit_text_publication_year"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:singleLine="true"
+            android:hint="@string/publication_year_label"
+            app:fontStyle="alegreya_regular" />
+
+        <com.barterli.android.widgets.TypefacedButton
+            android:id="@+id/barter_option_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="addBook"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/barter_type_label"
+            android:textSize="@dimen/text_medium"
+            app:fontStyle="alegreya_bold" />
+
+        <com.barterli.android.widgets.TypefacedButton
+            android:id="@+id/submit_book_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:onClick="addBook"
+            android:text="@string/submit"
+            android:textSize="@dimen/text_medium"
+            app:fontStyle="alegreya_bold" />
+    </LinearLayout>
+
+</ScrollView>

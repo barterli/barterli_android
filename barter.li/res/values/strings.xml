@@ -39,12 +39,10 @@
     <string name="search_by_author_hint">Search by Author</string>
     <string name="scan_barcode_button_label">Scan ISBN BarCode</string>
     <string name="add_new_book_label">Manual Entry</string>
-    <string name="add_books">Build Library | Add a Book</string>
-    <string name="or_label">Or</string>
     <string name="placeholder_books_around_me">This screen is under implementation. Why don\'t you try tapping one of the items on the action bar? :-)</string>
 
     <!-- Strings for EditBookDetailsActivity -->
-    <string name="title_label">Title</string>
+    <string name="title_label">Book Title</string>
     <string name="author_label">Author</string>
     <string name="description_label">Description</string>
     <string name="publication_year_label">Publication Year</string>
@@ -59,7 +57,6 @@
         <item>WishList</item>
     </string-array>
 
-    <string name="barter_type_button_label">Click for Options</string>
     <string name="submit">Submit</string>
 
     <!-- Strings for LoginActivity -->
