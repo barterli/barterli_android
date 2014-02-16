@@ -7,12 +7,8 @@ This is our Android Application for Barter.Li. Follow the below given steps.
 
 1. Download our Repo.
 
-2. Download the following dependencies and import them your working directory.
+2. Add the other projects as library projects.
 
-https://github.com/TechSmith/android-quick-response-code
+3. Enjoy!
 
-https://github.com/darvds/RibbonMenu
-
-3. Mark the above two projects as 'Library'
-
-4. Add the above Libaries to your Build path.
+4. License is yet to be decided - Will be eiher MIT License or Apache v2
