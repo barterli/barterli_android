@@ -9,8 +9,7 @@ import android.widget.EditText;
 import com.barterli.android.R;
 
 /**
- * @author Vinay S Shenoy
- * Custom EditText to apply a font
+ * @author Vinay S Shenoy Custom EditText to apply a font
  */
 public class TypefacedEditText extends EditText {
 

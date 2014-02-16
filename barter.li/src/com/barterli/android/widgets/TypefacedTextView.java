@@ -9,8 +9,7 @@ import android.widget.TextView;
 import com.barterli.android.R;
 
 /**
- * @author Vinay S Shenoy
- * Custom TextView to apply a font
+ * @author Vinay S Shenoy Custom TextView to apply a font
  */
 public class TypefacedTextView extends TextView {
 

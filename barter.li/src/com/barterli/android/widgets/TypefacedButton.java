@@ -9,8 +9,7 @@ import android.widget.Button;
 import com.barterli.android.R;
 
 /**
- * @author Vinay S Shenoy
- * Custom Buton to apply a font
+ * @author Vinay S Shenoy Custom Buton to apply a font
  */
 public class TypefacedButton extends Button {
 

@@ -10,6 +10,6 @@ import com.android.volley.toolbox.ImageLoader;
 public interface IVolleyHelper {
 
 	public RequestQueue getRequestQueue();
-	
+
 	public ImageLoader getImageLoader();
 }

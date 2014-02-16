@@ -69,7 +69,7 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 			mRequestCounter.incrementAndGet();
 			setProgressBarIndeterminateVisibility(true);
 			mRequestQueue.add(request);
-		} else if(showErrorOnNoNetwork) {
+		} else if (showErrorOnNoNetwork) {
 			showToast(R.string.no_network_connection, false);
 		}
 	}

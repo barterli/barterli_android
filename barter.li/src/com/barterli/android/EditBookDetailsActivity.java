@@ -40,7 +40,8 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 				PreferenceKeys.BARTER_LI_AUTH_TOKEN);
 		FB_Email = SharedPreferenceHelper.getString(this,
 				PreferenceKeys.FB_USER_EMAIL);
-		final String prefferedLocation = SharedPreferenceHelper.getString(this, PreferenceKeys.MY_PREFERRED_LOCATION);
+		final String prefferedLocation = SharedPreferenceHelper.getString(this,
+				PreferenceKeys.MY_PREFERRED_LOCATION);
 		Is_Loc_Set = !TextUtils.isEmpty(prefferedLocation);
 		// Toast.makeText(this, "You are aloready Logged in with Auth_token:" +
 		// Auth_Token, Toast.LENGTH_SHORT).show();
@@ -70,29 +71,23 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 					.getString("PUBLICATION_YEAR").toString());
 		}
 		if (_i.hasExtra("BARTER_TYPE")) {
-			/*barterChoiceGroup.setText(_i.getExtras().getString("BARTER_TYPE")
-					.toString());
-			chosenBarterOption = _i.getExtras().getString("BARTER_TYPE")
-					.toString();*/
+			/*
+			 * barterChoiceGroup.setText(_i.getExtras().getString("BARTER_TYPE")
+			 * .toString()); chosenBarterOption =
+			 * _i.getExtras().getString("BARTER_TYPE") .toString();
+			 */
 		}
 
-		/*// Set Listeners
-		barterChoiceGroup.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				new AlertDialog.Builder(EditBookDetailsActivity.this)
-						.setTitle("Select Valid Option")
-						.setAdapter(spinnerArrayAdapter,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int which) {
-										chosenBarterOption = barterOptions[which];
-										barterChoiceGroup
-												.setText(chosenBarterOption);
-										dialog.dismiss();
-									}
-								}).create().show();
-			}
-		});*/
+		/*
+		 * // Set Listeners barterChoiceGroup.setOnClickListener(new
+		 * OnClickListener() { public void onClick(View v) { new
+		 * AlertDialog.Builder(EditBookDetailsActivity.this)
+		 * .setTitle("Select Valid Option") .setAdapter(spinnerArrayAdapter, new
+		 * DialogInterface.OnClickListener() { public void
+		 * onClick(DialogInterface dialog, int which) { chosenBarterOption =
+		 * barterOptions[which]; barterChoiceGroup .setText(chosenBarterOption);
+		 * dialog.dismiss(); } }).create().show(); } });
+		 */
 
 	} // End of oncreate
 
@@ -118,16 +113,18 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		}
 		String _description = descriptionText.getText().toString();
 		String _publication_year = publicationYearText.getText().toString();
-		/*if (TextUtils.isEmpty(chosenBarterOption)) {
-			Toast.makeText(EditBookDetailsActivity.this,
-					"Please enter what you want to do with the book!",
-					Toast.LENGTH_SHORT).show();
-			return;
-		}*/
+		/*
+		 * if (TextUtils.isEmpty(chosenBarterOption)) {
+		 * Toast.makeText(EditBookDetailsActivity.this,
+		 * "Please enter what you want to do with the book!",
+		 * Toast.LENGTH_SHORT).show(); return; }
+		 */
 
-		//TODO Decide chosen option
-		/*new saveMyBookToServerTask().execute(_title, _author, _description,
-				_publication_year, chosenBarterOption, Auth_Token, FB_Email);*/
+		// TODO Decide chosen option
+		/*
+		 * new saveMyBookToServerTask().execute(_title, _author, _description,
+		 * _publication_year, chosenBarterOption, Auth_Token, FB_Email);
+		 */
 	} // End of addBook
 
 	// Synctask helper to post book to server
@@ -141,9 +138,11 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		}
 
 		protected String doInBackground(String... parameters) {
-			/*String post_to_mybooks_url = getResources().getString(
-					R.string.post_to_mybooks_url);
-			HTTPHelper myHTTPHelper = new HTTPHelper();*/
+			/*
+			 * String post_to_mybooks_url = getResources().getString(
+			 * R.string.post_to_mybooks_url); HTTPHelper myHTTPHelper = new
+			 * HTTPHelper();
+			 */
 			String responseString = "";
 			String _title = parameters[0];
 			String _author = parameters[1];
@@ -152,18 +151,16 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 			String _barter_type = parameters[4];
 			String _user_token = parameters[5];
 			String _fb_Email = parameters[6];
-			/*if (TextUtils.isEmpty(BOOK_ID)) {
-				responseString = myHTTPHelper
-						.postBookToMyList(post_to_mybooks_url, _title, _author,
-								_description, _publication_year, _barter_type,
-								_user_token, _fb_Email);
-			} else {
-				String put_to_mybooks_url = post_to_mybooks_url + BOOK_ID;
-				responseString = myHTTPHelper
-						.putBookToMyList(put_to_mybooks_url, _title, _author,
-								_description, _publication_year, _barter_type,
-								_user_token, _fb_Email);
-			}*/
+			/*
+			 * if (TextUtils.isEmpty(BOOK_ID)) { responseString = myHTTPHelper
+			 * .postBookToMyList(post_to_mybooks_url, _title, _author,
+			 * _description, _publication_year, _barter_type, _user_token,
+			 * _fb_Email); } else { String put_to_mybooks_url =
+			 * post_to_mybooks_url + BOOK_ID; responseString = myHTTPHelper
+			 * .putBookToMyList(put_to_mybooks_url, _title, _author,
+			 * _description, _publication_year, _barter_type, _user_token,
+			 * _fb_Email); }
+			 */
 
 			return responseString;
 		}
@@ -188,18 +185,19 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		}
 
 		protected String doInBackground(String... parameters) {
-			/*String suggestion_url = getResources().getString(
-					R.string.book_info_url);
-			suggestion_url += "?q=" + parameters[0];
-			HTTPHelper myHTTPHelper = new HTTPHelper();*/
+			/*
+			 * String suggestion_url = getResources().getString(
+			 * R.string.book_info_url); suggestion_url += "?q=" + parameters[0];
+			 * HTTPHelper myHTTPHelper = new HTTPHelper();
+			 */
 			String responseString = "";
-			//responseString = myHTTPHelper.getHelper(suggestion_url);
+			// responseString = myHTTPHelper.getHelper(suggestion_url);
 			return responseString;
 		}
 
 		protected void onPostExecute(String result) {
 			myProgressDialogManager.dismissProgresDialog();
-			//barterChoiceGroup.performClick();
+			// barterChoiceGroup.performClick();
 			try {
 				JSONObject bookObject = new JSONObject(result);
 				if (bookObject.has(AppConstants.DESCRIPTION_KEY)) {
@@ -244,8 +242,10 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		authorText.setText("");
 		descriptionText.setText("");
 		publicationYearText.setText("");
-		/*barterChoiceGroup.setText(R.string.barter_type_label);
-		chosenBarterOption = "";*/
+		/*
+		 * barterChoiceGroup.setText(R.string.barter_type_label);
+		 * chosenBarterOption = "";
+		 */
 	} // End of resetViews
 
 }

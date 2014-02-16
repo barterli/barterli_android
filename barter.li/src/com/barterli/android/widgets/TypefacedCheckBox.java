@@ -9,8 +9,7 @@ import android.widget.CheckBox;
 import com.barterli.android.R;
 
 /**
- * @author Vinay S Shenoy
- * Custom CheckBox to apply a font
+ * @author Vinay S Shenoy Custom CheckBox to apply a font
  */
 public class TypefacedCheckBox extends CheckBox {
 

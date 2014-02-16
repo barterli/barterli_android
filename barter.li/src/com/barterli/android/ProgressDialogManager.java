@@ -5,6 +5,7 @@ import android.content.Context;
 
 public class ProgressDialogManager {
 	ProgressDialog pDialog;
+
 	public void showProgresDialog(Context context, String message) {
 		pDialog = new ProgressDialog(context);
 		pDialog.setMessage(message);
@@ -12,7 +13,8 @@ public class ProgressDialogManager {
 		pDialog.setCancelable(false);
 		pDialog.show();
 	}
-	public void dismissProgresDialog(){
+
+	public void dismissProgresDialog() {
 		pDialog.dismiss();
 	}
 }
