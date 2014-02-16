@@ -11,4 +11,4 @@ This is our Android Application for Barter.Li. Follow the below given steps.
 
 3. Enjoy!
 
-4. License is yet to be decided - Will be eiher MIT License or Apache v2
+4. License is yet to be decided - Will be either MIT License or Apache v2
