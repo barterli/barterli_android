@@ -11,6 +11,11 @@
 	  <item name="android:paddingTop">@dimen/button_vertical_padding</item>
 	  <item name="android:paddingBottom">@dimen/button_vertical_padding</item>
   </style>
+  
+  <style name="CheckBoxTheme" parent="android:Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/apptheme_btn_check_holo_light</item>
+        <item name="android:textSize">@dimen/text_medium</item>
+    </style>
 
   <style name="ImageButtonAppTheme" parent="android:Widget.Holo.Light.ImageButton">
 	  <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>

@@ -47,16 +47,15 @@
     <string name="description_label">Description</string>
     <string name="publication_year_label">Publication Year</string>
     <string name="barter_type_label">Barter Type</string>
+    
     <!-- Barter Type Options -->
-    <string-array name="barterOptions">
-        <item>Free/Give Away</item>
-        <item>Barter</item>
-        <item>Sale</item>
-        <item>Read</item>
-        <item>Private</item>
-        <item>WishList</item>
-    </string-array>
-
+    <string name="give_away">Give Away</string>
+    <string name="barter">Barter</string>
+    <string name="sell">Sell</string>
+	<string name="read">Read</string>
+	<string name="wishlist">Add to Wishlist</string>
+	<string name="keep_private">Keep Private</string>
+	
     <string name="submit">Submit</string>
 
     <!-- Strings for LoginActivity -->

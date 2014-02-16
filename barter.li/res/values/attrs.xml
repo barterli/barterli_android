@@ -20,5 +20,8 @@
     <declare-styleable name="TypefacedEditText">
         <attr name="fontStyle" />
     </declare-styleable>
+    <declare-styleable name="TypefacedCheckBox">
+        <attr name="fontStyle" />
+    </declare-styleable>
 
 </resources>

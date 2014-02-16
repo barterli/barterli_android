@@ -16,51 +16,98 @@
             android:id="@+id/edit_text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:inputType="textCapWords"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:hint="@string/title_label"
+            android:inputType="textCapWords"
+            android:singleLine="true"
             app:fontStyle="alegreya_regular" />
-        
+
         <com.barterli.android.widgets.TypefacedAutoCompleteTextView
             android:id="@+id/edit_text_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:inputType="textCapWords"
             android:hint="@string/author_label"
+            android:inputType="textCapWords"
+            android:singleLine="true"
             app:fontStyle="alegreya_regular" />
-        
-         <com.barterli.android.widgets.TypefacedEditText
+
+        <com.barterli.android.widgets.TypefacedEditText
             android:id="@+id/edit_text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:inputType="textCapSentences|textAutoComplete|textMultiLine"
-            android:maxLines="8"
-            android:lines="3"
             android:hint="@string/description_label"
+            android:inputType="textCapSentences|textAutoComplete|textMultiLine"
+            android:lines="3"
+            android:maxLines="8"
             app:fontStyle="alegreya_regular" />
-         
-         <com.barterli.android.widgets.TypefacedEditText
+
+        <com.barterli.android.widgets.TypefacedEditText
             android:id="@+id/edit_text_publication_year"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:singleLine="true"
             android:hint="@string/publication_year_label"
+            android:inputType="number"
+            android:singleLine="true"
             app:fontStyle="alegreya_regular" />
 
-        <com.barterli.android.widgets.TypefacedButton
-            android:id="@+id/barter_option_button"
+        <LinearLayout
+            android:id="@+id/layout_barter_options"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="addBook"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:text="@string/barter_type_label"
-            app:fontStyle="alegreya_bold" />
+            android:orientation="vertical" >
+
+            <com.barterli.android.widgets.TypefacedCheckBox
+                android:id="@+id/checkbox_barter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/barter"
+                app:fontStyle="alegreya_regular" />
+
+            <com.barterli.android.widgets.TypefacedCheckBox
+                android:id="@+id/checkbox_sell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/sell"
+                app:fontStyle="alegreya_regular" />
+
+            <com.barterli.android.widgets.TypefacedCheckBox
+                android:id="@+id/checkbox_give_away"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/give_away"
+                app:fontStyle="alegreya_regular" />
+
+            <com.barterli.android.widgets.TypefacedCheckBox
+                android:id="@+id/checkbox_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/read"
+                app:fontStyle="alegreya_regular" />
+
+            <com.barterli.android.widgets.TypefacedCheckBox
+                android:id="@+id/checkbox_wishlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/wishlist"
+                app:fontStyle="alegreya_regular" />
+
+            <com.barterli.android.widgets.TypefacedCheckBox
+                android:id="@+id/checkbox_keep_private"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/keep_private"
+                app:fontStyle="alegreya_regular" />
+        </LinearLayout>
 
         <com.barterli.android.widgets.TypefacedButton
             android:id="@+id/submit_book_button"

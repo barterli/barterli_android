@@ -4,16 +4,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -28,9 +23,6 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 	private EditText authorText;
 	private EditText descriptionText;
 	private EditText publicationYearText;
-	private Button barterChoiceGroup;
-	private String[] barterOptions;
-	private String chosenBarterOption = "";
 	private ProgressDialogManager myProgressDialogManager = new ProgressDialogManager();
 	private HTTPHelper myHelper;
 	private String Auth_Token = "";
@@ -46,11 +38,6 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		authorText = (EditText) findViewById(R.id.edit_text_author);
 		descriptionText = (EditText) findViewById(R.id.edit_text_description);
 		publicationYearText = (EditText) findViewById(R.id.edit_text_publication_year);
-		barterChoiceGroup = (Button) findViewById(R.id.barter_option_button);
-		barterOptions = getResources().getStringArray(R.array.barterOptions);
-		final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-				EditBookDetailsActivity.this,
-				android.R.layout.simple_spinner_dropdown_item, barterOptions);
 		Auth_Token = SharedPreferenceHelper.getString(this,
 				PreferenceKeys.BARTER_LI_AUTH_TOKEN);
 		FB_Email = SharedPreferenceHelper.getString(this,
@@ -85,13 +72,13 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 					.getString("PUBLICATION_YEAR").toString());
 		}
 		if (_i.hasExtra("BARTER_TYPE")) {
-			barterChoiceGroup.setText(_i.getExtras().getString("BARTER_TYPE")
+			/*barterChoiceGroup.setText(_i.getExtras().getString("BARTER_TYPE")
 					.toString());
 			chosenBarterOption = _i.getExtras().getString("BARTER_TYPE")
-					.toString();
+					.toString();*/
 		}
 
-		// Set Listeners
+		/*// Set Listeners
 		barterChoiceGroup.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				new AlertDialog.Builder(EditBookDetailsActivity.this)
@@ -107,7 +94,7 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 									}
 								}).create().show();
 			}
-		});
+		});*/
 
 	} // End of oncreate
 
@@ -133,15 +120,16 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		}
 		String _description = descriptionText.getText().toString();
 		String _publication_year = publicationYearText.getText().toString();
-		if (TextUtils.isEmpty(chosenBarterOption)) {
+		/*if (TextUtils.isEmpty(chosenBarterOption)) {
 			Toast.makeText(EditBookDetailsActivity.this,
 					"Please enter what you want to do with the book!",
 					Toast.LENGTH_SHORT).show();
 			return;
-		}
+		}*/
 
-		new saveMyBookToServerTask().execute(_title, _author, _description,
-				_publication_year, chosenBarterOption, Auth_Token, FB_Email);
+		//TODO Decide chosen option
+		/*new saveMyBookToServerTask().execute(_title, _author, _description,
+				_publication_year, chosenBarterOption, Auth_Token, FB_Email);*/
 	} // End of addBook
 
 	// Synctask helper to post book to server
@@ -213,7 +201,7 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 
 		protected void onPostExecute(String result) {
 			myProgressDialogManager.dismissProgresDialog();
-			barterChoiceGroup.performClick();
+			//barterChoiceGroup.performClick();
 			try {
 				JSONObject bookObject = new JSONObject(result);
 				if (bookObject.has(AppConstants.DESCRIPTION_KEY)) {
@@ -258,8 +246,8 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		authorText.setText("");
 		descriptionText.setText("");
 		publicationYearText.setText("");
-		barterChoiceGroup.setText(R.string.barter_type_label);
-		chosenBarterOption = "";
+		/*barterChoiceGroup.setText(R.string.barter_type_label);
+		chosenBarterOption = "";*/
 	} // End of resetViews
 
 }

@@ -16,6 +16,7 @@
         <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_apptheme</item>
         <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Apptheme</item>
         <item name="android:windowBackground">@color/global_bg</item>
+        <item name="android:checkboxStyle">@style/CheckBoxTheme</item>
 
         <!-- Light.DarkActionBar specific -->
         <item name="android:actionBarWidgetTheme">@style/Theme.Apptheme.Widget</item>
