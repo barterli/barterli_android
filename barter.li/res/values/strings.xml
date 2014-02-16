@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Barter.li</string>
+    <string name="app_name">barter.li</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
@@ -9,6 +9,11 @@
     <string name="signup">Sign Up</string>
     <string name="build_library">Build Library</string>
     <string name="search">Search Books</string>
+    
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="welcome_fb">Welcome %s!</string>
+    <string name="welcome_to_barterli">Welcome to barter.li!</string>
+    <string name="location_pref_set">We have remembered your preferred location.</string>
     
     <string name="profile">Profile</string>
     <string name="library">My Books</string>

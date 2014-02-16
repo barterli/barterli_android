@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -13,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,6 +24,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.barterli.android.utils.PreferenceKeys;
+import com.barterli.android.utils.SharedPreferenceHelper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
@@ -44,7 +44,6 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 	private static final int READ_ISBN_SCAN_CODE = 0;
 	private AlertDialogManager alert = new AlertDialogManager();
 	private int RequestCounter = 0;
-	private SharedPreferences mSharedPreferences;
 	private String Auth_Token = "";
 	private boolean Is_Loc_Set = false;
 
@@ -63,24 +62,10 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-		mSharedPreferences = getApplicationContext().getSharedPreferences(
-				"BarterLiPref", 0);
-		if (mSharedPreferences != null) {
-			Auth_Token = mSharedPreferences.getString(
-					AllConstants.PREF_BARTER_LI_AUTHO_TOKEN, "");
-			Is_Loc_Set = mSharedPreferences.getBoolean(
-					AllConstants.IS_PREF_LOCATION_SET, false);
-			// Toast.makeText(this,
-			// "You are aloready Logged in with Auth_token:" + Auth_Token,
-			// Toast.LENGTH_SHORT).show();
-		}
-
-		if (TextUtils.isEmpty(Auth_Token) || !Is_Loc_Set) {
-			Toast.makeText(
-					this,
-					"You havent yet made account and/or not yet set preferred location.\nPlease complete all steps!",
-					Toast.LENGTH_SHORT).show();
-		}
+		Auth_Token = SharedPreferenceHelper.getString(this,
+				PreferenceKeys.PREF_BARTER_LI_AUTHO_TOKEN);
+		Is_Loc_Set = SharedPreferenceHelper.getBoolean(this,
+				PreferenceKeys.IS_PREF_LOCATION_SET);
 
 		handler = null;
 		hasSurface = false;
