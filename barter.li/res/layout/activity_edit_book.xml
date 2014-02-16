@@ -49,8 +49,6 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:hint="@string/description_label"
             android:inputType="textCapSentences|textAutoComplete|textMultiLine"
-            android:lines="3"
-            android:maxLines="8"
             app:fontStyle="alegreya_regular" />
 
         <com.barterli.android.widgets.TypefacedEditText

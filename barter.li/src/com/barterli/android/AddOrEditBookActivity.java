@@ -3,11 +3,8 @@ package com.barterli.android;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,8 +19,8 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.barterli.android.http.HttpConstants;
-import com.barterli.android.http.JsonUtils;
 import com.barterli.android.http.HttpConstants.ApiEndpoints;
+import com.barterli.android.http.JsonUtils;
 import com.barterli.android.utils.AppConstants;
 
 public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
@@ -37,6 +34,7 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 	private EditText mDescriptionEditText;
 	private EditText mPublicationYearEditText;
 	private String mBookId;
+	private boolean mHasFetchedDetails;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,58 +47,52 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 
 		findViewById(R.id.button_submit).setOnClickListener(this);
 
-		loadDetailsForIntent(getIntent());
+		final Bundle extras = getIntent().getExtras();
 
-		/*
-		 * // Set Listeners barterChoiceGroup.setOnClickListener(new
-		 * OnClickListener() { public void onClick(View v) { new
-		 * AlertDialog.Builder(EditBookDetailsActivity.this)
-		 * .setTitle("Select Valid Option") .setAdapter(spinnerArrayAdapter, new
-		 * DialogInterface.OnClickListener() { public void
-		 * onClick(DialogInterface dialog, int which) { chosenBarterOption =
-		 * barterOptions[which]; barterChoiceGroup .setText(chosenBarterOption);
-		 * dialog.dismiss(); } }).create().show(); } });
-		 */
-
-	} // End of oncreate
-
-	/**
-	 * @param launchIntent
-	 *            The intent which launched the screen
-	 */
-	private void loadDetailsForIntent(Intent launchIntent) {
-
-		final Bundle extras = launchIntent.getExtras();
-
-		// If extras are null, it means that user has to decided to add the book
-		// completely manually
+		// If extras are null, it means that user has to decided to add the
+		// book completely manually
 		if (extras != null) {
-
 			mBookId = extras.getString(AppConstants.BOOK_ID);
-			final String title = extras.getString(AppConstants.BOOK_TITLE);
-			final String author = extras.getString(AppConstants.AUTHOR);
-			final String description = extras
-					.getString(AppConstants.DESCRIPTION);
-			final String publicationYear = extras
-					.getString(AppConstants.PUBLICATION_YEAR);
-			final String[] barterTypes = extras
-					.getStringArray(AppConstants.BARTER_TYPES);
+			Log.d(TAG, "Book Id:" + mBookId);
 
-			mIsbnEditText.setText(mBookId);
-			mTitleEditText.setText(title);
-			mAuthorEditText.setText(author);
-			mDescriptionEditText.setText(description);
-			mPublicationYearEditText.setText(publicationYear);
+			if (savedInstanceState != null) {
+				mHasFetchedDetails = savedInstanceState
+						.getBoolean(AppConstants.BOOL_1);
+			}
 
-			setCheckBoxesForBarterTypes(barterTypes);
-
-			if (mBookId != null && TextUtils.isEmpty(title)) {
-
-				// User has come here after scanning a book, fetch the book
-				// details from server TODO: Fetch book details
+			else {
+				loadDetailsForIntent(extras);
+			}
+			if (!mHasFetchedDetails) {
 				getBookInfoFromServer();
 			}
 		}
+
+		// TODO Set up TextWatchers for Autocomplete ISBN and Title
+	} // End of oncreate
+
+	/**
+	 * @param extras
+	 *            The intent extras
+	 */
+	private void loadDetailsForIntent(final Bundle extras) {
+
+		mBookId = extras.getString(AppConstants.BOOK_ID);
+		final String title = extras.getString(AppConstants.BOOK_TITLE);
+		final String author = extras.getString(AppConstants.AUTHOR);
+		final String description = extras.getString(AppConstants.DESCRIPTION);
+		final String publicationYear = extras
+				.getString(AppConstants.PUBLICATION_YEAR);
+		final String[] barterTypes = extras
+				.getStringArray(AppConstants.BARTER_TYPES);
+
+		mIsbnEditText.setText(mBookId);
+		mTitleEditText.setText(title);
+		mAuthorEditText.setText(author);
+		mDescriptionEditText.setText(description);
+		mPublicationYearEditText.setText(publicationYear);
+
+		setCheckBoxesForBarterTypes(barterTypes);
 
 	}
 
@@ -202,61 +194,6 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 		}
 	}
 
-	private class getBookInfoFromServerTask extends
-			AsyncTask<String, Void, String> {
-
-		protected String doInBackground(String... parameters) {
-			/*
-			 * String suggestion_url = getResources().getString(
-			 * R.string.book_info_url); suggestion_url += "?q=" + parameters[0];
-			 * HTTPHelper myHTTPHelper = new HTTPHelper();
-			 */
-			String responseString = "";
-			// responseString = myHTTPHelper.getHelper(suggestion_url);
-			return responseString;
-		}
-
-		protected void onPostExecute(String result) {
-			// barterChoiceGroup.performClick();
-			try {
-				JSONObject bookObject = new JSONObject(result);
-				if (bookObject.has(AppConstants.DESCRIPTION_KEY)) {
-					mDescriptionEditText.setText(bookObject
-							.getString(AppConstants.DESCRIPTION_KEY));
-				}
-				if (bookObject.has(AppConstants.PUBLICATION_YEAR_KEY)) {
-					mPublicationYearEditText.setText(bookObject
-							.getString(AppConstants.PUBLICATION_YEAR_KEY));
-				}
-				if (bookObject.has(AppConstants.PUBLICATION_AUTHORS)) {
-					JSONObject authorsObject = bookObject
-							.getJSONObject(AppConstants.PUBLICATION_AUTHORS);
-					if (authorsObject.has(AppConstants.PUBLICATION_AUTHOR)) {
-
-						if (authorsObject.get(AppConstants.PUBLICATION_AUTHOR) instanceof JSONObject) {
-							JSONObject singleAuthorObject = authorsObject
-									.getJSONObject(AppConstants.PUBLICATION_AUTHOR);
-							mAuthorEditText
-									.setText(singleAuthorObject
-											.getString(AppConstants.PUBLICATION_AUTHOR_NAME));
-						} else if (authorsObject
-								.get(AppConstants.PUBLICATION_AUTHOR) instanceof JSONArray) {
-							JSONArray authorArray = authorsObject
-									.getJSONArray(AppConstants.PUBLICATION_AUTHOR);
-							JSONObject firstAuthorObject = authorArray
-									.getJSONObject(0);
-							mAuthorEditText
-									.setText(firstAuthorObject
-											.getString(AppConstants.PUBLICATION_AUTHOR_NAME));
-						}
-					}
-				}
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-	} // End of getBookInfoFromServerTask
-
 	@Override
 	public void onClick(View v) {
 
@@ -292,6 +229,12 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 		onRequestFinished();
 		readBookDetailsFromResponse(response);
 	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(AppConstants.BOOL_1, mHasFetchedDetails);
+	}
 
 	/**
 	 * Reads the book details from the response and populates the text fields
@@ -301,6 +244,7 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 	 */
 	private void readBookDetailsFromResponse(JSONObject response) {
 
+		mHasFetchedDetails = true;
 		final String bookTitle = JsonUtils.getStringValue(response,
 				HttpConstants.TITLE);
 		final String bookDescription = JsonUtils.getStringValue(response,

@@ -4,13 +4,8 @@ public class AppConstants {
 
 	public static final boolean DEBUG = true;
 
-	public static String DESCRIPTION_KEY = "description";
-	public static String PUBLICATION_YEAR_KEY = "publication_year";
-	public static String PUBLICATION_AUTHORS = "authors";
-	public static String PUBLICATION_AUTHOR = "author";
-	public static String PUBLICATION_AUTHOR_NAME = "name";
-
 	public static final String ISBN = "ISBN";
+	public static final String BOOL_1 = "bool_1";
 
 	public static String TWITTER_CONSUMER_KEY = "XpSpv7zk0EGcS7ZMCYYw"; // place
 																		// your
