@@ -59,7 +59,7 @@ public class LoginActivity extends AbstractBarterLiActivity {
 		permissions = new ArrayList<String>();
 		permissions.add("email");
 		LoginButton authButton = (LoginButton) findViewById(R.id.authButton);
-		registration_url = getResources().getString(R.string.create_account);
+		//registration_url = getResources().getString(R.string.create_account);
 
 		Auth_Token = SharedPreferenceHelper.getString(this,
 				PreferenceKeys.BARTER_LI_AUTH_TOKEN);
@@ -233,17 +233,17 @@ public class LoginActivity extends AbstractBarterLiActivity {
 		protected String doInBackground(String... parameters) {
 			// String registration_url =
 			// getResources().getString(R.string.create_account);
-			HTTPHelper myHTTPHelper = new HTTPHelper();
+			/*HTTPHelper myHTTPHelper = new HTTPHelper();
 			String post_to_newuser_url = parameters[0];
 			String uid = parameters[1];
 			String firstname = parameters[2];
 			String lastname = parameters[3];
 			String email = parameters[4];
-			String token = parameters[5];
+			String token = parameters[5];*/
 			// Log.v("ASYNC_URL", post_to_newuser_url);
-			String responseString = myHTTPHelper
+			String responseString = ""/* = myHTTPHelper
 					.postNewUser(post_to_newuser_url, uid, firstname, lastname,
-							email, token);
+							email, token)*/;
 			return responseString;
 
 		}

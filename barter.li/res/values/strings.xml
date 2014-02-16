@@ -9,18 +9,16 @@
     <string name="signup">Sign Up</string>
     <string name="build_library">Build Library</string>
     <string name="search">Search Books</string>
-    
     <string name="welcome_back">Welcome Back!</string>
     <string name="welcome_fb">Welcome %s!</string>
     <string name="welcome_to_barterli">Welcome to barter.li!</string>
     <string name="location_pref_set">We have remembered your preferred location.</string>
-    
     <string name="profile">Profile</string>
     <string name="library">My Books</string>
     <string name="scan_book">Scan Book</string>
     <string name="add_book">Add Book</string>
     <string name="add_manually">Add Book Manually</string>
-
+    <string name="no_network_connection">No network connection!</string>
     <string name="app_id">458716080895923</string>
 
     <!-- Strings for AddBookActivity -->
@@ -36,15 +34,14 @@
     <string name="description_label">Description</string>
     <string name="publication_year_label">Publication Year</string>
     <string name="barter_type_label">Barter Type</string>
-    
+
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>
     <string name="barter">Barter</string>
     <string name="sell">Sell</string>
-	<string name="read">Read</string>
-	<string name="wishlist">Add to Wishlist</string>
-	<string name="keep_private">Keep Private</string>
-	
+    <string name="read">Read</string>
+    <string name="wishlist">Add to Wishlist</string>
+    <string name="keep_private">Keep Private</string>
     <string name="submit">Submit</string>
 
     <!-- Strings for LoginActivity -->

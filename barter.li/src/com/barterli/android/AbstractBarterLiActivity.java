@@ -1,5 +1,7 @@
 package com.barterli.android;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -29,9 +32,11 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 
 	private RequestQueue mRequestQueue;
 	private ImageLoader mImageLoader;
+	private AtomicInteger mRequestCounter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
 		if (getActionBar() != null) {
 			getActionBar().setDisplayOptions(ACTION_BAR_DISPLAY_MASK);
@@ -40,20 +45,50 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 
 		mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
 		mImageLoader = ((IVolleyHelper) getApplication()).getImageLoader();
+		mRequestCounter = new AtomicInteger(0);
+		setProgressBarIndeterminateVisibility(false);
 	}
 
 	protected ImageLoader getImageLoader() {
 		return mImageLoader;
 	}
 
-	protected void addRequestToQueue(Request request) {
-		mRequestQueue.add(request);
+	/**
+	 * Add a request on the network queue
+	 * 
+	 * @param request
+	 *            The {@link Request} to add
+	 * @param showErrorOnNoNetwork
+	 *            Whether an error toast should be displayed on no internet
+	 *            connection
+	 */
+	protected void addRequestToQueue(Request<?> request,
+			boolean showErrorOnNoNetwork) {
+
+		if (isConnectedToInternet()) {
+			mRequestCounter.incrementAndGet();
+			setProgressBarIndeterminateVisibility(true);
+			mRequestQueue.add(request);
+		} else if(showErrorOnNoNetwork) {
+			showToast(R.string.no_network_connection, false);
+		}
+	}
+
+	/**
+	 * Call this whenever a request has finished, whether successfully or error
+	 */
+	protected void onRequestFinished() {
+
+		if (mRequestCounter.decrementAndGet() == 0) {
+			setProgressBarIndeterminateVisibility(false);
+		}
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
 		mRequestQueue.cancelAll(this);
+		setProgressBarIndeterminateVisibility(false);
 	}
 
 	protected void setActionBarDisplayOptions(int displayOptions) {

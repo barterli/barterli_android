@@ -24,7 +24,6 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 	private EditText descriptionText;
 	private EditText publicationYearText;
 	private ProgressDialogManager myProgressDialogManager = new ProgressDialogManager();
-	private HTTPHelper myHelper;
 	private String Auth_Token = "";
 	private String FB_Email = "";
 	private boolean Is_Loc_Set = false;
@@ -33,7 +32,6 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_book);
-		myHelper = new HTTPHelper(EditBookDetailsActivity.this);
 		titleText = (EditText) findViewById(R.id.edit_text_title);
 		authorText = (EditText) findViewById(R.id.edit_text_author);
 		descriptionText = (EditText) findViewById(R.id.edit_text_description);
@@ -143,9 +141,9 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		}
 
 		protected String doInBackground(String... parameters) {
-			String post_to_mybooks_url = getResources().getString(
+			/*String post_to_mybooks_url = getResources().getString(
 					R.string.post_to_mybooks_url);
-			HTTPHelper myHTTPHelper = new HTTPHelper();
+			HTTPHelper myHTTPHelper = new HTTPHelper();*/
 			String responseString = "";
 			String _title = parameters[0];
 			String _author = parameters[1];
@@ -154,7 +152,7 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 			String _barter_type = parameters[4];
 			String _user_token = parameters[5];
 			String _fb_Email = parameters[6];
-			if (TextUtils.isEmpty(BOOK_ID)) {
+			/*if (TextUtils.isEmpty(BOOK_ID)) {
 				responseString = myHTTPHelper
 						.postBookToMyList(post_to_mybooks_url, _title, _author,
 								_description, _publication_year, _barter_type,
@@ -165,7 +163,7 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 						.putBookToMyList(put_to_mybooks_url, _title, _author,
 								_description, _publication_year, _barter_type,
 								_user_token, _fb_Email);
-			}
+			}*/
 
 			return responseString;
 		}
@@ -190,12 +188,12 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 		}
 
 		protected String doInBackground(String... parameters) {
-			String suggestion_url = getResources().getString(
+			/*String suggestion_url = getResources().getString(
 					R.string.book_info_url);
 			suggestion_url += "?q=" + parameters[0];
-			HTTPHelper myHTTPHelper = new HTTPHelper();
+			HTTPHelper myHTTPHelper = new HTTPHelper();*/
 			String responseString = "";
-			responseString = myHTTPHelper.getHelper(suggestion_url);
+			//responseString = myHTTPHelper.getHelper(suggestion_url);
 			return responseString;
 		}
 

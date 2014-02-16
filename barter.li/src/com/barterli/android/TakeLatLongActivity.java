@@ -36,10 +36,10 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
 		setContentView(R.layout.take_lat_long);
 		listView = (ListView) findViewById(R.id.list_data);
 		queue = Volley.newRequestQueue(this);
-		place_suggestion_url = getResources().getString(
+		/*place_suggestion_url = getResources().getString(
 				R.string.hangouts_location);
 		post_to_my_preferred_loc = getResources().getString(
-				R.string.preferred_location);
+				R.string.preferred_location);*/
 
 		Auth_Token = SharedPreferenceHelper.getString(this,
 				PreferenceKeys.BARTER_LI_AUTH_TOKEN);
@@ -69,8 +69,8 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
 		}
 
 		protected String doInBackground(String... params) {
-			HTTPHelper myHTTPHelper = new HTTPHelper();
-			return myHTTPHelper.postPreferredLocation(params);
+			/*HTTPHelper myHTTPHelper = new HTTPHelper();*/
+			return ""/*myHTTPHelper.postPreferredLocation(params)*/;
 		}
 
 		protected void onPostExecute(String result) {
@@ -78,7 +78,7 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
 			SharedPreferenceHelper.set(TakeLatLongActivity.this,
 					PreferenceKeys.MY_PREFERRED_LOCATION, my_Pref_loc);
 
-			showToast(R.string.preferred_location, false);
+			/*showToast(R.string.preferred_location, false);*/
 			// Intent profileIntent = new Intent(TakeLatLongActivity.this,
 			// MyProfileActivity.class);
 			// startActivity(profileIntent);
@@ -99,9 +99,9 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
 			place_suggestion_url += "?latitude=" + latitude;
 			place_suggestion_url += "&longitude=" + longitude;
 			// USe HTTP Helper
-			HTTPHelper myHTTPHelper = new HTTPHelper();
+			//HTTPHelper myHTTPHelper = new HTTPHelper();
 			String responseString = "[]";
-			responseString = myHTTPHelper.getHelper(place_suggestion_url);
+			//responseString = myHTTPHelper.getHelper(place_suggestion_url);
 			return responseString;
 
 		}

@@ -2,13 +2,16 @@ package com.barterli.android;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONArray;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -25,6 +28,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.barterli.android.http.HttpConstants;
 import com.barterli.android.http.HttpConstants.ApiEndpoints;
 import com.barterli.android.utils.PreferenceKeys;
@@ -40,7 +47,8 @@ import com.jwetherell.quick_response_code.result.ResultHandler;
 import com.jwetherell.quick_response_code.result.ResultHandlerFactory;
 
 public class AddBookActivity extends AbstractBarterLiActivity implements
-		IDecoderActivity, SurfaceHolder.Callback {
+		IDecoderActivity, SurfaceHolder.Callback, Listener<JSONArray>,
+		ErrorListener {
 
 	private static final String TAG = "AddBookActivity";
 
@@ -263,12 +271,13 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 
 	private void handleDecodeInternally(Result rawResult,
 			ResultHandler resultHandler, Bitmap barcode) {
-		onPause();
+		// onPause();
 		// Toast.makeText(this, resultHandler.getDisplayContents().toString(),
 		// Toast.LENGTH_SHORT).show();
 		Log.v("RAWRESULT", resultHandler.getDisplayContents().toString());
 		Log.v("FORMAT", rawResult.getBarcodeFormat().toString());
 		Log.v("TYPE", resultHandler.getType().toString());
+		getSuggestions(resultHandler.getDisplayContents().toString());
 
 	}
 
@@ -286,7 +295,8 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 								false);
 						return;
 					}
-					new askServerForSuggestionsTask().execute(_isbn);
+					getSuggestions(_isbn);
+					// new askServerForSuggestionsTask().execute(_isbn);
 				} else {
 					Toast.makeText(
 							AddBookActivity.this,
@@ -296,6 +306,25 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 			}
 		}
 	} // End of onActivityResult
+
+	/**
+	 * Retrieve the suggestions for the books
+	 */
+	private void getSuggestions(String isbn) {
+
+		JsonArrayRequest request = new JsonArrayRequest(
+				HttpConstants.getApiBaseUrl() + ApiEndpoints.BOOK_SUGGESTIONS,
+				this, this);
+
+		final Map<String, String> params = new HashMap<String, String>();
+		params.put(HttpConstants.Q, isbn);
+		params.put(HttpConstants.T, "title");
+
+		request.setParams(params);
+
+		addRequestToQueue(request, false);
+
+	}
 
 	public void addNewBook(View v) {
 		Intent editBookIntent = new Intent(AddBookActivity.this,
@@ -313,12 +342,13 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			if (!isConnectedToInternet()) {
-				alert.showAlertDialog(AddBookActivity.this,
-						"Internet Connection Error",
-						"Please connect to working Internet connection", false);
-				return;
-			}
+			/*
+			 * if (!isConnectedToInternet()) {
+			 * alert.showAlertDialog(AddBookActivity.this,
+			 * "Internet Connection Error",
+			 * "Please connect to working Internet connection", false); return;
+			 * }
+			 */
 			/*
 			 * if (s.length() == 0 && before == 1) {
 			 * scanButton.setVisibility(View.VISIBLE);
@@ -329,54 +359,53 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 			 */
 			if ((s.length() == 10) || (s.length() >= 5)
 					&& (s.length() % 2 != 0)) {
-				new askServerForSuggestionsTask().execute(s.toString());
+				// new askServerForSuggestionsTask().execute(s.toString());
+				getSuggestions(s.toString());
 				RequestCounter += 1;
 			}
 		}
 	}; // End of mTextEditorWatcher
 
-	private class askServerForSuggestionsTask extends
-			AsyncTask<String, Void, String> {
-		protected void onPreExecute() {
-			if (!isConnectedToInternet()) {
-				alert.showAlertDialog(AddBookActivity.this,
-						"Internet Connection Error",
-						"Please connect to working Internet connection", false);
-				return;
-			}
-		}
+	/*
+	 * private class askServerForSuggestionsTask extends AsyncTask<String, Void,
+	 * String> { protected void onPreExecute() { if (!isConnectedToInternet()) {
+	 * alert.showAlertDialog(AddBookActivity.this, "Internet Connection Error",
+	 * "Please connect to working Internet connection", false); return; } }
+	 * 
+	 * protected String doInBackground(String... parameters) { String
+	 * suggestion_url = HttpConstants.getApiBaseUrl() +
+	 * ApiEndpoints.BOOK_SUGGESTIONS; suggestion_url += "?q=" + parameters[0];
+	 * suggestion_url += "&t=" + "title";
+	 * 
+	 * String responseString = "[]"; responseString =
+	 * myHTTPHelper.getHelper(suggestion_url); return responseString; }
+	 * 
+	 * protected void onPostExecute(String result) { RequestCounter -= 1; if
+	 * (RequestCounter != 0) { return; } final String[] book_suggestions = new
+	 * JSONHelper() .JsonStringofArraysToArray(result);
+	 * 
+	 * adapter = new ArrayAdapter<String>(AddBookActivity.this,
+	 * android.R.layout.simple_list_item_1, android.R.id.text1,
+	 * book_suggestions); listView.setAdapter(adapter);
+	 * listView.setOnItemClickListener(new OnItemClickListener() { public void
+	 * onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+	 * Intent editBookIntent = new Intent(AddBookActivity.this,
+	 * EditBookDetailsActivity.class); editBookIntent .putExtra("TITLE",
+	 * book_suggestions[position]); startActivity(editBookIntent); } });
+	 * 
+	 * } } // End of askServerForSuggestionsTask
+	 */
+	@Override
+	public void onErrorResponse(VolleyError error) {
 
-		protected String doInBackground(String... parameters) {
-			String suggestion_url = HttpConstants.getApiBaseUrl()
-					+ ApiEndpoints.BOOK_SUGGESTIONS;
-			suggestion_url += "?q=" + parameters[0];
-			suggestion_url += "&t=" + "title";
+		onRequestFinished();
+	}
 
-			HTTPHelper myHTTPHelper = new HTTPHelper();
-			String responseString = "[]";
-			responseString = myHTTPHelper.getHelper(suggestion_url);
-			return responseString;
-		}
+	@Override
+	public void onResponse(JSONArray response) {
 
-		protected void onPostExecute(String result) {
-			RequestCounter -= 1;
-			if (RequestCounter != 0) {
-				return;
-			}
-			final String[] book_suggestions = new JSONHelper()
-					.JsonStringofArraysToArray(result);
-			/*
-			 * adapter = new ArrayAdapter<String>(AddBookActivity.this,
-			 * android.R.layout.simple_list_item_1, android.R.id.text1,
-			 * book_suggestions); listView.setAdapter(adapter);
-			 * listView.setOnItemClickListener(new OnItemClickListener() {
-			 * public void onItemClick(AdapterView<?> arg0, View arg1, int
-			 * position, long id) { Intent editBookIntent = new
-			 * Intent(AddBookActivity.this, EditBookDetailsActivity.class);
-			 * editBookIntent .putExtra("TITLE", book_suggestions[position]);
-			 * startActivity(editBookIntent); } });
-			 */
-		}
-	} // End of askServerForSuggestionsTask
+		onRequestFinished();
+		Log.d(TAG, "Response:" + response);
+	}
 
 }

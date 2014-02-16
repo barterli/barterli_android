@@ -39,8 +39,8 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
 
 		my_email = SharedPreferenceHelper.getString(this,
 				PreferenceKeys.FB_USER_EMAIL);
-		my_name = SharedPreferenceHelper
-				.getString(this, PreferenceKeys.FB_USERNAME);
+		my_name = SharedPreferenceHelper.getString(this,
+				PreferenceKeys.FB_USERNAME);
 		my_pref_location = SharedPreferenceHelper.getString(this,
 				PreferenceKeys.MY_PREFERRED_LOCATION);
 		Auth_Token = SharedPreferenceHelper.getString(this,
@@ -51,7 +51,8 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
 		my_name_text.setText(my_name);
 		my_email_text.setText(my_email);
 		my_pref_location_text.setText(my_pref_location);
-		get_profile_url = getResources().getString(R.string.preferred_location);
+		// get_profile_url =
+		// getResources().getString(R.string.preferred_location);
 		listView = (ListView) findViewById(R.id.list_my_books);
 		new askServerForMyDetails().execute(get_profile_url, my_email,
 				Auth_Token);
@@ -72,9 +73,9 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
 			local_profile_url += "?user_email=" + parameters[1];
 			local_profile_url += "&user_token=" + parameters[2];
 
-			HTTPHelper myHTTPHelper = new HTTPHelper();
+			// HTTPHelper myHTTPHelper = new HTTPHelper();
 			String responseString = "[]";
-			responseString = myHTTPHelper.getHelper(local_profile_url);
+			// responseString = myHTTPHelper.getHelper(local_profile_url);
 			return responseString;
 		}
 

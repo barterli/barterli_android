@@ -2,6 +2,8 @@ package com.barterli.android.utils;
 
 public class AppConstants {
 
+	public static final boolean DEBUG = true;
+
 	public static String DESCRIPTION_KEY = "description";
 	public static String PUBLICATION_YEAR_KEY = "publication_year";
 	public static String PUBLICATION_AUTHORS = "authors";

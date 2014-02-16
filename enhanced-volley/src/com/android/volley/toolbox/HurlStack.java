@@ -58,324 +58,330 @@ import com.android.volley.toolbox.MultiPartRequest.MultiPartParam;
  */
 public class HurlStack implements HttpStack {
 
-    private static final String    HEADER_CONTENT_TYPE              = "Content-Type";
-    private static final String    HEADER_USER_AGENT                = "User-Agent";
-    private static final String    HEADER_CONTENT_DISPOSITION       = "Content-Disposition";
-    private static final String    HEADER_CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
-    private static final String    CONTENT_TYPE_MULTIPART           = "multipart/form-data; charset=%s; boundary=%s";
-    private static final String    BINARY                           = "binary";
-    private static final String    CRLF                             = "\r\n";
-    private static final String    FORM_DATA                        = "form-data; name=\"%s\"";
-    private static final String    BOUNDARY_PREFIX                  = "--";
-    private static final String    CONTENT_TYPE_OCTET_STREAM        = "application/octet-stream";
-    private static final String    FILENAME                         = "filename=%s";
-    private static final String    COLON_SPACE                      = ": ";
-    private static final String    SEMICOLON_SPACE                  = "; ";
+	private static final String HEADER_CONTENT_TYPE = "Content-Type";
+	private static final String HEADER_USER_AGENT = "User-Agent";
+	private static final String HEADER_CONTENT_DISPOSITION = "Content-Disposition";
+	private static final String HEADER_CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
+	private static final String CONTENT_TYPE_MULTIPART = "multipart/form-data; charset=%s; boundary=%s";
+	private static final String BINARY = "binary";
+	private static final String CRLF = "\r\n";
+	private static final String FORM_DATA = "form-data; name=\"%s\"";
+	private static final String BOUNDARY_PREFIX = "--";
+	private static final String CONTENT_TYPE_OCTET_STREAM = "application/octet-stream";
+	private static final String FILENAME = "filename=%s";
+	private static final String COLON_SPACE = ": ";
+	private static final String SEMICOLON_SPACE = "; ";
 
-    private UrlRewriter            mUrlRewriter;
-    private final SSLSocketFactory mSslSocketFactory;
-    private String                 mUserAgent;
+	private UrlRewriter mUrlRewriter;
+	private final SSLSocketFactory mSslSocketFactory;
+	private String mUserAgent;
 
-    /**
-     * @param urlRewriter
-     *            Rewriter to use for request URLs
-     */
-    public HurlStack(UrlRewriter urlRewriter, String userAgent) {
+	/**
+	 * @param urlRewriter
+	 *            Rewriter to use for request URLs
+	 */
+	public HurlStack(UrlRewriter urlRewriter, String userAgent) {
 
-        this(urlRewriter, null, userAgent);
-    }
+		this(urlRewriter, null, userAgent);
+	}
 
-    /**
-     * @param urlRewriter
-     *            Rewriter to use for request URLs
-     * @param sslSocketFactory
-     *            SSL factory to use for HTTPS connections
-     */
-    public HurlStack(UrlRewriter urlRewriter,
-            SSLSocketFactory sslSocketFactory, String userAgent) {
+	/**
+	 * @param urlRewriter
+	 *            Rewriter to use for request URLs
+	 * @param sslSocketFactory
+	 *            SSL factory to use for HTTPS connections
+	 */
+	public HurlStack(UrlRewriter urlRewriter,
+			SSLSocketFactory sslSocketFactory, String userAgent) {
 
-        mUrlRewriter = urlRewriter;
-        mSslSocketFactory = sslSocketFactory;
-        mUserAgent = userAgent;
-    }
+		mUrlRewriter = urlRewriter;
+		mSslSocketFactory = sslSocketFactory;
+		mUserAgent = userAgent;
+	}
 
-    /**
-     * Add headers and user agent to an {@code }
-     * 
-     * @param connection
-     *            The {@linkplain HttpURLConnection} to add request headers to
-     * @param userAgent
-     *            The User Agent to identify on server
-     * @param additionalHeaders
-     *            The headers to add to the request
-     */
-    private static void addHeadersToConnection(HttpURLConnection connection, String userAgent, Map<String, String> additionalHeaders) {
+	/**
+	 * Add headers and user agent to an {@code }
+	 * 
+	 * @param connection
+	 *            The {@linkplain HttpURLConnection} to add request headers to
+	 * @param userAgent
+	 *            The User Agent to identify on server
+	 * @param additionalHeaders
+	 *            The headers to add to the request
+	 */
+	private static void addHeadersToConnection(HttpURLConnection connection,
+			String userAgent, Map<String, String> additionalHeaders) {
 
-        connection.setRequestProperty(HEADER_USER_AGENT, userAgent);
-        for (String headerName : additionalHeaders.keySet()) {
-            connection.addRequestProperty(headerName,
-                    additionalHeaders.get(headerName));
-        }
-    }
+		connection.setRequestProperty(HEADER_USER_AGENT, userAgent);
+		for (String headerName : additionalHeaders.keySet()) {
+			connection.addRequestProperty(headerName,
+					additionalHeaders.get(headerName));
+		}
+	}
 
-    @Override
-    public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders) throws IOException, AuthFailureError {
+	@Override
+	public HttpResponse performRequest(Request<?> request,
+			Map<String, String> additionalHeaders) throws IOException,
+			AuthFailureError {
 
-        HashMap<String, String> map = new HashMap<String, String>();
-        map.putAll(request.getHeaders());
-        map.putAll(additionalHeaders);
-        URL parsedUrl = new URL(mUrlRewriter.rewriteUrl(request));
-        HttpURLConnection connection = openConnection(parsedUrl, request);
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.putAll(request.getHeaders());
+		map.putAll(additionalHeaders);
+		URL parsedUrl = new URL(mUrlRewriter.rewriteUrl(request));
 
-        if (request instanceof MultiPartRequest) {
-            setConnectionParametersForMultipartRequest(connection, request,
-                    map, mUserAgent);
-        } else {
+		request.addMarker(String.format("Calling url %s", parsedUrl));
+		HttpURLConnection connection = openConnection(parsedUrl, request);
 
-            setConnectionParametersForRequest(connection, request, map,
-                    mUserAgent);
-        }
+		if (request instanceof MultiPartRequest) {
+			setConnectionParametersForMultipartRequest(connection, request,
+					map, mUserAgent);
+		} else {
 
-        // Initialize HttpResponse with data from the HttpURLConnection.
-        ProtocolVersion protocolVersion = new ProtocolVersion("HTTP", 1, 1);
-        int responseCode = connection.getResponseCode();
-        if (responseCode == -1) {
-            // -1 is returned by getResponseCode() if the response code could
-            // not be retrieved.
-            // Signal to the caller that something was wrong with the
-            // connection.
-            throw new IOException(
-                    "Could not retrieve response code from HttpUrlConnection.");
-        }
-        StatusLine responseStatus = new BasicStatusLine(protocolVersion,
-                connection.getResponseCode(), connection.getResponseMessage());
-        BasicHttpResponse response = new BasicHttpResponse(responseStatus);
-        response.setEntity(entityFromConnection(connection));
-        for (Entry<String, List<String>> header : connection
-                .getHeaderFields()
-                .entrySet()) {
-            if (header.getKey() != null) {
-                Header h = new BasicHeader(header.getKey(), header
-                        .getValue()
-                        .get(0));
-                response.addHeader(h);
-            }
-        }
-        return response;
-    }
+			setConnectionParametersForRequest(connection, request, map,
+					mUserAgent);
+		}
 
-    /**
-     * Perform a multipart request on a connection
-     * 
-     * @param connection
-     *            The Connection to perform the multi part request
-     * @param request
-     * @param additionalHeaders
-     * @param multipartParams
-     *            The params to add to the Multi Part request
-     * @param filesToUpload
-     *            The files to upload
-     * @throws ProtocolException
-     */
-    private static void setConnectionParametersForMultipartRequest(HttpURLConnection connection, Request<?> request, HashMap<String, String> additionalHeaders, String userAgent) throws IOException, ProtocolException {
+		// Initialize HttpResponse with data from the HttpURLConnection.
+		ProtocolVersion protocolVersion = new ProtocolVersion("HTTP", 1, 1);
+		int responseCode = connection.getResponseCode();
+		if (responseCode == -1) {
+			// -1 is returned by getResponseCode() if the response code could
+			// not be retrieved.
+			// Signal to the caller that something was wrong with the
+			// connection.
+			throw new IOException(
+					"Could not retrieve response code from HttpUrlConnection.");
+		}
+		StatusLine responseStatus = new BasicStatusLine(protocolVersion,
+				connection.getResponseCode(), connection.getResponseMessage());
+		BasicHttpResponse response = new BasicHttpResponse(responseStatus);
+		response.setEntity(entityFromConnection(connection));
+		for (Entry<String, List<String>> header : connection.getHeaderFields()
+				.entrySet()) {
+			if (header.getKey() != null) {
+				Header h = new BasicHeader(header.getKey(), header.getValue()
+						.get(0));
+				response.addHeader(h);
+			}
+		}
+		return response;
+	}
 
-        final String charset = ((MultiPartRequest<?>) request)
-                .getProtocolCharset();
-        final int curTime = (int) (System.currentTimeMillis() / 1000);
-        final String boundary = BOUNDARY_PREFIX + curTime;
-        connection.setRequestMethod("POST");
-        connection.setDoOutput(true);
-        connection.setRequestProperty(HEADER_CONTENT_TYPE,
-                String.format(CONTENT_TYPE_MULTIPART, charset, curTime));
-        connection.setChunkedStreamingMode(0);
+	/**
+	 * Perform a multipart request on a connection
+	 * 
+	 * @param connection
+	 *            The Connection to perform the multi part request
+	 * @param request
+	 * @param additionalHeaders
+	 * @param multipartParams
+	 *            The params to add to the Multi Part request
+	 * @param filesToUpload
+	 *            The files to upload
+	 * @throws ProtocolException
+	 */
+	private static void setConnectionParametersForMultipartRequest(
+			HttpURLConnection connection, Request<?> request,
+			HashMap<String, String> additionalHeaders, String userAgent)
+			throws IOException, ProtocolException {
 
-        Map<String, MultiPartParam> multipartParams = ((MultiPartRequest<?>) request)
-                .getMultipartParams();
-        Map<String, String> filesToUpload = ((MultiPartRequest<?>) request)
-                .getFilesToUpload();
-        PrintWriter writer = null;
-        try {
-            addHeadersToConnection(connection, userAgent, additionalHeaders);
-            OutputStream out = connection.getOutputStream();
-            writer = new PrintWriter(new OutputStreamWriter(out, charset), true);
+		final String charset = ((MultiPartRequest<?>) request)
+				.getProtocolCharset();
+		final int curTime = (int) (System.currentTimeMillis() / 1000);
+		final String boundary = BOUNDARY_PREFIX + curTime;
+		connection.setRequestMethod("POST");
+		connection.setDoOutput(true);
+		connection.setRequestProperty(HEADER_CONTENT_TYPE,
+				String.format(CONTENT_TYPE_MULTIPART, charset, curTime));
+		connection.setChunkedStreamingMode(0);
 
-            for (String key : multipartParams.keySet()) {
-                MultiPartParam param = multipartParams.get(key);
+		Map<String, MultiPartParam> multipartParams = ((MultiPartRequest<?>) request)
+				.getMultipartParams();
+		Map<String, String> filesToUpload = ((MultiPartRequest<?>) request)
+				.getFilesToUpload();
+		PrintWriter writer = null;
+		try {
+			addHeadersToConnection(connection, userAgent, additionalHeaders);
+			OutputStream out = connection.getOutputStream();
+			writer = new PrintWriter(new OutputStreamWriter(out, charset), true);
 
-                writer.append(boundary)
-                        .append(CRLF)
-                        .append(String.format(HEADER_CONTENT_DISPOSITION
-                                + COLON_SPACE + FORM_DATA, key))
-                        .append(CRLF)
-                        .append(HEADER_CONTENT_TYPE + COLON_SPACE
-                                + param.contentType)
-                        .append(CRLF)
-                        .append(CRLF)
-                        .append(param.value)
-                        .append(CRLF)
-                        .flush();
-            }
+			for (String key : multipartParams.keySet()) {
+				MultiPartParam param = multipartParams.get(key);
 
-            for (String key : filesToUpload.keySet()) {
+				writer.append(boundary)
+						.append(CRLF)
+						.append(String.format(HEADER_CONTENT_DISPOSITION
+								+ COLON_SPACE + FORM_DATA, key))
+						.append(CRLF)
+						.append(HEADER_CONTENT_TYPE + COLON_SPACE
+								+ param.contentType).append(CRLF).append(CRLF)
+						.append(param.value).append(CRLF).flush();
+			}
 
-                File file = new File(filesToUpload.get(key));
-                
-                if(!file.exists()) {
-                    throw new IOException(String.format("File not found: %s", file.getAbsolutePath()));
-                }
-                
-                if(file.isDirectory()) {
-                    throw new IOException(String.format("File is a directory: %s", file.getAbsolutePath()));
-                }
+			for (String key : filesToUpload.keySet()) {
 
-                writer.append(boundary)
-                        .append(CRLF)
-                        .append(String.format(HEADER_CONTENT_DISPOSITION
-                                + COLON_SPACE + FORM_DATA + SEMICOLON_SPACE
-                                + FILENAME, key, file.getName()))
-                        .append(CRLF)
-                        .append(HEADER_CONTENT_TYPE + COLON_SPACE
-                                + CONTENT_TYPE_OCTET_STREAM)
-                        .append(CRLF)
-                        .append(HEADER_CONTENT_TRANSFER_ENCODING + COLON_SPACE
-                                + BINARY)
-                        .append(CRLF)
-                        .append(CRLF)
-                        .flush();
+				File file = new File(filesToUpload.get(key));
 
-                BufferedInputStream input = null;
-                try {
-                    FileInputStream fis = new FileInputStream(file);
-                    input = new BufferedInputStream(fis);
-                    int bufferLength = 0;
+				if (!file.exists()) {
+					throw new IOException(String.format("File not found: %s",
+							file.getAbsolutePath()));
+				}
 
-                    byte[] buffer = new byte[1024];
-                    while ((bufferLength = input.read(buffer)) > 0) {
-                        out.write(buffer, 0, bufferLength);
-                    }
-                    out.flush(); // Important! Output cannot be closed. Close of
-                                 // writer will close
-                                 // output as well.
-                } finally {
-                    if (input != null)
-                        try {
-                            input.close();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                }
-                writer.append(CRLF).flush(); // CRLF is important! It indicates
-                                             // end of binary
-                                             // boundary.
-            }
+				if (file.isDirectory()) {
+					throw new IOException(String.format(
+							"File is a directory: %s", file.getAbsolutePath()));
+				}
 
-            // End of multipart/form-data.
-            writer.append(boundary + BOUNDARY_PREFIX).append(CRLF).flush();
+				writer.append(boundary)
+						.append(CRLF)
+						.append(String.format(HEADER_CONTENT_DISPOSITION
+								+ COLON_SPACE + FORM_DATA + SEMICOLON_SPACE
+								+ FILENAME, key, file.getName()))
+						.append(CRLF)
+						.append(HEADER_CONTENT_TYPE + COLON_SPACE
+								+ CONTENT_TYPE_OCTET_STREAM)
+						.append(CRLF)
+						.append(HEADER_CONTENT_TRANSFER_ENCODING + COLON_SPACE
+								+ BINARY).append(CRLF).append(CRLF).flush();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+				BufferedInputStream input = null;
+				try {
+					FileInputStream fis = new FileInputStream(file);
+					input = new BufferedInputStream(fis);
+					int bufferLength = 0;
 
-        } finally {
-            if (writer != null) {
-                writer.close();
-            }
-        }
-    }
+					byte[] buffer = new byte[1024];
+					while ((bufferLength = input.read(buffer)) > 0) {
+						out.write(buffer, 0, bufferLength);
+					}
+					out.flush(); // Important! Output cannot be closed. Close of
+									// writer will close
+									// output as well.
+				} finally {
+					if (input != null)
+						try {
+							input.close();
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+				}
+				writer.append(CRLF).flush(); // CRLF is important! It indicates
+												// end of binary
+												// boundary.
+			}
 
-    /**
-     * Initializes an {@link HttpEntity} from the given
-     * {@link HttpURLConnection}.
-     * 
-     * @param connection
-     * @return an HttpEntity populated with data from <code>connection</code>.
-     */
-    private static HttpEntity entityFromConnection(HttpURLConnection connection) {
+			// End of multipart/form-data.
+			writer.append(boundary + BOUNDARY_PREFIX).append(CRLF).flush();
 
-        BasicHttpEntity entity = new BasicHttpEntity();
-        InputStream inputStream;
-        try {
-            inputStream = connection.getInputStream();
-        } catch (IOException ioe) {
-            inputStream = connection.getErrorStream();
-        }
-        entity.setContent(inputStream);
-        entity.setContentLength(connection.getContentLength());
-        entity.setContentEncoding(connection.getContentEncoding());
-        entity.setContentType(connection.getContentType());
-        return entity;
-    }
+		} catch (Exception e) {
+			e.printStackTrace();
 
-    /**
-     * Create an {@link HttpURLConnection} for the specified {@code url}.
-     */
-    protected HttpURLConnection createConnection(URL url) throws IOException {
+		} finally {
+			if (writer != null) {
+				writer.close();
+			}
+		}
+	}
 
-        return (HttpURLConnection) url.openConnection();
-    }
+	/**
+	 * Initializes an {@link HttpEntity} from the given
+	 * {@link HttpURLConnection}.
+	 * 
+	 * @param connection
+	 * @return an HttpEntity populated with data from <code>connection</code>.
+	 */
+	private static HttpEntity entityFromConnection(HttpURLConnection connection) {
 
-    /**
-     * Opens an {@link HttpURLConnection} with parameters.
-     * 
-     * @param url
-     * @return an open connection
-     * @throws IOException
-     */
-    private HttpURLConnection openConnection(URL url, Request<?> request) throws IOException {
+		BasicHttpEntity entity = new BasicHttpEntity();
+		InputStream inputStream;
+		try {
+			inputStream = connection.getInputStream();
+		} catch (IOException ioe) {
+			inputStream = connection.getErrorStream();
+		}
+		entity.setContent(inputStream);
+		entity.setContentLength(connection.getContentLength());
+		entity.setContentEncoding(connection.getContentEncoding());
+		entity.setContentType(connection.getContentType());
+		return entity;
+	}
 
-        HttpURLConnection connection = createConnection(url);
+	/**
+	 * Create an {@link HttpURLConnection} for the specified {@code url}.
+	 */
+	protected HttpURLConnection createConnection(URL url) throws IOException {
 
-        int timeoutMs = request.getTimeoutMs();
-        connection.setConnectTimeout(timeoutMs);
-        connection.setReadTimeout(timeoutMs);
-        connection.setUseCaches(false);
-        connection.setDoInput(true);
+		return (HttpURLConnection) url.openConnection();
+	}
 
-        // use caller-provided custom SslSocketFactory, if any, for HTTPS
-        if ("https".equals(url.getProtocol()) && mSslSocketFactory != null) {
-            ((HttpsURLConnection) connection)
-                    .setSSLSocketFactory(mSslSocketFactory);
-        }
+	/**
+	 * Opens an {@link HttpURLConnection} with parameters.
+	 * 
+	 * @param url
+	 * @return an open connection
+	 * @throws IOException
+	 */
+	private HttpURLConnection openConnection(URL url, Request<?> request)
+			throws IOException {
 
-        return connection;
-    }
+		HttpURLConnection connection = createConnection(url);
 
-    private static void setConnectionParametersForRequest(HttpURLConnection connection, Request<?> request, HashMap<String, String> additionalHeaders, String userAgent) throws IOException, AuthFailureError {
+		int timeoutMs = request.getTimeoutMs();
+		connection.setConnectTimeout(timeoutMs);
+		connection.setReadTimeout(timeoutMs);
+		connection.setUseCaches(false);
+		connection.setDoInput(true);
 
-        addHeadersToConnection(connection, userAgent, additionalHeaders);
-        switch (request.getMethod()) {
-        case Method.GET:
-            // Not necessary to set the request method because connection
-            // defaults to GET but
-            // being explicit here.
-            connection.setRequestMethod("GET");
-            break;
-        case Method.DELETE:
-            connection.setRequestMethod("DELETE");
-            break;
-        case Method.POST:
-            connection.setRequestMethod("POST");
-            addBodyIfExists(connection, request);
-            break;
-        case Method.PUT:
-            connection.setRequestMethod("PUT");
-            addBodyIfExists(connection, request);
-            break;
-        default:
-            throw new IllegalStateException("Unknown method type.");
-        }
-    }
+		// use caller-provided custom SslSocketFactory, if any, for HTTPS
+		if ("https".equals(url.getProtocol()) && mSslSocketFactory != null) {
+			((HttpsURLConnection) connection)
+					.setSSLSocketFactory(mSslSocketFactory);
+		}
 
-    private static void addBodyIfExists(HttpURLConnection connection, Request<?> request) throws IOException, AuthFailureError {
+		return connection;
+	}
 
-        byte[] body = request.getBody();
-        if (body != null) {
-            connection.setDoOutput(true);
-            connection.addRequestProperty(HEADER_CONTENT_TYPE,
-                    request.getBodyContentType());
-            DataOutputStream out = new DataOutputStream(
-                    connection.getOutputStream());
-            out.write(body);
-            out.close();
-        }
-    }
+	private static void setConnectionParametersForRequest(
+			HttpURLConnection connection, Request<?> request,
+			HashMap<String, String> additionalHeaders, String userAgent)
+			throws IOException, AuthFailureError {
+
+		addHeadersToConnection(connection, userAgent, additionalHeaders);
+		switch (request.getMethod()) {
+		case Method.GET:
+			// Not necessary to set the request method because connection
+			// defaults to GET but
+			// being explicit here.
+			connection.setRequestMethod("GET");
+			break;
+		case Method.DELETE:
+			connection.setRequestMethod("DELETE");
+			break;
+		case Method.POST:
+			connection.setRequestMethod("POST");
+			addBodyIfExists(connection, request);
+			break;
+		case Method.PUT:
+			connection.setRequestMethod("PUT");
+			addBodyIfExists(connection, request);
+			break;
+		default:
+			throw new IllegalStateException("Unknown method type.");
+		}
+	}
+
+	private static void addBodyIfExists(HttpURLConnection connection,
+			Request<?> request) throws IOException, AuthFailureError {
+
+		byte[] body = request.getBody();
+		if (body != null) {
+			connection.setDoOutput(true);
+			connection.addRequestProperty(HEADER_CONTENT_TYPE,
+					request.getBodyContentType());
+			DataOutputStream out = new DataOutputStream(
+					connection.getOutputStream());
+			out.write(body);
+			out.close();
+		}
+	}
 }
