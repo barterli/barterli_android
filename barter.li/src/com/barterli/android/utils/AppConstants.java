@@ -10,6 +10,8 @@ public class AppConstants {
 	public static String PUBLICATION_AUTHOR = "author";
 	public static String PUBLICATION_AUTHOR_NAME = "name";
 
+	public static final String ISBN = "ISBN";
+
 	public static String TWITTER_CONSUMER_KEY = "XpSpv7zk0EGcS7ZMCYYw"; // place
 																		// your
 																		// twitter
@@ -30,5 +32,12 @@ public class AppConstants {
 	public static final String URL_TWITTER_AUTH = "auth_url";
 	public static final String URL_TWITTER_OAUTH_VERIFIER = "oauth_verifier";
 	public static final String URL_TWITTER_OAUTH_TOKEN = "oauth_token";
+
+	public static final String BOOK_ID = "book_id";
+	public static final String BOOK_TITLE = "book_title";
+	public static final String AUTHOR = "author";
+	public static final String DESCRIPTION = "description";
+	public static final String PUBLICATION_YEAR = "publication_year";
+	public static final String BARTER_TYPES = "barter_types";
 
 }

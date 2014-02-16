@@ -100,7 +100,7 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
 					// Toast.makeText(MyProfileActivity.this,
 					// "Edit will be built soon!", Toast.LENGTH_SHORT).show();
 					Intent editBookIntent = new Intent(MyProfileActivity.this,
-							EditBookDetailsActivity.class);
+							AddOrEditBookActivity.class);
 					editBookIntent.putExtra("TITLE", my_books[position]);
 					try {
 						editBookIntent.putExtra("BOOK_ID", my_book_objects

@@ -29,7 +29,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity {
 
 		switch (item.getItemId()) {
 		case R.id.action_scan_book: {
-			startActivity(new Intent(this, AddBookActivity.class));
+			startActivity(new Intent(this, ScanIsbnActivity.class));
 			return true;
 		}
 
@@ -44,7 +44,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity {
 		}
 
 		case R.id.action_add_book: {
-			startActivity(new Intent(this, EditBookDetailsActivity.class));
+			startActivity(new Intent(this, AddOrEditBookActivity.class));
 			return true;
 		}
 

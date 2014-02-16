@@ -11,6 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
+        
+        <com.barterli.android.widgets.TypefacedEditText
+            android:id="@+id/edit_text_isbn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/isbn_label"
+            android:inputType="number"
+            android:singleLine="true"
+            app:fontStyle="alegreya_regular" />
 
         <com.barterli.android.widgets.TypefacedAutoCompleteTextView
             android:id="@+id/edit_text_title"
@@ -110,11 +120,10 @@
         </LinearLayout>
 
         <com.barterli.android.widgets.TypefacedButton
-            android:id="@+id/submit_book_button"
+            android:id="@+id/button_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:onClick="addBook"
             android:text="@string/submit"
             app:fontStyle="alegreya_bold" />
     </LinearLayout>

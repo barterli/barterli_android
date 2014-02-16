@@ -42,7 +42,7 @@
                 android:value=".BooksAroundMeActivity" />
         </activity>
         <activity
-            android:name=".AddBookActivity"
+            android:name=".ScanIsbnActivity"
             android:label="@string/app_name"
             android:parentActivityName=".BooksAroundMeActivity"
             android:screenOrientation="landscape" >
@@ -51,7 +51,7 @@
                 android:value=".BooksAroundMeActivity" />
         </activity>
         <activity
-            android:name=".EditBookDetailsActivity"
+            android:name=".AddOrEditBookActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:parentActivityName=".BooksAroundMeActivity" >

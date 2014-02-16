@@ -61,16 +61,20 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 	 * @param showErrorOnNoNetwork
 	 *            Whether an error toast should be displayed on no internet
 	 *            connection
+	 * @param errorMsgResId
+	 *            String resource Id for error message to show if no internet
+	 *            connection, 0 for a default error message
 	 */
 	protected void addRequestToQueue(Request<?> request,
-			boolean showErrorOnNoNetwork) {
+			boolean showErrorOnNoNetwork, final int errorMsgResId) {
 
 		if (isConnectedToInternet()) {
 			mRequestCounter.incrementAndGet();
 			setProgressBarIndeterminateVisibility(true);
 			mRequestQueue.add(request);
 		} else if (showErrorOnNoNetwork) {
-			showToast(R.string.no_network_connection, false);
+			showToast(errorMsgResId != 0 ? errorMsgResId
+					: R.string.no_network_connection, false);
 		}
 	}
 

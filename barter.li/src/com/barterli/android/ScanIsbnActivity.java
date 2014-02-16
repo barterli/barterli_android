@@ -2,10 +2,6 @@ package com.barterli.android;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.JSONArray;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,12 +20,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.barterli.android.http.HttpConstants;
-import com.barterli.android.http.HttpConstants.ApiEndpoints;
+import com.barterli.android.utils.AppConstants;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
@@ -40,9 +31,8 @@ import com.jwetherell.quick_response_code.camera.CameraManager;
 import com.jwetherell.quick_response_code.result.ResultHandler;
 import com.jwetherell.quick_response_code.result.ResultHandlerFactory;
 
-public class AddBookActivity extends AbstractBarterLiActivity implements
-		IDecoderActivity, SurfaceHolder.Callback, Listener<JSONArray>,
-		ErrorListener {
+public class ScanIsbnActivity extends AbstractBarterLiActivity implements
+		IDecoderActivity, SurfaceHolder.Callback {
 
 	private static final String TAG = "AddBookActivity";
 
@@ -140,7 +130,7 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		if (item.getItemId() == R.id.action_add_manually) {
-			startActivity(new Intent(this, EditBookDetailsActivity.class));
+			startActivity(new Intent(this, AddOrEditBookActivity.class));
 			finish();
 			return true;
 		}
@@ -255,7 +245,6 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 
 	@Override
 	public void handleDecode(Result rawResult, Bitmap barcode) {
-		// drawResultPoints(barcode, rawResult);
 		stopScanningForBarcode();
 		ResultHandler resultHandler = ResultHandlerFactory.makeResultHandler(
 				this, rawResult);
@@ -264,47 +253,26 @@ public class AddBookActivity extends AbstractBarterLiActivity implements
 
 	private void handleDecodeInternally(Result rawResult,
 			ResultHandler resultHandler, Bitmap barcode) {
-		// onPause();
-		// Toast.makeText(this, resultHandler.getDisplayContents().toString(),
-		// Toast.LENGTH_SHORT).show();
-		Log.v("RAWRESULT", resultHandler.getDisplayContents().toString());
-		Log.v("FORMAT", rawResult.getBarcodeFormat().toString());
-		Log.v("TYPE", resultHandler.getType().toString());
 
-		getSuggestions(resultHandler.getDisplayContents().toString());
+		final String isbnNumber = resultHandler.getDisplayContents().toString(); // Barcode
+																					// data
+		final String barcodeSymbology = rawResult.getBarcodeFormat().toString(); // Barcode
+																					// symbology
+		final String type = resultHandler.getType().toString(); // Whether
+																// barcode is of
+																// type URI or
+																// ISBN
 
-	}
+		if (!AppConstants.ISBN.equals(type)) {
+			showToast(R.string.not_a_valid_isbn, true);
+		} else {
 
-	/**
-	 * Retrieve the suggestions for the books
-	 */
-	private void getSuggestions(String isbn) {
+			final Intent addBookIntent = new Intent(this,
+					AddOrEditBookActivity.class);
+			addBookIntent.putExtra(AppConstants.BOOK_ID, isbnNumber);
+			startActivity(addBookIntent);
+		}
 
-		JsonArrayRequest request = new JsonArrayRequest(
-				HttpConstants.getApiBaseUrl() + ApiEndpoints.BOOK_SUGGESTIONS,
-				this, this);
-
-		final Map<String, String> params = new HashMap<String, String>();
-		params.put(HttpConstants.Q, isbn);
-		params.put(HttpConstants.T, "title");
-
-		request.setParams(params);
-
-		addRequestToQueue(request, false);
-
-	}
-
-	@Override
-	public void onErrorResponse(VolleyError error) {
-
-		onRequestFinished();
-	}
-
-	@Override
-	public void onResponse(JSONArray response) {
-
-		onRequestFinished();
-		Log.d(TAG, "Response:" + response);
 	}
 
 }

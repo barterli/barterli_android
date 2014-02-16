@@ -29,11 +29,16 @@
     <string name="placeholder_books_around_me">This screen is under implementation. Why don\'t you try tapping one of the items on the action bar? :-)</string>
 
     <!-- Strings for EditBookDetailsActivity -->
+    <string name="isbn_label">ISBN Number</string>
     <string name="title_label">Book Title</string>
     <string name="author_label">Author</string>
     <string name="description_label">Description</string>
-    <string name="publication_year_label">Publication Year</string>
+    <string name="publication_year_label">Published On</string>
     <string name="barter_type_label">Barter Type</string>
+    
+    <string name="book_added">Book has been added!</string>
+    <string name="unable_to_fetch_book_info">Unable to fetch book info.</string>
+    <string name="not_a_valid_isbn">Not a valid ISBN.</string>
 
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>

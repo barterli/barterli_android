@@ -44,5 +44,11 @@ public class HttpConstants {
 
 	public static final String Q = "q";
 	public static final String T = "t";
+	public static final String TITLE = "title";
+	public static final String DESCRIPTION = "description";
+	public static final String AUTHORS = "authors";
+	public static final String AUTHOR = "author";
+	public static final String NAME = "name";
+	public static final String PUBLICATION_YEAR = "publication_year";
 
 }
