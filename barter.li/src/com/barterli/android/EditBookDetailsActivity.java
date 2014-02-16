@@ -41,8 +41,6 @@ public class EditBookDetailsActivity extends AbstractBarterLiActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_book);
-		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		myHelper = new HTTPHelper(EditBookDetailsActivity.this);
 		titleText = (EditText) findViewById(R.id.edit_text_title);
 		authorText = (EditText) findViewById(R.id.edit_text_author);

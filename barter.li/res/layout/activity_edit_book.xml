@@ -60,7 +60,6 @@
             android:onClick="addBook"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="@string/barter_type_label"
-            android:textSize="@dimen/text_medium"
             app:fontStyle="alegreya_bold" />
 
         <com.barterli.android.widgets.TypefacedButton
@@ -70,7 +69,6 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:onClick="addBook"
             android:text="@string/submit"
-            android:textSize="@dimen/text_medium"
             app:fontStyle="alegreya_bold" />
     </LinearLayout>
 

@@ -8,5 +8,12 @@
     <dimen name="text_medium">18sp</dimen>
     <dimen name="text_big">20sp</dimen>
     <dimen name="text_large">22sp</dimen>
+    <dimen name="margin_x_small">8dp</dimen>
+    <dimen name="margin_minimum">12dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_huge">32dp</dimen>
+    <dimen name="button_vertical_padding">12dp</dimen>
+    <dimen name="button_horizontal_padding">12dp</dimen>
 
 </resources>

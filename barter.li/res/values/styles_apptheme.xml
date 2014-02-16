@@ -5,6 +5,11 @@
 
   <style name="ButtonAppTheme" parent="android:Widget.Holo.Light.Button">
 	  <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
+	  <item name="android:textSize">@dimen/text_big</item>
+	  <item name="android:paddingLeft">@dimen/button_horizontal_padding</item>
+	  <item name="android:paddingRight">@dimen/button_horizontal_padding</item>
+	  <item name="android:paddingTop">@dimen/button_vertical_padding</item>
+	  <item name="android:paddingBottom">@dimen/button_vertical_padding</item>
   </style>
 
   <style name="ImageButtonAppTheme" parent="android:Widget.Holo.Light.ImageButton">
