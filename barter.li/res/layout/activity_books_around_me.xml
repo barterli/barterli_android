@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent" >
 
-    <com.barterli.android.widgets.TypefacedTextView
+    <li.barter.widgets.TypefacedTextView
         android:id="@+id/tap_to_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
