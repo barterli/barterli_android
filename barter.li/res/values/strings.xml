@@ -26,7 +26,7 @@
     <string name="search_by_author_hint">Search by Author</string>
     <string name="scan_barcode_button_label">Scan ISBN BarCode</string>
     <string name="add_new_book_label">Manual Entry</string>
-    <string name="placeholder_books_around_me">This screen is under implementation. Why don\'t you try tapping one of the items on the action bar? :-)</string>
+    <string name="search_for_books">Search for books</string>
 
     <!-- Strings for EditBookDetailsActivity -->
     <string name="isbn_label">ISBN Number</string>

@@ -11,15 +11,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- <li.barter.widgets.TypefacedTextView
-        android:id="@+id/tap_to_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:gravity="center"
-        android:text="@string/placeholder_books_around_me"
-        android:textSize="@dimen/text_medium"
-        app:fontStyle="alegreya_regular" /> -->
+    <LinearLayout
+        android:id="@+id/layout_books_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/global_bg_70"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:orientation="vertical" >
+        
+        <li.barter.widgets.TypefacedAutoCompleteTextView 
+            android:id="@+id/auto_complete_books_around_me"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_for_books"
+            android:background="@color/white"
+            android:padding="@dimen/margin_x_small"
+            android:textSize="@dimen/text_medium"
+            app:fontStyle="alegreya_regular"/>
+    </LinearLayout>
 
 </RelativeLayout>
