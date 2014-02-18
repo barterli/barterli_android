@@ -1,14 +1,17 @@
 package li.barter;
 
+import com.google.android.gms.maps.MapFragment;
+
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import li.barter.R;
 
 public class BooksAroundMeActivity extends AbstractBarterLiActivity {
+
+	private static final String TAG = "BooksAroundMeActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,17 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity {
 
 		getMenuInflater().inflate(R.menu.menu_books_around_me, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	protected void onResumeFragments() {
+		super.onResumeFragments();
+		MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_books_around_me);
+		
+		if(fragment != null) {
+			Log.d(TAG, "Fragment:" + fragment.toString());
+			fragment.getMap().setMyLocationEnabled(true);
+		}
 	}
 
 	@Override
