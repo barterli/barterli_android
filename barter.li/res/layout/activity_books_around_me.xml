@@ -5,15 +5,21 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent" >
 
-    <li.barter.widgets.TypefacedTextView
+    <fragment
+        android:id="@+id/map_books_around_me"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- <li.barter.widgets.TypefacedTextView
         android:id="@+id/tap_to_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textSize="@dimen/text_medium"
-        android:gravity="center"
         android:layout_margin="@dimen/activity_horizontal_margin"
+        android:gravity="center"
         android:text="@string/placeholder_books_around_me"
-        app:fontStyle="alegreya_regular" />
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="alegreya_regular" /> -->
 
 </RelativeLayout>
