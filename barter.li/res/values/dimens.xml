@@ -30,5 +30,6 @@
     <dimen name="margin_huge">32dp</dimen>
     <dimen name="button_vertical_padding">12dp</dimen>
     <dimen name="button_horizontal_padding">12dp</dimen>
+    <dimen name="grid_view_spacing">32dp</dimen>
 
 </resources>

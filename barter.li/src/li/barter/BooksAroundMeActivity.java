@@ -17,12 +17,11 @@ package li.barter;
 
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.UtilityMethods;
-import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,7 +30,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -53,11 +51,13 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 	 */
 	private static final float MAP_ZOOM_LEVEL = 15;
 
+	private static final int MAP_BLUR = 18;
+
 	private GooglePlayClientWrapper mGooglePlayClientWrapper;
 
 	private MapFragment mMapFragment;
 
-	private ImageView mBackgroundImageView;
+	private View mBackground;
 
 	private AutoCompleteTextView mBooksAroundMeAutoCompleteTextView;
 
@@ -65,7 +65,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_books_around_me);
-		mBackgroundImageView = (ImageView) findViewById(R.id.background_blurred_map);
+		mBackground = findViewById(R.id.layout_books_container);
 		mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete_books_around_me);
 		setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
 		getActionBar().setHomeButtonEnabled(false);
@@ -149,10 +149,20 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		}
 	}
 
+	@SuppressWarnings("deprecation")
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@Override
 	public void onSnapshotReady(Bitmap snapshot) {
-		mBackgroundImageView.setImageBitmap(UtilityMethods.blurImage(this,
-				snapshot, 18));
+
+		BitmapDrawable backgroundDrawable = new BitmapDrawable(getResources(),
+				UtilityMethods.blurImage(this, snapshot, MAP_BLUR));
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			mBackground.setBackground(backgroundDrawable);
+		} else {
+			mBackground.setBackgroundDrawable(backgroundDrawable);
+		}
+
 		snapshot.recycle();
 		snapshot = null;
 
