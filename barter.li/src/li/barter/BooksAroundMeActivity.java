@@ -15,6 +15,7 @@
  ******************************************************************************/
 package li.barter;
 
+import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.UtilityMethods;
 import android.annotation.TargetApi;
@@ -30,6 +31,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.GridView;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -61,12 +63,21 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 	private AutoCompleteTextView mBooksAroundMeAutoCompleteTextView;
 
+	private GridView mBooksAroundMeGridView;
+
+	private BooksAroundMeAdapter mBooksAroundMeAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_books_around_me);
+
 		mBackground = findViewById(R.id.layout_books_container);
 		mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete_books_around_me);
+		mBooksAroundMeGridView = (GridView) findViewById(R.id.grid_books_around_me);
+
+		mBooksAroundMeAdapter = new BooksAroundMeAdapter();
+
 		setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
 		getActionBar().setHomeButtonEnabled(false);
 
@@ -157,6 +168,8 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		BitmapDrawable backgroundDrawable = new BitmapDrawable(getResources(),
 				UtilityMethods.blurImage(this, snapshot, MAP_BLUR));
 
+		// TODO Fade the blurred background into place instead of dropping it
+		// in
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			mBackground.setBackground(backgroundDrawable);
 		} else {
@@ -165,6 +178,11 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 		snapshot.recycle();
 		snapshot = null;
+
+		// TODO Use a Handler with a delay here and animate the Views in
+		if (mBooksAroundMeGridView.getAdapter() == null) {
+			mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
+		}
 
 	}
 
