@@ -154,15 +154,14 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 		actionBar.setTitle(s);
 	}
 
-	protected void showToast(String toastMessage, boolean isLong) {
+	public void showToast(String toastMessage, boolean isLong) {
 		Toast.makeText(this, toastMessage,
 				isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
 	}
 
-	protected void showToast(int toastMessageResId, boolean isLong) {
+	public void showToast(int toastMessageResId, boolean isLong) {
 		Toast.makeText(this, toastMessageResId,
 				isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
-		;
 	}
 
 }

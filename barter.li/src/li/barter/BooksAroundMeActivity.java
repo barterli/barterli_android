@@ -19,6 +19,14 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity {
 		setContentView(R.layout.activity_books_around_me);
 		setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
 		getActionBar().setHomeButtonEnabled(false);
+
+		MapFragment fragment = (MapFragment) getFragmentManager()
+				.findFragmentById(R.id.map_books_around_me);
+
+		if (fragment != null) {
+			Log.d(TAG, "Fragment:" + fragment.toString());
+			fragment.getMap().setMyLocationEnabled(true);
+		}
 	}
 
 	@Override
@@ -26,17 +34,6 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity {
 
 		getMenuInflater().inflate(R.menu.menu_books_around_me, menu);
 		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	protected void onResumeFragments() {
-		super.onResumeFragments();
-		MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_books_around_me);
-		
-		if(fragment != null) {
-			Log.d(TAG, "Fragment:" + fragment.toString());
-			fragment.getMap().setMyLocationEnabled(true);
-		}
 	}
 
 	@Override
