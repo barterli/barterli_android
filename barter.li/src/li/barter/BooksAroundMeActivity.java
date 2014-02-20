@@ -28,6 +28,7 @@ import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,6 +80,8 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 	private Drawable[] mTransitionDrawableLayers;
 
+	private Handler mHandler;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -96,6 +99,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
 		getActionBar().setHomeButtonEnabled(false);
 
+		mHandler = new Handler();
 		mTransitionDrawableLayers = new Drawable[2];
 		mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
 	}
@@ -169,12 +173,28 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 		if (mBackgroundView.getAlpha() == 1.0f) {
 			mBackgroundView.animate().alpha(0.0f).setDuration(500).start();
-			setMapMyLocationEnabled(true);
-			mMapView.bringToFront();
+
+			mHandler.postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+					setMapMyLocationEnabled(true);
+					mMapView.bringToFront();
+
+				}
+			}, 500);
 		} else {
-			mBackgroundView.animate().alpha(1.0f).setDuration(500).start();
 			setMapMyLocationEnabled(false);
 			mBackgroundView.bringToFront();
+			mBackgroundView.animate().alpha(1.0f).setDuration(500).start();
+			mHandler.postDelayed(new Runnable() {
+
+				@Override
+				public void run() {
+
+					beginMapSnapshotProcess();
+				}
+			}, 500);
 		}
 	}
 
@@ -239,7 +259,15 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 	@Override
 	public void onFinish() {
+		beginMapSnapshotProcess();
+	}
 
+	/**
+	 * Begins the process of capturing the Map snapshot by setting a Map loaded
+	 * callback. Once the Map is completely loaded, a snapshot is taken, and a
+	 * blurred bitmap is generated for the background of the screen content
+	 */
+	private void beginMapSnapshotProcess() {
 		if (mMapFragment != null && mMapFragment.isVisible()) {
 			GoogleMap googleMap = mMapFragment.getMap();
 
