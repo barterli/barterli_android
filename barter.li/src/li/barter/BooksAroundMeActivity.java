@@ -44,6 +44,7 @@ import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		LocationListener, SnapshotReadyCallback, CancelableCallback,
@@ -72,9 +73,10 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 	private BooksAroundMeAdapter mBooksAroundMeAdapter;
 
+	private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
+
 	private Drawable[] mTransitionDrawableLayers;
 
-	private Handler mHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,12 +88,13 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		mBooksAroundMeGridView = (GridView) findViewById(R.id.grid_books_around_me);
 
 		mBooksAroundMeAdapter = new BooksAroundMeAdapter();
+		mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(
+				mBooksAroundMeAdapter, 150, 500);
 
 		setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
 		getActionBar().setHomeButtonEnabled(false);
 
 		mTransitionDrawableLayers = new Drawable[2];
-		mHandler = new Handler();
 		mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
 	}
 
@@ -197,18 +200,11 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		snapshot.recycle();
 		snapshot = null;
 
-		// TODO Added for testing. In reality, we'll call network to fetch data
-		// for the location
-		mHandler.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				if (mBooksAroundMeGridView.getAdapter() == null) {
-					mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
-				}
-
-			}
-		}, 750);
+		if (mBooksAroundMeGridView.getAdapter() == null) {
+			mSwingBottomInAnimationAdapter
+					.setAbsListView(mBooksAroundMeGridView);
+			mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
+		}
 
 	}
 
