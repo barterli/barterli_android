@@ -57,7 +57,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 	 */
 	private static final float MAP_ZOOM_LEVEL = 15;
 
-	private static final int MAP_BLUR = 18;
+	private static final int MAP_BLUR = 20;
 
 	private static final int TRANSITION_DURATION = 1200;
 
