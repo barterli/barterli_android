@@ -28,6 +28,7 @@ import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -71,7 +72,9 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 	private BooksAroundMeAdapter mBooksAroundMeAdapter;
 
-	private Drawable[] mTransitionDrawableLayers = new Drawable[2];
+	private Drawable[] mTransitionDrawableLayers;
+
+	private Handler mHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,8 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
 		getActionBar().setHomeButtonEnabled(false);
 
+		mTransitionDrawableLayers = new Drawable[2];
+		mHandler = new Handler();
 		mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
 	}
 
@@ -173,29 +178,37 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 		BitmapDrawable backgroundDrawable = new BitmapDrawable(getResources(),
 				UtilityMethods.blurImage(this, snapshot, MAP_BLUR));
-		
+
 		mTransitionDrawableLayers[0] = mBackground.getBackground();
 		mTransitionDrawableLayers[1] = backgroundDrawable;
-		
-		final TransitionDrawable transitionDrawable = new TransitionDrawable(mTransitionDrawableLayers);
+
+		final TransitionDrawable transitionDrawable = new TransitionDrawable(
+				mTransitionDrawableLayers);
 		transitionDrawable.setCrossFadeEnabled(true);
-		
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			mBackground.setBackground(transitionDrawable);
 		} else {
 			mBackground.setBackgroundDrawable(transitionDrawable);
 		}
-		
+
 		transitionDrawable.startTransition(TRANSITION_DURATION);
 
 		snapshot.recycle();
 		snapshot = null;
 
-		// TODO Use a Handler with a delay here and animate the Views in
-		/*if (mBooksAroundMeGridView.getAdapter() == null) {
-			mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
-		}*/
+		// TODO Added for testing. In reality, we'll call network to fetch data
+		// for the location
+		mHandler.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				if (mBooksAroundMeGridView.getAdapter() == null) {
+					mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
+				}
+
+			}
+		}, 750);
 
 	}
 
