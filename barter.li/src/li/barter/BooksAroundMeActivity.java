@@ -23,6 +23,8 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -55,6 +57,8 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 	private static final int MAP_BLUR = 18;
 
+	private static final int TRANSITION_DURATION = 1200;
+
 	private GooglePlayClientWrapper mGooglePlayClientWrapper;
 
 	private MapFragment mMapFragment;
@@ -66,6 +70,8 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 	private GridView mBooksAroundMeGridView;
 
 	private BooksAroundMeAdapter mBooksAroundMeAdapter;
+
+	private Drawable[] mTransitionDrawableLayers = new Drawable[2];
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -167,22 +173,29 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 		BitmapDrawable backgroundDrawable = new BitmapDrawable(getResources(),
 				UtilityMethods.blurImage(this, snapshot, MAP_BLUR));
+		
+		mTransitionDrawableLayers[0] = mBackground.getBackground();
+		mTransitionDrawableLayers[1] = backgroundDrawable;
+		
+		final TransitionDrawable transitionDrawable = new TransitionDrawable(mTransitionDrawableLayers);
+		transitionDrawable.setCrossFadeEnabled(true);
+		
 
-		// TODO Fade the blurred background into place instead of dropping it
-		// in
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-			mBackground.setBackground(backgroundDrawable);
+			mBackground.setBackground(transitionDrawable);
 		} else {
-			mBackground.setBackgroundDrawable(backgroundDrawable);
+			mBackground.setBackgroundDrawable(transitionDrawable);
 		}
+		
+		transitionDrawable.startTransition(TRANSITION_DURATION);
 
 		snapshot.recycle();
 		snapshot = null;
 
 		// TODO Use a Handler with a delay here and animate the Views in
-		if (mBooksAroundMeGridView.getAdapter() == null) {
+		/*if (mBooksAroundMeGridView.getAdapter() == null) {
 			mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
-		}
+		}*/
 
 	}
 
