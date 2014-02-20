@@ -28,11 +28,11 @@ import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
 
@@ -65,7 +65,9 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 	private MapFragment mMapFragment;
 
-	private View mBackground;
+	private View mBackgroundView;
+
+	private View mMapView;
 
 	private AutoCompleteTextView mBooksAroundMeAutoCompleteTextView;
 
@@ -77,15 +79,15 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 	private Drawable[] mTransitionDrawableLayers;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_books_around_me);
 
-		mBackground = findViewById(R.id.layout_books_container);
+		mBackgroundView = findViewById(R.id.layout_books_container);
 		mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete_books_around_me);
 		mBooksAroundMeGridView = (GridView) findViewById(R.id.grid_books_around_me);
+		mMapView = findViewById(R.id.map_books_around_me);
 
 		mBooksAroundMeAdapter = new BooksAroundMeAdapter();
 		mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(
@@ -128,6 +130,12 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
+
+		case R.id.action_toggle_map: {
+
+			toggleMap();
+			return true;
+		}
 		case R.id.action_scan_book: {
 			startActivity(new Intent(this, ScanIsbnActivity.class));
 			return true;
@@ -151,6 +159,22 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		default: {
 			return super.onOptionsItemSelected(item);
 		}
+		}
+	}
+
+	/**
+	 * Toggle Map
+	 */
+	private void toggleMap() {
+
+		if (mBackgroundView.getAlpha() == 1.0f) {
+			mBackgroundView.animate().alpha(0.0f).setDuration(500).start();
+			setMapMyLocationEnabled(true);
+			mMapView.bringToFront();
+		} else {
+			mBackgroundView.animate().alpha(1.0f).setDuration(500).start();
+			setMapMyLocationEnabled(false);
+			mBackgroundView.bringToFront();
 		}
 	}
 
@@ -182,7 +206,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		BitmapDrawable backgroundDrawable = new BitmapDrawable(getResources(),
 				UtilityMethods.blurImage(this, snapshot, MAP_BLUR));
 
-		mTransitionDrawableLayers[0] = mBackground.getBackground();
+		mTransitionDrawableLayers[0] = mBackgroundView.getBackground();
 		mTransitionDrawableLayers[1] = backgroundDrawable;
 
 		final TransitionDrawable transitionDrawable = new TransitionDrawable(
@@ -190,9 +214,9 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		transitionDrawable.setCrossFadeEnabled(true);
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-			mBackground.setBackground(transitionDrawable);
+			mBackgroundView.setBackground(transitionDrawable);
 		} else {
-			mBackground.setBackgroundDrawable(transitionDrawable);
+			mBackgroundView.setBackgroundDrawable(transitionDrawable);
 		}
 
 		transitionDrawable.startTransition(TRANSITION_DURATION);
@@ -237,6 +261,21 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 			}
 		}
 
+	}
+
+	/**
+	 * Sets the My location enabled for the Map
+	 */
+	private void setMapMyLocationEnabled(boolean enabled) {
+
+		if (mMapFragment != null && mMapFragment.isVisible()) {
+
+			GoogleMap googleMap = mMapFragment.getMap();
+
+			if (googleMap != null) {
+				googleMap.setMyLocationEnabled(enabled);
+			}
+		}
 	}
 
 }

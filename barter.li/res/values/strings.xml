@@ -34,6 +34,7 @@
     <string name="add_book">Add Book</string>
     <string name="add_manually">Add Book Manually</string>
     <string name="no_network_connection">No network connection!</string>
+    <string name="toggle_map">Toggle Map</string>
     <string name="app_id">458716080895923</string>
 
     <!-- Strings for AddBookActivity -->
