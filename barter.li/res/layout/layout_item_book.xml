@@ -7,7 +7,7 @@
     android:paddingBottom="@dimen/margin_large"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:background="@color/white" >
+    android:background="@drawable/item_bg_main" >
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_name"
