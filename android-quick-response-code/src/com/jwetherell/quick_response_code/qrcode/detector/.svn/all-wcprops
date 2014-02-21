@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/detector
+END
+FinderPatternInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/22/trunk/src/com/jwetherell/quick_response_code/qrcode/detector/FinderPatternInfo.java
+END
+AlignmentPatternFinder.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/detector/AlignmentPatternFinder.java
+END
+FinderPattern.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/detector/FinderPattern.java
+END
+Detector.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/detector/Detector.java
+END
+AlignmentPattern.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/detector/AlignmentPattern.java
+END
+FinderPatternFinder.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/detector/FinderPatternFinder.java
+END

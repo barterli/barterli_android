@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/camera
+END
+CameraManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/camera/CameraManager.java
+END
+AutoFocusCallback.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/camera/AutoFocusCallback.java
+END
+CameraConfigurationManager.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/camera/CameraConfigurationManager.java
+END
+PreviewCallback.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/camera/PreviewCallback.java
+END

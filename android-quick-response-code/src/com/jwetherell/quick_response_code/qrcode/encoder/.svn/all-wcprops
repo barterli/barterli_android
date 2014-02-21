@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/encoder
+END
+Encoder.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/encoder/Encoder.java
+END
+MatrixUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/encoder/MatrixUtil.java
+END
+BlockPair.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/2/trunk/src/com/jwetherell/quick_response_code/qrcode/encoder/BlockPair.java
+END
+ByteMatrix.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/encoder/ByteMatrix.java
+END
+MaskUtil.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/encoder/MaskUtil.java
+END
+QRCode.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/23/trunk/src/com/jwetherell/quick_response_code/qrcode/encoder/QRCode.java
+END

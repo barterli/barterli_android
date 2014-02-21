@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2014, barter.li
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<resources>
+
+    <string name="app_name">barter.li</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- menu strings -->
+    <string name="signup">Sign Up</string>
+    <string name="build_library">Build Library</string>
+    <string name="search">Search Books</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="welcome_fb">Welcome %s!</string>
+    <string name="welcome_to_barterli">Welcome to barter.li!</string>
+    <string name="location_pref_set">We have remembered your preferred location.</string>
+    <string name="profile">Profile</string>
+    <string name="library">My Books</string>
+    <string name="scan_book">Scan Book</string>
+    <string name="add_book">Add Book</string>
+    <string name="add_manually">Add Book Manually</string>
+    <string name="no_network_connection">No network connection!</string>
+    <string name="toggle_map">Toggle Map</string>
+    <string name="app_id">458716080895923</string>
+
+    <!-- Strings for AddBookActivity -->
+    <string name="search_hint">Search by Title|Author|ISBN</string>
+    <string name="search_by_author_hint">Search by Author</string>
+    <string name="scan_barcode_button_label">Scan ISBN BarCode</string>
+    <string name="add_new_book_label">Manual Entry</string>
+    <string name="search_for_books">Search for books</string>
+
+    <!-- Strings for EditBookDetailsActivity -->
+    <string name="isbn_label">ISBN Number</string>
+    <string name="title_label">Book Title</string>
+    <string name="author_label">Author</string>
+    <string name="description_label">Description</string>
+    <string name="publication_year_label">Published On</string>
+    <string name="barter_type_label">Barter Type</string>
+    
+    <string name="book_added">Book has been added!</string>
+    <string name="unable_to_fetch_book_info">Unable to fetch book info.</string>
+    <string name="not_a_valid_isbn">Not a valid ISBN.</string>
+
+    <!-- Barter Type Options -->
+    <string name="give_away">Give Away</string>
+    <string name="barter">Barter</string>
+    <string name="sell">Sell</string>
+    <string name="read">Read</string>
+    <string name="wishlist">Add to Wishlist</string>
+    <string name="keep_private">Keep Private</string>
+    <string name="submit">Submit</string>
+
+    <!-- Strings for LoginActivity -->
+    <string name="facebook_login">Login with Facebook</string>
+    <string name="facebook_logout">Logout</string>
+    <string name="twitter_login">Login with Twitter</string>
+    <string name="description">Please note that we are taking facebook credentials only for Authorization.</string>
+
+    <!-- Strings for TakeLatLongActivity -->
+    <string name="lat_long">Location</string>
+    <string name="select_preferred_location_hint">Select your preferred Meeting Location</string>
+
+</resources>
