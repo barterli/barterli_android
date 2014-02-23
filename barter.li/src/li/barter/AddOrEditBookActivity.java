@@ -19,7 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
+import li.barter.http.BlJsonObjectRequest;
 import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.utils.AppConstants;
@@ -35,6 +37,7 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -116,13 +119,14 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 	/**
 	 * Fetches the book info from server based on the ISBN number
 	 * 
-	 * @param bookId The ISBN Id of the book to get info for
+	 * @param bookId
+	 *            The ISBN Id of the book to get info for
 	 */
 	private void getBookInfoFromServer(final String bookId) {
 
-		JsonObjectRequest request = new JsonObjectRequest(
-				HttpConstants.getApiBaseUrl() + ApiEndpoints.BOOK_INFO, null,
-				this, this);
+		BlJsonObjectRequest request = new BlJsonObjectRequest(
+				RequestId.GET_BOOK_INFO, HttpConstants.getApiBaseUrl()
+						+ ApiEndpoints.BOOK_INFO, null, this, this);
 		Map<String, String> params = new HashMap<String, String>();
 		params.put(HttpConstants.Q, bookId);
 		request.setParams(params);
@@ -236,19 +240,37 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 	}
 
 	@Override
-	public void onErrorResponse(VolleyError error) {
+	public void onErrorResponse(VolleyError error, Request<?> request) {
 
 		onRequestFinished();
-		showToast(R.string.unable_to_fetch_book_info, false);
+		if (request instanceof BlJsonObjectRequest) {
+
+			final int requestId = ((BlJsonObjectRequest) request)
+					.getRequestId();
+
+			if (requestId == RequestId.GET_BOOK_INFO) {
+				showToast(R.string.unable_to_fetch_book_info, false);
+			}
+		}
+
 	}
 
 	@Override
-	public void onResponse(JSONObject response) {
+	public void onResponse(JSONObject response, Request<JSONObject> request) {
 
 		onRequestFinished();
-		readBookDetailsFromResponse(response);
+
+		if (request instanceof BlJsonObjectRequest) {
+
+			final int requestId = ((BlJsonObjectRequest) request)
+					.getRequestId();
+
+			if (requestId == RequestId.GET_BOOK_INFO) {
+				readBookDetailsFromResponse(response);
+			}
+		}
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
