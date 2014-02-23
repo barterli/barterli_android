@@ -24,6 +24,7 @@ import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
 import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
@@ -65,6 +66,11 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 		setProgressBarIndeterminateVisibility(false);
 	}
 
+	/**
+	 * Reference to the {@link ImageLoader}
+	 * 
+	 * @return The {@link ImageLoader} for loading images from ntwork
+	 */
 	protected ImageLoader getImageLoader() {
 		return mImageLoader;
 	}
@@ -107,6 +113,7 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
+		// Cancel all pending requests because they shouldn't be delivered
 		mRequestQueue.cancelAll(this);
 		setProgressBarIndeterminateVisibility(false);
 	}
@@ -118,6 +125,11 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 		}
 	}
 
+	/**
+	 * Is the device connected to a network or not.
+	 * 
+	 * @return <code>true</code> if connected, <code>false</code> otherwise
+	 */
 	protected boolean isConnectedToInternet() {
 		return UtilityMethods.isNetworkConnected(this);
 	}
@@ -158,6 +170,12 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 		}
 	}
 
+	/**
+	 * Sets the Action bar title, using the desired {@link Typeface} loaded from
+	 * {@link TypefaceCache}
+	 * 
+	 * @param title The title to set for the Action Bar
+	 */
 	protected final void setActionBarTitle(final String title) {
 
 		final SpannableString s = new SpannableString(title);
@@ -168,12 +186,32 @@ public class AbstractBarterLiActivity extends FragmentActivity {
 		final ActionBar actionBar = getActionBar();
 		actionBar.setTitle(s);
 	}
+	
+	/**
+	 * Sets the Action bar title, using the desired {@link Typeface} loaded from
+	 * {@link TypefaceCache}
+	 * 
+	 * @param titleResId The title string resource Id to set for the Action Bar
+	 */
+	protected final void setActionBarTitle(final int titleResId) {
+		setActionBarTitle(getString(titleResId));
+	}
 
+	/**
+	 * Display a {@link Toast} message
+	 * @param toastMessage The message to display
+	 * @param isLong Whether it is a long toast
+	 */
 	public void showToast(String toastMessage, boolean isLong) {
 		Toast.makeText(this, toastMessage,
 				isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
 	}
 
+	/**
+	 * Display a {@link Toast} message
+	 * @param toastMessageResId The message string resource Id to display
+	 * @param isLong Whether it is a long toast
+	 */
 	public void showToast(int toastMessageResId, boolean isLong) {
 		Toast.makeText(this, toastMessageResId,
 				isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();

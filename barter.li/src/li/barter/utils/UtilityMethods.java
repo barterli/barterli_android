@@ -29,7 +29,8 @@ import android.support.v8.renderscript.ScriptIntrinsicBlur;
 public class UtilityMethods {
 
 	/**
-	 * This method returns whether the device is connected to a network
+	 * This method returns whether the device is connected to a network. But no
+	 * guarantees are made about internet connectivity.
 	 * 
 	 * @return <code>true</code> if connected, <code>false</code> otherwise
 	 */
