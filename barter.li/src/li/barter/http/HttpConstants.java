@@ -56,6 +56,13 @@ public class HttpConstants {
 		public static final String HANGOUTS = "/hangouts.json";
 		public static final String USER_PREFERRED_LOCATION = "/user_preferred_location.json";
 	}
+	
+	/**
+	 * Empty interface to store http request identifiers
+	 */
+	public static interface RequestId {
+		
+	}
 
 	public static final String Q = "q";
 	public static final String T = "t";
