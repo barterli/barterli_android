@@ -18,13 +18,9 @@ package li.barter;
 import java.io.IOException;
 import java.util.Collection;
 
-import li.barter.R;
 import li.barter.utils.AppConstants;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -39,7 +35,6 @@ import android.view.WindowManager;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
-import com.google.zxing.ResultPoint;
 import com.jwetherell.quick_response_code.DecoderActivityHandler;
 import com.jwetherell.quick_response_code.IDecoderActivity;
 import com.jwetherell.quick_response_code.ViewfinderView;
@@ -47,17 +42,20 @@ import com.jwetherell.quick_response_code.camera.CameraManager;
 import com.jwetherell.quick_response_code.result.ResultHandler;
 import com.jwetherell.quick_response_code.result.ResultHandlerFactory;
 
+/**
+ * @author vinaysshenoy Activity to scan an ISBN barcode
+ */
 public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 		IDecoderActivity, SurfaceHolder.Callback {
 
-	private static final String TAG = "AddBookActivity";
+	private static final String TAG = "ScanIsbnActivity";
 
-	protected DecoderActivityHandler handler = null;
-	protected ViewfinderView viewfinderView = null;
-	protected CameraManager cameraManager = null;
-	protected boolean hasSurface = false;
-	protected Collection<BarcodeFormat> decodeFormats = null;
-	protected String characterSet = null;
+	private DecoderActivityHandler mDecoderActivityHandler;
+	private ViewfinderView mViewFinderView;
+	private CameraManager mCameraManager;
+	private boolean mHasSurface;
+	private Collection<BarcodeFormat> mDecodeFormats;
+	private String mCharacterSet;
 
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
@@ -67,11 +65,11 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-		handler = null;
-		hasSurface = false;
-		// scanBarCode(viewfinderView);
-
-		// End of setting Listeners
+		mDecoderActivityHandler = null;
+		mHasSurface = false;
+		mViewFinderView = null;
+		mDecodeFormats = null;
+		mCharacterSet = null;
 
 	}
 
@@ -99,19 +97,19 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 	 */
 	private void startScanningForBarcode() {
 		// CameraManager must be initialized here, not in onCreate().
-		if (cameraManager == null)
-			cameraManager = new CameraManager(getApplication());
+		if (mCameraManager == null)
+			mCameraManager = new CameraManager(getApplication());
 
-		if (viewfinderView == null) {
-			viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-			viewfinderView.setCameraManager(cameraManager);
+		if (mViewFinderView == null) {
+			mViewFinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
+			mViewFinderView.setCameraManager(mCameraManager);
 		}
 
 		showScanner();
 
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
 		SurfaceHolder surfaceHolder = surfaceView.getHolder();
-		if (hasSurface) {
+		if (mHasSurface) {
 			// The activity was paused but not stopped, so the surface still
 			// exists. Therefore
 			// surfaceCreated() won't be called, so init the camera here.
@@ -128,14 +126,14 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 	 * Stop scanning for a barcode, and release the camera
 	 */
 	private void stopScanningForBarcode() {
-		if (handler != null) {
-			handler.quitSynchronously();
-			handler = null;
+		if (mDecoderActivityHandler != null) {
+			mDecoderActivityHandler.quitSynchronously();
+			mDecoderActivityHandler = null;
 		}
 
-		cameraManager.closeDriver();
+		mCameraManager.closeDriver();
 
-		if (!hasSurface) {
+		if (!mHasSurface) {
 			SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
 			SurfaceHolder surfaceHolder = surfaceView.getHolder();
 			surfaceHolder.removeCallback(this);
@@ -169,15 +167,15 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 		if (holder == null)
 			Log.e(TAG,
 					"*** WARNING *** surfaceCreated() gave us a null surface!");
-		if (!hasSurface) {
-			hasSurface = true;
+		if (!mHasSurface) {
+			mHasSurface = true;
 			initCamera(holder);
 		}
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		hasSurface = false;
+		mHasSurface = false;
 	}
 
 	@Override
@@ -188,68 +186,31 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 
 	@Override
 	public ViewfinderView getViewfinder() {
-		return viewfinderView;
+		return mViewFinderView;
 	}
 
 	@Override
 	public Handler getHandler() {
-		return handler;
+		return mDecoderActivityHandler;
 	}
 
 	@Override
 	public CameraManager getCameraManager() {
-		return cameraManager;
+		return mCameraManager;
 	}
 
-	protected void drawResultPoints(Bitmap barcode, Result rawResult) {
-		ResultPoint[] points = rawResult.getResultPoints();
-		if (points != null && points.length > 0) {
-			Canvas canvas = new Canvas(barcode);
-			Paint paint = new Paint();
-			paint.setColor(getResources().getColor(R.color.result_image_border));
-			paint.setStrokeWidth(3.0f);
-			paint.setStyle(Paint.Style.STROKE);
-			Rect border = new Rect(2, 2, barcode.getWidth() - 2,
-					barcode.getHeight() - 2);
-			canvas.drawRect(border, paint);
-
-			paint.setColor(getResources().getColor(R.color.result_points));
-			if (points.length == 2) {
-				paint.setStrokeWidth(4.0f);
-				drawLine(canvas, paint, points[0], points[1]);
-			} else if (points.length == 4
-					&& (rawResult.getBarcodeFormat() == BarcodeFormat.UPC_A || rawResult
-							.getBarcodeFormat() == BarcodeFormat.EAN_13)) {
-				// Hacky special case -- draw two lines, for the barcode and
-				// metadata
-				drawLine(canvas, paint, points[0], points[1]);
-				drawLine(canvas, paint, points[2], points[3]);
-			} else {
-				paint.setStrokeWidth(10.0f);
-				for (ResultPoint point : points) {
-					canvas.drawPoint(point.getX(), point.getY(), paint);
-				}
-			}
-		}
+	private void showScanner() {
+		mViewFinderView.setVisibility(View.VISIBLE);
 	}
 
-	protected static void drawLine(Canvas canvas, Paint paint, ResultPoint a,
-			ResultPoint b) {
-		canvas.drawLine(a.getX(), a.getY(), b.getX(), b.getY(), paint);
-	}
-
-	protected void showScanner() {
-		viewfinderView.setVisibility(View.VISIBLE);
-	}
-
-	protected void initCamera(SurfaceHolder surfaceHolder) {
+	private void initCamera(SurfaceHolder surfaceHolder) {
 		try {
-			cameraManager.openDriver(surfaceHolder);
+			mCameraManager.openDriver(surfaceHolder);
 			// Creating the handler starts the preview, which can also throw a
 			// RuntimeException.
-			if (handler == null)
-				handler = new DecoderActivityHandler(this, decodeFormats,
-						characterSet, cameraManager);
+			if (mDecoderActivityHandler == null)
+				mDecoderActivityHandler = new DecoderActivityHandler(this,
+						mDecodeFormats, mCharacterSet, mCameraManager);
 		} catch (IOException ioe) {
 			Log.w(TAG, ioe);
 		} catch (RuntimeException e) {
@@ -279,15 +240,10 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 																// type URI or
 																// ISBN
 
-		if (!AppConstants.ISBN.equals(type)) {
-			showToast(R.string.not_a_valid_isbn, true);
-		} else {
-
-			final Intent addBookIntent = new Intent(this,
-					AddOrEditBookActivity.class);
-			addBookIntent.putExtra(AppConstants.BOOK_ID, isbnNumber);
-			startActivity(addBookIntent);
-		}
+		final Intent addBookIntent = new Intent(this,
+				AddOrEditBookActivity.class);
+		addBookIntent.putExtra(AppConstants.BOOK_ID, isbnNumber);
+		startActivity(addBookIntent);
 
 	}
 

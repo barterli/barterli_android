@@ -18,12 +18,11 @@ package li.barter;
 import java.util.HashMap;
 import java.util.Map;
 
-import li.barter.R;
 import li.barter.http.BlJsonObjectRequest;
 import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
-import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.utils.AppConstants;
 
 import org.json.JSONObject;
@@ -41,7 +40,6 @@ import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 
 public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 		OnClickListener, Listener<JSONObject>, ErrorListener {
