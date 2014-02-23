@@ -33,7 +33,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
 
@@ -45,8 +44,14 @@ import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
+/**
+ * @author Vinay S Shenoy Activity for displaying Books Around Me. Also contains
+ *         a Map that the user can use to easily switch locations
+ * 
+ */
 public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 		LocationListener, SnapshotReadyCallback, CancelableCallback,
 		OnMapLoadedCallback {
@@ -58,26 +63,60 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 	 */
 	private static final float MAP_ZOOM_LEVEL = 15;
 
+	/**
+	 * Blur radius for the Map. 1 <= x <= 25
+	 */
 	private static final int MAP_BLUR = 20;
 
+	/**
+	 * Transition to use blurring between the Map backgrounds
+	 */
 	private static final int TRANSITION_DURATION = 1200;
 
 	private GooglePlayClientWrapper mGooglePlayClientWrapper;
 
+	/**
+	 * {@link MapFragment} used to display the Map
+	 */
 	private MapFragment mMapFragment;
 
+	/**
+	 * Background View on which the blurred Map snapshot is set
+	 */
 	private View mBackgroundView;
 
-	private View mMapView;
-
+	/**
+	 * TextView which will provide drop down suggestions as user searches for
+	 * books
+	 */
 	private AutoCompleteTextView mBooksAroundMeAutoCompleteTextView;
 
+	/**
+	 * GridView into which the book content will be placed
+	 */
 	private GridView mBooksAroundMeGridView;
 
+	/**
+	 * Reference to the container in the layout which contains the
+	 * {@link MapFragment}
+	 */
+	private View mMapView;
+
+	/**
+	 * {@link BooksAroundMeAdapter} instance for the Books
+	 */
 	private BooksAroundMeAdapter mBooksAroundMeAdapter;
 
+	/**
+	 * {@link AnimationAdapter} implementation to provide appearance animations
+	 * for the book items as they are brought in
+	 */
 	private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
 
+	/**
+	 * Array of drawables to use for the background View transition for
+	 * smoothening
+	 */
 	private Drawable[] mTransitionDrawableLayers;
 
 	private Handler mHandler;
@@ -119,6 +158,11 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 	@Override
 	protected void onResumeFragments() {
 		super.onResumeFragments();
+
+		/*
+		 * Get reference to MapFragment here because the fragment might be
+		 * destroyed when Activity is in background
+		 */
 		mMapFragment = (MapFragment) getFragmentManager().findFragmentById(
 				R.id.map_books_around_me);
 	}
@@ -167,7 +211,8 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 	}
 
 	/**
-	 * Toggle Map
+	 * Toggle the Map visibility. Will crossfade between the Books content and
+	 * the Map based on whichever one is at the front
 	 */
 	private void toggleMap() {
 
@@ -223,10 +268,17 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 	@Override
 	public void onSnapshotReady(Bitmap snapshot) {
 
+		/* Create a blurred version of the Map snapshot */
 		BitmapDrawable backgroundDrawable = new BitmapDrawable(getResources(),
 				UtilityMethods.blurImage(this, snapshot, MAP_BLUR));
 
-		mTransitionDrawableLayers[0] = mBackgroundView.getBackground();
+		/* Set the drawables to animate between */
+		if (mTransitionDrawableLayers[0] == null) {
+			mTransitionDrawableLayers[0] = mBackgroundView.getBackground();
+		} else {
+			mTransitionDrawableLayers[0] = mTransitionDrawableLayers[1];
+		}
+
 		mTransitionDrawableLayers[1] = backgroundDrawable;
 
 		final TransitionDrawable transitionDrawable = new TransitionDrawable(
@@ -259,6 +311,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
 	@Override
 	public void onFinish() {
+
 		beginMapSnapshotProcess();
 	}
 
