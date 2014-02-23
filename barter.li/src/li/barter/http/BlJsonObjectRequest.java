@@ -13,80 +13,74 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package li.barter.http;
 
-import org.json.JSONObject;
+package li.barter.http;
 
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.JsonObjectRequest;
 
+import org.json.JSONObject;
+
 /**
  * {@link JsonObjectRequest} extension
  * 
  * @author Vinay S Shenoy
- * 
  */
 public class BlJsonObjectRequest extends JsonObjectRequest {
 
-	/**
-	 * An identifier for the request that was made
-	 */
-	private final int mRequestId;
+    /**
+     * An identifier for the request that was made
+     */
+    private final int mRequestId;
 
-	/**
-	 * Build a request to read a {@link JSONObject} response
-	 * 
-	 * @param method
-	 *            One of the constants from {@link Method} class to identify the
-	 *            request type
-	 * @param requestId
-	 *            One of the {@linkplain HttpConstants.RequestId} constants
-	 * @param url
-	 *            The API endpoint
-	 * @param jsonRequest
-	 *            A {@link JSONObject} to use as the request body
-	 * @param listener
-	 *            The {@link Listener} for the response
-	 * @param errorListener
-	 *            The {@link ErrorListener} for the error response
-	 */
-	public BlJsonObjectRequest(int method, int requestId, String url,
-			JSONObject jsonRequest, Listener<JSONObject> listener,
-			ErrorListener errorListener) {
-		super(method, url, jsonRequest, listener, errorListener);
-		mRequestId = requestId;
-	}
+    /**
+     * Build a request to read a {@link JSONObject} response
+     * 
+     * @param method One of the constants from {@link Method} class to identify
+     *            the request type
+     * @param requestId One of the {@linkplain HttpConstants.RequestId}
+     *            constants
+     * @param url The API endpoint
+     * @param jsonRequest A {@link JSONObject} to use as the request body
+     * @param listener The {@link Listener} for the response
+     * @param errorListener The {@link ErrorListener} for the error response
+     */
+    public BlJsonObjectRequest(final int method, final int requestId,
+                    final String url, final JSONObject jsonRequest,
+                    final Listener<JSONObject> listener,
+                    final ErrorListener errorListener) {
+        super(method, url, jsonRequest, listener, errorListener);
+        mRequestId = requestId;
+    }
 
-	/**
-	 * Build a request to read a {@link JSONObject} response
-	 * 
-	 * @param requestId
-	 *            One of the {@linkplain HttpConstants.RequestId} constants
-	 * @param url
-	 *            The API endpoint
-	 * @param jsonRequest
-	 *            A {@link JSONObject} to use as the request body. Request type will
-	 *            be set to GET if <code>null</code>, POST if not
-	 * @param listener
-	 *            The {@link Listener} for the response
-	 * @param errorListener
-	 *            The {@link ErrorListener} for the error response
-	 */
-	public BlJsonObjectRequest(int requestId, String url,
-			JSONObject jsonRequest, Listener<JSONObject> listener,
-			ErrorListener errorListener) {
-		super(url, jsonRequest, listener, errorListener);
-		mRequestId = requestId;
-	}
+    /**
+     * Build a request to read a {@link JSONObject} response
+     * 
+     * @param requestId One of the {@linkplain HttpConstants.RequestId}
+     *            constants
+     * @param url The API endpoint
+     * @param jsonRequest A {@link JSONObject} to use as the request body.
+     *            Request type will be set to GET if <code>null</code>, POST if
+     *            not
+     * @param listener The {@link Listener} for the response
+     * @param errorListener The {@link ErrorListener} for the error response
+     */
+    public BlJsonObjectRequest(final int requestId, final String url,
+                    final JSONObject jsonRequest,
+                    final Listener<JSONObject> listener,
+                    final ErrorListener errorListener) {
+        super(url, jsonRequest, listener, errorListener);
+        mRequestId = requestId;
+    }
 
-	/**
-	 * Gets the request Id associated with this request
-	 * 
-	 * @return An integer representing the request Id
-	 */
-	public int getRequestId() {
-		return mRequestId;
-	}
+    /**
+     * Gets the request Id associated with this request
+     * 
+     * @return An integer representing the request Id
+     */
+    public int getRequestId() {
+        return mRequestId;
+    }
 
 }

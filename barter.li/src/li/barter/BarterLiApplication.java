@@ -13,45 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package li.barter;
 
-import li.barter.http.IVolleyHelper;
-import li.barter.utils.AppConstants;
-import android.app.Application;
+package li.barter;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
+import android.app.Application;
+
+import li.barter.http.IVolleyHelper;
+import li.barter.utils.AppConstants;
+
 /**
  * Custom Application class which holds some common functionality for the
  * Application
  * 
  * @author Vinay S Shenoy
- * 
  */
 public class BarterLiApplication extends Application implements IVolleyHelper {
 
-	private RequestQueue mRequestQueue;
+    private RequestQueue mRequestQueue;
 
-	private ImageLoader mImageLoader;
+    private ImageLoader  mImageLoader;
 
-	public void onCreate() {
+    @Override
+    public void onCreate() {
 
-		VolleyLog.sDebug = AppConstants.DEBUG;
-		mRequestQueue = Volley.newRequestQueue(this);
-		mImageLoader = new ImageLoader(mRequestQueue);
-	};
+        VolleyLog.sDebug = AppConstants.DEBUG;
+        mRequestQueue = Volley.newRequestQueue(this);
+        mImageLoader = new ImageLoader(mRequestQueue);
+    };
 
-	@Override
-	public RequestQueue getRequestQueue() {
-		return mRequestQueue;
-	}
+    @Override
+    public RequestQueue getRequestQueue() {
+        return mRequestQueue;
+    }
 
-	@Override
-	public ImageLoader getImageLoader() {
-		return mImageLoader;
-	}
+    @Override
+    public ImageLoader getImageLoader() {
+        return mImageLoader;
+    }
 
 }

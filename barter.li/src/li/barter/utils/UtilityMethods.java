@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.utils;
 
 import android.content.Context;
@@ -28,49 +29,49 @@ import android.support.v8.renderscript.ScriptIntrinsicBlur;
  */
 public class UtilityMethods {
 
-	/**
-	 * This method returns whether the device is connected to a network. But no
-	 * guarantees are made about internet connectivity.
-	 * 
-	 * @return <code>true</code> if connected, <code>false</code> otherwise
-	 */
-	public static boolean isNetworkConnected(final Context context) {
-		final ConnectivityManager connManager = (ConnectivityManager) context
-				.getSystemService(Context.CONNECTIVITY_SERVICE);
-		final NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
-		if ((activeNetwork != null) && activeNetwork.isConnected()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * This method returns whether the device is connected to a network. But no
+     * guarantees are made about internet connectivity.
+     * 
+     * @return <code>true</code> if connected, <code>false</code> otherwise
+     */
+    public static boolean isNetworkConnected(final Context context) {
+        final ConnectivityManager connManager = (ConnectivityManager) context
+                        .getSystemService(Context.CONNECTIVITY_SERVICE);
+        final NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
+        if ((activeNetwork != null) && activeNetwork.isConnected()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * Generate a blurred Bitmap from an input Bitmap
-	 * 
-	 * @param context
-	 * @param input
-	 *            The bitmap to be blurred
-	 * @param blurRadius
-	 *            The blur radius, between 1 & 25, inclusive
-	 * @return The blurred Bitmap
-	 */
-	public static Bitmap blurImage(Context context, Bitmap input, int blurRadius) {
-		RenderScript rsScript = RenderScript.create(context);
-		Allocation alloc = Allocation.createFromBitmap(rsScript, input);
+    /**
+     * Generate a blurred Bitmap from an input Bitmap
+     * 
+     * @param context
+     * @param input The bitmap to be blurred
+     * @param blurRadius The blur radius, between 1 & 25, inclusive
+     * @return The blurred Bitmap
+     */
+    public static Bitmap blurImage(final Context context, final Bitmap input,
+                    final int blurRadius) {
+        final RenderScript rsScript = RenderScript.create(context);
+        final Allocation alloc = Allocation.createFromBitmap(rsScript, input);
 
-		ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rsScript,
-				alloc.getElement());
-		blur.setRadius(blurRadius);
-		blur.setInput(alloc);
+        final ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rsScript,
+                        alloc.getElement());
+        blur.setRadius(blurRadius);
+        blur.setInput(alloc);
 
-		Bitmap result = Bitmap.createBitmap(input.getWidth(),
-				input.getHeight(), input.getConfig());
-		Allocation outAlloc = Allocation.createFromBitmap(rsScript, result);
-		blur.forEach(outAlloc);
-		outAlloc.copyTo(result);
+        final Bitmap result = Bitmap.createBitmap(input.getWidth(),
+                        input.getHeight(), input.getConfig());
+        final Allocation outAlloc = Allocation.createFromBitmap(rsScript,
+                        result);
+        blur.forEach(outAlloc);
+        outAlloc.copyTo(result);
 
-		rsScript.destroy();
-		return result;
-	}
+        rsScript.destroy();
+        return result;
+    }
 }

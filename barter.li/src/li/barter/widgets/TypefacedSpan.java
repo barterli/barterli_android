@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.widgets;
 
 import android.content.Context;
@@ -26,30 +27,30 @@ import android.text.style.MetricAffectingSpan;
  */
 public class TypefacedSpan extends MetricAffectingSpan {
 
-	private final Typeface mTypeface;
+    private final Typeface mTypeface;
 
-	public TypefacedSpan(final Context context, final String typefaceName) {
+    public TypefacedSpan(final Context context, final String typefaceName) {
 
-		mTypeface = TypefaceCache.get(context.getAssets(), typefaceName);
-	}
+        mTypeface = TypefaceCache.get(context.getAssets(), typefaceName);
+    }
 
-	@Override
-	public void updateMeasureState(final TextPaint p) {
+    @Override
+    public void updateMeasureState(final TextPaint p) {
 
-		p.setTypeface(mTypeface);
+        p.setTypeface(mTypeface);
 
-		// Note: This flag is required for proper typeface rendering
-		p.setFlags(p.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+        // Note: This flag is required for proper typeface rendering
+        p.setFlags(p.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
 
-	}
+    }
 
-	@Override
-	public void updateDrawState(final TextPaint tp) {
+    @Override
+    public void updateDrawState(final TextPaint tp) {
 
-		tp.setTypeface(mTypeface);
+        tp.setTypeface(mTypeface);
 
-		// Note: This flag is required for proper typeface rendering
-		tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
-	}
+        // Note: This flag is required for proper typeface rendering
+        tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+    }
 
 }

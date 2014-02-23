@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.http;
 
 import org.json.JSONArray;
@@ -29,238 +30,238 @@ import android.util.Log;
  */
 public class JsonUtils {
 
-	/** Tag used to print logs for debugging. */
-	private static final String TAG = "JsonUtils";
+    /** Tag used to print logs for debugging. */
+    private static final String TAG = "JsonUtils";
 
-	/**
-	 * Reads the string value from the Json Object for specified tag.
-	 * 
-	 * @param jsonObject
-	 * @param tag
-	 * @return
-	 */
-	public static String getStringValue(final JSONObject jsonObject,
-			final String tag) {
+    /**
+     * Reads the string value from the Json Object for specified tag.
+     * 
+     * @param jsonObject
+     * @param tag
+     * @return
+     */
+    public static String getStringValue(final JSONObject jsonObject,
+                    final String tag) {
 
-		String value = null;
-		try {
-			if (!jsonObject.isNull(tag)) {
-				value = jsonObject.getString(tag);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		return value;
-	}
+        String value = null;
+        try {
+            if (!jsonObject.isNull(tag)) {
+                value = jsonObject.getString(tag);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return value;
+    }
 
-	/**
-	 * Reads the string value from the Json Array for specified index
-	 * 
-	 * @param jsonArray
-	 * @param index
-	 * @return
-	 */
-	public static String getStringValue(final JSONArray jsonArray,
-			final int index) {
+    /**
+     * Reads the string value from the Json Array for specified index
+     * 
+     * @param jsonArray
+     * @param index
+     * @return
+     */
+    public static String getStringValue(final JSONArray jsonArray,
+                    final int index) {
 
-		String value = null;
-		try {
-			if (!jsonArray.isNull(index)) {
-				value = jsonArray.getString(index);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		return value;
-	}
+        String value = null;
+        try {
+            if (!jsonArray.isNull(index)) {
+                value = jsonArray.getString(index);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return value;
+    }
 
-	/**
-	 * Reads the int value from the Json Object for specified tag.
-	 * 
-	 * @param jsonObject
-	 * @param tag
-	 * @return
-	 */
-	public static int getIntValue(final JSONObject jsonObject, final String tag) {
+    /**
+     * Reads the int value from the Json Object for specified tag.
+     * 
+     * @param jsonObject
+     * @param tag
+     * @return
+     */
+    public static int getIntValue(final JSONObject jsonObject, final String tag) {
 
-		int value = -1;
-		try {
-			if (!jsonObject.isNull(tag)) {
-				value = jsonObject.getInt(tag);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		return value;
-	}
+        int value = -1;
+        try {
+            if (!jsonObject.isNull(tag)) {
+                value = jsonObject.getInt(tag);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return value;
+    }
 
-	/**
-	 * Reads the boolean value from the Json Object for specified tag.
-	 * 
-	 * @param jsonObject
-	 * @param tag
-	 * @return
-	 */
-	public static boolean getBooleanValue(final JSONObject jsonObject,
-			final String tag) {
+    /**
+     * Reads the boolean value from the Json Object for specified tag.
+     * 
+     * @param jsonObject
+     * @param tag
+     * @return
+     */
+    public static boolean getBooleanValue(final JSONObject jsonObject,
+                    final String tag) {
 
-		boolean value = false;
-		try {
-			if (!jsonObject.isNull(tag)) {
-				value = jsonObject.getBoolean(tag);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		return value;
-	}
+        boolean value = false;
+        try {
+            if (!jsonObject.isNull(tag)) {
+                value = jsonObject.getBoolean(tag);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return value;
+    }
 
-	/**
-	 * Reads the float value from the Json Object for specified tag.
-	 * 
-	 * @param jsonObject
-	 * @param tag
-	 * @return
-	 */
-	public static float getFloatValue(final JSONObject jsonObject,
-			final String tag) {
+    /**
+     * Reads the float value from the Json Object for specified tag.
+     * 
+     * @param jsonObject
+     * @param tag
+     * @return
+     */
+    public static float getFloatValue(final JSONObject jsonObject,
+                    final String tag) {
 
-		float value = 0.0f;
-		try {
-			if (!jsonObject.isNull(tag)) {
-				value = (float) jsonObject.getDouble(tag);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		return value;
-	}
+        float value = 0.0f;
+        try {
+            if (!jsonObject.isNull(tag)) {
+                value = (float) jsonObject.getDouble(tag);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return value;
+    }
 
-	/**
-	 * Reads the double value from the Json Object for specified tag.
-	 * 
-	 * @param jsonObject
-	 * @param tag
-	 * @return
-	 */
-	public static double getDoubleValue(final JSONObject jsonObject,
-			final String tag) {
+    /**
+     * Reads the double value from the Json Object for specified tag.
+     * 
+     * @param jsonObject
+     * @param tag
+     * @return
+     */
+    public static double getDoubleValue(final JSONObject jsonObject,
+                    final String tag) {
 
-		double value = 0.0;
-		try {
-			if (!jsonObject.isNull(tag)) {
-				value = jsonObject.getDouble(tag);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		return value;
-	}
+        double value = 0.0;
+        try {
+            if (!jsonObject.isNull(tag)) {
+                value = jsonObject.getDouble(tag);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return value;
+    }
 
-	/**
-	 * Reads the Long value from the Json Object for specified tag.
-	 * 
-	 * @param jsonObject
-	 * @param tag
-	 * @return
-	 */
-	public static long getLongValue(final JSONObject jsonObject,
-			final String tag) {
+    /**
+     * Reads the Long value from the Json Object for specified tag.
+     * 
+     * @param jsonObject
+     * @param tag
+     * @return
+     */
+    public static long getLongValue(final JSONObject jsonObject,
+                    final String tag) {
 
-		long value = -1l;
-		try {
-			if (!jsonObject.isNull(tag)) {
-				value = jsonObject.getLong(tag);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
+        long value = -1l;
+        try {
+            if (!jsonObject.isNull(tag)) {
+                value = jsonObject.getLong(tag);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
 
-		}
-		return value;
-	}
+        }
+        return value;
+    }
 
-	/**
-	 * Reads the json value from the Json Object for specified tag.
-	 * 
-	 * @param jsonObject
-	 * @param tag
-	 * @return
-	 */
-	public static JSONObject getJsonObject(final JSONObject jsonObject,
-			final String tag) {
+    /**
+     * Reads the json value from the Json Object for specified tag.
+     * 
+     * @param jsonObject
+     * @param tag
+     * @return
+     */
+    public static JSONObject getJsonObject(final JSONObject jsonObject,
+                    final String tag) {
 
-		JSONObject json = null;
-		try {
-			if (!jsonObject.isNull(tag)) {
-				json = jsonObject.getJSONObject(tag);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		return json;
-	}
+        JSONObject json = null;
+        try {
+            if (!jsonObject.isNull(tag)) {
+                json = jsonObject.getJSONObject(tag);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return json;
+    }
 
-	/**
-	 * Reads the json array value from the Json Object for specified tag.
-	 * 
-	 * @param jsonObject
-	 * @param tag
-	 * @return
-	 */
-	public static JSONArray getJsonArray(final JSONObject jsonObject,
-			final String tag) {
+    /**
+     * Reads the json array value from the Json Object for specified tag.
+     * 
+     * @param jsonObject
+     * @param tag
+     * @return
+     */
+    public static JSONArray getJsonArray(final JSONObject jsonObject,
+                    final String tag) {
 
-		JSONArray jsonArray = null;
-		try {
-			if (!jsonObject.isNull(tag)) {
-				jsonArray = jsonObject.getJSONArray(tag);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		return jsonArray;
-	}
+        JSONArray jsonArray = null;
+        try {
+            if (!jsonObject.isNull(tag)) {
+                jsonArray = jsonObject.getJSONArray(tag);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return jsonArray;
+    }
 
-	/**
-	 * Reads the json object value from the Json Array for specified index.
-	 * 
-	 * @param jsonArray
-	 * @param index
-	 * @return
-	 */
-	public static JSONObject getJsonObject(final JSONArray jsonArray,
-			final int index) {
+    /**
+     * Reads the json object value from the Json Array for specified index.
+     * 
+     * @param jsonArray
+     * @param index
+     * @return
+     */
+    public static JSONObject getJsonObject(final JSONArray jsonArray,
+                    final int index) {
 
-		JSONObject json = null;
-		try {
-			if (!jsonArray.isNull(index)) {
-				json = jsonArray.getJSONObject(index);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		return json;
-	}
+        JSONObject json = null;
+        try {
+            if (!jsonArray.isNull(index)) {
+                json = jsonArray.getJSONObject(index);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return json;
+    }
 
-	/**
-	 * Reads the json array value from the Json Array for specified index
-	 * 
-	 * @param jsonObject
-	 * @param tag
-	 * @return
-	 */
-	public static JSONArray getJsonArray(final JSONArray jsonArray,
-			final int index) {
+    /**
+     * Reads the json array value from the Json Array for specified index
+     * 
+     * @param jsonObject
+     * @param tag
+     * @return
+     */
+    public static JSONArray getJsonArray(final JSONArray jsonArray,
+                    final int index) {
 
-		JSONArray jArray = null;
-		try {
-			if (!jsonArray.isNull(index)) {
-				jArray = jsonArray.getJSONArray(index);
-			}
-		} catch (final JSONException e) {
-			Log.e(TAG, e.getMessage());
-		}
-		return jArray;
-	}
+        JSONArray jArray = null;
+        try {
+            if (!jsonArray.isNull(index)) {
+                jArray = jsonArray.getJSONArray(index);
+            }
+        } catch (final JSONException e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return jArray;
+    }
 
 }
