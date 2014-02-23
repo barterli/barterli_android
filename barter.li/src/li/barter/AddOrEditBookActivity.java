@@ -80,8 +80,8 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 			else {
 				loadDetailsForIntent(extras);
 			}
-			if (!mHasFetchedDetails) {
-				getBookInfoFromServer();
+			if (!mHasFetchedDetails && !TextUtils.isEmpty(mBookId)) {
+				getBookInfoFromServer(mBookId);
 			}
 		}
 
@@ -115,14 +115,16 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 
 	/**
 	 * Fetches the book info from server based on the ISBN number
+	 * 
+	 * @param bookId The ISBN Id of the book to get info for
 	 */
-	private void getBookInfoFromServer() {
+	private void getBookInfoFromServer(final String bookId) {
 
 		JsonObjectRequest request = new JsonObjectRequest(
 				HttpConstants.getApiBaseUrl() + ApiEndpoints.BOOK_INFO, null,
 				this, this);
 		Map<String, String> params = new HashMap<String, String>();
-		params.put(HttpConstants.Q, mBookId);
+		params.put(HttpConstants.Q, bookId);
 		request.setParams(params);
 		addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
 	}
