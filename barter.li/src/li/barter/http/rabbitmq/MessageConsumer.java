@@ -3,6 +3,7 @@ package li.barter.http.rabbitmq;
 import com.rabbitmq.client.QueueingConsumer;
 
 import android.os.Handler;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -12,6 +13,8 @@ import java.io.IOException;
  */
 public class MessageConsumer extends  IConnectToRabbitMQ{
  
+    private static final String TAG = "MessageConsumer";
+    
     public MessageConsumer(String server, String exchange, String exchangeType) {
         super(server, exchange, exchangeType);
     }
@@ -66,7 +69,8 @@ public class MessageConsumer extends  IConnectToRabbitMQ{
        {
  
            try {
-               mQueue = mModel.queueDeclare().getQueue();
+               Log.d(TAG, "Connected");
+               mQueue = mModel.queueDeclare("amqpgem.examples.helloworld6", true, false, true, null).getQueue();
                MySubscription = new QueueingConsumer(mModel);
                mModel.basicConsume(mQueue, false, MySubscription);
             } catch (IOException e) {

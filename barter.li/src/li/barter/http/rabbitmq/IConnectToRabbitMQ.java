@@ -53,7 +53,7 @@ public abstract class IConnectToRabbitMQ {
        * Connect to the broker and create the exchange
        * @return success
        */
-      public boolean connectToRabbitMQ()
+      protected boolean connectToRabbitMQ()
       {
           if(mModel!= null && mModel.isOpen() )//already declared
               return true;
@@ -61,6 +61,10 @@ public abstract class IConnectToRabbitMQ {
           {
               ConnectionFactory connectionFactory = new ConnectionFactory();
               connectionFactory.setHost(mServer);
+              connectionFactory.setUsername("guest");
+              connectionFactory.setPassword("guest");
+              connectionFactory.setVirtualHost("/");
+              connectionFactory.setPort(5672);
               mConnection = connectionFactory.newConnection();
               mModel = mConnection.createChannel();
               mModel.exchangeDeclare(mExchange, mExchangeType, true);
