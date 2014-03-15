@@ -38,7 +38,8 @@ public class ChatActivity extends AbstractBarterLiActivity implements
         mChatAdapter = new ChatAdapter(this);
         mChatListView.setAdapter(mChatAdapter);
 
-        mMessageConsumer = new MessageConsumer("192.168.1.138", "nodes.metadata6",
+        //IP, Exchange Name, Exchange Type
+        mMessageConsumer = new MessageConsumer("192.168.1.138", "nodes.metadatap21",
                         "direct");
         mMessageConsumer.setOnReceiveMessageHandler(this);
     }

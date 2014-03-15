@@ -70,7 +70,11 @@ public class MessageConsumer extends  IConnectToRabbitMQ{
  
            try {
                Log.d(TAG, "Connected");
-               mQueue = mModel.queueDeclare("amqpgem.examples.helloworld6", true, false, true, null).getQueue();
+               //Queue Name, durable, exclusive, autodelete, args
+               mQueue = mModel.queueDeclare("test123", true, false, false, null).getQueue();
+               
+               //Queue name, Exchange Name, Routing Key
+               mModel.queueBind("test123", mExchange, "shared.key");
                MySubscription = new QueueingConsumer(mModel);
                mModel.basicConsume(mQueue, false, MySubscription);
             } catch (IOException e) {

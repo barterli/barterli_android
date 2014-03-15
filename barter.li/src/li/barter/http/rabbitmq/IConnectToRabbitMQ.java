@@ -67,7 +67,7 @@ public abstract class IConnectToRabbitMQ {
               connectionFactory.setPort(5672);
               mConnection = connectionFactory.newConnection();
               mModel = mConnection.createChannel();
-              mModel.exchangeDeclare(mExchange, mExchangeType, true);
+              mModel.exchangeDeclare(mExchange, mExchangeType);
  
               return true;
           }
