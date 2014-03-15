@@ -12,23 +12,24 @@ import android.widget.ListView;
 import java.io.UnsupportedEncodingException;
 
 import li.barter.adapters.ChatAdapter;
-import li.barter.http.rabbitmq.MessageConsumer;
-import li.barter.http.rabbitmq.MessageConsumer.OnReceiveMessageHandler;
+import li.barter.http.rabbitmq.ChatRabbitMQConnector;
+import li.barter.http.rabbitmq.AbstractRabbitMQConnector.ExchangeType;
+import li.barter.http.rabbitmq.ChatRabbitMQConnector.OnReceiveMessageHandler;
 
 /**
  * @author vinaysshenoy Activity for displaying Chat Messages
  */
 public class ChatActivity extends AbstractBarterLiActivity implements
                 OnReceiveMessageHandler {
-    
+
     private static final String TAG = "ChatActivity";
 
-    private ChatAdapter     mChatAdapter;
+    private ChatAdapter         mChatAdapter;
 
-    private ListView        mChatListView;
+    private ListView            mChatListView;
 
-    /** {@link MessageConsumer} instane for listening to messages */
-    private MessageConsumer mMessageConsumer;
+    /** {@link ChatRabbitMQConnector} instane for listening to messages */
+    private ChatRabbitMQConnector     mMessageConsumer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +39,8 @@ public class ChatActivity extends AbstractBarterLiActivity implements
         mChatAdapter = new ChatAdapter(this);
         mChatListView.setAdapter(mChatAdapter);
 
-        //IP, Exchange Name, Exchange Type
-        mMessageConsumer = new MessageConsumer("192.168.1.138", "nodes.metadatap21",
-                        "direct");
+        mMessageConsumer = new ChatRabbitMQConnector("192.168.1.138", 5672, "/",
+                        "nodes.metadatap21", ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
     }
 
@@ -56,7 +56,10 @@ public class ChatActivity extends AbstractBarterLiActivity implements
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                mMessageConsumer.connectToRabbitMQ();
+                if (mMessageConsumer.connectToRabbitMQ("test123", true, false,
+                                false, null)) {
+                    mMessageConsumer.addBinding("shared.key");
+                }
                 return null;
             }
         }.execute();
