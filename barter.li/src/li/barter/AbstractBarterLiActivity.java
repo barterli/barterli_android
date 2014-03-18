@@ -87,7 +87,7 @@ public class AbstractBarterLiActivity extends FragmentActivity {
      */
     protected void addRequestToQueue(final Request<?> request,
                     final boolean showErrorOnNoNetwork, final int errorMsgResId) {
-
+        // TODO Add Headers to request objects
         if (isConnectedToInternet()) {
             mRequestCounter.incrementAndGet();
             setProgressBarIndeterminateVisibility(true);

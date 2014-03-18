@@ -60,7 +60,7 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
 
         Auth_Token = SharedPreferenceHelper
                         .getString(this, R.string.auth_token);
-        FB_Email = SharedPreferenceHelper.getString(this, R.string.fb_email);
+        FB_Email = SharedPreferenceHelper.getString(this, R.string.email);
         final String prefferedLocation = SharedPreferenceHelper.getString(this,
                         R.string.preferred_location);
         is_loc_pref_set = !TextUtils.isEmpty(prefferedLocation);

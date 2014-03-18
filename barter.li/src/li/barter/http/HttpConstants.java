@@ -65,6 +65,7 @@ public class HttpConstants {
      */
     public static interface RequestId {
         public static final int GET_BOOK_INFO = 100;
+        public static final int CREATE_BOOK   = 101;
     }
 
     public static final String Q                = "q";

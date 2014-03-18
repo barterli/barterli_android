@@ -21,6 +21,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
@@ -41,6 +42,7 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
 import li.barter.utils.AppConstants;
+import li.barter.utils.SharedPreferenceHelper;
 
 public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
                 OnClickListener, Listener<JSONObject>, ErrorListener {
@@ -146,75 +148,29 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
     /**
      * Add the book to the server
      */
-    private void addBookToServer() {
+    private void createBookOnServer() {
 
-        final String _title = mTitleEditText.getText().toString();
-        if (TextUtils.isEmpty(_title)) {
-            Toast.makeText(AddOrEditBookActivity.this, "Please Enter Title",
-                            Toast.LENGTH_SHORT).show();
-            return;
-        }
-        final String _author = mAuthorEditText.getText().toString();
-        if (TextUtils.isEmpty(_author)) {
-            Toast.makeText(AddOrEditBookActivity.this,
-                            "Please Enter Author Name", Toast.LENGTH_SHORT)
-                            .show();
-            return;
-        }
-        final String _description = mDescriptionEditText.getText().toString();
-        final String _publication_year = mPublicationYearEditText.getText()
-                        .toString();
-        /*
-         * if (TextUtils.isEmpty(chosenBarterOption)) {
-         * Toast.makeText(EditBookDetailsActivity.this,
-         * "Please enter what you want to do with the book!",
-         * Toast.LENGTH_SHORT).show(); return; }
-         */
+        final JSONObject createBookJson = new JSONObject();
 
-        // TODO Decide chosen option
-        /*
-         * new saveMyBookToServerTask().execute(_title, _author, _description,
-         * _publication_year, chosenBarterOption, Auth_Token, FB_Email);
-         */
-    } // End of addBook
+        try {
+            createBookJson.put(HttpConstants.TITLE, mTitleEditText.getText()
+                            .toString());
+            createBookJson.put(HttpConstants.AUTHOR, mAuthorEditText.getText()
+                            .toString());
+            createBookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
+                            .getText().toString());
+            createBookJson.put(HttpConstants.PUBLICATION_YEAR,
+                            mPublicationYearEditText.getText().toString());
 
-    // Synctask helper to post book to server
+            // TODO Add barter types
+            final BlJsonObjectRequest createBookRequest = new BlJsonObjectRequest(
+                            RequestId.CREATE_BOOK,
+                            HttpConstants.getApiBaseUrl() + ApiEndpoints.BOOKS,
+                            createBookJson, this, this);
 
-    private class saveMyBookToServerTask extends
-                    AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(final String... parameters) {
-            /*
-             * String post_to_mybooks_url = getResources().getString(
-             * R.string.post_to_mybooks_url); HTTPHelper myHTTPHelper = new
-             * HTTPHelper();
-             */
-            final String responseString = "";
-            final String _title = parameters[0];
-            final String _author = parameters[1];
-            final String _description = parameters[2];
-            final String _publication_year = parameters[3];
-            final String _barter_type = parameters[4];
-            final String _user_token = parameters[5];
-            final String _fb_Email = parameters[6];
-            /*
-             * if (TextUtils.isEmpty(BOOK_ID)) { responseString = myHTTPHelper
-             * .postBookToMyList(post_to_mybooks_url, _title, _author,
-             * _description, _publication_year, _barter_type, _user_token,
-             * _fb_Email); } else { String put_to_mybooks_url =
-             * post_to_mybooks_url + BOOK_ID; responseString = myHTTPHelper
-             * .putBookToMyList(put_to_mybooks_url, _title, _author,
-             * _description, _publication_year, _barter_type, _user_token,
-             * _fb_Email); }
-             */
-
-            return responseString;
-        }
-
-        @Override
-        protected void onPostExecute(final String result) {
-            showToast(R.string.book_added, false);
+            addRequestToQueue(createBookRequest, true, 0);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -222,8 +178,14 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
     public void onClick(final View v) {
 
         if ((v.getId() == R.id.button_submit) && isInputValid()) {
-            showToast("Feature under implementation", true);
-            // addBookToServer();
+
+            if (TextUtils.isEmpty(SharedPreferenceHelper.getString(this,
+                            R.string.auth_token))) {
+
+                // TODO Ask user to login first
+            } else {
+                createBookOnServer();
+            }
         }
     }
 
@@ -270,6 +232,9 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 
             if (requestId == RequestId.GET_BOOK_INFO) {
                 readBookDetailsFromResponse(response);
+            } else if (requestId == RequestId.CREATE_BOOK) {
+                showToast(R.string.book_added, true);
+                finish();
             }
         }
     }

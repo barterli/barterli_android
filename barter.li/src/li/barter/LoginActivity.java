@@ -126,7 +126,7 @@ public class LoginActivity extends AbstractBarterLiActivity {
                                                                                 user.getId());
                                                 SharedPreferenceHelper
                                                                 .set(LoginActivity.this,
-                                                                                R.string.fb_email,
+                                                                                R.string.email,
                                                                                 email);
 
                                                 showToast(getString(

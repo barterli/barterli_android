@@ -54,7 +54,7 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
         setContentView(R.layout.show_my_profile);
 
         my_email = SharedPreferenceHelper.getString(this,
-                        R.string.fb_email);
+                        R.string.email);
         my_name = SharedPreferenceHelper.getString(this,
                         R.string.fb_username);
         my_pref_location = SharedPreferenceHelper.getString(this,

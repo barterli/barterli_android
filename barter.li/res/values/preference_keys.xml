@@ -3,7 +3,7 @@
 
     <string name="auth_token">auth_token</string>
     <string name="preferred_location">preferred_location</string>
-    <string name="fb_email">fb_email</string>
+    <string name="email">email</string>
     <string name="fb_username">fb_username</string>
     <string name="fb_userid">fb_userid</string>
     <string name="fb_access_token">fb_access_token</string>
