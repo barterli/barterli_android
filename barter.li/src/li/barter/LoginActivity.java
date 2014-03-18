@@ -29,16 +29,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -51,8 +46,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import li.barter.utils.AppConstants;
-import li.barter.utils.PreferenceKeys;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class LoginActivity extends AbstractBarterLiActivity {
@@ -81,7 +74,7 @@ public class LoginActivity extends AbstractBarterLiActivity {
         // registration_url = getResources().getString(R.string.create_account);
 
         Auth_Token = SharedPreferenceHelper.getString(this,
-                        PreferenceKeys.BARTER_LI_AUTH_TOKEN);
+                        R.string.auth_token);
         if (!TextUtils.isEmpty(Auth_Token)) {
             showToast(R.string.welcome_back, true);
             final Intent latLongIntent = new Intent(LoginActivity.this,
@@ -125,15 +118,15 @@ public class LoginActivity extends AbstractBarterLiActivity {
                                                                 .getName();
                                                 SharedPreferenceHelper
                                                                 .set(LoginActivity.this,
-                                                                                PreferenceKeys.FB_USERNAME,
+                                                                                R.string.fb_username,
                                                                                 name);
                                                 SharedPreferenceHelper
                                                                 .set(LoginActivity.this,
-                                                                                PreferenceKeys.FB_USERID,
+                                                                                R.string.fb_userid,
                                                                                 user.getId());
                                                 SharedPreferenceHelper
                                                                 .set(LoginActivity.this,
-                                                                                PreferenceKeys.FB_USER_EMAIL,
+                                                                                R.string.fb_email,
                                                                                 email);
 
                                                 showToast(getString(
@@ -154,7 +147,7 @@ public class LoginActivity extends AbstractBarterLiActivity {
             }
         });
 
-        // Act when twitter returns
+       /* // Act when twitter returns
         if (!isTwitterLoggedInAlready()) {
             final Uri uri = getIntent().getData();
             if ((uri != null)
@@ -164,7 +157,7 @@ public class LoginActivity extends AbstractBarterLiActivity {
                                 .getQueryParameter(AppConstants.URL_TWITTER_OAUTH_VERIFIER);
                 new twitterAsyncTaskSecondRound().execute(verifier);
             }
-        }
+        }*/
 
     } // End of OnCreate
 
@@ -197,15 +190,14 @@ public class LoginActivity extends AbstractBarterLiActivity {
 
     private boolean isTwitterLoggedInAlready() {
 
-        return !TextUtils.isEmpty(SharedPreferenceHelper.getString(this,
-                        PreferenceKeys.TWITTER_OAUTH_TOKEN));
+        return false;
     }
 
     private class twitterAsyncTaskFirstRound extends
                     AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(final String... parameters) {
-            final ConfigurationBuilder builder = new ConfigurationBuilder();
+            /*final ConfigurationBuilder builder = new ConfigurationBuilder();
             builder.setOAuthConsumerKey(AppConstants.TWITTER_CONSUMER_KEY);
             builder.setOAuthConsumerSecret(AppConstants.TWITTER_CONSUMER_SECRET);
             final Configuration configuration = builder.build();
@@ -219,46 +211,10 @@ public class LoginActivity extends AbstractBarterLiActivity {
                                 Uri.parse(requestToken.getAuthenticationURL())));
             } catch (final TwitterException e) {
                 e.printStackTrace();
-            }
+            }*/
             return null;
         }
     } // End of twitterAsyncTask
-
-    private class twitterAsyncTaskSecondRound extends
-                    AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(final String... params) {
-            final String verifier = params[0];
-            String username = "";
-            try {
-                final AccessToken accessToken = twitter.getOAuthAccessToken(
-                                requestToken, verifier);
-                // Save details in Preferences
-                SharedPreferenceHelper.set(LoginActivity.this,
-                                PreferenceKeys.TWITTER_OAUTH_TOKEN,
-                                accessToken.getToken());
-                SharedPreferenceHelper.set(LoginActivity.this,
-                                PreferenceKeys.TWITTER_OAUTH_SECRET,
-                                accessToken.getTokenSecret());
-                Log.e("Twitter OAuth Token", "> " + accessToken.getToken());
-                final long userID = accessToken.getUserId();
-                final User user = twitter.showUser(userID);
-                username = user.getName();
-                // accessToken.
-                //
-            } catch (final Exception e) {
-                Log.e("Twitter Login Error", "> " + e.getMessage());
-            }
-            return username;
-        }
-
-        @Override
-        protected void onPostExecute(final String name) {
-            Toast.makeText(LoginActivity.this,
-                            "Welcome " + name + ". Your email: ",
-                            Toast.LENGTH_SHORT).show();
-        }
-    } // End of twitterAsyncTaskSecondRound
 
     private class authServerTask extends AsyncTask<String, Void, String> {
         @Override
@@ -307,7 +263,7 @@ public class LoginActivity extends AbstractBarterLiActivity {
                                                     .contentEquals("null")) {
 
                         SharedPreferenceHelper.set(LoginActivity.this,
-                                        PreferenceKeys.BARTER_LI_AUTH_TOKEN,
+                                        R.string.auth_token,
                                         userObject.getString("auth_token"));
                         // Log.v("AUTHO", userObject.getString("auth_token"));
 

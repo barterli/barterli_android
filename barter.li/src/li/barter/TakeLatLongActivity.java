@@ -30,7 +30,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import li.barter.utils.PreferenceKeys;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class TakeLatLongActivity extends AbstractBarterLiActivity {
@@ -59,12 +58,11 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
          * getResources().getString( R.string.preferred_location);
          */
 
-        Auth_Token = SharedPreferenceHelper.getString(this,
-                        PreferenceKeys.BARTER_LI_AUTH_TOKEN);
-        FB_Email = SharedPreferenceHelper.getString(this,
-                        PreferenceKeys.FB_USER_EMAIL);
+        Auth_Token = SharedPreferenceHelper
+                        .getString(this, R.string.auth_token);
+        FB_Email = SharedPreferenceHelper.getString(this, R.string.fb_email);
         final String prefferedLocation = SharedPreferenceHelper.getString(this,
-                        PreferenceKeys.MY_PREFERRED_LOCATION);
+                        R.string.preferred_location);
         is_loc_pref_set = !TextUtils.isEmpty(prefferedLocation);
 
         gps = new GPSTracker(TakeLatLongActivity.this);
@@ -99,7 +97,7 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
         protected void onPostExecute(final String result) {
             myProgressDialogManager.dismissProgresDialog();
             SharedPreferenceHelper.set(TakeLatLongActivity.this,
-                            PreferenceKeys.MY_PREFERRED_LOCATION, my_Pref_loc);
+                            R.string.preferred_location, my_Pref_loc);
 
             /* showToast(R.string.preferred_location, false); */
             // Intent profileIntent = new Intent(TakeLatLongActivity.this,

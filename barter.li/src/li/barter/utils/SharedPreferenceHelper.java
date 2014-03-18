@@ -31,24 +31,24 @@ public class SharedPreferenceHelper {
      * Checks whether the preferences contains a key or not
      * 
      * @param context
-     * @param key
+     * @param key The string resource Id of the key
      * @return <code>true</code> if the key exists, <code>false</code> otherwise
      */
-    public static boolean contains(final Context context, final String key) {
+    public static boolean contains(final Context context, final int key) {
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
-        return preferences.contains(key);
+        return preferences.contains(context.getString(key));
     }
 
     /**
      * Get String value for a particular key.
      * 
      * @param context
-     * @param key
+     * @param key The string resource Id of the key
      * @return String value that was stored earlier, or empty string if no
      *         mapping exists
      */
-    public static String getString(final Context context, final String key) {
+    public static String getString(final Context context, final int key) {
 
         return getString(context, key, "");
     }
@@ -57,27 +57,27 @@ public class SharedPreferenceHelper {
      * Get String value for a particular key.
      * 
      * @param context
-     * @param key
+     * @param key The string resource Id of the key
      * @param defValue The default value to return
      * @return String value that was stored earlier, or the supplied default
      *         value if no mapping exists
      */
-    public static String getString(final Context context, final String key,
+    public static String getString(final Context context, final int key,
                     final String defValue) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
-        return preferences.getString(key, defValue);
+        return preferences.getString(context.getString(key), defValue);
     }
 
     /**
      * Get int value for key.
      * 
      * @param context
-     * @param key
+     * @param key The string resource Id of the key
      * @return value or 0 if no mapping exists
      */
-    public static int getInt(final Context context, final String key) {
+    public static int getInt(final Context context, final int key) {
 
         return getInt(context, key, 0);
     }
@@ -86,26 +86,26 @@ public class SharedPreferenceHelper {
      * Get int value for key.
      * 
      * @param context
-     * @param key
+     * @param key The string resource Id of the key
      * @param defValue The default value
      * @return value or defValue if no mapping exists
      */
-    public static int getInt(final Context context, final String key,
+    public static int getInt(final Context context, final int key,
                     final int defValue) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
-        return preferences.getInt(key, defValue);
+        return preferences.getInt(context.getString(key), defValue);
     }
 
     /**
      * Get float value for a particular key.
      * 
      * @param context
-     * @param key
+     * @param key The string resource Id of the key
      * @return value or 0.0 if no mapping exists
      */
-    public static float getFloat(final Context context, final String key) {
+    public static float getFloat(final Context context, final int key) {
 
         return getFloat(context, key, 0.0f);
 
@@ -115,16 +115,16 @@ public class SharedPreferenceHelper {
      * Get float value for a particular key.
      * 
      * @param context
-     * @param key
-     * @param defValue
+     * @param key The string resource Id of the key
+     * @param defValue The default value to return if the requested key is not present
      * @return value or defValue if no mapping exists
      */
-    public static float getFloat(final Context context, final String key,
+    public static float getFloat(final Context context, final int key,
                     final float defValue) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
-        return preferences.getFloat(key, defValue);
+        return preferences.getFloat(context.getString(key), defValue);
 
     }
 
@@ -132,10 +132,10 @@ public class SharedPreferenceHelper {
      * Get long value for a particular key.
      * 
      * @param context
-     * @param key
+     * @param key The string resource Id of the key
      * @return value or 0 if no mapping exists
      */
-    public static long getLong(final Context context, final String key) {
+    public static long getLong(final Context context, final int key) {
 
         return getLong(context, key, 0l);
     }
@@ -144,26 +144,26 @@ public class SharedPreferenceHelper {
      * Get long value for a particular key.
      * 
      * @param context
-     * @param key
-     * @param defValue
+     * @param key The string resource Id of the key
+     * @param defValue The default value to fetch if the requested key doesn't exist
      * @return value or defValue if no mapping exists
      */
-    public static long getLong(final Context context, final String key,
+    public static long getLong(final Context context, final int key,
                     final long defValue) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
-        return preferences.getLong(key, defValue);
+        return preferences.getLong(context.getString(key), defValue);
     }
 
     /**
      * Get boolean value for a particular key.
      * 
      * @param context
-     * @param key
-     * @return value or false if no mapping exists
+     * @param key The string resource Id of the key
+     * @return value or <code>false</code> if no mapping exists
      */
-    public static boolean getBoolean(final Context context, final String key) {
+    public static boolean getBoolean(final Context context, final int key) {
 
         return getBoolean(context, key, false);
     }
@@ -172,33 +172,32 @@ public class SharedPreferenceHelper {
      * Get boolean value for a particular key.
      * 
      * @param context
-     * @param key
-     * @param defValue
+     * @param key The string resource Id of the key
+     * @param defValue The default value to fetch if the key doesn't exist
      * @return value or defValue if no mapping exists
      */
-    public static boolean getBoolean(final Context context, final String key,
+    public static boolean getBoolean(final Context context, final int key,
                     final boolean defValue) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
-        return preferences.getBoolean(key, defValue);
+        return preferences.getBoolean(context.getString(key), defValue);
     }
 
     /**
-     * Set String value for a particular key. Convert non-Strings to appropriate
-     * Strings before storing.
+     * Set String value for a particular key.
      * 
      * @param context
-     * @param key
-     * @param value
+     * @param key The string resource Id of the key
+     * @param value The value to set for the key
      */
-    public static void set(final Context context, final String key,
+    public static void set(final Context context, final int key,
                     final String value) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(key, value);
+        editor.putString(context.getString(key), value);
         editor.commit();
     }
 
@@ -206,16 +205,16 @@ public class SharedPreferenceHelper {
      * Set int value for key.
      * 
      * @param context
-     * @param key
-     * @param value
+     * @param key The string resource Id of the key
+     * @param value The value to set for the key
      */
-    public static void set(final Context context, final String key,
+    public static void set(final Context context, final int key,
                     final int value) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(key, value);
+        editor.putInt(context.getString(key), value);
         editor.commit();
     }
 
@@ -223,17 +222,17 @@ public class SharedPreferenceHelper {
      * Set float value for a key.
      * 
      * @param context
-     * @param key
-     * @param value
+     * @param key The string resource Id of the key
+     * @param value The value to set for the key
      */
-    public static void set(final Context context, final String key,
+    public static void set(final Context context, final int key,
                     final float value) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = preferences.edit();
 
-        editor.putFloat(key, value);
+        editor.putFloat(context.getString(key), value);
         editor.commit();
     }
 
@@ -241,16 +240,16 @@ public class SharedPreferenceHelper {
      * Set long value for key.
      * 
      * @param context
-     * @param key
-     * @param value
+     * @param key The string resource Id of the key
+     * @param value The value to set for the key
      */
-    public static void set(final Context context, final String key,
+    public static void set(final Context context, final int key,
                     final long value) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong(key, value);
+        editor.putLong(context.getString(key), value);
         editor.commit();
     }
 
@@ -258,16 +257,16 @@ public class SharedPreferenceHelper {
      * Set boolean value for key.
      * 
      * @param context
-     * @param key
-     * @param value
+     * @param key The string resource Id of the key
+     * @param value The value to set for the key
      */
-    public static void set(final Context context, final String key,
+    public static void set(final Context context, final int key,
                     final boolean value) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(key, value);
+        editor.putBoolean(context.getString(key), value);
         editor.commit();
     }
 

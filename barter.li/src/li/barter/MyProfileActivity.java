@@ -30,7 +30,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import li.barter.utils.PreferenceKeys;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class MyProfileActivity extends AbstractBarterLiActivity {
@@ -55,13 +54,13 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
         setContentView(R.layout.show_my_profile);
 
         my_email = SharedPreferenceHelper.getString(this,
-                        PreferenceKeys.FB_USER_EMAIL);
+                        R.string.fb_email);
         my_name = SharedPreferenceHelper.getString(this,
-                        PreferenceKeys.FB_USERNAME);
+                        R.string.fb_username);
         my_pref_location = SharedPreferenceHelper.getString(this,
-                        PreferenceKeys.MY_PREFERRED_LOCATION);
+                        R.string.preferred_location);
         Auth_Token = SharedPreferenceHelper.getString(this,
-                        PreferenceKeys.BARTER_LI_AUTH_TOKEN);
+                        R.string.auth_token);
         my_name_text = (TextView) findViewById(R.id.my_name);
         my_email_text = (TextView) findViewById(R.id.my_email);
         my_pref_location_text = (TextView) findViewById(R.id.my_pref_loc);
