@@ -92,7 +92,7 @@
                 android:value=".BooksAroundMeActivity" />
         </activity>
         <activity
-            android:name="li.barter.ChatActivity"
+            android:name=".ChatActivity"
             android:label="@string/app_name"
             android:parentActivityName=".BooksAroundMeActivity" >
             <meta-data

@@ -60,7 +60,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
     public boolean connectToRabbitMQ(final String queueName,
                     final boolean durable, final boolean exclusive,
                     final boolean autoDelete, final Map<String, Object> args) {
-        if (super.connectToRabbitMQ("guest", "guest")) {
+        if (super.connectToRabbitMQ("barterli", "barter")) {
 
             try {
                 Log.d(TAG, "Connected");

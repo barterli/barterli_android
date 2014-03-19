@@ -39,8 +39,8 @@ public class ChatActivity extends AbstractBarterLiActivity implements
         mChatAdapter = new ChatAdapter(this);
         mChatListView.setAdapter(mChatAdapter);
 
-        mMessageConsumer = new ChatRabbitMQConnector("192.168.1.138", 5672, "/",
-                        "nodes.metadatap21", ExchangeType.DIRECT);
+        mMessageConsumer = new ChatRabbitMQConnector("192.168.1.123", 5672, "/",
+                        "node.barterli", ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
     }
 
@@ -56,8 +56,8 @@ public class ChatActivity extends AbstractBarterLiActivity implements
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
-                if (mMessageConsumer.connectToRabbitMQ("test123", true, false,
-                                false, null)) {
+                if (mMessageConsumer.connectToRabbitMQ("user1", false, false,
+                                true, null)) {
                     mMessageConsumer.addBinding("shared.key");
                 }
                 return null;
