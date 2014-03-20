@@ -246,6 +246,11 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
     @Override
     public void onLocationChanged(final Location location) {
+        
+        //Very rare case, if locationClient.getLastLocation() returns null
+        if(location == null) {
+            return;
+        }
         Log.d(TAG,
                         "Location update:" + location.getLatitude() + " "
                                         + location.getLongitude());
