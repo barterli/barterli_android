@@ -45,13 +45,13 @@ import li.barter.widgets.TypefacedSpan;
  */
 public class AbstractBarterLiActivity extends FragmentActivity {
 
-    private static final int ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
-                                                                     | ActionBar.DISPLAY_SHOW_TITLE;
+    private static final int ACTION_BAR_DISPLAY_MASK      = ActionBar.DISPLAY_HOME_AS_UP
+                                                                          | ActionBar.DISPLAY_SHOW_TITLE;
 
     private RequestQueue     mRequestQueue;
     private ImageLoader      mImageLoader;
     private AtomicInteger    mRequestCounter;
-
+    
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
@@ -60,12 +60,12 @@ public class AbstractBarterLiActivity extends FragmentActivity {
             getActionBar().setDisplayOptions(ACTION_BAR_DISPLAY_MASK);
             setActionBarTitle(getTitle().toString());
         }
-
         mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
         mImageLoader = ((IVolleyHelper) getApplication()).getImageLoader();
         mRequestCounter = new AtomicInteger(0);
         setProgressBarIndeterminateVisibility(false);
     }
+
 
     /**
      * Reference to the {@link ImageLoader}

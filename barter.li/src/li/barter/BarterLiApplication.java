@@ -22,6 +22,9 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 import android.app.Application;
+import android.view.ViewConfiguration;
+
+import java.lang.reflect.Field;
 
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants;
@@ -41,10 +44,36 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
     @Override
     public void onCreate() {
 
+        overrideHardwareMenuButton();
         VolleyLog.sDebug = AppConstants.DEBUG;
         mRequestQueue = Volley.newRequestQueue(this);
         mImageLoader = new ImageLoader(mRequestQueue);
     };
+
+    /**
+     * Some device manufacturers are stuck in the past and stubbornly use H/W
+     * menu buttons, which is deprecated since Android 3.0. This breaks the UX
+     * on newer devices since the Action Bar overflow just doesn't show. This
+     * little hack tricks the Android OS into thinking that the device doesn't
+     * have a permanant menu button, and hence the Overflow button gets shown.
+     * This doesn't disable the Menu button, however. It will continue to
+     * function as normal, so the users who are already used to it will be able
+     * to use it as before
+     */
+    private void overrideHardwareMenuButton() {
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class
+                            .getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception ex) {
+            // Ignore since we can't do anything
+        }
+
+    }
 
     @Override
     public RequestQueue getRequestQueue() {
