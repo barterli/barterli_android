@@ -14,8 +14,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent" >
@@ -26,10 +27,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- -ve margin given to override the default margin hardcoded by drawer layout -->
+
     <LinearLayout
         android:id="@+id/layout_books_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginLeft="-65dp"
         android:background="@color/transparent"
         android:orientation="vertical" >
 
@@ -58,4 +63,4 @@
             android:verticalSpacing="@dimen/grid_view_spacing" />
     </LinearLayout>
 
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

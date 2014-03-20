@@ -31,13 +31,17 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,6 +50,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
 
 import li.barter.adapters.BooksAroundMeAdapter;
+import li.barter.utils.AppConstants;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.UtilityMethods;
 
@@ -55,7 +60,7 @@ import li.barter.utils.UtilityMethods;
  */
 public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
                 LocationListener, SnapshotReadyCallback, CancelableCallback,
-                OnMapLoadedCallback {
+                OnMapLoadedCallback, DrawerListener {
 
     private static final String           TAG                 = "BooksAroundMeActivity";
 
@@ -122,11 +127,33 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
     private Handler                       mHandler;
 
+    /**
+     * Transparent color drawable to serve as the initial starting drawable for
+     * the map background transition
+     */
+    private Drawable                      mTransparentColorDrawable;
+
+    /**
+     * Drawer Layout that contains the Books grid and autocomplete search text
+     */
+    private DrawerLayout                  mDrawerLayout;
+
+    /**
+     * Flag that remembers whether the drawer has been opened at least once
+     * automatically
+     */
+    private boolean                       mDrawerOpenedAutomatically;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_around_me);
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerListener(this);
+        mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+
+        mTransparentColorDrawable = new ColorDrawable(Color.TRANSPARENT);
         mBackgroundView = findViewById(R.id.layout_books_container);
         mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete_books_around_me);
         mBooksAroundMeGridView = (GridView) findViewById(R.id.grid_books_around_me);
@@ -142,6 +169,19 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
         mHandler = new Handler();
         mTransitionDrawableLayers = new Drawable[2];
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
+
+        if (savedInstanceState == null) {
+            mDrawerOpenedAutomatically = false;
+        } else {
+            mDrawerOpenedAutomatically = savedInstanceState
+                            .getBoolean(AppConstants.BOOL_1);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(AppConstants.BOOL_1, mDrawerOpenedAutomatically);
     }
 
     @Override
@@ -230,7 +270,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
                 }
             }, 500);
         } else {
-            setMapMyLocationEnabled(false);
+
             mBackgroundView.bringToFront();
             mBackgroundView.animate().alpha(1.0f).setDuration(500).start();
             mHandler.postDelayed(new Runnable() {
@@ -246,9 +286,9 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
     @Override
     public void onLocationChanged(final Location location) {
-        
-        //Very rare case, if locationClient.getLastLocation() returns null
-        if(location == null) {
+
+        // Very rare case, if locationClient.getLastLocation() returns null
+        if (location == null) {
             return;
         }
         Log.d(TAG,
@@ -280,13 +320,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
                         getResources(), UtilityMethods.blurImage(this,
                                         snapshot, MAP_BLUR));
 
-        /* Set the drawables to animate between */
-        if (mTransitionDrawableLayers[0] == null) {
-            mTransitionDrawableLayers[0] = mBackgroundView.getBackground();
-        } else {
-            mTransitionDrawableLayers[0] = mTransitionDrawableLayers[1];
-        }
-
+        mTransitionDrawableLayers[0] = mTransparentColorDrawable;
         mTransitionDrawableLayers[1] = backgroundDrawable;
 
         final TransitionDrawable transitionDrawable = new TransitionDrawable(
@@ -341,15 +375,15 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
     @Override
     public void onMapLoaded() {
-        if ((mMapFragment != null) && mMapFragment.isVisible()) {
-            final GoogleMap googleMap = mMapFragment.getMap();
 
-            if (googleMap != null) {
-                Log.d(TAG, "Taking Snapshot!");
-                googleMap.snapshot(this);
-            }
+        // Create the map snapshot only if the drawer is open
+        if (mDrawerLayout.isDrawerOpen(mBackgroundView)) {
+            captureMapSnapshot();
+        } else if (!mDrawerOpenedAutomatically) {
+            // Open drawer automatically on map loaded if first launch
+            mDrawerOpenedAutomatically = true;
+            mDrawerLayout.openDrawer(mBackgroundView);
         }
-
     }
 
     /**
@@ -365,6 +399,58 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
                 googleMap.setMyLocationEnabled(enabled);
             }
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        if (drawerView == mBackgroundView) {
+            setMapMyLocationEnabled(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                mBackgroundView.setBackground(mTransparentColorDrawable);
+            } else {
+                mBackgroundView.setBackgroundDrawable(mTransparentColorDrawable);
+            }
+        }
+
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+
+        if (drawerView == mBackgroundView) {
+            setMapMyLocationEnabled(false);
+            beginMapSnapshotProcess();
+        }
+
+    }
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onDrawerStateChanged(int state) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * Captures a snapshot of the map
+     */
+    private void captureMapSnapshot() {
+        if ((mMapFragment != null) && mMapFragment.isVisible()) {
+            final GoogleMap googleMap = mMapFragment.getMap();
+
+            if (googleMap != null) {
+                Log.d(TAG, "Taking Snapshot!");
+                googleMap.snapshot(this);
+            }
+        }
+
     }
 
 }
