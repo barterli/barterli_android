@@ -19,11 +19,6 @@
     <!-- Group to hide action items when navigation drawer is opened -->
     <group android:id="@+id/group_hide_on_drawer_open" >
         
-        <item 
-            android:id="@+id/action_toggle_map"
-            android:orderInCategory="0"
-            android:showAsAction="never"
-            android:title="@string/toggle_map"/>
         <item
             android:id="@+id/action_scan_book"
             android:orderInCategory="1"

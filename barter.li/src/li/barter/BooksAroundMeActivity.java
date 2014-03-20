@@ -39,7 +39,6 @@ import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.util.Log;
@@ -103,12 +102,6 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     private GridView                      mBooksAroundMeGridView;
 
     /**
-     * Reference to the container in the layout which contains the
-     * {@link MapFragment}
-     */
-    private View                          mMapView;
-
-    /**
      * {@link BooksAroundMeAdapter} instance for the Books
      */
     private BooksAroundMeAdapter          mBooksAroundMeAdapter;
@@ -124,8 +117,6 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
      * smoothening
      */
     private Drawable[]                    mTransitionDrawableLayers;
-
-    private Handler                       mHandler;
 
     /**
      * Transparent color drawable to serve as the initial starting drawable for
@@ -157,7 +148,6 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
         mBackgroundView = findViewById(R.id.layout_books_container);
         mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete_books_around_me);
         mBooksAroundMeGridView = (GridView) findViewById(R.id.grid_books_around_me);
-        mMapView = findViewById(R.id.map_books_around_me);
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter();
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(
@@ -166,7 +156,6 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         getActionBar().setHomeButtonEnabled(false);
 
-        mHandler = new Handler();
         mTransitionDrawableLayers = new Drawable[2];
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
 
@@ -220,11 +209,6 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
         switch (item.getItemId()) {
 
-            case R.id.action_toggle_map: {
-
-                toggleMap();
-                return true;
-            }
             case R.id.action_scan_book: {
                 startActivity(new Intent(this, ScanIsbnActivity.class));
                 return true;
@@ -248,39 +232,6 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
             default: {
                 return super.onOptionsItemSelected(item);
             }
-        }
-    }
-
-    /**
-     * Toggle the Map visibility. Will crossfade between the Books content and
-     * the Map based on whichever one is at the front
-     */
-    private void toggleMap() {
-
-        if (mBackgroundView.getAlpha() == 1.0f) {
-            mBackgroundView.animate().alpha(0.0f).setDuration(500).start();
-
-            mHandler.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    setMapMyLocationEnabled(true);
-                    mMapView.bringToFront();
-
-                }
-            }, 500);
-        } else {
-
-            mBackgroundView.bringToFront();
-            mBackgroundView.animate().alpha(1.0f).setDuration(500).start();
-            mHandler.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    beginMapSnapshotProcess();
-                }
-            }, 500);
         }
     }
 
