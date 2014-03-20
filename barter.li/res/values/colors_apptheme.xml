@@ -19,5 +19,6 @@
     <color name="global_bg">#DCE0DA</color>
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="dark_gray">#565051</color>
     
 </resources>

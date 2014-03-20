@@ -109,6 +109,9 @@
                     android:host="barterLi"
                     android:scheme="oauth" />
             </intent-filter>
+            <meta-data
+                android:name="android.support.PARENT_ACTICITY"
+                android:value=".AddOrEditBookActivity" />
         </activity>
 
         <meta-data

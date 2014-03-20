@@ -24,6 +24,7 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -180,9 +181,9 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
         if ((v.getId() == R.id.button_submit) && isInputValid()) {
 
             if (TextUtils.isEmpty(SharedPreferenceHelper.getString(this,
-                            R.string.auth_token))) {
+                            R.string.pref_auth_token))) {
 
-                // TODO Ask user to login first
+                startActivity(new Intent(this, LoginActivity.class));
             } else {
                 createBookOnServer();
             }
@@ -193,13 +194,21 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
      * Validates the current input. Sets errors for the text fields if there are
      * any errors
      * 
-     * @return <code>true</code> if there are no errors, <code>false</code>
+     * @return <code>true</code> if there are no errors, <code>fhalse</code>
      *         otherwise
      */
     private boolean isInputValid() {
 
-        // TODO Add input validation
-        return true;
+        boolean isValid = true;
+        
+        final String title = mTitleEditText.getText().toString();
+        
+        isValid &= !TextUtils.isEmpty(title);
+        
+        if(!isValid) {
+            mTitleEditText.setError(getString(R.string.error_enter_title));
+        }
+        return isValid;
     }
 
     @Override

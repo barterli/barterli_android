@@ -59,10 +59,10 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
          */
 
         Auth_Token = SharedPreferenceHelper
-                        .getString(this, R.string.auth_token);
-        FB_Email = SharedPreferenceHelper.getString(this, R.string.email);
+                        .getString(this, R.string.pref_auth_token);
+        FB_Email = SharedPreferenceHelper.getString(this, R.string.pref_email);
         final String prefferedLocation = SharedPreferenceHelper.getString(this,
-                        R.string.preferred_location);
+                        R.string.pref_preferred_location);
         is_loc_pref_set = !TextUtils.isEmpty(prefferedLocation);
 
         gps = new GPSTracker(TakeLatLongActivity.this);
@@ -97,7 +97,7 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
         protected void onPostExecute(final String result) {
             myProgressDialogManager.dismissProgresDialog();
             SharedPreferenceHelper.set(TakeLatLongActivity.this,
-                            R.string.preferred_location, my_Pref_loc);
+                            R.string.pref_preferred_location, my_Pref_loc);
 
             /* showToast(R.string.preferred_location, false); */
             // Intent profileIntent = new Intent(TakeLatLongActivity.this,

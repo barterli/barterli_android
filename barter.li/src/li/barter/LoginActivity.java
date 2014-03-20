@@ -16,153 +16,40 @@
 
 package li.barter;
 
-import com.facebook.FacebookException;
-import com.facebook.Request;
-import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.SessionState;
-import com.facebook.model.GraphUser;
-import com.facebook.widget.LoginButton;
-import com.facebook.widget.LoginButton.OnErrorListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import twitter4j.Twitter;
-import twitter4j.User;
-import twitter4j.auth.AccessToken;
-import twitter4j.auth.RequestToken;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+public class LoginActivity extends AbstractBarterLiActivity implements OnClickListener {
 
-import li.barter.utils.SharedPreferenceHelper;
-
-public class LoginActivity extends AbstractBarterLiActivity {
-
-    // Twitter
-    private static Twitter              twitter;
-    private static RequestToken         requestToken;
-    // Shared Preferences
-    // Internet Connection detector
-    // Alert Dialog Manager
-    private final AlertDialogManager    alert                   = new AlertDialogManager();
-    private TextView                    welcome;
-    List<String>                        permissions;
-    Bundle                              parameters;
-    private final ProgressDialogManager myProgressDialogManager = new ProgressDialogManager();
-    String                              registration_url;
-    String                              Auth_Token;
-
+    private Button mFacebookLoginButton;
+    private Button mGoogleLoginButton;
+    private Button mSubmitButton;
+    private EditText mEmailEditText;
+    private EditText mPasswordEditText;
+    
     @Override
-    public void onCreate(final Bundle icicle) {
-        super.onCreate(icicle);
-        setContentView(R.layout.login_activity);
-        permissions = new ArrayList<String>();
-        permissions.add("email");
-        final LoginButton authButton = (LoginButton) findViewById(R.id.authButton);
-        // registration_url = getResources().getString(R.string.create_account);
-
-        Auth_Token = SharedPreferenceHelper.getString(this,
-                        R.string.auth_token);
-        if (!TextUtils.isEmpty(Auth_Token)) {
-            showToast(R.string.welcome_back, true);
-            final Intent latLongIntent = new Intent(LoginActivity.this,
-                            TakeLatLongActivity.class);
-            startActivity(latLongIntent);
-            finish();
-        }
-
-        authButton.setOnErrorListener(new OnErrorListener() {
-            @Override
-            public void onError(final FacebookException error) {
-                Log.i("FB_ERROR", "Error " + error.getMessage());
-            }
-        });
-        authButton.setReadPermissions(Arrays.asList("basic_info", "email"));
-        authButton.setSessionStatusCallback(new Session.StatusCallback() {
-            @Override
-            public void call(final Session session, final SessionState state,
-                            final Exception exception) {
-                if (session.isOpened()) {
-                    Log.i("FB", "Access Token" + session.getAccessToken()); // **
-                    final String accesstoken = session.getAccessToken();
-                    // Log.i("FB","Access Token"+ session.); //**
-                    // make request to the /me API
-                    final Request request = Request.newMeRequest(session,
-                                    new Request.GraphUserCallback() {
-                                        // callback after Graph API response
-                                        // with user
-                                        // object
-                                        @Override
-                                        public void onCompleted(
-                                                        final GraphUser user,
-                                                        final Response response) {
-                                            if (user != null) {
-
-                                                final String email = user
-                                                                .asMap()
-                                                                .get("email")
-                                                                .toString();
-                                                final String name = user
-                                                                .getName();
-                                                SharedPreferenceHelper
-                                                                .set(LoginActivity.this,
-                                                                                R.string.fb_username,
-                                                                                name);
-                                                SharedPreferenceHelper
-                                                                .set(LoginActivity.this,
-                                                                                R.string.fb_userid,
-                                                                                user.getId());
-                                                SharedPreferenceHelper
-                                                                .set(LoginActivity.this,
-                                                                                R.string.email,
-                                                                                email);
-
-                                                showToast(getString(
-                                                                R.string.welcome_fb,
-                                                                name), false);
-                                                new authServerTask()
-                                                                .execute(registration_url,
-                                                                                user.getId(),
-                                                                                user.getFirstName(),
-                                                                                user.getLastName(),
-                                                                                email,
-                                                                                accesstoken);
-                                            }
-                                        }
-                                    });
-                    request.executeAsync();
-                }
-            }
-        });
-
-       /* // Act when twitter returns
-        if (!isTwitterLoggedInAlready()) {
-            final Uri uri = getIntent().getData();
-            if ((uri != null)
-                            && uri.toString().startsWith(
-                                            AppConstants.TWITTER_CALLBACK_URL)) {
-                final String verifier = uri
-                                .getQueryParameter(AppConstants.URL_TWITTER_OAUTH_VERIFIER);
-                new twitterAsyncTaskSecondRound().execute(verifier);
-            }
-        }*/
-
-    } // End of OnCreate
-
-    // Call back for FB
-    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        
+        mFacebookLoginButton = (Button) findViewById(R.id.button_facebook_login);
+        mGoogleLoginButton = (Button) findViewById(R.id.button_google_login);
+        mSubmitButton = (Button) findViewById(R.id.button_submit);
+        mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
+        mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
+        
+        mFacebookLoginButton.setOnClickListener(this);
+        mGoogleLoginButton.setOnClickListener(this);
+        mSubmitButton.setOnClickListener(this);
+        
+    }
+    
     public void onActivityResult(final int requestCode, final int resultCode,
                     final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -170,149 +57,26 @@ public class LoginActivity extends AbstractBarterLiActivity {
                         resultCode, data);
     }
 
-    public void loginToTwitter(final View v) {
-        if (!isTwitterLoggedInAlready()) {
-            if (!isConnectedToInternet()) {
-                alert.showAlertDialog(
-                                LoginActivity.this,
-                                "Internet Connection Error",
-                                "Please connect to working Internet connection",
-                                false);
-                return;
+    @Override
+    public void onClick(View v) {
+
+        switch(v.getId()) {
+            
+            case R.id.button_facebook_login: {
+                //TODO Facebook Login
+                break;
             }
-            new twitterAsyncTaskFirstRound().execute();
-        } else {
-            Toast.makeText(getApplicationContext(),
-                            "Already Logged into twitter", Toast.LENGTH_LONG)
-                            .show();
+            
+            case R.id.button_google_login: {
+                //TODO Google Login
+                break;
+            }
+            
+            case R.id.button_submit: {
+                //TODO User Login/Create
+                break;
+            }
         }
     }
-
-    private boolean isTwitterLoggedInAlready() {
-
-        return false;
-    }
-
-    private class twitterAsyncTaskFirstRound extends
-                    AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(final String... parameters) {
-            /*final ConfigurationBuilder builder = new ConfigurationBuilder();
-            builder.setOAuthConsumerKey(AppConstants.TWITTER_CONSUMER_KEY);
-            builder.setOAuthConsumerSecret(AppConstants.TWITTER_CONSUMER_SECRET);
-            final Configuration configuration = builder.build();
-            final TwitterFactory factory = new TwitterFactory(configuration);
-            twitter = factory.getInstance();
-
-            try {
-                requestToken = twitter
-                                .getOAuthRequestToken(AppConstants.TWITTER_CALLBACK_URL);
-                startActivity(new Intent(Intent.ACTION_VIEW,
-                                Uri.parse(requestToken.getAuthenticationURL())));
-            } catch (final TwitterException e) {
-                e.printStackTrace();
-            }*/
-            return null;
-        }
-    } // End of twitterAsyncTask
-
-    private class authServerTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            myProgressDialogManager.showProgresDialog(LoginActivity.this,
-                            "Registering...");
-        }
-
-        @Override
-        protected String doInBackground(final String... parameters) {
-            // String registration_url =
-            // getResources().getString(R.string.create_account);
-            /*
-             * HTTPHelper myHTTPHelper = new HTTPHelper(); String
-             * post_to_newuser_url = parameters[0]; String uid = parameters[1];
-             * String firstname = parameters[2]; String lastname =
-             * parameters[3]; String email = parameters[4]; String token =
-             * parameters[5];
-             */
-            // Log.v("ASYNC_URL", post_to_newuser_url);
-            final String responseString = ""/*
-                                             * = myHTTPHelper
-                                             * .postNewUser(post_to_newuser_url,
-                                             * uid, firstname, lastname, email,
-                                             * token)
-                                             */;
-            return responseString;
-
-        }
-
-        @Override
-        protected void onPostExecute(final String result) {
-            myProgressDialogManager.dismissProgresDialog();
-            // Toast.makeText(LoginActivity.this, result,
-            // Toast.LENGTH_SHORT).show();
-            try {
-                Log.v("FB_AUTH_RETURN", result);
-                final JSONObject userObject = new JSONObject(result);
-                if (userObject.has("status")
-                                && userObject.getString("status")
-                                                .contentEquals("success")) {
-
-                    if (userObject.has("auth_token")
-                                    && !userObject.getString("auth_token")
-                                                    .contentEquals("null")) {
-
-                        SharedPreferenceHelper.set(LoginActivity.this,
-                                        R.string.auth_token,
-                                        userObject.getString("auth_token"));
-                        // Log.v("AUTHO", userObject.getString("auth_token"));
-
-                        showToast(R.string.welcome_to_barterli, true);
-                        Log.v("FB_AUTH_RETURN", result);
-                    }
-                    final Intent latLongIntent = new Intent(LoginActivity.this,
-                                    TakeLatLongActivity.class);
-                    startActivity(latLongIntent);
-                }
-            } catch (final JSONException e) {
-                e.printStackTrace();
-                Toast.makeText(LoginActivity.this, "Registration Failed!",
-                                Toast.LENGTH_SHORT).show();
-            }
-            // Toast.makeText(LoginActivity.this, "Registration Success!",
-            // Toast.LENGTH_SHORT).show();
-            final Intent latLongIntent = new Intent(LoginActivity.this,
-                            TakeLatLongActivity.class);
-            startActivity(latLongIntent);
-        }
-    } // End of askServerForSuggestionsTask
-
-    /*
-     * public void LoginThroughFacebook(View v){ if
-     * (!connection_status_detector.isConnectingToInternet()) {
-     * alert.showAlertDialog(LoginActivity.this,
-     * "Internet Connection Error","Please connect to working Internet connection"
-     * , false); return; } // start Facebook Login
-     * Session.openActiveSession(this, true, new Session.StatusCallback() { //
-     * callback when session changes state public void call(Session session,
-     * SessionState state, Exception exception) { if (session.isOpened()) {
-     * String accessToken = session.getAccessToken();
-     * sharedPrefEditor.putString(AllConstants.FB_ACCESS_TOKEN, accessToken);
-     * sharedPrefEditor.commit(); // make request to the /me API Request request
-     * = Request.newMeRequest(session, new Request.GraphUserCallback() { //
-     * callback after Graph API response with user object public void
-     * onCompleted(GraphUser user, Response response) { if (user != null) {
-     * sharedPrefEditor.putString(AllConstants.FB_USERNAME, user.getName());
-     * sharedPrefEditor.putString(AllConstants.FB_USERID, user.getId()); //Few
-     * more details are yet to come! String email = user.getFirstName()+
-     * user.asMap().get("email");
-     * sharedPrefEditor.putString(AllConstants.FB_USER_EMAIL, email);
-     * Log.v("FB_LOGIN", user.getInnerJSONObject().toString());
-     * sharedPrefEditor.commit(); welcome.setText("Hello " + user.getName() +
-     * "!. Email::" + email); //Save all details in preferences } } });
-     * //Request.executeBatchAsync(request);
-     * //request.setParameters(parameters); request.executeAsync(); } } }); }
-     * //End of LoginThroughFacebook
-     */
 
 }

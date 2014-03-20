@@ -51,6 +51,7 @@
     <string name="description_label">Description</string>
     <string name="publication_year_label">Published On</string>
     <string name="barter_type_label">Barter Type</string>
+    <string name="error_enter_title">Please enter a book title</string>
     
     <string name="book_added">Book has been added!</string>
     <string name="unable_to_fetch_book_info">Unable to fetch book info.</string>
@@ -64,12 +65,11 @@
     <string name="wishlist">Add to Wishlist</string>
     <string name="keep_private">Keep Private</string>
     <string name="submit">Submit</string>
-
-    <!-- Strings for LoginActivity -->
-    <string name="facebook_login">Login with Facebook</string>
-    <string name="facebook_logout">Logout</string>
-    <string name="twitter_login">Login with Twitter</string>
-    <string name="description">Please note that we are taking facebook credentials only for Authorization.</string>
+    
+    <string name="login_with_facebook">Login with Facebook</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="email_label">Email Id</string>
+    <string name="password_label">Password</string>
 
     <!-- Strings for TakeLatLongActivity -->
     <string name="lat_long">Location</string>

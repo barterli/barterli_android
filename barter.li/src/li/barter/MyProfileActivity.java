@@ -54,13 +54,13 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
         setContentView(R.layout.show_my_profile);
 
         my_email = SharedPreferenceHelper.getString(this,
-                        R.string.email);
+                        R.string.pref_email);
         my_name = SharedPreferenceHelper.getString(this,
-                        R.string.fb_username);
+                        R.string.pref_fb_username);
         my_pref_location = SharedPreferenceHelper.getString(this,
-                        R.string.preferred_location);
+                        R.string.pref_preferred_location);
         Auth_Token = SharedPreferenceHelper.getString(this,
-                        R.string.auth_token);
+                        R.string.pref_auth_token);
         my_name_text = (TextView) findViewById(R.id.my_name);
         my_email_text = (TextView) findViewById(R.id.my_email);
         my_pref_location_text = (TextView) findViewById(R.id.my_pref_loc);
