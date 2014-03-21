@@ -42,7 +42,7 @@ import android.view.WindowManager;
 import java.io.IOException;
 import java.util.Collection;
 
-import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.Keys;
 
 /**
  * @author vinaysshenoy Activity to scan an ISBN barcode
@@ -248,7 +248,7 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 
         final Intent addBookIntent = new Intent(this,
                         AddOrEditBookActivity.class);
-        addBookIntent.putExtra(AppConstants.BOOK_ID, isbnNumber);
+        addBookIntent.putExtra(Keys.BOOK_ID, isbnNumber);
         startActivity(addBookIntent);
 
     }

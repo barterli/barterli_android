@@ -25,14 +25,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +40,7 @@ import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
-import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
@@ -75,12 +73,12 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
         // If extras are null, it means that user has to decided to add the
         // book completely manually
         if (extras != null) {
-            mBookId = extras.getString(AppConstants.BOOK_ID);
+            mBookId = extras.getString(Keys.BOOK_ID);
             Log.d(TAG, "Book Id:" + mBookId);
 
             if (savedInstanceState != null) {
                 mHasFetchedDetails = savedInstanceState
-                                .getBoolean(AppConstants.BOOL_1);
+                                .getBoolean(Keys.BOOL_1);
             }
 
             else {
@@ -99,14 +97,14 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
      */
     private void loadDetailsForIntent(final Bundle extras) {
 
-        mBookId = extras.getString(AppConstants.BOOK_ID);
-        final String title = extras.getString(AppConstants.BOOK_TITLE);
-        final String author = extras.getString(AppConstants.AUTHOR);
-        final String description = extras.getString(AppConstants.DESCRIPTION);
+        mBookId = extras.getString(Keys.BOOK_ID);
+        final String title = extras.getString(Keys.BOOK_TITLE);
+        final String author = extras.getString(Keys.AUTHOR);
+        final String description = extras.getString(Keys.DESCRIPTION);
         final String publicationYear = extras
-                        .getString(AppConstants.PUBLICATION_YEAR);
+                        .getString(Keys.PUBLICATION_YEAR);
         final String[] barterTypes = extras
-                        .getStringArray(AppConstants.BARTER_TYPES);
+                        .getStringArray(Keys.BARTER_TYPES);
 
         mIsbnEditText.setText(mBookId);
         mTitleEditText.setText(title);
@@ -251,7 +249,7 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(AppConstants.BOOL_1, mHasFetchedDetails);
+        outState.putBoolean(Keys.BOOL_1, mHasFetchedDetails);
     }
 
     /**

@@ -49,7 +49,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
 
 import li.barter.adapters.BooksAroundMeAdapter;
-import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.UtilityMethods;
 
@@ -163,14 +164,14 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
             mDrawerOpenedAutomatically = false;
         } else {
             mDrawerOpenedAutomatically = savedInstanceState
-                            .getBoolean(AppConstants.BOOL_1);
+                            .getBoolean(Keys.BOOL_1);
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(AppConstants.BOOL_1, mDrawerOpenedAutomatically);
+        outState.putBoolean(Keys.BOOL_1, mDrawerOpenedAutomatically);
     }
 
     @Override
@@ -246,16 +247,23 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
                         "Location update:" + location.getLatitude() + " "
                                         + location.getLongitude());
 
+        UserInfo.INSTANCE.latestLocation = location;
+
         if ((mMapFragment != null) && mMapFragment.isVisible()) {
 
             final GoogleMap googleMap = mMapFragment.getMap();
 
             if (googleMap != null) {
                 googleMap.setMyLocationEnabled(false);
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                                new LatLng(location.getLatitude(), location
-                                                .getLongitude()),
-                                MAP_ZOOM_LEVEL), this);
+                googleMap.animateCamera(
+                                CameraUpdateFactory
+                                                .newLatLngZoom(new LatLng(
+                                                                UserInfo.INSTANCE.latestLocation
+                                                                                .getLatitude(),
+                                                                UserInfo.INSTANCE.latestLocation
+                                                                                .getLongitude()),
+                                                                MAP_ZOOM_LEVEL),
+                                this);
 
             }
         }

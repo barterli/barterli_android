@@ -16,18 +16,51 @@
 
 package li.barter.utils;
 
+import android.location.Location;
+import android.location.LocationManager;
+
 public class AppConstants {
 
-    public static final boolean DEBUG                      = true;
+    public static final boolean DEBUG = true;
 
-    public static final String  ISBN                       = "ISBN";
-    public static final String  BOOL_1                     = "bool_1";
+    public enum UserInfo {
+        
+        INSTANCE;
+        
+        private static final Location DEFAULT_LOCATION = new Location(LocationManager.PASSIVE_PROVIDER);
+        
+        public String   authToken;
+        public Location latestLocation;
 
-    public static final String  BOOK_ID                    = "book_id";
-    public static final String  BOOK_TITLE                 = "book_title";
-    public static final String  AUTHOR                     = "author";
-    public static final String  DESCRIPTION                = "description";
-    public static final String  PUBLICATION_YEAR           = "publication_year";
-    public static final String  BARTER_TYPES               = "barter_types";
+        private UserInfo() {
+            clear();
+        }
+
+        
+
+        public void clear() {
+            authToken = "";
+            latestLocation = DEFAULT_LOCATION;
+            latestLocation.setLatitude(0.0);
+            latestLocation.setLongitude(0.0);
+        }
+    }
     
+    /**
+     * @author vinaysshenoy
+     * Constant Interface, DO NOT IMPLEMENT
+     */
+    public static interface Keys {
+
+        public static final String ISBN             = "ISBN";
+        public static final String BOOL_1           = "bool_1";
+        public static final String BOOK_ID          = "book_id";
+        public static final String BOOK_TITLE       = "book_title";
+        public static final String AUTHOR           = "author";
+        public static final String DESCRIPTION      = "description";
+        public static final String PUBLICATION_YEAR = "publication_year";
+        public static final String BARTER_TYPES     = "barter_types";
+        
+    }
+
 }
