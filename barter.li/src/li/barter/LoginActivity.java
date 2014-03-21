@@ -25,6 +25,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import li.barter.utils.ActivityTransition;
+
+@ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
 public class LoginActivity extends AbstractBarterLiActivity implements OnClickListener {
 
     private Button mFacebookLoginButton;

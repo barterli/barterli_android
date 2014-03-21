@@ -16,10 +16,12 @@ import li.barter.http.HttpConstants;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector;
 import li.barter.http.rabbitmq.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector.OnReceiveMessageHandler;
+import li.barter.utils.ActivityTransition;
 
 /**
  * @author vinaysshenoy Activity for displaying Chat Messages
  */
+@ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
 public class ChatActivity extends AbstractBarterLiActivity implements
                 OnReceiveMessageHandler {
 

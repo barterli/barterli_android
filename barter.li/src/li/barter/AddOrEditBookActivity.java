@@ -41,8 +41,10 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.ActivityTransition;
 import li.barter.utils.SharedPreferenceHelper;
 
+@ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
 public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
                 OnClickListener, Listener<JSONObject>, ErrorListener {
 

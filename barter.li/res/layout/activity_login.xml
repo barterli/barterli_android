@@ -29,6 +29,7 @@
 
         <li.barter.widgets.TypefacedButton
             android:id="@+id/button_facebook_login"
+            style="@style/ButtonAppTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -39,6 +40,7 @@
 
         <li.barter.widgets.TypefacedButton
             android:id="@+id/button_google_login"
+            style="@style/ButtonAppTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
@@ -76,7 +78,7 @@
 
         <li.barter.widgets.TypefacedButton
             android:id="@+id/button_submit"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="@string/submit"

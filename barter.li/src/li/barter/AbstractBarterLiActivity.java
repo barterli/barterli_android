@@ -36,6 +36,7 @@ import android.widget.Toast;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.http.IVolleyHelper;
+import li.barter.utils.ActivityTransition;
 import li.barter.utils.UtilityMethods;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
@@ -45,17 +46,27 @@ import li.barter.widgets.TypefacedSpan;
  */
 public class AbstractBarterLiActivity extends FragmentActivity {
 
-    private static final int ACTION_BAR_DISPLAY_MASK      = ActionBar.DISPLAY_HOME_AS_UP
-                                                                          | ActionBar.DISPLAY_SHOW_TITLE;
+    private static final int   ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
+                                                                       | ActionBar.DISPLAY_SHOW_TITLE;
 
-    private RequestQueue     mRequestQueue;
-    private ImageLoader      mImageLoader;
-    private AtomicInteger    mRequestCounter;
-    
+    private RequestQueue       mRequestQueue;
+    private ImageLoader        mImageLoader;
+    private AtomicInteger      mRequestCounter;
+
+    private ActivityTransition mActivityTransition;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
+        mActivityTransition = getClass().getAnnotation(ActivityTransition.class);
+        if (savedInstanceState == null) {
+            if (mActivityTransition != null) {
+                overridePendingTransition(
+                                mActivityTransition.createEnterAnimation(),
+                                mActivityTransition.createExitAnimation());
+            }
+        }
         if (getActionBar() != null) {
             getActionBar().setDisplayOptions(ACTION_BAR_DISPLAY_MASK);
             setActionBarTitle(getTitle().toString());
@@ -65,7 +76,6 @@ public class AbstractBarterLiActivity extends FragmentActivity {
         mRequestCounter = new AtomicInteger(0);
         setProgressBarIndeterminateVisibility(false);
     }
-
 
     /**
      * Reference to the {@link ImageLoader}
@@ -215,6 +225,30 @@ public class AbstractBarterLiActivity extends FragmentActivity {
     public void showToast(final int toastMessageResId, final boolean isLong) {
         Toast.makeText(this, toastMessageResId,
                         isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Finish the Activity, specifying whether to use custom or default
+     * animations
+     * 
+     * @param defaultAnimation <code>true</code> to use Activity default
+     *            animation, <code>false</code> to use custom Animation. In
+     *            order for the custom Animation to be applied, however, you
+     *            must add the {@link ActivityTransition} Annotation to the
+     *            Activity declaration
+     */
+    public void finish(boolean defaultAnimation) {
+        super.finish();
+        if (mActivityTransition != null && !defaultAnimation) {
+            overridePendingTransition(
+                            mActivityTransition.destroyEnterAnimation(),
+                            mActivityTransition.destroyExitAnimation());
+        }
+    }
+
+    @Override
+    public void finish() {
+        finish(false);
     }
 
 }

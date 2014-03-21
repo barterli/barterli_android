@@ -27,7 +27,7 @@ public class AppConstants {
         
         INSTANCE;
         
-        private static final Location DEFAULT_LOCATION = new Location(LocationManager.PASSIVE_PROVIDER);
+        private final Location defaultLocation = new Location(LocationManager.PASSIVE_PROVIDER);
         
         public String   authToken;
         public Location latestLocation;
@@ -40,7 +40,7 @@ public class AppConstants {
 
         public void clear() {
             authToken = "";
-            latestLocation = DEFAULT_LOCATION;
+            latestLocation = defaultLocation;
             latestLocation.setLatitude(0.0);
             latestLocation.setLongitude(0.0);
         }
