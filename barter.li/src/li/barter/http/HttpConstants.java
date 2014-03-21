@@ -23,29 +23,51 @@ package li.barter.http;
 public class HttpConstants {
 
     /**
+     * The API version in use by the app
+     */
+    private static final int API_VERSION = 1;
+
+    /**
      * Enum to switch between servers
      */
     private enum Server {
 
-        LOCAL("http://162.243.198.171/api/v", API_VERSION), DEV(
+        LOCAL("http://192.168.1.123/api/v", API_VERSION, "192.168.1.123", 5672),
+        DEV(
                         "http://162.243.198.171/api/v",
-                        API_VERSION), PRODUCTION(
+                        API_VERSION,
+                        "162.243.198.171",
+                        5672),
+        PRODUCTION(
                         "http://162.243.198.171/api/v",
-                        API_VERSION);
+                        API_VERSION,
+                        "162.243.198.171",
+                        5672);
 
         public final String mUrl;
+        public final String mChatUrl;
+        public final int    mChatPort;
 
-        Server(final String url, final int version) {
-            mUrl = url + version;
+        Server(final String url, final int apiVersion, final String chatUrl,
+                        final int chatPort) {
+            mUrl = url + apiVersion;
+            mChatUrl = chatUrl;
+            mChatPort = chatPort;
         }
     }
 
-    private static final int API_VERSION = 1;
-
-    private static Server    SERVER      = Server.LOCAL;
+    private static Server SERVER = Server.LOCAL;
 
     public static String getApiBaseUrl() {
         return SERVER.mUrl;
+    }
+
+    public static String getChatUrl() {
+        return SERVER.mChatUrl;
+    }
+
+    public static int getChatPort() {
+        return SERVER.mChatPort;
     }
 
     /**

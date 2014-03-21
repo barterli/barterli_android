@@ -12,6 +12,7 @@ import android.widget.ListView;
 import java.io.UnsupportedEncodingException;
 
 import li.barter.adapters.ChatAdapter;
+import li.barter.http.HttpConstants;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector;
 import li.barter.http.rabbitmq.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector.OnReceiveMessageHandler;
@@ -39,7 +40,7 @@ public class ChatActivity extends AbstractBarterLiActivity implements
         mChatAdapter = new ChatAdapter(this);
         mChatListView.setAdapter(mChatAdapter);
 
-        mMessageConsumer = new ChatRabbitMQConnector("192.168.1.123", 5672, "/",
+        mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants.getChatPort(), "/",
                         "node.barterli", ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
     }
