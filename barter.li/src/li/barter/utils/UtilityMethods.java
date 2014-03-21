@@ -19,6 +19,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Looper;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
@@ -72,5 +73,13 @@ public class UtilityMethods {
 
         rsScript.destroy();
         return result;
+    }
+    
+    /**
+     * Checks if the current thread is the main thread or not
+     * @return <code>true</code> if the current thread is the main/UI thread, <code>false</code> otherwise
+     */
+    public static boolean isMainThread() {
+        return Looper.getMainLooper() == Looper.myLooper();
     }
 }
