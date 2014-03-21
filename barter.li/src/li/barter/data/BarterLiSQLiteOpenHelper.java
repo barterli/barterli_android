@@ -24,8 +24,12 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 import li.barter.utils.AppConstants;
 import li.barter.utils.UtilityMethods;
+import li.barter.utils.loader.SQLiteLoader;
+import li.barter.utils.loader.SQLiteLoaderObserver;
 
 /**
  * @author vinaysshenoy {@link SQLiteOpenHelper} to provide database
@@ -45,6 +49,9 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     // SQLite Open Helper instance
     private static BarterLiSQLiteOpenHelper sSQLiteOpenHelper;
 
+    // Array of loader entries to hold for notifying changes
+    private ArrayList<SQLiteLoaderObserver>    mActiveLoaders;
+
     /**
      * Gets a reference to the SQLIte Open Helper for the app, creating it if
      * necessary. This method is thread-safe
@@ -59,8 +66,9 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
             if (sSQLiteOpenHelper == null) {
 
                 synchronized (LOCK) {
-                    sSQLiteOpenHelper = new BarterLiSQLiteOpenHelper(context.getApplicationContext(),
-                                    DB_NAME, null, DB_VERSION);
+                    sSQLiteOpenHelper = new BarterLiSQLiteOpenHelper(
+                                    context.getApplicationContext(), DB_NAME,
+                                    null, DB_VERSION);
                 }
             }
         }
@@ -184,15 +192,38 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         return database.delete(table, whereClause, whereArgs);
     }
 
-    @Override
-    public SQLiteDatabase getReadableDatabase() {
+    /**
+     * Register a loader for maintaining notify changes
+     * 
+     * @param loader The {@link SQLiteLoader} loader to register
+     * @param table The table name
+     * @return The {@link SQLiteLoaderObserver} that was created. Use this to
+     *         unregister the loader entry
+     */
+    public SQLiteLoaderObserver registerLoader(SQLiteLoader loader, String table) {
 
-        return super.getReadableDatabase();
+        final SQLiteLoaderObserver entry = new SQLiteLoaderObserver(loader, table);
+        mActiveLoaders.add(entry);
+        return entry;
     }
 
-    @Override
-    public SQLiteDatabase getWritableDatabase() {
-        return super.getWritableDatabase();
+    public void unregisterLoader(SQLiteLoaderObserver entry) {
+
+        mActiveLoaders.remove(entry);
+    }
+
+    /**
+     * Notify loaders whenever a table is modified
+     * 
+     * @param table The table that was modified
+     */
+    public void notifyChange(String table) {
+        //TODO Optimize this later, Maybe a sorted list of loaders by table name?
+        for (SQLiteLoaderObserver entry : mActiveLoaders) {
+            if (entry.table.equals(table)) {
+                entry.loader.onContentChanged();
+            }
+        }
     }
 
 }

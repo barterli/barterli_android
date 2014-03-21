@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package li.barter.utils;
+package li.barter.utils.loader;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -30,31 +30,33 @@ import li.barter.data.BarterLiSQLiteOpenHelper;
  * @author vinaysshenoy
  */
 public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
-    
-    private static final String TAG = "SQLiteLoader";
+
+    private static final String  TAG = "SQLiteLoader";
 
     /**
      * Cursor loaded from the SQLiteDatabase
      */
-    private Cursor   mCursor;
+    private Cursor               mCursor;
 
-    private boolean  mDistinct;
+    private boolean              mDistinct;
 
-    private String   mTable;
+    private String               mTable;
 
-    private String[] mColumns;
+    private String[]             mColumns;
 
-    private String   mSelection;
+    private String               mSelection;
 
-    private String[] mSelectionArgs;
+    private String[]             mSelectionArgs;
 
-    private String   mGroupBy;
+    private String               mGroupBy;
 
-    private String   mHaving;
+    private String               mHaving;
 
-    private String   mOrderBy;
+    private String               mOrderBy;
 
-    private String   mLimit;
+    private String               mLimit;
+
+    private SQLiteLoaderObserver mObserver;
 
     /**
      * Construct a loader to load from the database
@@ -93,31 +95,64 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
 
     @Override
     protected void onStartLoading() {
-        // TODO Auto-generated method stub
-        super.onStartLoading();
+        if (mCursor != null) {
+            deliverResult(mCursor);
+        }
+
+        if(mObserver == null) {
+            mObserver = BarterLiSQLiteOpenHelper.getInstance(getContext()).registerLoader(this, mTable);
+        }
+        
+        if (takeContentChanged() || mCursor == null) {
+            forceLoad();
+        }
     }
 
     @Override
     protected void onStopLoading() {
-        // TODO Auto-generated method stub
-        super.onStopLoading();
+        cancelLoad();
     }
 
     @Override
     protected void onReset() {
-        // TODO Auto-generated method stub
         super.onReset();
+        onStopLoading();
+        if (mCursor != null && !mCursor.isClosed()) {
+            mCursor.close();
+        }
+        mCursor = null;
+        if(mObserver != null) {
+            BarterLiSQLiteOpenHelper.getInstance(getContext()).unregisterLoader(mObserver);
+        }
+        mObserver = null;
     }
 
     @Override
     public void onCanceled(Cursor data) {
-        // TODO Auto-generated method stub
-        super.onCanceled(data);
+        if (data != null && !data.isClosed()) {
+            data.close();
+        }
     }
 
     @Override
     public void deliverResult(Cursor data) {
-        super.deliverResult(data);
+
+        if (isReset()) {
+            if (data != null) {
+                data.close();
+            }
+            return;
+        }
+        Cursor oldCursor = mCursor;
+        mCursor = data;
+
+        if (isStarted()) {
+            super.deliverResult(data);
+        }
+
+        if (oldCursor != null && oldCursor != data && !oldCursor.isClosed()) {
+            oldCursor.close();
+        }
     }
 
 }
