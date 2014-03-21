@@ -139,8 +139,6 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startActivity(new Intent(this, ChatActivity.class));
-        finish();
         setContentView(R.layout.activity_books_around_me);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
