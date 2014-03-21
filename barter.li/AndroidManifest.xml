@@ -92,6 +92,18 @@
                 android:value=".BooksAroundMeActivity" />
         </activity>
         <activity
+            android:name="li.barter.ChatActivity"
+            android:label="@string/app_name"
+            android:parentActivityName=".BooksAroundMeActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".BooksAroundMeActivity" />
+        </activity>
+        <activity
+            android:name="li.barter.TakeLatLongActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name="li.barter.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
