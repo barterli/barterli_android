@@ -52,7 +52,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param context The Context reference
      * @return the reference to {@link BarterLiSQLiteOpenHelper}
      */
-    public static BarterLiSQLiteOpenHelper getInstance(Context context) {
+    public static BarterLiSQLiteOpenHelper getInstance(final Context context) {
 
         synchronized (LOCK) {
 
@@ -74,18 +74,19 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param factory
      * @param version
      */
-    public BarterLiSQLiteOpenHelper(Context context, String name, CursorFactory factory, int version) {
+    public BarterLiSQLiteOpenHelper(final Context context, final String name, final CursorFactory factory, final int version) {
         super(context, name, factory, version);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(final SQLiteDatabase db) {
         // TODO Create Tables
 
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(final SQLiteDatabase db, final int oldVersion,
+                    final int newVersion) {
         // TODO Upgrade Tables
 
     }
@@ -119,9 +120,11 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param limit LIMIT clause
      * @return A {@link Cursor} over the dataset result
      */
-    public Cursor query(boolean distinct, String table, String[] columns,
-                    String selection, String[] selectionArgs, String groupBy,
-                    String having, String orderBy, String limit) {
+    public Cursor query(final boolean distinct, final String table,
+                    final String[] columns, final String selection,
+                    final String[] selectionArgs, final String groupBy,
+                    final String having, final String orderBy,
+                    final String limit) {
 
         throwIfOnMainThread();
         final SQLiteDatabase database = getReadableDatabase();
@@ -140,7 +143,8 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param values The fields to insert
      * @return The row Id of the newly inserted row, or -1 if unable to insert
      */
-    public long insert(String table, String nullColumnHack, ContentValues values) {
+    public long insert(final String table, final String nullColumnHack,
+                    final ContentValues values) {
 
         throwIfOnMainThread();
         final SQLiteDatabase database = getWritableDatabase();
@@ -156,8 +160,8 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param whereArgs Arguments for the where clause
      * @return The number of rows updated
      */
-    public int update(String table, ContentValues values, String whereClause,
-                    String[] whereArgs) {
+    public int update(final String table, final ContentValues values,
+                    final String whereClause, final String[] whereArgs) {
 
         throwIfOnMainThread();
         final SQLiteDatabase database = getWritableDatabase();
@@ -172,7 +176,8 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param whereArgs Arguments for the where clause
      * @return The number of rows deleted
      */
-    public int delete(String table, String whereClause, String[] whereArgs) {
+    public int delete(final String table, final String whereClause,
+                    final String[] whereArgs) {
 
         throwIfOnMainThread();
         final SQLiteDatabase database = getWritableDatabase();

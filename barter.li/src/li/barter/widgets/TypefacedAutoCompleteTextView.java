@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.widgets;
 
 import android.content.Context;
@@ -28,8 +29,7 @@ import li.barter.R;
  */
 public class TypefacedAutoCompleteTextView extends AutoCompleteTextView {
 
-    public TypefacedAutoCompleteTextView(final Context context,
-                    final AttributeSet attrs) {
+    public TypefacedAutoCompleteTextView(final Context context, final AttributeSet attrs) {
 
         super(context, attrs);
 

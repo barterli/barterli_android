@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter;
 
 import com.android.volley.RequestQueue;
@@ -57,8 +58,8 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
          * getResources().getString( R.string.preferred_location);
          */
 
-        Auth_Token = SharedPreferenceHelper
-                        .getString(this, R.string.pref_auth_token);
+        Auth_Token = SharedPreferenceHelper.getString(this,
+                        R.string.pref_auth_token);
         FB_Email = SharedPreferenceHelper.getString(this, R.string.pref_email);
         final String prefferedLocation = SharedPreferenceHelper.getString(this,
                         R.string.pref_preferred_location);

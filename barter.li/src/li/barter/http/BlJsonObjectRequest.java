@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.http;
 
 import com.android.volley.Response.ErrorListener;
@@ -45,10 +46,7 @@ public class BlJsonObjectRequest extends JsonObjectRequest {
      * @param listener The {@link Listener} for the response
      * @param errorListener The {@link ErrorListener} for the error response
      */
-    public BlJsonObjectRequest(final int method, final int requestId,
-                    final String url, final JSONObject jsonRequest,
-                    final Listener<JSONObject> listener,
-                    final ErrorListener errorListener) {
+    public BlJsonObjectRequest(final int method, final int requestId, final String url, final JSONObject jsonRequest, final Listener<JSONObject> listener, final ErrorListener errorListener) {
         super(method, url, jsonRequest, listener, errorListener);
         mRequestId = requestId;
     }
@@ -65,10 +63,7 @@ public class BlJsonObjectRequest extends JsonObjectRequest {
      * @param listener The {@link Listener} for the response
      * @param errorListener The {@link ErrorListener} for the error response
      */
-    public BlJsonObjectRequest(final int requestId, final String url,
-                    final JSONObject jsonRequest,
-                    final Listener<JSONObject> listener,
-                    final ErrorListener errorListener) {
+    public BlJsonObjectRequest(final int requestId, final String url, final JSONObject jsonRequest, final Listener<JSONObject> listener, final ErrorListener errorListener) {
         super(url, jsonRequest, listener, errorListener);
         mRequestId = requestId;
     }

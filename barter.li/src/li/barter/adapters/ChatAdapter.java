@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.adapters;
 
 import android.content.Context;
@@ -31,10 +32,10 @@ import li.barter.R;
  */
 public class ChatAdapter extends BaseAdapter {
 
-    private ArrayList<String> mChatMessages;
-    private LayoutInflater    mLayoutInflater;
+    private final ArrayList<String> mChatMessages;
+    private final LayoutInflater    mLayoutInflater;
 
-    public ChatAdapter(Context context) {
+    public ChatAdapter(final Context context) {
         mChatMessages = new ArrayList<String>();
         mLayoutInflater = LayoutInflater.from(context);
     }
@@ -45,17 +46,18 @@ public class ChatAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return mChatMessages.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView,
+                    final ViewGroup parent) {
 
         View view = convertView;
 
@@ -80,7 +82,7 @@ public class ChatAdapter extends BaseAdapter {
      * 
      * @param message The message added
      */
-    public void addMessage(String message) {
+    public void addMessage(final String message) {
         mChatMessages.add(message);
         notifyDataSetChanged();
     }

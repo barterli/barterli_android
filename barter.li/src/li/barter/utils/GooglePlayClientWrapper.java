@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.utils;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -27,7 +28,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
@@ -58,8 +58,7 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
 
     private final LocationRequest          mLocationRequest;
 
-    public GooglePlayClientWrapper(final AbstractBarterLiActivity activity,
-                    final LocationListener locationListener) {
+    public GooglePlayClientWrapper(final AbstractBarterLiActivity activity, final LocationListener locationListener) {
         mActivity = activity;
         mLocationClient = new LocationClient(mActivity, this, this);
         mLocationListener = locationListener;

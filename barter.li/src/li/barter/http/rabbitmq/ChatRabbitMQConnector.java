@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.http.rabbitmq;
 
 import com.rabbitmq.client.QueueingConsumer;
@@ -30,8 +31,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
 
     private static final String TAG = "ChatRabbitMQConnector";
 
-    public ChatRabbitMQConnector(String server, int port, String virtualHost,
-                    String exchange, ExchangeType exchangeType) {
+    public ChatRabbitMQConnector(final String server, final int port, final String virtualHost, final String exchange, final ExchangeType exchangeType) {
         super(server, port, virtualHost, exchange, exchangeType);
     }
 
@@ -51,10 +51,11 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
     // A reference to the listener, we can only have one at a time(for now)
     private OnReceiveMessageHandler mOnReceiveMessageHandler;
 
-    private Handler                 mHandler       = new Handler();
+    private final Handler           mHandler       = new Handler();
 
     // Create runnable for posting back to main thread
     final Runnable                  mReturnMessage = new Runnable() {
+                                                       @Override
                                                        public void run() {
                                                            mOnReceiveMessageHandler
                                                                            .onReceiveMessage(mLastMessage);
@@ -62,6 +63,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                                                    };
 
     final Runnable                  mConsumeRunner = new Runnable() {
+                                                       @Override
                                                        public void run() {
                                                            consume();
                                                        }
@@ -82,7 +84,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                                 autoDelete, args).getQueue();
                 mSubscription = new QueueingConsumer(mChannel);
                 mChannel.basicConsume(mQueue, false, mSubscription);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
                 return false;
             }
@@ -104,10 +106,10 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
      * 
      * @param routingKey the binding key eg GOOG
      */
-    public void addBinding(String routingKey) {
+    public void addBinding(final String routingKey) {
         try {
             mChannel.queueBind(mQueue, mExchange, routingKey);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
@@ -118,10 +120,10 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
      * 
      * @param routingKey the binding key
      */
-    public void removeBinding(String routingKey) {
+    public void removeBinding(final String routingKey) {
         try {
             mChannel.queueUnbind(mQueue, mExchange, routingKey);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
     }
@@ -131,12 +133,12 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
      * 
      * @param handler The callback
      */
-    public void setOnReceiveMessageHandler(OnReceiveMessageHandler handler) {
+    public void setOnReceiveMessageHandler(final OnReceiveMessageHandler handler) {
         mOnReceiveMessageHandler = handler;
     };
 
     private void consume() {
-        Thread thread = new Thread() {
+        final Thread thread = new Thread() {
 
             @Override
             public void run() {
@@ -149,10 +151,10 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                         try {
                             mChannel.basicAck(delivery.getEnvelope()
                                             .getDeliveryTag(), false);
-                        } catch (IOException e) {
+                        } catch (final IOException e) {
                             e.printStackTrace();
                         }
-                    } catch (InterruptedException ie) {
+                    } catch (final InterruptedException ie) {
                         ie.printStackTrace();
                     }
                 }
@@ -168,7 +170,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
      * @param routingKey The binding key
      * @param message The message to publish
      */
-    public void publish(String routingKey, String message) {
+    public void publish(final String routingKey, final String message) {
         publish(mQueue, routingKey, message);
     }
 

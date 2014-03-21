@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.http.rabbitmq;
 
 import com.rabbitmq.client.Channel;
@@ -39,11 +40,13 @@ public abstract class AbstractRabbitMQConnector {
 
     public enum ExchangeType {
 
-        DIRECT("direct"), TOPIC("topic"), FANOUT("fanout");
+        DIRECT("direct"),
+        TOPIC("topic"),
+        FANOUT("fanout");
 
         public final String key;
 
-        private ExchangeType(String key) {
+        private ExchangeType(final String key) {
             this.key = key;
         }
     }
@@ -53,9 +56,7 @@ public abstract class AbstractRabbitMQConnector {
 
     private boolean      mRunning;
 
-    public AbstractRabbitMQConnector(final String server, final int port,
-                    final String virtualHost, final String exchange,
-                    final ExchangeType exchangeType) {
+    public AbstractRabbitMQConnector(final String server, final int port, final String virtualHost, final String exchange, final ExchangeType exchangeType) {
         mServer = server;
         mPort = port;
         mVirtualHost = virtualHost;
@@ -67,11 +68,13 @@ public abstract class AbstractRabbitMQConnector {
         mRunning = false;
 
         try {
-            if (mConnection != null)
+            if (mConnection != null) {
                 mConnection.close();
-            if (mChannel != null)
+            }
+            if (mChannel != null) {
                 mChannel.abort();
-        } catch (IOException e) {
+            }
+        } catch (final IOException e) {
             e.printStackTrace();
         }
 
@@ -81,7 +84,7 @@ public abstract class AbstractRabbitMQConnector {
         return mRunning;
     }
 
-    protected void setIsRunning(boolean running) {
+    protected void setIsRunning(final boolean running) {
         mRunning = running;
     }
 
@@ -92,10 +95,11 @@ public abstract class AbstractRabbitMQConnector {
      */
     protected boolean connectToRabbitMQ(final String userName,
                     final String password) {
-        if (mChannel != null && mChannel.isOpen())// already declared
+        if ((mChannel != null) && mChannel.isOpen()) {
             return true;
+        }
         try {
-            ConnectionFactory connectionFactory = new ConnectionFactory();
+            final ConnectionFactory connectionFactory = new ConnectionFactory();
             connectionFactory.setHost(mServer);
             connectionFactory.setUsername(userName);
             connectionFactory.setPassword(password);
@@ -106,7 +110,7 @@ public abstract class AbstractRabbitMQConnector {
             mChannel.exchangeDeclare(mExchange, mExchangeType.key);
 
             return true;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -121,13 +125,13 @@ public abstract class AbstractRabbitMQConnector {
      */
     protected void publish(final String queueName, final String routingKey,
                     final String message) {
-        if (mChannel != null && mChannel.isOpen()) {
+        if ((mChannel != null) && mChannel.isOpen()) {
             try {
                 mChannel.basicPublish(queueName, routingKey, null,
                                 message.getBytes(HTTP.UTF_8));
-            } catch (UnsupportedEncodingException e) {
+            } catch (final UnsupportedEncodingException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
         }

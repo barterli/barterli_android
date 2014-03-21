@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.utils;
 
 import android.content.Context;
@@ -115,7 +116,8 @@ public class SharedPreferenceHelper {
      * 
      * @param context
      * @param key The string resource Id of the key
-     * @param defValue The default value to return if the requested key is not present
+     * @param defValue The default value to return if the requested key is not
+     *            present
      * @return value or defValue if no mapping exists
      */
     public static float getFloat(final Context context, final int key,
@@ -144,7 +146,8 @@ public class SharedPreferenceHelper {
      * 
      * @param context
      * @param key The string resource Id of the key
-     * @param defValue The default value to fetch if the requested key doesn't exist
+     * @param defValue The default value to fetch if the requested key doesn't
+     *            exist
      * @return value or defValue if no mapping exists
      */
     public static long getLong(final Context context, final int key,
@@ -207,8 +210,7 @@ public class SharedPreferenceHelper {
      * @param key The string resource Id of the key
      * @param value The value to set for the key
      */
-    public static void set(final Context context, final int key,
-                    final int value) {
+    public static void set(final Context context, final int key, final int value) {
 
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);

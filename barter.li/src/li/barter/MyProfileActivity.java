@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter;
 
 import org.json.JSONArray;
@@ -52,8 +53,7 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
         super.onCreate(icicle);
         setContentView(R.layout.show_my_profile);
 
-        my_email = SharedPreferenceHelper.getString(this,
-                        R.string.pref_email);
+        my_email = SharedPreferenceHelper.getString(this, R.string.pref_email);
         my_name = SharedPreferenceHelper.getString(this,
                         R.string.pref_fb_username);
         my_pref_location = SharedPreferenceHelper.getString(this,

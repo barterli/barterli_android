@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.http;
 
 /**
@@ -47,8 +48,7 @@ public class HttpConstants {
         public final String mChatUrl;
         public final int    mChatPort;
 
-        Server(final String url, final int apiVersion, final String chatUrl,
-                        final int chatPort) {
+        Server(final String url, final int apiVersion, final String chatUrl, final int chatPort) {
             mUrl = url + apiVersion;
             mChatUrl = chatUrl;
             mChatPort = chatPort;

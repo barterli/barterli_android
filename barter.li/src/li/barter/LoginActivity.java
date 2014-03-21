@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter;
 
 import com.facebook.Session;
@@ -27,31 +28,33 @@ import android.widget.EditText;
 import li.barter.utils.ActivityTransition;
 
 @ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
-public class LoginActivity extends AbstractBarterLiActivity implements OnClickListener {
+public class LoginActivity extends AbstractBarterLiActivity implements
+                OnClickListener {
 
-    private Button mFacebookLoginButton;
-    private Button mGoogleLoginButton;
-    private Button mSubmitButton;
+    private Button   mFacebookLoginButton;
+    private Button   mGoogleLoginButton;
+    private Button   mSubmitButton;
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
-    
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        
+
         mFacebookLoginButton = (Button) findViewById(R.id.button_facebook_login);
         mGoogleLoginButton = (Button) findViewById(R.id.button_google_login);
         mSubmitButton = (Button) findViewById(R.id.button_submit);
         mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
         mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
-        
+
         mFacebookLoginButton.setOnClickListener(this);
         mGoogleLoginButton.setOnClickListener(this);
         mSubmitButton.setOnClickListener(this);
-        
+
     }
-    
+
+    @Override
     public void onActivityResult(final int requestCode, final int resultCode,
                     final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -60,22 +63,22 @@ public class LoginActivity extends AbstractBarterLiActivity implements OnClickLi
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
 
-        switch(v.getId()) {
-            
+        switch (v.getId()) {
+
             case R.id.button_facebook_login: {
-                //TODO Facebook Login
+                // TODO Facebook Login
                 break;
             }
-            
+
             case R.id.button_google_login: {
-                //TODO Google Login
+                // TODO Google Login
                 break;
             }
-            
+
             case R.id.button_submit: {
-                //TODO User Login/Create
+                // TODO User Login/Create
                 break;
             }
         }

@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter;
 
 import com.android.volley.RequestQueue;
@@ -61,14 +62,14 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
      */
     private void overrideHardwareMenuButton() {
         try {
-            ViewConfiguration config = ViewConfiguration.get(this);
-            Field menuKeyField = ViewConfiguration.class
+            final ViewConfiguration config = ViewConfiguration.get(this);
+            final Field menuKeyField = ViewConfiguration.class
                             .getDeclaredField("sHasPermanentMenuKey");
             if (menuKeyField != null) {
                 menuKeyField.setAccessible(true);
                 menuKeyField.setBoolean(config, false);
             }
-        } catch (Exception ex) {
+        } catch (final Exception ex) {
             // Ignore since we can't do anything
         }
 

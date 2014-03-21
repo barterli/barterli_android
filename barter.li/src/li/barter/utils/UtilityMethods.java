@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.utils;
 
 import android.content.Context;
@@ -74,10 +75,12 @@ public class UtilityMethods {
         rsScript.destroy();
         return result;
     }
-    
+
     /**
      * Checks if the current thread is the main thread or not
-     * @return <code>true</code> if the current thread is the main/UI thread, <code>false</code> otherwise
+     * 
+     * @return <code>true</code> if the current thread is the main/UI thread,
+     *         <code>false</code> otherwise
      */
     public static boolean isMainThread() {
         return Looper.getMainLooper() == Looper.myLooper();

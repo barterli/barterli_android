@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.utils;
 
 import android.location.Location;
@@ -23,19 +24,18 @@ public class AppConstants {
     public static final boolean DEBUG = true;
 
     public enum UserInfo {
-        
+
         INSTANCE;
-        
-        private final Location defaultLocation = new Location(LocationManager.PASSIVE_PROVIDER);
-        
-        public String   authToken;
-        public Location latestLocation;
+
+        private final Location defaultLocation = new Location(
+                                                               LocationManager.PASSIVE_PROVIDER);
+
+        public String          authToken;
+        public Location        latestLocation;
 
         private UserInfo() {
             clear();
         }
-
-        
 
         public void clear() {
             authToken = "";
@@ -44,10 +44,9 @@ public class AppConstants {
             latestLocation.setLongitude(0.0);
         }
     }
-    
+
     /**
-     * @author vinaysshenoy
-     * Constant Interface, DO NOT IMPLEMENT
+     * @author vinaysshenoy Constant Interface, DO NOT IMPLEMENT
      */
     public static interface Keys {
 
@@ -59,7 +58,7 @@ public class AppConstants {
         public static final String DESCRIPTION      = "description";
         public static final String PUBLICATION_YEAR = "publication_year";
         public static final String BARTER_TYPES     = "barter_types";
-        
+
     }
 
 }

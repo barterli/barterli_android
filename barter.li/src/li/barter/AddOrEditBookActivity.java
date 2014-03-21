@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter;
 
 import com.android.volley.Request;
@@ -39,8 +40,8 @@ import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
-import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.ActivityTransition;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.SharedPreferenceHelper;
 
 @ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
@@ -78,8 +79,7 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
             Log.d(TAG, "Book Id:" + mBookId);
 
             if (savedInstanceState != null) {
-                mHasFetchedDetails = savedInstanceState
-                                .getBoolean(Keys.BOOL_1);
+                mHasFetchedDetails = savedInstanceState.getBoolean(Keys.BOOL_1);
             }
 
             else {
@@ -102,10 +102,8 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
         final String title = extras.getString(Keys.BOOK_TITLE);
         final String author = extras.getString(Keys.AUTHOR);
         final String description = extras.getString(Keys.DESCRIPTION);
-        final String publicationYear = extras
-                        .getString(Keys.PUBLICATION_YEAR);
-        final String[] barterTypes = extras
-                        .getStringArray(Keys.BARTER_TYPES);
+        final String publicationYear = extras.getString(Keys.PUBLICATION_YEAR);
+        final String[] barterTypes = extras.getStringArray(Keys.BARTER_TYPES);
 
         mIsbnEditText.setText(mBookId);
         mTitleEditText.setText(title);
@@ -169,7 +167,7 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
                             createBookJson, this, this);
 
             addRequestToQueue(createBookRequest, true, 0);
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             e.printStackTrace();
         }
     }
@@ -199,12 +197,12 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
     private boolean isInputValid() {
 
         boolean isValid = true;
-        
+
         final String title = mTitleEditText.getText().toString();
-        
+
         isValid &= !TextUtils.isEmpty(title);
-        
-        if(!isValid) {
+
+        if (!isValid) {
             mTitleEditText.setError(getString(R.string.error_enter_title));
         }
         return isValid;

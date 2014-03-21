@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter;
 
 import com.google.android.gms.location.LocationListener;
@@ -168,7 +169,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.BOOL_1, mDrawerOpenedAutomatically);
     }
@@ -362,7 +363,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     @SuppressWarnings("deprecation")
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
-    public void onDrawerClosed(View drawerView) {
+    public void onDrawerClosed(final View drawerView) {
         if (drawerView == mBackgroundView) {
             setMapMyLocationEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -375,7 +376,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     }
 
     @Override
-    public void onDrawerOpened(View drawerView) {
+    public void onDrawerOpened(final View drawerView) {
 
         if (drawerView == mBackgroundView) {
             setMapMyLocationEnabled(false);
@@ -385,13 +386,13 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     }
 
     @Override
-    public void onDrawerSlide(View drawerView, float slideOffset) {
+    public void onDrawerSlide(final View drawerView, final float slideOffset) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onDrawerStateChanged(int state) {
+    public void onDrawerStateChanged(final int state) {
         // TODO Auto-generated method stub
 
     }

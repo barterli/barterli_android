@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter;
 
 import com.android.volley.Request;
@@ -58,7 +59,8 @@ public class AbstractBarterLiActivity extends FragmentActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
-        mActivityTransition = getClass().getAnnotation(ActivityTransition.class);
+        mActivityTransition = getClass()
+                        .getAnnotation(ActivityTransition.class);
         if (savedInstanceState == null) {
             if (mActivityTransition != null) {
                 overridePendingTransition(
@@ -236,9 +238,9 @@ public class AbstractBarterLiActivity extends FragmentActivity {
      *            must add the {@link ActivityTransition} Annotation to the
      *            Activity declaration
      */
-    public void finish(boolean defaultAnimation) {
+    public void finish(final boolean defaultAnimation) {
         super.finish();
-        if (mActivityTransition != null && !defaultAnimation) {
+        if ((mActivityTransition != null) && !defaultAnimation) {
             overridePendingTransition(
                             mActivityTransition.destroyEnterAnimation(),
                             mActivityTransition.destroyExitAnimation());
