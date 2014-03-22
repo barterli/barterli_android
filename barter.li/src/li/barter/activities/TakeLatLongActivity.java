@@ -40,6 +40,9 @@ import li.barter.R.string;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class TakeLatLongActivity extends AbstractBarterLiActivity {
+
+    private static final String         TAG                     = "TakeLatLongActivity";
+
     private GPSTracker                  gps;
     private final ProgressDialogManager myProgressDialogManager = new ProgressDialogManager();
     private ListView                    listView;
@@ -85,6 +88,11 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
             // Ask user to enable GPS/network in settings
             gps.showSettingsAlert();
         }
+    }
+
+    @Override
+    protected Object getVolleyTag() {
+        return TAG;
     }
 
     private class savePreferredTask extends AsyncTask<String, Void, String> {

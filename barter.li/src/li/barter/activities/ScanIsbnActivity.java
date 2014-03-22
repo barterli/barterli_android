@@ -81,6 +81,11 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
         mCharacterSet = null;
 
     }
+    
+    @Override
+    protected Object getVolleyTag() {
+        return TAG;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {

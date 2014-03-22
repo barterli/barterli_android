@@ -33,6 +33,8 @@ import li.barter.R.layout;
 @ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
 public class LoginActivity extends AbstractBarterLiActivity implements
                 OnClickListener {
+    
+    private static final String TAG = "LoginActivity";
 
     private Button   mFacebookLoginButton;
     private Button   mGoogleLoginButton;
@@ -57,6 +59,10 @@ public class LoginActivity extends AbstractBarterLiActivity implements
 
     }
 
+    @Override
+    protected Object getVolleyTag() {
+        return TAG;
+    }
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,
                     final Intent data) {

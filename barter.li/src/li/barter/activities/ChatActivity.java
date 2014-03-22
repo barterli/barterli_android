@@ -66,6 +66,11 @@ public class ChatActivity extends AbstractBarterLiActivity implements
                         ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
     }
+    
+    @Override
+    protected Object getVolleyTag() {
+        return TAG;
+    }
 
     @Override
     protected void onPause() {

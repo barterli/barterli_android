@@ -118,6 +118,11 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
         setCheckBoxesForBarterTypes(barterTypes);
 
     }
+    
+    @Override
+    protected Object getVolleyTag() {
+        return TAG;
+    }
 
     /**
      * Fetches the book info from server based on the ISBN number

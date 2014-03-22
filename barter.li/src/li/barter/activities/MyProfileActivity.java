@@ -39,6 +39,8 @@ import li.barter.R.string;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class MyProfileActivity extends AbstractBarterLiActivity {
+    
+    private static final String TAG = "MyProfileActivity";
 
     private String                   my_email;
     private String                   my_name;
@@ -77,6 +79,11 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
         listView = (ListView) findViewById(R.id.list_my_books);
         new askServerForMyDetails().execute(get_profile_url, my_email,
                         Auth_Token);
+    }
+    
+    @Override
+    protected Object getVolleyTag() {
+        return TAG;
     }
 
     private class askServerForMyDetails extends AsyncTask<String, Void, String> {

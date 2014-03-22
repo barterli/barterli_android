@@ -36,7 +36,6 @@ import android.widget.Toast;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
-import li.barter.R.string;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.UtilityMethods;
 import li.barter.widgets.TypefaceCache;
@@ -45,16 +44,18 @@ import li.barter.widgets.TypefacedSpan;
 /**
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
  */
-public class AbstractBarterLiActivity extends FragmentActivity {
+public abstract class AbstractBarterLiActivity extends FragmentActivity {
 
-    private static final int   ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
-                                                                       | ActionBar.DISPLAY_SHOW_TITLE;
+    private static final String TAG                     = "BaseBarterLiActivity";
 
-    private RequestQueue       mRequestQueue;
-    private ImageLoader        mImageLoader;
-    private AtomicInteger      mRequestCounter;
+    private static final int    ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
+                                                                        | ActionBar.DISPLAY_SHOW_TITLE;
 
-    private ActivityTransition mActivityTransition;
+    private RequestQueue        mRequestQueue;
+    private ImageLoader         mImageLoader;
+    private AtomicInteger       mRequestCounter;
+
+    private ActivityTransition  mActivityTransition;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -101,6 +102,7 @@ public class AbstractBarterLiActivity extends FragmentActivity {
                     final boolean showErrorOnNoNetwork, final int errorMsgResId) {
         // TODO Add Headers to request objects
         if (isConnectedToInternet()) {
+            request.setTag(getVolleyTag());
             mRequestCounter.incrementAndGet();
             setProgressBarIndeterminateVisibility(true);
             mRequestQueue.add(request);
@@ -109,6 +111,12 @@ public class AbstractBarterLiActivity extends FragmentActivity {
                             : R.string.no_network_connection, false);
         }
     }
+    
+    /**
+     * A Tag to add to all Volley requests. This must be unique for all Fragments types
+     * @return An Object that's the tag for this fragment
+     */
+    protected abstract Object getVolleyTag();
 
     /**
      * Call this whenever a request has finished, whether successfully or error
@@ -128,7 +136,7 @@ public class AbstractBarterLiActivity extends FragmentActivity {
         setProgressBarIndeterminateVisibility(false);
     }
 
-    protected void setActionBarDisplayOptions(final int displayOptions) {
+    public void setActionBarDisplayOptions(final int displayOptions) {
         if (getActionBar() != null) {
             getActionBar().setDisplayOptions(displayOptions,
                             ACTION_BAR_DISPLAY_MASK);
@@ -140,7 +148,7 @@ public class AbstractBarterLiActivity extends FragmentActivity {
      * 
      * @return <code>true</code> if connected, <code>false</code> otherwise
      */
-    protected boolean isConnectedToInternet() {
+    public boolean isConnectedToInternet() {
         return UtilityMethods.isNetworkConnected(this);
     }
 

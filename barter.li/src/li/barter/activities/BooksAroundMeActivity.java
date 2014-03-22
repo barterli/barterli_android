@@ -177,6 +177,11 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.BOOL_1, mDrawerOpenedAutomatically);
     }
+    
+    @Override
+    protected Object getVolleyTag() {
+        return TAG;
+    }
 
     @Override
     protected void onStart() {
