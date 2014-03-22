@@ -28,7 +28,6 @@ import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 import android.annotation.TargetApi;
-import android.app.ActionBar;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -432,10 +431,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (drawerView == mBackgroundView) {
             unscheduleMapHideTask(); // If drawer is slid as the transition is
                                      // happening, cancel the hide runnable
+                                     // TODO: Is the optimal place to call this?
             if (mMapFrameLayout.getVisibility() == View.GONE
                             && slideOffset >= 0.9f) {
                 mMapFrameLayout.setVisibility(View.VISIBLE);
             }
+
+            // TODO Schedule the hiding of map background again if user doesn't
+            // fully slide the drawer open
         }
     }
 
