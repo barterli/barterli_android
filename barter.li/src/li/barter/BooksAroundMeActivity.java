@@ -39,8 +39,6 @@ import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,6 +51,8 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.UtilityMethods;
+import li.barter.widgets.FullWidthDrawerLayout;
+import li.barter.widgets.FullWidthDrawerLayout.DrawerListener;
 
 /**
  * @author Vinay S Shenoy Activity for displaying Books Around Me. Also contains
@@ -128,7 +128,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     /**
      * Drawer Layout that contains the Books grid and autocomplete search text
      */
-    private DrawerLayout                  mDrawerLayout;
+    private FullWidthDrawerLayout                  mDrawerLayout;
 
     /**
      * Flag that remembers whether the drawer has been opened at least once
@@ -141,7 +141,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_around_me);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (FullWidthDrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerListener(this);
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
 
