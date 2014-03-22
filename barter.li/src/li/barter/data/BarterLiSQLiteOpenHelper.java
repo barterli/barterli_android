@@ -28,8 +28,6 @@ import java.util.ArrayList;
 
 import li.barter.utils.AppConstants;
 import li.barter.utils.UtilityMethods;
-import li.barter.utils.loader.SQLiteLoader;
-import li.barter.utils.loader.SQLiteLoaderObserver;
 
 /**
  * @author vinaysshenoy {@link SQLiteOpenHelper} to provide database

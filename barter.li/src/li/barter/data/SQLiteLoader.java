@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-package li.barter.utils.loader;
+package li.barter.data;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-
-import li.barter.data.BarterLiSQLiteOpenHelper;
 
 /**
  * Custom {@link Loader} implementation to read from
