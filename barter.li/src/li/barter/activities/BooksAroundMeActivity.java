@@ -39,11 +39,13 @@ import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 
 import li.barter.R;
@@ -96,6 +98,11 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     private View                          mBackgroundView;
 
     /**
+     * Frame Layout in which the map fragment is placed
+     */
+    private FrameLayout                   mMapFrameLayout;
+
+    /**
      * TextView which will provide drop down suggestions as user searches for
      * books
      */
@@ -132,7 +139,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     /**
      * Drawer Layout that contains the Books grid and autocomplete search text
      */
-    private FullWidthDrawerLayout                  mDrawerLayout;
+    private FullWidthDrawerLayout         mDrawerLayout;
 
     /**
      * Flag that remembers whether the drawer has been opened at least once
@@ -140,10 +147,22 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
      */
     private boolean                       mDrawerOpenedAutomatically;
 
+    /**
+     * Handler for scheduling callbacks on UI thread
+     */
+    private Handler                       mHandler;
+
+    /**
+     * Runnable for hiding the Map container when the drawer is opened
+     */
+    private Runnable                      mHideMapViewRunnable;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_around_me);
+
+        mMapFrameLayout = (FrameLayout) findViewById(R.id.map_books_around_me);
 
         mDrawerLayout = (FullWidthDrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerListener(this);
@@ -164,6 +183,8 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
         mTransitionDrawableLayers = new Drawable[2];
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
 
+        mHandler = new Handler();
+
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
         } else {
@@ -177,7 +198,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.BOOL_1, mDrawerOpenedAutomatically);
     }
-    
+
     @Override
     protected Object getVolleyTag() {
         return TAG;
@@ -306,12 +327,58 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
         snapshot.recycle();
         snapshot = null;
 
+        /*
+         * Set to prevent overdraw. You will get a moment of overdraw when the
+         * transition is happening, but after the overdraw gets removed. We're
+         * scheduling the hide map view transition to happen later because it
+         * causes a bad effect if we hide the Map View in background while the
+         * transition is still happening
+         */
+        scheduleHideMapTask(TRANSITION_DURATION);
+
         if (mBooksAroundMeGridView.getAdapter() == null) {
             mSwingBottomInAnimationAdapter
                             .setAbsListView(mBooksAroundMeGridView);
             mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
         }
 
+    }
+
+    /**
+     * Schedules the task for hiding the map transition, cancelling the previous
+     * one, if any
+     * 
+     * @param delay The delay(in milliseconds) after which the Map should be
+     *            removed in the background
+     */
+    private void scheduleHideMapTask(final int delay) {
+
+        unscheduleMapHideTask();
+        mHideMapViewRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                mMapFrameLayout.setVisibility(View.GONE);
+            }
+        };
+        mHandler.postDelayed(mHideMapViewRunnable, delay);
+    }
+
+    /**
+     * Unschedules any current(if exists) map hide transition
+     */
+    private void unscheduleMapHideTask() {
+
+        if (mHideMapViewRunnable != null) {
+            mHandler.removeCallbacks(mHideMapViewRunnable);
+            mHideMapViewRunnable = null;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unscheduleMapHideTask();
     }
 
     @Override
@@ -374,6 +441,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     @Override
     public void onDrawerClosed(final View drawerView) {
         if (drawerView == mBackgroundView) {
+
             setMapMyLocationEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 mBackgroundView.setBackground(mTransparentColorDrawable);
@@ -388,6 +456,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     public void onDrawerOpened(final View drawerView) {
 
         if (drawerView == mBackgroundView) {
+
             setMapMyLocationEnabled(false);
             beginMapSnapshotProcess();
         }
@@ -396,8 +465,15 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
     @Override
     public void onDrawerSlide(final View drawerView, final float slideOffset) {
-        // TODO Auto-generated method stub
 
+        if (drawerView == mBackgroundView) {
+            unscheduleMapHideTask(); // If drawer is slid as the transition is
+                                     // happening, cancel the hide runnable
+            if (mMapFrameLayout.getVisibility() == View.GONE
+                            && slideOffset >= 0.9f) {
+                mMapFrameLayout.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
