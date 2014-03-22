@@ -65,10 +65,6 @@
             android:value="@string/app_id" />
 
         <activity
-            android:name="li.barter.activities.BooksAroundMeActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
             android:name="li.barter.activities.HomeActivity"
             android:label="@string/app_name" >
             <intent-filter>
@@ -80,7 +76,7 @@
         <activity
             android:name="li.barter.activities.ScanIsbnActivity"
             android:label="@string/app_name"
-            android:parentActivityName="li.barter.activities.BooksAroundMeActivity"
+            android:parentActivityName="li.barter.fragments.BooksAroundMeFragment"
             android:screenOrientation="landscape" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -89,7 +85,7 @@
         <activity
             android:name="li.barter.activities.AddOrEditBookActivity"
             android:label="@string/app_name"
-            android:parentActivityName="li.barter.activities.BooksAroundMeActivity"
+            android:parentActivityName="li.barter.fragments.BooksAroundMeFragment"
             android:windowSoftInputMode="stateHidden|adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -98,7 +94,7 @@
         <activity
             android:name="li.barter.ChatActivity"
             android:label="@string/app_name"
-            android:parentActivityName="li.barter.activities.BooksAroundMeActivity" >
+            android:parentActivityName="li.barter.fragments.BooksAroundMeFragment" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="li.barter.activities.BooksAroundMeActivity" />

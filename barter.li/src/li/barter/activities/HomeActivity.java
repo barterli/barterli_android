@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,6 +30,7 @@ import android.view.View;
 import android.widget.ListView;
 
 import li.barter.R;
+import li.barter.fragments.BooksAroundMeFragment;
 
 /**
  * @author Vinay S Shenoy Main Activity for holding the Navigation Drawer and
@@ -63,7 +66,22 @@ public class HomeActivity extends AbstractBarterLiActivity {
 
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         initDrawer();
+        if (savedInstanceState == null) {
+            loadBooksAroundMeFragment();
+        } else {
+            // Do we need to remember which fragment was visible and load that
+            // one instead? Or does the Android system take care of it?
+        }
 
+    }
+
+    /**
+     * Loads the {@link BooksAroundMeFragment} into the fragment container
+     */
+    private void loadBooksAroundMeFragment() {
+
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().add(R.id.frame_content, Fragment.instantiate(this, BooksAroundMeFragment.class.getName()), null).commit();
     }
 
     /**
@@ -72,8 +90,8 @@ public class HomeActivity extends AbstractBarterLiActivity {
     private void initDrawer() {
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                        R.drawable.ic_navigation_drawer,
-                        R.string.drawer_open, R.string.drawer_closed) {
+                        R.drawable.ic_navigation_drawer, R.string.drawer_open,
+                        R.string.drawer_closed) {
 
             @Override
             public void onDrawerOpened(View drawerView) {
@@ -140,7 +158,7 @@ public class HomeActivity extends AbstractBarterLiActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-        
+
         switch (item.getItemId()) {
 
             case R.id.action_scan_book: {

@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter.activities;
+package li.barter.fragments;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -22,14 +22,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.CancelableCallback;
 import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
-import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -41,17 +40,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 
 import li.barter.R;
-import li.barter.R.id;
-import li.barter.R.layout;
-import li.barter.R.menu;
+import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
@@ -61,10 +58,10 @@ import li.barter.widgets.FullWidthDrawerLayout;
 import li.barter.widgets.FullWidthDrawerLayout.DrawerListener;
 
 /**
- * @author Vinay S Shenoy Activity for displaying Books Around Me. Also contains
+ * @author Vinay S Shenoy Fragment for displaying Books Around Me. Also contains
  *         a Map that the user can use to easily switch locations
  */
-public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
+public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LocationListener, SnapshotReadyCallback, CancelableCallback,
                 OnMapLoadedCallback, DrawerListener {
 
@@ -88,9 +85,9 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     private GooglePlayClientWrapper       mGooglePlayClientWrapper;
 
     /**
-     * {@link MapFragment} used to display the Map
+     * {@link SupportMapFragment} used to display the Map
      */
-    private MapFragment                   mMapFragment;
+    private SupportMapFragment            mMapFragment;
 
     /**
      * Background View on which the blurred Map snapshot is set
@@ -158,30 +155,34 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     private Runnable                      mHideMapViewRunnable;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_books_around_me);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                    Bundle savedInstanceState) {
 
-        mMapFrameLayout = (FrameLayout) findViewById(R.id.map_books_around_me);
+        final View contentView = inflater.inflate(
+                        R.layout.activity_books_around_me, container, false);
 
-        mDrawerLayout = (FullWidthDrawerLayout) findViewById(R.id.drawer_layout);
+        mMapFrameLayout = (FrameLayout) contentView
+                        .findViewById(R.id.map_books_around_me);
+
+        mDrawerLayout = (FullWidthDrawerLayout) contentView
+                        .findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerListener(this);
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
 
         mTransparentColorDrawable = new ColorDrawable(Color.TRANSPARENT);
-        mBackgroundView = findViewById(R.id.layout_books_container);
-        mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.auto_complete_books_around_me);
-        mBooksAroundMeGridView = (GridView) findViewById(R.id.grid_books_around_me);
+        mBackgroundView = contentView.findViewById(R.id.layout_books_container);
+        mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
+                        .findViewById(R.id.auto_complete_books_around_me);
+        mBooksAroundMeGridView = (GridView) contentView
+                        .findViewById(R.id.grid_books_around_me);
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter();
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(
                         mBooksAroundMeAdapter, 150, 500);
 
-        setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
-        getActionBar().setHomeButtonEnabled(false);
-
         mTransitionDrawableLayers = new Drawable[2];
-        mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
+        mGooglePlayClientWrapper = new GooglePlayClientWrapper(
+                        (AbstractBarterLiActivity) getActivity(), this);
 
         mHandler = new Handler();
 
@@ -191,10 +192,11 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
             mDrawerOpenedAutomatically = savedInstanceState
                             .getBoolean(Keys.BOOL_1);
         }
+        return contentView;
     }
 
     @Override
-    protected void onSaveInstanceState(final Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.BOOL_1, mDrawerOpenedAutomatically);
     }
@@ -205,65 +207,26 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     }
 
     @Override
-    protected void onStart() {
+    public void onStart() {
         super.onStart();
         mGooglePlayClientWrapper.onActivityStart();
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         mGooglePlayClientWrapper.onActivityStop();
         super.onStop();
     }
 
     @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-
+    public void onResume() {
+        super.onResume();
         /*
          * Get reference to MapFragment here because the fragment might be
          * destroyed when Activity is in background
          */
-        mMapFragment = (MapFragment) getFragmentManager().findFragmentById(
-                        R.id.map_books_around_me);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_books_around_me, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-
-        switch (item.getItemId()) {
-
-            case R.id.action_scan_book: {
-                startActivity(new Intent(this, ScanIsbnActivity.class));
-                return true;
-            }
-
-            case R.id.action_my_books: {
-                // TODO do we have a screen to show here
-                return true;
-            }
-
-            case R.id.action_profile: {
-                // TODO Show profile screen
-                return true;
-            }
-
-            case R.id.action_add_book: {
-                startActivity(new Intent(this, AddOrEditBookActivity.class));
-                return true;
-            }
-
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
-        }
+        mMapFragment = (SupportMapFragment) getFragmentManager()
+                        .findFragmentById(R.id.map_books_around_me);
     }
 
     @Override
@@ -306,7 +269,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
 
         /* Create a blurred version of the Map snapshot */
         final BitmapDrawable backgroundDrawable = new BitmapDrawable(
-                        getResources(), UtilityMethods.blurImage(this,
+                        getResources(), UtilityMethods.blurImage(getActivity(),
                                         snapshot, MAP_BLUR));
 
         mTransitionDrawableLayers[0] = mTransparentColorDrawable;
@@ -376,7 +339,7 @@ public class BooksAroundMeActivity extends AbstractBarterLiActivity implements
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         unscheduleMapHideTask();
     }

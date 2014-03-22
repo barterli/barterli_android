@@ -61,4 +61,11 @@ public class AppConstants {
 
     }
 
+    /**
+     * @author vinaysshenoy Constant interface, DO NOT IMPLEMENT
+     */
+    public static interface FragmentTags {
+        public static final String BOOKS_AROUND_ME = "books_around_me";
+    }
+
 }
