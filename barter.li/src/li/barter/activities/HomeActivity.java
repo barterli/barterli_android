@@ -90,7 +90,6 @@ public class HomeActivity extends AbstractBarterLiActivity {
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        //getActionBar().setDisplayShowHomeEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
