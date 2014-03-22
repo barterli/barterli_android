@@ -32,7 +32,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 
-import li.barter.AbstractBarterLiActivity;
+import li.barter.activities.AbstractBarterLiActivity;
 
 /**
  * @author Vinay S Shenoy Class to wrap the Google Play Connection code

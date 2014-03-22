@@ -58,16 +58,16 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        
+
         <!-- Meta data for Facebook SDK -->
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/app_id" />
 
         <activity
-            android:name="li.barter.BooksAroundMeActivity"
+            android:name="li.barter.activities.BooksAroundMeActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".BooksAroundMeActivity" >
+            android:parentActivityName="li.barter.activities.BooksAroundMeActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -79,18 +79,18 @@
                 android:value=".BooksAroundMeActivity" />
         </activity>
         <activity
-            android:name="li.barter.ScanIsbnActivity"
+            android:name="li.barter.activities.ScanIsbnActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".BooksAroundMeActivity"
+            android:parentActivityName="li.barter.activities.BooksAroundMeActivity"
             android:screenOrientation="landscape" >
             <meta-data
                 android:name="android.support.PARENT_ACTICITY"
                 android:value=".BooksAroundMeActivity" />
         </activity>
         <activity
-            android:name="li.barter.AddOrEditBookActivity"
+            android:name="li.barter.activities.AddOrEditBookActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".BooksAroundMeActivity"
+            android:parentActivityName="li.barter.activities.BooksAroundMeActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -99,17 +99,17 @@
         <activity
             android:name="li.barter.ChatActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".BooksAroundMeActivity" >
+            android:parentActivityName="li.barter.activities.BooksAroundMeActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".BooksAroundMeActivity" />
+                android:value="li.barter.activities.BooksAroundMeActivity" />
         </activity>
         <activity
             android:name="li.barter.TakeLatLongActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="li.barter.LoginActivity"
+            android:name="li.barter.activities.LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -126,7 +126,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".AddOrEditBookActivity" />
         </activity>
-
         <activity
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name" >

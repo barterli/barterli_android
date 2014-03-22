@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter;
+package li.barter.activities;
 
 import org.apache.http.protocol.HTTP;
 
@@ -26,12 +26,15 @@ import android.widget.ListView;
 
 import java.io.UnsupportedEncodingException;
 
+import li.barter.R;
+import li.barter.R.anim;
+import li.barter.R.id;
+import li.barter.R.layout;
 import li.barter.adapters.ChatAdapter;
 import li.barter.http.HttpConstants;
 import li.barter.http.rabbitmq.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector.OnReceiveMessageHandler;
-import li.barter.utils.ActivityTransition;
 
 /**
  * @author vinaysshenoy Activity for displaying Chat Messages

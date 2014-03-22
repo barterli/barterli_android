@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter;
+package li.barter.activities;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -42,7 +42,11 @@ import android.view.WindowManager;
 import java.io.IOException;
 import java.util.Collection;
 
-import li.barter.utils.ActivityTransition;
+import li.barter.R;
+import li.barter.R.anim;
+import li.barter.R.id;
+import li.barter.R.layout;
+import li.barter.R.menu;
 import li.barter.utils.AppConstants.Keys;
 
 /**

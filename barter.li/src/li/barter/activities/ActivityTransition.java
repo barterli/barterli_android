@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter.utils;
+package li.barter.activities;
 
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;

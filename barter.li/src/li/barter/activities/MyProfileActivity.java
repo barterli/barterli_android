@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter;
+package li.barter.activities;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +30,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import li.barter.AlertDialogManager;
+import li.barter.JSONHelper;
+import li.barter.R;
+import li.barter.R.id;
+import li.barter.R.layout;
+import li.barter.R.string;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class MyProfileActivity extends AbstractBarterLiActivity {

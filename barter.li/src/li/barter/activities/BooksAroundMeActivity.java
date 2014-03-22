@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter;
+package li.barter.activities;
 
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -46,6 +46,10 @@ import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
 
+import li.barter.R;
+import li.barter.R.id;
+import li.barter.R.layout;
+import li.barter.R.menu;
 import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;

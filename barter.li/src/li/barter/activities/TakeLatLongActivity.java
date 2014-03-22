@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter;
+package li.barter.activities;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -30,6 +30,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import li.barter.GPSTracker;
+import li.barter.JSONHelper;
+import li.barter.ProgressDialogManager;
+import li.barter.R;
+import li.barter.R.id;
+import li.barter.R.layout;
+import li.barter.R.string;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class TakeLatLongActivity extends AbstractBarterLiActivity {

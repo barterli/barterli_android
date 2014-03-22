@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter;
+package li.barter.activities;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,8 +35,9 @@ import android.widget.Toast;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import li.barter.R;
+import li.barter.R.string;
 import li.barter.http.IVolleyHelper;
-import li.barter.utils.ActivityTransition;
 import li.barter.utils.UtilityMethods;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;

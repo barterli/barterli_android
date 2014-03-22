@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter;
+package li.barter.activities;
 
 import com.facebook.Session;
 
@@ -25,7 +25,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import li.barter.utils.ActivityTransition;
+import li.barter.R;
+import li.barter.R.anim;
+import li.barter.R.id;
+import li.barter.R.layout;
 
 @ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
 public class LoginActivity extends AbstractBarterLiActivity implements

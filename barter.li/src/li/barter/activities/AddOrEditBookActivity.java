@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter;
+package li.barter.activities;
 
 import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
@@ -35,12 +35,16 @@ import android.widget.EditText;
 import java.util.HashMap;
 import java.util.Map;
 
+import li.barter.R;
+import li.barter.R.anim;
+import li.barter.R.id;
+import li.barter.R.layout;
+import li.barter.R.string;
 import li.barter.http.BlJsonObjectRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
-import li.barter.utils.ActivityTransition;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.SharedPreferenceHelper;
 
