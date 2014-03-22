@@ -158,7 +158,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                     Bundle savedInstanceState) {
 
         final View contentView = inflater.inflate(
-                        R.layout.activity_books_around_me, container, false);
+                        R.layout.fragment_books_around_me, container, false);
 
         mMapFrameLayout = (FrameLayout) contentView
                         .findViewById(R.id.map_books_around_me);
