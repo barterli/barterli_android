@@ -105,15 +105,17 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         }
 
         setActionBarDrawerToggleEnabled(false);
-        setHasOptionsMenu(true);
-
         return view;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "On Options Item Selected");
-        return super.onOptionsItemSelected(item);
+        if(item.getItemId() == android.R.id.home) {
+            Log.d(TAG, "On Home Pressed");
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     /**

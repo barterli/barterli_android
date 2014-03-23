@@ -202,45 +202,71 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
 
-        if (mIsActionBarNavDrawerToggleEnabled) {
+        if (mIsActionBarNavDrawerToggleEnabled
+                        && mDrawerToggle.onOptionsItemSelected(item)) {
             // Pass the event to ActionBarDrawerToggle, if it returns
             // true, then it has handled the app icon touch event
-            if (mDrawerToggle.onOptionsItemSelected(item)) {
-                return true;
-            }
-        }
-
-        // To provide Up navigation
-        if (item.getItemId() == android.R.id.home) {
-
-            final Intent upIntent = NavUtils.getParentActivityIntent(this);
-
-            if (upIntent == null) {
-
-                NavUtils.navigateUpFromSameTask(this);
-
-            } else {
-                if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-                    // This activity is NOT part of this app's task, so create a
-                    // new
-                    // task
-                    // when navigating up, with a synthesized back stack.
-                    TaskStackBuilder.create(this)
-                    // Add all of this activity's parents to the back stack
-                                    .addNextIntentWithParentStack(upIntent)
-                                    // Navigate up to the closest parent
-                                    .startActivities();
-                } else {
-                    // This activity is part of this app's task, so simply
-                    // navigate up to the logical parent activity.
-                    NavUtils.navigateUpTo(this, upIntent);
-                }
-            }
-
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+
+        else {
+
+            //Fetch the current primary fragment. If that will handle the Menu click, pass it to that one
+            final AbstractBarterLiFragment currentMainFragment = (AbstractBarterLiFragment) getSupportFragmentManager()
+                            .findFragmentById(R.id.frame_content);
+
+            boolean handled = false;
+            if (currentMainFragment != null) {
+                handled = currentMainFragment.onOptionsItemSelected(item);
+            }
+
+            if (!handled) {
+                // To provide Up navigation
+                if (item.getItemId() == android.R.id.home) {
+
+                    doUpNavigation();
+                    return true;
+                } else {
+                    return super.onOptionsItemSelected(item);
+                }
+
+            }
+
+            return handled;
+
+        }
+
+    }
+
+    /**
+     * Moves up in the hierarchy using the Support meta data specified in
+     * manifest
+     */
+    private void doUpNavigation() {
+        final Intent upIntent = NavUtils.getParentActivityIntent(this);
+
+        if (upIntent == null) {
+
+            NavUtils.navigateUpFromSameTask(this);
+
+        } else {
+            if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                // This activity is NOT part of this app's task, so create a
+                // new
+                // task
+                // when navigating up, with a synthesized back stack.
+                TaskStackBuilder.create(this)
+                // Add all of this activity's parents to the back stack
+                                .addNextIntentWithParentStack(upIntent)
+                                // Navigate up to the closest parent
+                                .startActivities();
+            } else {
+                // This activity is part of this app's task, so simply
+                // navigate up to the logical parent activity.
+                NavUtils.navigateUpTo(this, upIntent);
+            }
+        }
+
     }
 
     /**
@@ -452,7 +478,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * the Action Bar
      */
     public boolean isActionBarNavDrawerToggleEnabled() {
-        return mDrawerToggle == null ? mIsActionBarNavDrawerToggleEnabled : mDrawerToggle.isDrawerIndicatorEnabled();
+        return mDrawerToggle == null ? mIsActionBarNavDrawerToggleEnabled
+                        : mDrawerToggle.isDrawerIndicatorEnabled();
     }
 
     /**
@@ -466,12 +493,12 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      */
     public void setActionBarDrawerToggleEnabled(boolean enabled) {
 
-        if(mHasNavigationDrawer) {
-            
-            if(mDrawerToggle != null) {
+        if (mHasNavigationDrawer) {
+
+            if (mDrawerToggle != null) {
                 mDrawerToggle.setDrawerIndicatorEnabled(enabled);
             }
-            
+
         }
     }
 
