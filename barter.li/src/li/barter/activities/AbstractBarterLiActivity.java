@@ -25,6 +25,8 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.SpannableString;
@@ -36,6 +38,8 @@ import android.widget.Toast;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
+import li.barter.fragments.AbstractBarterLiFragment;
+import li.barter.fragments.FragmentTransition;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.UtilityMethods;
 import li.barter.widgets.TypefaceCache;
@@ -111,9 +115,11 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
                             : R.string.no_network_connection, false);
         }
     }
-    
+
     /**
-     * A Tag to add to all Volley requests. This must be unique for all Fragments types
+     * A Tag to add to all Volley requests. This must be unique for all
+     * Fragments types
+     * 
      * @return An Object that's the tag for this fragment
      */
     protected abstract Object getVolleyTag();
@@ -259,6 +265,43 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
     @Override
     public void finish() {
         finish(false);
+    }
+
+    /**
+     * Helper method to load fragments into layout
+     * 
+     * @param containerResId The container resource Id in the content view into
+     *            which to load the fragment
+     * @param fragment The fragment to load
+     * @param tag The fragment tag
+     * @param addToBackStack Whether the transaction should be addded to the
+     *            backstack
+     */
+    protected void loadFragment(int containerResId,
+                    AbstractBarterLiFragment fragment, String tag,
+                    final boolean addToBackStack) {
+
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        final FragmentTransaction transaction = fragmentManager
+                        .beginTransaction();
+        final FragmentTransition fragmentTransition = fragment.getClass()
+                        .getAnnotation(FragmentTransition.class);
+        if (fragmentTransition != null) {
+
+            transaction.setCustomAnimations(
+                            fragmentTransition.enterAnimation(),
+                            fragmentTransition.exitAnimation(),
+                            fragmentTransition.popEnterAnimation(),
+                            fragmentTransition.popExitAnimation());
+
+        }
+
+        transaction.replace(containerResId, fragment, tag);
+
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
     }
 
 }

@@ -167,4 +167,5 @@ public abstract class AbstractBarterLiFragment extends Fragment {
                             isLong);
         }
     }
+    
 }

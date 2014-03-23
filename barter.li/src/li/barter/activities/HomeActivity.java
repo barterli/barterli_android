@@ -17,7 +17,6 @@
 package li.barter.activities;
 
 import android.app.ActionBar;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -33,7 +32,9 @@ import android.widget.ListView;
 
 import li.barter.R;
 import li.barter.adapters.HomeNavDrawerAdapter;
+import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
+import li.barter.utils.AppConstants.FragmentTags;
 
 /**
  * @author Vinay S Shenoy Main Activity for holding the Navigation Drawer and
@@ -85,14 +86,12 @@ public class HomeActivity extends AbstractBarterLiActivity {
      */
     private void loadBooksAroundMeFragment() {
 
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                        .add(R.id.frame_content,
-                                        Fragment.instantiate(
-                                                        this,
-                                                        BooksAroundMeFragment.class
-                                                                        .getName()),
-                                        null).commit();
+        loadFragment(R.id.frame_content,
+                        (AbstractBarterLiFragment) Fragment.instantiate(this,
+                                        BooksAroundMeFragment.class.getName(),
+                                        null), FragmentTags.BOOKS_AROUND_ME,
+                        false);
+
     }
 
     /**

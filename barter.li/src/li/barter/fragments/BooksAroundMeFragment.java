@@ -94,9 +94,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private static final int              MAP_BLUR            = 20;
 
     /**
-     * Transition to use blurring between the Map backgrounds
+     * Transition time(in milliseconds) to use blurring between the Map backgrounds
      */
-    private static final int              TRANSITION_DURATION = 1200;
+    private static final int              TRANSITION_DURATION = 1000;
 
     private GooglePlayClientWrapper       mGooglePlayClientWrapper;
 
