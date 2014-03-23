@@ -46,7 +46,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
-        final View view = inflater.inflate(R.layout.activity_login, null);
+        final View view = inflater.inflate(R.layout.fragment_login, null);
 
         mFacebookLoginButton = (Button) view
                         .findViewById(R.id.button_facebook_login);

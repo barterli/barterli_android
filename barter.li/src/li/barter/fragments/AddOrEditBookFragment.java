@@ -67,7 +67,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         final View view = inflater
-                        .inflate(R.layout.activity_edit_book, container, false);
+                        .inflate(R.layout.fragment_add_or_edit_book, container, false);
         mIsbnEditText = (EditText) view.findViewById(R.id.edit_text_isbn);
         mTitleEditText = (EditText) view.findViewById(R.id.edit_text_title);
         mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);

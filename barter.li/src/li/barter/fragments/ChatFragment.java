@@ -60,7 +60,7 @@ public class ChatFragment extends AbstractBarterLiFragment implements
                     Bundle savedInstanceState) {
         init(container);
         final View view = inflater
-                        .inflate(R.layout.activity_chat, container, false);
+                        .inflate(R.layout.fragment_chat, container, false);
         mChatListView = (ListView) view.findViewById(R.id.list_chats);
         mChatAdapter = new ChatAdapter(getActivity());
         mChatListView.setAdapter(mChatAdapter);
