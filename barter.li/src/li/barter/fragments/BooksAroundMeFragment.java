@@ -38,6 +38,7 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +55,6 @@ import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.UtilityMethods;
 import li.barter.widgets.FullWidthDrawerLayout;
-import li.barter.widgets.FullWidthDrawerLayout.DrawerListener;
 
 /**
  * @author Vinay S Shenoy Fragment for displaying Books Around Me. Also contains
@@ -64,7 +64,18 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LocationListener, SnapshotReadyCallback, CancelableCallback,
                 OnMapLoadedCallback, DrawerListener {
 
-    private static final String           TAG                 = "BooksAroundMeActivity";
+    private static final String TAG = "BooksAroundMeActivity";
+
+    /**
+     * Enum that indicates the direction of the drag
+     * 
+     * @author Vinay S Shenoy
+     */
+    private enum DrawerDragState {
+
+        OPENING,
+        CLOSING
+    }
 
     /**
      * Zoom level for the map when the location is retrieved
@@ -91,7 +102,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     /**
      * Background View on which the blurred Map snapshot is set
      */
-    private View                          mBackgroundView;
+    private View                          mBooksContentView;
 
     /**
      * Frame Layout in which the map fragment is placed
@@ -153,6 +164,32 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private Runnable                      mHideMapViewRunnable;
 
+    /**
+     * Flag that indicates whether a hide runnable has also been posted to the
+     * Handler to prevent multiple runnables being posted
+     */
+    private boolean                       mIsHideRunnablePosted;
+
+    /**
+     * The current drawer state
+     */
+    private DrawerDragState               mCurDirection;
+
+    /**
+     * The previous drawer state
+     */
+    private DrawerDragState               mPrevDirection;
+
+    /**
+     * The previous slide offset
+     */
+    private float                         mPrevSlideOffset;
+
+    /**
+     * Flag to indicate whether a map snapshot has been requested
+     */
+    private boolean                       mMapSnapshotRequested;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                     Bundle savedInstanceState) {
@@ -169,7 +206,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
 
         mTransparentColorDrawable = new ColorDrawable(Color.TRANSPARENT);
-        mBackgroundView = contentView.findViewById(R.id.layout_books_container);
+        mBooksContentView = contentView.findViewById(R.id.layout_books_container);
         mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
                         .findViewById(R.id.auto_complete_books_around_me);
         mBooksAroundMeGridView = (GridView) contentView
@@ -185,6 +222,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         mHandler = new Handler();
 
+        mPrevSlideOffset = 0.0f;
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
         } else {
@@ -279,9 +317,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         transitionDrawable.setCrossFadeEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mBackgroundView.setBackground(transitionDrawable);
+            mBooksContentView.setBackground(transitionDrawable);
         } else {
-            mBackgroundView.setBackgroundDrawable(transitionDrawable);
+            mBooksContentView.setBackgroundDrawable(transitionDrawable);
         }
 
         transitionDrawable.startTransition(TRANSITION_DURATION);
@@ -304,6 +342,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
         }
 
+        mMapSnapshotRequested = false;
+
     }
 
     /**
@@ -315,15 +355,21 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void scheduleHideMapTask(final int delay) {
 
-        unscheduleMapHideTask();
+        if (mIsHideRunnablePosted) {
+
+            Log.d(TAG, "Already posted runnable, returning");
+            return;
+        }
         mHideMapViewRunnable = new Runnable() {
 
             @Override
             public void run() {
+                mIsHideRunnablePosted = false;
                 mMapFrameLayout.setVisibility(View.GONE);
             }
         };
         mHandler.postDelayed(mHideMapViewRunnable, delay);
+        mIsHideRunnablePosted = true;
     }
 
     /**
@@ -334,6 +380,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (mHideMapViewRunnable != null) {
             mHandler.removeCallbacks(mHideMapViewRunnable);
             mHideMapViewRunnable = null;
+            mIsHideRunnablePosted = false;
         }
     }
 
@@ -361,6 +408,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void beginMapSnapshotProcess() {
         if ((mMapFragment != null) && mMapFragment.isVisible()) {
+            mMapSnapshotRequested = true;
             final GoogleMap googleMap = mMapFragment.getMap();
 
             if (googleMap != null) {
@@ -374,12 +422,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onMapLoaded() {
 
         // Create the map snapshot only if the drawer is open
-        if (mDrawerLayout.isDrawerOpen(mBackgroundView)) {
+        if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
             captureMapSnapshot();
         } else if (!mDrawerOpenedAutomatically) {
             // Open drawer automatically on map loaded if first launch
             mDrawerOpenedAutomatically = true;
-            mDrawerLayout.openDrawer(mBackgroundView);
+            mDrawerLayout.openDrawer(mBooksContentView);
         }
     }
 
@@ -402,13 +450,13 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onDrawerClosed(final View drawerView) {
-        if (drawerView == mBackgroundView) {
+        if (drawerView == mBooksContentView) {
 
             setMapMyLocationEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mBackgroundView.setBackground(mTransparentColorDrawable);
+                mBooksContentView.setBackground(mTransparentColorDrawable);
             } else {
-                mBackgroundView.setBackgroundDrawable(mTransparentColorDrawable);
+                mBooksContentView.setBackgroundDrawable(mTransparentColorDrawable);
             }
         }
 
@@ -417,8 +465,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onDrawerOpened(final View drawerView) {
 
-        if (drawerView == mBackgroundView) {
+        if (drawerView == mBooksContentView) {
 
+            Log.d(TAG, "Map Opened");
             setMapMyLocationEnabled(false);
             beginMapSnapshotProcess();
         }
@@ -428,24 +477,66 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onDrawerSlide(final View drawerView, final float slideOffset) {
 
-        if (drawerView == mBackgroundView) {
-            unscheduleMapHideTask(); // If drawer is slid as the transition is
-                                     // happening, cancel the hide runnable
-                                     // TODO: Is the optimal place to call this?
-            if (mMapFrameLayout.getVisibility() == View.GONE
-                            && slideOffset >= 0.9f) {
-                mMapFrameLayout.setVisibility(View.VISIBLE);
-            }
+        if (drawerView == mBooksContentView) {
 
-            // TODO Schedule the hiding of map background again if user doesn't
-            // fully slide the drawer open
+            calculateCurrentDirection(slideOffset);
+
+            if (mCurDirection != mPrevDirection) { //Drawer state has changed
+
+                Log.d(TAG, "Drawer drag " + mCurDirection + " from "
+                                + mPrevDirection + " slide offset:"
+                                + slideOffset);
+
+                /*
+                 * if (mCurDirection == DrawerDragState.OPENING) { if
+                 * (slideOffset >= 0.7f && mMapFrameLayout.getVisibility() ==
+                 * View.VISIBLE) { //Drawer was moved to be closed, but was
+                 * brought back into opened state, in which case, we need to
+                 * hide the drawer again scheduleHideMapTask(150); } } else {
+                 */
+                if (mCurDirection == DrawerDragState.CLOSING
+                                && slideOffset >= 0.7f) { //Drawer was almost opened, but user moved it to closed again
+
+                    if (mMapFrameLayout.getVisibility() == View.VISIBLE) {
+                        unscheduleMapHideTask(); //If there's any task sceduled for hiding the map, remove it
+                    } else if (mMapFrameLayout.getVisibility() == View.GONE) {
+                        mMapFrameLayout.setVisibility(View.VISIBLE);
+                    }
+                }
+                //}
+            }
         }
     }
 
     @Override
     public void onDrawerStateChanged(final int state) {
-        // TODO Auto-generated method stub
 
+        Log.d(TAG, "On Drawer State Change:" + state);
+        if (state == FullWidthDrawerLayout.STATE_IDLE) {
+            if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
+                if (!mMapSnapshotRequested) { //If a map snapshot hasn't been requested, no need to call this as the map will be hidden when the snapsht is loaded
+                    scheduleHideMapTask(0);
+                } else {
+                    beginMapSnapshotProcess();
+                }
+            }
+        }
+    }
+
+    /**
+     * Calculates the current direction of the drag
+     */
+    private void calculateCurrentDirection(final float slideOffset) {
+
+        mPrevDirection = mCurDirection;
+
+        // Drawer is being opened
+        if (slideOffset >= mPrevSlideOffset) {
+            mCurDirection = DrawerDragState.OPENING;
+        } else {
+            mCurDirection = DrawerDragState.CLOSING;
+        }
+        mPrevSlideOffset = slideOffset;
     }
 
     /**

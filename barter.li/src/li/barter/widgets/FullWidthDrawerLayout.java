@@ -33,6 +33,8 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewGroupCompat;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
+import android.support.v4.widget.DrawerLayout.SimpleDrawerListener;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -77,7 +79,7 @@ import android.view.accessibility.AccessibilityEvent;
  * default margin being added
  */
 public class FullWidthDrawerLayout extends ViewGroup {
-    private static final String    TAG                         = "DrawerLayout";
+    private static final String    TAG                         = "FullWidthDrawerLayout";
 
     /**
      * Indicates that any drawers are in an idle, settled state. No animation is
@@ -163,67 +165,6 @@ public class FullWidthDrawerLayout extends ViewGroup {
 
     private Drawable               mShadowLeft;
     private Drawable               mShadowRight;
-
-    /**
-     * Listener for monitoring events about drawers.
-     */
-    public interface DrawerListener {
-        /**
-         * Called when a drawer's position changes.
-         * 
-         * @param drawerView The child view that was moved
-         * @param slideOffset The new offset of this drawer within its range,
-         *            from 0-1
-         */
-        public void onDrawerSlide(View drawerView, float slideOffset);
-
-        /**
-         * Called when a drawer has settled in a completely open state. The
-         * drawer is interactive at this point.
-         * 
-         * @param drawerView Drawer view that is now open
-         */
-        public void onDrawerOpened(View drawerView);
-
-        /**
-         * Called when a drawer has settled in a completely closed state.
-         * 
-         * @param drawerView Drawer view that is now closed
-         */
-        public void onDrawerClosed(View drawerView);
-
-        /**
-         * Called when the drawer motion state changes. The new state will be
-         * one of {@link #STATE_IDLE}, {@link #STATE_DRAGGING} or
-         * {@link #STATE_SETTLING}.
-         * 
-         * @param newState The new drawer motion state
-         */
-        public void onDrawerStateChanged(int newState);
-    }
-
-    /**
-     * Stub/no-op implementations of all methods of {@link DrawerListener}.
-     * Override this if you only care about a few of the available callback
-     * methods.
-     */
-    public static abstract class SimpleDrawerListener implements DrawerListener {
-        @Override
-        public void onDrawerSlide(View drawerView, float slideOffset) {
-        }
-
-        @Override
-        public void onDrawerOpened(View drawerView) {
-        }
-
-        @Override
-        public void onDrawerClosed(View drawerView) {
-        }
-
-        @Override
-        public void onDrawerStateChanged(int newState) {
-        }
-    }
 
     public FullWidthDrawerLayout(Context context) {
         this(context, null);
