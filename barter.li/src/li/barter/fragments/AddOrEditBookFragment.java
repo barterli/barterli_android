@@ -27,7 +27,6 @@ import org.json.JSONObject;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +39,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
-import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.http.BlJsonObjectRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -48,7 +46,7 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.SharedPreferenceHelper;
+import li.barter.utils.Logger;
 
 @FragmentTransition(enterAnimation = R.anim.activity_slide_in_right, exitAnimation = R.anim.activity_scale_out, popEnterAnimation = R.anim.activity_scale_in, popExitAnimation = R.anim.activity_slide_out_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
@@ -89,7 +87,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         // book completely manually
         if (extras != null) {
             mBookId = extras.getString(Keys.ISBN);
-            Log.d(TAG, "Book Id:" + mBookId);
+           Logger.d(TAG, "Book Id:" + mBookId);
 
             if (savedInstanceState != null) {
                 mHasFetchedDetails = savedInstanceState.getBoolean(Keys.BOOL_1);
@@ -206,7 +204,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             if (!isLoggedIn()) {
 
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), LoginFragment.class
+                                .instantiate(getActivity(),LoginFragment.class
                                                 .getName(), null), FragmentTags.LOGIN, true);
 
             } else {

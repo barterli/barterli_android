@@ -29,7 +29,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +44,7 @@ import java.util.Collection;
 import li.barter.R;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.ResultCodes;
+import li.barter.utils.Logger;
 
 /**
  * Activity to scan an ISBN barcode and send it back in the result. The result
@@ -192,7 +192,7 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
     @Override
     public void surfaceCreated(final SurfaceHolder holder) {
         if (holder == null) {
-            Log.e(TAG, "*** WARNING *** surfaceCreated() gave us a null surface!");
+          Logger.e(TAG, "*** WARNING *** surfaceCreated() gave us a null surface!");
         }
         if (!mHasSurface) {
             mHasSurface = true;
@@ -239,11 +239,11 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
                 mDecoderActivityHandler = new DecoderActivityHandler(this, mDecodeFormats, mCharacterSet, mCameraManager);
             }
         } catch (final IOException ioe) {
-            Log.w(TAG, ioe);
+          Logger.w(TAG, "Unable to open camera:", ioe);
         } catch (final RuntimeException e) {
             // Barcode Scanner has seen crashes in the wild of this variety:
             // java.?lang.?RuntimeException: Fail to connect to camera service
-            Log.w(TAG, "Unexpected error initializing camera", e);
+          Logger.w(TAG, "Unexpected error initializing camera", e);
         }
     }
 

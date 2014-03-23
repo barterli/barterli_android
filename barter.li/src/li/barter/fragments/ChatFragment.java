@@ -21,7 +21,6 @@ import org.apache.http.protocol.HTTP;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +35,7 @@ import li.barter.http.HttpConstants;
 import li.barter.http.rabbitmq.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector.OnReceiveMessageHandler;
+import li.barter.utils.Logger;
 
 /**
  * Activity for displaying Chat Messages
@@ -118,7 +118,7 @@ public class ChatFragment extends AbstractBarterLiFragment implements
         String text = "";
         try {
             text = new String(message, HTTP.UTF_8);
-            Log.d(TAG, "Received:" + text);
+           Logger.d(TAG, "Received:" + text);
         } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();
         }

@@ -22,11 +22,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 
 import li.barter.utils.AppConstants;
+import li.barter.utils.Logger;
 import li.barter.utils.UtilityMethods;
 
 /**
@@ -97,7 +97,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
     /**
      * Checks if the current database query is being made on the main thread. If
-     * yes, either throws an Exception(if in DEBUG mode) or Logs an error(in
+     * yes, either throws an Exception(if in DEBUG mode) orLoggers an error(in
      * PRODUCTION mode)
      */
     private static void throwIfOnMainThread() {
@@ -105,7 +105,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
             if (AppConstants.DEBUG) {
                 throw new RuntimeException("Accessing database on main thread!");
             } else {
-                Log.e(TAG, "Accessing database on main thread");
+               Logger.e(TAG, "Accessing database on main thread");
             }
         }
     }

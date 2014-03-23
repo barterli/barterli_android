@@ -140,7 +140,7 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
         // If Google Play services is available
         if (ConnectionResult.SUCCESS == resultCode) {
             // In debug mode, log the status
-            Log.d("Location Updates", "Google Play services is available.");
+           Logger.d("Location Updates", "Google Play services is available.");
             // Continue
             return true;
             // Google Play services was not available for some reason
@@ -206,7 +206,7 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
                  * PendingIntent
                  */
             } catch (final IntentSender.SendIntentException e) {
-                // Log the error
+                //Logger the error
                 e.printStackTrace();
             }
         } else {

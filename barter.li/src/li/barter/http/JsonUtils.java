@@ -20,7 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.util.Log;
+import li.barter.utils.Logger;
 
 /**
  * Utility class for reading items from {@link JSONObject}s or {@link JSONArray}
@@ -49,7 +49,7 @@ public class JsonUtils {
                 value = jsonObject.getString(tag);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -70,7 +70,7 @@ public class JsonUtils {
                 value = jsonArray.getString(index);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -90,7 +90,7 @@ public class JsonUtils {
                 value = jsonObject.getInt(tag);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -111,7 +111,7 @@ public class JsonUtils {
                 value = jsonObject.getBoolean(tag);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -132,7 +132,7 @@ public class JsonUtils {
                 value = (float) jsonObject.getDouble(tag);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -153,7 +153,7 @@ public class JsonUtils {
                 value = jsonObject.getDouble(tag);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -174,7 +174,7 @@ public class JsonUtils {
                 value = jsonObject.getLong(tag);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
 
         }
         return value;
@@ -196,7 +196,7 @@ public class JsonUtils {
                 json = jsonObject.getJSONObject(tag);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
         }
         return json;
     }
@@ -217,7 +217,7 @@ public class JsonUtils {
                 jsonArray = jsonObject.getJSONArray(tag);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
         }
         return jsonArray;
     }
@@ -238,7 +238,7 @@ public class JsonUtils {
                 json = jsonArray.getJSONObject(index);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
         }
         return json;
     }
@@ -259,7 +259,7 @@ public class JsonUtils {
                 jArray = jsonArray.getJSONArray(index);
             }
         } catch (final JSONException e) {
-            Log.e(TAG, e.getMessage());
+           Logger.e(TAG, e.getMessage());
         }
         return jArray;
     }

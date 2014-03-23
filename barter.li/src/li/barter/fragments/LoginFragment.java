@@ -94,17 +94,17 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         switch (v.getId()) {
 
             case R.id.button_facebook_login: {
-                // TODO Facebook Login
+                // TODO FacebookLoggerin
                 break;
             }
 
             case R.id.button_google_login: {
-                // TODO Google Login
+                // TODO GoogleLoggerin
                 break;
             }
 
             case R.id.button_submit: {
-                // TODO User Login/Create
+                // TODO UserLoggerin/Create
                 break;
             }
         }

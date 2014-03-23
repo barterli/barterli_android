@@ -44,7 +44,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v4.widgets.FullWidthDrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,6 +63,7 @@ import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
+import li.barter.utils.Logger;
 import li.barter.utils.UtilityMethods;
 
 /**
@@ -324,7 +324,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (location == null) {
             return;
         }
-        Log.d(TAG, "Location update:" + location.getLatitude() + " "
+       Logger.d(TAG, "Location update:" + location.getLatitude() + " "
                         + location.getLongitude());
 
         UserInfo.INSTANCE.latestLocation = location;
@@ -397,7 +397,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (mIsHideRunnablePosted) {
 
-            Log.d(TAG, "Already posted runnable, returning");
+           Logger.d(TAG, "Already posted runnable, returning");
             return;
         }
         mHideMapViewRunnable = new Runnable() {
@@ -474,7 +474,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         final GoogleMap googleMap = mMapView.getMap();
 
         if (googleMap != null) {
-            Log.d(TAG, "Adding On Loaded Callback!");
+           Logger.d(TAG, "Adding On Loaded Callback!");
             googleMap.setOnMapLoadedCallback(this);
         }
     }
@@ -526,7 +526,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (drawerView == mBooksContentView) {
 
-            Log.d(TAG, "Map Opened");
+           Logger.d(TAG, "Map Opened");
             setMapMyLocationEnabled(false);
             beginMapSnapshotProcess();
         }
@@ -542,7 +542,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             if (mCurDirection != mPrevDirection) { //Drawer state has changed
 
-                Log.d(TAG, "Drawer drag " + mCurDirection + " from "
+               Logger.d(TAG, "Drawer drag " + mCurDirection + " from "
                                 + mPrevDirection + " slide offset:"
                                 + slideOffset);
 
@@ -562,7 +562,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onDrawerStateChanged(final int state) {
 
-        Log.d(TAG, "On Drawer State Change:" + state);
+       Logger.d(TAG, "On Drawer State Change:" + state);
         if (state == DrawerLayout.STATE_IDLE) {
             if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
                 if (!mMapSnapshotRequested) { //If a map snapshot hasn't been requested, no need to call this as the map will be hidden when the snapsht is loaded
@@ -597,7 +597,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         final GoogleMap googleMap = mMapView.getMap();
 
         if (googleMap != null) {
-            Log.d(TAG, "Taking Snapshot!");
+           Logger.d(TAG, "Taking Snapshot!");
             googleMap.snapshot(this);
         }
 

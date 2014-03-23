@@ -19,10 +19,11 @@ package li.barter.http.rabbitmq;
 import com.rabbitmq.client.QueueingConsumer;
 
 import android.os.Handler;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.Map;
+
+import li.barter.utils.Logger;
 
 /**
  * Consumes messages from a RabbitMQ broker
@@ -79,7 +80,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
         if (super.connectToRabbitMQ("barterli", "barter")) {
 
             try {
-                Log.d(TAG, "Connected");
+                Logger.d(TAG, "Connected");
                 mQueue = mChannel
                                 .queueDeclare(queueName, durable, exclusive, autoDelete, args)
                                 .getQueue();

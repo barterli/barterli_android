@@ -29,10 +29,11 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import li.barter.utils.Logger;
 
 public class GPSTracker extends Service implements LocationListener {
 
@@ -86,7 +87,7 @@ public class GPSTracker extends Service implements LocationListener {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
                     locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                    Log.d("Network", "Network");
+                    Logger.d("Network", "Network");
                     if (locationManager != null) {
                         location = locationManager
                                         .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -100,7 +101,7 @@ public class GPSTracker extends Service implements LocationListener {
                 if (isGPSEnabled) {
                     if (location == null) {
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
-                        Log.d("GPS Enabled", "GPS Enabled");
+                        Logger.d("GPS Enabled", "GPS Enabled");
                         if (locationManager != null) {
                             location = locationManager
                                             .getLastKnownLocation(LocationManager.GPS_PROVIDER);
