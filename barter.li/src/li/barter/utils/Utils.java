@@ -25,26 +25,34 @@ import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
 
+import li.barter.utils.AppConstants.NetworkDetails;
+
 /**
  * @author Vinay S Shenoy Utility methods for barter.li
  */
-public class UtilityMethods {
+public class Utils {
+
+    private static final String TAG = "Utils";
 
     /**
-     * This method returns whether the device is connected to a network. But no
-     * guarantees are made about internet connectivity.
-     * 
-     * @return <code>true</code> if connected, <code>false</code> otherwise
+     * Reads the network info from service and sets up the singleton
      */
-    public static boolean isNetworkConnected(final Context context) {
+    public static void setupNetworkInfo(Context context) {
+
         final ConnectivityManager connManager = (ConnectivityManager) context
                         .getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
-        if ((activeNetwork != null) && activeNetwork.isConnected()) {
-            return true;
+        if (activeNetwork != null) {
+            NetworkDetails.INSTANCE.isNetworkConnected = activeNetwork
+                            .isConnectedOrConnecting();
+            NetworkDetails.INSTANCE.currentNetworkType = activeNetwork
+                            .getType();
         } else {
-            return false;
+            NetworkDetails.INSTANCE.isNetworkConnected = false;
+            NetworkDetails.INSTANCE.currentNetworkType = ConnectivityManager.TYPE_DUMMY;
         }
+
+        Logger.d(TAG, "Network State Updated Connected: %b Type: %d", NetworkDetails.INSTANCE.isNetworkConnected, NetworkDetails.INSTANCE.currentNetworkType);
     }
 
     /**

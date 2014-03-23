@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
-import li.barter.utils.UtilityMethods;
+import li.barter.utils.Utils;
 
 /**
  * @author vinaysshenoy {@link SQLiteOpenHelper} to provide database
@@ -101,7 +101,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * PRODUCTION mode)
      */
     private static void throwIfOnMainThread() {
-        if (UtilityMethods.isMainThread()) {
+        if (Utils.isMainThread()) {
             if (AppConstants.DEBUG) {
                 throw new RuntimeException("Accessing database on main thread!");
             } else {

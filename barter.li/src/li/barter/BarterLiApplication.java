@@ -30,6 +30,7 @@ import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.SharedPreferenceHelper;
+import li.barter.utils.Utils;
 
 /**
  * Custom Application class which holds some common functionality for the
@@ -51,14 +52,17 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         mRequestQueue = Volley.newRequestQueue(this);
         mImageLoader = new ImageLoader(mRequestQueue);
         readUserInfoFromSharedPref();
+        Utils.setupNetworkInfo(this);
     };
 
     /**
-     * Reads the previously fetched auth token from Shared Preferencesand stores it in the Singleton for in memory access 
+     * Reads the previously fetched auth token from Shared Preferencesand stores
+     * it in the Singleton for in memory access
      */
     private void readUserInfoFromSharedPref() {
-     
-        UserInfo.INSTANCE.authToken = SharedPreferenceHelper.getString(this, R.string.pref_auth_token);
+
+        UserInfo.INSTANCE.authToken = SharedPreferenceHelper
+                        .getString(this, R.string.pref_auth_token);
     }
 
     /**

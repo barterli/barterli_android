@@ -64,7 +64,7 @@ import li.barter.utils.AppConstants.ResultCodes;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.Logger;
-import li.barter.utils.UtilityMethods;
+import li.barter.utils.Utils;
 
 /**
  * @author Vinay S Shenoy Fragment for displaying Books Around Me. Also contains
@@ -347,7 +347,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onSnapshotReady(Bitmap snapshot) {
 
         /* Create a blurred version of the Map snapshot */
-        final BitmapDrawable backgroundDrawable = new BitmapDrawable(getResources(), UtilityMethods
+        final BitmapDrawable backgroundDrawable = new BitmapDrawable(getResources(), Utils
                         .blurImage(getActivity(), snapshot, MAP_BLUR));
 
         mTransitionDrawableLayers[0] = mTransparentColorDrawable;

@@ -28,6 +28,11 @@ public class AppConstants {
 
     public static final boolean DEBUG = true;
 
+    /**
+     * Singleton to hold frequently accessed info in memory
+     * 
+     * @author Vinay S Shenoy
+     */
     public enum UserInfo {
 
         INSTANCE;
@@ -47,6 +52,21 @@ public class AppConstants {
             latestLocation.setLatitude(0.0);
             latestLocation.setLongitude(0.0);
         }
+    }
+
+    /**
+     * Singleton to hold the current network state. Broadcas receiver for
+     * network state will be used to keep this updated
+     * 
+     * @author Vinay S Shenoy
+     */
+    public enum NetworkDetails {
+
+        INSTANCE;
+
+        public boolean isNetworkConnected;
+        public int  currentNetworkType;
+
     }
 
     /**
