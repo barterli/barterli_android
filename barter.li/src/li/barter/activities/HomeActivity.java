@@ -24,6 +24,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,9 +69,6 @@ public class HomeActivity extends AbstractBarterLiActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavListView = (ListView) findViewById(R.id.list_nav_drawer);
-
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         initDrawer();
         if (savedInstanceState == null) {
@@ -102,6 +100,9 @@ public class HomeActivity extends AbstractBarterLiActivity {
      */
     private void initDrawer() {
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mNavListView = (ListView) findViewById(R.id.list_nav_drawer);
+        
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                         R.drawable.ic_navigation_drawer, R.string.drawer_open,
                         R.string.drawer_closed) {
@@ -121,6 +122,8 @@ public class HomeActivity extends AbstractBarterLiActivity {
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.setScrimColor(getResources().getColor(R.color.overlay_black_40p));
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         
         mNavDrawerAdapter = new HomeNavDrawerAdapter(this, R.array.nav_drawer_titles, R.array.nav_drawer_descriptions);
