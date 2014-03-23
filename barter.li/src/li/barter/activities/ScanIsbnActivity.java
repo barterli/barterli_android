@@ -57,7 +57,10 @@ import li.barter.utils.AppConstants.ResultCodes;
  * <li>The isbn symbology, with the key {@linkplain Keys#SYMBOLOGY}</li>
  * <li>The isbn type, with the key {@linkplain Keys#TYPE}</li>
  * </ul>
- * In the latter case, the result intent will be <code>null</code>
+ * In the latter case, the result intent will be <code>null</code> <br/>
+ * Note: This will be a little complicated to transition to a Fragment sice it
+ * requires special configuration - landscape, soft input hidden etc. TODO:
+ * Investigate later
  * 
  * @author Vinay S Shenoy
  */

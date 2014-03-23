@@ -74,7 +74,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LocationListener, SnapshotReadyCallback, CancelableCallback,
                 OnMapLoadedCallback, DrawerListener {
 
-    private static final String TAG = "BooksAroundMeActivity";
+    private static final String TAG = "BooksAroundMeFragment";
 
     /**
      * Enum that indicates the direction of the drag

@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter.activities;
+package li.barter.fragments;
 
 import org.apache.http.protocol.HTTP;
 
@@ -22,6 +22,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import java.io.UnsupportedEncodingException;
@@ -34,32 +37,38 @@ import li.barter.http.rabbitmq.ChatRabbitMQConnector;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector.OnReceiveMessageHandler;
 
 /**
- * @author vinaysshenoy Activity for displaying Chat Messages
+ * Activity for displaying Chat Messages
+ * 
+ * @author Vinay S Shenoy
  */
-@ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
-public class ChatActivity extends AbstractBarterLiActivity implements
+@FragmentTransition(enterAnimation = R.anim.activity_slide_in_right, exitAnimation = R.anim.activity_scale_out, popEnterAnimation = R.anim.activity_scale_in, popExitAnimation = R.anim.activity_slide_out_right)
+public class ChatFragment extends AbstractBarterLiFragment implements
                 OnReceiveMessageHandler {
 
-    private static final String   TAG = "ChatActivity";
+    private static final String   TAG = "ChatFragment";
 
     private ChatAdapter           mChatAdapter;
 
     private ListView              mChatListView;
 
-    /** {@link ChatRabbitMQConnector} instane for listening to messages */
+    /** {@link ChatRabbitMQConnector} instance for listening to messages */
     private ChatRabbitMQConnector mMessageConsumer;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-        mChatListView = (ListView) findViewById(R.id.list_chats);
-        mChatAdapter = new ChatAdapter(this);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                    Bundle savedInstanceState) {
+        init(container);
+        final View view = inflater
+                        .inflate(R.layout.activity_chat, container, false);
+        mChatListView = (ListView) view.findViewById(R.id.list_chats);
+        mChatAdapter = new ChatAdapter(getActivity());
         mChatListView.setAdapter(mChatAdapter);
 
+        //TODO Implement a chat service to take care of this
         mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
                         .getChatPort(), "/", "node.barterli", ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
+        return view;
     }
 
     @Override
@@ -68,13 +77,13 @@ public class ChatActivity extends AbstractBarterLiActivity implements
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         mMessageConsumer.dispose();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         new AsyncTask<Void, Void, Void>() {
             @Override

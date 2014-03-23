@@ -33,7 +33,7 @@ import li.barter.R;
 public class LoginFragment extends AbstractBarterLiFragment implements
                 OnClickListener {
 
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = "LoginFragment";
 
     private Button              mFacebookLoginButton;
     private Button              mGoogleLoginButton;

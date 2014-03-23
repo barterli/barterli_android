@@ -52,7 +52,7 @@ import li.barter.utils.SharedPreferenceHelper;
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 OnClickListener, Listener<JSONObject>, ErrorListener {
 
-    private static final String TAG = "AddOrEditBookActivity";
+    private static final String TAG = "AddOrEditBookFragment";
 
     private EditText            mIsbnEditText;
     private EditText            mTitleEditText;
