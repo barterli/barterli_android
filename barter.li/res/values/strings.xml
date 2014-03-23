@@ -73,4 +73,22 @@
     <string name="lat_long">Location</string>
     <string name="select_preferred_location_hint">Select your preferred Meeting Location</string>
 
+    <!-- Strings for Nav drawer -->
+    <string-array name="nav_drawer_titles">
+        <item>My Profile</item>
+        <item>Send feedback</item>
+        <item>Help out barter.lu!</item>
+        <item>Open Source</item>
+        <item>About us</item>
+        <item>Tribute</item>
+    </string-array>
+    <string-array name="nav_drawer_descriptions">
+        <item>Check out your profile, update your info, view your saved books.</item>
+        <item>Got a bug? An idea? Some feedback? Tell us about it.</item>
+        <item>Contribute to bater.li.</item>
+        <item>No open source licences were violated in the making of this app.</item>
+        <item>What is barter.li? Whos behind it?</item>
+        <item>The inspiration for barter.li.</item>
+    </string-array>
+
 </resources>

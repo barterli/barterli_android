@@ -33,6 +33,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/global_bg"
-        android:cacheColorHint="@color/transparent" />
+        android:cacheColorHint="@color/transparent"
+        android:listSelector="@color/overlay_black" />
 
 </android.support.v4.widget.DrawerLayout>
