@@ -28,6 +28,8 @@ import java.lang.reflect.Field;
 
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.SharedPreferenceHelper;
 
 /**
  * Custom Application class which holds some common functionality for the
@@ -48,7 +50,16 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         VolleyLog.sDebug = AppConstants.DEBUG;
         mRequestQueue = Volley.newRequestQueue(this);
         mImageLoader = new ImageLoader(mRequestQueue);
+        readUserInfoFromSharedPref();
     };
+
+    /**
+     * Reads the previously fetched auth token from Shared Preferencesand stores it in the Singleton for in memory access 
+     */
+    private void readUserInfoFromSharedPref() {
+     
+        UserInfo.INSTANCE.authToken = SharedPreferenceHelper.getString(this, R.string.pref_auth_token);
+    }
 
     /**
      * Some device manufacturers are stuck in the past and stubbornly use H/W

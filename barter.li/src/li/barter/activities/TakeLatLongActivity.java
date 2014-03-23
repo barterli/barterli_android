@@ -34,6 +34,7 @@ import li.barter.GPSTracker;
 import li.barter.JSONHelper;
 import li.barter.ProgressDialogManager;
 import li.barter.R;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class TakeLatLongActivity extends AbstractBarterLiActivity {
@@ -65,8 +66,7 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
          * getResources().getString( R.string.preferred_location);
          */
 
-        Auth_Token = SharedPreferenceHelper
-                        .getString(this, R.string.pref_auth_token);
+        Auth_Token = UserInfo.INSTANCE.authToken;
         FB_Email = SharedPreferenceHelper.getString(this, R.string.pref_email);
         final String prefferedLocation = SharedPreferenceHelper
                         .getString(this, R.string.pref_preferred_location);

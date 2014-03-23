@@ -198,7 +198,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * 
      * @param title The title to set for the Action Bar
      */
-    protected final void setActionBarTitle(final String title) {
+    public final void setActionBarTitle(final String title) {
 
         final SpannableString s = new SpannableString(title);
         s.setSpan(new TypefacedSpan(this, TypefaceCache.ALEGREYA_BLACK_ITALIC), 0, s
@@ -215,7 +215,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * 
      * @param titleResId The title string resource Id to set for the Action Bar
      */
-    protected final void setActionBarTitle(final int titleResId) {
+    public final void setActionBarTitle(final int titleResId) {
         setActionBarTitle(getString(titleResId));
     }
 

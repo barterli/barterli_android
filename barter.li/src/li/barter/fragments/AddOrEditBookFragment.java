@@ -188,8 +188,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         if ((v.getId() == R.id.button_submit) && isInputValid()) {
 
-            if (TextUtils.isEmpty(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_auth_token))) {
+            if (!isLoggedIn()) {
 
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), LoginFragment.class

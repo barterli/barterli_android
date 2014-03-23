@@ -21,7 +21,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -30,6 +32,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.http.IVolleyHelper;
+import li.barter.utils.AppConstants.UserInfo;
+import li.barter.widgets.TypefaceCache;
 
 /**
  * Base fragment class to encapsulate common functionality. Call the init()
@@ -221,6 +225,36 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      */
     public boolean isAttached() {
         return mIsAttached;
+    }
+
+    /**
+     * Sets the Action bar title, using the desired {@link Typeface} loaded from
+     * {@link TypefaceCache}
+     * 
+     * @param title The title to set for the Action Bar
+     */
+    public final void setActionBarTitle(final String title) {
+
+        if (mIsAttached) {
+            ((AbstractBarterLiActivity) getActivity()).setActionBarTitle(title);
+        }
+    }
+
+    /**
+     * Sets the Action bar title, using the desired {@link Typeface} loaded from
+     * {@link TypefaceCache}
+     * 
+     * @param titleResId The title string resource Id to set for the Action Bar
+     */
+    public final void setActionBarTitle(final int titleResId) {
+        setActionBarTitle(getString(titleResId));
+    }
+
+    /**
+     * Is the user logged in
+     */
+    protected boolean isLoggedIn() {
+        return !TextUtils.isEmpty(UserInfo.INSTANCE.authToken);
     }
 
 }

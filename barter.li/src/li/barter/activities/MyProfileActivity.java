@@ -34,6 +34,7 @@ import li.barter.AlertDialogManager;
 import li.barter.JSONHelper;
 import li.barter.R;
 import li.barter.fragments.AddOrEditBookFragment;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class MyProfileActivity extends AbstractBarterLiActivity {
@@ -64,8 +65,7 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
                         .getString(this, R.string.pref_fb_username);
         my_pref_location = SharedPreferenceHelper
                         .getString(this, R.string.pref_preferred_location);
-        Auth_Token = SharedPreferenceHelper
-                        .getString(this, R.string.pref_auth_token);
+        Auth_Token = UserInfo.INSTANCE.authToken;
         my_name_text = (TextView) findViewById(R.id.my_name);
         my_email_text = (TextView) findViewById(R.id.my_email);
         my_pref_location_text = (TextView) findViewById(R.id.my_pref_loc);
