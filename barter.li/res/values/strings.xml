@@ -52,7 +52,6 @@
     <string name="publication_year_label">Published On</string>
     <string name="barter_type_label">Barter Type</string>
     <string name="error_enter_title">Please enter a book title</string>
-    
     <string name="book_added">Book has been added!</string>
     <string name="unable_to_fetch_book_info">Unable to fetch book info.</string>
     <string name="not_a_valid_isbn">Not a valid ISBN.</string>
@@ -62,10 +61,9 @@
     <string name="barter">Barter</string>
     <string name="sell">Sell</string>
     <string name="read">Read</string>
-    <string name="wishlist">Add to Wishlist</string>
+    <string name="wishlist">Wishlist</string>
     <string name="keep_private">Keep Private</string>
     <string name="submit">Submit</string>
-    
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>
     <string name="email_label">Email Id</string>
