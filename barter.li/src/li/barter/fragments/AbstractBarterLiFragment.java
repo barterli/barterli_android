@@ -22,6 +22,7 @@ import com.android.volley.toolbox.ImageLoader;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,9 +32,10 @@ import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.http.IVolleyHelper;
 
 /**
- * Base fragment class to encapsulate common functionality
+ * Base fragment class to encapsulate common functionality. Call the init()
+ * method in the onCreateView() of your fragments
  * 
- * @author vinaysshenoy
+ * @author Vinay S Shenoy
  */
 public abstract class AbstractBarterLiFragment extends Fragment {
 
@@ -43,6 +45,11 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      * Flag that indicates that this fragment is attached to an Activity
      */
     private boolean             mIsAttached;
+
+    /**
+     * Stores the id for the container view
+     */
+    protected int               mContainerViewId;
 
     private RequestQueue        mRequestQueue;
     private ImageLoader         mImageLoader;
@@ -57,6 +64,42 @@ public abstract class AbstractBarterLiFragment extends Fragment {
         mImageLoader = ((IVolleyHelper) activity.getApplication())
                         .getImageLoader();
         mRequestCounter = new AtomicInteger(0);
+    }
+
+    /**
+     * Call this method in the onCreateView() of any subclasses
+     * 
+     * @param container The container passed into onCreateView()
+     */
+    protected void init(ViewGroup container) {
+        mContainerViewId = container.getId();
+    }
+
+    /**
+     * Helper method to load fragments into layout
+     * 
+     * @param containerResId The container resource Id in the content view into
+     *            which to load the fragment
+     * @param fragment The fragment to load
+     * @param tag The fragment tag
+     * @param addToBackStack Whether the transaction should be addded to the
+     *            backstack
+     */
+    public void loadFragment(int containerResId,
+                    AbstractBarterLiFragment fragment, String tag,
+                    final boolean addToBackStack) {
+
+        if (mIsAttached) {
+            ((AbstractBarterLiActivity) getActivity()).loadFragment(
+                            containerResId, fragment, tag, addToBackStack);
+        }
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mContainerViewId = 0;
     }
 
     @Override
@@ -74,7 +117,8 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      * @return <code>true</code> if connected, <code>false</code> otherwise
      */
     public boolean isConnectedToInternet() {
-        return ((AbstractBarterLiActivity) getActivity()).isConnectedToInternet();
+        return ((AbstractBarterLiActivity) getActivity())
+                        .isConnectedToInternet();
     }
 
     public void setActionBarDisplayOptions(final int displayOptions) {
@@ -127,7 +171,9 @@ public abstract class AbstractBarterLiFragment extends Fragment {
     }
 
     /**
-     * A Tag to add to all Volley requests. This must be unique for all Fragments types
+     * A Tag to add to all Volley requests. This must be unique for all
+     * Fragments types
+     * 
      * @return An Object that's the tag for this fragment
      */
     protected abstract Object getVolleyTag();
@@ -163,9 +209,18 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      */
     public void showToast(final int toastMessageResId, final boolean isLong) {
         if (mIsAttached) {
-            ((AbstractBarterLiActivity) getActivity()).showToast(toastMessageResId,
-                            isLong);
+            ((AbstractBarterLiActivity) getActivity()).showToast(
+                            toastMessageResId, isLong);
         }
     }
-    
+
+    /**
+     * Whether this Fragment is currently attached to an Activity
+     * 
+     * @return <code>true</code> if attached, <code>false</code> otherwise
+     */
+    public boolean isAttached() {
+        return mIsAttached;
+    }
+
 }

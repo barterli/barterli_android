@@ -43,14 +43,23 @@ import java.io.IOException;
 import java.util.Collection;
 
 import li.barter.R;
-import li.barter.R.anim;
-import li.barter.R.id;
-import li.barter.R.layout;
-import li.barter.R.menu;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.ResultCodes;
 
 /**
- * @author vinaysshenoy Activity to scan an ISBN barcode
+ * Activity to scan an ISBN barcode and send it back in the result. The result
+ * code will be of {@linkplain ResultCodes#SUCCESS} if either the barcode was
+ * scanned successfully, OR the user chose to add a book manually throguh the
+ * options menu. In the former case, the result intent will NOT be
+ * <code>null</code> and will contain three items -
+ * <ul>
+ * <li>The isbn number, with the key {@linkplain Keys#ISBN}</li>
+ * <li>The isbn symbology, with the key {@linkplain Keys#SYMBOLOGY}</li>
+ * <li>The isbn type, with the key {@linkplain Keys#TYPE}</li>
+ * </ul>
+ * In the latter case, the result intent will be <code>null</code>
+ * 
+ * @author Vinay S Shenoy
  */
 @ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
 public class ScanIsbnActivity extends AbstractBarterLiActivity implements
@@ -81,7 +90,7 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
         mCharacterSet = null;
 
     }
-    
+
     @Override
     protected Object getVolleyTag() {
         return TAG;
@@ -159,7 +168,8 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
     public boolean onOptionsItemSelected(final MenuItem item) {
 
         if (item.getItemId() == R.id.action_add_manually) {
-            startActivity(new Intent(this, AddOrEditBookActivity.class));
+
+            setResult(ResultCodes.SUCCESS);
             finish();
             return true;
         }
@@ -257,10 +267,13 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
                                                                 // type URI or
                                                                 // ISBN
 
-        final Intent addBookIntent = new Intent(this,
-                        AddOrEditBookActivity.class);
-        addBookIntent.putExtra(Keys.BOOK_ID, isbnNumber);
-        startActivity(addBookIntent);
+        final Intent intent = new Intent();
+        intent.putExtra(Keys.ISBN, isbnNumber);
+        intent.putExtra(Keys.SYMBOLOGY, barcodeSymbology);
+        intent.putExtra(Keys.TYPE, type);
+
+        setResult(ResultCodes.SUCCESS, intent);
+        finish();
 
     }
 

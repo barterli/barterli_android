@@ -14,16 +14,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<li.barter.widgets.FullWidthDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widgets.FullWidthDrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent" >
 
-    <fragment
+    <com.google.android.gms.maps.MapView
         android:id="@+id/map_books_around_me"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -62,4 +61,4 @@
             android:verticalSpacing="@dimen/grid_view_spacing" />
     </LinearLayout>
 
-</li.barter.widgets.FullWidthDrawerLayout>
+</android.support.v4.widgets.FullWidthDrawerLayout>

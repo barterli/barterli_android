@@ -277,7 +277,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * @param addToBackStack Whether the transaction should be addded to the
      *            backstack
      */
-    protected void loadFragment(int containerResId,
+    public void loadFragment(int containerResId,
                     AbstractBarterLiFragment fragment, String tag,
                     final boolean addToBackStack) {
 

@@ -22,7 +22,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.CancelableCallback;
 import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
@@ -39,7 +40,9 @@ import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
+import android.support.v4.widgets.FullWidthDrawerLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,19 +51,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
-import li.barter.activities.AddOrEditBookActivity;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksAroundMeAdapter;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.RequestCodes;
+import li.barter.utils.AppConstants.ResultCodes;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.UtilityMethods;
-import li.barter.widgets.FullWidthDrawerLayout;
 
 /**
  * @author Vinay S Shenoy Fragment for displaying Books Around Me. Also contains
@@ -94,26 +97,22 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private static final int              MAP_BLUR            = 20;
 
     /**
-     * Transition time(in milliseconds) to use blurring between the Map backgrounds
+     * Transition time(in milliseconds) to use blurring between the Map
+     * backgrounds
      */
     private static final int              TRANSITION_DURATION = 1000;
 
     private GooglePlayClientWrapper       mGooglePlayClientWrapper;
 
     /**
-     * {@link SupportMapFragment} used to display the Map
+     * {@link MapView} used to display the Map
      */
-    private SupportMapFragment            mMapFragment;
+    private MapView                       mMapView;
 
     /**
      * Background View on which the blurred Map snapshot is set
      */
     private View                          mBooksContentView;
-
-    /**
-     * Frame Layout in which the map fragment is placed
-     */
-    private FrameLayout                   mMapFrameLayout;
 
     /**
      * TextView which will provide drop down suggestions as user searches for
@@ -199,14 +198,22 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                     Bundle savedInstanceState) {
-
+        init(container);
         setHasOptionsMenu(true);
+
         final View contentView = inflater.inflate(
                         R.layout.fragment_books_around_me, container, false);
 
-        mMapFrameLayout = (FrameLayout) contentView
-                        .findViewById(R.id.map_books_around_me);
-
+        /*
+         * The Google Maps V2 API states that when using MapView, we need to
+         * forward the onCreate(Bundle) method to the MapView, but since we are
+         * in a fragment, the onCreateView() gets called AFTER the
+         * onCreate(Bundle) method, which makes forwarding that method
+         * impossible. This is the workaround for that
+         */
+        MapsInitializer.initialize(getActivity());
+        mMapView = (MapView) contentView.findViewById(R.id.map_books_around_me);
+        mMapView.onCreate(savedInstanceState);
         mDrawerLayout = (FullWidthDrawerLayout) contentView
                         .findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerListener(this);
@@ -250,13 +257,13 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case R.id.action_scan_book: {
-                startActivity(new Intent(getActivity(), ScanIsbnActivity.class));
+                startActivityForResult(new Intent(getActivity(),
+                                ScanIsbnActivity.class), RequestCodes.SCAN_ISBN);
                 return true;
             }
 
             case R.id.action_add_book: {
-                startActivity(new Intent(getActivity(),
-                                AddOrEditBookActivity.class));
+                loadAddOrEditBookFragment(null);
                 return true;
             }
 
@@ -267,9 +274,29 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RequestCodes.SCAN_ISBN
+                        && resultCode == ResultCodes.SUCCESS) {
+
+            Bundle args = null;
+            if (data != null) {
+                args = data.getExtras();
+            }
+
+            loadAddOrEditBookFragment(args);
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.BOOL_1, mDrawerOpenedAutomatically);
+        if (mMapView != null) {
+            mMapView.onSaveInstanceState(outState);
+        }
     }
 
     @Override
@@ -290,17 +317,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        /*
-         * Get reference to MapFragment here because the fragment might be
-         * destroyed when Activity is in background
-         */
-        mMapFragment = (SupportMapFragment) getFragmentManager()
-                        .findFragmentById(R.id.map_books_around_me);
-    }
-
-    @Override
     public void onLocationChanged(final Location location) {
 
         // Very rare case, if locationClient.getLastLocation() returns null
@@ -313,23 +329,17 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         UserInfo.INSTANCE.latestLocation = location;
 
-        if ((mMapFragment != null) && mMapFragment.isVisible()) {
+        final GoogleMap googleMap = mMapView.getMap();
 
-            final GoogleMap googleMap = mMapFragment.getMap();
+        if (googleMap != null) {
+            googleMap.setMyLocationEnabled(false);
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(UserInfo.INSTANCE.latestLocation
+                                            .getLatitude(),
+                                            UserInfo.INSTANCE.latestLocation
+                                                            .getLongitude()),
+                            MAP_ZOOM_LEVEL), this);
 
-            if (googleMap != null) {
-                googleMap.setMyLocationEnabled(false);
-                googleMap.animateCamera(
-                                CameraUpdateFactory
-                                                .newLatLngZoom(new LatLng(
-                                                                UserInfo.INSTANCE.latestLocation
-                                                                                .getLatitude(),
-                                                                UserInfo.INSTANCE.latestLocation
-                                                                                .getLongitude()),
-                                                                MAP_ZOOM_LEVEL),
-                                this);
-
-            }
         }
     }
 
@@ -399,7 +409,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             @Override
             public void run() {
                 mIsHideRunnablePosted = false;
-                mMapFrameLayout.setVisibility(View.GONE);
+                mMapView.setVisibility(View.GONE);
             }
         };
         mHandler.postDelayed(mHideMapViewRunnable, delay);
@@ -421,7 +431,30 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPause() {
         super.onPause();
+        mMapView.onPause();
         unscheduleMapHideTask();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mMapView != null) {
+            mMapView.onDestroy();
+        }
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        if (mMapView != null) {
+            mMapView.onLowMemory();
+        }
     }
 
     @Override
@@ -441,14 +474,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * blurred bitmap is generated for the background of the screen content
      */
     private void beginMapSnapshotProcess() {
-        if ((mMapFragment != null) && mMapFragment.isVisible()) {
-            mMapSnapshotRequested = true;
-            final GoogleMap googleMap = mMapFragment.getMap();
+        mMapSnapshotRequested = true;
+        final GoogleMap googleMap = mMapView.getMap();
 
-            if (googleMap != null) {
-                Log.d(TAG, "Adding On Loaded Callback!");
-                googleMap.setOnMapLoadedCallback(this);
-            }
+        if (googleMap != null) {
+            Log.d(TAG, "Adding On Loaded Callback!");
+            googleMap.setOnMapLoadedCallback(this);
         }
     }
 
@@ -470,13 +501,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void setMapMyLocationEnabled(final boolean enabled) {
 
-        if ((mMapFragment != null) && mMapFragment.isVisible()) {
+        final GoogleMap googleMap = mMapView.getMap();
 
-            final GoogleMap googleMap = mMapFragment.getMap();
-
-            if (googleMap != null) {
-                googleMap.setMyLocationEnabled(enabled);
-            }
+        if (googleMap != null) {
+            googleMap.setMyLocationEnabled(enabled);
         }
     }
 
@@ -522,23 +550,15 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                                 + mPrevDirection + " slide offset:"
                                 + slideOffset);
 
-                /*
-                 * if (mCurDirection == DrawerDragState.OPENING) { if
-                 * (slideOffset >= 0.7f && mMapFrameLayout.getVisibility() ==
-                 * View.VISIBLE) { //Drawer was moved to be closed, but was
-                 * brought back into opened state, in which case, we need to
-                 * hide the drawer again scheduleHideMapTask(150); } } else {
-                 */
                 if (mCurDirection == DrawerDragState.CLOSING
                                 && slideOffset >= 0.7f) { //Drawer was almost opened, but user moved it to closed again
 
-                    if (mMapFrameLayout.getVisibility() == View.VISIBLE) {
+                    if (mMapView.getVisibility() == View.VISIBLE) {
                         unscheduleMapHideTask(); //If there's any task sceduled for hiding the map, remove it
-                    } else if (mMapFrameLayout.getVisibility() == View.GONE) {
-                        mMapFrameLayout.setVisibility(View.VISIBLE);
+                    } else if (mMapView.getVisibility() == View.GONE) {
+                        mMapView.setVisibility(View.VISIBLE);
                     }
                 }
-                //}
             }
         }
     }
@@ -578,15 +598,29 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * Captures a snapshot of the map
      */
     private void captureMapSnapshot() {
-        if ((mMapFragment != null) && mMapFragment.isVisible()) {
-            final GoogleMap googleMap = mMapFragment.getMap();
+        final GoogleMap googleMap = mMapView.getMap();
 
-            if (googleMap != null) {
-                Log.d(TAG, "Taking Snapshot!");
-                googleMap.snapshot(this);
-            }
+        if (googleMap != null) {
+            Log.d(TAG, "Taking Snapshot!");
+            googleMap.snapshot(this);
         }
 
+    }
+
+    /**
+     * Loads the Fragment to Add Or Edit Books
+     * 
+     * @param bookInfo The book info to load. Can be <code>null</code>, in which
+     *            case, it treats it as Add a new book flow
+     */
+    private void loadAddOrEditBookFragment(Bundle bookInfo) {
+
+        loadFragment(mContainerViewId,
+                        (AbstractBarterLiFragment) Fragment.instantiate(
+                                        getActivity(),
+                                        AddOrEditBookFragment.class.getName(),
+                                        bookInfo),
+                        FragmentTags.ADD_OR_EDIT_BOOK, true);
     }
 
 }

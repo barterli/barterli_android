@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter.activities;
+package li.barter.fragments;
 
 import com.android.volley.Request;
 import com.android.volley.Response.ErrorListener;
@@ -28,18 +28,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
-import li.barter.R.anim;
-import li.barter.R.id;
-import li.barter.R.layout;
-import li.barter.R.string;
+import li.barter.activities.LoginActivity;
 import li.barter.http.BlJsonObjectRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -48,8 +48,8 @@ import li.barter.http.JsonUtils;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.SharedPreferenceHelper;
 
-@ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
-public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
+@FragmentTransition(enterAnimation = R.anim.activity_slide_in_right, exitAnimation = R.anim.activity_scale_out, popEnterAnimation = R.anim.activity_scale_in, popExitAnimation = R.anim.activity_slide_out_right)
+public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 OnClickListener, Listener<JSONObject>, ErrorListener {
 
     private static final String TAG = "AddOrEditBookActivity";
@@ -63,23 +63,31 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
     private boolean             mHasFetchedDetails;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_book);
-        mIsbnEditText = (EditText) findViewById(R.id.edit_text_isbn);
-        mTitleEditText = (EditText) findViewById(R.id.edit_text_title);
-        mAuthorEditText = (EditText) findViewById(R.id.edit_text_author);
-        mDescriptionEditText = (EditText) findViewById(R.id.edit_text_description);
-        mPublicationYearEditText = (EditText) findViewById(R.id.edit_text_publication_year);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                    Bundle savedInstanceState) {
+        init(container);
+        final View view = inflater.inflate(R.layout.activity_edit_book,
+                        container, false);
+        mIsbnEditText = (EditText) view.findViewById(R.id.edit_text_isbn);
+        mTitleEditText = (EditText) view.findViewById(R.id.edit_text_title);
+        mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
+        mDescriptionEditText = (EditText) view
+                        .findViewById(R.id.edit_text_description);
+        mPublicationYearEditText = (EditText) view
+                        .findViewById(R.id.edit_text_publication_year);
 
-        findViewById(R.id.button_submit).setOnClickListener(this);
+        view.findViewById(R.id.button_submit).setOnClickListener(this);
 
-        final Bundle extras = getIntent().getExtras();
+        getActivity().getWindow()
+                        .setSoftInputMode(
+                                        WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                                                        | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        final Bundle extras = getArguments();
 
         // If extras are null, it means that user has to decided to add the
         // book completely manually
         if (extras != null) {
-            mBookId = extras.getString(Keys.BOOK_ID);
+            mBookId = extras.getString(Keys.ISBN);
             Log.d(TAG, "Book Id:" + mBookId);
 
             if (savedInstanceState != null) {
@@ -93,21 +101,20 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
                 getBookInfoFromServer(mBookId);
             }
         }
-
-        // TODO Set up TextWatchers for Autocomplete ISBN and Title
-    } // End of oncreate
+        return view;
+    }
 
     /**
-     * @param extras The intent extras
+     * @param args The Fragment arguments
      */
-    private void loadDetailsForIntent(final Bundle extras) {
+    private void loadDetailsForIntent(final Bundle args) {
 
-        mBookId = extras.getString(Keys.BOOK_ID);
-        final String title = extras.getString(Keys.BOOK_TITLE);
-        final String author = extras.getString(Keys.AUTHOR);
-        final String description = extras.getString(Keys.DESCRIPTION);
-        final String publicationYear = extras.getString(Keys.PUBLICATION_YEAR);
-        final String[] barterTypes = extras.getStringArray(Keys.BARTER_TYPES);
+        mBookId = args.getString(Keys.ISBN);
+        final String title = args.getString(Keys.BOOK_TITLE);
+        final String author = args.getString(Keys.AUTHOR);
+        final String description = args.getString(Keys.DESCRIPTION);
+        final String publicationYear = args.getString(Keys.PUBLICATION_YEAR);
+        final String[] barterTypes = args.getStringArray(Keys.BARTER_TYPES);
 
         mIsbnEditText.setText(mBookId);
         mTitleEditText.setText(title);
@@ -118,7 +125,7 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
         setCheckBoxesForBarterTypes(barterTypes);
 
     }
-    
+
     @Override
     protected Object getVolleyTag() {
         return TAG;
@@ -186,10 +193,10 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
 
         if ((v.getId() == R.id.button_submit) && isInputValid()) {
 
-            if (TextUtils.isEmpty(SharedPreferenceHelper.getString(this,
-                            R.string.pref_auth_token))) {
+            if (TextUtils.isEmpty(SharedPreferenceHelper.getString(
+                            getActivity(), R.string.pref_auth_token))) {
 
-                startActivity(new Intent(this, LoginActivity.class));
+                startActivity(new Intent(getActivity(), LoginActivity.class));
             } else {
                 createBookOnServer();
             }
@@ -249,13 +256,13 @@ public class AddOrEditBookActivity extends AbstractBarterLiActivity implements
                 readBookDetailsFromResponse(response);
             } else if (requestId == RequestId.CREATE_BOOK) {
                 showToast(R.string.book_added, true);
-                finish();
+                getFragmentManager().popBackStack();
             }
         }
     }
 
     @Override
-    protected void onSaveInstanceState(final Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.BOOL_1, mHasFetchedDetails);
     }

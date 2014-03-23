@@ -36,6 +36,7 @@ import li.barter.R;
 import li.barter.R.id;
 import li.barter.R.layout;
 import li.barter.R.string;
+import li.barter.fragments.AddOrEditBookFragment;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class MyProfileActivity extends AbstractBarterLiActivity {
@@ -136,7 +137,7 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
                     // "Edit will be built soon!", Toast.LENGTH_SHORT).show();
                     final Intent editBookIntent = new Intent(
                                     MyProfileActivity.this,
-                                    AddOrEditBookActivity.class);
+                                    AddOrEditBookFragment.class);
                     editBookIntent.putExtra("TITLE", my_books[position]);
                     try {
                         editBookIntent.putExtra("BOOK_ID", my_book_objects

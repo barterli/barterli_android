@@ -76,20 +76,11 @@
         <activity
             android:name="li.barter.activities.ScanIsbnActivity"
             android:label="@string/app_name"
-            android:parentActivityName="li.barter.fragments.BooksAroundMeFragment"
+            android:parentActivityName="li.barter.activities.HomeActivity"
             android:screenOrientation="landscape" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".BooksAroundMeActivity" />
-        </activity>
-        <activity
-            android:name="li.barter.activities.AddOrEditBookActivity"
-            android:label="@string/app_name"
-            android:parentActivityName="li.barter.fragments.BooksAroundMeFragment"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".BooksAroundMeActivity" />
+                android:value=".HomeActivity" />
         </activity>
         <activity
             android:name="li.barter.ChatActivity"
