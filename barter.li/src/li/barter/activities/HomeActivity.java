@@ -102,7 +102,7 @@ public class HomeActivity extends AbstractBarterLiActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavListView = (ListView) findViewById(R.id.list_nav_drawer);
-        
+
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                         R.drawable.ic_navigation_drawer, R.string.drawer_open,
                         R.string.drawer_closed) {
@@ -122,11 +122,14 @@ public class HomeActivity extends AbstractBarterLiActivity {
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerLayout.setScrimColor(getResources().getColor(R.color.overlay_black_40p));
+        mDrawerLayout.setScrimColor(getResources().getColor(
+                        R.color.overlay_black_40p));
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        
-        mNavDrawerAdapter = new HomeNavDrawerAdapter(this, R.array.nav_drawer_titles, R.array.nav_drawer_descriptions);
+
+        mNavDrawerAdapter = new HomeNavDrawerAdapter(this,
+                        R.array.nav_drawer_titles,
+                        R.array.nav_drawer_descriptions);
         mNavListView.setAdapter(mNavDrawerAdapter);
 
     }
@@ -163,13 +166,6 @@ public class HomeActivity extends AbstractBarterLiActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-
-        getMenuInflater().inflate(R.menu.menu_books_around_me, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
 
         // Pass the event to ActionBarDrawerToggle, if it returns
@@ -177,33 +173,6 @@ public class HomeActivity extends AbstractBarterLiActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
-
-        switch (item.getItemId()) {
-
-            case R.id.action_scan_book: {
-                startActivity(new Intent(this, ScanIsbnActivity.class));
-                return true;
-            }
-
-            case R.id.action_my_books: {
-                // TODO do we have a screen to show here
-                return true;
-            }
-
-            case R.id.action_profile: {
-                // TODO Show profile screen
-                return true;
-            }
-
-            case R.id.action_add_book: {
-                startActivity(new Intent(this, AddOrEditBookActivity.class));
-                return true;
-            }
-
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
-        }
+        return super.onOptionsItemSelected(item);
     }
-
 }

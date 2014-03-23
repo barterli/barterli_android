@@ -18,7 +18,6 @@
 
     <!-- Group to hide action items when navigation drawer is opened -->
     <group android:id="@+id/group_hide_on_drawer_open" >
-        
         <item
             android:id="@+id/action_scan_book"
             android:orderInCategory="1"
@@ -29,16 +28,6 @@
             android:orderInCategory="2"
             android:showAsAction="never"
             android:title="@string/add_book"/>
-        <item
-            android:id="@+id/action_profile"
-            android:orderInCategory="3"
-            android:showAsAction="never"
-            android:title="@string/profile"/>
-        <item
-            android:id="@+id/action_my_books"
-            android:orderInCategory="4"
-            android:showAsAction="never"
-            android:title="@string/library"/>
     </group>
 
 </menu>

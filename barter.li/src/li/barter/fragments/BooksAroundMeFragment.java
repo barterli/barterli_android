@@ -28,6 +28,7 @@ import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -41,6 +42,9 @@ import android.os.Handler;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
@@ -49,6 +53,8 @@ import android.widget.GridView;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.activities.AddOrEditBookActivity;
+import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
@@ -194,6 +200,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                     Bundle savedInstanceState) {
 
+        setHasOptionsMenu(true);
         final View contentView = inflater.inflate(
                         R.layout.fragment_books_around_me, container, false);
 
@@ -206,7 +213,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
 
         mTransparentColorDrawable = new ColorDrawable(Color.TRANSPARENT);
-        mBooksContentView = contentView.findViewById(R.id.layout_books_container);
+        mBooksContentView = contentView
+                        .findViewById(R.id.layout_books_container);
         mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
                         .findViewById(R.id.auto_complete_books_around_me);
         mBooksAroundMeGridView = (GridView) contentView
@@ -230,6 +238,32 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                             .getBoolean(Keys.BOOL_1);
         }
         return contentView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_books_around_me, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.action_scan_book: {
+                startActivity(new Intent(getActivity(), ScanIsbnActivity.class));
+                return true;
+            }
+
+            case R.id.action_add_book: {
+                startActivity(new Intent(getActivity(),
+                                AddOrEditBookActivity.class));
+                return true;
+            }
+
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
     }
 
     @Override
@@ -456,7 +490,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 mBooksContentView.setBackground(mTransparentColorDrawable);
             } else {
-                mBooksContentView.setBackgroundDrawable(mTransparentColorDrawable);
+                mBooksContentView
+                                .setBackgroundDrawable(mTransparentColorDrawable);
             }
         }
 
