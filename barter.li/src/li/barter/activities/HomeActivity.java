@@ -44,38 +44,14 @@ public class HomeActivity extends AbstractBarterLiActivity {
 
     private static final String   TAG = "HomeActivity";
 
-    /**
-     * Drawer Layout that contains the Navigation Drawer
-     */
-    private DrawerLayout          mDrawerLayout;
-
-    /**
-     * Drawer toggle for Action Bar
-     */
-    private ActionBarDrawerToggle mDrawerToggle;
-
-    /**
-     * {@link ListView} that provides the navigation items
-     */
-    private ListView              mNavListView;
-
-    /**
-     * {@link BaseAdapter} implementation for Navigation drawer item
-     */
-    private HomeNavDrawerAdapter  mNavDrawerAdapter;
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
-        initDrawer();
+        initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
         if (savedInstanceState == null) {
             loadBooksAroundMeFragment();
-        } else {
-            // Do we need to remember which fragment was visible and load that
-            // one instead? Or does the Android system take care of it?
         }
 
     }
@@ -91,80 +67,9 @@ public class HomeActivity extends AbstractBarterLiActivity {
 
     }
 
-    /**
-     * Initialize the Action Bar Drawer toggle
-     */
-    private void initDrawer() {
-
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavListView = (ListView) findViewById(R.id.list_nav_drawer);
-
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_navigation_drawer, R.string.drawer_open, R.string.drawer_closed) {
-
-            @Override
-            public void onDrawerOpened(final View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu();
-            }
-
-            @Override
-            public void onDrawerClosed(final View drawerView) {
-                super.onDrawerClosed(drawerView);
-                invalidateOptionsMenu();
-            }
-
-        };
-
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerLayout.setScrimColor(getResources()
-                        .getColor(R.color.overlay_black_40p));
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mNavDrawerAdapter = new HomeNavDrawerAdapter(this, R.array.nav_drawer_titles, R.array.nav_drawer_descriptions);
-        mNavListView.setAdapter(mNavDrawerAdapter);
-
-    }
-
-    @Override
-    protected void onPostCreate(final Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(final Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        setOptionsGroupHidden(menu, mDrawerLayout.isDrawerOpen(mNavListView));
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    private void setOptionsGroupHidden(final Menu menu, final boolean drawerOpen) {
-
-        menu.setGroupEnabled(R.id.group_hide_on_drawer_open, !drawerOpen);
-        menu.setGroupVisible(R.id.group_hide_on_drawer_open, !drawerOpen);
-
-    }
-
     @Override
     protected Object getVolleyTag() {
         return TAG;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-
-        // Pass the event to ActionBarDrawerToggle, if it returns
-        // true, then it has handled the app icon touch event
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

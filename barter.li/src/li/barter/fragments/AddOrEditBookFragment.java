@@ -29,6 +29,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.http.BlJsonObjectRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -99,8 +101,19 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             if (!mHasFetchedDetails && !TextUtils.isEmpty(mBookId)) {
                 getBookInfoFromServer(mBookId);
             }
+
         }
+
+        setActionBarDrawerToggleEnabled(false);
+        setHasOptionsMenu(true);
+
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "On Options Item Selected");
+        return super.onOptionsItemSelected(item);
     }
 
     /**

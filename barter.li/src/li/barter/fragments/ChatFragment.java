@@ -68,6 +68,8 @@ public class ChatFragment extends AbstractBarterLiFragment implements
         mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
                         .getChatPort(), "/", "node.barterli", ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
+        
+        setActionBarDrawerToggleEnabled(false);
         return view;
     }
 

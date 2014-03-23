@@ -59,6 +59,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         mFacebookLoginButton.setOnClickListener(this);
         mGoogleLoginButton.setOnClickListener(this);
         mSubmitButton.setOnClickListener(this);
+        setActionBarDrawerToggleEnabled(false);
         return view;
     }
 

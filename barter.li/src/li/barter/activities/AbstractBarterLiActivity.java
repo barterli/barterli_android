@@ -22,22 +22,31 @@ import com.android.volley.toolbox.ImageLoader;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
+import li.barter.adapters.HomeNavDrawerAdapter;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.FragmentTransition;
 import li.barter.http.IVolleyHelper;
@@ -50,21 +59,55 @@ import li.barter.widgets.TypefacedSpan;
  */
 public abstract class AbstractBarterLiActivity extends FragmentActivity {
 
-    private static final String TAG                     = "BaseBarterLiActivity";
+    private static final String   TAG                     = "BaseBarterLiActivity";
 
-    private static final int    ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
-                                                                        | ActionBar.DISPLAY_SHOW_TITLE;
+    private static final int      ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
+                                                                          | ActionBar.DISPLAY_SHOW_TITLE;
 
-    private RequestQueue        mRequestQueue;
-    private ImageLoader         mImageLoader;
-    private AtomicInteger       mRequestCounter;
+    private RequestQueue          mRequestQueue;
+    private ImageLoader           mImageLoader;
+    private AtomicInteger         mRequestCounter;
 
-    private ActivityTransition  mActivityTransition;
+    private ActivityTransition    mActivityTransition;
+
+    /**
+     * Drawer Layout that contains the Navigation Drawer
+     */
+    private DrawerLayout          mDrawerLayout;
+
+    /**
+     * Drawer toggle for Action Bar
+     */
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    /**
+     * {@link ListView} that provides the navigation items
+     */
+    private ListView              mNavListView;
+
+    /**
+     * {@link BaseAdapter} implementation for Navigation drawer item
+     */
+    private HomeNavDrawerAdapter  mNavDrawerAdapter;
+
+    /**
+     * Whether the current activity has a Navigation drawer or not
+     */
+    private boolean               mHasNavigationDrawer;
+
+    /**
+     * Whether the nav drawer associated with this activity is also associated
+     * with the drawer togglw. Is valid only if
+     * <code>mHasNavigationDrawer</code> is <code>true</code>
+     */
+    private boolean               mIsActionBarNavDrawerToggleEnabled;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
+        mHasNavigationDrawer = false;
+        mIsActionBarNavDrawerToggleEnabled = false;
         mActivityTransition = getClass()
                         .getAnnotation(ActivityTransition.class);
         if (savedInstanceState == null) {
@@ -158,6 +201,14 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
+
+        if (mIsActionBarNavDrawerToggleEnabled) {
+            // Pass the event to ActionBarDrawerToggle, if it returns
+            // true, then it has handled the app icon touch event
+            if (mDrawerToggle.onOptionsItemSelected(item)) {
+                return true;
+            }
+        }
 
         // To provide Up navigation
         if (item.getItemId() == android.R.id.home) {
@@ -298,6 +349,130 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
             transaction.addToBackStack(null);
         }
         transaction.commit();
+    }
+
+    /**
+     * Initialize the Navigation Drawer. Call after the content view is set, in
+     * onCreate()
+     * 
+     * @param navDrawerResId The resource Id of the navigation drawer
+     * @param navListResId The resource id of the list view in the layout which
+     *            is the drawer content
+     * @param attachToActionBar Whether the navigation should be associated with
+     *            the Action Bar drawer toggle
+     */
+    protected void initDrawer(final int navDrawerResId, final int navListResId,
+                    boolean attachToActionBar) {
+
+        mDrawerLayout = (DrawerLayout) findViewById(navDrawerResId);
+
+        if (mDrawerLayout == null) {
+            throw new IllegalArgumentException("Drawer Layout not found. Check your layout/resource id being sent");
+        }
+        mNavListView = (ListView) findViewById(navListResId);
+
+        if (mNavListView == null) {
+            throw new IllegalArgumentException("Drawer content not found. Check the layout/resource id being sent");
+        }
+
+        mHasNavigationDrawer = true;
+
+        if (attachToActionBar) {
+            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_navigation_drawer, R.string.drawer_open, R.string.drawer_closed) {
+
+                @Override
+                public void onDrawerOpened(final View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    invalidateOptionsMenu();
+                }
+
+                @Override
+                public void onDrawerClosed(final View drawerView) {
+                    super.onDrawerClosed(drawerView);
+                    invalidateOptionsMenu();
+                }
+
+            };
+
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
+            getActionBar().setDisplayHomeAsUpEnabled(true);
+            mIsActionBarNavDrawerToggleEnabled = true;
+        }
+
+        mDrawerLayout.setScrimColor(getResources()
+                        .getColor(R.color.overlay_black_40p));
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
+
+        mNavDrawerAdapter = new HomeNavDrawerAdapter(this, R.array.nav_drawer_titles, R.array.nav_drawer_descriptions);
+        mNavListView.setAdapter(mNavDrawerAdapter);
+
+    }
+
+    @Override
+    protected void onPostCreate(final Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        if (mIsActionBarNavDrawerToggleEnabled) {
+            mDrawerToggle.syncState();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(final Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (mIsActionBarNavDrawerToggleEnabled) {
+            mDrawerToggle.onConfigurationChanged(newConfig);
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(final Menu menu) {
+        if (mIsActionBarNavDrawerToggleEnabled) {
+            setOptionsGroupHidden(menu, mDrawerLayout.isDrawerOpen(mNavListView));
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void setOptionsGroupHidden(final Menu menu, final boolean drawerOpen) {
+
+        menu.setGroupEnabled(R.id.group_hide_on_drawer_open, !drawerOpen);
+        menu.setGroupVisible(R.id.group_hide_on_drawer_open, !drawerOpen);
+
+    }
+
+    /**
+     * Whether the current Activity has a Navigation Drawer
+     */
+    public boolean hasNavigationDrawer() {
+        return mHasNavigationDrawer;
+    }
+
+    /**
+     * Whether the current Activity's Navigation drawer is also associated with
+     * the Action Bar
+     */
+    public boolean isActionBarNavDrawerToggleEnabled() {
+        return mDrawerToggle == null ? mIsActionBarNavDrawerToggleEnabled : mDrawerToggle.isDrawerIndicatorEnabled();
+    }
+
+    /**
+     * Use to dynamically enable/disable the Action Bar drawer toggle for the
+     * Activity. Has no effect if the Activity never has a Navigation Drawer to
+     * begin with. Mainly used to control The Action Bar Drawer toggle from
+     * fragments
+     * 
+     * @param enabled <code>true</code> to enable the Action Bar drawer toggle,
+     *            <code>false</code> to disable it
+     */
+    public void setActionBarDrawerToggleEnabled(boolean enabled) {
+
+        if(mHasNavigationDrawer) {
+            
+            if(mDrawerToggle != null) {
+                mDrawerToggle.setDrawerIndicatorEnabled(enabled);
+            }
+            
+        }
     }
 
 }

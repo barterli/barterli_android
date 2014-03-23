@@ -78,6 +78,15 @@ public abstract class AbstractBarterLiFragment extends Fragment {
     protected void init(final ViewGroup container) {
         mContainerViewId = container.getId();
     }
+    
+    
+    protected void setActionBarDrawerToggleEnabled(boolean enabled) {
+        AbstractBarterLiActivity activity = (AbstractBarterLiActivity) getActivity();
+        if(activity.hasNavigationDrawer()) {
+            activity.setActionBarDrawerToggleEnabled(enabled);
+        }
+    }
+    
 
     /**
      * Helper method to load fragments into layout

@@ -243,6 +243,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mDrawerOpenedAutomatically = savedInstanceState
                             .getBoolean(Keys.BOOL_1);
         }
+        
+        setActionBarDrawerToggleEnabled(true);
         return contentView;
     }
 
