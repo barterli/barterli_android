@@ -19,7 +19,10 @@
     android:layout_height="match_parent"
     android:background="@color/transparent"
     android:orientation="vertical"
-    android:padding="@dimen/activity_horizontal_margin" >
+    android:paddingBottom="@dimen/margin_x_small"
+    android:paddingLeft="@dimen/activity_margin"
+    android:paddingRight="@dimen/activity_margin"
+    android:paddingTop="@dimen/margin_x_small" >
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_nav_item_title"
@@ -27,7 +30,7 @@
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_large"
+        android:textSize="@dimen/text_medium"
         app:fontStyle="alegreya_bold" />
 
     <li.barter.widgets.TypefacedTextView
@@ -35,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
-        android:textColor="@color/silver"
+        android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
         app:fontStyle="alegreya_regular" />
 

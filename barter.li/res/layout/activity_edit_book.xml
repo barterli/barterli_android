@@ -19,7 +19,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    android:padding="@dimen/activity_horizontal_margin" >
+    android:padding="@dimen/activity_margin" >
 
     <LinearLayout
         android:id="@+id/layout_container"
@@ -31,7 +31,7 @@
             android:id="@+id/edit_text_isbn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             android:hint="@string/isbn_label"
             android:inputType="number"
             android:singleLine="true"
@@ -41,7 +41,7 @@
             android:id="@+id/edit_text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             android:hint="@string/title_label"
             android:inputType="textCapWords"
             android:singleLine="true"
@@ -51,7 +51,7 @@
             android:id="@+id/edit_text_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             android:hint="@string/author_label"
             android:inputType="textCapWords"
             android:singleLine="true"
@@ -61,7 +61,7 @@
             android:id="@+id/edit_text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             android:hint="@string/description_label"
             android:inputType="textCapSentences|textAutoComplete|textMultiLine"
             app:fontStyle="alegreya_regular" />
@@ -70,7 +70,7 @@
             android:id="@+id/edit_text_publication_year"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             android:hint="@string/publication_year_label"
             android:inputType="number"
             android:singleLine="true"
@@ -80,7 +80,7 @@
             android:id="@+id/layout_barter_options"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             android:orientation="vertical" >
 
             <LinearLayout
@@ -161,7 +161,7 @@
             android:id="@+id/button_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/activity_margin"
             android:text="@string/submit"
             app:fontStyle="alegreya_bold" />
     </LinearLayout>

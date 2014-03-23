@@ -27,9 +27,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import li.barter.R;
+import li.barter.adapters.HomeNavDrawerAdapter;
 import li.barter.fragments.BooksAroundMeFragment;
 
 /**
@@ -56,6 +58,11 @@ public class HomeActivity extends AbstractBarterLiActivity {
      */
     private ListView              mNavListView;
 
+    /**
+     * {@link BaseAdapter} implementation for Navigation drawer item
+     */
+    private HomeNavDrawerAdapter  mNavDrawerAdapter;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +88,13 @@ public class HomeActivity extends AbstractBarterLiActivity {
     private void loadBooksAroundMeFragment() {
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().add(R.id.frame_content, Fragment.instantiate(this, BooksAroundMeFragment.class.getName()), null).commit();
+        fragmentManager.beginTransaction()
+                        .add(R.id.frame_content,
+                                        Fragment.instantiate(
+                                                        this,
+                                                        BooksAroundMeFragment.class
+                                                                        .getName()),
+                                        null).commit();
     }
 
     /**
@@ -109,6 +122,9 @@ public class HomeActivity extends AbstractBarterLiActivity {
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        
+        mNavDrawerAdapter = new HomeNavDrawerAdapter(this, R.array.nav_drawer_titles, R.array.nav_drawer_descriptions);
+        mNavListView.setAdapter(mNavDrawerAdapter);
 
     }
 
