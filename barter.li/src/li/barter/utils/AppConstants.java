@@ -32,8 +32,7 @@ public class AppConstants {
 
         INSTANCE;
 
-        private final Location defaultLocation = new Location(
-                                                               LocationManager.PASSIVE_PROVIDER);
+        private final Location defaultLocation = new Location(LocationManager.PASSIVE_PROVIDER);
 
         public String          authToken;
         public Location        latestLocation;
@@ -99,6 +98,7 @@ public class AppConstants {
     public static interface FragmentTags {
         public static final String BOOKS_AROUND_ME  = "books_around_me";
         public static final String ADD_OR_EDIT_BOOK = "add_or_edit_book";
+        public static final String LOGIN            = "login";
     }
 
 }

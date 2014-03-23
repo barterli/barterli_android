@@ -33,15 +33,12 @@ import android.widget.Toast;
 import li.barter.AlertDialogManager;
 import li.barter.JSONHelper;
 import li.barter.R;
-import li.barter.R.id;
-import li.barter.R.layout;
-import li.barter.R.string;
 import li.barter.fragments.AddOrEditBookFragment;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class MyProfileActivity extends AbstractBarterLiActivity {
-    
-    private static final String TAG = "MyProfileActivity";
+
+    private static final String      TAG   = "MyProfileActivity";
 
     private String                   my_email;
     private String                   my_name;
@@ -63,12 +60,12 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
         setContentView(R.layout.show_my_profile);
 
         my_email = SharedPreferenceHelper.getString(this, R.string.pref_email);
-        my_name = SharedPreferenceHelper.getString(this,
-                        R.string.pref_fb_username);
-        my_pref_location = SharedPreferenceHelper.getString(this,
-                        R.string.pref_preferred_location);
-        Auth_Token = SharedPreferenceHelper.getString(this,
-                        R.string.pref_auth_token);
+        my_name = SharedPreferenceHelper
+                        .getString(this, R.string.pref_fb_username);
+        my_pref_location = SharedPreferenceHelper
+                        .getString(this, R.string.pref_preferred_location);
+        Auth_Token = SharedPreferenceHelper
+                        .getString(this, R.string.pref_auth_token);
         my_name_text = (TextView) findViewById(R.id.my_name);
         my_email_text = (TextView) findViewById(R.id.my_email);
         my_pref_location_text = (TextView) findViewById(R.id.my_pref_loc);
@@ -78,10 +75,10 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
         // get_profile_url =
         // getResources().getString(R.string.preferred_location);
         listView = (ListView) findViewById(R.id.list_my_books);
-        new askServerForMyDetails().execute(get_profile_url, my_email,
-                        Auth_Token);
+        new askServerForMyDetails()
+                        .execute(get_profile_url, my_email, Auth_Token);
     }
-    
+
     @Override
     protected Object getVolleyTag() {
         return TAG;
@@ -91,11 +88,7 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
         @Override
         protected void onPreExecute() {
             if (!isConnectedToInternet()) {
-                alert.showAlertDialog(
-                                MyProfileActivity.this,
-                                "Internet Connection Error",
-                                "Please connect to working Internet connection",
-                                false);
+                alert.showAlertDialog(MyProfileActivity.this, "Internet Connection Error", "Please connect to working Internet connection", false);
                 return;
             }
         }
@@ -120,13 +113,11 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
             final JSONArray my_book_objects = new JSONHelper()
                             .getBookObjectsFromUserProfile(result);
             if (my_books.length == 0) {
-                Toast.makeText(MyProfileActivity.this, "No Books!",
-                                Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyProfileActivity.this, "No Books!", Toast.LENGTH_SHORT)
+                                .show();
                 return;
             }
-            adapter = new ArrayAdapter<String>(MyProfileActivity.this,
-                            android.R.layout.simple_list_item_1,
-                            android.R.id.text1, my_books);
+            adapter = new ArrayAdapter<String>(MyProfileActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, my_books);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
@@ -135,29 +126,24 @@ public class MyProfileActivity extends AbstractBarterLiActivity {
                                 final long id) {
                     // Toast.makeText(MyProfileActivity.this,
                     // "Edit will be built soon!", Toast.LENGTH_SHORT).show();
-                    final Intent editBookIntent = new Intent(
-                                    MyProfileActivity.this,
-                                    AddOrEditBookFragment.class);
+                    final Intent editBookIntent = new Intent(MyProfileActivity.this, AddOrEditBookFragment.class);
                     editBookIntent.putExtra("TITLE", my_books[position]);
                     try {
                         editBookIntent.putExtra("BOOK_ID", my_book_objects
                                         .getJSONObject(position)
                                         .optString("id"));
-                        editBookIntent.putExtra("AUTHOR",
-                                        my_book_objects.getJSONObject(position)
-                                                        .optString("author"));
-                        editBookIntent.putExtra(
-                                        "DESCRIPTION",
-                                        my_book_objects.getJSONObject(position)
-                                                        .optString("description"));
-                        editBookIntent.putExtra(
-                                        "PUBLICATION_YEAR",
-                                        my_book_objects.getJSONObject(position)
-                                                        .optString("publication_year"));
-                        editBookIntent.putExtra(
-                                        "BARTER_TYPE",
-                                        my_book_objects.getJSONObject(position)
-                                                        .optString("barter_type"));
+                        editBookIntent.putExtra("AUTHOR", my_book_objects
+                                        .getJSONObject(position)
+                                        .optString("author"));
+                        editBookIntent.putExtra("DESCRIPTION", my_book_objects
+                                        .getJSONObject(position)
+                                        .optString("description"));
+                        editBookIntent.putExtra("PUBLICATION_YEAR", my_book_objects
+                                        .getJSONObject(position)
+                                        .optString("publication_year"));
+                        editBookIntent.putExtra("BARTER_TYPE", my_book_objects
+                                        .getJSONObject(position)
+                                        .optString("barter_type"));
                     } catch (final JSONException e) {
                         e.printStackTrace();
                     }

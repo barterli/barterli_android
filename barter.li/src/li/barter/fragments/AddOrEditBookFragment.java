@@ -24,8 +24,8 @@ import com.android.volley.VolleyError;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,12 +39,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
-import li.barter.activities.LoginActivity;
 import li.barter.http.BlJsonObjectRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.SharedPreferenceHelper;
 
@@ -63,11 +63,11 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private boolean             mHasFetchedDetails;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                    Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater,
+                    final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
-        final View view = inflater.inflate(R.layout.activity_edit_book,
-                        container, false);
+        final View view = inflater
+                        .inflate(R.layout.activity_edit_book, container, false);
         mIsbnEditText = (EditText) view.findViewById(R.id.edit_text_isbn);
         mTitleEditText = (EditText) view.findViewById(R.id.edit_text_title);
         mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
@@ -79,9 +79,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         view.findViewById(R.id.button_submit).setOnClickListener(this);
 
         getActivity().getWindow()
-                        .setSoftInputMode(
-                                        WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                                                        | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                        .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                                        | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         final Bundle extras = getArguments();
 
         // If extras are null, it means that user has to decided to add the
@@ -138,10 +137,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void getBookInfoFromServer(final String bookId) {
 
-        final BlJsonObjectRequest request = new BlJsonObjectRequest(
-                        RequestId.GET_BOOK_INFO, HttpConstants.getApiBaseUrl()
-                                        + ApiEndpoints.BOOK_INFO, null, this,
-                        this);
+        final BlJsonObjectRequest request = new BlJsonObjectRequest(RequestId.GET_BOOK_INFO, HttpConstants
+                        .getApiBaseUrl() + ApiEndpoints.BOOK_INFO, null, this, this);
         final Map<String, String> params = new HashMap<String, String>();
         params.put(HttpConstants.Q, bookId);
         request.setParams(params);
@@ -173,14 +170,12 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                             .toString());
             createBookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
                             .getText().toString());
-            createBookJson.put(HttpConstants.PUBLICATION_YEAR,
-                            mPublicationYearEditText.getText().toString());
+            createBookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYearEditText
+                            .getText().toString());
 
             // TODO Add barter types
-            final BlJsonObjectRequest createBookRequest = new BlJsonObjectRequest(
-                            RequestId.CREATE_BOOK,
-                            HttpConstants.getApiBaseUrl() + ApiEndpoints.BOOKS,
-                            createBookJson, this, this);
+            final BlJsonObjectRequest createBookRequest = new BlJsonObjectRequest(RequestId.CREATE_BOOK, HttpConstants
+                            .getApiBaseUrl() + ApiEndpoints.BOOKS, createBookJson, this, this);
 
             addRequestToQueue(createBookRequest, true, 0);
         } catch (final JSONException e) {
@@ -193,10 +188,13 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         if ((v.getId() == R.id.button_submit) && isInputValid()) {
 
-            if (TextUtils.isEmpty(SharedPreferenceHelper.getString(
-                            getActivity(), R.string.pref_auth_token))) {
+            if (TextUtils.isEmpty(SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_auth_token))) {
 
-                startActivity(new Intent(getActivity(), LoginActivity.class));
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), LoginFragment.class
+                                                .getName(), null), FragmentTags.LOGIN, true);
+
             } else {
                 createBookOnServer();
             }
@@ -275,25 +273,25 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private void readBookDetailsFromResponse(final JSONObject response) {
 
         mHasFetchedDetails = true;
-        final String bookTitle = JsonUtils.getStringValue(response,
-                        HttpConstants.TITLE);
-        final String bookDescription = JsonUtils.getStringValue(response,
-                        HttpConstants.DESCRIPTION);
+        final String bookTitle = JsonUtils
+                        .getStringValue(response, HttpConstants.TITLE);
+        final String bookDescription = JsonUtils
+                        .getStringValue(response, HttpConstants.DESCRIPTION);
 
-        JSONObject authorObject = JsonUtils.getJsonObject(response,
-                        HttpConstants.AUTHORS);
+        JSONObject authorObject = JsonUtils
+                        .getJsonObject(response, HttpConstants.AUTHORS);
         String authorName = null;
         if (authorObject != null) {
-            authorObject = JsonUtils.getJsonObject(authorObject,
-                            HttpConstants.AUTHOR);
+            authorObject = JsonUtils
+                            .getJsonObject(authorObject, HttpConstants.AUTHOR);
             if (authorObject != null) {
-                authorName = JsonUtils.getStringValue(authorObject,
-                                HttpConstants.NAME);
+                authorName = JsonUtils
+                                .getStringValue(authorObject, HttpConstants.NAME);
             }
         }
 
-        final String publicationYear = JsonUtils.getStringValue(response,
-                        HttpConstants.PUBLICATION_YEAR);
+        final String publicationYear = JsonUtils
+                        .getStringValue(response, HttpConstants.PUBLICATION_YEAR);
 
         mTitleEditText.setText(bookTitle);
         mDescriptionEditText.setText(bookDescription);

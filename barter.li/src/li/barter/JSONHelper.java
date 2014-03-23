@@ -50,8 +50,8 @@ public class JSONHelper {
             final JSONArray booksArray = userObject.getJSONArray("books");
             final String[] bookTitleArray = new String[booksArray.length()];
             for (int i = 0; i < booksArray.length(); i++) {
-                bookTitleArray[i] = booksArray.getJSONObject(i).getString(
-                                "title");
+                bookTitleArray[i] = booksArray.getJSONObject(i)
+                                .getString("title");
             }
             return bookTitleArray;
         } catch (final JSONException e) {
@@ -97,13 +97,12 @@ public class JSONHelper {
                 _obj.put("id", booksArray.getJSONObject(i).opt("id"));
                 _obj.put("title", booksArray.getJSONObject(i).opt("title"));
                 _obj.put("author", booksArray.getJSONObject(i).opt("author"));
-                _obj.put("description",
-                                booksArray.getJSONObject(i).opt("description"));
-                _obj.put("publication_year",
-                                booksArray.getJSONObject(i).opt(
-                                                "publication_year"));
-                _obj.put("barter_type",
-                                booksArray.getJSONObject(i).opt("barter_type"));
+                _obj.put("description", booksArray.getJSONObject(i)
+                                .opt("description"));
+                _obj.put("publication_year", booksArray.getJSONObject(i)
+                                .opt("publication_year"));
+                _obj.put("barter_type", booksArray.getJSONObject(i)
+                                .opt("barter_type"));
                 BooksJSONArray.put(_obj);
                 // bookTitleArray[i] =
                 // booksArray.getJSONObject(i).getString("title");

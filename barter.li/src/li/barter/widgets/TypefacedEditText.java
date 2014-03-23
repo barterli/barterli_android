@@ -35,10 +35,10 @@ public class TypefacedEditText extends EditText {
 
         if (attrs != null) {
             // Get Custom Attribute Name and value
-            final TypedArray styledAttrs = context.obtainStyledAttributes(
-                            attrs, R.styleable.TypefacedEditText);
-            final int typefaceCode = styledAttrs.getInt(
-                            R.styleable.TypefacedEditText_fontStyle, -1);
+            final TypedArray styledAttrs = context
+                            .obtainStyledAttributes(attrs, R.styleable.TypefacedEditText);
+            final int typefaceCode = styledAttrs
+                            .getInt(R.styleable.TypefacedEditText_fontStyle, -1);
             styledAttrs.recycle();
 
             // Typeface.createFromAsset doesn't work in the layout editor.
@@ -47,8 +47,8 @@ public class TypefacedEditText extends EditText {
                 return;
             }
 
-            final Typeface typeface = TypefaceCache.get(context.getAssets(),
-                            typefaceCode);
+            final Typeface typeface = TypefaceCache
+                            .get(context.getAssets(), typefaceCode);
             setTypeface(typeface);
         }
     }

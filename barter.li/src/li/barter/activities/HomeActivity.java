@@ -21,7 +21,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Gravity;
 import android.view.Menu;
@@ -86,11 +85,9 @@ public class HomeActivity extends AbstractBarterLiActivity {
      */
     private void loadBooksAroundMeFragment() {
 
-        loadFragment(R.id.frame_content,
-                        (AbstractBarterLiFragment) Fragment.instantiate(this,
-                                        BooksAroundMeFragment.class.getName(),
-                                        null), FragmentTags.BOOKS_AROUND_ME,
-                        false);
+        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                        .instantiate(this, BooksAroundMeFragment.class
+                                        .getName(), null), FragmentTags.BOOKS_AROUND_ME, false);
 
     }
 
@@ -102,18 +99,16 @@ public class HomeActivity extends AbstractBarterLiActivity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavListView = (ListView) findViewById(R.id.list_nav_drawer);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                        R.drawable.ic_navigation_drawer, R.string.drawer_open,
-                        R.string.drawer_closed) {
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_navigation_drawer, R.string.drawer_open, R.string.drawer_closed) {
 
             @Override
-            public void onDrawerOpened(View drawerView) {
+            public void onDrawerOpened(final View drawerView) {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();
             }
 
             @Override
-            public void onDrawerClosed(View drawerView) {
+            public void onDrawerClosed(final View drawerView) {
                 super.onDrawerClosed(drawerView);
                 invalidateOptionsMenu();
             }
@@ -121,33 +116,31 @@ public class HomeActivity extends AbstractBarterLiActivity {
         };
 
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mDrawerLayout.setScrimColor(getResources().getColor(
-                        R.color.overlay_black_40p));
+        mDrawerLayout.setScrimColor(getResources()
+                        .getColor(R.color.overlay_black_40p));
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
         getActionBar().setDisplayHomeAsUpEnabled(true);
 
-        mNavDrawerAdapter = new HomeNavDrawerAdapter(this,
-                        R.array.nav_drawer_titles,
-                        R.array.nav_drawer_descriptions);
+        mNavDrawerAdapter = new HomeNavDrawerAdapter(this, R.array.nav_drawer_titles, R.array.nav_drawer_descriptions);
         mNavListView.setAdapter(mNavDrawerAdapter);
 
     }
 
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
+    protected void onPostCreate(final Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mDrawerToggle.syncState();
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(final Menu menu) {
         setOptionsGroupHidden(menu, mDrawerLayout.isDrawerOpen(mNavListView));
         return super.onPrepareOptionsMenu(menu);
     }

@@ -34,9 +34,6 @@ import li.barter.GPSTracker;
 import li.barter.JSONHelper;
 import li.barter.ProgressDialogManager;
 import li.barter.R;
-import li.barter.R.id;
-import li.barter.R.layout;
-import li.barter.R.string;
 import li.barter.utils.SharedPreferenceHelper;
 
 public class TakeLatLongActivity extends AbstractBarterLiActivity {
@@ -68,20 +65,21 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
          * getResources().getString( R.string.preferred_location);
          */
 
-        Auth_Token = SharedPreferenceHelper.getString(this,
-                        R.string.pref_auth_token);
+        Auth_Token = SharedPreferenceHelper
+                        .getString(this, R.string.pref_auth_token);
         FB_Email = SharedPreferenceHelper.getString(this, R.string.pref_email);
-        final String prefferedLocation = SharedPreferenceHelper.getString(this,
-                        R.string.pref_preferred_location);
+        final String prefferedLocation = SharedPreferenceHelper
+                        .getString(this, R.string.pref_preferred_location);
         is_loc_pref_set = !TextUtils.isEmpty(prefferedLocation);
 
         gps = new GPSTracker(TakeLatLongActivity.this);
         if (gps.canGetLocation()) {
             final double latitude = gps.getLatitude();
             final double longitude = gps.getLongitude();
-            new askServerForSuggestedPlacesTask().execute(place_suggestion_url,
-                            Double.toString(latitude),
-                            Double.toString(longitude));
+            new askServerForSuggestedPlacesTask()
+                            .execute(place_suggestion_url, Double
+                                            .toString(latitude), Double
+                                            .toString(longitude));
         } else {
             // can't get location
             // GPS or Network is not enabled
@@ -98,8 +96,8 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
     private class savePreferredTask extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
-            myProgressDialogManager.showProgresDialog(TakeLatLongActivity.this,
-                            "Setting Prefered Location!");
+            myProgressDialogManager
+                            .showProgresDialog(TakeLatLongActivity.this, "Setting Prefered Location!");
         }
 
         @Override
@@ -111,8 +109,8 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
         @Override
         protected void onPostExecute(final String result) {
             myProgressDialogManager.dismissProgresDialog();
-            SharedPreferenceHelper.set(TakeLatLongActivity.this,
-                            R.string.pref_preferred_location, my_Pref_loc);
+            SharedPreferenceHelper
+                            .set(TakeLatLongActivity.this, R.string.pref_preferred_location, my_Pref_loc);
 
             /* showToast(R.string.preferred_location, false); */
             // Intent profileIntent = new Intent(TakeLatLongActivity.this,
@@ -125,8 +123,8 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
                     AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
-            myProgressDialogManager.showProgresDialog(TakeLatLongActivity.this,
-                            "Retrieving...");
+            myProgressDialogManager
+                            .showProgresDialog(TakeLatLongActivity.this, "Retrieving...");
         }
 
         @Override
@@ -151,9 +149,7 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
             // Toast.LENGTH_SHORT).show();
             final String[] place_suggestions = new JSONHelper()
                             .JsonStringofArraysToArray(result);
-            adapter = new ArrayAdapter<String>(TakeLatLongActivity.this,
-                            android.R.layout.simple_list_item_1,
-                            android.R.id.text1, place_suggestions);
+            adapter = new ArrayAdapter<String>(TakeLatLongActivity.this, android.R.layout.simple_list_item_1, android.R.id.text1, place_suggestions);
             listView.setAdapter(adapter);
             listView.setOnItemClickListener(new OnItemClickListener() {
                 @Override
@@ -164,9 +160,8 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
                     final Address my_address = gps
                                     .getMyLocationAddress(place_suggestions[position]);
                     if (my_address == null) {
-                        Toast.makeText(getApplicationContext(),
-                                        "Not able to reverse geocode!",
-                                        Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Not able to reverse geocode!", Toast.LENGTH_SHORT)
+                                        .show();
                         return;
                     }
                     // Log.v("DETAILS2", my_address.toString());
@@ -175,11 +170,8 @@ public class TakeLatLongActivity extends AbstractBarterLiActivity {
                     final String _country = my_address.getCountryName();
                     final String _city = my_address.getSubAdminArea();
                     my_Pref_loc = place_suggestions[position];
-                    new savePreferredTask().execute(post_to_my_preferred_loc,
-                                    Double.toString(_lat),
-                                    Double.toString(_long), _city, _country,
-                                    place_suggestions[position], Auth_Token,
-                                    FB_Email);
+                    new savePreferredTask().execute(post_to_my_preferred_loc, Double
+                                    .toString(_lat), Double.toString(_long), _city, _country, place_suggestions[position], Auth_Token, FB_Email);
                 }
             });
         }

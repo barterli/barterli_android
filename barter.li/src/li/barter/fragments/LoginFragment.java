@@ -14,61 +14,65 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter.activities;
+package li.barter.fragments;
 
 import com.facebook.Session;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
 import li.barter.R;
-import li.barter.R.anim;
-import li.barter.R.id;
-import li.barter.R.layout;
 
-@ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
-public class LoginActivity extends AbstractBarterLiActivity implements
+@FragmentTransition(enterAnimation = R.anim.activity_slide_in_right, exitAnimation = R.anim.activity_scale_out, popEnterAnimation = R.anim.activity_scale_in, popExitAnimation = R.anim.activity_slide_out_right)
+public class LoginFragment extends AbstractBarterLiFragment implements
                 OnClickListener {
-    
+
     private static final String TAG = "LoginActivity";
 
-    private Button   mFacebookLoginButton;
-    private Button   mGoogleLoginButton;
-    private Button   mSubmitButton;
-    private EditText mEmailEditText;
-    private EditText mPasswordEditText;
+    private Button              mFacebookLoginButton;
+    private Button              mGoogleLoginButton;
+    private Button              mSubmitButton;
+    private EditText            mEmailEditText;
+    private EditText            mPasswordEditText;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    public View onCreateView(final LayoutInflater inflater,
+                    final ViewGroup container, final Bundle savedInstanceState) {
+        init(container);
+        final View view = inflater.inflate(R.layout.activity_login, null);
 
-        mFacebookLoginButton = (Button) findViewById(R.id.button_facebook_login);
-        mGoogleLoginButton = (Button) findViewById(R.id.button_google_login);
-        mSubmitButton = (Button) findViewById(R.id.button_submit);
-        mEmailEditText = (EditText) findViewById(R.id.edit_text_email);
-        mPasswordEditText = (EditText) findViewById(R.id.edit_text_password);
+        mFacebookLoginButton = (Button) view
+                        .findViewById(R.id.button_facebook_login);
+        mGoogleLoginButton = (Button) view
+                        .findViewById(R.id.button_google_login);
+        mSubmitButton = (Button) view.findViewById(R.id.button_submit);
+        mEmailEditText = (EditText) view.findViewById(R.id.edit_text_email);
+        mPasswordEditText = (EditText) view
+                        .findViewById(R.id.edit_text_password);
 
         mFacebookLoginButton.setOnClickListener(this);
         mGoogleLoginButton.setOnClickListener(this);
         mSubmitButton.setOnClickListener(this);
-
+        return view;
     }
 
     @Override
     protected Object getVolleyTag() {
         return TAG;
     }
+
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,
                     final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Session.getActiveSession().onActivityResult(this, requestCode,
-                        resultCode, data);
+        Session.getActiveSession()
+                        .onActivityResult(getActivity(), requestCode, resultCode, data);
     }
 
     @Override

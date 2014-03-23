@@ -56,7 +56,7 @@ public abstract class AbstractBarterLiFragment extends Fragment {
     private AtomicInteger       mRequestCounter;
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(final Activity activity) {
         super.onAttach(activity);
         mIsAttached = true;
         mRequestQueue = ((IVolleyHelper) activity.getApplication())
@@ -71,7 +71,7 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      * 
      * @param container The container passed into onCreateView()
      */
-    protected void init(ViewGroup container) {
+    protected void init(final ViewGroup container) {
         mContainerViewId = container.getId();
     }
 
@@ -85,13 +85,13 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      * @param addToBackStack Whether the transaction should be addded to the
      *            backstack
      */
-    public void loadFragment(int containerResId,
-                    AbstractBarterLiFragment fragment, String tag,
+    public void loadFragment(final int containerResId,
+                    final AbstractBarterLiFragment fragment, final String tag,
                     final boolean addToBackStack) {
 
         if (mIsAttached) {
-            ((AbstractBarterLiActivity) getActivity()).loadFragment(
-                            containerResId, fragment, tag, addToBackStack);
+            ((AbstractBarterLiActivity) getActivity())
+                            .loadFragment(containerResId, fragment, tag, addToBackStack);
         }
 
     }
@@ -196,8 +196,8 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      */
     public void showToast(final String toastMessage, final boolean isLong) {
         if (mIsAttached) {
-            ((AbstractBarterLiActivity) getActivity()).showToast(toastMessage,
-                            isLong);
+            ((AbstractBarterLiActivity) getActivity())
+                            .showToast(toastMessage, isLong);
         }
     }
 
@@ -209,8 +209,8 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      */
     public void showToast(final int toastMessageResId, final boolean isLong) {
         if (mIsAttached) {
-            ((AbstractBarterLiActivity) getActivity()).showToast(
-                            toastMessageResId, isLong);
+            ((AbstractBarterLiActivity) getActivity())
+                            .showToast(toastMessageResId, isLong);
         }
     }
 

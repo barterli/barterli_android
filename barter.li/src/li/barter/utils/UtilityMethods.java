@@ -60,15 +60,15 @@ public class UtilityMethods {
         final RenderScript rsScript = RenderScript.create(context);
         final Allocation alloc = Allocation.createFromBitmap(rsScript, input);
 
-        final ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(rsScript,
-                        alloc.getElement());
+        final ScriptIntrinsicBlur blur = ScriptIntrinsicBlur
+                        .create(rsScript, alloc.getElement());
         blur.setRadius(blurRadius);
         blur.setInput(alloc);
 
-        final Bitmap result = Bitmap.createBitmap(input.getWidth(),
-                        input.getHeight(), input.getConfig());
-        final Allocation outAlloc = Allocation.createFromBitmap(rsScript,
-                        result);
+        final Bitmap result = Bitmap.createBitmap(input.getWidth(), input
+                        .getHeight(), input.getConfig());
+        final Allocation outAlloc = Allocation
+                        .createFromBitmap(rsScript, result);
         blur.forEach(outAlloc);
         outAlloc.copyTo(result);
 

@@ -80,8 +80,9 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
 
             try {
                 Log.d(TAG, "Connected");
-                mQueue = mChannel.queueDeclare(queueName, durable, exclusive,
-                                autoDelete, args).getQueue();
+                mQueue = mChannel
+                                .queueDeclare(queueName, durable, exclusive, autoDelete, args)
+                                .getQueue();
                 mSubscription = new QueueingConsumer(mChannel);
                 mChannel.basicConsume(mQueue, false, mSubscription);
             } catch (final IOException e) {

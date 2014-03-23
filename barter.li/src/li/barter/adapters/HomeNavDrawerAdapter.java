@@ -35,17 +35,17 @@ public class HomeNavDrawerAdapter extends BaseAdapter {
     /**
      * Navigation Drawer titles
      */
-    private String[]       mNavDrawerTitles;
+    private final String[]       mNavDrawerTitles;
 
     /**
      * Navigation Drawer descriptions
      */
-    private String[]       mNavDrawerDescriptions;
+    private final String[]       mNavDrawerDescriptions;
 
     /**
      * Layout Inflater for inflating layouts
      */
-    private LayoutInflater mLayoutInflater;
+    private final LayoutInflater mLayoutInflater;
 
     /**
      * COnstruct the adapter for the Navigation drawer
@@ -57,16 +57,15 @@ public class HomeNavDrawerAdapter extends BaseAdapter {
      *            contains the strings of the descriptions of the items in the
      *            navigation drawer
      */
-    public HomeNavDrawerAdapter(Context context, int drawerItemTitlesResId, int drawerItemDescriptionResId) throws IllegalArgumentException {
+    public HomeNavDrawerAdapter(final Context context, final int drawerItemTitlesResId, final int drawerItemDescriptionResId) throws IllegalArgumentException {
         mLayoutInflater = LayoutInflater.from(context);
-        mNavDrawerTitles = context.getResources().getStringArray(
-                        drawerItemTitlesResId);
-        mNavDrawerDescriptions = context.getResources().getStringArray(
-                        drawerItemDescriptionResId);
+        mNavDrawerTitles = context.getResources()
+                        .getStringArray(drawerItemTitlesResId);
+        mNavDrawerDescriptions = context.getResources()
+                        .getStringArray(drawerItemDescriptionResId);
 
         if (mNavDrawerTitles.length != mNavDrawerDescriptions.length) {
-            throw new IllegalArgumentException(
-                            "The passed arrays do not have an equal number of items. There should be one description matching to each item. Add an empty item if you don't want any description to be displayed");
+            throw new IllegalArgumentException("The passed arrays do not have an equal number of items. There should be one description matching to each item. Add an empty item if you don't want any description to be displayed");
         }
     }
 
@@ -76,28 +75,29 @@ public class HomeNavDrawerAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return mNavDrawerTitles[position];
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView,
+                    final ViewGroup parent) {
 
         View view = convertView;
 
         if (view == null) {
-            view = mLayoutInflater.inflate(R.layout.layout_nav_drawer_item,
-                            parent, false);
+            view = mLayoutInflater
+                            .inflate(R.layout.layout_nav_drawer_item, parent, false);
 
-            view.setTag(R.id.text_nav_item_title,
-                            view.findViewById(R.id.text_nav_item_title));
-            view.setTag(R.id.text_nav_desc,
-                            view.findViewById(R.id.text_nav_desc));
+            view.setTag(R.id.text_nav_item_title, view
+                            .findViewById(R.id.text_nav_item_title));
+            view.setTag(R.id.text_nav_desc, view
+                            .findViewById(R.id.text_nav_desc));
         }
 
         ((TextView) view.getTag(R.id.text_nav_item_title))
@@ -106,7 +106,5 @@ public class HomeNavDrawerAdapter extends BaseAdapter {
                         .setText(mNavDrawerDescriptions[position]);
         return view;
     }
-    
-    
 
 }

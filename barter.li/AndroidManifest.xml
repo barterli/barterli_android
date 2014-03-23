@@ -95,24 +95,6 @@
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="li.barter.activities.LoginActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="barterLi"
-                    android:scheme="oauth" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".AddOrEditBookActivity" />
-        </activity>
-        <activity
             android:name="com.facebook.LoginActivity"
             android:label="@string/app_name" >
         </activity>

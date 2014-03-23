@@ -40,8 +40,8 @@ public class TypefaceCache {
             final String typefaceName = getTypefaceName(typefaceCode);
 
             if (!CACHE.containsKey(typefaceName)) {
-                final Typeface t = Typeface.createFromAsset(manager,
-                                typefaceName);
+                final Typeface t = Typeface
+                                .createFromAsset(manager, typefaceName);
                 CACHE.put(typefaceName, t);
             }
             return CACHE.get(typefaceName);

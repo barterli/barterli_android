@@ -36,23 +36,23 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
      */
     private Cursor               mCursor;
 
-    private boolean              mDistinct;
+    private final boolean        mDistinct;
 
-    private String               mTable;
+    private final String         mTable;
 
-    private String[]             mColumns;
+    private final String[]       mColumns;
 
-    private String               mSelection;
+    private final String         mSelection;
 
-    private String[]             mSelectionArgs;
+    private final String[]       mSelectionArgs;
 
-    private String               mGroupBy;
+    private final String         mGroupBy;
 
-    private String               mHaving;
+    private final String         mHaving;
 
-    private String               mOrderBy;
+    private final String         mOrderBy;
 
-    private String               mLimit;
+    private final String         mLimit;
 
     private SQLiteLoaderObserver mObserver;
 
@@ -71,7 +71,7 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
      * @param limit LIMIT clause
      * @return A {@link Cursor} over the dataset result
      */
-    public SQLiteLoader(Context context, boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+    public SQLiteLoader(final Context context, final boolean distinct, final String table, final String[] columns, final String selection, final String[] selectionArgs, final String groupBy, final String having, final String orderBy, final String limit) {
         super(context);
         mDistinct = distinct;
         mTable = table;
@@ -86,9 +86,9 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
 
     @Override
     public Cursor loadInBackground() {
-        return BarterLiSQLiteOpenHelper.getInstance(getContext()).query(
-                        mDistinct, mTable, mColumns, mSelection,
-                        mSelectionArgs, mGroupBy, mHaving, mOrderBy, mLimit);
+        return BarterLiSQLiteOpenHelper
+                        .getInstance(getContext())
+                        .query(mDistinct, mTable, mColumns, mSelection, mSelectionArgs, mGroupBy, mHaving, mOrderBy, mLimit);
     }
 
     @Override
@@ -97,11 +97,12 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
             deliverResult(mCursor);
         }
 
-        if(mObserver == null) {
-            mObserver = BarterLiSQLiteOpenHelper.getInstance(getContext()).registerLoader(this, mTable);
+        if (mObserver == null) {
+            mObserver = BarterLiSQLiteOpenHelper.getInstance(getContext())
+                            .registerLoader(this, mTable);
         }
-        
-        if (takeContentChanged() || mCursor == null) {
+
+        if (takeContentChanged() || (mCursor == null)) {
             forceLoad();
         }
     }
@@ -115,25 +116,26 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
     protected void onReset() {
         super.onReset();
         onStopLoading();
-        if (mCursor != null && !mCursor.isClosed()) {
+        if ((mCursor != null) && !mCursor.isClosed()) {
             mCursor.close();
         }
         mCursor = null;
-        if(mObserver != null) {
-            BarterLiSQLiteOpenHelper.getInstance(getContext()).unregisterLoader(mObserver);
+        if (mObserver != null) {
+            BarterLiSQLiteOpenHelper.getInstance(getContext())
+                            .unregisterLoader(mObserver);
         }
         mObserver = null;
     }
 
     @Override
-    public void onCanceled(Cursor data) {
-        if (data != null && !data.isClosed()) {
+    public void onCanceled(final Cursor data) {
+        if ((data != null) && !data.isClosed()) {
             data.close();
         }
     }
 
     @Override
-    public void deliverResult(Cursor data) {
+    public void deliverResult(final Cursor data) {
 
         if (isReset()) {
             if (data != null) {
@@ -141,14 +143,14 @@ public class SQLiteLoader extends AsyncTaskLoader<Cursor> {
             }
             return;
         }
-        Cursor oldCursor = mCursor;
+        final Cursor oldCursor = mCursor;
         mCursor = data;
 
         if (isStarted()) {
             super.deliverResult(data);
         }
 
-        if (oldCursor != null && oldCursor != data && !oldCursor.isClosed()) {
+        if ((oldCursor != null) && (oldCursor != data) && !oldCursor.isClosed()) {
             oldCursor.close();
         }
     }

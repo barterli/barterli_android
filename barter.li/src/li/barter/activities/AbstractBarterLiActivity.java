@@ -69,9 +69,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
                         .getAnnotation(ActivityTransition.class);
         if (savedInstanceState == null) {
             if (mActivityTransition != null) {
-                overridePendingTransition(
-                                mActivityTransition.createEnterAnimation(),
-                                mActivityTransition.createExitAnimation());
+                overridePendingTransition(mActivityTransition.createEnterAnimation(), mActivityTransition
+                                .createExitAnimation());
             }
         }
         if (getActionBar() != null) {
@@ -144,8 +143,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
 
     public void setActionBarDisplayOptions(final int displayOptions) {
         if (getActionBar() != null) {
-            getActionBar().setDisplayOptions(displayOptions,
-                            ACTION_BAR_DISPLAY_MASK);
+            getActionBar().setDisplayOptions(displayOptions, ACTION_BAR_DISPLAY_MASK);
         }
     }
 
@@ -203,8 +201,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
     protected final void setActionBarTitle(final String title) {
 
         final SpannableString s = new SpannableString(title);
-        s.setSpan(new TypefacedSpan(this, TypefaceCache.ALEGREYA_BLACK_ITALIC),
-                        0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.setSpan(new TypefacedSpan(this, TypefaceCache.ALEGREYA_BLACK_ITALIC), 0, s
+                        .length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance
         final ActionBar actionBar = getActionBar();
@@ -228,8 +226,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * @param isLong Whether it is a long toast
      */
     public void showToast(final String toastMessage, final boolean isLong) {
-        Toast.makeText(this, toastMessage,
-                        isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, toastMessage, isLong ? Toast.LENGTH_LONG
+                        : Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -239,8 +237,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * @param isLong Whether it is a long toast
      */
     public void showToast(final int toastMessageResId, final boolean isLong) {
-        Toast.makeText(this, toastMessageResId,
-                        isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, toastMessageResId, isLong ? Toast.LENGTH_LONG
+                        : Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -256,9 +254,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
     public void finish(final boolean defaultAnimation) {
         super.finish();
         if ((mActivityTransition != null) && !defaultAnimation) {
-            overridePendingTransition(
-                            mActivityTransition.destroyEnterAnimation(),
-                            mActivityTransition.destroyExitAnimation());
+            overridePendingTransition(mActivityTransition.destroyEnterAnimation(), mActivityTransition
+                            .destroyExitAnimation());
         }
     }
 
@@ -277,8 +274,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * @param addToBackStack Whether the transaction should be addded to the
      *            backstack
      */
-    public void loadFragment(int containerResId,
-                    AbstractBarterLiFragment fragment, String tag,
+    public void loadFragment(final int containerResId,
+                    final AbstractBarterLiFragment fragment, final String tag,
                     final boolean addToBackStack) {
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
@@ -288,11 +285,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
                         .getAnnotation(FragmentTransition.class);
         if (fragmentTransition != null) {
 
-            transaction.setCustomAnimations(
-                            fragmentTransition.enterAnimation(),
-                            fragmentTransition.exitAnimation(),
-                            fragmentTransition.popEnterAnimation(),
-                            fragmentTransition.popExitAnimation());
+            transaction.setCustomAnimations(fragmentTransition.enterAnimation(), fragmentTransition
+                            .exitAnimation(), fragmentTransition
+                            .popEnterAnimation(), fragmentTransition
+                            .popExitAnimation());
 
         }
 

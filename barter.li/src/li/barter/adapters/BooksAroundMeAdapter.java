@@ -54,10 +54,10 @@ public class BooksAroundMeAdapter extends BaseAdapter {
         View view = convertView;
 
         if (convertView == null) {
-            view = LayoutInflater.from(parent.getContext()).inflate(
-                            R.layout.layout_item_book, null);
-            view.setTag(R.id.text_book_name,
-                            view.findViewById(R.id.text_book_name));
+            view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.layout_item_book, null);
+            view.setTag(R.id.text_book_name, view
+                            .findViewById(R.id.text_book_name));
         }
 
         ((TextView) view.getTag(R.id.text_book_name))

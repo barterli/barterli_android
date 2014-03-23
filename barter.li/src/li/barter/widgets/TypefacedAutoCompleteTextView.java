@@ -35,11 +35,10 @@ public class TypefacedAutoCompleteTextView extends AutoCompleteTextView {
 
         if (attrs != null) {
             // Get Custom Attribute Name and value
-            final TypedArray styledAttrs = context.obtainStyledAttributes(
-                            attrs, R.styleable.TypefacedAutoCompleteTextView);
+            final TypedArray styledAttrs = context
+                            .obtainStyledAttributes(attrs, R.styleable.TypefacedAutoCompleteTextView);
             final int typefaceCode = styledAttrs
-                            .getInt(R.styleable.TypefacedAutoCompleteTextView_fontStyle,
-                                            -1);
+                            .getInt(R.styleable.TypefacedAutoCompleteTextView_fontStyle, -1);
             styledAttrs.recycle();
 
             // Typeface.createFromAsset doesn't work in the layout editor.
@@ -48,8 +47,8 @@ public class TypefacedAutoCompleteTextView extends AutoCompleteTextView {
                 return;
             }
 
-            final Typeface typeface = TypefaceCache.get(context.getAssets(),
-                            typefaceCode);
+            final Typeface typeface = TypefaceCache
+                            .get(context.getAssets(), typefaceCode);
             setTypeface(typeface);
         }
     }

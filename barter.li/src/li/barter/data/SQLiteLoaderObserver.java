@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package li.barter.data;
 
-
 /**
- * SQLite Loader entry for keeping a track of loaders and the tables with
- * which they are associated for notification
+ * SQLite Loader entry for keeping a track of loaders and the tables with which
+ * they are associated for notification
  */
 public class SQLiteLoaderObserver {
     public SQLiteLoader loader;
@@ -28,7 +28,7 @@ public class SQLiteLoaderObserver {
      * @param loader The {@link SQLiteLoader} to add as the entry
      * @param table The Table name
      */
-    public SQLiteLoaderObserver(SQLiteLoader loader, String table) {
+    public SQLiteLoaderObserver(final SQLiteLoader loader, final String table) {
         this.loader = loader;
         this.table = table;
     }

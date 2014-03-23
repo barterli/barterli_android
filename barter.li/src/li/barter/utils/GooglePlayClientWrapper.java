@@ -148,9 +148,8 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
             // Get the error code
             final int errorCode = mConnectionResult.getErrorCode();
             // Get the error dialog from Google Play services
-            final Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-                            errorCode, mActivity,
-                            CONNECTION_FAILURE_RESOLUTION_REQUEST);
+            final Dialog errorDialog = GooglePlayServicesUtil
+                            .getErrorDialog(errorCode, mActivity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
             // If Google Play services can provide an error dialog
             if (errorDialog != null) {
                 // Create a new DialogFragment for the error dialog
@@ -158,8 +157,7 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
                 // Set the dialog in the DialogFragment
                 errorFragment.setDialog(errorDialog);
                 // Show the error dialog in the DialogFragment
-                errorFragment.show(mActivity.getSupportFragmentManager(),
-                                "Location Updates");
+                errorFragment.show(mActivity.getSupportFragmentManager(), "Location Updates");
             }
 
             return false;
@@ -180,8 +178,7 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
     public void onConnected(final Bundle dataBundle) {
         // Display the connection status
         mLocationListener.onLocationChanged(mLocationClient.getLastLocation());
-        mLocationClient.requestLocationUpdates(mLocationRequest,
-                        mLocationListener);
+        mLocationClient.requestLocationUpdates(mLocationRequest, mLocationListener);
     }
 
     @Override
@@ -203,8 +200,7 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
         if (connectionResult.hasResolution()) {
             try {
                 // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(mActivity,
-                                CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                connectionResult.startResolutionForResult(mActivity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
                 /*
                  * Thrown if Google Play services canceled the original
                  * PendingIntent
@@ -220,9 +216,8 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
              */
             // showErrorDialog(connectionResult.getErrorCode());
 
-            final Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
-                            connectionResult.getErrorCode(), mActivity,
-                            CONNECTION_FAILURE_RESOLUTION_REQUEST);
+            final Dialog errorDialog = GooglePlayServicesUtil
+                            .getErrorDialog(connectionResult.getErrorCode(), mActivity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
             // If Google Play services can provide an error dialog
             if (errorDialog != null) {
                 // Create a new DialogFragment for the error dialog
@@ -230,8 +225,7 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
                 // Set the dialog in the DialogFragment
                 errorFragment.setDialog(errorDialog);
                 // Show the error dialog in the DialogFragment
-                errorFragment.show(mActivity.getSupportFragmentManager(),
-                                "Location Updates");
+                errorFragment.show(mActivity.getSupportFragmentManager(), "Location Updates");
             }
         }
     }

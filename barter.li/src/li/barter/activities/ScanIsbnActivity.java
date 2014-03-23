@@ -79,8 +79,7 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_book);
-        getWindow().setSoftInputMode(
-                        WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         mDecoderActivityHandler = null;
@@ -190,8 +189,7 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
     @Override
     public void surfaceCreated(final SurfaceHolder holder) {
         if (holder == null) {
-            Log.e(TAG,
-                            "*** WARNING *** surfaceCreated() gave us a null surface!");
+            Log.e(TAG, "*** WARNING *** surfaceCreated() gave us a null surface!");
         }
         if (!mHasSurface) {
             mHasSurface = true;
@@ -235,8 +233,7 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
             // Creating the handler starts the preview, which can also throw a
             // RuntimeException.
             if (mDecoderActivityHandler == null) {
-                mDecoderActivityHandler = new DecoderActivityHandler(this,
-                                mDecodeFormats, mCharacterSet, mCameraManager);
+                mDecoderActivityHandler = new DecoderActivityHandler(this, mDecodeFormats, mCharacterSet, mCameraManager);
             }
         } catch (final IOException ioe) {
             Log.w(TAG, ioe);

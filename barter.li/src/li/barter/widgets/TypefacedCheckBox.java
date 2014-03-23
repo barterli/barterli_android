@@ -35,10 +35,10 @@ public class TypefacedCheckBox extends CheckBox {
 
         if (attrs != null) {
             // Get Custom Attribute Name and value
-            final TypedArray styledAttrs = context.obtainStyledAttributes(
-                            attrs, R.styleable.TypefacedCheckBox);
-            final int typefaceCode = styledAttrs.getInt(
-                            R.styleable.TypefacedCheckBox_fontStyle, -1);
+            final TypedArray styledAttrs = context
+                            .obtainStyledAttributes(attrs, R.styleable.TypefacedCheckBox);
+            final int typefaceCode = styledAttrs
+                            .getInt(R.styleable.TypefacedCheckBox_fontStyle, -1);
             styledAttrs.recycle();
 
             // Typeface.createFromAsset doesn't work in the layout editor.
@@ -47,8 +47,8 @@ public class TypefacedCheckBox extends CheckBox {
                 return;
             }
 
-            final Typeface typeface = TypefaceCache.get(context.getAssets(),
-                            typefaceCode);
+            final Typeface typeface = TypefaceCache
+                            .get(context.getAssets(), typefaceCode);
             setTypeface(typeface);
         }
     }

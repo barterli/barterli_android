@@ -48,7 +48,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     private static BarterLiSQLiteOpenHelper sSQLiteOpenHelper;
 
     // Array of loader entries to hold for notifying changes
-    private ArrayList<SQLiteLoaderObserver>    mActiveLoaders;
+    private ArrayList<SQLiteLoaderObserver> mActiveLoaders;
 
     /**
      * Gets a reference to the SQLIte Open Helper for the app, creating it if
@@ -64,9 +64,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
             if (sSQLiteOpenHelper == null) {
 
                 synchronized (LOCK) {
-                    sSQLiteOpenHelper = new BarterLiSQLiteOpenHelper(
-                                    context.getApplicationContext(), DB_NAME,
-                                    null, DB_VERSION);
+                    sSQLiteOpenHelper = new BarterLiSQLiteOpenHelper(context.getApplicationContext(), DB_NAME, null, DB_VERSION);
                 }
             }
         }
@@ -134,8 +132,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
         throwIfOnMainThread();
         final SQLiteDatabase database = getReadableDatabase();
-        return database.query(distinct, table, columns, selection,
-                        selectionArgs, groupBy, having, orderBy, limit);
+        return database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
     /**
@@ -198,14 +195,15 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @return The {@link SQLiteLoaderObserver} that was created. Use this to
      *         unregister the loader entry
      */
-    public SQLiteLoaderObserver registerLoader(SQLiteLoader loader, String table) {
+    public SQLiteLoaderObserver registerLoader(final SQLiteLoader loader,
+                    final String table) {
 
         final SQLiteLoaderObserver entry = new SQLiteLoaderObserver(loader, table);
         mActiveLoaders.add(entry);
         return entry;
     }
 
-    public void unregisterLoader(SQLiteLoaderObserver entry) {
+    public void unregisterLoader(final SQLiteLoaderObserver entry) {
 
         mActiveLoaders.remove(entry);
     }
@@ -215,9 +213,9 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * 
      * @param table The table that was modified
      */
-    public void notifyChange(String table) {
+    public void notifyChange(final String table) {
         //TODO Optimize this later, Maybe a sorted list of loaders by table name?
-        for (SQLiteLoaderObserver entry : mActiveLoaders) {
+        for (final SQLiteLoaderObserver entry : mActiveLoaders) {
             if (entry.table.equals(table)) {
                 entry.loader.onContentChanged();
             }

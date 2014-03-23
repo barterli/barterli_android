@@ -27,9 +27,6 @@ import android.widget.ListView;
 import java.io.UnsupportedEncodingException;
 
 import li.barter.R;
-import li.barter.R.anim;
-import li.barter.R.id;
-import li.barter.R.layout;
 import li.barter.adapters.ChatAdapter;
 import li.barter.http.HttpConstants;
 import li.barter.http.rabbitmq.AbstractRabbitMQConnector.ExchangeType;
@@ -60,13 +57,11 @@ public class ChatActivity extends AbstractBarterLiActivity implements
         mChatAdapter = new ChatAdapter(this);
         mChatListView.setAdapter(mChatAdapter);
 
-        mMessageConsumer = new ChatRabbitMQConnector(
-                        HttpConstants.getChatUrl(),
-                        HttpConstants.getChatPort(), "/", "node.barterli",
-                        ExchangeType.DIRECT);
+        mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
+                        .getChatPort(), "/", "node.barterli", ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
     }
-    
+
     @Override
     protected Object getVolleyTag() {
         return TAG;
@@ -84,8 +79,8 @@ public class ChatActivity extends AbstractBarterLiActivity implements
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(final Void... params) {
-                if (mMessageConsumer.connectToRabbitMQ("user1", false, false,
-                                true, null)) {
+                if (mMessageConsumer
+                                .connectToRabbitMQ("user1", false, false, true, null)) {
                     mMessageConsumer.addBinding("shared.key");
                 }
                 return null;

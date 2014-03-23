@@ -35,10 +35,10 @@ public class TypefacedTextView extends TextView {
 
         if (attrs != null) {
             // Get Custom Attribute Name and value
-            final TypedArray styledAttrs = context.obtainStyledAttributes(
-                            attrs, R.styleable.TypefacedTextView);
-            final int typefaceCode = styledAttrs.getInt(
-                            R.styleable.TypefacedTextView_fontStyle, -1);
+            final TypedArray styledAttrs = context
+                            .obtainStyledAttributes(attrs, R.styleable.TypefacedTextView);
+            final int typefaceCode = styledAttrs
+                            .getInt(R.styleable.TypefacedTextView_fontStyle, -1);
             styledAttrs.recycle();
 
             // Typeface.createFromAsset doesn't work in the layout editor.
@@ -47,8 +47,8 @@ public class TypefacedTextView extends TextView {
                 return;
             }
 
-            final Typeface typeface = TypefaceCache.get(context.getAssets(),
-                            typefaceCode);
+            final Typeface typeface = TypefaceCache
+                            .get(context.getAssets(), typefaceCode);
             setTypeface(typeface);
         }
     }

@@ -85,10 +85,7 @@ public class GPSTracker extends Service implements LocationListener {
             } else {
                 this.canGetLocation = true;
                 if (isNetworkEnabled) {
-                    locationManager.requestLocationUpdates(
-                                    LocationManager.NETWORK_PROVIDER,
-                                    MIN_TIME_BW_UPDATES,
-                                    MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                     Log.d("Network", "Network");
                     if (locationManager != null) {
                         location = locationManager
@@ -102,10 +99,7 @@ public class GPSTracker extends Service implements LocationListener {
                 // if GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled) {
                     if (location == null) {
-                        locationManager.requestLocationUpdates(
-                                        LocationManager.GPS_PROVIDER,
-                                        MIN_TIME_BW_UPDATES,
-                                        MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, MIN_TIME_BW_UPDATES, MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                         Log.d("GPS Enabled", "GPS Enabled");
                         if (locationManager != null) {
                             location = locationManager
@@ -189,8 +183,7 @@ public class GPSTracker extends Service implements LocationListener {
      * lauch Settings Options
      */
     public void showSettingsAlert() {
-        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-                        mContext);
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         // Setting Dialog Title
         alertDialog.setTitle("GPS is settings");
@@ -199,26 +192,21 @@ public class GPSTracker extends Service implements LocationListener {
         alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
 
         // On pressing Settings button
-        alertDialog.setPositiveButton("Settings",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog,
-                                            final int which) {
-                                final Intent intent = new Intent(
-                                                Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                                mContext.startActivity(intent);
-                            }
-                        });
+        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                final Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                mContext.startActivity(intent);
+            }
+        });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog,
-                                            final int which) {
-                                dialog.cancel();
-                            }
-                        });
+        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, final int which) {
+                dialog.cancel();
+            }
+        });
 
         // Showing Alert Message
         alertDialog.show();

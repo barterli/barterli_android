@@ -127,8 +127,8 @@ public abstract class AbstractRabbitMQConnector {
                     final String message) {
         if ((mChannel != null) && mChannel.isOpen()) {
             try {
-                mChannel.basicPublish(queueName, routingKey, null,
-                                message.getBytes(HTTP.UTF_8));
+                mChannel.basicPublish(queueName, routingKey, null, message
+                                .getBytes(HTTP.UTF_8));
             } catch (final UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (final IOException e) {

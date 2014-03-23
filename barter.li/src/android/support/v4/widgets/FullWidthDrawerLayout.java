@@ -59,35 +59,35 @@ import android.view.View;
  */
 public class FullWidthDrawerLayout extends DrawerLayout {
 
-    public FullWidthDrawerLayout(Context context) {
+    public FullWidthDrawerLayout(final Context context) {
         super(context);
     }
 
-    public FullWidthDrawerLayout(Context context, AttributeSet attrs) {
+    public FullWidthDrawerLayout(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public FullWidthDrawerLayout(Context context, AttributeSet attrs, int defStyle) {
+    public FullWidthDrawerLayout(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    protected void onMeasure(final int widthMeasureSpec,
+                    final int heightMeasureSpec) {
         final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-        if (widthMode != MeasureSpec.EXACTLY
-                        || heightMode != MeasureSpec.EXACTLY) {
-            throw new IllegalArgumentException(
-                            "DrawerLayout must be measured with MeasureSpec.EXACTLY.");
+        if ((widthMode != MeasureSpec.EXACTLY)
+                        || (heightMode != MeasureSpec.EXACTLY)) {
+            throw new IllegalArgumentException("DrawerLayout must be measured with MeasureSpec.EXACTLY.");
         }
 
         setMeasuredDimension(widthSize, heightSize);
 
         // Gravity value for each drawer we've seen. Only one of each permitted.
-        int foundDrawers = 0;
+        final int foundDrawers = 0;
         final int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = getChildAt(i);
@@ -100,63 +100,58 @@ public class FullWidthDrawerLayout extends DrawerLayout {
 
             if (isContentView(child)) {
                 // Content views get measured at exactly the layout's size.
-                final int contentWidthSpec = MeasureSpec.makeMeasureSpec(
-                                widthSize - lp.leftMargin - lp.rightMargin,
-                                MeasureSpec.EXACTLY);
-                final int contentHeightSpec = MeasureSpec.makeMeasureSpec(
-                                heightSize - lp.topMargin - lp.bottomMargin,
-                                MeasureSpec.EXACTLY);
+                final int contentWidthSpec = MeasureSpec
+                                .makeMeasureSpec(widthSize - lp.leftMargin
+                                                - lp.rightMargin, MeasureSpec.EXACTLY);
+                final int contentHeightSpec = MeasureSpec
+                                .makeMeasureSpec(heightSize - lp.topMargin
+                                                - lp.bottomMargin, MeasureSpec.EXACTLY);
                 child.measure(contentWidthSpec, contentHeightSpec);
             } else if (isDrawerView(child)) {
                 final int childGravity = getDrawerViewGravity(child)
                                 & Gravity.HORIZONTAL_GRAVITY_MASK;
                 if ((foundDrawers & childGravity) != 0) {
-                    throw new IllegalStateException(
-                                    "Child drawer has absolute gravity "
-                                                    + gravityToString(childGravity)
-                                                    + " but this already has a "
-                                                    + "drawer view along that edge");
+                    throw new IllegalStateException("Child drawer has absolute gravity "
+                                    + gravityToString(childGravity)
+                                    + " but this already has a "
+                                    + "drawer view along that edge");
                 }
-                final int drawerWidthSpec = getChildMeasureSpec(
-                                widthMeasureSpec, lp.leftMargin
-                                                + lp.rightMargin, lp.width);
-                final int drawerHeightSpec = getChildMeasureSpec(
-                                heightMeasureSpec, lp.topMargin
-                                                + lp.bottomMargin, lp.height);
+                final int drawerWidthSpec = getChildMeasureSpec(widthMeasureSpec, lp.leftMargin
+                                + lp.rightMargin, lp.width);
+                final int drawerHeightSpec = getChildMeasureSpec(heightMeasureSpec, lp.topMargin
+                                + lp.bottomMargin, lp.height);
                 child.measure(drawerWidthSpec, drawerHeightSpec);
             } else {
-                throw new IllegalStateException(
-                                "Child "
-                                                + child
-                                                + " at index "
-                                                + i
-                                                + " does not have a valid layout_gravity - must be Gravity.LEFT, "
-                                                + "Gravity.RIGHT or Gravity.NO_GRAVITY");
+                throw new IllegalStateException("Child "
+                                + child
+                                + " at index "
+                                + i
+                                + " does not have a valid layout_gravity - must be Gravity.LEFT, "
+                                + "Gravity.RIGHT or Gravity.NO_GRAVITY");
             }
         }
     }
 
-    boolean isContentView(View child) {
+    boolean isContentView(final View child) {
         return ((LayoutParams) child.getLayoutParams()).gravity == Gravity.NO_GRAVITY;
     }
 
-    boolean isDrawerView(View child) {
+    boolean isDrawerView(final View child) {
         final int gravity = ((LayoutParams) child.getLayoutParams()).gravity;
-        final int absGravity = Gravity.getAbsoluteGravity(
-                        gravity,
-                        GravityCompat.getAbsoluteGravity(gravity,
-                                        ViewCompat.getLayoutDirection(child)));
+        final int absGravity = Gravity
+                        .getAbsoluteGravity(gravity, GravityCompat.getAbsoluteGravity(gravity, ViewCompat
+                                        .getLayoutDirection(child)));
         return (absGravity & (Gravity.LEFT | Gravity.RIGHT)) != 0;
     }
 
-    int getDrawerViewGravity(View drawerView) {
+    int getDrawerViewGravity(final View drawerView) {
         final int gravity = ((LayoutParams) drawerView.getLayoutParams()).gravity;
         return Gravity.getAbsoluteGravity(gravity, GravityCompat
                         .getAbsoluteGravity(gravity, ViewCompat
                                         .getLayoutDirection(drawerView)));
     }
 
-    static String gravityToString(int gravity) {
+    static String gravityToString(final int gravity) {
         if ((gravity & Gravity.LEFT) == Gravity.LEFT) {
             return "LEFT";
         }

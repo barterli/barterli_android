@@ -41,6 +41,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v4.widgets.FullWidthDrawerLayout;
 import android.util.Log;
@@ -196,13 +197,13 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private boolean                       mMapSnapshotRequested;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                    Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater,
+                    final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         setHasOptionsMenu(true);
 
-        final View contentView = inflater.inflate(
-                        R.layout.fragment_books_around_me, container, false);
+        final View contentView = inflater
+                        .inflate(R.layout.fragment_books_around_me, container, false);
 
         /*
          * The Google Maps V2 API states that when using MapView, we need to
@@ -228,12 +229,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.grid_books_around_me);
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter();
-        mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(
-                        mBooksAroundMeAdapter, 150, 500);
+        mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
 
         mTransitionDrawableLayers = new Drawable[2];
-        mGooglePlayClientWrapper = new GooglePlayClientWrapper(
-                        (AbstractBarterLiActivity) getActivity(), this);
+        mGooglePlayClientWrapper = new GooglePlayClientWrapper((AbstractBarterLiActivity) getActivity(), this);
 
         mHandler = new Handler();
 
@@ -248,17 +247,16 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.menu_books_around_me, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
 
             case R.id.action_scan_book: {
-                startActivityForResult(new Intent(getActivity(),
-                                ScanIsbnActivity.class), RequestCodes.SCAN_ISBN);
+                startActivityForResult(new Intent(getActivity(), ScanIsbnActivity.class), RequestCodes.SCAN_ISBN);
                 return true;
             }
 
@@ -274,9 +272,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RequestCodes.SCAN_ISBN
-                        && resultCode == ResultCodes.SUCCESS) {
+    public void onActivityResult(final int requestCode, final int resultCode,
+                    final Intent data) {
+        if ((requestCode == RequestCodes.SCAN_ISBN)
+                        && (resultCode == ResultCodes.SUCCESS)) {
 
             Bundle args = null;
             if (data != null) {
@@ -323,9 +322,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (location == null) {
             return;
         }
-        Log.d(TAG,
-                        "Location update:" + location.getLatitude() + " "
-                                        + location.getLongitude());
+        Log.d(TAG, "Location update:" + location.getLatitude() + " "
+                        + location.getLongitude());
 
         UserInfo.INSTANCE.latestLocation = location;
 
@@ -333,12 +331,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (googleMap != null) {
             googleMap.setMyLocationEnabled(false);
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                            new LatLng(UserInfo.INSTANCE.latestLocation
-                                            .getLatitude(),
-                                            UserInfo.INSTANCE.latestLocation
-                                                            .getLongitude()),
-                            MAP_ZOOM_LEVEL), this);
+            googleMap.animateCamera(CameraUpdateFactory
+                            .newLatLngZoom(new LatLng(UserInfo.INSTANCE.latestLocation
+                                            .getLatitude(), UserInfo.INSTANCE.latestLocation
+                                            .getLongitude()), MAP_ZOOM_LEVEL), this);
 
         }
     }
@@ -349,15 +345,13 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onSnapshotReady(Bitmap snapshot) {
 
         /* Create a blurred version of the Map snapshot */
-        final BitmapDrawable backgroundDrawable = new BitmapDrawable(
-                        getResources(), UtilityMethods.blurImage(getActivity(),
-                                        snapshot, MAP_BLUR));
+        final BitmapDrawable backgroundDrawable = new BitmapDrawable(getResources(), UtilityMethods
+                        .blurImage(getActivity(), snapshot, MAP_BLUR));
 
         mTransitionDrawableLayers[0] = mTransparentColorDrawable;
         mTransitionDrawableLayers[1] = backgroundDrawable;
 
-        final TransitionDrawable transitionDrawable = new TransitionDrawable(
-                        mTransitionDrawableLayers);
+        final TransitionDrawable transitionDrawable = new TransitionDrawable(mTransitionDrawableLayers);
         transitionDrawable.setCrossFadeEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -550,8 +544,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                                 + mPrevDirection + " slide offset:"
                                 + slideOffset);
 
-                if (mCurDirection == DrawerDragState.CLOSING
-                                && slideOffset >= 0.7f) { //Drawer was almost opened, but user moved it to closed again
+                if ((mCurDirection == DrawerDragState.CLOSING)
+                                && (slideOffset >= 0.7f)) { //Drawer was almost opened, but user moved it to closed again
 
                     if (mMapView.getVisibility() == View.VISIBLE) {
                         unscheduleMapHideTask(); //If there's any task sceduled for hiding the map, remove it
@@ -567,7 +561,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onDrawerStateChanged(final int state) {
 
         Log.d(TAG, "On Drawer State Change:" + state);
-        if (state == FullWidthDrawerLayout.STATE_IDLE) {
+        if (state == DrawerLayout.STATE_IDLE) {
             if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
                 if (!mMapSnapshotRequested) { //If a map snapshot hasn't been requested, no need to call this as the map will be hidden when the snapsht is loaded
                     scheduleHideMapTask(0);
@@ -613,14 +607,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * @param bookInfo The book info to load. Can be <code>null</code>, in which
      *            case, it treats it as Add a new book flow
      */
-    private void loadAddOrEditBookFragment(Bundle bookInfo) {
+    private void loadAddOrEditBookFragment(final Bundle bookInfo) {
 
-        loadFragment(mContainerViewId,
-                        (AbstractBarterLiFragment) Fragment.instantiate(
-                                        getActivity(),
-                                        AddOrEditBookFragment.class.getName(),
-                                        bookInfo),
-                        FragmentTags.ADD_OR_EDIT_BOOK, true);
+        loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                        .instantiate(getActivity(), AddOrEditBookFragment.class
+                                        .getName(), bookInfo), FragmentTags.ADD_OR_EDIT_BOOK, true);
     }
 
 }
