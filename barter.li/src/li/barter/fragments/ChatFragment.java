@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -71,6 +72,17 @@ public class ChatFragment extends AbstractBarterLiFragment implements
         
         setActionBarDrawerToggleEnabled(false);
         return view;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            getFragmentManager().popBackStack();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

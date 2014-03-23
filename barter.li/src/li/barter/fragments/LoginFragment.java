@@ -21,6 +21,7 @@ import com.facebook.Session;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -61,6 +62,17 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         mSubmitButton.setOnClickListener(this);
         setActionBarDrawerToggleEnabled(false);
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == android.R.id.home) {
+            getFragmentManager().popBackStack();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
