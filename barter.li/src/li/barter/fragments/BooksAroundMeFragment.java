@@ -308,12 +308,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mGooglePlayClientWrapper.onActivityStart();
+        mGooglePlayClientWrapper.onStart();
     }
 
     @Override
     public void onStop() {
-        mGooglePlayClientWrapper.onActivityStop();
+        mGooglePlayClientWrapper.onStop();
         super.onStop();
     }
 

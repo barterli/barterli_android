@@ -78,21 +78,21 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param factory
      * @param version
      */
-    public BarterLiSQLiteOpenHelper(final Context context, final String name, final CursorFactory factory, final int version) {
+    private BarterLiSQLiteOpenHelper(final Context context, final String name, final CursorFactory factory, final int version) {
+        //Private so you need to use the getInstance() method
         super(context, name, factory, version);
     }
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
-        // TODO Create Tables
+        TableSearchBooks.create(db);
 
     }
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, final int oldVersion,
                     final int newVersion) {
-        // TODO Upgrade Tables
-
+        TableSearchBooks.upgrade(db, oldVersion, newVersion);
     }
 
     /**
@@ -105,7 +105,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
             if (AppConstants.DEBUG) {
                 throw new RuntimeException("Accessing database on main thread!");
             } else {
-               Logger.e(TAG, "Accessing database on main thread");
+                Logger.e(TAG, "Accessing database on main thread");
             }
         }
     }

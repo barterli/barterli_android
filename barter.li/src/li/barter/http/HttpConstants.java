@@ -79,6 +79,7 @@ public class HttpConstants {
         public static final String CREATE_USER             = "/create_user.json";
         public static final String HANGOUTS                = "/hangouts.json";
         public static final String USER_PREFERRED_LOCATION = "/user_preferred_location.json";
+        public static final String SEARCH                  = "/search.json";
     }
 
     /**
@@ -87,8 +88,12 @@ public class HttpConstants {
     public static interface RequestId {
         public static final int GET_BOOK_INFO = 100;
         public static final int CREATE_BOOK   = 101;
+        public static final int SEARCH_BOOKS  = 102;
     }
 
+    public static final String ID               = "id";
+    public static final String ISBN_10          = "isbn_10";
+    public static final String ISBN_13          = "isbn_13";
     public static final String Q                = "q";
     public static final String T                = "t";
     public static final String TITLE            = "title";
@@ -97,5 +102,7 @@ public class HttpConstants {
     public static final String AUTHOR           = "author";
     public static final String NAME             = "name";
     public static final String PUBLICATION_YEAR = "publication_year";
+    public static final String BARTER_TYPE      = "barter_type";
+    public static final String USER_ID          = "user_id";
 
 }

@@ -22,10 +22,14 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 import android.app.Application;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.view.ViewConfiguration;
 
 import java.lang.reflect.Field;
 
+import li.barter.data.BarterLiSQLiteOpenHelper;
+import li.barter.data.TableSearchBooks;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.UserInfo;
