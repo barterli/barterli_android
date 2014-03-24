@@ -55,6 +55,7 @@
     <string name="book_added">Book has been added!</string>
     <string name="unable_to_fetch_book_info">Unable to fetch book info.</string>
     <string name="not_a_valid_isbn">Not a valid ISBN.</string>
+    <string name="unable_to_fetch_books">Unable to fetch books.</string>
 
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>

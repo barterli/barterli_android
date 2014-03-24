@@ -98,16 +98,18 @@ public class AppConstants {
      */
     public static interface Keys {
 
-        public static final String ISBN             = "isbn";
-        public static final String BOOL_1           = "bool_1";
-        public static final String BOOK_TITLE       = "book_title";
-        public static final String AUTHOR           = "author";
-        public static final String DESCRIPTION      = "description";
-        public static final String PUBLICATION_YEAR = "publication_year";
-        public static final String BARTER_TYPES     = "barter_types";
-        public static final String SYMBOLOGY        = "symbology";
-        public static final String TYPE             = "type";
-        public static final String BACKSTACK_TAG    = "backstack_tag";
+        public static final String ISBN               = "isbn";
+        public static final String BOOK_TITLE         = "book_title";
+        public static final String AUTHOR             = "author";
+        public static final String DESCRIPTION        = "description";
+        public static final String PUBLICATION_YEAR   = "publication_year";
+        public static final String BARTER_TYPES       = "barter_types";
+        public static final String SYMBOLOGY          = "symbology";
+        public static final String TYPE               = "type";
+        public static final String BACKSTACK_TAG      = "backstack_tag";
+        public static final String MAP_MOVED_ONCE     = "map_moved_once";
+        public static final String DRAWER_OPENED_ONCE = "drawer_opened_once";
+        public static final String HAS_FETCHED_INFO   = "has_fetched_info";
 
     }
 
@@ -124,14 +126,14 @@ public class AppConstants {
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME = "to_books_around_me";
     }
-    
+
     /**
      * Constant interface. DO NOT IMPLEMENT
+     * 
      * @author Vinay S Shenoy
-     *
      */
     public static interface Loaders {
-        
+
         public static final int SEARCH_BOOKS = 201;
     }
 

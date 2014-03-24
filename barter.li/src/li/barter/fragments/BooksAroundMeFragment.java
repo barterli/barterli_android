@@ -213,6 +213,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private boolean                       mMapSnapshotRequested;
 
+    /**
+     * Flag to indicate whether the Map has already been moved at least once to
+     * the user position
+     */
+    private boolean                       mMapAlreadyMovedOnce;
+
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
@@ -258,15 +264,36 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mPrevSlideOffset = 0.0f;
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
+            mMapAlreadyMovedOnce = false;
             fetchBooksAroundMe();
         } else {
             mDrawerOpenedAutomatically = savedInstanceState
-                            .getBoolean(Keys.BOOL_1);
+                            .getBoolean(Keys.DRAWER_OPENED_ONCE);
+            mMapAlreadyMovedOnce = savedInstanceState
+                            .getBoolean(Keys.MAP_MOVED_ONCE);
         }
 
         loadBookSearchResults();
         setActionBarDrawerToggleEnabled(true);
         return contentView;
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(Keys.DRAWER_OPENED_ONCE, mDrawerOpenedAutomatically);
+        outState.putBoolean(Keys.MAP_MOVED_ONCE, mMapAlreadyMovedOnce);
+        if (mMapView != null) {
+            mMapView.onSaveInstanceState(outState);
+        }
+    }
+
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
+            beginMapSnapshotProcess();
+        }
     }
 
     /**
@@ -332,15 +359,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(Keys.BOOL_1, mDrawerOpenedAutomatically);
-        if (mMapView != null) {
-            mMapView.onSaveInstanceState(outState);
-        }
-    }
-
-    @Override
     protected Object getVolleyTag() {
         return TAG;
     }
@@ -360,25 +378,24 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLocationChanged(final Location location) {
 
-        // Very rare case, if locationClient.getLastLocation() returns null
-        if (location == null) {
-            return;
-        }
-        Logger.d(TAG, "Location update:" + location.getLatitude() + " "
-                        + location.getLongitude());
-
         UserInfo.INSTANCE.latestLocation = location;
 
-        final GoogleMap googleMap = ((mMapView != null) ? (mMapView.getMap())
-                        : null);
+        if (!mMapAlreadyMovedOnce) {
+            /*
+             * For the initial launch, move the Map to the user's current
+             * position as soon as the location is fetched
+             */
+            final GoogleMap googleMap = getMap();
 
-        if (googleMap != null) {
-            googleMap.setMyLocationEnabled(false);
-            googleMap.animateCamera(CameraUpdateFactory
-                            .newLatLngZoom(new LatLng(UserInfo.INSTANCE.latestLocation
-                                            .getLatitude(), UserInfo.INSTANCE.latestLocation
-                                            .getLongitude()), MAP_ZOOM_LEVEL), this);
+            if (googleMap != null) {
+                mMapAlreadyMovedOnce = true;
+                googleMap.setMyLocationEnabled(false);
+                googleMap.animateCamera(CameraUpdateFactory
+                                .newLatLngZoom(new LatLng(UserInfo.INSTANCE.latestLocation
+                                                .getLatitude(), UserInfo.INSTANCE.latestLocation
+                                                .getLongitude()), MAP_ZOOM_LEVEL), this);
 
+            }
         }
     }
 
@@ -506,7 +523,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void beginMapSnapshotProcess() {
         mMapSnapshotRequested = true;
-        final GoogleMap googleMap = mMapView.getMap();
+        final GoogleMap googleMap = getMap();
 
         if (googleMap != null) {
             Logger.d(TAG, "Adding On Loaded Callback!");
@@ -528,7 +545,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void setMapMyLocationEnabled(final boolean enabled) {
 
-        final GoogleMap googleMap = mMapView.getMap();
+        final GoogleMap googleMap = getMap();
 
         if (googleMap != null) {
             googleMap.setMyLocationEnabled(enabled);
@@ -541,7 +558,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onDrawerClosed(final View drawerView) {
         if (drawerView == mBooksContentView) {
 
-            setMapMyLocationEnabled(true);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 mBooksContentView.setBackground(mTransparentColorDrawable);
             } else {
@@ -558,7 +574,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (drawerView == mBooksContentView) {
 
             Logger.d(TAG, "Map Opened");
-            setMapMyLocationEnabled(false);
             beginMapSnapshotProcess();
         }
 
@@ -596,11 +611,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         Logger.d(TAG, "On Drawer State Change:" + state);
         if (state == DrawerLayout.STATE_IDLE) {
             if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
+                setMapMyLocationEnabled(false);
                 if (!mMapSnapshotRequested) { //If a map snapshot hasn't been requested, no need to call this as the map will be hidden when the snapsht is loaded
                     scheduleHideMapTask(0);
                 } else {
                     beginMapSnapshotProcess();
                 }
+            } else {
+                setMapMyLocationEnabled(true);
             }
         }
     }
@@ -625,7 +643,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * Captures a snapshot of the map
      */
     private void captureMapSnapshot() {
-        final GoogleMap googleMap = mMapView.getMap();
+        final GoogleMap googleMap = getMap();
 
         if (googleMap != null) {
             Logger.d(TAG, "Taking Snapshot!");
@@ -650,7 +668,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onErrorResponse(VolleyError error, Request<?> request) {
         onRequestFinished();
+        Logger.e(TAG, error, "Parse Error");
 
+        if (request instanceof BlRequest) {
+
+            if (((BlRequest) request).getRequestId() == RequestId.SEARCH_BOOKS) {
+                showToast(R.string.unable_to_fetch_books, true);
+            }
+        }
     }
 
     @Override
@@ -674,7 +699,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
-            Logger.d(TAG, "Cursor Loaded!");
+            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
             mBooksAroundMeAdapter.swapCursor(cursor);
             if (!mDrawerOpenedAutomatically) {
                 // Open drawer automatically on map loaded if first launch
@@ -690,6 +715,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
             mBooksAroundMeAdapter.swapCursor(null);
         }
+    }
+
+    /**
+     * Gets a reference of the Google Map
+     */
+    private GoogleMap getMap() {
+
+        return mMapView.getMap();
     }
 
 }

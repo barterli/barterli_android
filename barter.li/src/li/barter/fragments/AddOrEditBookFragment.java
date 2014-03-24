@@ -92,7 +92,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             Logger.d(TAG, "Book Id:" + mBookId);
 
             if (savedInstanceState != null) {
-                mHasFetchedDetails = savedInstanceState.getBoolean(Keys.BOOL_1);
+                mHasFetchedDetails = savedInstanceState
+                                .getBoolean(Keys.HAS_FETCHED_INFO);
             }
 
             else {
@@ -106,6 +107,12 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         setActionBarDrawerToggleEnabled(false);
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(Keys.HAS_FETCHED_INFO, mHasFetchedDetails);
     }
 
     @Override
@@ -190,7 +197,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             // TODO Add barter types
             final BlRequest createBookRequest = new BlRequest(Method.POST, RequestId.CREATE_BOOK, HttpConstants
-                            .getApiBaseUrl() + ApiEndpoints.BOOKS, createBookJson.toString(), this, this);
+                            .getApiBaseUrl() + ApiEndpoints.BOOKS, createBookJson
+                            .toString(), this, this);
 
             addRequestToQueue(createBookRequest, true, 0);
         } catch (final JSONException e) {
@@ -251,8 +259,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         onRequestFinished();
         if (request instanceof BlRequest) {
 
-            final int requestId = ((BlRequest) request)
-                            .getRequestId();
+            final int requestId = ((BlRequest) request).getRequestId();
 
             if (requestId == RequestId.GET_BOOK_INFO) {
                 showToast(R.string.unable_to_fetch_book_info, false);
@@ -270,22 +277,15 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if (request instanceof BlRequest) {
 
             //TODO Read book details from response
-            final int requestId = ((BlRequest) request)
-                            .getRequestId();
+            final int requestId = ((BlRequest) request).getRequestId();
 
-            /*if (requestId == RequestId.GET_BOOK_INFO) {
-                readBookDetailsFromResponse(response);
-            } else if (requestId == RequestId.CREATE_BOOK) {
-                showToast(R.string.book_added, true);
-                getFragmentManager().popBackStack();
-            }*/
+            /*
+             * if (requestId == RequestId.GET_BOOK_INFO) {
+             * readBookDetailsFromResponse(response); } else if (requestId ==
+             * RequestId.CREATE_BOOK) { showToast(R.string.book_added, true);
+             * getFragmentManager().popBackStack(); }
+             */
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(Keys.BOOL_1, mHasFetchedDetails);
     }
 
     /**

@@ -28,6 +28,7 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.utils.Logger;
 
 /**
  * Class that reads an API response and parses it and stores it in the database
@@ -35,6 +36,8 @@ import li.barter.http.HttpConstants.RequestId;
  * @author Vinay S Shenoy
  */
 public class HttpResponseParser {
+
+    private static final String TAG = "HttpResponseParser";
 
     /**
      * Parses the string response for a particular {@linkplain RequestId} and
@@ -79,7 +82,8 @@ public class HttpResponseParser {
 
         final ResponseInfo responseInfo = new ResponseInfo();
 
-        final JSONArray booksArray = new JSONArray(response);
+        final JSONObject responseObject = new JSONObject(response);
+        final JSONArray booksArray = JsonUtils.getJsonArray(responseObject, HttpConstants.BOOKS);
 
         JSONObject bookObject = null;
         ContentValues values = new ContentValues();

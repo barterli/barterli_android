@@ -91,6 +91,7 @@ public class HttpConstants {
         public static final int SEARCH_BOOKS  = 102;
     }
 
+    public static final String BOOKS            = "books";
     public static final String ID               = "id";
     public static final String ISBN_10          = "isbn_10";
     public static final String ISBN_13          = "isbn_13";

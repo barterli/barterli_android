@@ -183,7 +183,6 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
     @Override
     public void onConnected(final Bundle dataBundle) {
         // Display the connection status
-        mLocationListener.onLocationChanged(mLocationClient.getLastLocation());
         mLocationClient.requestLocationUpdates(mLocationRequest, mLocationListener);
     }
 
