@@ -124,5 +124,15 @@ public class AppConstants {
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME = "to_books_around_me";
     }
+    
+    /**
+     * Constant interface. DO NOT IMPLEMENT
+     * @author Vinay S Shenoy
+     *
+     */
+    public static interface Loaders {
+        
+        public static final int SEARCH_BOOKS = 201;
+    }
 
 }

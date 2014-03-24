@@ -81,6 +81,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     private BarterLiSQLiteOpenHelper(final Context context, final String name, final CursorFactory factory, final int version) {
         //Private so you need to use the getInstance() method
         super(context, name, factory, version);
+        mActiveLoaders = new ArrayList<SQLiteLoaderObserver>();
     }
 
     @Override
@@ -198,6 +199,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     public SQLiteLoaderObserver registerLoader(final SQLiteLoader loader,
                     final String table) {
 
+        Logger.d(TAG, "Add Loader Observer: %s", table);
         final SQLiteLoaderObserver entry = new SQLiteLoaderObserver(loader, table);
         mActiveLoaders.add(entry);
         return entry;
@@ -205,6 +207,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
     public void unregisterLoader(final SQLiteLoaderObserver entry) {
 
+        Logger.d(TAG, "Remove Loader Observer: %s", entry.table);
         mActiveLoaders.remove(entry);
     }
 
@@ -216,6 +219,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     public void notifyChange(final String table) {
         //TODO Optimize this later, Maybe a sorted list of loaders by table name?
         for (final SQLiteLoaderObserver entry : mActiveLoaders) {
+            Logger.d(TAG, "Notify change: %s", entry.table);
             if (entry.table.equals(table)) {
                 entry.loader.onContentChanged();
             }

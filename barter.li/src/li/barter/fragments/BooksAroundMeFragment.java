@@ -16,6 +16,11 @@
 
 package li.barter.fragments;
 
+import com.android.volley.Request;
+import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,6 +35,7 @@ import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnim
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -41,6 +47,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v4.widgets.FullWidthDrawerLayout;
@@ -57,8 +65,16 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksAroundMeAdapter;
+import li.barter.data.SQLiteLoader;
+import li.barter.data.TableSearchBooks;
+import li.barter.http.BlRequest;
+import li.barter.http.HttpConstants;
+import li.barter.http.ResponseInfo;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
 import li.barter.utils.AppConstants.UserInfo;
@@ -72,7 +88,8 @@ import li.barter.utils.Utils;
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LocationListener, SnapshotReadyCallback, CancelableCallback,
-                OnMapLoadedCallback, DrawerListener {
+                OnMapLoadedCallback, DrawerListener, Listener<ResponseInfo>,
+                ErrorListener, LoaderCallbacks<Cursor> {
 
     private static final String TAG = "BooksAroundMeFragment";
 
@@ -245,7 +262,28 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         }
 
         setActionBarDrawerToggleEnabled(true);
+        fetchBooksAroundMe();
+        loadBookSearchResults();
         return contentView;
+    }
+
+    /**
+     * Starts the loader for book search results
+     */
+    private void loadBookSearchResults() {
+        //TODO Add filters for search results
+        getLoaderManager().restartLoader(Loaders.SEARCH_BOOKS, null, this);
+    }
+
+    /**
+     * Method to fetch books around me from the server
+     */
+    private void fetchBooksAroundMe() {
+
+        //TODO Add params or searching
+        BlRequest request = new BlRequest(Method.GET, RequestId.SEARCH_BOOKS, HttpConstants.getApiBaseUrl()
+                        + ApiEndpoints.SEARCH, null, this, this);
+        addRequestToQueue(request, true, 0);
     }
 
     @Override
@@ -485,10 +523,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         // Create the map snapshot only if the drawer is open
         if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
             captureMapSnapshot();
-        } else if (!mDrawerOpenedAutomatically) {
-            // Open drawer automatically on map loaded if first launch
-            mDrawerOpenedAutomatically = true;
-            mDrawerLayout.openDrawer(mBooksContentView);
         }
     }
 
@@ -614,6 +648,49 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                         .instantiate(getActivity(), AddOrEditBookFragment.class
                                         .getName(), bookInfo), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_BOOKS_AROUND_ME);
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error, Request<?> request) {
+        onRequestFinished();
+
+    }
+
+    @Override
+    public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+        onRequestFinished();
+
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
+
+        if (loaderId == Loaders.SEARCH_BOOKS) {
+            return new SQLiteLoader(getActivity(), false, TableSearchBooks.NAME, null, null, null, null, null, null, null);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        if (loader.getId() == Loaders.SEARCH_BOOKS) {
+
+            // TODO: Swap cursor
+            Logger.d(TAG, "Loaded book results: %d", cursor.getCount());
+            if (!mDrawerOpenedAutomatically) {
+                // Open drawer automatically on map loaded if first launch
+                mDrawerOpenedAutomatically = true;
+                mDrawerLayout.openDrawer(mBooksContentView);
+            }
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // TODO Auto-generated method stub
+
     }
 
 }

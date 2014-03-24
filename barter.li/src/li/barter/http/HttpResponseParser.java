@@ -79,9 +79,7 @@ public class HttpResponseParser {
 
         final ResponseInfo responseInfo = new ResponseInfo();
 
-        final JSONObject responseObject = new JSONObject(response);
-        final JSONArray booksArray = JsonUtils
-                        .getJsonArray(responseObject, HttpConstants.BOOKS);
+        final JSONArray booksArray = new JSONArray(response);
 
         JSONObject bookObject = null;
         ContentValues values = new ContentValues();
