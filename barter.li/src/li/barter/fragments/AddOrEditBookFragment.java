@@ -17,6 +17,7 @@
 package li.barter.fragments;
 
 import com.android.volley.Request;
+import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -39,8 +40,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
-import li.barter.http.BlJsonObjectRequest;
+import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
+import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
@@ -50,7 +52,7 @@ import li.barter.utils.Logger;
 
 @FragmentTransition(enterAnimation = R.anim.activity_slide_in_right, exitAnimation = R.anim.activity_scale_out, popEnterAnimation = R.anim.activity_scale_in, popExitAnimation = R.anim.activity_slide_out_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-                OnClickListener, Listener<JSONObject>, ErrorListener {
+                OnClickListener, Listener<ResponseInfo>, ErrorListener {
 
     private static final String TAG = "AddOrEditBookFragment";
 
@@ -150,7 +152,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void getBookInfoFromServer(final String bookId) {
 
-        final BlJsonObjectRequest request = new BlJsonObjectRequest(RequestId.GET_BOOK_INFO, HttpConstants
+        final BlRequest request = new BlRequest(Method.POST, RequestId.GET_BOOK_INFO, HttpConstants
                         .getApiBaseUrl() + ApiEndpoints.BOOK_INFO, null, this, this);
         final Map<String, String> params = new HashMap<String, String>();
         params.put(HttpConstants.Q, bookId);
@@ -187,8 +189,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                             .getText().toString());
 
             // TODO Add barter types
-            final BlJsonObjectRequest createBookRequest = new BlJsonObjectRequest(RequestId.CREATE_BOOK, HttpConstants
-                            .getApiBaseUrl() + ApiEndpoints.BOOKS, createBookJson, this, this);
+            final BlRequest createBookRequest = new BlRequest(Method.POST, RequestId.CREATE_BOOK, HttpConstants
+                            .getApiBaseUrl() + ApiEndpoints.BOOKS, createBookJson.toString(), this, this);
 
             addRequestToQueue(createBookRequest, true, 0);
         } catch (final JSONException e) {
@@ -247,9 +249,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     final Request<?> request) {
 
         onRequestFinished();
-        if (request instanceof BlJsonObjectRequest) {
+        if (request instanceof BlRequest) {
 
-            final int requestId = ((BlJsonObjectRequest) request)
+            final int requestId = ((BlRequest) request)
                             .getRequestId();
 
             if (requestId == RequestId.GET_BOOK_INFO) {
@@ -260,22 +262,23 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onResponse(final JSONObject response,
-                    final Request<JSONObject> request) {
+    public void onResponse(final ResponseInfo response,
+                    final Request<ResponseInfo> request) {
 
         onRequestFinished();
 
-        if (request instanceof BlJsonObjectRequest) {
+        if (request instanceof BlRequest) {
 
-            final int requestId = ((BlJsonObjectRequest) request)
+            //TODO Read book details from response
+            final int requestId = ((BlRequest) request)
                             .getRequestId();
 
-            if (requestId == RequestId.GET_BOOK_INFO) {
+            /*if (requestId == RequestId.GET_BOOK_INFO) {
                 readBookDetailsFromResponse(response);
             } else if (requestId == RequestId.CREATE_BOOK) {
                 showToast(R.string.book_added, true);
                 getFragmentManager().popBackStack();
-            }
+            }*/
         }
     }
 

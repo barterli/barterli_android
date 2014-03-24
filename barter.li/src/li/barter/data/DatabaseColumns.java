@@ -31,4 +31,5 @@ public interface DatabaseColumns {
     public static final String AUTHOR      = "author";
     public static final String BARTER_TYPE = "barter_type";
     public static final String USER_ID     = "user_id";
+    public static final String IMAGE_URL   = "image_url";
 }

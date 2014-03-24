@@ -22,6 +22,7 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 import android.app.Application;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.view.ViewConfiguration;
@@ -44,13 +45,35 @@ import li.barter.utils.Utils;
  */
 public class BarterLiApplication extends Application implements IVolleyHelper {
 
-    private RequestQueue mRequestQueue;
+    private static final String TAG = "BarterLiApplication";
 
-    private ImageLoader  mImageLoader;
+    /**
+     * Maintains a reference to the application context so that it can be
+     * referred anywhere wihout fear of leaking. It's a hack, but it works.
+     */
+    private static Context      sStaticContext;
+
+    private RequestQueue        mRequestQueue;
+
+    private ImageLoader         mImageLoader;
+
+    /**
+     * Gets a reference to the application context
+     * 
+     */
+    public static Context getStaticContext() {
+        if (sStaticContext != null) {
+            return sStaticContext;
+        }
+
+        //Should NEVER hapen
+        throw new RuntimeException("No static context instance");
+    }
 
     @Override
     public void onCreate() {
 
+        sStaticContext = getApplicationContext();
         overrideHardwareMenuButton();
         VolleyLog.sDebug = AppConstants.DEBUG;
         mRequestQueue = Volley.newRequestQueue(this);

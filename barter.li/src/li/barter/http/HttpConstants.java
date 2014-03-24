@@ -104,5 +104,7 @@ public class HttpConstants {
     public static final String PUBLICATION_YEAR = "publication_year";
     public static final String BARTER_TYPE      = "barter_type";
     public static final String USER_ID          = "user_id";
+    public static final String BOOKS            = "books";
+    public static final String IMAGE_URL        = "image_url";
 
 }

@@ -16,19 +16,25 @@
 
 package li.barter.http;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
+import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonRequest;
 
-import org.json.JSONArray;
+import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+
+import java.io.UnsupportedEncodingException;
 
 /**
- * {@link JsonObjectRequest} extension
+ * Request class for submitting requests to Volley
  * 
  * @author Vinay S Shenoy
  */
-public class BlJsonArrayRequest extends JsonArrayRequest {
+public class BlRequest extends JsonRequest<ResponseInfo> {
 
     /**
      * An identifier for the request that was made
@@ -36,16 +42,17 @@ public class BlJsonArrayRequest extends JsonArrayRequest {
     private final int mRequestId;
 
     /**
-     * Build a request to read a {@link JSONArray} response
-     * 
+     * @param method One of the constants from {@link Method} class to identify
+     *            the request type
      * @param requestId One of the {@linkplain HttpConstants.RequestId}
      *            constants
      * @param url The API endpoint
+     * @param requestBody A string represention of the Json request body
      * @param listener The {@link Listener} for the response
      * @param errorListener The {@link ErrorListener} for the error response
      */
-    public BlJsonArrayRequest(final int requestId, final String url, final Listener<JSONArray> listener, final ErrorListener errorListener) {
-        super(url, listener, errorListener);
+    public BlRequest(final int method, final int requestId, final String url, final String requestBody, final Listener<ResponseInfo> listener, final ErrorListener errorListener) {
+        super(method, url, requestBody, listener, errorListener);
         mRequestId = requestId;
     }
 
@@ -57,4 +64,21 @@ public class BlJsonArrayRequest extends JsonArrayRequest {
     public int getRequestId() {
         return mRequestId;
     }
+
+    @Override
+    protected Response<ResponseInfo> parseNetworkResponse(
+                    NetworkResponse response) {
+        
+        final HttpResponseParser parser = new HttpResponseParser();
+        try {
+            return Response.success(parser
+                            .getSuccessResponse(mRequestId, new String(response.data, HTTP.UTF_8)), HttpHeaderParser
+                            .parseCacheHeaders(response));
+        } catch (JSONException e) {
+            return Response.error(new ParseError(e));
+        } catch (UnsupportedEncodingException e) {
+            return Response.error(new ParseError(e));
+        }
+    }
+
 }
