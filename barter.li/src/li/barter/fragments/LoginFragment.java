@@ -20,6 +20,7 @@ import com.facebook.Session;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import li.barter.R;
+import li.barter.utils.AppConstants.Keys;
 
 @FragmentTransition(enterAnimation = R.anim.activity_slide_in_right, exitAnimation = R.anim.activity_scale_out, popEnterAnimation = R.anim.activity_scale_in, popExitAnimation = R.anim.activity_slide_out_right)
 public class LoginFragment extends AbstractBarterLiFragment implements
@@ -68,7 +70,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            getFragmentManager().popBackStack();
+
+            popBackStack();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

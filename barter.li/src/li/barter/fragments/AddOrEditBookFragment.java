@@ -87,7 +87,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         // book completely manually
         if (extras != null) {
             mBookId = extras.getString(Keys.ISBN);
-           Logger.d(TAG, "Book Id:" + mBookId);
+            Logger.d(TAG, "Book Id:" + mBookId);
 
             if (savedInstanceState != null) {
                 mHasFetchedDetails = savedInstanceState.getBoolean(Keys.BOOL_1);
@@ -108,8 +108,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == android.R.id.home) {
-            getFragmentManager().popBackStack();
+        if (item.getItemId() == android.R.id.home) {
+            popBackStack();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -203,9 +203,17 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             if (!isLoggedIn()) {
 
+                final Bundle myArgs = getArguments();
+                Bundle loginArgs = null;
+
+                if (myArgs != null && myArgs.containsKey(Keys.BACKSTACK_TAG)) {
+                    loginArgs = new Bundle(1);
+                    loginArgs.putString(Keys.BACKSTACK_TAG, myArgs
+                                    .getString(Keys.BACKSTACK_TAG));
+                }
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(),LoginFragment.class
-                                                .getName(), null), FragmentTags.LOGIN, true);
+                                .instantiate(getActivity(), LoginFragment.class
+                                                .getName(), loginArgs), FragmentTags.LOGIN, true, null);
 
             } else {
                 createBookOnServer();

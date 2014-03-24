@@ -243,7 +243,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mDrawerOpenedAutomatically = savedInstanceState
                             .getBoolean(Keys.BOOL_1);
         }
-        
+
         setActionBarDrawerToggleEnabled(true);
         return contentView;
     }
@@ -324,7 +324,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (location == null) {
             return;
         }
-       Logger.d(TAG, "Location update:" + location.getLatitude() + " "
+        Logger.d(TAG, "Location update:" + location.getLatitude() + " "
                         + location.getLongitude());
 
         UserInfo.INSTANCE.latestLocation = location;
@@ -397,7 +397,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (mIsHideRunnablePosted) {
 
-           Logger.d(TAG, "Already posted runnable, returning");
+            Logger.d(TAG, "Already posted runnable, returning");
             return;
         }
         mHideMapViewRunnable = new Runnable() {
@@ -474,7 +474,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         final GoogleMap googleMap = mMapView.getMap();
 
         if (googleMap != null) {
-           Logger.d(TAG, "Adding On Loaded Callback!");
+            Logger.d(TAG, "Adding On Loaded Callback!");
             googleMap.setOnMapLoadedCallback(this);
         }
     }
@@ -526,7 +526,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (drawerView == mBooksContentView) {
 
-           Logger.d(TAG, "Map Opened");
+            Logger.d(TAG, "Map Opened");
             setMapMyLocationEnabled(false);
             beginMapSnapshotProcess();
         }
@@ -542,7 +542,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             if (mCurDirection != mPrevDirection) { //Drawer state has changed
 
-               Logger.d(TAG, "Drawer drag " + mCurDirection + " from "
+                Logger.d(TAG, "Drawer drag " + mCurDirection + " from "
                                 + mPrevDirection + " slide offset:"
                                 + slideOffset);
 
@@ -562,7 +562,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onDrawerStateChanged(final int state) {
 
-       Logger.d(TAG, "On Drawer State Change:" + state);
+        Logger.d(TAG, "On Drawer State Change:" + state);
         if (state == DrawerLayout.STATE_IDLE) {
             if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
                 if (!mMapSnapshotRequested) { //If a map snapshot hasn't been requested, no need to call this as the map will be hidden when the snapsht is loaded
@@ -597,7 +597,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         final GoogleMap googleMap = mMapView.getMap();
 
         if (googleMap != null) {
-           Logger.d(TAG, "Taking Snapshot!");
+            Logger.d(TAG, "Taking Snapshot!");
             googleMap.snapshot(this);
         }
 
@@ -613,7 +613,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                         .instantiate(getActivity(), AddOrEditBookFragment.class
-                                        .getName(), bookInfo), FragmentTags.ADD_OR_EDIT_BOOK, true);
+                                        .getName(), bookInfo), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_BOOKS_AROUND_ME);
     }
 
 }

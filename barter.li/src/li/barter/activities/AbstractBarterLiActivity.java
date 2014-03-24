@@ -350,10 +350,11 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * @param tag The fragment tag
      * @param addToBackStack Whether the transaction should be addded to the
      *            backstack
+     * @param backStackTag The tag used for the backstack tag
      */
     public void loadFragment(final int containerResId,
                     final AbstractBarterLiFragment fragment, final String tag,
-                    final boolean addToBackStack) {
+                    final boolean addToBackStack, final String backStackTag) {
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction transaction = fragmentManager
@@ -372,7 +373,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
         transaction.replace(containerResId, fragment, tag);
 
         if (addToBackStack) {
-            transaction.addToBackStack(null);
+            transaction.addToBackStack(backStackTag);
         }
         transaction.commit();
     }

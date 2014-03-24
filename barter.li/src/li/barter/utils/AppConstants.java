@@ -65,7 +65,7 @@ public class AppConstants {
         INSTANCE;
 
         public boolean isNetworkConnected;
-        public int  currentNetworkType;
+        public int     currentNetworkType;
 
     }
 
@@ -107,6 +107,7 @@ public class AppConstants {
         public static final String BARTER_TYPES     = "barter_types";
         public static final String SYMBOLOGY        = "symbology";
         public static final String TYPE             = "type";
+        public static final String BACKSTACK_TAG    = "backstack_tag";
 
     }
 
@@ -116,9 +117,12 @@ public class AppConstants {
      * @author Vinay S Shenoy
      */
     public static interface FragmentTags {
-        public static final String BOOKS_AROUND_ME  = "books_around_me";
-        public static final String ADD_OR_EDIT_BOOK = "add_or_edit_book";
-        public static final String LOGIN            = "login";
+        public static final String BOOKS_AROUND_ME    = "books_around_me";
+        public static final String ADD_OR_EDIT_BOOK   = "add_or_edit_book";
+        public static final String LOGIN              = "login";
+
+        /* Tags for fragment backstack popping and providing up navigation */
+        public static final String BS_BOOKS_AROUND_ME = "to_books_around_me";
     }
 
 }

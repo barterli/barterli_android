@@ -78,7 +78,7 @@ public class ChatFragment extends AbstractBarterLiFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            getFragmentManager().popBackStack();
+            popBackStack();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

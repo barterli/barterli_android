@@ -22,7 +22,9 @@ import com.android.volley.toolbox.ImageLoader;
 
 import android.app.Activity;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -32,6 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.http.IVolleyHelper;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.TypefaceCache;
 
@@ -78,15 +81,13 @@ public abstract class AbstractBarterLiFragment extends Fragment {
     protected void init(final ViewGroup container) {
         mContainerViewId = container.getId();
     }
-    
-    
+
     protected void setActionBarDrawerToggleEnabled(boolean enabled) {
         AbstractBarterLiActivity activity = (AbstractBarterLiActivity) getActivity();
-        if(activity.hasNavigationDrawer()) {
+        if (activity.hasNavigationDrawer()) {
             activity.setActionBarDrawerToggleEnabled(enabled);
         }
     }
-    
 
     /**
      * Helper method to load fragments into layout
@@ -97,14 +98,15 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      * @param tag The fragment tag
      * @param addToBackStack Whether the transaction should be addded to the
      *            backstack
+     * @param backStackTag The tag used for the backstack tag
      */
     public void loadFragment(final int containerResId,
                     final AbstractBarterLiFragment fragment, final String tag,
-                    final boolean addToBackStack) {
+                    final boolean addToBackStack, final String backStackTag) {
 
         if (mIsAttached) {
             ((AbstractBarterLiActivity) getActivity())
-                            .loadFragment(containerResId, fragment, tag, addToBackStack);
+                            .loadFragment(containerResId, fragment, tag, addToBackStack, backStackTag);
         }
 
     }
@@ -264,6 +266,22 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      */
     protected boolean isLoggedIn() {
         return !TextUtils.isEmpty(UserInfo.INSTANCE.authToken);
+    }
+
+    /**
+     * Pops the fragment from the backstack, checking to see if the bundle args
+     * have {@linkplain Keys#BACKSTACK_TAG} which gives the name of the
+     * backstack tag to pop to
+     */
+    protected void popBackStack() {
+        final Bundle args = getArguments();
+
+        if (args != null && args.containsKey(Keys.BACKSTACK_TAG)) {
+            getFragmentManager()
+                            .popBackStack(args.getString(Keys.BACKSTACK_TAG), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        } else {
+            getFragmentManager().popBackStack();
+        }
     }
 
 }

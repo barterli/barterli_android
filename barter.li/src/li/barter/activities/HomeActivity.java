@@ -63,7 +63,7 @@ public class HomeActivity extends AbstractBarterLiActivity {
 
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                         .instantiate(this, BooksAroundMeFragment.class
-                                        .getName(), null), FragmentTags.BOOKS_AROUND_ME, false);
+                                        .getName(), null), FragmentTags.BOOKS_AROUND_ME, false, null);
 
     }
 
