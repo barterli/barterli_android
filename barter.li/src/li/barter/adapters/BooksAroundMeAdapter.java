@@ -16,35 +16,51 @@
 
 package li.barter.adapters;
 
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
-
-import java.util.Locale;
 
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
 
+/**
+ * Adapter used to display information for books around me
+ * 
+ * @author Vinay S Shenoy
+ */
 public class BooksAroundMeAdapter extends CursorAdapter {
 
-    public BooksAroundMeAdapter(Context context) {
+    private ImageLoader mImageLoader;
+
+    /**
+     * @param context A reference to the {@link Context}
+     * @param imageLoader An {@link ImageLoader} reference for loading images
+     *            from the network
+     */
+    public BooksAroundMeAdapter(Context context, ImageLoader imageLoader) {
         super(context, null, 0);
+        mImageLoader = imageLoader;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        ((TextView) view.getTag(R.id.textBookName))
+        ((TextView) view.getTag(R.id.text_book_name))
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.TITLE)));
-        ((TextView) view.getTag(R.id.textBookDesc))
+        ((TextView) view.getTag(R.id.text_book_desc))
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.DESCRIPTION)));
+        ((NetworkImageView) view.getTag(R.id.image_book))
+                        .setImageUrl(cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.IMAGE_URL)), mImageLoader);
     }
 
     @Override
@@ -52,9 +68,9 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         final View view = LayoutInflater.from(context)
                         .inflate(R.layout.layout_item_book, parent, false);
 
-        view.setTag(R.id.imageBook, view.findViewById(R.id.imageBook));
-        view.setTag(R.id.textBookName, view.findViewById(R.id.textBookName));
-        view.setTag(R.id.textBookDesc, view.findViewById(R.id.textBookDesc));
+        view.setTag(R.id.image_book, view.findViewById(R.id.image_book));
+        view.setTag(R.id.text_book_name, view.findViewById(R.id.text_book_name));
+        view.setTag(R.id.text_book_desc, view.findViewById(R.id.text_book_desc));
         return view;
     }
 

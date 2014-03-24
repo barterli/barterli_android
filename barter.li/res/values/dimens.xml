@@ -28,8 +28,8 @@
     <dimen name="bookGridVerticalSpacing">16dp</dimen>
     <dimen name="width_item_border">1dp</dimen>
     <dimen name="nav_drawer_width">240dp</dimen>
-    <dimen name="bookHeight">120dp</dimen>
-    <dimen name="bookImageWidth">90dp</dimen>
+    <dimen name="book_height">120dp</dimen>
+    <dimen name="book_image_width">90dp</dimen>
 
     <!-- Texy sizes -->
     <dimen name="text_micro">12sp</dimen>

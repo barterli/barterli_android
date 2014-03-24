@@ -251,7 +251,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeGridView = (GridView) contentView
                         .findViewById(R.id.grid_books_around_me);
 
-        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
+        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity(), getImageLoader());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
         mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
         mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
