@@ -54,11 +54,12 @@
             android:layout_marginLeft="@dimen/activity_margin"
             android:layout_marginRight="@dimen/activity_margin"
             android:background="@color/transparent"
-            android:horizontalSpacing="@dimen/grid_view_spacing"
+            android:horizontalSpacing="@dimen/bookGridHorizontalSpacing"
             android:numColumns="@integer/grid_col_count"
             android:overScrollMode="never"
+            android:paddingBottom="@dimen/bookGridVerticalSpacing"
             android:scrollbars="none"
-            android:verticalSpacing="@dimen/grid_view_spacing" />
+            android:verticalSpacing="@dimen/bookGridVerticalSpacing" />
     </LinearLayout>
 
 </android.support.v4.widgets.FullWidthDrawerLayout>

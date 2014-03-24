@@ -245,8 +245,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeGridView = (GridView) contentView
                         .findViewById(R.id.grid_books_around_me);
 
-        mBooksAroundMeAdapter = new BooksAroundMeAdapter();
+        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
+        mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
+        mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
 
         mTransitionDrawableLayers = new Drawable[2];
         mGooglePlayClientWrapper = new GooglePlayClientWrapper((AbstractBarterLiActivity) getActivity(), this);
@@ -256,14 +258,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mPrevSlideOffset = 0.0f;
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
+            fetchBooksAroundMe();
         } else {
             mDrawerOpenedAutomatically = savedInstanceState
                             .getBoolean(Keys.BOOL_1);
         }
 
-        setActionBarDrawerToggleEnabled(true);
-        fetchBooksAroundMe();
         loadBookSearchResults();
+        setActionBarDrawerToggleEnabled(true);
         return contentView;
     }
 
@@ -367,7 +369,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         UserInfo.INSTANCE.latestLocation = location;
 
-        final GoogleMap googleMap = mMapView.getMap();
+        final GoogleMap googleMap = ((mMapView != null) ? (mMapView.getMap())
+                        : null);
 
         if (googleMap != null) {
             googleMap.setMyLocationEnabled(false);
@@ -413,12 +416,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
          * transition is still happening
          */
         scheduleHideMapTask(TRANSITION_DURATION);
-
-        if (mBooksAroundMeGridView.getAdapter() == null) {
-            mSwingBottomInAnimationAdapter
-                            .setAbsListView(mBooksAroundMeGridView);
-            mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
-        }
 
         mMapSnapshotRequested = false;
 
@@ -677,8 +674,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
-            // TODO: Swap cursor
-            Logger.d(TAG, "Loaded book results: %d", cursor.getCount());
+            Logger.d(TAG, "Cursor Loaded!");
+            mBooksAroundMeAdapter.swapCursor(cursor);
             if (!mDrawerOpenedAutomatically) {
                 // Open drawer automatically on map loaded if first launch
                 mDrawerOpenedAutomatically = true;
@@ -689,8 +686,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // TODO Auto-generated method stub
 
+        if (loader.getId() == Loaders.SEARCH_BOOKS) {
+            mBooksAroundMeAdapter.swapCursor(null);
+        }
     }
 
 }
