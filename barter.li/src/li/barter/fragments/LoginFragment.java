@@ -57,7 +57,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     /**
      * Minimum length of the entered password
      */
-    private final int           mMinPasswordLength = 6;
+    private final int           mMinPasswordLength = 8;
 
     private Button              mFacebookLoginButton;
     private Button              mGoogleLoginButton;
