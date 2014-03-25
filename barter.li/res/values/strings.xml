@@ -51,11 +51,15 @@
     <string name="description_label">Description</string>
     <string name="publication_year_label">Published On</string>
     <string name="barter_type_label">Barter Type</string>
-    <string name="error_enter_title">Please enter a book title</string>
+    <string name="error_enter_title">Enter a book title</string>
     <string name="book_added">Book has been added!</string>
     <string name="unable_to_fetch_book_info">Unable to fetch book info.</string>
     <string name="not_a_valid_isbn">Not a valid ISBN.</string>
     <string name="unable_to_fetch_books">Unable to fetch books.</string>
+    <string name="error_enter_email">Please enter your email address.</string>
+    <string name="error_invalid_email">Please enter a valid email address.</string>
+    <string name="error_enter_password">Please enter a password.</string>
+    <string name="error_password_minimum_length">Password must be at least %d characters long.</string>
 
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>

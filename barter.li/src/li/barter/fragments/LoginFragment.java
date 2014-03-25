@@ -16,11 +16,20 @@
 
 package li.barter.fragments;
 
+import com.android.volley.Request;
+import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.facebook.Session;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,13 +39,25 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import li.barter.R;
+import li.barter.http.BlRequest;
+import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.Logger;
 
 @FragmentTransition(enterAnimation = R.anim.activity_slide_in_right, exitAnimation = R.anim.activity_scale_out, popEnterAnimation = R.anim.activity_scale_in, popExitAnimation = R.anim.activity_slide_out_right)
 public class LoginFragment extends AbstractBarterLiFragment implements
-                OnClickListener {
+                OnClickListener, Listener<ResponseInfo>, ErrorListener {
 
-    private static final String TAG = "LoginFragment";
+    private static final String TAG                = "LoginFragment";
+
+    /**
+     * Minimum length of the entered password
+     */
+    private final int           mMinPasswordLength = 6;
 
     private Button              mFacebookLoginButton;
     private Button              mGoogleLoginButton;
@@ -107,10 +128,92 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             }
 
             case R.id.button_submit: {
-                // TODO UserLoggerin/Create
+                if (isInputValid()) {
+                    login(mEmailEditText.getText().toString(), mPasswordEditText
+                                    .getText().toString());
+                }
                 break;
             }
         }
+    }
+
+    /**
+     * Call the login Api
+     * 
+     * @param email The entered email
+     * @param password The entered password
+     */
+    private void login(final String email, final String password) {
+
+        final JSONObject requestObject = new JSONObject();
+
+        try {
+            requestObject.put(HttpConstants.PROVIDER, AppConstants.MANUAL);
+            requestObject.put(HttpConstants.EMAIL, email);
+            requestObject.put(HttpConstants.PASSWORD, password);
+            final BlRequest request = new BlRequest(Method.POST, RequestId.CREATE_USER, HttpConstants
+                            .getApiBaseUrl() + ApiEndpoints.CREATE_USER, requestObject
+                            .toString(), this, this);
+            addRequestToQueue(request, true, 0);
+        } catch(JSONException e) {
+            // Should never happen
+            Logger.e(TAG, e, "Error building create user json");
+        }
+        
+    }
+
+    /**
+     * Validates the text fields for creating a user. Automatically sets the
+     * error messages for the text fields
+     * 
+     * @return <code>true</code> If the input is valid, <code>false</code>
+     *         otherwise
+     */
+    private boolean isInputValid() {
+
+        final String email = mEmailEditText.getText().toString();
+        boolean isValid = !TextUtils.isEmpty(email);
+
+        if (!isValid) {
+            mEmailEditText.setError(getString(R.string.error_enter_email));
+        } else {
+            //Using a regex for email comparison is pointless
+            isValid &= email.contains("@");
+            if (!isValid) {
+                mEmailEditText.setError(getString(R.string.error_invalid_email));
+            }
+        }
+
+        if (isValid) {
+            final String password = mPasswordEditText.getText().toString();
+            isValid &= !TextUtils.isEmpty(password);
+
+            if (!isValid) {
+                mPasswordEditText
+                                .setError(getString(R.string.error_enter_password));
+            } else {
+                isValid &= (password.length() >= mMinPasswordLength);
+                if (!isValid) {
+                    mPasswordEditText
+                                    .setError(getString(R.string.error_password_minimum_length, mMinPasswordLength));
+                }
+            }
+        }
+
+        return isValid;
+    }
+
+    @Override
+    public void onErrorResponse(VolleyError error, Request<?> request) {
+        onRequestFinished();
+        Logger.e(TAG, error, "Error Response");
+
+    }
+
+    @Override
+    public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+        onRequestFinished();
+        Logger.d(TAG, "Response received");
     }
 
 }

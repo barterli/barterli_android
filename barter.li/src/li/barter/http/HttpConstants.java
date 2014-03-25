@@ -89,6 +89,7 @@ public class HttpConstants {
         public static final int GET_BOOK_INFO = 100;
         public static final int CREATE_BOOK   = 101;
         public static final int SEARCH_BOOKS  = 102;
+        public static final int CREATE_USER   = 103;
     }
 
     public static final String BOOKS            = "books";
@@ -110,5 +111,12 @@ public class HttpConstants {
     public static final String LATITUDE         = "latitude";
     public static final String LONGITUDE        = "longitude";
     public static final String RADIUS           = "radius";
-
+    public static final String PROVIDER         = "provider";
+    public static final String ACCESS_TOKEN     = "access_token";
+    public static final String EMAIL            = "email";
+    public static final String PASSWORD         = "password";
+    public static final String AUTH_TOKEN       = "auth_token";
+    public static final String STATUS           = "status";
+    public static final String SUCCESS          = "success";
+    public static final String LOCATION         = "location";
 }

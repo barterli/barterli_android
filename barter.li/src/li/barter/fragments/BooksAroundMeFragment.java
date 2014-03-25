@@ -522,6 +522,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * blurred bitmap is generated for the background of the screen content
      */
     private void beginMapSnapshotProcess() {
+        if(!isAttached()) {
+            return;
+        }
         mMapSnapshotRequested = true;
         final GoogleMap googleMap = getMap();
 

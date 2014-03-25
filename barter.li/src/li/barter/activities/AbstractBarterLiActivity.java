@@ -202,7 +202,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
 
-        if (mIsActionBarNavDrawerToggleEnabled
+        if (isActionBarNavDrawerToggleEnabled()
                         && mDrawerToggle.onOptionsItemSelected(item)) {
             // Pass the event to ActionBarDrawerToggle, if it returns
             // true, then it has handled the app icon touch event

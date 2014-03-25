@@ -26,7 +26,10 @@ import android.location.LocationManager;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG    = true;
+
+    public static final String  FACEBOOK = "facebook";
+    public static final String  MANUAL   = "manual";
 
     /**
      * Singleton to hold frequently accessed info in memory

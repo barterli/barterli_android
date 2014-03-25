@@ -58,9 +58,9 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         ((TextView) view.getTag(R.id.text_book_desc))
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.DESCRIPTION)));
-        ((NetworkImageView) view.getTag(R.id.image_book))
+        /*((NetworkImageView) view.getTag(R.id.image_book))
                         .setImageUrl(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.IMAGE_URL)), mImageLoader);
+                                        .getColumnIndex(DatabaseColumns.IMAGE_URL)), mImageLoader); */
     }
 
     @Override

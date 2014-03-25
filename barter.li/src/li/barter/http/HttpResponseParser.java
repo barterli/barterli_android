@@ -16,6 +16,7 @@
 
 package li.barter.http;
 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +52,7 @@ public class HttpResponseParser {
     public ResponseInfo getSuccessResponse(int requestId, String response)
                     throws JSONException {
 
+        Logger.d(TAG, "Request Id %d\nResponse %s", requestId, response);
         switch (requestId) {
 
             case RequestId.CREATE_BOOK: {
@@ -65,6 +67,10 @@ public class HttpResponseParser {
                 return parseGetSearchBooksResponse(response);
             }
 
+            case RequestId.CREATE_USER: {
+                return parseCreateUserResponse(response);
+            }
+
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
                                 + requestId);
@@ -73,6 +79,27 @@ public class HttpResponseParser {
     }
 
     /**
+     * Method for parsing the create user/login response
+     * 
+     * @param response
+     * @return
+     * @throws JSONException If the Json response is malformed
+     */
+    private ResponseInfo parseCreateUserResponse(String response)
+                    throws JSONException {
+
+        final ResponseInfo responseInfo = new ResponseInfo();
+
+        final JSONObject responseObject = new JSONObject(response);
+        
+        final String authToken = JsonUtils.getStringValue(responseObject, HttpConstants.AUTH_TOKEN);
+        Logger.d(TAG, "On Login: %s", authToken);
+        return responseInfo;
+    }
+
+    /**
+     * Method for parsing the search results
+     * 
      * @param response
      * @return
      * @throws JSONException If the Json resposne is malformed
@@ -83,7 +110,8 @@ public class HttpResponseParser {
         final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
-        final JSONArray booksArray = JsonUtils.getJsonArray(responseObject, HttpConstants.BOOKS);
+        final JSONArray booksArray = JsonUtils
+                        .getJsonArray(responseObject, HttpConstants.BOOKS);
 
         JSONObject bookObject = null;
         ContentValues values = new ContentValues();
