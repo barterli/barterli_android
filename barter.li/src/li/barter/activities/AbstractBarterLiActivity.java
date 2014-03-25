@@ -25,7 +25,9 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -34,11 +36,14 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -49,8 +54,11 @@ import li.barter.R;
 import li.barter.adapters.HomeNavDrawerAdapter;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.FragmentTransition;
+import li.barter.fragments.LoginFragment;
 import li.barter.http.IVolleyHelper;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.NetworkDetails;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
 
@@ -59,48 +67,76 @@ import li.barter.widgets.TypefacedSpan;
  */
 public abstract class AbstractBarterLiActivity extends FragmentActivity {
 
-    private static final String   TAG                     = "BaseBarterLiActivity";
+    private static final String       TAG                         = "BaseBarterLiActivity";
 
-    private static final int      ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
-                                                                          | ActionBar.DISPLAY_SHOW_TITLE;
+    private static final int          ACTION_BAR_DISPLAY_MASK     = ActionBar.DISPLAY_HOME_AS_UP
+                                                                                  | ActionBar.DISPLAY_SHOW_TITLE;
 
-    private RequestQueue          mRequestQueue;
-    private ImageLoader           mImageLoader;
-    private AtomicInteger         mRequestCounter;
+    private RequestQueue              mRequestQueue;
+    private ImageLoader               mImageLoader;
+    private AtomicInteger             mRequestCounter;
 
-    private ActivityTransition    mActivityTransition;
+    private ActivityTransition        mActivityTransition;
 
     /**
      * Drawer Layout that contains the Navigation Drawer
      */
-    private DrawerLayout          mDrawerLayout;
+    private DrawerLayout              mDrawerLayout;
 
     /**
      * Drawer toggle for Action Bar
      */
-    private ActionBarDrawerToggle mDrawerToggle;
+    private ActionBarDrawerToggle     mDrawerToggle;
 
     /**
      * {@link ListView} that provides the navigation items
      */
-    private ListView              mNavListView;
+    private ListView                  mNavListView;
 
     /**
      * {@link BaseAdapter} implementation for Navigation drawer item
      */
-    private HomeNavDrawerAdapter  mNavDrawerAdapter;
+    private HomeNavDrawerAdapter      mNavDrawerAdapter;
 
     /**
      * Whether the current activity has a Navigation drawer or not
      */
-    private boolean               mHasNavigationDrawer;
+    private boolean                   mHasNavigationDrawer;
 
     /**
      * Whether the nav drawer associated with this activity is also associated
      * with the drawer togglw. Is valid only if
      * <code>mHasNavigationDrawer</code> is <code>true</code>
      */
-    private boolean               mIsActionBarNavDrawerToggleEnabled;
+    private boolean                   mIsActionBarNavDrawerToggleEnabled;
+
+    /**
+     * Handler for posting callbacks back to the main thread. Used for delaying
+     * launching of nav drawer item until the drawer is closed
+     */
+    private Handler                   mHandler;
+
+    /**
+     * Navigation Drawer Item Click Listener. The Nav list items are loaded from
+     * R.array.nav_drawer_titles
+     */
+    private final OnItemClickListener mNavDrawerItemClickListener = new OnItemClickListener() {
+                                                                      public void onItemClick(
+                                                                                      AdapterView<?> parent,
+                                                                                      View view,
+                                                                                      int position,
+                                                                                      long id) {
+
+                                                                          Runnable launchRunnable = makeRunnableForNavDrawerClick(position);
+                                                                          if (launchRunnable != null) {
+                                                                              //Give time for drawer to close before performing the action
+                                                                              mHandler.postDelayed(launchRunnable, 250);
+                                                                          }
+                                                                          mDrawerLayout.closeDrawer(mNavListView);
+
+                                                                      }
+
+                                                                  };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -124,7 +160,76 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
         mImageLoader = ((IVolleyHelper) getApplication()).getImageLoader();
         mRequestCounter = new AtomicInteger(0);
         setProgressBarIndeterminateVisibility(false);
+        mHandler = new Handler();
     }
+
+    /**
+     * Creates a {@link Runnable} for positing to the Handler for launching the
+     * Navigation Drawer click
+     * 
+     * @param position The nav drawer item that was clicked
+     * @return a {@link Runnable} to be posted to the Handler thread
+     */
+    private Runnable makeRunnableForNavDrawerClick(final int position) {
+
+        Runnable runnable = null;
+        switch (position) {
+
+        //My Profile
+            case 0: {
+
+                runnable = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        if (isLoggedIn()) {
+                            //TODO Load Profile screen
+                        } else {
+                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                            .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
+                                                            .getName(), null), FragmentTags.LOGIN, true, null);
+                        }
+
+                    }
+                };
+                break;
+
+            }
+
+            //Send feedback
+            case 1: {
+
+                break;
+            }
+
+            //Help out barter.li
+            case 2: {
+                break;
+            }
+
+            //Open source
+            case 3: {
+
+                break;
+            }
+
+            //About us
+            case 4: {
+                break;
+            }
+
+            //Tribute
+            case 5: {
+                break;
+            }
+
+            default: {
+                runnable = null;
+            }
+        }
+
+        return runnable;
+    };
 
     /**
      * Reference to the {@link ImageLoader}
@@ -432,6 +537,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
 
         mNavDrawerAdapter = new HomeNavDrawerAdapter(this, R.array.nav_drawer_titles, R.array.nav_drawer_descriptions);
         mNavListView.setAdapter(mNavDrawerAdapter);
+        mNavListView.setOnItemClickListener(mNavDrawerItemClickListener);
 
     }
 
@@ -501,6 +607,13 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
             }
 
         }
+    }
+
+    /**
+     * Is the user logged in
+     */
+    protected boolean isLoggedIn() {
+        return !TextUtils.isEmpty(UserInfo.INSTANCE.authToken);
     }
 
 }
