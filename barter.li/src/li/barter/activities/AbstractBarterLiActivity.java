@@ -615,5 +615,12 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
     protected boolean isLoggedIn() {
         return !TextUtils.isEmpty(UserInfo.INSTANCE.authToken);
     }
+    
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        //Reset background to reduce overdaw
+        getWindow().setBackgroundDrawable(null);
+    }
 
 }
