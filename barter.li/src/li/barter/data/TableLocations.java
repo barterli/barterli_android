@@ -25,30 +25,29 @@ import java.util.Locale;
 import li.barter.utils.Logger;
 
 /**
- * Table representation for search results for books
- * 
- * @author Vinay S Shenoy
+ * @author Vinay S Shenoy Table representing a list of locations used in the app
  */
-public class TableSearchBooks {
+public class TableLocations {
 
-    private static final String TAG  = "TableSearchBooks";
+    private static final String TAG  = "TableLocations";
 
-    public static final String  NAME = "SEARCH_BOOKS";
+    public static final String  NAME = "LOCATIONS";
 
     public static void create(SQLiteDatabase db) {
 
         final String columnDef = TextUtils
                         .join(SQLConstants.COMMA, new String[] {
                                 String.format(Locale.US, SQLConstants.DATA_INTEGER_PK, BaseColumns._ID),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_ID),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ISBN_10),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ISBN_13),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TITLE),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.DESCRIPTION),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.AUTHOR),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BARTER_TYPE),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.USER_ID),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.IMAGE_URL)
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCATION_ID),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.NAME),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ADDRESS),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.STREET),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCALITY),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.CITY),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.STATE),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.COUNTRY),
+                                String.format(Locale.US, SQLConstants.DATA_REAL, DatabaseColumns.LATITUDE),
+                                String.format(Locale.US, SQLConstants.DATA_REAL, DatabaseColumns.LONGITUDE)
                         });
 
         Logger.d(TAG, "Column Def:", columnDef);
