@@ -16,14 +16,25 @@
 
 package li.barter.utils;
 
+import com.google.android.gms.internal.ed;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.LatLng;
+
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Looper;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
+import android.view.View;
+
+import java.util.Map;
 
 import li.barter.utils.AppConstants.NetworkDetails;
 
@@ -92,5 +103,142 @@ public class Utils {
      */
     public static boolean isMainThread() {
         return Looper.getMainLooper() == Looper.myLooper();
+    }
+
+    /**
+     * Returns the center of a map
+     * 
+     * @param map The map to fetch the center location of
+     * @return The center of the map
+     */
+    public static Location getCenterLocationOfMap(GoogleMap map) {
+        final LatLng latLng = map.getCameraPosition().target;
+        final Location location = new Location(LocationManager.PASSIVE_PROVIDER);
+        location.setLatitude(latLng.latitude);
+        location.setLongitude(latLng.longitude);
+        return location;
+    }
+
+    /**
+     * From the center point of the map, caculate the shortest radius(in metres)
+     * depending on the whether the {@link MapView} is in portrait/landscape
+     * orientation
+     * 
+     * @param map The {@link MapView} to calculate the radius from
+     * @return The shortest radius(in metres), or 0 of the map is not intialized
+     */
+    public static float getShortestRadiusFromCenter(MapView mapView) {
+
+        float radius = 0.0f;
+
+        final GoogleMap map = mapView.getMap();
+
+        if (map != null) {
+
+            // To hold the coordinates of the center line of the map
+            Point[] screenCenterEdgePoints = null;
+            screenCenterEdgePoints = getShorterDimensionEdgePoints(mapView);
+            Location[] locations = getLocationsFromPoints(map, screenCenterEdgePoints);
+
+            if (locations.length == 2) {
+                Location startLocation = locations[0];
+                Location endLocation = locations[1];
+                final float[] results = new float[1];
+                Location.distanceBetween(startLocation.getLatitude(), startLocation
+                                .getLongitude(), endLocation.getLatitude(), endLocation
+                                .getLongitude(), results);
+                radius = results[0];
+                Logger.v(TAG, "Distance Calculated: %f", radius);
+            }
+        }
+        return radius;
+    }
+
+    /**
+     * Takes an array of points(in screen pixels) and converts them into
+     * Location objects on the Map
+     * 
+     * @param map {@link Map} reference on which the points are calculated
+     * @param points The {@link Point}s to convert to {@link Location}s
+     * @return An array of {@link Location}s with a 1-to-1 mapping between the
+     *         input points
+     */
+    public static Location[] getLocationsFromPoints(GoogleMap map,
+                    Point[] points) {
+        final Location[] locations = new Location[points.length];
+
+        for (int i = 0; i < points.length; i++) {
+            locations[i] = pointToLocation(map, points[i]);
+        }
+        return locations;
+    }
+
+    /**
+     * Converts a {@link Point}(in screen pixels) into a {@link Location} using
+     * the provided {@link GoogleMap}
+     * 
+     * @param map A {@link GoogleMap} instance
+     * @param point The {@link Point} in the MapView, in screen pixels
+     * @return A {@link Location} object
+     */
+    public static Location pointToLocation(GoogleMap map, Point point) {
+
+        final LatLng latLng = map.getProjection().fromScreenLocation(point);
+        Location location = new Location(LocationManager.PASSIVE_PROVIDER);
+
+        if (latLng != null) {
+            location.setLatitude(latLng.latitude);
+            location.setLongitude(latLng.longitude);
+        }
+
+        Logger.v(TAG, "Converted Point %s to Location %s", point.toString(), location
+                        .toString());
+        return location;
+    }
+
+    /**
+     * @param view the view to get the edges of
+     * @return The edges(in screen coordinates) of the shortest dimension of the
+     *         view. If in landscape, the points will be returned as top,
+     *         bottom. Otherwise left, right
+     */
+    public static Point[] getShorterDimensionEdgePoints(View view) {
+
+        final Point[] edgePoints = new Point[2];
+
+        final int viewTop = view.getTop();
+        final int viewBottom = view.getBottom();
+        final int viewLeft = view.getLeft();
+        final int viewRight = view.getRight();
+
+        Logger.v(TAG, "Left %d, Top %d, Right %d, Bottom %d", viewLeft, viewTop, viewRight, viewBottom);
+
+        if (isViewInLandscape(view)) {
+
+            final int centerX = (viewRight - viewLeft) / 2;
+            edgePoints[0] = new Point(centerX, viewTop);
+            edgePoints[1] = new Point(centerX, viewBottom);
+
+            Logger.v(TAG, "Landscape Edge: %s, %s", edgePoints[0].toString(), edgePoints[1]
+                            .toString());
+        } else {
+
+            final int centerY = (viewBottom - viewTop) / 2;
+
+            edgePoints[0] = new Point(viewLeft, centerY);
+            edgePoints[1] = new Point(viewRight, centerY);
+
+            Logger.v(TAG, "Portrait Edge: %s, %s", edgePoints[0].toString(), edgePoints[1]
+                            .toString());
+        }
+        return edgePoints;
+    }
+
+    /**
+     * @return <code>true</code> if view is in landscape mode,
+     *         <code>false</code> if it is in portrait mode
+     */
+    public static boolean isViewInLandscape(View view) {
+        return view.getWidth() >= view.getHeight();
     }
 }

@@ -74,6 +74,7 @@ import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.Logger;
 import li.barter.utils.MapDrawerInteractionHelper;
+import li.barter.utils.Utils;
 
 /**
  * @author Vinay S Shenoy Fragment for displaying Books Around Me. Also contains
@@ -192,7 +193,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
             mMapAlreadyMovedOnce = false;
-            fetchBooksAroundMe();
+            fetchBooksAroundMe(UserInfo.INSTANCE.latestLocation, 1);
         } else {
             mDrawerOpenedAutomatically = savedInstanceState
                             .getBoolean(Keys.DRAWER_OPENED_ONCE);
@@ -230,21 +231,27 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Method to fetch books around me from the server
+     * Method to fetch books around me from the server centered at a location,
+     * and in a search radius
+     * 
+     * @param center The {@link Location} representing the center
+     * @param radius The radius(in kilometers) to search in
      */
-    private void fetchBooksAroundMe() {
+    private void fetchBooksAroundMe(Location center, int radius) {
 
         BlRequest request = new BlRequest(Method.GET, RequestId.SEARCH_BOOKS, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.SEARCH, null, this, this);
 
-        final Location lastLocation = UserInfo.INSTANCE.latestLocation;
-
-        if (lastLocation != null) {
+        if (center != null) {
             final Map<String, String> params = new HashMap<String, String>(2);
-            params.put(HttpConstants.LATITUDE, String.valueOf(lastLocation
+            params.put(HttpConstants.LATITUDE, String.valueOf(center
                             .getLatitude()));
-            params.put(HttpConstants.LONGITUDE, String.valueOf(lastLocation
+            params.put(HttpConstants.LONGITUDE, String.valueOf(center
                             .getLongitude()));
+
+            if (radius >= 1) {
+                params.put(HttpConstants.RADIUS, String.valueOf(radius));
+            }
             request.setParams(params);
         }
         addRequestToQueue(request, true, 0);
@@ -316,7 +323,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         UserInfo.INSTANCE.latestLocation = location;
 
         if (!mMapAlreadyMovedOnce) {
-            fetchBooksAroundMe();
+
             /*
              * For the initial launch, move the Map to the user's current
              * position as soon as the location is fetched
@@ -324,7 +331,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             final GoogleMap googleMap = getMap();
 
             if (googleMap != null) {
-                mMapAlreadyMovedOnce = true;
                 googleMap.setMyLocationEnabled(false);
                 googleMap.animateCamera(CameraUpdateFactory
                                 .newLatLngZoom(new LatLng(UserInfo.INSTANCE.latestLocation
@@ -371,6 +377,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onFinish() {
+        if (!mMapAlreadyMovedOnce) {
+            mMapAlreadyMovedOnce = true;
+            final int searchRadius = Math.round(Utils
+                            .getShortestRadiusFromCenter(mMapView) / 1000);
+            fetchBooksAroundMe(UserInfo.INSTANCE.latestLocation, searchRadius);
+        }
         mMapDrawerBlurHelper.onMapZoomedIn();
     }
 
@@ -449,25 +461,27 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onDrawerClosed(View drawerView) {
-        
+
     }
 
     @Override
     public void onDrawerOpened(View drawerView) {
 
-        if(drawerView == mBooksDrawerView) {
-            fetchBooksAroundMe();
+        if (drawerView == mBooksDrawerView) {
+            final int searchRadius = Math.round(Utils
+                            .getShortestRadiusFromCenter(mMapView) / 1000);
+            fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), searchRadius);
         }
     }
 
     @Override
     public void onDrawerSlide(View drawerView, float slideOffset) {
-        
+
     }
 
     @Override
     public void onDrawerStateChanged(int state) {
-        
+
     }
 
 }
