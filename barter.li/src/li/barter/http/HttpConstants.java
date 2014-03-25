@@ -32,7 +32,11 @@ public class HttpConstants {
      */
     private enum Server {
 
-        LOCAL("http://192.168.1.138:3000/api/v", API_VERSION, "192.168.1.138", 5672),
+        LOCAL(
+                        "http://192.168.1.138:3000/api/v",
+                        API_VERSION,
+                        "192.168.1.138",
+                        5672),
         DEV(
                         "http://162.243.198.171/api/v",
                         API_VERSION,
@@ -55,7 +59,7 @@ public class HttpConstants {
         }
     }
 
-    private static Server SERVER = Server.LOCAL;
+    private static Server SERVER = Server.DEV;
 
     public static String getApiBaseUrl() {
         return SERVER.mUrl;
@@ -119,4 +123,5 @@ public class HttpConstants {
     public static final String STATUS           = "status";
     public static final String SUCCESS          = "success";
     public static final String LOCATION         = "location";
+    public static final String ERROR_CODE       = "error_code";
 }

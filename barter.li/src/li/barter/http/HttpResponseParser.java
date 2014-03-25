@@ -16,7 +16,7 @@
 
 package li.barter.http;
 
-
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,8 +41,9 @@ public class HttpResponseParser {
     private static final String TAG = "HttpResponseParser";
 
     /**
-     * Parses the string response for a particular {@linkplain RequestId} and
-     * returns the response data
+     * Parses the string response(when the request was successful -
+     * {@linkplain HttpStatus#SC_OK} was returned) for a particular
+     * {@linkplain RequestId} and returns the response data
      * 
      * @param requestId
      * @param response
@@ -91,8 +92,9 @@ public class HttpResponseParser {
         final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
-        
-        final String authToken = JsonUtils.getStringValue(responseObject, HttpConstants.AUTH_TOKEN);
+
+        final String authToken = JsonUtils
+                        .getStringValue(responseObject, HttpConstants.AUTH_TOKEN);
         Logger.d(TAG, "On Login: %s", authToken);
         return responseInfo;
     }
@@ -193,4 +195,45 @@ public class HttpResponseParser {
         // TODO Parse get create book response
         return new ResponseInfo();
     }
+
+    /**
+     * Parses the string response(when the request was unsuccessful -
+     * {@linkplain HttpStatus#SC_BAD_REQUEST} was returned) for a particular
+     * {@linkplain RequestId} and returns the response data
+     * 
+     * @param requestId The {@linkplain RequestId} for the request
+     * @param response The response from the server
+     * @return a {@linkplain ResponseInfo} object representing the response
+     * @throws JSONException If the response was an invalid json
+     */
+    public ResponseInfo getErrorResponse(int requestId, String response)
+                    throws JSONException {
+
+        Logger.d(TAG, "Request Id %d\nResponse %s", requestId, response);
+        final ResponseInfo responseInfo = parseErrorResponse(requestId, response);
+        return responseInfo;
+    }
+
+    /**
+     * Do the actual parsing of error response here
+     * 
+     * @param requestId The {@linkplain RequestId} for the request
+     * @param response The Json response from server
+     * @return a {@linkplain ResponseInfo} object representing the response
+     * @throws JSONException If the response was invalid json
+     */
+    private ResponseInfo parseErrorResponse(final int requestId, String response)
+                    throws JSONException {
+
+        ResponseInfo responseInfo = new ResponseInfo(false);
+        JSONObject errorObject = new JSONObject(response);
+
+        final int errorCode = JsonUtils
+                        .getIntValue(errorObject, HttpConstants.ERROR_CODE);
+        responseInfo.errorCode = errorCode;
+        //Parse error response specific to any request here
+        return responseInfo;
+
+    }
+
 }

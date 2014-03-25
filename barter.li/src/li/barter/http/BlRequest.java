@@ -16,16 +16,21 @@
 
 package li.barter.http;
 
+import com.android.volley.BadRequestError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError.ErrorCode;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
+
+import android.os.Bundle;
 
 import java.io.UnsupportedEncodingException;
 
@@ -68,7 +73,7 @@ public class BlRequest extends JsonRequest<ResponseInfo> {
     @Override
     protected Response<ResponseInfo> parseNetworkResponse(
                     NetworkResponse response) {
-        
+
         final HttpResponseParser parser = new HttpResponseParser();
         try {
             return Response.success(parser
@@ -78,6 +83,28 @@ public class BlRequest extends JsonRequest<ResponseInfo> {
             return Response.error(new ParseError(e));
         } catch (UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
+        }
+    }
+
+    @Override
+    protected VolleyError parseNetworkError(VolleyError volleyError) {
+
+        if (volleyError.errorCode == ErrorCode.BAD_REQUEST_ERROR) {
+            try {
+
+                final HttpResponseParser parser = new HttpResponseParser();
+                final ResponseInfo responseInfo = parser
+                                .getErrorResponse(mRequestId, new String(volleyError.networkResponse.data, HTTP.UTF_8));
+                final BlBadRequestError badRequestError = new BlBadRequestError(mRequestId, responseInfo.errorCode);
+                badRequestError.setResponseBundle(responseInfo.responseBundle);
+                return badRequestError;
+            } catch (UnsupportedEncodingException e) {
+                return new ParseError(e);
+            } catch (JSONException e) {
+                return new ParseError(e);
+            }
+        } else {
+            return super.parseNetworkError(volleyError);
         }
     }
 
