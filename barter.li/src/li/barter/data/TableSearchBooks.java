@@ -48,6 +48,7 @@ public class TableSearchBooks {
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.AUTHOR),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BARTER_TYPE),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.USER_ID),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCATION_ID),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.IMAGE_URL)
                         });
 
