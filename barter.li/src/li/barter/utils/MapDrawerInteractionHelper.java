@@ -113,6 +113,11 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     private boolean             mIsHideRunnablePosted;
 
     /**
+     * External drawer listener to listen for drawer open/close events
+     */
+    private DrawerListener      mExternalDrawerListener;
+
+    /**
      * Enum that indicates the direction of the drag
      * 
      * @author Vinay S Shenoy
@@ -188,13 +193,25 @@ public class MapDrawerInteractionHelper implements DrawerListener,
 
     /**
      * Start tracking the events for the Map/Drawer
+     * 
+     * @param externalDrawerListener The external drawer listener to listen for
+     *            events whenever the drawer opens/closes
      */
-    public void init() {
+    public void init(DrawerListener externalDrawerListener) {
         mTransparentColorDrawable = new ColorDrawable(Color.TRANSPARENT);
         mTransitionDrawableLayers = new Drawable[2];
         mPrevSlideOffset = 0.0f;
         mHandler = new Handler();
         mDrawerLayout.setDrawerListener(this);
+        setExternalDrawerListener(externalDrawerListener);
+    }
+    
+    public DrawerListener getExternalDrawerListener() {
+        return mExternalDrawerListener;
+    }
+    
+    public void setExternalDrawerListener(DrawerListener drawerListener) {
+        mExternalDrawerListener = drawerListener;
     }
 
     /**
@@ -243,6 +260,10 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void onDrawerClosed(final View drawerView) {
+
+        if (mExternalDrawerListener != null) {
+            mExternalDrawerListener.onDrawerClosed(drawerView);
+        }
         if (drawerView == mDrawerView) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
@@ -257,6 +278,9 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     @Override
     public void onDrawerOpened(final View drawerView) {
 
+        if (mExternalDrawerListener != null) {
+            mExternalDrawerListener.onDrawerOpened(drawerView);
+        }
         if (drawerView == mDrawerView) {
 
             Logger.d(TAG, "Map Opened");
@@ -268,6 +292,9 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     @Override
     public void onDrawerSlide(final View drawerView, final float slideOffset) {
 
+        if (mExternalDrawerListener != null) {
+            mExternalDrawerListener.onDrawerSlide(drawerView, slideOffset);
+        }
         if (drawerView == mDrawerView) {
 
             calculateCurrentDirection(slideOffset);
@@ -294,7 +321,9 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     @Override
     public void onDrawerStateChanged(final int state) {
 
-        Logger.d(TAG, "On Drawer State Change:" + state);
+        if (mExternalDrawerListener != null) {
+            mExternalDrawerListener.onDrawerStateChanged(state);
+        }
         if (state == DrawerLayout.STATE_IDLE) {
             if (mDrawerLayout.isDrawerOpen(mDrawerView)) {
                 setMapMyLocationEnabled(false);

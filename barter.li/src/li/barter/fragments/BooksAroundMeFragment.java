@@ -21,6 +21,7 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.google.android.gms.internal.dr;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +40,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v4.widgets.FullWidthDrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +50,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
@@ -76,7 +81,7 @@ import li.barter.utils.MapDrawerInteractionHelper;
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LocationListener, Listener<ResponseInfo>, ErrorListener,
-                LoaderCallbacks<Cursor>, CancelableCallback {
+                LoaderCallbacks<Cursor>, CancelableCallback, DrawerListener {
 
     private static final String           TAG            = "BooksAroundMeFragment";
 
@@ -96,9 +101,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private MapView                       mMapView;
 
     /**
-     * Background View on which the blurred Map snapshot is set
+     * Drawer View on which the blurred Map snapshot is set
      */
-    private View                          mBooksContentView;
+    private View                          mBooksDrawerView;
 
     /**
      * TextView which will provide drop down suggestions as user searches for
@@ -142,7 +147,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     /**
      * Class to manage the transitions for drawer events the map behind it
      */
-    private MapDrawerInteractionHelper           mMapDrawerBlurHelper;
+    private MapDrawerInteractionHelper    mMapDrawerBlurHelper;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -167,15 +172,15 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.drawer_layout);
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
 
-        mBooksContentView = contentView
+        mBooksDrawerView = contentView
                         .findViewById(R.id.layout_books_container);
         mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
                         .findViewById(R.id.auto_complete_books_around_me);
         mBooksAroundMeGridView = (GridView) contentView
                         .findViewById(R.id.grid_books_around_me);
 
-        mMapDrawerBlurHelper = new MapDrawerInteractionHelper(getActivity(), mDrawerLayout, mBooksContentView, mMapView);
-        mMapDrawerBlurHelper.init();
+        mMapDrawerBlurHelper = new MapDrawerInteractionHelper(getActivity(), mDrawerLayout, mBooksDrawerView, mMapView);
+        mMapDrawerBlurHelper.init(this);
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity(), getImageLoader());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
@@ -229,9 +234,19 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void fetchBooksAroundMe() {
 
-        //TODO Add params or searching
         BlRequest request = new BlRequest(Method.GET, RequestId.SEARCH_BOOKS, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.SEARCH, null, this, this);
+
+        final Location lastLocation = UserInfo.INSTANCE.latestLocation;
+
+        if (lastLocation != null) {
+            final Map<String, String> params = new HashMap<String, String>(2);
+            params.put(HttpConstants.LATITUDE, String.valueOf(lastLocation
+                            .getLatitude()));
+            params.put(HttpConstants.LONGITUDE, String.valueOf(lastLocation
+                            .getLongitude()));
+            request.setParams(params);
+        }
         addRequestToQueue(request, true, 0);
     }
 
@@ -301,6 +316,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         UserInfo.INSTANCE.latestLocation = location;
 
         if (!mMapAlreadyMovedOnce) {
+            fetchBooksAroundMe();
             /*
              * For the initial launch, move the Map to the user's current
              * position as soon as the location is fetched
@@ -358,8 +374,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mMapDrawerBlurHelper.onMapZoomedIn();
     }
 
-   
-
     /**
      * Loads the Fragment to Add Or Edit Books
      * 
@@ -412,7 +426,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             if (!mDrawerOpenedAutomatically) {
                 // Open drawer automatically on map loaded if first launch
                 mDrawerOpenedAutomatically = true;
-                mDrawerLayout.openDrawer(mBooksContentView);
+                mDrawerLayout.openDrawer(mBooksDrawerView);
             }
         }
     }
@@ -431,6 +445,29 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private GoogleMap getMap() {
 
         return mMapView.getMap();
+    }
+
+    @Override
+    public void onDrawerClosed(View drawerView) {
+        
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerView) {
+
+        if(drawerView == mBooksDrawerView) {
+            fetchBooksAroundMe();
+        }
+    }
+
+    @Override
+    public void onDrawerSlide(View drawerView, float slideOffset) {
+        
+    }
+
+    @Override
+    public void onDrawerStateChanged(int state) {
+        
     }
 
 }
