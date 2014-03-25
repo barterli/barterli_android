@@ -285,7 +285,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
     protected void onStop() {
         super.onStop();
         // Cancel all pending requests because they shouldn't be delivered
-        mRequestQueue.cancelAll(this);
+        mRequestQueue.cancelAll(getVolleyTag());
         setProgressBarIndeterminateVisibility(false);
     }
 

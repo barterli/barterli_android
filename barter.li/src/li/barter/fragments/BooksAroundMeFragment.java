@@ -25,32 +25,20 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.CancelableCallback;
-import com.google.android.gms.maps.GoogleMap.OnMapLoadedCallback;
-import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v4.widgets.FullWidthDrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -69,9 +57,9 @@ import li.barter.data.SQLiteLoader;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
-import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
@@ -80,46 +68,26 @@ import li.barter.utils.AppConstants.ResultCodes;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.Logger;
-import li.barter.utils.Utils;
+import li.barter.utils.MapDrawerInteractionHelper;
 
 /**
  * @author Vinay S Shenoy Fragment for displaying Books Around Me. Also contains
  *         a Map that the user can use to easily switch locations
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
-                LocationListener, SnapshotReadyCallback, CancelableCallback,
-                OnMapLoadedCallback, DrawerListener, Listener<ResponseInfo>,
-                ErrorListener, LoaderCallbacks<Cursor> {
+                LocationListener, Listener<ResponseInfo>, ErrorListener,
+                LoaderCallbacks<Cursor>, CancelableCallback {
 
-    private static final String TAG = "BooksAroundMeFragment";
-
-    /**
-     * Enum that indicates the direction of the drag
-     * 
-     * @author Vinay S Shenoy
-     */
-    private enum DrawerDragState {
-
-        OPENING,
-        CLOSING
-    }
+    private static final String           TAG            = "BooksAroundMeFragment";
 
     /**
      * Zoom level for the map when the location is retrieved
      */
-    private static final float            MAP_ZOOM_LEVEL      = 15;
+    private static final float            MAP_ZOOM_LEVEL = 15;
 
     /**
-     * Blur radius for the Map. 1 <= x <= 25
+     * Helper for connecting to Google Play Services
      */
-    private static final int              MAP_BLUR            = 20;
-
-    /**
-     * Transition time(in milliseconds) to use blurring between the Map
-     * backgrounds
-     */
-    private static final int              TRANSITION_DURATION = 1000;
-
     private GooglePlayClientWrapper       mGooglePlayClientWrapper;
 
     /**
@@ -155,18 +123,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
 
     /**
-     * Array of drawables to use for the background View transition for
-     * smoothening
-     */
-    private Drawable[]                    mTransitionDrawableLayers;
-
-    /**
-     * Transparent color drawable to serve as the initial starting drawable for
-     * the map background transition
-     */
-    private Drawable                      mTransparentColorDrawable;
-
-    /**
      * Drawer Layout that contains the Books grid and autocomplete search text
      */
     private FullWidthDrawerLayout         mDrawerLayout;
@@ -178,46 +134,15 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private boolean                       mDrawerOpenedAutomatically;
 
     /**
-     * Handler for scheduling callbacks on UI thread
-     */
-    private Handler                       mHandler;
-
-    /**
-     * Runnable for hiding the Map container when the drawer is opened
-     */
-    private Runnable                      mHideMapViewRunnable;
-
-    /**
-     * Flag that indicates whether a hide runnable has also been posted to the
-     * Handler to prevent multiple runnables being posted
-     */
-    private boolean                       mIsHideRunnablePosted;
-
-    /**
-     * The current drawer state
-     */
-    private DrawerDragState               mCurDirection;
-
-    /**
-     * The previous drawer state
-     */
-    private DrawerDragState               mPrevDirection;
-
-    /**
-     * The previous slide offset
-     */
-    private float                         mPrevSlideOffset;
-
-    /**
-     * Flag to indicate whether a map snapshot has been requested
-     */
-    private boolean                       mMapSnapshotRequested;
-
-    /**
      * Flag to indicate whether the Map has already been moved at least once to
      * the user position
      */
     private boolean                       mMapAlreadyMovedOnce;
+
+    /**
+     * Class to manage the transitions for drawer events the map behind it
+     */
+    private MapDrawerInteractionHelper           mMapDrawerBlurHelper;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -240,10 +165,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mMapView.onCreate(savedInstanceState);
         mDrawerLayout = (FullWidthDrawerLayout) contentView
                         .findViewById(R.id.drawer_layout);
-        mDrawerLayout.setDrawerListener(this);
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
 
-        mTransparentColorDrawable = new ColorDrawable(Color.TRANSPARENT);
         mBooksContentView = contentView
                         .findViewById(R.id.layout_books_container);
         mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
@@ -251,17 +174,16 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeGridView = (GridView) contentView
                         .findViewById(R.id.grid_books_around_me);
 
+        mMapDrawerBlurHelper = new MapDrawerInteractionHelper(getActivity(), mDrawerLayout, mBooksContentView, mMapView);
+        mMapDrawerBlurHelper.init();
+
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity(), getImageLoader());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
         mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
         mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
 
-        mTransitionDrawableLayers = new Drawable[2];
         mGooglePlayClientWrapper = new GooglePlayClientWrapper((AbstractBarterLiActivity) getActivity(), this);
 
-        mHandler = new Handler();
-
-        mPrevSlideOffset = 0.0f;
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
             mMapAlreadyMovedOnce = false;
@@ -291,9 +213,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
-            beginMapSnapshotProcess();
-        }
+        mMapDrawerBlurHelper.onRestoreState();
     }
 
     /**
@@ -399,88 +319,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         }
     }
 
-    @SuppressWarnings("deprecation")
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    @Override
-    public void onSnapshotReady(Bitmap snapshot) {
-
-        /* Create a blurred version of the Map snapshot */
-        final BitmapDrawable backgroundDrawable = new BitmapDrawable(getResources(), Utils
-                        .blurImage(getActivity(), snapshot, MAP_BLUR));
-
-        mTransitionDrawableLayers[0] = mTransparentColorDrawable;
-        mTransitionDrawableLayers[1] = backgroundDrawable;
-
-        final TransitionDrawable transitionDrawable = new TransitionDrawable(mTransitionDrawableLayers);
-        transitionDrawable.setCrossFadeEnabled(true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mBooksContentView.setBackground(transitionDrawable);
-        } else {
-            mBooksContentView.setBackgroundDrawable(transitionDrawable);
-        }
-
-        transitionDrawable.startTransition(TRANSITION_DURATION);
-
-        snapshot.recycle();
-        snapshot = null;
-
-        /*
-         * Set to prevent overdraw. You will get a moment of overdraw when the
-         * transition is happening, but after the overdraw gets removed. We're
-         * scheduling the hide map view transition to happen later because it
-         * causes a bad effect if we hide the Map View in background while the
-         * transition is still happening
-         */
-        scheduleHideMapTask(TRANSITION_DURATION);
-
-        mMapSnapshotRequested = false;
-
-    }
-
-    /**
-     * Schedules the task for hiding the map transition, cancelling the previous
-     * one, if any
-     * 
-     * @param delay The delay(in milliseconds) after which the Map should be
-     *            removed in the background
-     */
-    private void scheduleHideMapTask(final int delay) {
-
-        if (mIsHideRunnablePosted) {
-
-            Logger.d(TAG, "Already posted runnable, returning");
-            return;
-        }
-        mHideMapViewRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                mIsHideRunnablePosted = false;
-                mMapView.setVisibility(View.GONE);
-            }
-        };
-        mHandler.postDelayed(mHideMapViewRunnable, delay);
-        mIsHideRunnablePosted = true;
-    }
-
-    /**
-     * Unschedules any current(if exists) map hide transition
-     */
-    private void unscheduleMapHideTask() {
-
-        if (mHideMapViewRunnable != null) {
-            mHandler.removeCallbacks(mHideMapViewRunnable);
-            mHideMapViewRunnable = null;
-            mIsHideRunnablePosted = false;
-        }
-    }
-
     @Override
     public void onPause() {
         super.onPause();
         mMapView.onPause();
-        unscheduleMapHideTask();
+        mMapDrawerBlurHelper.onPause();
     }
 
     @Override
@@ -512,148 +355,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onFinish() {
-
-        beginMapSnapshotProcess();
+        mMapDrawerBlurHelper.onMapZoomedIn();
     }
 
-    /**
-     * Begins the process of capturing the Map snapshot by setting a Map loaded
-     * callback. Once the Map is completely loaded, a snapshot is taken, and a
-     * blurred bitmap is generated for the background of the screen content
-     */
-    private void beginMapSnapshotProcess() {
-        if(!isAttached()) {
-            return;
-        }
-        mMapSnapshotRequested = true;
-        final GoogleMap googleMap = getMap();
-
-        if (googleMap != null) {
-            Logger.d(TAG, "Adding On Loaded Callback!");
-            googleMap.setOnMapLoadedCallback(this);
-        }
-    }
-
-    @Override
-    public void onMapLoaded() {
-
-        // Create the map snapshot only if the drawer is open
-        if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
-            captureMapSnapshot();
-        }
-    }
-
-    /**
-     * Sets the My location enabled for the Map
-     */
-    private void setMapMyLocationEnabled(final boolean enabled) {
-
-        final GoogleMap googleMap = getMap();
-
-        if (googleMap != null) {
-            googleMap.setMyLocationEnabled(enabled);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    @Override
-    public void onDrawerClosed(final View drawerView) {
-        if (drawerView == mBooksContentView) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mBooksContentView.setBackground(mTransparentColorDrawable);
-            } else {
-                mBooksContentView
-                                .setBackgroundDrawable(mTransparentColorDrawable);
-            }
-        }
-
-    }
-
-    @Override
-    public void onDrawerOpened(final View drawerView) {
-
-        if (drawerView == mBooksContentView) {
-
-            Logger.d(TAG, "Map Opened");
-            beginMapSnapshotProcess();
-        }
-
-    }
-
-    @Override
-    public void onDrawerSlide(final View drawerView, final float slideOffset) {
-
-        if (drawerView == mBooksContentView) {
-
-            calculateCurrentDirection(slideOffset);
-
-            if (mCurDirection != mPrevDirection) { //Drawer state has changed
-
-                Logger.d(TAG, "Drawer drag " + mCurDirection + " from "
-                                + mPrevDirection + " slide offset:"
-                                + slideOffset);
-
-                if ((mCurDirection == DrawerDragState.CLOSING)
-                                && (slideOffset >= 0.7f)) { //Drawer was almost opened, but user moved it to closed again
-
-                    if (mMapView.getVisibility() == View.VISIBLE) {
-                        unscheduleMapHideTask(); //If there's any task sceduled for hiding the map, remove it
-                    } else if (mMapView.getVisibility() == View.GONE) {
-                        mMapView.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onDrawerStateChanged(final int state) {
-
-        Logger.d(TAG, "On Drawer State Change:" + state);
-        if (state == DrawerLayout.STATE_IDLE) {
-            if (mDrawerLayout.isDrawerOpen(mBooksContentView)) {
-                setMapMyLocationEnabled(false);
-                if (!mMapSnapshotRequested) { //If a map snapshot hasn't been requested, no need to call this as the map will be hidden when the snapsht is loaded
-                    scheduleHideMapTask(0);
-                } else {
-                    beginMapSnapshotProcess();
-                }
-            } else {
-                setMapMyLocationEnabled(true);
-            }
-        }
-    }
-
-    /**
-     * Calculates the current direction of the drag
-     */
-    private void calculateCurrentDirection(final float slideOffset) {
-
-        mPrevDirection = mCurDirection;
-
-        // Drawer is being opened
-        if (slideOffset >= mPrevSlideOffset) {
-            mCurDirection = DrawerDragState.OPENING;
-        } else {
-            mCurDirection = DrawerDragState.CLOSING;
-        }
-        mPrevSlideOffset = slideOffset;
-    }
-
-    /**
-     * Captures a snapshot of the map
-     */
-    private void captureMapSnapshot() {
-        final GoogleMap googleMap = getMap();
-
-        if (googleMap != null) {
-            Logger.d(TAG, "Taking Snapshot!");
-            googleMap.snapshot(this);
-        }
-
-    }
+   
 
     /**
      * Loads the Fragment to Add Or Edit Books

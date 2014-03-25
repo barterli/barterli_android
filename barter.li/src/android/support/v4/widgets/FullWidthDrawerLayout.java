@@ -98,7 +98,7 @@ public class FullWidthDrawerLayout extends DrawerLayout {
 
             final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
-            if (isContentView(child)) {
+            if (isChildAContentView(child)) {
                 // Content views get measured at exactly the layout's size.
                 final int contentWidthSpec = MeasureSpec
                                 .makeMeasureSpec(widthSize - lp.leftMargin
@@ -107,7 +107,7 @@ public class FullWidthDrawerLayout extends DrawerLayout {
                                 .makeMeasureSpec(heightSize - lp.topMargin
                                                 - lp.bottomMargin, MeasureSpec.EXACTLY);
                 child.measure(contentWidthSpec, contentHeightSpec);
-            } else if (isDrawerView(child)) {
+            } else if (isChildADrawerView(child)) {
                 final int childGravity = getDrawerViewGravity(child)
                                 & Gravity.HORIZONTAL_GRAVITY_MASK;
                 if ((foundDrawers & childGravity) != 0) {
@@ -132,11 +132,11 @@ public class FullWidthDrawerLayout extends DrawerLayout {
         }
     }
 
-    boolean isContentView(final View child) {
+    boolean isChildAContentView(final View child) {
         return ((LayoutParams) child.getLayoutParams()).gravity == Gravity.NO_GRAVITY;
     }
 
-    boolean isDrawerView(final View child) {
+    boolean isChildADrawerView(final View child) {
         final int gravity = ((LayoutParams) child.getLayoutParams()).gravity;
         final int absGravity = Gravity
                         .getAbsoluteGravity(gravity, GravityCompat.getAbsoluteGravity(gravity, ViewCompat
