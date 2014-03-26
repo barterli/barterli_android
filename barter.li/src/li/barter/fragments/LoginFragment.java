@@ -45,7 +45,9 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
+import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 
 @FragmentTransition(enterAnimation = R.anim.activity_slide_in_right, exitAnimation = R.anim.activity_scale_out, popEnterAnimation = R.anim.activity_scale_in, popExitAnimation = R.anim.activity_slide_out_right)
@@ -155,11 +157,11 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                             .getApiBaseUrl() + ApiEndpoints.CREATE_USER, requestObject
                             .toString(), this, this);
             addRequestToQueue(request, true, 0);
-        } catch(JSONException e) {
+        } catch (JSONException e) {
             // Should never happen
             Logger.e(TAG, e, "Error building create user json");
         }
-        
+
     }
 
     /**
@@ -206,6 +208,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     @Override
     public void onErrorResponse(VolleyError error, Request<?> request) {
         onRequestFinished();
+        showToast(R.string.error_unable_to_login, false);
+        //TODO Show error sent from server if 400
         Logger.e(TAG, error, "Error Response");
 
     }
@@ -213,7 +217,27 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     @Override
     public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
         onRequestFinished();
-        Logger.d(TAG, "Response received");
+        
+        if(request instanceof BlRequest) {
+            
+            final int requestId = ((BlRequest) request).getRequestId();
+            
+            if(requestId == RequestId.CREATE_USER) {
+                
+                final Bundle userInfo = response.responseBundle;
+                
+                UserInfo.INSTANCE.authToken = userInfo.getString(HttpConstants.AUTH_TOKEN);
+                
+                SharedPreferenceHelper.set(getActivity(), R.string.pref_auth_token, userInfo.getString(HttpConstants.AUTH_TOKEN));
+                SharedPreferenceHelper.set(getActivity(), R.string.pref_email, userInfo.getString(HttpConstants.EMAIL));
+                SharedPreferenceHelper.set(getActivity(), R.string.pref_description, userInfo.getString(HttpConstants.DESCRIPTION));
+                SharedPreferenceHelper.set(getActivity(), R.string.pref_first_name, userInfo.getString(HttpConstants.FIRST_NAME));
+                SharedPreferenceHelper.set(getActivity(), R.string.pref_last_name, userInfo.getString(HttpConstants.LAST_NAME));
+                SharedPreferenceHelper.set(getActivity(), R.string.pref_user_id, userInfo.getString(HttpConstants.ID));
+                
+                popBackStack();
+            }
+        }
     }
 
 }

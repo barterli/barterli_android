@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import li.barter.data.DBUtils;
@@ -66,7 +67,7 @@ public class HttpResponseParser {
 
             case RequestId.SEARCH_BOOKS: {
                 //Delete the current search results before parsing the old ones
-                if(DBUtils.delete(TableSearchBooks.NAME, null, null) > 0) {
+                if (DBUtils.delete(TableSearchBooks.NAME, null, null) > 0) {
                     DBUtils.notifyChange(TableSearchBooks.NAME);
                 }
                 return parseSearchBooksResponse(response);
@@ -97,9 +98,24 @@ public class HttpResponseParser {
 
         final JSONObject responseObject = new JSONObject(response);
 
-        final String authToken = JsonUtils
-                        .getStringValue(responseObject, HttpConstants.AUTH_TOKEN);
-        Logger.d(TAG, "On Login: %s", authToken);
+        final JSONObject userObject = JsonUtils
+                        .getJsonObject(responseObject, HttpConstants.USER);
+
+        final Bundle responseBundle = new Bundle();
+        responseBundle.putString(HttpConstants.ID, JsonUtils
+                        .getStringValue(userObject, HttpConstants.ID));
+        responseBundle.putString(HttpConstants.AUTH_TOKEN, JsonUtils
+                        .getStringValue(userObject, HttpConstants.AUTH_TOKEN));
+        responseBundle.putString(HttpConstants.EMAIL, JsonUtils
+                        .getStringValue(userObject, HttpConstants.EMAIL));
+        responseBundle.putString(HttpConstants.DESCRIPTION, JsonUtils
+                        .getStringValue(userObject, HttpConstants.DESCRIPTION));
+        responseBundle.putString(HttpConstants.FIRST_NAME, JsonUtils
+                        .getStringValue(userObject, HttpConstants.FIRST_NAME));
+        responseBundle.putString(HttpConstants.LAST_NAME, JsonUtils
+                        .getStringValue(userObject, HttpConstants.LAST_NAME));
+
+        responseInfo.responseBundle = responseBundle;
         return responseInfo;
     }
 
