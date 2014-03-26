@@ -41,7 +41,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
-import android.support.v4.widgets.FullWidthDrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -75,6 +74,7 @@ import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.Logger;
 import li.barter.utils.MapDrawerInteractionHelper;
 import li.barter.utils.Utils;
+import li.barter.widgets.FullWidthDrawerLayout;
 
 /**
  * @author Vinay S Shenoy Fragment for displaying Books Around Me. Also contains

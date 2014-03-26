@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package android.support.v4.widgets;
+package li.barter.widgets;
 
 import android.content.Context;
 import android.support.v4.view.GravityCompat;
