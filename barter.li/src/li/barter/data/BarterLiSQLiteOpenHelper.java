@@ -31,7 +31,9 @@ import li.barter.utils.Utils;
 
 /**
  * @author vinaysshenoy {@link SQLiteOpenHelper} to provide database
- *         connectivity for the application
+ *         connectivity for the application. The Methods of this class should
+ *         not be accessed directly. Access them through the
+ *         {@linkplain DBUtils} class
  */
 public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
@@ -52,12 +54,14 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
     /**
      * Gets a reference to the SQLIte Open Helper for the app, creating it if
-     * necessary. This method is thread-safe
+     * necessary. This method is thread-safe. The Methods of this class should
+     * not be accessed directly. Access them through the {@linkplain DBUtils}
+     * class
      * 
      * @param context The Context reference
      * @return the reference to {@link BarterLiSQLiteOpenHelper}
      */
-    public static BarterLiSQLiteOpenHelper getInstance(final Context context) {
+    static BarterLiSQLiteOpenHelper getInstance(final Context context) {
 
         synchronized (LOCK) {
 
@@ -127,7 +131,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param limit LIMIT clause
      * @return A {@link Cursor} over the dataset result
      */
-    public Cursor query(final boolean distinct, final String table,
+    Cursor query(final boolean distinct, final String table,
                     final String[] columns, final String selection,
                     final String[] selectionArgs, final String groupBy,
                     final String having, final String orderBy,
@@ -149,7 +153,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param values The fields to insert
      * @return The row Id of the newly inserted row, or -1 if unable to insert
      */
-    public long insert(final String table, final String nullColumnHack,
+    long insert(final String table, final String nullColumnHack,
                     final ContentValues values) {
 
         throwIfOnMainThread();
@@ -166,7 +170,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param whereArgs Arguments for the where clause
      * @return The number of rows updated
      */
-    public int update(final String table, final ContentValues values,
+    int update(final String table, final ContentValues values,
                     final String whereClause, final String[] whereArgs) {
 
         throwIfOnMainThread();
@@ -182,7 +186,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param whereArgs Arguments for the where clause
      * @return The number of rows deleted
      */
-    public int delete(final String table, final String whereClause,
+    int delete(final String table, final String whereClause,
                     final String[] whereArgs) {
 
         throwIfOnMainThread();
@@ -198,7 +202,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @return The {@link SQLiteLoaderObserver} that was created. Use this to
      *         unregister the loader entry
      */
-    public SQLiteLoaderObserver registerLoader(final SQLiteLoader loader,
+    SQLiteLoaderObserver registerLoader(final SQLiteLoader loader,
                     final String table) {
 
         Logger.d(TAG, "Add Loader Observer: %s", table);
@@ -207,7 +211,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         return entry;
     }
 
-    public void unregisterLoader(final SQLiteLoaderObserver entry) {
+    void unregisterLoader(final SQLiteLoaderObserver entry) {
 
         Logger.d(TAG, "Remove Loader Observer: %s", entry.table);
         mActiveLoaders.remove(entry);
@@ -218,7 +222,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * 
      * @param table The table that was modified
      */
-    public void notifyChange(final String table) {
+    void notifyChange(final String table) {
         //TODO Optimize this later, Maybe a sorted list of loaders by table name?
         for (final SQLiteLoaderObserver entry : mActiveLoaders) {
             Logger.d(TAG, "Notify change: %s", entry.table);
