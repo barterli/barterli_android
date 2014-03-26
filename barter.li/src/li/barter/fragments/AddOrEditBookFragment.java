@@ -297,24 +297,24 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         mHasFetchedDetails = true;
         final String bookTitle = JsonUtils
-                        .getStringValue(response, HttpConstants.TITLE);
+                        .readString(response, HttpConstants.TITLE);
         final String bookDescription = JsonUtils
-                        .getStringValue(response, HttpConstants.DESCRIPTION);
+                        .readString(response, HttpConstants.DESCRIPTION);
 
         JSONObject authorObject = JsonUtils
-                        .getJsonObject(response, HttpConstants.AUTHORS);
+                        .readJSONObject(response, HttpConstants.AUTHORS);
         String authorName = null;
         if (authorObject != null) {
             authorObject = JsonUtils
-                            .getJsonObject(authorObject, HttpConstants.AUTHOR);
+                            .readJSONObject(authorObject, HttpConstants.AUTHOR);
             if (authorObject != null) {
                 authorName = JsonUtils
-                                .getStringValue(authorObject, HttpConstants.NAME);
+                                .readString(authorObject, HttpConstants.NAME);
             }
         }
 
         final String publicationYear = JsonUtils
-                        .getStringValue(response, HttpConstants.PUBLICATION_YEAR);
+                        .readString(response, HttpConstants.PUBLICATION_YEAR);
 
         mTitleEditText.setText(bookTitle);
         mDescriptionEditText.setText(bookDescription);

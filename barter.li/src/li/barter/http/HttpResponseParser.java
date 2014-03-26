@@ -99,21 +99,21 @@ public class HttpResponseParser {
         final JSONObject responseObject = new JSONObject(response);
 
         final JSONObject userObject = JsonUtils
-                        .getJsonObject(responseObject, HttpConstants.USER);
+                        .readJSONObject(responseObject, HttpConstants.USER);
 
         final Bundle responseBundle = new Bundle();
         responseBundle.putString(HttpConstants.ID, JsonUtils
-                        .getStringValue(userObject, HttpConstants.ID));
+                        .readString(userObject, HttpConstants.ID));
         responseBundle.putString(HttpConstants.AUTH_TOKEN, JsonUtils
-                        .getStringValue(userObject, HttpConstants.AUTH_TOKEN));
+                        .readString(userObject, HttpConstants.AUTH_TOKEN));
         responseBundle.putString(HttpConstants.EMAIL, JsonUtils
-                        .getStringValue(userObject, HttpConstants.EMAIL));
+                        .readString(userObject, HttpConstants.EMAIL));
         responseBundle.putString(HttpConstants.DESCRIPTION, JsonUtils
-                        .getStringValue(userObject, HttpConstants.DESCRIPTION));
+                        .readString(userObject, HttpConstants.DESCRIPTION));
         responseBundle.putString(HttpConstants.FIRST_NAME, JsonUtils
-                        .getStringValue(userObject, HttpConstants.FIRST_NAME));
+                        .readString(userObject, HttpConstants.FIRST_NAME));
         responseBundle.putString(HttpConstants.LAST_NAME, JsonUtils
-                        .getStringValue(userObject, HttpConstants.LAST_NAME));
+                        .readString(userObject, HttpConstants.LAST_NAME));
 
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
@@ -133,7 +133,7 @@ public class HttpResponseParser {
 
         final JSONObject responseObject = new JSONObject(response);
         final JSONArray searchResults = JsonUtils
-                        .getJsonArray(responseObject, HttpConstants.SEARCH);
+                        .readJSONArray(responseObject, HttpConstants.SEARCH);
 
         JSONObject bookObject = null;
         ContentValues values = new ContentValues();
@@ -141,7 +141,7 @@ public class HttpResponseParser {
                         + SQLConstants.EQUALS_ARG;
         final String[] args = new String[1];
         for (int i = 0; i < searchResults.length(); i++) {
-            bookObject = JsonUtils.getJsonObject(searchResults, i);
+            bookObject = JsonUtils.readJSONObject(searchResults, i);
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
 
             //First try to update the table if a book already exists
@@ -172,7 +172,7 @@ public class HttpResponseParser {
         }
 
         final String bookId = JsonUtils
-                        .getStringValue(bookObject, HttpConstants.ID);
+                        .readString(bookObject, HttpConstants.ID);
 
         if (TextUtils.isEmpty(bookId)) {
             throw new IllegalArgumentException("Not a valid book json:"
@@ -180,21 +180,21 @@ public class HttpResponseParser {
         }
         values.put(DatabaseColumns.BOOK_ID, bookId);
         values.put(DatabaseColumns.ISBN_10, JsonUtils
-                        .getStringValue(bookObject, HttpConstants.ISBN_10));
+                        .readString(bookObject, HttpConstants.ISBN_10));
         values.put(DatabaseColumns.ISBN_13, JsonUtils
-                        .getStringValue(bookObject, HttpConstants.ISBN_13));
+                        .readString(bookObject, HttpConstants.ISBN_13));
         values.put(DatabaseColumns.AUTHOR, JsonUtils
-                        .getStringValue(bookObject, HttpConstants.AUTHOR));
+                        .readString(bookObject, HttpConstants.AUTHOR));
         values.put(DatabaseColumns.BARTER_TYPE, JsonUtils
-                        .getStringValue(bookObject, HttpConstants.BARTER_TYPE));
+                        .readString(bookObject, HttpConstants.BARTER_TYPE));
         values.put(DatabaseColumns.USER_ID, JsonUtils
-                        .getStringValue(bookObject, HttpConstants.USER_ID));
+                        .readString(bookObject, HttpConstants.USER_ID));
         values.put(DatabaseColumns.TITLE, JsonUtils
-                        .getStringValue(bookObject, HttpConstants.TITLE));
+                        .readString(bookObject, HttpConstants.TITLE));
         values.put(DatabaseColumns.DESCRIPTION, JsonUtils
-                        .getStringValue(bookObject, HttpConstants.DESCRIPTION));
+                        .readString(bookObject, HttpConstants.DESCRIPTION));
         values.put(DatabaseColumns.IMAGE_URL, JsonUtils
-                        .getStringValue(bookObject, HttpConstants.IMAGE_URL));
+                        .readString(bookObject, HttpConstants.IMAGE_URL));
         return bookId;
     }
 
@@ -249,7 +249,7 @@ public class HttpResponseParser {
         JSONObject errorObject = new JSONObject(response);
 
         final int errorCode = JsonUtils
-                        .getIntValue(errorObject, HttpConstants.ERROR_CODE);
+                        .readInt(errorObject, HttpConstants.ERROR_CODE);
         responseInfo.errorCode = errorCode;
         //Parse error response specific to any request here
         return responseInfo;

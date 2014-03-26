@@ -40,7 +40,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static String getStringValue(final JSONObject jsonObject,
+    public static String readString(final JSONObject jsonObject,
                     final String tag) {
 
         String value = null;
@@ -49,28 +49,7 @@ public class JsonUtils {
                 value = jsonObject.getString(tag);
             }
         } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
-        }
-        return value;
-    }
-
-    /**
-     * Reads the string value from the Json Array for specified index
-     * 
-     * @param jsonArray
-     * @param index
-     * @return
-     */
-    public static String getStringValue(final JSONArray jsonArray,
-                    final int index) {
-
-        String value = null;
-        try {
-            if (!jsonArray.isNull(index)) {
-                value = jsonArray.getString(index);
-            }
-        } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
+            Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -82,7 +61,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static int getIntValue(final JSONObject jsonObject, final String tag) {
+    public static int readInt(final JSONObject jsonObject, final String tag) {
 
         int value = -1;
         try {
@@ -90,7 +69,7 @@ public class JsonUtils {
                 value = jsonObject.getInt(tag);
             }
         } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
+            Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -102,7 +81,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static boolean getBooleanValue(final JSONObject jsonObject,
+    public static boolean readBoolean(final JSONObject jsonObject,
                     final String tag) {
 
         boolean value = false;
@@ -111,7 +90,7 @@ public class JsonUtils {
                 value = jsonObject.getBoolean(tag);
             }
         } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
+            Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -123,7 +102,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static float getFloatValue(final JSONObject jsonObject,
+    public static float readFloat(final JSONObject jsonObject,
                     final String tag) {
 
         float value = 0.0f;
@@ -132,7 +111,7 @@ public class JsonUtils {
                 value = (float) jsonObject.getDouble(tag);
             }
         } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
+            Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -144,7 +123,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static double getDoubleValue(final JSONObject jsonObject,
+    public static double readDouble(final JSONObject jsonObject,
                     final String tag) {
 
         double value = 0.0;
@@ -153,7 +132,7 @@ public class JsonUtils {
                 value = jsonObject.getDouble(tag);
             }
         } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
+            Logger.e(TAG, e.getMessage());
         }
         return value;
     }
@@ -165,7 +144,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static long getLongValue(final JSONObject jsonObject,
+    public static long readLong(final JSONObject jsonObject,
                     final String tag) {
 
         long value = -1l;
@@ -174,7 +153,7 @@ public class JsonUtils {
                 value = jsonObject.getLong(tag);
             }
         } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
+            Logger.e(TAG, e.getMessage());
 
         }
         return value;
@@ -187,7 +166,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static JSONObject getJsonObject(final JSONObject jsonObject,
+    public static JSONObject readJSONObject(final JSONObject jsonObject,
                     final String tag) {
 
         JSONObject json = null;
@@ -196,7 +175,7 @@ public class JsonUtils {
                 json = jsonObject.getJSONObject(tag);
             }
         } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
+            Logger.e(TAG, e.getMessage());
         }
         return json;
     }
@@ -208,7 +187,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static JSONArray getJsonArray(final JSONObject jsonObject,
+    public static JSONArray readJSONArray(final JSONObject jsonObject,
                     final String tag) {
 
         JSONArray jsonArray = null;
@@ -217,7 +196,7 @@ public class JsonUtils {
                 jsonArray = jsonObject.getJSONArray(tag);
             }
         } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
+            Logger.e(TAG, e.getMessage());
         }
         return jsonArray;
     }
@@ -229,7 +208,7 @@ public class JsonUtils {
      * @param index
      * @return
      */
-    public static JSONObject getJsonObject(final JSONArray jsonArray,
+    public static JSONObject readJSONObject(final JSONArray jsonArray,
                     final int index) {
 
         JSONObject json = null;
@@ -238,7 +217,7 @@ public class JsonUtils {
                 json = jsonArray.getJSONObject(index);
             }
         } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
+            Logger.e(TAG, e.getMessage());
         }
         return json;
     }
@@ -250,7 +229,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static JSONArray getJsonArray(final JSONArray jsonArray,
+    public static JSONArray readJSONArray(final JSONArray jsonArray,
                     final int index) {
 
         JSONArray jArray = null;
@@ -259,9 +238,129 @@ public class JsonUtils {
                 jArray = jsonArray.getJSONArray(index);
             }
         } catch (final JSONException e) {
-           Logger.e(TAG, e.getMessage());
+            Logger.e(TAG, e.getMessage());
         }
         return jArray;
+    }
+
+    /**
+     * Reads the string value from the Json Array for specified index
+     * 
+     * @param jsonArray
+     * @param index
+     * @return
+     */
+    public static String readString(final JSONArray jsonArray, final int index) {
+
+        String value = null;
+        try {
+            if (!jsonArray.isNull(index)) {
+                value = jsonArray.getString(index);
+            }
+        } catch (final JSONException e) {
+            Logger.e(TAG, e.getMessage());
+        }
+        return value;
+    }
+
+    /**
+     * Reads the int value from the Json Array for specified index
+     * 
+     * @param jsonArray
+     * @param index
+     * @return
+     */
+    public static int readInt(final JSONArray jsonArray, final int index) {
+
+        int value = -1;
+        try {
+            if (!jsonArray.isNull(index)) {
+                value = jsonArray.getInt(index);
+            }
+        } catch (final JSONException e) {
+            Logger.e(TAG, e.getMessage());
+        }
+        return value;
+    }
+
+    /**
+     * Reads the boolean value from the Json Array for specified index
+     * 
+     * @param jsonArray
+     * @param index
+     * @return
+     */
+    public static boolean readBoolean(final JSONArray jsonArray, final int index) {
+
+        boolean value = false;
+        try {
+            if (!jsonArray.isNull(index)) {
+                value = jsonArray.getBoolean(index);
+            }
+        } catch (final JSONException e) {
+            Logger.e(TAG, e.getMessage());
+        }
+        return value;
+    }
+
+    /**
+     * Reads the double value from the Json Array for specified index
+     * 
+     * @param jsonArray
+     * @param index
+     * @return
+     */
+    public static double readDouble(final JSONArray jsonArray, final int index) {
+
+        double value = 0.0;
+        try {
+            if (!jsonArray.isNull(index)) {
+                value = jsonArray.getDouble(index);
+            }
+        } catch (final JSONException e) {
+            Logger.e(TAG, e.getMessage());
+        }
+        return value;
+    }
+
+    /**
+     * Reads the float value from the Json Array for specified index
+     * 
+     * @param jsonArray
+     * @param index
+     * @return
+     */
+    public static float readFloat(final JSONArray jsonArray, final int index) {
+
+        float value = 0.0f;
+        try {
+            if (!jsonArray.isNull(index)) {
+                value = (float) jsonArray.getDouble(index);
+            }
+        } catch (final JSONException e) {
+            Logger.e(TAG, e.getMessage());
+        }
+        return value;
+    }
+
+    /**
+     * Reads the long value from the Json Array for specified index
+     * 
+     * @param jsonArray
+     * @param index
+     * @return
+     */
+    public static long readLong(final JSONArray jsonArray, final int index) {
+
+        long value = -1L;
+        try {
+            if (!jsonArray.isNull(index)) {
+                value = jsonArray.getLong(index);
+            }
+        } catch (final JSONException e) {
+            Logger.e(TAG, e.getMessage());
+        }
+        return value;
     }
 
 }
