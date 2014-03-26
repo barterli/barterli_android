@@ -65,7 +65,11 @@ public class HttpResponseParser {
             }
 
             case RequestId.SEARCH_BOOKS: {
-                return parseGetSearchBooksResponse(response);
+                //Delete the current search results before parsing the old ones
+                if(DBUtils.delete(TableSearchBooks.NAME, null, null) > 0) {
+                    DBUtils.notifyChange(TableSearchBooks.NAME);
+                }
+                return parseSearchBooksResponse(response);
             }
 
             case RequestId.CREATE_USER: {
@@ -106,22 +110,22 @@ public class HttpResponseParser {
      * @return
      * @throws JSONException If the Json resposne is malformed
      */
-    private ResponseInfo parseGetSearchBooksResponse(String response)
+    private ResponseInfo parseSearchBooksResponse(String response)
                     throws JSONException {
 
         final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
-        final JSONArray booksArray = JsonUtils
-                        .getJsonArray(responseObject, HttpConstants.BOOKS);
+        final JSONArray searchResults = JsonUtils
+                        .getJsonArray(responseObject, HttpConstants.SEARCH);
 
         JSONObject bookObject = null;
         ContentValues values = new ContentValues();
         final String selection = DatabaseColumns.BOOK_ID
                         + SQLConstants.EQUALS_ARG;
         final String[] args = new String[1];
-        for (int i = 0; i < booksArray.length(); i++) {
-            bookObject = JsonUtils.getJsonObject(booksArray, i);
+        for (int i = 0; i < searchResults.length(); i++) {
+            bookObject = JsonUtils.getJsonObject(searchResults, i);
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
 
             //First try to update the table if a book already exists
@@ -130,8 +134,8 @@ public class HttpResponseParser {
                 // Unable to update, insert the item
                 DBUtils.insert(TableSearchBooks.NAME, null, values);
             }
-            DBUtils.notifyChange(TableSearchBooks.NAME);
         }
+        DBUtils.notifyChange(TableSearchBooks.NAME);
         return responseInfo;
     }
 

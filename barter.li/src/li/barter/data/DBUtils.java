@@ -17,6 +17,7 @@
 package li.barter.data;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import li.barter.BarterLiApplication;
 
@@ -59,6 +60,47 @@ public class DBUtils {
         return BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
                         .update(table, values, whereClause, whereArgs);
+    }
+
+    /**
+     * Delete rows from the database
+     * 
+     * @param table The table to delete from
+     * @param whereClause The WHERE clause
+     * @param whereArgs Arguments for the where clause
+     * @return The number of rows deleted
+     */
+    public static int delete(final String table, final String whereClause,
+                    final String[] whereArgs) {
+
+        return BarterLiSQLiteOpenHelper
+                        .getInstance(BarterLiApplication.getStaticContext())
+                        .delete(table, whereClause, whereArgs);
+    }
+
+    /**
+     * Query the given URL, returning a Cursor over the result set.
+     * 
+     * @param distinct <code>true</code> if dataset should be unique
+     * @param table The table to query
+     * @param columns The columns to fetch
+     * @param selection The selection string, formatted as a WHERE clause
+     * @param selectionArgs The arguments for the selection parameter
+     * @param groupBy GROUP BY clause
+     * @param having HAVING clause
+     * @param orderBy ORDER BY clause
+     * @param limit LIMIT clause
+     * @return A {@link Cursor} over the dataset result
+     */
+    public static Cursor query(final boolean distinct, final String table,
+                    final String[] columns, final String selection,
+                    final String[] selectionArgs, final String groupBy,
+                    final String having, final String orderBy,
+                    final String limit) {
+
+        return BarterLiSQLiteOpenHelper
+                        .getInstance(BarterLiApplication.getStaticContext())
+                        .query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
 
     /**

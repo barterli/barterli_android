@@ -100,7 +100,7 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
     /**
      * Checks if the current database query is being made on the main thread. If
-     * yes, either throws an Exception(if in DEBUG mode) orLoggers an error(in
+     * yes, either throws an Exception(if in DEBUG mode) or Logs an error(in
      * PRODUCTION mode)
      */
     private static void throwIfOnMainThread() {

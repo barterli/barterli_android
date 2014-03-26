@@ -58,13 +58,10 @@ public class Logger {
         Log.w(tag, buildMessage(format, args), tr);
     }
 
-    public static void wtf(String tag, String format, Object... args) {
-        Log.wtf(tag, buildMessage(format, args));
-    }
-
-    public static void wtf(String tag, Throwable tr, String format,
-                    Object... args) {
-        Log.wtf(tag, buildMessage(format, args), tr);
+    public static void i(String tag, String format, Object... args) {
+        if (AppConstants.DEBUG) {
+            Log.i(tag, buildMessage(format, args));
+        }
     }
 
     /**
