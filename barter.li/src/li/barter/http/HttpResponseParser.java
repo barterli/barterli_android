@@ -25,7 +25,7 @@ import android.content.ContentValues;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import li.barter.data.DBUtils;
+import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableLocations;
@@ -68,7 +68,7 @@ public class HttpResponseParser {
 
             case RequestId.SEARCH_BOOKS: {
                 //Delete the current search results before parsing the old ones
-                DBUtils.delete(TableSearchBooks.NAME, null, null, true);
+                DBInterface.delete(TableSearchBooks.NAME, null, null, true);
                 return parseSearchBooksResponse(response);
             }
 
@@ -145,10 +145,10 @@ public class HttpResponseParser {
         };
 
         //Update the locations table if the location already exists
-        if (DBUtils.update(TableLocations.NAME, values, selection, args, true) == 0) {
+        if (DBInterface.update(TableLocations.NAME, values, selection, args, true) == 0) {
 
             //Location was not present, insert into locations table
-            DBUtils.insert(TableLocations.NAME, null, values, true);
+            DBInterface.insert(TableLocations.NAME, null, values, true);
         }
 
         return locationId;
@@ -180,10 +180,10 @@ public class HttpResponseParser {
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
 
             //First try to update the table if a book already exists
-            if (DBUtils.update(TableSearchBooks.NAME, values, selection, args, true) == 0) {
+            if (DBInterface.update(TableSearchBooks.NAME, values, selection, args, true) == 0) {
 
                 // Unable to update, insert the item
-                DBUtils.insert(TableSearchBooks.NAME, null, values, true);
+                DBInterface.insert(TableSearchBooks.NAME, null, values, true);
             }
         }
         return responseInfo;

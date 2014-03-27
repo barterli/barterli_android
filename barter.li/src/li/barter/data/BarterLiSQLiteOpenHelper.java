@@ -33,9 +33,9 @@ import li.barter.utils.Utils;
  * @author vinaysshenoy {@link SQLiteOpenHelper} to provide database
  *         connectivity for the application. The Methods of this class should
  *         not be accessed directly. Access them through the
- *         {@linkplain DBUtils} class
+ *         {@linkplain DBInterface} class
  */
-public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
+class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String             TAG        = "BarterLiSQLiteOpenHelper";
 
@@ -55,8 +55,8 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     /**
      * Gets a reference to the SQLIte Open Helper for the app, creating it if
      * necessary. This method is thread-safe. The Methods of this class should
-     * not be accessed directly. Access them through the {@linkplain DBUtils}
-     * class
+     * not be accessed directly. Access them through the
+     * {@linkplain DBInterface} class
      * 
      * @param context The Context reference
      * @return the reference to {@link BarterLiSQLiteOpenHelper}
@@ -110,9 +110,9 @@ public class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     private static void throwIfOnMainThread() {
         if (Utils.isMainThread()) {
             if (AppConstants.DEBUG) {
-                throw new RuntimeException("Accessing database on main thread!");
+                throw new RuntimeException("Accessing database on main thread! Use the async() versions of the methods.");
             } else {
-                Logger.e(TAG, "Accessing database on main thread");
+                Logger.e(TAG, "Accessing database on main thread! Use the async() versions of the methods.");
             }
         }
     }
