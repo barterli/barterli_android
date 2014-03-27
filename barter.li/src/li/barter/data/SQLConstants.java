@@ -24,13 +24,9 @@ package li.barter.data;
 public interface SQLConstants {
     public static final String CREATE_TABLE         = "CREATE TABLE IF NOT EXISTS %s (%s);";
     public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS %s;";
-    public static final String DATA_TEXT            = "%s TEXT ";
-    public static final String DATA_TEXT_DEFAULT    = "%s TEXT DEFAULT '%s' ";
-    public static final String DATA_INTEGER         = "%s INTEGER ";
-    public static final String DATA_INTEGER_DEFAULT = "%s INTEGER DEFAULT %d ";
-    public static final String DATA_REAL            = "%s REAL ";
-    public static final String DATA_REAL_DEFAULT    = "%s REAL DEFAULT %f ";
-    public static final String DATA_BLOB            = " BLOB ";
+    public static final String DATA_TEXT            = "%s TEXT DEFAULT '%s' ";
+    public static final String DATA_INTEGER         = "%s INTEGER DEFAULT %d ";
+    public static final String DATA_REAL            = "%s REAL DEFAULT %f ";
     public static final String DATA_INTEGER_PK      = "%s INTEGER PRIMARY KEY AUTOINCREMENT ";
     public static final String ASCENDING            = " ASC ";
     public static final String DESCENDING           = " DESC ";

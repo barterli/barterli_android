@@ -40,16 +40,16 @@ public class TableSearchBooks {
         final String columnDef = TextUtils
                         .join(SQLConstants.COMMA, new String[] {
                                 String.format(Locale.US, SQLConstants.DATA_INTEGER_PK, BaseColumns._ID),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_ID),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ISBN_10),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ISBN_13),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TITLE),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.DESCRIPTION),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.AUTHOR),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BARTER_TYPE),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.USER_ID),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCATION_ID),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.IMAGE_URL)
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_ID, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ISBN_10, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ISBN_13, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TITLE, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.DESCRIPTION, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.AUTHOR, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BARTER_TYPE, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.USER_ID, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCATION_ID, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.IMAGE_URL, "")
                         });
 
         Logger.d(TAG, "Column Def:", columnDef);

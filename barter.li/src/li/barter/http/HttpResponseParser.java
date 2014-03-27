@@ -28,6 +28,7 @@ import android.text.TextUtils;
 import li.barter.data.DBUtils;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
+import li.barter.data.TableLocations;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.Logger;
@@ -67,9 +68,7 @@ public class HttpResponseParser {
 
             case RequestId.SEARCH_BOOKS: {
                 //Delete the current search results before parsing the old ones
-                if (DBUtils.delete(TableSearchBooks.NAME, null, null) > 0) {
-                    DBUtils.notifyChange(TableSearchBooks.NAME);
-                }
+                DBUtils.delete(TableSearchBooks.NAME, null, null, true);
                 return parseSearchBooksResponse(response);
             }
 
@@ -115,8 +114,44 @@ public class HttpResponseParser {
         responseBundle.putString(HttpConstants.LAST_NAME, JsonUtils
                         .readString(userObject, HttpConstants.LAST_NAME));
 
+        final JSONObject locationObject = JsonUtils
+                        .readJSONObject(userObject, HttpConstants.LOCATION);
+
+        String locationId = null;
+        if (locationObject != null) {
+            locationId = parseAndStoreLocation(locationObject);
+        }
+
+        responseBundle.putString(HttpConstants.LOCATION, locationId); //Would like to use location id, but server just sends id for location
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
+    }
+
+    /**
+     * Reads out a Location object from Json, stores it the DB and returns the
+     * location id
+     * 
+     * @param locationObject The Location object
+     * @return The id of the parsed location
+     */
+    private String parseAndStoreLocation(JSONObject locationObject) {
+
+        final ContentValues values = new ContentValues();
+        final String locationId = readLocationDetailsIntoContentValues(locationObject, values, true);
+        final String selection = DatabaseColumns.LOCATION_ID
+                        + SQLConstants.EQUALS_ARG;
+        final String[] args = new String[] {
+            locationId
+        };
+
+        //Update the locations table if the location already exists
+        if (DBUtils.update(TableLocations.NAME, values, selection, args, true) == 0) {
+
+            //Location was not present, insert into locations table
+            DBUtils.insert(TableLocations.NAME, null, values, true);
+        }
+
+        return locationId;
     }
 
     /**
@@ -145,13 +180,12 @@ public class HttpResponseParser {
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
 
             //First try to update the table if a book already exists
-            if (DBUtils.update(TableSearchBooks.NAME, values, selection, args) == 0) {
+            if (DBUtils.update(TableSearchBooks.NAME, values, selection, args, true) == 0) {
 
                 // Unable to update, insert the item
-                DBUtils.insert(TableSearchBooks.NAME, null, values);
+                DBUtils.insert(TableSearchBooks.NAME, null, values, true);
             }
         }
-        DBUtils.notifyChange(TableSearchBooks.NAME);
         return responseInfo;
     }
 
@@ -195,7 +229,59 @@ public class HttpResponseParser {
                         .readString(bookObject, HttpConstants.DESCRIPTION));
         values.put(DatabaseColumns.IMAGE_URL, JsonUtils
                         .readString(bookObject, HttpConstants.IMAGE_URL));
+
+        final JSONObject locationObject = JsonUtils
+                        .readJSONObject(bookObject, HttpConstants.LOCATION);
+
+        if (locationObject != null) {
+            values.put(DatabaseColumns.LOCATION_ID, parseAndStoreLocation(locationObject));
+        }
         return bookId;
+    }
+
+    /**
+     * Reads the location details from the Location response json into a content
+     * values object
+     * 
+     * @param locationObject The Json representation of a location
+     * @param values The values instance to read into
+     * @param clearBeforeAdd Whether the values should be emptied before adding
+     * @return The location Id that was parsed
+     */
+    private String readLocationDetailsIntoContentValues(
+                    JSONObject locationObject, ContentValues values,
+                    boolean clearBeforeAdd) {
+
+        if (clearBeforeAdd) {
+            values.clear();
+        }
+
+        final String locationId = JsonUtils
+                        .readString(locationObject, HttpConstants.ID);
+        if (TextUtils.isEmpty(locationId)) {
+            throw new IllegalArgumentException("Not a valid location json:"
+                            + locationObject.toString());
+        }
+        values.put(DatabaseColumns.LOCATION_ID, locationId);
+        values.put(DatabaseColumns.NAME, JsonUtils
+                        .readString(locationObject, HttpConstants.NAME));
+        values.put(DatabaseColumns.ADDRESS, JsonUtils
+                        .readString(locationObject, HttpConstants.ADDRESS));
+        values.put(DatabaseColumns.POSTAL_CODE, JsonUtils
+                        .readString(locationObject, HttpConstants.POSTAL_CODE));
+        values.put(DatabaseColumns.LOCALITY, JsonUtils
+                        .readString(locationObject, HttpConstants.LOCALITY));
+        values.put(DatabaseColumns.CITY, JsonUtils
+                        .readString(locationObject, HttpConstants.CITY));
+        values.put(DatabaseColumns.STATE, JsonUtils
+                        .readString(locationObject, HttpConstants.STATE));
+        values.put(DatabaseColumns.COUNTRY, JsonUtils
+                        .readString(locationObject, HttpConstants.COUNTRY));
+        values.put(DatabaseColumns.LATITUDE, JsonUtils
+                        .readDouble(locationObject, HttpConstants.LATITUDE));
+        values.put(DatabaseColumns.LONGITUDE, JsonUtils
+                        .readDouble(locationObject, HttpConstants.LONGITUDE));
+        return locationId;
     }
 
     /**

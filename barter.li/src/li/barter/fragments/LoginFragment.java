@@ -216,32 +216,59 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     @Override
     public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
         onRequestFinished();
-        
-        if(request instanceof BlRequest) {
-            
+
+        if (request instanceof BlRequest) {
+
             final int requestId = ((BlRequest) request).getRequestId();
-            
-            if(requestId == RequestId.CREATE_USER) {
-                
+
+            if (requestId == RequestId.CREATE_USER) {
+
                 final Bundle userInfo = response.responseBundle;
-                
-                UserInfo.INSTANCE.authToken = userInfo.getString(HttpConstants.AUTH_TOKEN);
-                
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_auth_token, userInfo.getString(HttpConstants.AUTH_TOKEN));
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_email, userInfo.getString(HttpConstants.EMAIL));
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_description, userInfo.getString(HttpConstants.DESCRIPTION));
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_first_name, userInfo.getString(HttpConstants.FIRST_NAME));
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_last_name, userInfo.getString(HttpConstants.LAST_NAME));
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_user_id, userInfo.getString(HttpConstants.ID));
-                
+
+                UserInfo.INSTANCE.authToken = userInfo
+                                .getString(HttpConstants.AUTH_TOKEN);
+
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_auth_token, userInfo
+                                                .getString(HttpConstants.AUTH_TOKEN));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_email, userInfo
+                                                .getString(HttpConstants.EMAIL));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_description, userInfo
+                                                .getString(HttpConstants.DESCRIPTION));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_first_name, userInfo
+                                                .getString(HttpConstants.FIRST_NAME));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_last_name, userInfo
+                                                .getString(HttpConstants.LAST_NAME));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_user_id, userInfo
+                                                .getString(HttpConstants.ID));
+
                 final String tag = getTag();
-                
-                if(tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+
+                if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
                     //TODO Load profile screen
-                } else if(tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
-                    //TODO If location object is null, open fragment to set prefered location
+                } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
+
+                    final String locationId = userInfo
+                                    .getString(HttpConstants.LOCATION);
+
+                    if (TextUtils.isEmpty(locationId)) {
+                        //TODO Open fragment to set preferred location
+                        Logger.v(TAG, "No location, open select location screen");
+                    } else {
+                        /*
+                         * TODO Figure out a way to notify to the
+                         * AddBookFragment that login is done and book upload
+                         * should commence. Maybe an event log in Abstract
+                         * class?
+                         */
+                        popBackStack();
+                    }
                 }
-                popBackStack();
             }
         }
     }

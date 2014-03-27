@@ -37,13 +37,20 @@ public class DBUtils {
      *            provides the name of nullable column name to explicitly insert
      *            a NULL into in the case where your values is empty.
      * @param values The fields to insert
+     * @param autoNotify <code>true</code> to automatically notify a change on
+     *            the table
      * @return The row Id if inserted, -1 if not
      */
     public static long insert(String table, String nullColumnHack,
-                    ContentValues values) {
-        return BarterLiSQLiteOpenHelper
+                    ContentValues values, boolean autoNotify) {
+        final long insertRowId = BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
                         .insert(table, nullColumnHack, values);
+
+        if (autoNotify && insertRowId >= 0) {
+            notifyChange(table);
+        }
+        return insertRowId;
     }
 
     /**
@@ -53,13 +60,20 @@ public class DBUtils {
      * @param values The fields to update
      * @param whereClause The WHERE clause
      * @param whereArgs Arguments for the where clause
+     * @param autoNotify <code>true</code> to automatically notify a change on
+     *            the table
      * @return The number of rows updated
      */
     public static int update(String table, ContentValues values,
-                    String whereClause, String[] whereArgs) {
-        return BarterLiSQLiteOpenHelper
+                    String whereClause, String[] whereArgs, boolean autoNotify) {
+        final int updateCount = BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
                         .update(table, values, whereClause, whereArgs);
+
+        if (autoNotify && updateCount > 0) {
+            notifyChange(table);
+        }
+        return updateCount;
     }
 
     /**
@@ -68,14 +82,20 @@ public class DBUtils {
      * @param table The table to delete from
      * @param whereClause The WHERE clause
      * @param whereArgs Arguments for the where clause
+     * @param autoNotify <code>true</code> to automatically notify a change on
+     *            the table
      * @return The number of rows deleted
      */
     public static int delete(final String table, final String whereClause,
-                    final String[] whereArgs) {
+                    final String[] whereArgs, boolean autoNotify) {
 
-        return BarterLiSQLiteOpenHelper
+        final int deleteCount = BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
                         .delete(table, whereClause, whereArgs);
+        if (autoNotify && deleteCount > 0) {
+            notifyChange(table);
+        }
+        return deleteCount;
     }
 
     /**

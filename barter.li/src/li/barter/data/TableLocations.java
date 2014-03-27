@@ -38,16 +38,16 @@ public class TableLocations {
         final String columnDef = TextUtils
                         .join(SQLConstants.COMMA, new String[] {
                                 String.format(Locale.US, SQLConstants.DATA_INTEGER_PK, BaseColumns._ID),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCATION_ID),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.NAME),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ADDRESS),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.STREET),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCALITY),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.CITY),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.STATE),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.COUNTRY),
-                                String.format(Locale.US, SQLConstants.DATA_REAL, DatabaseColumns.LATITUDE),
-                                String.format(Locale.US, SQLConstants.DATA_REAL, DatabaseColumns.LONGITUDE)
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCATION_ID, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.NAME, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ADDRESS, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.POSTAL_CODE, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCALITY, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.CITY, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.STATE, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.COUNTRY, ""),
+                                String.format(Locale.US, SQLConstants.DATA_REAL, DatabaseColumns.LATITUDE, 0.0),
+                                String.format(Locale.US, SQLConstants.DATA_REAL, DatabaseColumns.LONGITUDE, 0.0)
                         });
 
         Logger.d(TAG, "Column Def:", columnDef);

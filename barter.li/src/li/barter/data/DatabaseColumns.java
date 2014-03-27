@@ -35,8 +35,8 @@ public interface DatabaseColumns {
     public static final String LOCATION_ID = "location_id";
     public static final String NAME        = "name";
     public static final String ADDRESS     = "address";
-    public static final String STREET      = "street";
     public static final String LOCALITY    = "locality";
+    public static final String POSTAL_CODE = "postal_code";
     public static final String CITY        = "city";
     public static final String STATE       = "state";
     public static final String COUNTRY     = "country";
