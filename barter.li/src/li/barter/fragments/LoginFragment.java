@@ -28,7 +28,6 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -45,10 +44,10 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
-import li.barter.utils.SharedPreferenceHelper;
-import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 
 @FragmentTransition(enterAnimation = R.anim.activity_slide_in_right, exitAnimation = R.anim.activity_scale_out, popEnterAnimation = R.anim.activity_scale_in, popExitAnimation = R.anim.activity_slide_out_right)
 public class LoginFragment extends AbstractBarterLiFragment implements
@@ -235,6 +234,13 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 SharedPreferenceHelper.set(getActivity(), R.string.pref_last_name, userInfo.getString(HttpConstants.LAST_NAME));
                 SharedPreferenceHelper.set(getActivity(), R.string.pref_user_id, userInfo.getString(HttpConstants.ID));
                 
+                final String tag = getTag();
+                
+                if(tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+                    //TODO Load profile screen
+                } else if(tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
+                    //TODO If location object is null, open fragment to set prefered location
+                }
                 popBackStack();
             }
         }

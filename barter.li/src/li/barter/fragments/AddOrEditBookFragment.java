@@ -42,10 +42,10 @@ import java.util.Map;
 import li.barter.R;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
-import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils;
+import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.Logger;
@@ -213,17 +213,12 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             if (!isLoggedIn()) {
 
-                final Bundle myArgs = getArguments();
-                Bundle loginArgs = null;
-
-                if (myArgs != null && myArgs.containsKey(Keys.BACKSTACK_TAG)) {
-                    loginArgs = new Bundle(1);
-                    loginArgs.putString(Keys.BACKSTACK_TAG, myArgs
-                                    .getString(Keys.BACKSTACK_TAG));
-                }
+                final Bundle loginArgs = new Bundle(1);
+                loginArgs.putString(Keys.BACKSTACK_TAG, FragmentTags.BS_ADD_BOOK);
+                
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), LoginFragment.class
-                                                .getName(), loginArgs), FragmentTags.LOGIN, true, null);
+                                                .getName(), loginArgs), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.BS_ADD_BOOK);
 
             } else {
                 createBookOnServer();
