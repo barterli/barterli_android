@@ -246,6 +246,9 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 SharedPreferenceHelper
                                 .set(getActivity(), R.string.pref_user_id, userInfo
                                                 .getString(HttpConstants.ID));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_location, userInfo
+                                                .getString(HttpConstants.LOCATION));
 
                 final String tag = getTag();
 
