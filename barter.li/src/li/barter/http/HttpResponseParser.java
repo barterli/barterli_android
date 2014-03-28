@@ -236,21 +236,10 @@ public class HttpResponseParser {
         hangout.name = JsonUtils.readString(hangoutObject, HttpConstants.NAME);
         hangout.address = JsonUtils
                         .readString(hangoutObject, HttpConstants.ADDRESS);
-        hangout.street = JsonUtils
-                        .readString(hangoutObject, HttpConstants.CROSS_STREET);
-        hangout.city = JsonUtils.readString(hangoutObject, HttpConstants.CITY);
-        hangout.state = JsonUtils
-                        .readString(hangoutObject, HttpConstants.STATE);
-        hangout.country = JsonUtils
-                        .readString(hangoutObject, HttpConstants.COUNTRY);
-        hangout.postalCode = JsonUtils
-                        .readString(hangoutObject, HttpConstants.POSTALCODE);
         hangout.latitude = JsonUtils
-                        .readDouble(hangoutObject, HttpConstants.LAT);
+                        .readDouble(hangoutObject, HttpConstants.LATITUDE);
         hangout.longitude = JsonUtils
-                        .readDouble(hangoutObject, HttpConstants.LNG);
-        hangout.distance = JsonUtils
-                        .readInt(hangoutObject, HttpConstants.DISTANCE);
+                        .readDouble(hangoutObject, HttpConstants.LONGITUDE);
 
     }
 

@@ -135,9 +135,4 @@ public class HttpConstants {
     public static final String LOCALITY         = "locality";
     public static final String METERS           = "meters";
     public static final String LOCATIONS        = "locations";
-    public static final String LAT              = "lat";
-    public static final String LNG              = "lng";
-    public static final String POSTALCODE       = "postalCode";
-    public static final String CROSS_STREET     = "crossStreet";
-    public static final String DISTANCE         = "distance";
 }

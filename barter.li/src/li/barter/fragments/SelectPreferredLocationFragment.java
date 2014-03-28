@@ -21,11 +21,11 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
-import com.google.android.gms.internal.ah;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.CancelableCallback;
 import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -50,9 +50,9 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.parcelables.Hangout;
-import li.barter.utils.Logger;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
 
 /**
  * @author Vinay S Shenoy Fragment for selecting a preferred location for
@@ -61,19 +61,20 @@ import li.barter.utils.AppConstants.UserInfo;
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                 implements Listener<ResponseInfo>, ErrorListener,
-                CancelableCallback, OnInfoWindowClickListener {
+                CancelableCallback, OnInfoWindowClickListener,
+                OnMarkerDragListener {
 
-    private static final String  TAG                = "SelectPreferredLocationFragment";
+    private static final String  TAG                      = "SelectPreferredLocationFragment";
 
     /**
      * Zoom level for the map when the location is retrieved
      */
-    private static final float   MAP_ZOOM_LEVEL     = 15;
+    private static final float   MAP_ZOOM_LEVEL           = 15;
 
     /**
      * Hue for custom marker, to match with the app theme
      */
-    private final float          mCustomMarkerHue   = 196.0f;
+    private final float          mCustomMarkerHue         = 196.0f;
 
     /**
      * {@link MapView} used to display the Map
@@ -93,7 +94,12 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     /**
      * Title format for the marker
      */
-    private final String         mMarkerTitleFormat = "%s, %s";
+    private final String         mMarkerTitleFormat       = "%s, %s";
+
+    /**
+     * Title format for the custom marker
+     */
+    private final String         mCustomMarkerTitleFormat = "%.5f, %.5f";
 
     /**
      * A 1-to-1 mapping between the Map markers and the hangouts to resolve
@@ -236,6 +242,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
         if (map != null) {
             map.setOnInfoWindowClickListener(this);
+            map.setOnMarkerDragListener(this);
         }
     }
 
@@ -311,8 +318,10 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                                 .addMarker(new MarkerOptions()
                                                 .draggable(true)
                                                 .icon(BitmapDescriptorFactory
-                                                                .defaultMarker(196.0f))
-                                                .title(getString(R.string.custom_location))
+                                                                .defaultMarker(mCustomMarkerHue))
+                                                .title(String.format(mCustomMarkerTitleFormat, location
+                                                                .getLatitude(), location
+                                                                .getLongitude()))
                                                 .snippet(snippet)
                                                 .position(new LatLng(location
                                                                 .getLatitude(), location
@@ -342,5 +351,25 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
             Logger.v(TAG, "Marker Clicked: %s, %s", selectedHangout.name, selectedHangout.address);
             //TODO Read the location info from the Hangout and return
         }
+    }
+
+    @Override
+    public void onMarkerDrag(Marker marker) {
+
+    }
+
+    @Override
+    public void onMarkerDragEnd(Marker marker) {
+        if (marker.equals(mCustomMarker)) {
+            final LatLng position = marker.getPosition();
+            marker.setTitle(String
+                            .format(mCustomMarkerTitleFormat, position.latitude, position.longitude));
+            marker.showInfoWindow();
+        }
+    }
+
+    @Override
+    public void onMarkerDragStart(Marker marker) {
+
     }
 }

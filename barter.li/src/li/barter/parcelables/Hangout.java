@@ -28,14 +28,8 @@ public class Hangout implements Parcelable {
 
     public String name;
     public String address;
-    public String street;
-    public String postalCode;
-    public String city;
-    public String state;
-    public String country;
     public double latitude;
     public double longitude;
-    public int    distance;
 
     //Default constructor
     public Hangout() {
@@ -46,28 +40,16 @@ public class Hangout implements Parcelable {
     public Hangout(Parcel source) {
         name = source.readString();
         address = source.readString();
-        street = source.readString();
-        postalCode = source.readString();
-        city = source.readString();
-        state = source.readString();
-        country = source.readString();
         latitude = source.readDouble();
         longitude = source.readDouble();
-        distance = source.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(address);
-        dest.writeString(street);
-        dest.writeString(postalCode);
-        dest.writeString(city);
-        dest.writeString(state);
-        dest.writeString(country);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
-        dest.writeInt(distance);
     }
 
     @Override
