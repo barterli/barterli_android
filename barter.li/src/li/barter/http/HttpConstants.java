@@ -126,4 +126,10 @@ public class HttpConstants {
     public static final String USER             = "user";
     public static final String FIRST_NAME       = "first_name";
     public static final String LAST_NAME        = "last_name";
+    public static final String COUNTRY          = "country";
+    public static final String STATE            = "state";
+    public static final String CITY             = "city";
+    public static final String ADDRESS          = "address";
+    public static final String POSTAL_CODE      = "postal_code";
+    public static final String LOCALITY         = "locality";
 }

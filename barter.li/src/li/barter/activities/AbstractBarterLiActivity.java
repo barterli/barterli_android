@@ -191,7 +191,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
                         } else {
                             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                             .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
-                                                            .getName(), null), FragmentTags.LOGIN, true, null);
+                                                            .getName(), null), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, null);
                         }
 
                     }

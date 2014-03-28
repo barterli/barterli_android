@@ -28,7 +28,6 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -45,12 +44,12 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
-import li.barter.utils.SharedPreferenceHelper;
-import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 
-@FragmentTransition(enterAnimation = R.anim.activity_slide_in_right, exitAnimation = R.anim.activity_scale_out, popEnterAnimation = R.anim.activity_scale_in, popExitAnimation = R.anim.activity_slide_out_right)
+@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class LoginFragment extends AbstractBarterLiFragment implements
                 OnClickListener, Listener<ResponseInfo>, ErrorListener {
 
@@ -217,25 +216,62 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     @Override
     public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
         onRequestFinished();
-        
-        if(request instanceof BlRequest) {
-            
+
+        if (request instanceof BlRequest) {
+
             final int requestId = ((BlRequest) request).getRequestId();
-            
-            if(requestId == RequestId.CREATE_USER) {
-                
+
+            if (requestId == RequestId.CREATE_USER) {
+
                 final Bundle userInfo = response.responseBundle;
-                
-                UserInfo.INSTANCE.authToken = userInfo.getString(HttpConstants.AUTH_TOKEN);
-                
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_auth_token, userInfo.getString(HttpConstants.AUTH_TOKEN));
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_email, userInfo.getString(HttpConstants.EMAIL));
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_description, userInfo.getString(HttpConstants.DESCRIPTION));
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_first_name, userInfo.getString(HttpConstants.FIRST_NAME));
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_last_name, userInfo.getString(HttpConstants.LAST_NAME));
-                SharedPreferenceHelper.set(getActivity(), R.string.pref_user_id, userInfo.getString(HttpConstants.ID));
-                
-                popBackStack();
+
+                UserInfo.INSTANCE.authToken = userInfo
+                                .getString(HttpConstants.AUTH_TOKEN);
+
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_auth_token, userInfo
+                                                .getString(HttpConstants.AUTH_TOKEN));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_email, userInfo
+                                                .getString(HttpConstants.EMAIL));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_description, userInfo
+                                                .getString(HttpConstants.DESCRIPTION));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_first_name, userInfo
+                                                .getString(HttpConstants.FIRST_NAME));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_last_name, userInfo
+                                                .getString(HttpConstants.LAST_NAME));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_user_id, userInfo
+                                                .getString(HttpConstants.ID));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_location, userInfo
+                                                .getString(HttpConstants.LOCATION));
+
+                final String tag = getTag();
+
+                if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+                    //TODO Load profile screen
+                } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
+
+                    final String locationId = userInfo
+                                    .getString(HttpConstants.LOCATION);
+
+                    if (TextUtils.isEmpty(locationId)) {
+                        //TODO Open fragment to set preferred location
+                        Logger.v(TAG, "No location, open select location screen");
+                    } else {
+                        /*
+                         * TODO Figure out a way to notify to the
+                         * AddBookFragment that login is done and book upload
+                         * should commence. Maybe an event log in Abstract
+                         * class?
+                         */
+                        popBackStack();
+                    }
+                }
             }
         }
     }
