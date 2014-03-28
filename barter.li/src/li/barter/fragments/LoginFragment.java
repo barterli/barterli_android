@@ -267,7 +267,6 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                         if (myArgs != null) {
                             preferredLocationArgs = new Bundle(myArgs);
                         }
-                        Logger.v(TAG, "No location, open select location screen");
                         loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                         .instantiate(getActivity(), SelectPreferredLocationFragment.class
                                                         .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);

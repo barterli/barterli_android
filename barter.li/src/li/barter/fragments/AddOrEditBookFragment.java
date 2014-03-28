@@ -215,13 +215,17 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
                 final Bundle loginArgs = new Bundle(1);
                 loginArgs.putString(Keys.BACKSTACK_TAG, FragmentTags.BS_ADD_BOOK);
-                
+
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), LoginFragment.class
                                                 .getName(), loginArgs), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.BS_ADD_BOOK);
 
             } else {
-                createBookOnServer();
+
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), SelectPreferredLocationFragment.class
+                                                .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_ADD_OR_EDIT_BOOK, true, FragmentTags.BS_PREFERRED_LOCATION);
+                //createBookOnServer();
             }
         }
     }

@@ -31,6 +31,7 @@ import li.barter.data.SQLConstants;
 import li.barter.data.TableLocations;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.parcelables.Hangout;
 import li.barter.utils.Logger;
 
 /**
@@ -204,9 +205,53 @@ public class HttpResponseParser {
                     throws JSONException {
 
         final ResponseInfo responseInfo = new ResponseInfo();
-        
-        final JSONArray hangoutsArray = new JSONArray(response);
+
+        final JSONObject responseObject = new JSONObject(response);
+        final JSONArray hangoutsArray = JsonUtils
+                        .readJSONArray(responseObject, HttpConstants.LOCATIONS);
+
+        final Hangout[] hangouts = new Hangout[hangoutsArray.length()];
+        JSONObject hangoutObject = null;
+        for (int i = 0; i < hangouts.length; i++) {
+            hangoutObject = JsonUtils.readJSONObject(hangoutsArray, i);
+            hangouts[i] = new Hangout();
+            readHangoutObjectIntoHangout(hangoutObject, hangouts[i]);
+        }
+
+        final Bundle responseBundle = new Bundle(1);
+        responseBundle.putParcelableArray(HttpConstants.LOCATIONS, hangouts);
+        responseInfo.responseBundle = responseBundle;
         return responseInfo;
+    }
+
+    /**
+     * Reads a Hangout {@link JSONObject} into a {@link Hangout} model
+     * 
+     * @param hangoutObject The Json response representing a Hangout
+     * @param hangout The {@link Hangout} model to write into
+     */
+    private void readHangoutObjectIntoHangout(JSONObject hangoutObject,
+                    Hangout hangout) {
+
+        hangout.name = JsonUtils.readString(hangoutObject, HttpConstants.NAME);
+        hangout.address = JsonUtils
+                        .readString(hangoutObject, HttpConstants.ADDRESS);
+        hangout.street = JsonUtils
+                        .readString(hangoutObject, HttpConstants.CROSS_STREET);
+        hangout.city = JsonUtils.readString(hangoutObject, HttpConstants.CITY);
+        hangout.state = JsonUtils
+                        .readString(hangoutObject, HttpConstants.STATE);
+        hangout.country = JsonUtils
+                        .readString(hangoutObject, HttpConstants.COUNTRY);
+        hangout.postalCode = JsonUtils
+                        .readString(hangoutObject, HttpConstants.POSTALCODE);
+        hangout.latitude = JsonUtils
+                        .readDouble(hangoutObject, HttpConstants.LAT);
+        hangout.longitude = JsonUtils
+                        .readDouble(hangoutObject, HttpConstants.LNG);
+        hangout.distance = JsonUtils
+                        .readInt(hangoutObject, HttpConstants.DISTANCE);
+
     }
 
     /**
