@@ -135,4 +135,5 @@ public class HttpConstants {
     public static final String LOCALITY         = "locality";
     public static final String METERS           = "meters";
     public static final String LOCATIONS        = "locations";
+    public static final String token            = "token";
 }
