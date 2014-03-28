@@ -20,6 +20,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import li.barter.BarterLiApplication;
+import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
 import li.barter.utils.Utils;
 
@@ -52,14 +53,11 @@ public class DBInterface {
      */
     public static long insert(String table, String nullColumnHack,
                     ContentValues values, boolean autoNotify) {
-        final long insertRowId = BarterLiSQLiteOpenHelper
+        throwIfOnMainThread();
+        return BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
-                        .insert(table, nullColumnHack, values);
+                        .insert(table, nullColumnHack, values, autoNotify);
 
-        if (autoNotify && insertRowId >= 0) {
-            notifyChange(table);
-        }
-        return insertRowId;
     }
 
     /**
@@ -72,15 +70,18 @@ public class DBInterface {
      *            provides the name of nullable column name to explicitly insert
      *            a NULL into in the case where your values is empty.
      * @param values The fields to insert
+     * @param autoNotify Whether to automatically notify once the row is
+     *            inserted
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
     public static void insertAsync(final int token, final String table,
                     final String nullColumnHack, final ContentValues values,
+                    final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
         logIfNotOnMainThread();
         ASYNC_QUERY_HANDLER
-                        .startInsert(token, table, nullColumnHack, values, callback);
+                        .startInsert(token, table, nullColumnHack, values, autoNotify, callback);
     }
 
     /**
@@ -96,14 +97,11 @@ public class DBInterface {
      */
     public static int update(String table, ContentValues values,
                     String whereClause, String[] whereArgs, boolean autoNotify) {
-        final int updateCount = BarterLiSQLiteOpenHelper
+        throwIfOnMainThread();
+        return BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
-                        .update(table, values, whereClause, whereArgs);
+                        .update(table, values, whereClause, whereArgs, autoNotify);
 
-        if (autoNotify && updateCount > 0) {
-            notifyChange(table);
-        }
-        return updateCount;
     }
 
     /**
@@ -113,17 +111,18 @@ public class DBInterface {
      * @param table The table to update
      * @param values The fields to update
      * @param selection The WHERE clause
-     * @param selectionArgs Arguments for the where clause
+     * @param selectionArgs Arguments for the where clauseupdate is done
+     * @param autoNotify Whether to automatically notify once the
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
     public static void updateAsync(final int token, final String table,
                     final ContentValues values, final String selection,
-                    final String[] selectionArgs,
+                    final String[] selectionArgs, final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
         logIfNotOnMainThread();
         ASYNC_QUERY_HANDLER
-                        .startUpdate(token, table, values, selection, selectionArgs, callback);
+                        .startUpdate(token, table, values, selection, selectionArgs, autoNotify, callback);
     }
 
     /**
@@ -138,14 +137,10 @@ public class DBInterface {
      */
     public static int delete(final String table, final String whereClause,
                     final String[] whereArgs, boolean autoNotify) {
-
-        final int deleteCount = BarterLiSQLiteOpenHelper
+        throwIfOnMainThread();
+        return BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
-                        .delete(table, whereClause, whereArgs);
-        if (autoNotify && deleteCount > 0) {
-            notifyChange(table);
-        }
-        return deleteCount;
+                        .delete(table, whereClause, whereArgs, autoNotify);
     }
 
     /**
@@ -155,16 +150,19 @@ public class DBInterface {
      * @param table The table to delete from
      * @param selection The WHERE clause
      * @param selectionArgs Arguments for the where clause
+     * @param autoNotify Whether to automatically notify once the delete
+     *            operation is done
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    void startDelete(final int token, final String table,
+    public static void deleteAsync(final int token, final String table,
                     final String selection, final String[] selectionArgs,
+                    final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
         logIfNotOnMainThread();
         ASYNC_QUERY_HANDLER
-                        .startDelete(token, table, selection, selectionArgs, callback);
+                        .startDelete(token, table, selection, selectionArgs, autoNotify, callback);
     }
 
     /**
@@ -186,7 +184,7 @@ public class DBInterface {
                     final String[] selectionArgs, final String groupBy,
                     final String having, final String orderBy,
                     final String limit) {
-
+        throwIfOnMainThread();
         return BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
                         .query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
@@ -209,7 +207,7 @@ public class DBInterface {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    void startQuery(final int token, final boolean distinct,
+    public static void queryAsync(final int token, final boolean distinct,
                     final String table, final String[] columns,
                     final String selection, final String[] selectionArgs,
                     final String groupBy, final String having,
@@ -280,6 +278,21 @@ public class DBInterface {
     private static void logIfNotOnMainThread() {
         if (!Utils.isMainThread()) {
             Logger.w(TAG, "Performing async database query on a thread other than main thread. Are you sure you don't want to use the synchronous versions instead?");
+        }
+    }
+
+    /**
+     * Checks if the current database query is being made on the main thread. If
+     * yes, either throws an Exception(if in DEBUG mode) or Logs an error(in
+     * PRODUCTION mode)
+     */
+    private static void throwIfOnMainThread() {
+        if (Utils.isMainThread()) {
+            if (AppConstants.DEBUG) {
+                throw new RuntimeException("Accessing database on main thread! Use the async() versions of the methods.");
+            } else {
+                Logger.e(TAG, "Accessing database on main thread! Use the async() versions of the methods.");
+            }
         }
     }
 }

@@ -25,9 +25,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 
-import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
-import li.barter.utils.Utils;
 
 /**
  * @author vinaysshenoy {@link SQLiteOpenHelper} to provide database
@@ -103,21 +101,6 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Checks if the current database query is being made on the main thread. If
-     * yes, either throws an Exception(if in DEBUG mode) or Logs an error(in
-     * PRODUCTION mode)
-     */
-    private static void throwIfOnMainThread() {
-        if (Utils.isMainThread()) {
-            if (AppConstants.DEBUG) {
-                throw new RuntimeException("Accessing database on main thread! Use the async() versions of the methods.");
-            } else {
-                Logger.e(TAG, "Accessing database on main thread! Use the async() versions of the methods.");
-            }
-        }
-    }
-
-    /**
      * Query the given URL, returning a Cursor over the result set.
      * 
      * @param distinct <code>true</code> if dataset should be unique
@@ -137,7 +120,6 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
                     final String having, final String orderBy,
                     final String limit) {
 
-        throwIfOnMainThread();
         final SQLiteDatabase database = getReadableDatabase();
         return database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
     }
@@ -151,14 +133,19 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      *            provides the name of nullable column name to explicitly insert
      *            a NULL into in the case where your values is empty.
      * @param values The fields to insert
+     * @param autoNotify Whethr to automatically notify a change on the table
+     *            which was inserted into
      * @return The row Id of the newly inserted row, or -1 if unable to insert
      */
     long insert(final String table, final String nullColumnHack,
-                    final ContentValues values) {
+                    final ContentValues values, final boolean autoNotify) {
 
-        throwIfOnMainThread();
         final SQLiteDatabase database = getWritableDatabase();
-        return database.insert(table, nullColumnHack, values);
+        final long insertRowId = database.insert(table, nullColumnHack, values);
+        if (autoNotify && insertRowId >= 0) {
+            notifyChange(table);
+        }
+        return insertRowId;
     }
 
     /**
@@ -168,14 +155,22 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param values The fields to update
      * @param whereClause The WHERE clause
      * @param whereArgs Arguments for the where clause
+     * @param autoNotify Whether to automatically notify any changes to the
+     *            table
      * @return The number of rows updated
      */
     int update(final String table, final ContentValues values,
-                    final String whereClause, final String[] whereArgs) {
+                    final String whereClause, final String[] whereArgs,
+                    final boolean autoNotify) {
 
-        throwIfOnMainThread();
         final SQLiteDatabase database = getWritableDatabase();
-        return database.update(table, values, whereClause, whereArgs);
+        int updateCount = database
+                        .update(table, values, whereClause, whereArgs);
+
+        if (autoNotify && updateCount > 0) {
+            notifyChange(table);
+        }
+        return updateCount;
     }
 
     /**
@@ -184,14 +179,20 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param table The table to delete from
      * @param whereClause The WHERE clause
      * @param whereArgs Arguments for the where clause
+     * @param autoNotify Whether to automatically notify any changes to the
+     *            table
      * @return The number of rows deleted
      */
     int delete(final String table, final String whereClause,
-                    final String[] whereArgs) {
+                    final String[] whereArgs, final boolean autoNotify) {
 
-        throwIfOnMainThread();
         final SQLiteDatabase database = getWritableDatabase();
-        return database.delete(table, whereClause, whereArgs);
+        final int deleteCount = database.delete(table, whereClause, whereArgs);
+
+        if (autoNotify && deleteCount > 0) {
+            notifyChange(table);
+        }
+        return deleteCount;
     }
 
     /**

@@ -76,17 +76,21 @@ class BarterLiAsyncQueryHandler {
      *            provides the name of nullable column name to explicitly insert
      *            a NULL into in the case where your values is empty.
      * @param values The fields to insert
+     * @param autoNotify Whether to automatically notify any changes to the
+     *            table
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
     void startInsert(final int token, final String table,
                     final String nullColumnHack, final ContentValues values,
+                    final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
         final QueryTask task = new QueryTask(Type.INSERT, token, callback);
         task.mTableName = table;
         task.mNullColumnHack = nullColumnHack;
         task.mValues = values;
+        task.mAutoNotify = autoNotify;
         mTasks.put(token, task);
         new QueryAsyncTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, task);
     }
@@ -98,17 +102,21 @@ class BarterLiAsyncQueryHandler {
      * @param table The table to delete from
      * @param selection The WHERE clause
      * @param selectionArgs Arguments for the where clause
+     * @param autoNotify Whether to automatically notify any changes to the
+     *            table
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
     void startDelete(final int token, final String table,
                     final String selection, final String[] selectionArgs,
+                    final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
         final QueryTask task = new QueryTask(Type.DELETE, token, callback);
         task.mTableName = table;
         task.mSelection = selection;
         task.mSelectionArgs = selectionArgs;
+        task.mAutoNotify = autoNotify;
         mTasks.put(token, task);
         new QueryAsyncTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, task);
 
@@ -122,12 +130,14 @@ class BarterLiAsyncQueryHandler {
      * @param values The fields to update
      * @param selection The WHERE clause
      * @param selectionArgs Arguments for the where clause
+     * @param autoNotify Whether to automatically notify any changes to the
+     *            table
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
     void startUpdate(final int token, final String table,
                     final ContentValues values, final String selection,
-                    final String[] selectionArgs,
+                    final String[] selectionArgs, final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
         final QueryTask task = new QueryTask(Type.UPDATE, token, callback);
@@ -135,6 +145,7 @@ class BarterLiAsyncQueryHandler {
         task.mValues = values;
         task.mSelection = selection;
         task.mSelectionArgs = selectionArgs;
+        task.mAutoNotify = autoNotify;
         mTasks.put(token, task);
         new QueryAsyncTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, task);
 
@@ -271,6 +282,7 @@ class BarterLiAsyncQueryHandler {
         private String               mLimit;
         private String               mNullColumnHack;
         private ContentValues        mValues;
+        private boolean              mAutoNotify;
 
         private boolean              mCancelled;
 
@@ -312,19 +324,19 @@ class BarterLiAsyncQueryHandler {
                 case INSERT: {
                     result.mInsertRowId = BarterLiSQLiteOpenHelper
                                     .getInstance(BarterLiApplication.getStaticContext())
-                                    .insert(task.mTableName, task.mNullColumnHack, task.mValues);
+                                    .insert(task.mTableName, task.mNullColumnHack, task.mValues, task.mAutoNotify);
                 }
 
                 case DELETE: {
                     result.mDeleteCount = BarterLiSQLiteOpenHelper
                                     .getInstance(BarterLiApplication.getStaticContext())
-                                    .delete(task.mTableName, task.mSelection, task.mSelectionArgs);
+                                    .delete(task.mTableName, task.mSelection, task.mSelectionArgs, task.mAutoNotify);
                 }
 
                 case UPDATE: {
                     result.mUpdateCount = BarterLiSQLiteOpenHelper
                                     .getInstance(BarterLiApplication.getStaticContext())
-                                    .update(task.mTableName, task.mValues, task.mSelection, task.mSelectionArgs);
+                                    .update(task.mTableName, task.mValues, task.mSelection, task.mSelectionArgs, task.mAutoNotify);
 
                 }
 
