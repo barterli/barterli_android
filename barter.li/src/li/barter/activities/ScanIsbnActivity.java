@@ -64,7 +64,7 @@ import li.barter.utils.Logger;
  * 
  * @author Vinay S Shenoy
  */
-@ActivityTransition(createEnterAnimation = R.anim.activity_slide_in_right, createExitAnimation = R.anim.activity_scale_out, destroyEnterAnimation = R.anim.activity_scale_in, destroyExitAnimation = R.anim.activity_slide_out_right)
+@ActivityTransition(createEnterAnimation = R.anim.slide_in_from_right, createExitAnimation = R.anim.zoom_out, destroyEnterAnimation = R.anim.zoom_in, destroyExitAnimation = R.anim.slide_out_to_right)
 public class ScanIsbnActivity extends AbstractBarterLiActivity implements
                 IDecoderActivity, SurfaceHolder.Callback {
 
