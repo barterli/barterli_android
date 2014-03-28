@@ -122,14 +122,16 @@ public class AppConstants {
      * @author Vinay S Shenoy
      */
     public static interface FragmentTags {
-        public static final String BOOKS_AROUND_ME       = "books_around_me";
-        public static final String ADD_OR_EDIT_BOOK      = "add_or_edit_book";
-        public static final String LOGIN_TO_ADD_BOOK     = "login_to_add_book";
-        public static final String LOGIN_FROM_NAV_DRAWER = "login_from_nav_drawer";
+        public static final String BOOKS_AROUND_ME                      = "books_around_me";
+        public static final String ADD_OR_EDIT_BOOK                     = "add_or_edit_book";
+        public static final String LOGIN_TO_ADD_BOOK                    = "login_to_add_book";
+        public static final String LOGIN_FROM_NAV_DRAWER                = "login_from_nav_drawer";
+        public static final String SELECT_PREFERRED_LOCATION_FROM_LOGIN = "select_preferred_location_from_login";
 
         /* Tags for fragment backstack popping and providing up navigation */
-        public static final String BS_BOOKS_AROUND_ME    = "to_books_around_me";
-        public static final String BS_ADD_BOOK           = "to_add_book";
+        public static final String BS_BOOKS_AROUND_ME                   = "to_books_around_me";
+        public static final String BS_ADD_BOOK                          = "to_add_book";
+        public static final String BS_PREFERRED_LOCATION                = "to_preferred_location";
     }
 
     /**

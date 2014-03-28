@@ -118,7 +118,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            popBackStack();
+            onUpNavigate();
             return true;
         } else {
             return super.onOptionsItemSelected(item);

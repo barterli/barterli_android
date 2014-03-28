@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -45,6 +46,7 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
@@ -92,8 +94,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-
-            popBackStack();
+            onUpNavigate();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -260,16 +261,25 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                                     .getString(HttpConstants.LOCATION);
 
                     if (TextUtils.isEmpty(locationId)) {
-                        //TODO Open fragment to set preferred location
+                        final Bundle myArgs = getArguments();
+                        Bundle preferredLocationArgs = null;
+
+                        if (myArgs != null) {
+                            preferredLocationArgs = new Bundle(myArgs);
+                        }
                         Logger.v(TAG, "No location, open select location screen");
+                        loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(getActivity(), SelectPreferredLocationFragment.class
+                                                        .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
                     } else {
                         /*
                          * TODO Figure out a way to notify to the
                          * AddBookFragment that login is done and book upload
                          * should commence. Maybe an event log in Abstract
-                         * class?
+                         * class? Maybe get the instance of the fragment and
+                         * load it again?
                          */
-                        popBackStack();
+                        onUpNavigate();
                     }
                 }
             }

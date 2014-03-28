@@ -69,16 +69,16 @@ public class ChatFragment extends AbstractBarterLiFragment implements
         mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
                         .getChatPort(), "/", "node.barterli", ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
-        
+
         setActionBarDrawerToggleEnabled(false);
         return view;
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            popBackStack();
+            onUpNavigate();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -118,7 +118,7 @@ public class ChatFragment extends AbstractBarterLiFragment implements
         String text = "";
         try {
             text = new String(message, HTTP.UTF_8);
-           Logger.d(TAG, "Received:" + text);
+            Logger.d(TAG, "Received:" + text);
         } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();
         }

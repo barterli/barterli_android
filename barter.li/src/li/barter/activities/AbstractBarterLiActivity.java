@@ -615,12 +615,41 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
     protected boolean isLoggedIn() {
         return !TextUtils.isEmpty(UserInfo.INSTANCE.authToken);
     }
-    
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         //Reset background to reduce overdaw
         getWindow().setBackgroundDrawable(null);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
+        if (masterFragment != null
+                        && getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            masterFragment.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * Returns the current master fragment. In single pane layout, this is the
+     * fragment in the main content. In a multi-pane layout, returns the
+     * fragment in the master container, which is the one responsible for
+     * coordination
+     * 
+     * @return <code>null</code> If no fragment is loaded,the
+     *         {@link AbstractBarterLiFragment} implementation which is the
+     *         current master fragment otherwise
+     */
+    public AbstractBarterLiFragment getCurrentMasterFragment() {
+
+        return (AbstractBarterLiFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.frame_content);
+
     }
 
 }
