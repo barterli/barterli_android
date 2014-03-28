@@ -56,8 +56,8 @@ public class ChatFragment extends AbstractBarterLiFragment implements
     private ChatRabbitMQConnector mMessageConsumer;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                    Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater,
+                    final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         final View view = inflater
                         .inflate(R.layout.fragment_chat, container, false);
@@ -75,7 +75,7 @@ public class ChatFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
             onUpNavigate();

@@ -17,20 +17,10 @@
 package li.barter.activities;
 
 import android.app.ActionBar;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 
 import li.barter.R;
-import li.barter.adapters.HomeNavDrawerAdapter;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
 import li.barter.utils.AppConstants.FragmentTags;
@@ -42,7 +32,7 @@ import li.barter.utils.AppConstants.FragmentTags;
  */
 public class HomeActivity extends AbstractBarterLiActivity {
 
-    private static final String   TAG = "HomeActivity";
+    private static final String TAG = "HomeActivity";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

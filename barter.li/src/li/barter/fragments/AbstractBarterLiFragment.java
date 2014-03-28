@@ -82,8 +82,8 @@ public abstract class AbstractBarterLiFragment extends Fragment {
         mContainerViewId = container.getId();
     }
 
-    protected void setActionBarDrawerToggleEnabled(boolean enabled) {
-        AbstractBarterLiActivity activity = (AbstractBarterLiActivity) getActivity();
+    protected void setActionBarDrawerToggleEnabled(final boolean enabled) {
+        final AbstractBarterLiActivity activity = (AbstractBarterLiActivity) getActivity();
         if (activity.hasNavigationDrawer()) {
             activity.setActionBarDrawerToggleEnabled(enabled);
         }
@@ -276,7 +276,7 @@ public abstract class AbstractBarterLiFragment extends Fragment {
     public void onUpNavigate() {
         final Bundle args = getArguments();
 
-        if (args != null && args.containsKey(Keys.BACKSTACK_TAG)) {
+        if ((args != null) && args.containsKey(Keys.BACKSTACK_TAG)) {
             getFragmentManager()
                             .popBackStack(args.getString(Keys.BACKSTACK_TAG), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } else {

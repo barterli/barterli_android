@@ -121,13 +121,14 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * R.array.nav_drawer_titles
      */
     private final OnItemClickListener mNavDrawerItemClickListener = new OnItemClickListener() {
+                                                                      @Override
                                                                       public void onItemClick(
-                                                                                      AdapterView<?> parent,
-                                                                                      View view,
-                                                                                      int position,
-                                                                                      long id) {
+                                                                                      final AdapterView<?> parent,
+                                                                                      final View view,
+                                                                                      final int position,
+                                                                                      final long id) {
 
-                                                                          Runnable launchRunnable = makeRunnableForNavDrawerClick(position);
+                                                                          final Runnable launchRunnable = makeRunnableForNavDrawerClick(position);
                                                                           if (launchRunnable != null) {
                                                                               //Give time for drawer to close before performing the action
                                                                               mHandler.postDelayed(launchRunnable, 250);
@@ -494,7 +495,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      *            the Action Bar drawer toggle
      */
     protected void initDrawer(final int navDrawerResId, final int navListResId,
-                    boolean attachToActionBar) {
+                    final boolean attachToActionBar) {
 
         mDrawerLayout = (DrawerLayout) findViewById(navDrawerResId);
 
@@ -598,7 +599,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * @param enabled <code>true</code> to enable the Action Bar drawer toggle,
      *            <code>false</code> to disable it
      */
-    public void setActionBarDrawerToggleEnabled(boolean enabled) {
+    public void setActionBarDrawerToggleEnabled(final boolean enabled) {
 
         if (mHasNavigationDrawer) {
 
@@ -617,7 +618,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
+    public void onWindowFocusChanged(final boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         //Reset background to reduce overdaw
         getWindow().setBackgroundDrawable(null);
@@ -626,9 +627,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
 
-        AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
-        if (masterFragment != null
-                        && getSupportFragmentManager().getBackStackEntryCount() > 0) {
+        final AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
+        if ((masterFragment != null)
+                        && (getSupportFragmentManager()
+                                        .getBackStackEntryCount() > 0)) {
             masterFragment.onBackPressed();
         } else {
             super.onBackPressed();

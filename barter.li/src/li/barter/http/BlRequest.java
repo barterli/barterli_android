@@ -16,21 +16,18 @@
 
 package li.barter.http;
 
-import com.android.volley.BadRequestError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.android.volley.VolleyError.ErrorCode;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonRequest;
 
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
-
-import android.os.Bundle;
 
 import java.io.UnsupportedEncodingException;
 
@@ -72,22 +69,22 @@ public class BlRequest extends JsonRequest<ResponseInfo> {
 
     @Override
     protected Response<ResponseInfo> parseNetworkResponse(
-                    NetworkResponse response) {
+                    final NetworkResponse response) {
 
         final HttpResponseParser parser = new HttpResponseParser();
         try {
             return Response.success(parser
                             .getSuccessResponse(mRequestId, new String(response.data, HTTP.UTF_8)), HttpHeaderParser
                             .parseCacheHeaders(response));
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             return Response.error(new ParseError(e));
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
         }
     }
 
     @Override
-    protected VolleyError parseNetworkError(VolleyError volleyError) {
+    protected VolleyError parseNetworkError(final VolleyError volleyError) {
 
         if (volleyError.errorCode == ErrorCode.BAD_REQUEST_ERROR) {
             try {
@@ -98,9 +95,9 @@ public class BlRequest extends JsonRequest<ResponseInfo> {
                 final BlBadRequestError badRequestError = new BlBadRequestError(mRequestId, responseInfo.errorCode);
                 badRequestError.setResponseBundle(responseInfo.responseBundle);
                 return badRequestError;
-            } catch (UnsupportedEncodingException e) {
+            } catch (final UnsupportedEncodingException e) {
                 return new ParseError(e);
-            } catch (JSONException e) {
+            } catch (final JSONException e) {
                 return new ParseError(e);
             }
         } else {

@@ -90,7 +90,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
             onUpNavigate();
@@ -156,7 +156,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                             .getApiBaseUrl() + ApiEndpoints.CREATE_USER, requestObject
                             .toString(), this, this);
             addRequestToQueue(request, true, 0);
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             // Should never happen
             Logger.e(TAG, e, "Error building create user json");
         }
@@ -205,7 +205,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onErrorResponse(VolleyError error, Request<?> request) {
+    public void onErrorResponse(final VolleyError error,
+                    final Request<?> request) {
         onRequestFinished();
         showToast(R.string.error_unable_to_login, false);
         //TODO Show error sent from server if 400
@@ -214,7 +215,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+    public void onResponse(final ResponseInfo response,
+                    final Request<ResponseInfo> request) {
         onRequestFinished();
 
         if (request instanceof BlRequest) {

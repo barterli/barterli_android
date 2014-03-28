@@ -21,7 +21,6 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
-import com.google.android.gms.internal.dr;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -217,7 +216,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
+    public void onViewStateRestored(final Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         mMapDrawerBlurHelper.onRestoreState();
     }
@@ -237,10 +236,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * @param center The {@link Location} representing the center
      * @param radius The radius(in kilometers) to search in
      */
-    private void fetchBooksAroundMe(Location center, int radius) {
+    private void fetchBooksAroundMe(final Location center, final int radius) {
 
-        BlRequest request = new BlRequest(Method.GET, RequestId.SEARCH_BOOKS, HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.SEARCH, null, this, this);
+        final BlRequest request = new BlRequest(Method.GET, RequestId.SEARCH_BOOKS, HttpConstants
+                        .getApiBaseUrl() + ApiEndpoints.SEARCH, null, this, this);
 
         if (center != null) {
             final Map<String, String> params = new HashMap<String, String>(2);
@@ -400,7 +399,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onErrorResponse(VolleyError error, Request<?> request) {
+    public void onErrorResponse(final VolleyError error,
+                    final Request<?> request) {
         onRequestFinished();
         Logger.e(TAG, error, "Parse Error");
 
@@ -413,13 +413,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+    public void onResponse(final ResponseInfo response,
+                    final Request<ResponseInfo> request) {
         onRequestFinished();
 
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
+    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
 
         if (loaderId == Loaders.SEARCH_BOOKS) {
             return new SQLiteLoader(getActivity(), false, TableSearchBooks.NAME, null, null, null, null, null, null, null);
@@ -429,7 +430,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
 
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
@@ -444,7 +445,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(final Loader<Cursor> loader) {
 
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
             mBooksAroundMeAdapter.swapCursor(null);
@@ -460,12 +461,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onDrawerClosed(View drawerView) {
+    public void onDrawerClosed(final View drawerView) {
 
     }
 
     @Override
-    public void onDrawerOpened(View drawerView) {
+    public void onDrawerOpened(final View drawerView) {
 
         if (drawerView == mBooksDrawerView) {
             final int searchRadius = Math.round(Utils
@@ -475,12 +476,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onDrawerSlide(View drawerView, float slideOffset) {
+    public void onDrawerSlide(final View drawerView, final float slideOffset) {
 
     }
 
     @Override
-    public void onDrawerStateChanged(int state) {
+    public void onDrawerStateChanged(final int state) {
 
     }
 

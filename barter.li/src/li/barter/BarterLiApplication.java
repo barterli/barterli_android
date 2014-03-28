@@ -55,7 +55,6 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
 
     /**
      * Gets a reference to the application context
-     * 
      */
     public static Context getStaticContext() {
         if (sStaticContext != null) {

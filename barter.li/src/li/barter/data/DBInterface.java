@@ -51,8 +51,8 @@ public class DBInterface {
      *            the table
      * @return The row Id if inserted, -1 if not
      */
-    public static long insert(String table, String nullColumnHack,
-                    ContentValues values, boolean autoNotify) {
+    public static long insert(final String table, final String nullColumnHack,
+                    final ContentValues values, final boolean autoNotify) {
         throwIfOnMainThread();
         return BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
@@ -95,8 +95,9 @@ public class DBInterface {
      *            the table
      * @return The number of rows updated
      */
-    public static int update(String table, ContentValues values,
-                    String whereClause, String[] whereArgs, boolean autoNotify) {
+    public static int update(final String table, final ContentValues values,
+                    final String whereClause, final String[] whereArgs,
+                    final boolean autoNotify) {
         throwIfOnMainThread();
         return BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
@@ -136,7 +137,7 @@ public class DBInterface {
      * @return The number of rows deleted
      */
     public static int delete(final String table, final String whereClause,
-                    final String[] whereArgs, boolean autoNotify) {
+                    final String[] whereArgs, final boolean autoNotify) {
         throwIfOnMainThread();
         return BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
@@ -225,7 +226,7 @@ public class DBInterface {
      * 
      * @param tableName The table name that has been updated
      */
-    public static void notifyChange(String tableName) {
+    public static void notifyChange(final String tableName) {
         BarterLiSQLiteOpenHelper
                         .getInstance(BarterLiApplication.getStaticContext())
                         .notifyChange(tableName);

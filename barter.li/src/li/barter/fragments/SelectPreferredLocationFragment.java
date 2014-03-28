@@ -129,7 +129,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         mMapView.onCreate(savedInstanceState);
         setUpMapListeners();
         moveMapToLocation(UserInfo.INSTANCE.latestLocation);
-        if (savedInstanceState == null || mHangouts == null) {
+        if ((savedInstanceState == null) || (mHangouts == null)) {
             fetchHangoutsForLocation(UserInfo.INSTANCE.latestLocation, 1000);
         } else {
             //Set fetched hangouts to adapter
@@ -145,7 +145,8 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
      * @param location The location to search for hangouts
      * @param radius Tghe search radius(in meters)
      */
-    private void fetchHangoutsForLocation(Location location, int radius) {
+    private void fetchHangoutsForLocation(final Location location,
+                    final int radius) {
 
         final BlRequest request = new BlRequest(Method.GET, RequestId.HANGOUTS, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.HANGOUTS, null, this, this);
@@ -171,7 +172,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onUpNavigate();
             return true;
@@ -257,7 +258,8 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     }
 
     @Override
-    public void onErrorResponse(VolleyError error, Request<?> request) {
+    public void onErrorResponse(final VolleyError error,
+                    final Request<?> request) {
         onRequestFinished();
 
         if (request instanceof BlRequest) {
@@ -279,7 +281,8 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     }
 
     @Override
-    public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+    public void onResponse(final ResponseInfo response,
+                    final Request<ResponseInfo> request) {
         onRequestFinished();
 
         if (request instanceof BlRequest) {
@@ -296,14 +299,14 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     /**
      * Parses the LatLng values from the Hangouts passed, adds Map markers
      */
-    private void addMarkersToMap(Hangout[] hangouts) {
+    private void addMarkersToMap(final Hangout[] hangouts) {
         final GoogleMap map = getMap();
 
         if (map != null) {
             mMarkerHangoutMap.clear();
             final String snippet = getString(R.string.tap_to_set_preferred_location);
             Marker marker = null;
-            for (Hangout aHangout : hangouts) {
+            for (final Hangout aHangout : hangouts) {
 
                 marker = map.addMarker(new MarkerOptions()
                                 .position(new LatLng(aHangout.latitude, aHangout.longitude))
@@ -339,7 +342,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     }
 
     @Override
-    public void onInfoWindowClick(Marker marker) {
+    public void onInfoWindowClick(final Marker marker) {
 
         if (marker.equals(mCustomMarker)) {
             final LatLng markerPosition = marker.getPosition();
@@ -354,12 +357,12 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     }
 
     @Override
-    public void onMarkerDrag(Marker marker) {
+    public void onMarkerDrag(final Marker marker) {
 
     }
 
     @Override
-    public void onMarkerDragEnd(Marker marker) {
+    public void onMarkerDragEnd(final Marker marker) {
         if (marker.equals(mCustomMarker)) {
             final LatLng position = marker.getPosition();
             marker.setTitle(String
@@ -369,7 +372,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     }
 
     @Override
-    public void onMarkerDragStart(Marker marker) {
+    public void onMarkerDragStart(final Marker marker) {
 
     }
 }

@@ -32,6 +32,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
@@ -51,7 +52,7 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     /**
      * A reference to the context
      */
-    private Context             mContext;
+    private final Context       mContext;
 
     /**
      * Blur radius for the Map. 1 <= x <= 25
@@ -149,7 +150,7 @@ public class MapDrawerInteractionHelper implements DrawerListener,
      * 
      * @param context A {@link Context} reference
      */
-    public MapDrawerInteractionHelper(Context context) {
+    public MapDrawerInteractionHelper(final Context context) {
         mContext = context;
     }
 
@@ -163,7 +164,7 @@ public class MapDrawerInteractionHelper implements DrawerListener,
      * @param drawerView The reference to the Drawer view
      * @param mapView The MapView which is to be tied to the drawer events
      */
-    public MapDrawerInteractionHelper(Context context, DrawerLayout drawerLayout, View drawerView, MapView mapView) {
+    public MapDrawerInteractionHelper(final Context context, final DrawerLayout drawerLayout, final View drawerView, final MapView mapView) {
 
         mContext = context;
         mDrawerLayout = drawerLayout;
@@ -197,7 +198,7 @@ public class MapDrawerInteractionHelper implements DrawerListener,
      * @param externalDrawerListener The external drawer listener to listen for
      *            events whenever the drawer opens/closes
      */
-    public void init(DrawerListener externalDrawerListener) {
+    public void init(final DrawerListener externalDrawerListener) {
         mTransparentColorDrawable = new ColorDrawable(Color.TRANSPARENT);
         mTransitionDrawableLayers = new Drawable[2];
         mPrevSlideOffset = 0.0f;
@@ -205,12 +206,12 @@ public class MapDrawerInteractionHelper implements DrawerListener,
         mDrawerLayout.setDrawerListener(this);
         setExternalDrawerListener(externalDrawerListener);
     }
-    
+
     public DrawerListener getExternalDrawerListener() {
         return mExternalDrawerListener;
     }
-    
-    public void setExternalDrawerListener(DrawerListener drawerListener) {
+
+    public void setExternalDrawerListener(final DrawerListener drawerListener) {
         mExternalDrawerListener = drawerListener;
     }
 
@@ -224,7 +225,7 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     /**
      * @param drawerLayout the drawerLayout to set
      */
-    public void setDrawerLayout(DrawerLayout drawerLayout) {
+    public void setDrawerLayout(final DrawerLayout drawerLayout) {
         this.mDrawerLayout = drawerLayout;
     }
 
@@ -238,7 +239,7 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     /**
      * @param drawerView the drawerView to set
      */
-    public void setDrawerView(View drawerView) {
+    public void setDrawerView(final View drawerView) {
         this.mDrawerView = drawerView;
     }
 
@@ -252,7 +253,7 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     /**
      * @param mapView the mapView to set
      */
-    public void setmMapView(MapView mapView) {
+    public void setmMapView(final MapView mapView) {
         this.mMapView = mapView;
     }
 

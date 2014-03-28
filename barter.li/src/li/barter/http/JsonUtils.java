@@ -102,8 +102,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static float readFloat(final JSONObject jsonObject,
-                    final String tag) {
+    public static float readFloat(final JSONObject jsonObject, final String tag) {
 
         float value = 0.0f;
         try {
@@ -144,8 +143,7 @@ public class JsonUtils {
      * @param tag
      * @return
      */
-    public static long readLong(final JSONObject jsonObject,
-                    final String tag) {
+    public static long readLong(final JSONObject jsonObject, final String tag) {
 
         long value = -1l;
         try {

@@ -37,7 +37,7 @@ public class Hangout implements Parcelable {
     }
 
     //Constructor to read from parcel
-    public Hangout(Parcel source) {
+    public Hangout(final Parcel source) {
         name = source.readString();
         address = source.readString();
         latitude = source.readDouble();
@@ -45,7 +45,7 @@ public class Hangout implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(name);
         dest.writeString(address);
         dest.writeDouble(latitude);
@@ -62,13 +62,13 @@ public class Hangout implements Parcelable {
 
                                                      @Override
                                                      public Hangout createFromParcel(
-                                                                     Parcel source) {
+                                                                     final Parcel source) {
                                                          return new Hangout(source);
                                                      }
 
                                                      @Override
                                                      public Hangout[] newArray(
-                                                                     int size) {
+                                                                     final int size) {
                                                          return new Hangout[size];
                                                      }
                                                  };

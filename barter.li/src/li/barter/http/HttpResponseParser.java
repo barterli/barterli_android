@@ -53,8 +53,8 @@ public class HttpResponseParser {
      * @return
      * @throws JSONException
      */
-    public ResponseInfo getSuccessResponse(int requestId, String response)
-                    throws JSONException {
+    public ResponseInfo getSuccessResponse(final int requestId,
+                    final String response) throws JSONException {
 
         Logger.d(TAG, "Request Id %d\nResponse %s", requestId, response);
         switch (requestId) {
@@ -95,7 +95,7 @@ public class HttpResponseParser {
      * @return
      * @throws JSONException If the Json response is malformed
      */
-    private ResponseInfo parseCreateUserResponse(String response)
+    private ResponseInfo parseCreateUserResponse(final String response)
                     throws JSONException {
 
         final ResponseInfo responseInfo = new ResponseInfo();
@@ -139,7 +139,7 @@ public class HttpResponseParser {
      * @param locationObject The Location object
      * @return The id of the parsed location
      */
-    private String parseAndStoreLocation(JSONObject locationObject) {
+    private String parseAndStoreLocation(final JSONObject locationObject) {
 
         final ContentValues values = new ContentValues();
         final String locationId = readLocationDetailsIntoContentValues(locationObject, values, true);
@@ -166,7 +166,7 @@ public class HttpResponseParser {
      * @return
      * @throws JSONException If the Json resposne is malformed
      */
-    private ResponseInfo parseSearchBooksResponse(String response)
+    private ResponseInfo parseSearchBooksResponse(final String response)
                     throws JSONException {
 
         final ResponseInfo responseInfo = new ResponseInfo();
@@ -176,7 +176,7 @@ public class HttpResponseParser {
                         .readJSONArray(responseObject, HttpConstants.SEARCH);
 
         JSONObject bookObject = null;
-        ContentValues values = new ContentValues();
+        final ContentValues values = new ContentValues();
         final String selection = DatabaseColumns.BOOK_ID
                         + SQLConstants.EQUALS_ARG;
         final String[] args = new String[1];
@@ -201,7 +201,7 @@ public class HttpResponseParser {
      * @return
      * @throws JSONException if the Json string is invalid
      */
-    private ResponseInfo parseHangoutsResponse(String response)
+    private ResponseInfo parseHangoutsResponse(final String response)
                     throws JSONException {
 
         final ResponseInfo responseInfo = new ResponseInfo();
@@ -230,8 +230,8 @@ public class HttpResponseParser {
      * @param hangoutObject The Json response representing a Hangout
      * @param hangout The {@link Hangout} model to write into
      */
-    private void readHangoutObjectIntoHangout(JSONObject hangoutObject,
-                    Hangout hangout) {
+    private void readHangoutObjectIntoHangout(final JSONObject hangoutObject,
+                    final Hangout hangout) {
 
         hangout.name = JsonUtils.readString(hangoutObject, HttpConstants.NAME);
         hangout.address = JsonUtils
@@ -252,8 +252,9 @@ public class HttpResponseParser {
      * @param clearBeforeAdd Whether the values should be emptied before adding
      * @return The book Id that was parsed
      */
-    private String readBookDetailsIntoContentValues(JSONObject bookObject,
-                    ContentValues values, boolean clearBeforeAdd) {
+    private String readBookDetailsIntoContentValues(
+                    final JSONObject bookObject, final ContentValues values,
+                    final boolean clearBeforeAdd) {
 
         if (clearBeforeAdd) {
             values.clear();
@@ -303,8 +304,8 @@ public class HttpResponseParser {
      * @return The location Id that was parsed
      */
     private String readLocationDetailsIntoContentValues(
-                    JSONObject locationObject, ContentValues values,
-                    boolean clearBeforeAdd) {
+                    final JSONObject locationObject,
+                    final ContentValues values, final boolean clearBeforeAdd) {
 
         if (clearBeforeAdd) {
             values.clear();
@@ -342,7 +343,7 @@ public class HttpResponseParser {
      * @param response
      * @return
      */
-    private ResponseInfo parseGetBookInfoResponse(String response) {
+    private ResponseInfo parseGetBookInfoResponse(final String response) {
         // TODO Parse get book info response
         return new ResponseInfo();
     }
@@ -351,7 +352,7 @@ public class HttpResponseParser {
      * @param response
      * @return
      */
-    private ResponseInfo parseCreateBookResponse(String response) {
+    private ResponseInfo parseCreateBookResponse(final String response) {
         // TODO Parse get create book response
         return new ResponseInfo();
     }
@@ -366,8 +367,8 @@ public class HttpResponseParser {
      * @return a {@linkplain ResponseInfo} object representing the response
      * @throws JSONException If the response was an invalid json
      */
-    public ResponseInfo getErrorResponse(int requestId, String response)
-                    throws JSONException {
+    public ResponseInfo getErrorResponse(final int requestId,
+                    final String response) throws JSONException {
 
         Logger.d(TAG, "Request Id %d\nResponse %s", requestId, response);
         final ResponseInfo responseInfo = parseErrorResponse(requestId, response);
@@ -382,11 +383,11 @@ public class HttpResponseParser {
      * @return a {@linkplain ResponseInfo} object representing the response
      * @throws JSONException If the response was invalid json
      */
-    private ResponseInfo parseErrorResponse(final int requestId, String response)
-                    throws JSONException {
+    private ResponseInfo parseErrorResponse(final int requestId,
+                    final String response) throws JSONException {
 
-        ResponseInfo responseInfo = new ResponseInfo(false);
-        JSONObject errorObject = new JSONObject(response);
+        final ResponseInfo responseInfo = new ResponseInfo(false);
+        final JSONObject errorObject = new JSONObject(response);
 
         final int errorCode = JsonUtils
                         .readInt(errorObject, HttpConstants.ERROR_CODE);

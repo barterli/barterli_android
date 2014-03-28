@@ -31,9 +31,9 @@ import li.barter.utils.Utils;
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(final Context context, final Intent intent) {
 
-        if (intent.getAction() != null
+        if ((intent.getAction() != null)
                         && intent.getAction()
                                         .equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
 

@@ -35,31 +35,31 @@ public class BlBadRequestError extends BadRequestError {
     public final int          errorCode;
     private Bundle            mResponseBundle;
 
-    public BlBadRequestError(int requestId, int errorCode) {
+    public BlBadRequestError(final int requestId, final int errorCode) {
         super();
         this.requestId = requestId;
         this.errorCode = errorCode;
     }
 
-    public BlBadRequestError(int requestId, int errorCode, NetworkResponse networkResponse) {
+    public BlBadRequestError(final int requestId, final int errorCode, final NetworkResponse networkResponse) {
         super(networkResponse);
         this.requestId = requestId;
         this.errorCode = errorCode;
     }
 
-    public BlBadRequestError(int requestId, int errorCode, String exceptionMessage, Throwable reason) {
+    public BlBadRequestError(final int requestId, final int errorCode, final String exceptionMessage, final Throwable reason) {
         super(exceptionMessage, reason);
         this.requestId = requestId;
         this.errorCode = errorCode;
     }
 
-    public BlBadRequestError(int requestId, int errorCode, String exceptionMessage) {
+    public BlBadRequestError(final int requestId, final int errorCode, final String exceptionMessage) {
         super(exceptionMessage);
         this.requestId = requestId;
         this.errorCode = errorCode;
     }
 
-    public BlBadRequestError(int requestId, int errorCode, Throwable cause) {
+    public BlBadRequestError(final int requestId, final int errorCode, final Throwable cause) {
         super(cause);
         this.requestId = requestId;
         this.errorCode = errorCode;
@@ -75,7 +75,7 @@ public class BlBadRequestError extends BadRequestError {
     /**
      * @param responseBundle the Response info bundle to set
      */
-    public void setResponseBundle(Bundle responseBundle) {
+    public void setResponseBundle(final Bundle responseBundle) {
         mResponseBundle = responseBundle;
     }
 

@@ -35,20 +35,20 @@ import li.barter.utils.Logger;
  */
 class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
-    private static final String             TAG        = "BarterLiSQLiteOpenHelper";
+    private static final String                   TAG        = "BarterLiSQLiteOpenHelper";
 
     // Lock for synchronized methods
-    private static final Object             LOCK       = new Object();
+    private static final Object                   LOCK       = new Object();
 
     // Database file name and version
-    private static final String             DB_NAME    = "barterli.sqlite";
-    private static final int                DB_VERSION = 1;
+    private static final String                   DB_NAME    = "barterli.sqlite";
+    private static final int                      DB_VERSION = 1;
 
     // SQLite Open Helper instance
-    private static BarterLiSQLiteOpenHelper sSQLiteOpenHelper;
+    private static BarterLiSQLiteOpenHelper       sSQLiteOpenHelper;
 
     // Array of loader entries to hold for notifying changes
-    private ArrayList<SQLiteLoaderObserver> mActiveLoaders;
+    private final ArrayList<SQLiteLoaderObserver> mActiveLoaders;
 
     /**
      * Gets a reference to the SQLIte Open Helper for the app, creating it if
@@ -142,7 +142,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
         final SQLiteDatabase database = getWritableDatabase();
         final long insertRowId = database.insert(table, nullColumnHack, values);
-        if (autoNotify && insertRowId >= 0) {
+        if (autoNotify && (insertRowId >= 0)) {
             notifyChange(table);
         }
         return insertRowId;
@@ -164,10 +164,10 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
                     final boolean autoNotify) {
 
         final SQLiteDatabase database = getWritableDatabase();
-        int updateCount = database
+        final int updateCount = database
                         .update(table, values, whereClause, whereArgs);
 
-        if (autoNotify && updateCount > 0) {
+        if (autoNotify && (updateCount > 0)) {
             notifyChange(table);
         }
         return updateCount;
@@ -189,7 +189,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         final SQLiteDatabase database = getWritableDatabase();
         final int deleteCount = database.delete(table, whereClause, whereArgs);
 
-        if (autoNotify && deleteCount > 0) {
+        if (autoNotify && (deleteCount > 0)) {
             notifyChange(table);
         }
         return deleteCount;

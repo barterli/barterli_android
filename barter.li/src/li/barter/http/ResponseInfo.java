@@ -46,11 +46,11 @@ public class ResponseInfo {
         success = true;
     }
 
-    public ResponseInfo(boolean success) {
+    public ResponseInfo(final boolean success) {
         this.success = success;
     }
 
-    public ResponseInfo(boolean success, Bundle responseBundle) {
+    public ResponseInfo(final boolean success, final Bundle responseBundle) {
         this.success = success;
         this.responseBundle = responseBundle;
     }

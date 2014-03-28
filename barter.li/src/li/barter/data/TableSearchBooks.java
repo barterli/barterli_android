@@ -35,7 +35,7 @@ public class TableSearchBooks {
 
     public static final String  NAME = "SEARCH_BOOKS";
 
-    public static void create(SQLiteDatabase db) {
+    public static void create(final SQLiteDatabase db) {
 
         final String columnDef = TextUtils
                         .join(SQLConstants.COMMA, new String[] {
@@ -58,7 +58,8 @@ public class TableSearchBooks {
 
     }
 
-    public static void upgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public static void upgrade(final SQLiteDatabase db, final int oldVersion,
+                    final int newVersion) {
 
         //Add any data migration code here. Default is to drop and rebuild the table
         db.execSQL(String
