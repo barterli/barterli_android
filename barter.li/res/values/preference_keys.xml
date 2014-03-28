@@ -26,5 +26,10 @@
     <string name="pref_fb_username">fb_username</string>
     <string name="pref_fb_userid">fb_userid</string>
     <string name="pref_fb_access_token">fb_access_token</string>
+    
+    <string name="pref_is_about_me_description_set">pref_is_about_me_description_set</string>
+    <string name="pref_about_me_description">pref_about_me_description</string>
 
+    <string name="pref_is_profile_pic_set">pref_is_profile_pic_set</string>
+    
 </resources>

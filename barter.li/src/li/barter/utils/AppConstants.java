@@ -44,6 +44,7 @@ public class AppConstants {
 
         public String          authToken;
         public Location        latestLocation;
+        public String 			aboutMeDescription;
 
         private UserInfo() {
             clear();
@@ -125,9 +126,12 @@ public class AppConstants {
         public static final String BOOKS_AROUND_ME    = "books_around_me";
         public static final String ADD_OR_EDIT_BOOK   = "add_or_edit_book";
         public static final String LOGIN              = "login";
+        public static final String PROFILE              = "profile";
+        public static final String EDIT_PROFILE              = "edit_profile";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME = "to_books_around_me";
+        public static final String BS_PROFILE = "to_edit_profile";
     }
 
     /**

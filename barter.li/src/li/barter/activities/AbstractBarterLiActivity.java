@@ -55,6 +55,7 @@ import li.barter.adapters.HomeNavDrawerAdapter;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.FragmentTransition;
 import li.barter.fragments.LoginFragment;
+import li.barter.fragments.ProfileFragment;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.NetworkDetails;
@@ -182,8 +183,11 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
 
                     @Override
                     public void run() {
-                        if (isLoggedIn()) {
-                            //TODO Load Profile screen
+                        //if (isLoggedIn()) { //TODO to be removed
+                    	if (true) {
+                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                    .instantiate(AbstractBarterLiActivity.this, ProfileFragment.class
+                                                    .getName(), null), FragmentTags.PROFILE, true, null);
                         } else {
                             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                             .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
