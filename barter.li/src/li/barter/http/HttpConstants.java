@@ -90,11 +90,12 @@ public class HttpConstants {
      * Empty interface to store http request identifiers
      */
     public static interface RequestId {
-        public static final int GET_BOOK_INFO = 100;
-        public static final int CREATE_BOOK   = 101;
-        public static final int SEARCH_BOOKS  = 102;
-        public static final int CREATE_USER   = 103;
-        public static final int HANGOUTS      = 104;
+        public static final int GET_BOOK_INFO               = 100;
+        public static final int CREATE_BOOK                 = 101;
+        public static final int SEARCH_BOOKS                = 102;
+        public static final int CREATE_USER                 = 103;
+        public static final int HANGOUTS                    = 104;
+        public static final int GET_USER_PREFERRED_LOCATION = 105;
     }
 
     public static final String ID                          = "id";

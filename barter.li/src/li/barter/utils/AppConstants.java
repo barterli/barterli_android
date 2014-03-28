@@ -100,7 +100,9 @@ public class AppConstants {
 
         public String getAuthHeader() {
 
-            if (TextUtils.isEmpty(mAuthHeader)) {
+            if (TextUtils.isEmpty(mAuthHeader)
+                            && !TextUtils.isEmpty(mAuthToken)
+                            && !TextUtils.isEmpty(mEmail)) {
                 mAuthHeader = String
                                 .format(Locale.US, HttpConstants.HEADER_AUTHORIZATION_FORMAT, mAuthToken, mEmail);
             }

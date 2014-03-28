@@ -29,10 +29,13 @@ import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.http.HttpConstants;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
@@ -175,6 +178,7 @@ public abstract class AbstractBarterLiFragment extends Fragment {
         if (mIsAttached) {
             request.setTag(getVolleyTag());
             if (isConnectedToInternet()) {
+                addHeadersToRequest(request);
                 mRequestCounter.incrementAndGet();
                 getActivity().setProgressBarIndeterminateVisibility(true);
                 mRequestQueue.add(request);
@@ -183,6 +187,19 @@ public abstract class AbstractBarterLiFragment extends Fragment {
                                 : R.string.no_network_connection, false);
             }
         }
+    }
+
+    /**
+     * Add Request Headers to the headers
+     * 
+     * @param request The request to add the headers to
+     */
+    private void addHeadersToRequest(Request<?> request) {
+
+        final Map<String, String> headers = new HashMap<String, String>(1);
+        headers.put(HttpConstants.HEADER_AUTHORIZATION, UserInfo.INSTANCE
+                        .getAuthHeader());
+        request.setHeaders(headers);
     }
 
     /**

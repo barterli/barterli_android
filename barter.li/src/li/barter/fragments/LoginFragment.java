@@ -255,6 +255,11 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                                 .set(getActivity(), R.string.pref_location, userInfo
                                                 .getString(HttpConstants.LOCATION));
 
+                //                final BlRequest newRequest = new BlRequest(Method.GET, RequestId.GET_USER_PREFERRED_LOCATION, HttpConstants
+                //                                .getApiBaseUrl()
+                //                                + ApiEndpoints.USER_PREFERRED_LOCATION, null, this, null);
+                //                addRequestToQueue(newRequest, true, 0);
+
                 final String locationId = userInfo
                                 .getString(HttpConstants.LOCATION);
 
