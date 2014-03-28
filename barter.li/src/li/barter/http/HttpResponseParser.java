@@ -76,6 +76,10 @@ public class HttpResponseParser {
                 return parseCreateUserResponse(response);
             }
 
+            case RequestId.HANGOUTS: {
+                return parseHangoutsResponse(response);
+            }
+
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
                                 + requestId);
@@ -186,6 +190,22 @@ public class HttpResponseParser {
                 DBInterface.insert(TableSearchBooks.NAME, null, values, true);
             }
         }
+        return responseInfo;
+    }
+
+    /**
+     * Method for parsing the hangouts response
+     * 
+     * @param response The Json string response
+     * @return
+     * @throws JSONException if the Json string is invalid
+     */
+    private ResponseInfo parseHangoutsResponse(String response)
+                    throws JSONException {
+
+        final ResponseInfo responseInfo = new ResponseInfo();
+        
+        final JSONArray hangoutsArray = new JSONArray(response);
         return responseInfo;
     }
 

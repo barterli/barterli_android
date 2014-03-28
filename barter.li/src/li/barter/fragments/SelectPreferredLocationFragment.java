@@ -17,6 +17,7 @@
 package li.barter.fragments;
 
 import com.android.volley.Request;
+import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -34,8 +35,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import li.barter.R;
 import li.barter.http.BlRequest;
+import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
@@ -83,9 +89,31 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                         .findViewById(R.id.map_preferred_location);
         mMapView.onCreate(savedInstanceState);
         moveMapToLocation(UserInfo.INSTANCE.latestLocation);
-
+        fetchHangoutsForLocation(UserInfo.INSTANCE.latestLocation, 1000);
         setActionBarDrawerToggleEnabled(false);
         return contentView;
+    }
+
+    /**
+     * Fetch all the hangouts centered at the current location with the given
+     * radius
+     * 
+     * @param location The location to search for hangouts
+     * @param radius Tghe search radius(in meters)
+     */
+    private void fetchHangoutsForLocation(Location location, int radius) {
+        
+        final BlRequest request = new BlRequest(Method.GET, RequestId.HANGOUTS, HttpConstants.getApiBaseUrl()
+                        + ApiEndpoints.HANGOUTS, null, this, this);
+        
+        final Map<String, String> params = new HashMap<String, String>(3);
+        
+        params.put(HttpConstants.LATITUDE, String.valueOf(location.getLatitude()));
+        params.put(HttpConstants.LONGITUDE, String.valueOf(location.getLongitude()));
+        params.put(HttpConstants.METERS, String.valueOf(radius));
+        
+        request.setParams(params);
+        addRequestToQueue(request, true, 0);
     }
 
     @Override
