@@ -35,7 +35,7 @@ import android.view.View;
 
 import java.util.Map;
 
-import li.barter.utils.AppConstants.NetworkDetails;
+import li.barter.utils.AppConstants.DeviceInfo;
 
 /**
  * @author Vinay S Shenoy Utility methods for barter.li
@@ -53,18 +53,18 @@ public class Utils {
                         .getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
-            NetworkDetails.INSTANCE.setNetworkConnected(activeNetwork
+            DeviceInfo.INSTANCE.setNetworkConnected(activeNetwork
                             .isConnectedOrConnecting());
-            NetworkDetails.INSTANCE.setCurrentNetworkType(activeNetwork
+            DeviceInfo.INSTANCE.setCurrentNetworkType(activeNetwork
                             .getType());
         } else {
-            NetworkDetails.INSTANCE.setNetworkConnected(false);
-            NetworkDetails.INSTANCE
+            DeviceInfo.INSTANCE.setNetworkConnected(false);
+            DeviceInfo.INSTANCE
                             .setCurrentNetworkType(ConnectivityManager.TYPE_DUMMY);
         }
 
-        Logger.d(TAG, "Network State Updated Connected: %b Type: %d", NetworkDetails.INSTANCE
-                        .isNetworkConnected(), NetworkDetails.INSTANCE
+        Logger.d(TAG, "Network State Updated Connected: %b Type: %d", DeviceInfo.INSTANCE
+                        .isNetworkConnected(), DeviceInfo.INSTANCE
                         .getCurrentNetworkType());
     }
 

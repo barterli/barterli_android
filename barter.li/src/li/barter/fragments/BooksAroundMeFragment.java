@@ -66,7 +66,7 @@ import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
-import li.barter.utils.AppConstants.NetworkDetails;
+import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
 import li.barter.utils.AppConstants.UserInfo;
@@ -193,7 +193,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
             mMapAlreadyMovedOnce = false;
-            fetchBooksAroundMe(NetworkDetails.INSTANCE.getLatestLocation(), 1);
+            fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), 1);
         } else {
             mDrawerOpenedAutomatically = savedInstanceState
                             .getBoolean(Keys.DRAWER_OPENED_ONCE);
@@ -320,7 +320,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLocationChanged(final Location location) {
 
-        NetworkDetails.INSTANCE.setLatestLocation(location);
+        DeviceInfo.INSTANCE.setLatestLocation(location);
 
         if (!mMapAlreadyMovedOnce) {
 
@@ -333,9 +333,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             if (googleMap != null) {
                 googleMap.setMyLocationEnabled(false);
                 googleMap.animateCamera(CameraUpdateFactory
-                                .newLatLngZoom(new LatLng(NetworkDetails.INSTANCE
+                                .newLatLngZoom(new LatLng(DeviceInfo.INSTANCE
                                                 .getLatestLocation()
-                                                .getLatitude(), NetworkDetails.INSTANCE
+                                                .getLatitude(), DeviceInfo.INSTANCE
                                                 .getLatestLocation()
                                                 .getLongitude()), MAP_ZOOM_LEVEL), this);
 
@@ -383,7 +383,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mMapAlreadyMovedOnce = true;
             final int searchRadius = Math.round(Utils
                             .getShortestRadiusFromCenter(mMapView) / 1000);
-            fetchBooksAroundMe(NetworkDetails.INSTANCE.getLatestLocation(), searchRadius);
+            fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), searchRadius);
         }
         mMapDrawerBlurHelper.onMapZoomedIn();
     }

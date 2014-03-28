@@ -115,7 +115,7 @@ public class AppConstants {
      * 
      * @author Vinay S Shenoy
      */
-    public enum NetworkDetails {
+    public enum DeviceInfo {
 
         INSTANCE;
 
@@ -125,7 +125,7 @@ public class AppConstants {
         private int            mCurrentNetworkType;
         private Location       mLatestLocation;
 
-        private NetworkDetails() {
+        private DeviceInfo() {
             reset();
         }
 

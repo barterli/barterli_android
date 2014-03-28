@@ -57,7 +57,7 @@ import li.barter.fragments.FragmentTransition;
 import li.barter.fragments.LoginFragment;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.NetworkDetails;
+import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
@@ -302,7 +302,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * @return <code>true</code> if connected, <code>false</code> otherwise
      */
     public boolean isConnectedToInternet() {
-        return NetworkDetails.INSTANCE.isNetworkConnected();
+        return DeviceInfo.INSTANCE.isNetworkConnected();
     }
 
     @Override
