@@ -46,7 +46,6 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
@@ -251,26 +250,26 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                                 .set(getActivity(), R.string.pref_location, userInfo
                                                 .getString(HttpConstants.LOCATION));
 
-                final String tag = getTag();
+                final String locationId = userInfo
+                                .getString(HttpConstants.LOCATION);
 
-                if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
-                    //TODO Load profile screen
-                } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
+                if (TextUtils.isEmpty(locationId)) {
+                    final Bundle myArgs = getArguments();
+                    Bundle preferredLocationArgs = null;
 
-                    final String locationId = userInfo
-                                    .getString(HttpConstants.LOCATION);
+                    if (myArgs != null) {
+                        preferredLocationArgs = new Bundle(myArgs);
+                    }
+                    loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                    .instantiate(getActivity(), SelectPreferredLocationFragment.class
+                                                    .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
+                } else {
+                    final String tag = getTag();
 
-                    if (TextUtils.isEmpty(locationId)) {
-                        final Bundle myArgs = getArguments();
-                        Bundle preferredLocationArgs = null;
+                    if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+                        //TODO Load profile screen
+                    } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
 
-                        if (myArgs != null) {
-                            preferredLocationArgs = new Bundle(myArgs);
-                        }
-                        loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                        .instantiate(getActivity(), SelectPreferredLocationFragment.class
-                                                        .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
-                    } else {
                         /*
                          * TODO Figure out a way to notify to the
                          * AddBookFragment that login is done and book upload
@@ -281,6 +280,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                         onUpNavigate();
                     }
                 }
+
             }
         }
     }
