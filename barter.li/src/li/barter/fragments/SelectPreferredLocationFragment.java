@@ -39,6 +39,7 @@ import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 
 /**
@@ -81,6 +82,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         mMapView = (MapView) contentView
                         .findViewById(R.id.map_preferred_location);
         mMapView.onCreate(savedInstanceState);
+        moveMapToLocation(UserInfo.INSTANCE.latestLocation);
 
         setActionBarDrawerToggleEnabled(false);
         return contentView;
@@ -109,7 +111,12 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         return TAG;
     }
 
-    public void moveMapToLocation(final Location location) {
+    /**
+     * Moves the map to a location
+     * 
+     * @param location The {@link Location} to move the map to
+     */
+    private void moveMapToLocation(final Location location) {
 
         /*
          * For the initial launch, move the Map to the user's current position
