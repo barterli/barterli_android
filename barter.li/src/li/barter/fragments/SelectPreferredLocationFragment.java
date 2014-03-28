@@ -51,6 +51,7 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.parcelables.Hangout;
 import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.NetworkDetails;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 
@@ -128,9 +129,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                         .findViewById(R.id.map_preferred_location);
         mMapView.onCreate(savedInstanceState);
         setUpMapListeners();
-        moveMapToLocation(UserInfo.INSTANCE.latestLocation);
+        moveMapToLocation(NetworkDetails.INSTANCE.getLatestLocation());
         if ((savedInstanceState == null) || (mHangouts == null)) {
-            fetchHangoutsForLocation(UserInfo.INSTANCE.latestLocation, 1000);
+            fetchHangoutsForLocation(NetworkDetails.INSTANCE.getLatestLocation(), 1000);
         } else {
             //Set fetched hangouts to adapter
         }
@@ -316,7 +317,8 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
             }
 
             if (mCustomMarker == null) {
-                final Location location = UserInfo.INSTANCE.latestLocation;
+                final Location location = NetworkDetails.INSTANCE
+                                .getLatestLocation();
                 mCustomMarker = map
                                 .addMarker(new MarkerOptions()
                                                 .draggable(true)

@@ -83,8 +83,8 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
      */
     private void readUserInfoFromSharedPref() {
 
-        UserInfo.INSTANCE.authToken = SharedPreferenceHelper
-                        .getString(this, R.string.pref_auth_token);
+        UserInfo.INSTANCE.setAuthToken(SharedPreferenceHelper
+                        .getString(this, R.string.pref_auth_token));
     }
 
     /**

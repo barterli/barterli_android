@@ -265,7 +265,7 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      * Is the user logged in
      */
     protected boolean isLoggedIn() {
-        return !TextUtils.isEmpty(UserInfo.INSTANCE.authToken);
+        return !TextUtils.isEmpty(UserInfo.INSTANCE.getAuthToken());
     }
 
     /**

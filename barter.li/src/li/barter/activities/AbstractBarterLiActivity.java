@@ -302,7 +302,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * @return <code>true</code> if connected, <code>false</code> otherwise
      */
     public boolean isConnectedToInternet() {
-        return NetworkDetails.INSTANCE.isNetworkConnected;
+        return NetworkDetails.INSTANCE.isNetworkConnected();
     }
 
     @Override
@@ -614,7 +614,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * Is the user logged in
      */
     protected boolean isLoggedIn() {
-        return !TextUtils.isEmpty(UserInfo.INSTANCE.authToken);
+        return !TextUtils.isEmpty(UserInfo.INSTANCE.getAuthToken());
     }
 
     @Override

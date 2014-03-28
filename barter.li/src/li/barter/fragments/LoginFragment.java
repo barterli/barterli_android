@@ -227,8 +227,11 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
                 final Bundle userInfo = response.responseBundle;
 
-                UserInfo.INSTANCE.authToken = userInfo
-                                .getString(HttpConstants.AUTH_TOKEN);
+                UserInfo.INSTANCE.setAuthToken(userInfo
+                                .getString(HttpConstants.AUTH_TOKEN));
+                UserInfo.INSTANCE.setEmail(userInfo
+                                .getString(HttpConstants.EMAIL));
+                UserInfo.INSTANCE.setId(userInfo.getString(HttpConstants.ID));
 
                 SharedPreferenceHelper
                                 .set(getActivity(), R.string.pref_auth_token, userInfo

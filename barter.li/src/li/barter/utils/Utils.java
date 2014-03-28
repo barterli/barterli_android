@@ -53,16 +53,19 @@ public class Utils {
                         .getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
-            NetworkDetails.INSTANCE.isNetworkConnected = activeNetwork
-                            .isConnectedOrConnecting();
-            NetworkDetails.INSTANCE.currentNetworkType = activeNetwork
-                            .getType();
+            NetworkDetails.INSTANCE.setNetworkConnected(activeNetwork
+                            .isConnectedOrConnecting());
+            NetworkDetails.INSTANCE.setCurrentNetworkType(activeNetwork
+                            .getType());
         } else {
-            NetworkDetails.INSTANCE.isNetworkConnected = false;
-            NetworkDetails.INSTANCE.currentNetworkType = ConnectivityManager.TYPE_DUMMY;
+            NetworkDetails.INSTANCE.setNetworkConnected(false);
+            NetworkDetails.INSTANCE
+                            .setCurrentNetworkType(ConnectivityManager.TYPE_DUMMY);
         }
 
-        Logger.d(TAG, "Network State Updated Connected: %b Type: %d", NetworkDetails.INSTANCE.isNetworkConnected, NetworkDetails.INSTANCE.currentNetworkType);
+        Logger.d(TAG, "Network State Updated Connected: %b Type: %d", NetworkDetails.INSTANCE
+                        .isNetworkConnected(), NetworkDetails.INSTANCE
+                        .getCurrentNetworkType());
     }
 
     /**
