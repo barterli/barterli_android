@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
@@ -78,6 +81,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     private static final String TAG = "EditProfileFragment";
 
+    private TextView mFirstNameTextView;
+    private TextView mLastNameTextView;
     private TextView mAboutMeTextView;
     private ImageView mProfileImageView;
     private ImageView mEditPreferredLocationImageView;
@@ -97,6 +102,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         final View view = inflater
                 .inflate(R.layout.fragment_profile_edit, null);
 
+        
+        mFirstNameTextView = (TextView) view.findViewById(R.id.profile_name_first_name);
+        mLastNameTextView = (TextView) view.findViewById(R.id.profile_name_last_name);
         mAboutMeTextView = (TextView) view.findViewById(R.id.about_me);
         mProfileImageView = (ImageView) view
                 .findViewById(R.id.profile_pic_thumbnail);
@@ -359,12 +367,30 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     
     private void saveProfileInfoToServer(final String firstName, final String lastName, final String aboutMeDescription) {
 
-        final BlRequest request = new BlRequest(Method.POST, RequestId.SAVE_USER_PROFILE, HttpConstants
+       /* final BlRequest request = new BlRequest(Method.POST, RequestId.SAVE_USER_PROFILE, HttpConstants
                         .getApiBaseUrl() + ApiEndpoints.BOOK_INFO, null, this, this);
         final Map<String, String> params = new HashMap<String, String>();
         //params.put(HttpConstants.Q, bookId);
         request.setParams(params);
-        addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
+        addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);*/
+    	
+        final JSONObject updateUserJson = new JSONObject();
+
+        try {
+        	updateUserJson.put(HttpConstants.FIRST_NAME, firstName);
+        	updateUserJson.put(HttpConstants.LAST_NAME, lastName);
+        	updateUserJson.put(HttpConstants.DESCRIPTION, aboutMeDescription);
+
+            final BlRequest createBookRequest = new BlRequest(Method.PUT, RequestId.SAVE_USER_PROFILE, HttpConstants
+                            .getApiBaseUrl() + ApiEndpoints.UPDATE_USER_INFO, updateUserJson
+                            .toString(), this, this);
+
+            addRequestToQueue(createBookRequest, true, 0);
+        } catch (final JSONException e) {
+            e.printStackTrace();
+        }
+    	
+    	
     }
 
     

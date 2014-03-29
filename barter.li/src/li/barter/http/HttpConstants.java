@@ -84,6 +84,8 @@ public class HttpConstants {
         public static final String HANGOUTS                = "/hangouts.json";
         public static final String USER_PREFERRED_LOCATION = "/user_preferred_location.json";
         public static final String SEARCH                  = "/search.json";
+        
+        public static final String UPDATE_USER_INFO = "/user_update.json";
     }
 
     /**
@@ -133,4 +135,8 @@ public class HttpConstants {
     public static final String ADDRESS          = "address";
     public static final String POSTAL_CODE      = "postal_code";
     public static final String LOCALITY         = "locality";
+    
+    //One concering Profile Activity
+   
+    
 }
