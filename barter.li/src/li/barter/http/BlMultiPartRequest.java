@@ -24,7 +24,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyError.ErrorCode;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.android.volley.toolbox.JsonRequest;
+import com.android.volley.toolbox.MultiPartRequest;
 
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
@@ -32,11 +32,11 @@ import org.json.JSONException;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Request class for submitting requests to Volley
+ * Request class for submitting multipart requests to Volley
  * 
  * @author Vinay S Shenoy
  */
-public class BlRequest extends JsonRequest<ResponseInfo> implements
+public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo> implements
                 IBlRequestContract {
 
     /**
@@ -48,12 +48,11 @@ public class BlRequest extends JsonRequest<ResponseInfo> implements
      * @param method One of the constants from {@link Method} class to identify
      *            the request type
      * @param url The API endpoint
-     * @param requestBody A string represention of the Json request body
      * @param listener The {@link Listener} for the response
      * @param errorListener The {@link ErrorListener} for the error response
      */
-    public BlRequest(final int method, final String url, final String requestBody, final Listener<ResponseInfo> listener, final ErrorListener errorListener) {
-        super(method, url, requestBody, listener, errorListener);
+    public BlMultiPartRequest(final int method, final String url, final String requestBody, final Listener<ResponseInfo> listener, final ErrorListener errorListener) {
+        super(method, url, listener, errorListener);
     }
 
     @Override

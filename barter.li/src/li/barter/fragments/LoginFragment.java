@@ -152,9 +152,9 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             requestObject.put(HttpConstants.PROVIDER, AppConstants.MANUAL);
             requestObject.put(HttpConstants.EMAIL, email);
             requestObject.put(HttpConstants.PASSWORD, password);
-            final BlRequest request = new BlRequest(Method.POST, RequestId.CREATE_USER, HttpConstants
-                            .getApiBaseUrl() + ApiEndpoints.CREATE_USER, requestObject
-                            .toString(), this, this);
+            final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.CREATE_USER, requestObject.toString(), this, this);
+            request.setRequestId(RequestId.CREATE_USER);
             addRequestToQueue(request, true, 0);
         } catch (final JSONException e) {
             // Should never happen

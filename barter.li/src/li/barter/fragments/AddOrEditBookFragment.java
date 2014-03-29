@@ -159,9 +159,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void getBookInfoFromServer(final String bookId) {
 
-        final BlRequest request = new BlRequest(Method.POST, RequestId.GET_BOOK_INFO, HttpConstants
-                        .getApiBaseUrl() + ApiEndpoints.BOOK_INFO, null, this, this);
+        final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                        + ApiEndpoints.BOOK_INFO, null, this, this);
         final Map<String, String> params = new HashMap<String, String>();
+        request.setRequestId(RequestId.GET_BOOK_INFO);
         params.put(HttpConstants.Q, bookId);
         request.setParams(params);
         addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
@@ -196,10 +197,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                             .getText().toString());
 
             // TODO Add barter types
-            final BlRequest createBookRequest = new BlRequest(Method.POST, RequestId.CREATE_BOOK, HttpConstants
-                            .getApiBaseUrl() + ApiEndpoints.BOOKS, createBookJson
-                            .toString(), this, this);
-
+            final BlRequest createBookRequest = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.BOOKS, createBookJson.toString(), this, this);
+            createBookRequest.setRequestId(RequestId.CREATE_BOOK);
             addRequestToQueue(createBookRequest, true, 0);
         } catch (final JSONException e) {
             e.printStackTrace();

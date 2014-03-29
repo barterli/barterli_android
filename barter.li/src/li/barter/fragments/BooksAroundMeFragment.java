@@ -63,13 +63,12 @@ import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
-import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
-import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.Logger;
 import li.barter.utils.MapDrawerInteractionHelper;
@@ -239,8 +238,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void fetchBooksAroundMe(final Location center, final int radius) {
 
-        final BlRequest request = new BlRequest(Method.GET, RequestId.SEARCH_BOOKS, HttpConstants
-                        .getApiBaseUrl() + ApiEndpoints.SEARCH, null, this, this);
+        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+                        + ApiEndpoints.SEARCH, null, this, this);
+        request.setRequestId(RequestId.SEARCH_BOOKS);
 
         if (center != null) {
             final Map<String, String> params = new HashMap<String, String>(2);

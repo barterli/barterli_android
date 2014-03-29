@@ -152,8 +152,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     private void fetchHangoutsForLocation(final Location location,
                     final int radius) {
 
-        final BlRequest request = new BlRequest(Method.GET, RequestId.HANGOUTS, HttpConstants.getApiBaseUrl()
+        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.HANGOUTS, null, this, this);
+        request.setRequestId(RequestId.HANGOUTS);
 
         final Map<String, String> params = new HashMap<String, String>(3);
 
@@ -390,11 +391,10 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
             requestBody.put(HttpConstants.LATITUDE, latitude);
             requestBody.put(HttpConstants.LONGITUDE, longitude);
 
-            final BlRequest request = new BlRequest(Method.POST, RequestId.SET_USER_PREFERRED_LOCATION, HttpConstants
-                            .getApiBaseUrl()
-                            + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody
-                            .toString(), this, this);
+            final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody.toString(), this, this);
             addRequestToQueue(request, true, 0);
+            request.setRequestId(RequestId.SET_USER_PREFERRED_LOCATION);
         } catch (JSONException e) {
             e.printStackTrace();
         }
