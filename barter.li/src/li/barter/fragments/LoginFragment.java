@@ -255,31 +255,23 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                                 .set(getActivity(), R.string.pref_location, userInfo
                                                 .getString(HttpConstants.LOCATION));
 
-                //                final BlRequest newRequest = new BlRequest(Method.GET, RequestId.GET_USER_PREFERRED_LOCATION, HttpConstants
-                //                                .getApiBaseUrl()
-                //                                + ApiEndpoints.USER_PREFERRED_LOCATION, null, this, null);
-                //                addRequestToQueue(newRequest, true, 0);
-
                 final String locationId = userInfo
                                 .getString(HttpConstants.LOCATION);
-
                 if (TextUtils.isEmpty(locationId)) {
                     final Bundle myArgs = getArguments();
                     Bundle preferredLocationArgs = null;
-
                     if (myArgs != null) {
                         preferredLocationArgs = new Bundle(myArgs);
                     }
                     loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                     .instantiate(getActivity(), SelectPreferredLocationFragment.class
                                                     .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
+
                 } else {
                     final String tag = getTag();
-
                     if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
-                        //TODO Load profile screen
+                        //TODO Load profile screen 
                     } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
-
                         /*
                          * TODO Figure out a way to notify to the
                          * AddBookFragment that login is done and book upload

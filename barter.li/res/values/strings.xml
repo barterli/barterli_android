@@ -63,6 +63,7 @@
     <string name="error_enter_password">Please enter a password.</string>
     <string name="error_password_minimum_length">Password must be at least %d characters long.</string>
     <string name="error_unable_to_login">Unable to login.</string>
+    <string name="error_unable_to_set_preferred_location">Unable to set preferred location for user.</string>
 
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>

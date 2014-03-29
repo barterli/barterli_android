@@ -33,9 +33,9 @@ public class HttpConstants {
     private enum Server {
 
         LOCAL(
-                        "http://192.168.1.138:3000/api/v",
+                        "http://192.168.1.123:3000/api/v",
                         API_VERSION,
-                        "192.168.1.138",
+                        "192.168.1.123",
                         5672),
         DEV(
                         "http://162.243.198.171/api/v",
@@ -59,7 +59,7 @@ public class HttpConstants {
         }
     }
 
-    private static Server SERVER = Server.DEV;
+    private static Server SERVER = Server.LOCAL;
 
     public static String getApiBaseUrl() {
         return SERVER.mUrl;
@@ -95,7 +95,7 @@ public class HttpConstants {
         public static final int SEARCH_BOOKS                = 102;
         public static final int CREATE_USER                 = 103;
         public static final int HANGOUTS                    = 104;
-        public static final int GET_USER_PREFERRED_LOCATION = 105;
+        public static final int SET_USER_PREFERRED_LOCATION = 105;
     }
 
     public static final String ID                          = "id";
@@ -138,6 +138,6 @@ public class HttpConstants {
     public static final String LOCATIONS                   = "locations";
     public static final String TOKEN                       = "token";
     public static final String HEADER_AUTHORIZATION_FORMAT = "Token token=\"%s\", email=\"%s\"";
-    public static final String HEADER_AUTHORIZATION        = "HTTP_AUTHORIZATION";
+    public static final String HEADER_AUTHORIZATION        = "Authorization";
 
 }

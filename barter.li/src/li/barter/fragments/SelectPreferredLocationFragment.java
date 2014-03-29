@@ -33,6 +33,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -50,10 +53,10 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.parcelables.Hangout;
-import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.DeviceInfo;
-import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 
 /**
  * @author Vinay S Shenoy Fragment for selecting a preferred location for
@@ -265,9 +268,13 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
         if (request instanceof BlRequest) {
 
-            if (((BlRequest) request).getRequestId() == RequestId.HANGOUTS) {
+            final int requestId = ((BlRequest) request).getRequestId();
+            if (requestId == RequestId.HANGOUTS) {
                 showToast(R.string.unable_to_fetch_hangouts, true);
+            } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
+                showToast(R.string.error_unable_to_set_preferred_location, true);
             }
+
         }
     }
 
@@ -288,10 +295,17 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
         if (request instanceof BlRequest) {
 
-            if (((BlRequest) request).getRequestId() == RequestId.HANGOUTS) {
+            final int requestId = ((BlRequest) request).getRequestId();
+            if (requestId == RequestId.HANGOUTS) {
                 mHangouts = (Hangout[]) response.responseBundle
                                 .getParcelableArray(HttpConstants.LOCATIONS);
                 addMarkersToMap(mHangouts);
+            } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
+
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_location, response.responseBundle
+                                                .getString(HttpConstants.LOCATION));
+                onUpNavigate();
             }
         }
 
@@ -354,8 +368,37 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
             final Hangout selectedHangout = mMarkerHangoutMap.get(marker);
             Logger.v(TAG, "Marker Clicked: %s, %s", selectedHangout.name, selectedHangout.address);
-            //TODO Read the location info from the Hangout and return
+            setUserPreferredLocation(selectedHangout.name, selectedHangout.address, selectedHangout.latitude, selectedHangout.longitude);
         }
+    }
+
+    /**
+     * Uploads the user preferred location to server
+     * 
+     * @param name The name of the location
+     * @param address The address of the location
+     * @param latitude The latitude of the location
+     * @param longitude The longitude of the location
+     */
+    private void setUserPreferredLocation(String name, String address,
+                    double latitude, double longitude) {
+
+        final JSONObject requestBody = new JSONObject();
+        try {
+            requestBody.put(HttpConstants.NAME, name);
+            requestBody.put(HttpConstants.ADDRESS, address);
+            requestBody.put(HttpConstants.LATITUDE, latitude);
+            requestBody.put(HttpConstants.LONGITUDE, longitude);
+
+            final BlRequest request = new BlRequest(Method.POST, RequestId.SET_USER_PREFERRED_LOCATION, HttpConstants
+                            .getApiBaseUrl()
+                            + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody
+                            .toString(), this, this);
+            addRequestToQueue(request, true, 0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

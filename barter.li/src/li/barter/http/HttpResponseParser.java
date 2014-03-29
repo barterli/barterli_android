@@ -81,6 +81,10 @@ public class HttpResponseParser {
                 return parseHangoutsResponse(response);
             }
 
+            case RequestId.SET_USER_PREFERRED_LOCATION: {
+                return parseSetUserPreferredLocationResponse(response);
+            }
+
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
                                 + requestId);
@@ -225,6 +229,28 @@ public class HttpResponseParser {
     }
 
     /**
+     * Parse the set user preferred location response
+     * 
+     * @param response The Json response representing the set location
+     * @return
+     * @throws JSONException If response is invalid json
+     */
+    private ResponseInfo parseSetUserPreferredLocationResponse(String response)
+                    throws JSONException {
+        final ResponseInfo responseInfo = new ResponseInfo();
+
+        final JSONObject responseObject = new JSONObject(response);
+        final JSONObject locationObject = JsonUtils
+                        .readJSONObject(responseObject, HttpConstants.LOCATION);
+
+        final String locationId = parseAndStoreLocation(locationObject);
+        final Bundle responseBundle = new Bundle(1);
+        responseBundle.putString(HttpConstants.LOCATION, locationId);
+        responseInfo.responseBundle = responseBundle;
+        return responseInfo;
+    }
+
+    /**
      * Reads a Hangout {@link JSONObject} into a {@link Hangout} model
      * 
      * @param hangoutObject The Json response representing a Hangout
@@ -322,16 +348,6 @@ public class HttpResponseParser {
                         .readString(locationObject, HttpConstants.NAME));
         values.put(DatabaseColumns.ADDRESS, JsonUtils
                         .readString(locationObject, HttpConstants.ADDRESS));
-        values.put(DatabaseColumns.POSTAL_CODE, JsonUtils
-                        .readString(locationObject, HttpConstants.POSTAL_CODE));
-        values.put(DatabaseColumns.LOCALITY, JsonUtils
-                        .readString(locationObject, HttpConstants.LOCALITY));
-        values.put(DatabaseColumns.CITY, JsonUtils
-                        .readString(locationObject, HttpConstants.CITY));
-        values.put(DatabaseColumns.STATE, JsonUtils
-                        .readString(locationObject, HttpConstants.STATE));
-        values.put(DatabaseColumns.COUNTRY, JsonUtils
-                        .readString(locationObject, HttpConstants.COUNTRY));
         values.put(DatabaseColumns.LATITUDE, JsonUtils
                         .readDouble(locationObject, HttpConstants.LATITUDE));
         values.put(DatabaseColumns.LONGITUDE, JsonUtils

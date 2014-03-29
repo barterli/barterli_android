@@ -58,6 +58,7 @@ import li.barter.fragments.LoginFragment;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.DeviceInfo;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
@@ -186,9 +187,13 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
                         if (isLoggedIn()) {
                             //TODO Load Profile screen
                         } else {
+
+                            final Bundle loginArgs = new Bundle(1);
+                            loginArgs.putString(Keys.BACKSTACK_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+
                             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                             .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
-                                                            .getName(), null), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, null);
+                                                            .getName(), loginArgs), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, FragmentTags.BS_BOOKS_AROUND_ME);
                         }
 
                     }
