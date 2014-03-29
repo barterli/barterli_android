@@ -20,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 import li.barter.utils.Logger;
 
 /**
@@ -31,25 +33,49 @@ import li.barter.utils.Logger;
 public class JsonUtils {
 
     /** Tag used to print logs for debugging. */
-    private static final String TAG = "JsonUtils";
+    private static final String TAG                      = "JsonUtils";
+
+    /**
+     * String format for formatting exception of null value in Json Objects
+     */
+    private static final String NULL_VALUE_FORMAT_OBJECT = "Value is null for key %s when key is specified as not null";
+
+    /**
+     * String format for formatting exception of null value in Json Arrays
+     */
+    private static final String NULL_VALUE_FORMAT_ARRAY  = "Value is null for index %d when index is specified as not null";
 
     /**
      * Reads the string value from the Json Object for specified tag.
      * 
-     * @param jsonObject
-     * @param tag
-     * @return
+     * @param jsonObject The {@link JSONObject} to read the key from
+     * @param key The key to read
+     * @param required Whether the key is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the string was unable to be read, or if the
+     *             required/notNull flags were violated
      */
     public static String readString(final JSONObject jsonObject,
-                    final String tag) {
+                    final String key, final boolean required,
+                    final boolean notNull) throws JSONException {
 
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonObject.getString(key);
+        }
+
+        if (notNull && jsonObject.isNull(key)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_OBJECT, key));
+        }
         String value = null;
-        try {
-            if (!jsonObject.isNull(tag)) {
-                value = jsonObject.getString(tag);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (!jsonObject.isNull(key)) {
+            value = jsonObject.getString(key);
         }
         return value;
     }
@@ -57,19 +83,34 @@ public class JsonUtils {
     /**
      * Reads the int value from the Json Object for specified tag.
      * 
-     * @param jsonObject
-     * @param tag
-     * @return
+     * @param jsonObject The {@link JSONObject} to read the key from
+     * @param key The key to read
+     * @param required Whether the key is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the int was unable to be read, or if the
+     *             required/notNull flags were violated
      */
-    public static int readInt(final JSONObject jsonObject, final String tag) {
+    public static int readInt(final JSONObject jsonObject, final String key,
+                    final boolean required, final boolean notNull)
+                    throws JSONException {
 
-        int value = -1;
-        try {
-            if (!jsonObject.isNull(tag)) {
-                value = jsonObject.getInt(tag);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonObject.getInt(key);
+        }
+
+        if (notNull && jsonObject.isNull(key)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_OBJECT, key));
+        }
+        int value = 0;
+        if (!jsonObject.isNull(key)) {
+            value = jsonObject.getInt(key);
         }
         return value;
     }
@@ -77,20 +118,34 @@ public class JsonUtils {
     /**
      * Reads the boolean value from the Json Object for specified tag.
      * 
-     * @param jsonObject
-     * @param tag
-     * @return
+     * @param jsonObject The {@link JSONObject} to read the key from
+     * @param key The key to read
+     * @param required Whether the key is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the boolean was unable to be read, or if the
+     *             required/notNull flags were violated
      */
     public static boolean readBoolean(final JSONObject jsonObject,
-                    final String tag) {
+                    final String key, final boolean required,
+                    final boolean notNull) throws JSONException {
 
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonObject.getBoolean(key);
+        }
+
+        if (notNull && jsonObject.isNull(key)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_OBJECT, key));
+        }
         boolean value = false;
-        try {
-            if (!jsonObject.isNull(tag)) {
-                value = jsonObject.getBoolean(tag);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (!jsonObject.isNull(key)) {
+            value = jsonObject.getBoolean(key);
         }
         return value;
     }
@@ -98,19 +153,34 @@ public class JsonUtils {
     /**
      * Reads the float value from the Json Object for specified tag.
      * 
-     * @param jsonObject
-     * @param tag
-     * @return
+     * @param jsonObject The {@link JSONObject} to read the key from
+     * @param key The key to read
+     * @param required Whether the key is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the float was unable to be read, or if the
+     *             required/notNull flags were violated
      */
-    public static float readFloat(final JSONObject jsonObject, final String tag) {
+    public static float readFloat(final JSONObject jsonObject,
+                    final String key, final boolean required,
+                    final boolean notNull) throws JSONException {
 
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return (float) jsonObject.getDouble(key);
+        }
+
+        if (notNull && jsonObject.isNull(key)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_OBJECT, key));
+        }
         float value = 0.0f;
-        try {
-            if (!jsonObject.isNull(tag)) {
-                value = (float) jsonObject.getDouble(tag);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (!jsonObject.isNull(key)) {
+            value = (float) jsonObject.getDouble(key);
         }
         return value;
     }
@@ -118,20 +188,34 @@ public class JsonUtils {
     /**
      * Reads the double value from the Json Object for specified tag.
      * 
-     * @param jsonObject
-     * @param tag
-     * @return
+     * @param jsonObject The {@link JSONObject} to read the key from
+     * @param key The key to read
+     * @param required Whether the key is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the double was unable to be read, or if the
+     *             required/notNull flags were violated
      */
     public static double readDouble(final JSONObject jsonObject,
-                    final String tag) {
+                    final String key, final boolean required,
+                    final boolean notNull) throws JSONException {
 
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonObject.getDouble(key);
+        }
+
+        if (notNull && jsonObject.isNull(key)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_OBJECT, key));
+        }
         double value = 0.0;
-        try {
-            if (!jsonObject.isNull(tag)) {
-                value = jsonObject.getDouble(tag);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (!jsonObject.isNull(key)) {
+            value = jsonObject.getDouble(key);
         }
         return value;
     }
@@ -139,20 +223,34 @@ public class JsonUtils {
     /**
      * Reads the Long value from the Json Object for specified tag.
      * 
-     * @param jsonObject
-     * @param tag
-     * @return
+     * @param jsonObject The {@link JSONObject} to read the key from
+     * @param key The key to read
+     * @param required Whether the key is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the long was unable to be read, or if the
+     *             required/notNull flags were violated
      */
-    public static long readLong(final JSONObject jsonObject, final String tag) {
+    public static long readLong(final JSONObject jsonObject, final String key,
+                    final boolean required, final boolean notNull)
+                    throws JSONException {
 
-        long value = -1l;
-        try {
-            if (!jsonObject.isNull(tag)) {
-                value = jsonObject.getLong(tag);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonObject.getLong(key);
+        }
 
+        if (notNull && jsonObject.isNull(key)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_OBJECT, key));
+        }
+        long value = 0l;
+        if (!jsonObject.isNull(key)) {
+            value = jsonObject.getLong(key);
         }
         return value;
     }
@@ -160,103 +258,174 @@ public class JsonUtils {
     /**
      * Reads the json value from the Json Object for specified tag.
      * 
-     * @param jsonObject
-     * @param tag
-     * @return
+     * @param jsonObject The {@link JSONObject} to read the key from
+     * @param key The key to read
+     * @param required Whether the key is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the {@link JSONObject} was unable to be read, or
+     *             if the required/notNull flags were violated
      */
     public static JSONObject readJSONObject(final JSONObject jsonObject,
-                    final String tag) {
+                    final String key, final boolean required,
+                    final boolean notNull) throws JSONException {
 
-        JSONObject json = null;
-        try {
-            if (!jsonObject.isNull(tag)) {
-                json = jsonObject.getJSONObject(tag);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonObject.getJSONObject(key);
         }
-        return json;
+
+        if (notNull && jsonObject.isNull(key)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_OBJECT, key));
+        }
+        JSONObject value = null;
+        if (!jsonObject.isNull(key)) {
+            value = jsonObject.getJSONObject(key);
+        }
+        return value;
     }
 
     /**
      * Reads the json array value from the Json Object for specified tag.
      * 
-     * @param jsonObject
-     * @param tag
-     * @return
+     * @param jsonObject The {@link JSONObject} to read the key from
+     * @param key The key to read
+     * @param required Whether the key is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the {@link JSONArray} was unable to be read, or
+     *             if the required/notNull flags were violated
      */
     public static JSONArray readJSONArray(final JSONObject jsonObject,
-                    final String tag) {
+                    final String key, final boolean required,
+                    final boolean notNull) throws JSONException {
 
-        JSONArray jsonArray = null;
-        try {
-            if (!jsonObject.isNull(tag)) {
-                jsonArray = jsonObject.getJSONArray(tag);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonObject.getJSONArray(key);
         }
-        return jsonArray;
+
+        if (notNull && jsonObject.isNull(key)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_OBJECT, key));
+        }
+        JSONArray value = null;
+        if (!jsonObject.isNull(key)) {
+            value = jsonObject.getJSONArray(key);
+        }
+        return value;
     }
 
     /**
      * Reads the json object value from the Json Array for specified index.
      * 
-     * @param jsonArray
-     * @param index
-     * @return
+     * @param jsonArray The {@link JSONArray} to read the index from
+     * @param index The key to read
+     * @param required Whether the index is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the {@link JSONObject} was unable to be read, or
+     *             if the required/notNull flags were violated
      */
     public static JSONObject readJSONObject(final JSONArray jsonArray,
-                    final int index) {
+                    final int index, final boolean required,
+                    final boolean notNull) throws JSONException {
 
-        JSONObject json = null;
-        try {
-            if (!jsonArray.isNull(index)) {
-                json = jsonArray.getJSONObject(index);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonArray.getJSONObject(index);
         }
-        return json;
+
+        if (notNull && jsonArray.isNull(index)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_ARRAY, index));
+        }
+        JSONObject value = null;
+        if (!jsonArray.isNull(index)) {
+            value = jsonArray.getJSONObject(index);
+        }
+        return value;
     }
 
     /**
      * Reads the json array value from the Json Array for specified index
      * 
-     * @param jsonObject
-     * @param tag
-     * @return
+     * @param jsonArray The {@link JSONArray} to read the index from
+     * @param index The key to read
+     * @param required Whether the index is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the {@link JSONArray} was unable to be read, or
+     *             if the required/notNull flags were violated
      */
     public static JSONArray readJSONArray(final JSONArray jsonArray,
-                    final int index) {
+                    final int index, final boolean required,
+                    final boolean notNull) throws JSONException {
 
-        JSONArray jArray = null;
-        try {
-            if (!jsonArray.isNull(index)) {
-                jArray = jsonArray.getJSONArray(index);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonArray.getJSONArray(index);
         }
-        return jArray;
+
+        if (notNull && jsonArray.isNull(index)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_ARRAY, index));
+        }
+        JSONArray value = null;
+        if (!jsonArray.isNull(index)) {
+            value = jsonArray.getJSONArray(index);
+        }
+        return value;
     }
 
     /**
      * Reads the string value from the Json Array for specified index
      * 
-     * @param jsonArray
-     * @param index
-     * @return
+     * @param jsonArray The {@link JSONArray} to read the index from
+     * @param index The key to read
+     * @param required Whether the index is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the String was unable to be read, or if the
+     *             required/notNull flags were violated
      */
-    public static String readString(final JSONArray jsonArray, final int index) {
+    public static String readString(final JSONArray jsonArray, final int index,
+                    final boolean required, final boolean notNull)
+                    throws JSONException {
 
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonArray.getString(index);
+        }
+
+        if (notNull && jsonArray.isNull(index)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_ARRAY, index));
+        }
         String value = null;
-        try {
-            if (!jsonArray.isNull(index)) {
-                value = jsonArray.getString(index);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (!jsonArray.isNull(index)) {
+            value = jsonArray.getString(index);
         }
         return value;
     }
@@ -264,19 +433,34 @@ public class JsonUtils {
     /**
      * Reads the int value from the Json Array for specified index
      * 
-     * @param jsonArray
-     * @param index
-     * @return
+     * @param jsonArray The {@link JSONArray} to read the index from
+     * @param index The key to read
+     * @param required Whether the index is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the int was unable to be read, or if the
+     *             required/notNull flags were violated
      */
-    public static int readInt(final JSONArray jsonArray, final int index) {
+    public static int readInt(final JSONArray jsonArray, final int index,
+                    final boolean required, final boolean notNull)
+                    throws JSONException {
 
-        int value = -1;
-        try {
-            if (!jsonArray.isNull(index)) {
-                value = jsonArray.getInt(index);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonArray.getInt(index);
+        }
+
+        if (notNull && jsonArray.isNull(index)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_ARRAY, index));
+        }
+        int value = 0;
+        if (!jsonArray.isNull(index)) {
+            value = jsonArray.getInt(index);
         }
         return value;
     }
@@ -284,19 +468,34 @@ public class JsonUtils {
     /**
      * Reads the boolean value from the Json Array for specified index
      * 
-     * @param jsonArray
-     * @param index
-     * @return
+     * @param jsonArray The {@link JSONArray} to read the index from
+     * @param index The key to read
+     * @param required Whether the index is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the boolean was unable to be read, or if the
+     *             required/notNull flags were violated
      */
-    public static boolean readBoolean(final JSONArray jsonArray, final int index) {
+    public static boolean readBoolean(final JSONArray jsonArray,
+                    final int index, final boolean required,
+                    final boolean notNull) throws JSONException {
 
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonArray.getBoolean(index);
+        }
+
+        if (notNull && jsonArray.isNull(index)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_ARRAY, index));
+        }
         boolean value = false;
-        try {
-            if (!jsonArray.isNull(index)) {
-                value = jsonArray.getBoolean(index);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (!jsonArray.isNull(index)) {
+            value = jsonArray.getBoolean(index);
         }
         return value;
     }
@@ -304,19 +503,34 @@ public class JsonUtils {
     /**
      * Reads the double value from the Json Array for specified index
      * 
-     * @param jsonArray
-     * @param index
-     * @return
+     * @param jsonArray The {@link JSONArray} to read the index from
+     * @param index The key to read
+     * @param required Whether the index is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the double was unable to be read, or if the
+     *             required/notNull flags were violated
      */
-    public static double readDouble(final JSONArray jsonArray, final int index) {
+    public static double readDouble(final JSONArray jsonArray, final int index,
+                    final boolean required, final boolean notNull)
+                    throws JSONException {
 
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonArray.getDouble(index);
+        }
+
+        if (notNull && jsonArray.isNull(index)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_ARRAY, index));
+        }
         double value = 0.0;
-        try {
-            if (!jsonArray.isNull(index)) {
-                value = jsonArray.getDouble(index);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (!jsonArray.isNull(index)) {
+            value = jsonArray.getDouble(index);
         }
         return value;
     }
@@ -324,19 +538,34 @@ public class JsonUtils {
     /**
      * Reads the float value from the Json Array for specified index
      * 
-     * @param jsonArray
-     * @param index
-     * @return
+     * @param jsonArray The {@link JSONArray} to read the index from
+     * @param index The key to read
+     * @param required Whether the index is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the float was unable to be read, or if the
+     *             required/notNull flags were violated
      */
-    public static float readFloat(final JSONArray jsonArray, final int index) {
+    public static float readFloat(final JSONArray jsonArray, final int index,
+                    final boolean required, final boolean notNull)
+                    throws JSONException {
 
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return (float) jsonArray.getDouble(index);
+        }
+
+        if (notNull && jsonArray.isNull(index)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_ARRAY, index));
+        }
         float value = 0.0f;
-        try {
-            if (!jsonArray.isNull(index)) {
-                value = (float) jsonArray.getDouble(index);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (!jsonArray.isNull(index)) {
+            value = (float) jsonArray.getDouble(index);
         }
         return value;
     }
@@ -344,19 +573,34 @@ public class JsonUtils {
     /**
      * Reads the long value from the Json Array for specified index
      * 
-     * @param jsonArray
-     * @param index
-     * @return
+     * @param jsonArray The {@link JSONArray} to read the index from
+     * @param index The key to read
+     * @param required Whether the index is required. If <code>true</code>,
+     *            attempting to read it when it is <code>null</code> will throw
+     *            a {@link JSONException}
+     * @param notNull Whether the value is allowed to be <code>null</code>. If
+     *            <code>true</code>, will throw a {@link JSONException} if the
+     *            value is null
+     * @return The read value
+     * @throws JSONException If the long was unable to be read, or if the
+     *             required/notNull flags were violated
      */
-    public static long readLong(final JSONArray jsonArray, final int index) {
+    public static long readLong(final JSONArray jsonArray, final int index,
+                    final boolean required, final boolean notNull)
+                    throws JSONException {
 
-        long value = -1L;
-        try {
-            if (!jsonArray.isNull(index)) {
-                value = jsonArray.getLong(index);
-            }
-        } catch (final JSONException e) {
-            Logger.e(TAG, e.getMessage());
+        if (required) {
+            //Will throw JsonException if mapping doesn't exist
+            return jsonArray.getLong(index);
+        }
+
+        if (notNull && jsonArray.isNull(index)) {
+            //throw JsonException because key is null
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_ARRAY, index));
+        }
+        long value = 0l;
+        if (!jsonArray.isNull(index)) {
+            value = jsonArray.getLong(index);
         }
         return value;
     }

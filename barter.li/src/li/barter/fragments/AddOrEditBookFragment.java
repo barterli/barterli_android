@@ -287,39 +287,4 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         }
     }
 
-    /**
-     * Reads the book details from the response and populates the text fields
-     * 
-     * @param response The {@link JSONObject} which contains the response
-     */
-    private void readBookDetailsFromResponse(final JSONObject response) {
-
-        mHasFetchedDetails = true;
-        final String bookTitle = JsonUtils
-                        .readString(response, HttpConstants.TITLE);
-        final String bookDescription = JsonUtils
-                        .readString(response, HttpConstants.DESCRIPTION);
-
-        JSONObject authorObject = JsonUtils
-                        .readJSONObject(response, HttpConstants.AUTHORS);
-        String authorName = null;
-        if (authorObject != null) {
-            authorObject = JsonUtils
-                            .readJSONObject(authorObject, HttpConstants.AUTHOR);
-            if (authorObject != null) {
-                authorName = JsonUtils
-                                .readString(authorObject, HttpConstants.NAME);
-            }
-        }
-
-        final String publicationYear = JsonUtils
-                        .readString(response, HttpConstants.PUBLICATION_YEAR);
-
-        mTitleEditText.setText(bookTitle);
-        mDescriptionEditText.setText(bookDescription);
-        mAuthorEditText.setText(authorName);
-        mPublicationYearEditText.setText(publicationYear);
-
-    }
-
 }

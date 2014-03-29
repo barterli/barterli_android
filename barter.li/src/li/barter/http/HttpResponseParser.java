@@ -107,24 +107,24 @@ public class HttpResponseParser {
         final JSONObject responseObject = new JSONObject(response);
 
         final JSONObject userObject = JsonUtils
-                        .readJSONObject(responseObject, HttpConstants.USER);
+                        .readJSONObject(responseObject, HttpConstants.USER, true, true);
 
         final Bundle responseBundle = new Bundle();
         responseBundle.putString(HttpConstants.ID, JsonUtils
-                        .readString(userObject, HttpConstants.ID));
+                        .readString(userObject, HttpConstants.ID, true, true));
         responseBundle.putString(HttpConstants.AUTH_TOKEN, JsonUtils
-                        .readString(userObject, HttpConstants.AUTH_TOKEN));
+                        .readString(userObject, HttpConstants.AUTH_TOKEN, true, true));
         responseBundle.putString(HttpConstants.EMAIL, JsonUtils
-                        .readString(userObject, HttpConstants.EMAIL));
+                        .readString(userObject, HttpConstants.EMAIL, true, true));
         responseBundle.putString(HttpConstants.DESCRIPTION, JsonUtils
-                        .readString(userObject, HttpConstants.DESCRIPTION));
+                        .readString(userObject, HttpConstants.DESCRIPTION, false, false));
         responseBundle.putString(HttpConstants.FIRST_NAME, JsonUtils
-                        .readString(userObject, HttpConstants.FIRST_NAME));
+                        .readString(userObject, HttpConstants.FIRST_NAME, false, false));
         responseBundle.putString(HttpConstants.LAST_NAME, JsonUtils
-                        .readString(userObject, HttpConstants.LAST_NAME));
+                        .readString(userObject, HttpConstants.LAST_NAME, false, false));
 
         final JSONObject locationObject = JsonUtils
-                        .readJSONObject(userObject, HttpConstants.LOCATION);
+                        .readJSONObject(userObject, HttpConstants.LOCATION, false, false);
 
         String locationId = null;
         if (locationObject != null) {
@@ -142,8 +142,10 @@ public class HttpResponseParser {
      * 
      * @param locationObject The Location object
      * @return The id of the parsed location
+     * @throws JSONException If the Json is invalid
      */
-    private String parseAndStoreLocation(final JSONObject locationObject) {
+    private String parseAndStoreLocation(final JSONObject locationObject)
+                    throws JSONException {
 
         final ContentValues values = new ContentValues();
         final String locationId = readLocationDetailsIntoContentValues(locationObject, values, true);
@@ -177,7 +179,7 @@ public class HttpResponseParser {
 
         final JSONObject responseObject = new JSONObject(response);
         final JSONArray searchResults = JsonUtils
-                        .readJSONArray(responseObject, HttpConstants.SEARCH);
+                        .readJSONArray(responseObject, HttpConstants.SEARCH, true, true);
 
         JSONObject bookObject = null;
         final ContentValues values = new ContentValues();
@@ -185,7 +187,8 @@ public class HttpResponseParser {
                         + SQLConstants.EQUALS_ARG;
         final String[] args = new String[1];
         for (int i = 0; i < searchResults.length(); i++) {
-            bookObject = JsonUtils.readJSONObject(searchResults, i);
+            bookObject = JsonUtils
+                            .readJSONObject(searchResults, i, false, false);
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
 
             //First try to update the table if a book already exists
@@ -212,12 +215,13 @@ public class HttpResponseParser {
 
         final JSONObject responseObject = new JSONObject(response);
         final JSONArray hangoutsArray = JsonUtils
-                        .readJSONArray(responseObject, HttpConstants.LOCATIONS);
+                        .readJSONArray(responseObject, HttpConstants.LOCATIONS, true, true);
 
         final Hangout[] hangouts = new Hangout[hangoutsArray.length()];
         JSONObject hangoutObject = null;
         for (int i = 0; i < hangouts.length; i++) {
-            hangoutObject = JsonUtils.readJSONObject(hangoutsArray, i);
+            hangoutObject = JsonUtils
+                            .readJSONObject(hangoutsArray, i, true, true);
             hangouts[i] = new Hangout();
             readHangoutObjectIntoHangout(hangoutObject, hangouts[i]);
         }
@@ -241,7 +245,7 @@ public class HttpResponseParser {
 
         final JSONObject responseObject = new JSONObject(response);
         final JSONObject locationObject = JsonUtils
-                        .readJSONObject(responseObject, HttpConstants.LOCATION);
+                        .readJSONObject(responseObject, HttpConstants.LOCATION, true, true);
 
         final String locationId = parseAndStoreLocation(locationObject);
         final Bundle responseBundle = new Bundle(1);
@@ -255,17 +259,19 @@ public class HttpResponseParser {
      * 
      * @param hangoutObject The Json response representing a Hangout
      * @param hangout The {@link Hangout} model to write into
+     * @throws JSONException If the Json is invalid
      */
     private void readHangoutObjectIntoHangout(final JSONObject hangoutObject,
-                    final Hangout hangout) {
+                    final Hangout hangout) throws JSONException {
 
-        hangout.name = JsonUtils.readString(hangoutObject, HttpConstants.NAME);
+        hangout.name = JsonUtils
+                        .readString(hangoutObject, HttpConstants.NAME, true, true);
         hangout.address = JsonUtils
-                        .readString(hangoutObject, HttpConstants.ADDRESS);
+                        .readString(hangoutObject, HttpConstants.ADDRESS, true, true);
         hangout.latitude = JsonUtils
-                        .readDouble(hangoutObject, HttpConstants.LATITUDE);
+                        .readDouble(hangoutObject, HttpConstants.LATITUDE, true, true);
         hangout.longitude = JsonUtils
-                        .readDouble(hangoutObject, HttpConstants.LONGITUDE);
+                        .readDouble(hangoutObject, HttpConstants.LONGITUDE, true, true);
 
     }
 
@@ -277,42 +283,39 @@ public class HttpResponseParser {
      * @param values The values instance to read into
      * @param clearBeforeAdd Whether the values should be emptied before adding
      * @return The book Id that was parsed
+     * @throws JSONException If the Json is invalid
      */
     private String readBookDetailsIntoContentValues(
                     final JSONObject bookObject, final ContentValues values,
-                    final boolean clearBeforeAdd) {
+                    final boolean clearBeforeAdd) throws JSONException {
 
         if (clearBeforeAdd) {
             values.clear();
         }
 
         final String bookId = JsonUtils
-                        .readString(bookObject, HttpConstants.ID);
+                        .readString(bookObject, HttpConstants.ID, true, true);
 
-        if (TextUtils.isEmpty(bookId)) {
-            throw new IllegalArgumentException("Not a valid book json:"
-                            + bookObject.toString());
-        }
         values.put(DatabaseColumns.BOOK_ID, bookId);
         values.put(DatabaseColumns.ISBN_10, JsonUtils
-                        .readString(bookObject, HttpConstants.ISBN_10));
+                        .readString(bookObject, HttpConstants.ISBN_10, false, false));
         values.put(DatabaseColumns.ISBN_13, JsonUtils
-                        .readString(bookObject, HttpConstants.ISBN_13));
+                        .readString(bookObject, HttpConstants.ISBN_13, false, false));
         values.put(DatabaseColumns.AUTHOR, JsonUtils
-                        .readString(bookObject, HttpConstants.AUTHOR));
+                        .readString(bookObject, HttpConstants.AUTHOR, false, false));
         values.put(DatabaseColumns.BARTER_TYPE, JsonUtils
-                        .readString(bookObject, HttpConstants.BARTER_TYPE));
+                        .readString(bookObject, HttpConstants.BARTER_TYPE, false, false));
         values.put(DatabaseColumns.USER_ID, JsonUtils
-                        .readString(bookObject, HttpConstants.USER_ID));
+                        .readString(bookObject, HttpConstants.USER_ID, false, false));
         values.put(DatabaseColumns.TITLE, JsonUtils
-                        .readString(bookObject, HttpConstants.TITLE));
+                        .readString(bookObject, HttpConstants.TITLE, false, false));
         values.put(DatabaseColumns.DESCRIPTION, JsonUtils
-                        .readString(bookObject, HttpConstants.DESCRIPTION));
+                        .readString(bookObject, HttpConstants.DESCRIPTION, false, false));
         values.put(DatabaseColumns.IMAGE_URL, JsonUtils
-                        .readString(bookObject, HttpConstants.IMAGE_URL));
+                        .readString(bookObject, HttpConstants.IMAGE_URL, false, false));
 
         final JSONObject locationObject = JsonUtils
-                        .readJSONObject(bookObject, HttpConstants.LOCATION);
+                        .readJSONObject(bookObject, HttpConstants.LOCATION, false, false);
 
         if (locationObject != null) {
             values.put(DatabaseColumns.LOCATION_ID, parseAndStoreLocation(locationObject));
@@ -328,30 +331,28 @@ public class HttpResponseParser {
      * @param values The values instance to read into
      * @param clearBeforeAdd Whether the values should be emptied before adding
      * @return The location Id that was parsed
+     * @throws JSONException If the Json is invalid
      */
     private String readLocationDetailsIntoContentValues(
                     final JSONObject locationObject,
-                    final ContentValues values, final boolean clearBeforeAdd) {
+                    final ContentValues values, final boolean clearBeforeAdd)
+                    throws JSONException {
 
         if (clearBeforeAdd) {
             values.clear();
         }
 
         final String locationId = JsonUtils
-                        .readString(locationObject, HttpConstants.ID);
-        if (TextUtils.isEmpty(locationId)) {
-            throw new IllegalArgumentException("Not a valid location json:"
-                            + locationObject.toString());
-        }
+                        .readString(locationObject, HttpConstants.ID, true, true);
         values.put(DatabaseColumns.LOCATION_ID, locationId);
         values.put(DatabaseColumns.NAME, JsonUtils
-                        .readString(locationObject, HttpConstants.NAME));
+                        .readString(locationObject, HttpConstants.NAME, true, true));
         values.put(DatabaseColumns.ADDRESS, JsonUtils
-                        .readString(locationObject, HttpConstants.ADDRESS));
+                        .readString(locationObject, HttpConstants.ADDRESS, true, true));
         values.put(DatabaseColumns.LATITUDE, JsonUtils
-                        .readDouble(locationObject, HttpConstants.LATITUDE));
+                        .readDouble(locationObject, HttpConstants.LATITUDE, true, true));
         values.put(DatabaseColumns.LONGITUDE, JsonUtils
-                        .readDouble(locationObject, HttpConstants.LONGITUDE));
+                        .readDouble(locationObject, HttpConstants.LONGITUDE, true, true));
         return locationId;
     }
 
@@ -406,7 +407,7 @@ public class HttpResponseParser {
         final JSONObject errorObject = new JSONObject(response);
 
         final int errorCode = JsonUtils
-                        .readInt(errorObject, HttpConstants.ERROR_CODE);
+                        .readInt(errorObject, HttpConstants.ERROR_CODE, true, true);
         responseInfo.errorCode = errorCode;
         //Parse error response specific to any request here
         return responseInfo;
