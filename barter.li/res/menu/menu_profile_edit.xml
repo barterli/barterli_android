@@ -14,19 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!-- Profile Fragment  -->
-    <string name="profile_pic_description">Profile Picture</string>
-	<string name="profile_description">Short information about you.</string>
-	<string name="edit_preferred_location_description">Edit Preferred Location</string>
-	
-	<string name="edit_profile">Edit</string>
-	<string name="save_profile">Save</string>
-	
-	<string name="first_name_hint">First Name</string>
-	<string name="last_name_hint">Last Name</string>
-
-
-
-</resources>
+        <item
+            android:id="@+id/action_profile_save"
+            android:showAsAction="ifRoom"
+            android:title="@string/save_profile"/>
+</menu>

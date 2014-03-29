@@ -19,7 +19,15 @@ package li.barter.fragments;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.android.volley.Request;
+import com.android.volley.Request.Method;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,6 +58,11 @@ import android.widget.TextView;
 import li.barter.R;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.CropOptionAdapter;
+import li.barter.http.BlRequest;
+import li.barter.http.HttpConstants;
+import li.barter.http.ResponseInfo;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.models.CropOption;
 import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
@@ -61,7 +74,7 @@ import li.barter.utils.AppConstants.RequestCodes;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class EditProfileFragment extends AbstractBarterLiFragment implements
-        OnClickListener {
+        OnClickListener, Listener<ResponseInfo>, ErrorListener {
 
     private static final String TAG = "EditProfileFragment";
 
@@ -116,7 +129,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_profile_show, menu);
+        inflater.inflate(R.menu.menu_profile_edit, menu);
     }
 
     @Override
@@ -128,8 +141,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 return true;
             }
 
-            case R.id.action_edit_profile: {
-                showToast("hi", false);
+            case R.id.action_profile_save: {
+                showToast("save initiated", false);
                 return true;
             }
 
@@ -241,6 +254,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         dialog.show();
     } // End of editSetProfilePictureDialog
 
+    
+    
     private void doCrop(final int source_of_image) {
         final ArrayList<CropOption> cropOptions = new ArrayList<CropOption>();
         String source_string;
@@ -339,5 +354,28 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             }
         }
     } // End of doCrop
+    
+    
+    
+    private void saveProfileInfoToServer(final String firstName, final String lastName, final String aboutMeDescription) {
+
+        final BlRequest request = new BlRequest(Method.POST, RequestId.SAVE_USER_PROFILE, HttpConstants
+                        .getApiBaseUrl() + ApiEndpoints.BOOK_INFO, null, this, this);
+        final Map<String, String> params = new HashMap<String, String>();
+        //params.put(HttpConstants.Q, bookId);
+        request.setParams(params);
+        addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
+    }
+
+    
+	@Override
+	public void onErrorResponse(VolleyError error, Request<?> request) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+		// TODO Auto-generated method stub	
+	}
     
 }

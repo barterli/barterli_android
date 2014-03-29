@@ -94,6 +94,7 @@ public class HttpConstants {
         public static final int CREATE_BOOK   = 101;
         public static final int SEARCH_BOOKS  = 102;
         public static final int CREATE_USER   = 103;
+        public static final int SAVE_USER_PROFILE   = 110;
     }
 
     public static final String ID               = "id";
