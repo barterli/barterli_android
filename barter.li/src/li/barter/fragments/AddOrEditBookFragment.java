@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -39,6 +40,11 @@ import java.util.List;
 import java.util.Map;
 
 import li.barter.R;
+import li.barter.data.DBInterface;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
+import li.barter.data.TableLocations;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -48,11 +54,13 @@ import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-                OnClickListener {
+                OnClickListener, AsyncDbQueryCallback {
 
     private static final String TAG = "AddOrEditBookFragment";
 
@@ -258,8 +266,11 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
     /**
      * Add the book to the server
+     * 
+     * @param locationObject The location at which to create the book, if
+     *            <code>null</code>, uses the user's preferred location
      */
-    private void createBookOnServer() {
+    private void createBookOnServer(final JSONObject locationObject) {
 
         if (mShouldSubmitOnResume) {
             mShouldSubmitOnResume = false;
@@ -278,6 +289,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYearEditText
                             .getText().toString());
             bookJson.put(HttpConstants.TAG_NAMES, getBarterTagsArray());
+            if (locationObject != null) {
+                bookJson.put(HttpConstants.LOCATION, locationObject);
+            }
             requestObject.put(HttpConstants.BOOK, bookJson);
 
             final BlRequest createBookRequest = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
@@ -311,8 +325,20 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     public void onResume() {
         super.onResume();
         if (mShouldSubmitOnResume) {
-            createBookOnServer();
+            createBookOnServer(null);
         }
+    }
+
+    /**
+     * Loads the user's preferred location from the DB
+     */
+    private void loadPreferredLocation() {
+
+        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
+                        + SQLConstants.EQUALS_ARG, new String[] {
+            SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_location)
+        }, null, null, null, null, this);
     }
 
     @Override
@@ -331,8 +357,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                                                 .getName(), loginArgs), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.BS_ADD_BOOK);
 
             } else {
-
-                createBookOnServer();
+                createBookOnServer(null);
             }
         }
     }
@@ -392,6 +417,50 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     Bundle errorResponseBundle) {
         if (requestId == RequestId.GET_BOOK_INFO) {
             showToast(R.string.unable_to_fetch_book_info, false);
+        }
+    }
+
+    @Override
+    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+
+    }
+
+    @Override
+    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+
+    }
+
+    @Override
+    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+
+        if (token == QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK) {
+
+            try {
+                if (cursor.moveToFirst()) {
+                    final JSONObject locationObject = new JSONObject();
+                    locationObject.put(HttpConstants.NAME, cursor.getString(cursor
+                                    .getColumnIndex(DatabaseColumns.NAME)));
+                    locationObject.put(HttpConstants.ADDRESS, cursor.getString(cursor
+                                    .getColumnIndex(DatabaseColumns.ADDRESS)));
+                    locationObject.put(HttpConstants.LATITUDE, cursor.getDouble(cursor
+                                    .getColumnIndex(DatabaseColumns.LATITUDE)));
+                    locationObject.put(HttpConstants.LONGITUDE, cursor.getDouble(cursor
+                                    .getColumnIndex(DatabaseColumns.LONGITUDE)));
+
+                    //TODO Show location address
+                }
+
+            } catch (JSONException e) {
+                Logger.e(TAG, e, "Unable to build location object");
+            } finally {
+                cursor.close();
+            }
+
         }
     }
 
