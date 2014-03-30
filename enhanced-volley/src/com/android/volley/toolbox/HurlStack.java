@@ -180,7 +180,15 @@ public class HurlStack implements HttpStack {
                         .getProtocolCharset();
         final int curTime = (int) (System.currentTimeMillis() / 1000);
         final String boundary = BOUNDARY_PREFIX + curTime;
-        connection.setRequestMethod("POST");
+        
+        if(request.getMethod() == Method.POST) {
+            connection.setRequestMethod("POST");
+        } else if(request.getMethod() == Method.PUT) {
+            connection.setRequestMethod("PUT");
+        } else {
+            //Any other case
+            connection.setRequestMethod("POST");
+        }
         connection.setDoOutput(true);
         connection.setRequestProperty(HEADER_CONTENT_TYPE, String
                         .format(CONTENT_TYPE_MULTIPART, charset, curTime));

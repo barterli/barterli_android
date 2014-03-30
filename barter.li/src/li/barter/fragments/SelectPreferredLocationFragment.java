@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -287,9 +288,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
         if (requestId == RequestId.HANGOUTS) {
-            showToast(R.string.unable_to_fetch_hangouts, true);
+            showCrouton(R.string.unable_to_fetch_hangouts, AlertStyle.ERROR);
         } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
-            showToast(R.string.error_unable_to_set_preferred_location, true);
+            showCrouton(R.string.error_unable_to_set_preferred_location, AlertStyle.ERROR);
         }
     }
 

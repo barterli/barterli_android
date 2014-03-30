@@ -20,6 +20,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -27,7 +29,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
@@ -160,6 +162,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     @Override
     public void onStop() {
         super.onStop();
+        Crouton.clearCroutonsForActivity(getActivity());
         mVolleyCallbacks.cancelAll(getVolleyTag());
         getActivity().setProgressBarIndeterminateVisibility(false);
     }
@@ -193,8 +196,8 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
                 getActivity().setProgressBarIndeterminateVisibility(true);
                 mVolleyCallbacks.queue(request);
             } else if (showErrorOnNoNetwork) {
-                showToast(errorMsgResId != 0 ? errorMsgResId
-                                : R.string.no_network_connection, false);
+                showCrouton(errorMsgResId != 0 ? errorMsgResId
+                                : R.string.no_network_connection, AlertStyle.ERROR);
             }
         }
     }
@@ -221,28 +224,27 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     protected abstract Object getVolleyTag();
 
     /**
-     * Display a {@link Toast} message
+     * Display an alert, with a string message
      * 
-     * @param toastMessage The message to display
-     * @param isLong Whether it is a long toast
+     * @param message The message to display
+     * @param style The {@link AlertStyle} of message to display
      */
-    public void showToast(final String toastMessage, final boolean isLong) {
+    public void showCrouton(final String message, final AlertStyle style) {
         if (mIsAttached) {
             ((AbstractBarterLiActivity) getActivity())
-                            .showToast(toastMessage, isLong);
+                            .showCrouton(message, style);
         }
     }
 
     /**
-     * Display a {@link Toast} message
+     * Display an alert, with a string message
      * 
-     * @param toastMessageResId The message string resource Id to display
-     * @param isLong Whether it is a long toast
+     * @param messageResId The message to display
+     * @param style The {@link AlertStyle} of message to display
      */
-    public void showToast(final int toastMessageResId, final boolean isLong) {
+    public void showCrouton(final int messageResId, final AlertStyle style) {
         if (mIsAttached) {
-            ((AbstractBarterLiActivity) getActivity())
-                            .showToast(toastMessageResId, isLong);
+            showCrouton(getString(messageResId), style);
         }
     }
 
