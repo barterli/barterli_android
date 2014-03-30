@@ -74,6 +74,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
     private TextView            mProfileNameTextView;
     private TextView            mAboutMeTextView;
+    private TextView            mPreferredLocationTextView;
     private ImageView           mProfileImageView;
     private ImageView           mEditPreferredLocationImageView;
     private Uri                 mImageCaptureUri;
@@ -94,6 +95,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         mProfileNameTextView = (TextView) view.findViewById(R.id.profile_name);
         mAboutMeTextView = (TextView) view.findViewById(R.id.about_me);
+        mPreferredLocationTextView = (TextView) view
+                        .findViewById(R.id.current_location_text);
         mProfileImageView = (ImageView) view
                         .findViewById(R.id.profile_pic_thumbnail);
         mEditPreferredLocationImageView = (ImageView) view
@@ -125,6 +128,12 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                                 .getString(getActivity(), R.string.pref_profile_last_name);
             }
             mProfileNameTextView.setText(fullName);
+        }
+
+        if (SharedPreferenceHelper
+                        .contains(getActivity(), R.string.pref_location)) {
+            mPreferredLocationTextView.setText(SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_location));
         }
 
         if (SharedPreferenceHelper

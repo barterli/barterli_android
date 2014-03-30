@@ -222,6 +222,7 @@ public class AppConstants {
         public static final String LOGIN_TO_ADD_BOOK                               = "login_to_add_book";
         public static final String LOGIN_FROM_NAV_DRAWER                           = "login_from_nav_drawer";
         public static final String SELECT_PREFERRED_LOCATION_FROM_LOGIN            = "select_preferred_location_from_login";
+        public static final String SELECT_PREFERRED_LOCATION_FROM_PROFILE            = "select_preferred_location_from_profile";
         public static final String SELECT_PREFERRED_LOCATION_FROM_ADD_OR_EDIT_BOOK = "select_preferred_location_from_add_or_edit_book";
 
         /* Tags for fragment backstack popping and providing up navigation */

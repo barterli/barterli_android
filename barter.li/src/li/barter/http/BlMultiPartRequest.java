@@ -51,7 +51,7 @@ public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo> implement
      * @param listener The {@link Listener} for the response
      * @param errorListener The {@link ErrorListener} for the error response
      */
-    public BlMultiPartRequest(final int method, final String url, final String requestBody, final Listener<ResponseInfo> listener, final ErrorListener errorListener) {
+    public BlMultiPartRequest(final int method, final String url, final Listener<ResponseInfo> listener, final ErrorListener errorListener) {
         super(method, url, listener, errorListener);
     }
 

@@ -49,6 +49,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -63,6 +64,7 @@ import android.widget.TextView;
 import li.barter.R;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.CropOptionAdapter;
+import li.barter.http.BlMultiPartRequest;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.ResponseInfo;
@@ -71,6 +73,7 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.models.CropOption;
 import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.RequestCodes;
 
 /**
@@ -86,6 +89,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     private TextView            mFirstNameTextView;
     private TextView            mLastNameTextView;
     private TextView            mAboutMeTextView;
+    private TextView            mPreferredLocationTextView;
     private ImageView           mProfileImageView;
     private ImageView           mEditPreferredLocationImageView;
     private Uri                 mImageCaptureUri;
@@ -109,6 +113,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         mLastNameTextView = (TextView) view
                         .findViewById(R.id.profile_name_last_name);
         mAboutMeTextView = (TextView) view.findViewById(R.id.about_me);
+        mPreferredLocationTextView = (TextView) view
+                        .findViewById(R.id.current_location_text_in_edit_page);
         mProfileImageView = (ImageView) view
                         .findViewById(R.id.profile_pic_thumbnail);
         mEditPreferredLocationImageView = (ImageView) view
@@ -153,6 +159,12 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                             .getString(getActivity(), R.string.pref_profile_about_me_description));
         }
 
+        if (SharedPreferenceHelper
+                        .contains(getActivity(), R.string.pref_location)) {
+            mPreferredLocationTextView.setText(SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_location));
+        }
+
         setActionBarDrawerToggleEnabled(false);
         return view;
     }
@@ -173,17 +185,21 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
             case R.id.action_profile_save: {
 
+                String mFirstName = mFirstNameTextView.getText().toString();
+                String mLastName = mLastNameTextView.getText().toString();
+                String mAboutMe = mAboutMeTextView.getText().toString();
+
+                //TODO move saving to shared preference to network success listener
                 SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_profile_first_name, mFirstNameTextView
-                                                .getText().toString());
+                                .set(getActivity(), R.string.pref_profile_first_name, mFirstName);
 
                 SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_profile_last_name, mLastNameTextView
-                                                .getText().toString());
+                                .set(getActivity(), R.string.pref_profile_last_name, mLastName);
 
                 SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_profile_about_me_description, mAboutMeTextView
-                                                .getText().toString());
+                                .set(getActivity(), R.string.pref_profile_about_me_description, mAboutMe);
+
+                //saveProfileInfoToServer(mFirstName, mLastName, mAboutMe);
 
                 showToast("Saved", false);
                 return true;
@@ -211,8 +227,12 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-            case R.id.edit_current_location_button: {
+            case R.id.edit_current_location_button_in_edit_page: {
                 showToast("Edit Preferred Location!", false);
+               loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), SelectPreferredLocationFragment.class
+                                                .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true, FragmentTags.PROFILE);
+
                 break;
             }
 
@@ -299,84 +319,55 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         dialog.show();
     } // End of editSetProfilePictureDialog
 
-    private void doCrop(final int source_of_image) {
-        Log.v("DO-CROP", mImageCaptureUri.toString());
-        final ArrayList<CropOption> cropOptions = new ArrayList<CropOption>();
-        String source_string;
-        if (source_of_image == PICK_FROM_FILE) {
-            source_string = "Gallery";
-        } else {
-            source_string = "Camera";
-        }
-        final String source = source_string;
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setType("image/*");
-        List<ResolveInfo> list = getActivity().getPackageManager()
-                        .queryIntentActivities(intent, 0);
-        int size = list.size();
-        if (size == 0) {
-            showToast("Could not find an App to Crop Image", false);
-            mCompressedPhoto = PhotoUtils
-                            .rotateBitmapIfNeededAndCompressIfTold(getActivity(), mImageCaptureUri, source, true);
-            if (mCompressedPhoto != null) {
-                mProfileImageView.setImageBitmap(mCompressedPhoto);
-                PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_is_profile_pic_set, true);
-            }
-            return;
-        } else {
-            intent.setData(mImageCaptureUri);
-            intent.putExtra("outputX", 150);
-            intent.putExtra("outputY", 150);
-            intent.putExtra("aspectX", 1);
-            intent.putExtra("aspectY", 1);
-            intent.putExtra("scale", true);
-            intent.putExtra("return-data", true);
-            if (size == 1) {
-                Intent i = new Intent(intent);
-                ResolveInfo res = list.get(0);
-                i.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-                startActivityForResult(i, CROP_FROM_CAMERA);
-            } else {
-                for (ResolveInfo res : list) {
-                    final CropOption co = new CropOption();
-                    co.title = getActivity()
-                                    .getPackageManager()
-                                    .getApplicationLabel(res.activityInfo.applicationInfo);
-                    co.icon = getActivity()
-                                    .getPackageManager()
-                                    .getApplicationIcon(res.activityInfo.applicationInfo);
-                    co.appIntent = new Intent(intent);
-                    co.appIntent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-                    cropOptions.add(co);
-                }
-                CropOptionAdapter adapter = new CropOptionAdapter(getActivity(), cropOptions);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Choose an Application to Crop Image");
-                builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        startActivityForResult(cropOptions.get(item).appIntent, CROP_FROM_CAMERA);
-                    }
-                });
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        mCompressedPhoto = PhotoUtils
-                                        .rotateBitmapIfNeededAndCompressIfTold(getActivity(), mImageCaptureUri, source, true);
-                        if (mCompressedPhoto != null) {
-                            mProfileImageView.setImageBitmap(mCompressedPhoto);
-                            PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
-                            SharedPreferenceHelper
-                                            .set(getActivity(), R.string.pref_is_profile_pic_set, true);
-                        }
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-        }
-    } // End of doCrop
+    /*
+     * private void doCrop(final int source_of_image) { Log.v("DO-CROP",
+     * mImageCaptureUri.toString()); final ArrayList<CropOption> cropOptions =
+     * new ArrayList<CropOption>(); String source_string; if (source_of_image ==
+     * PICK_FROM_FILE) { source_string = "Gallery"; } else { source_string =
+     * "Camera"; } final String source = source_string; Intent intent = new
+     * Intent("com.android.camera.action.CROP"); intent.setType("image/*");
+     * List<ResolveInfo> list = getActivity().getPackageManager()
+     * .queryIntentActivities(intent, 0); int size = list.size(); if (size == 0)
+     * { showToast("Could not find an App to Crop Image", false);
+     * mCompressedPhoto = PhotoUtils
+     * .rotateBitmapIfNeededAndCompressIfTold(getActivity(), mImageCaptureUri,
+     * source, true); if (mCompressedPhoto != null) {
+     * mProfileImageView.setImageBitmap(mCompressedPhoto);
+     * PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
+     * SharedPreferenceHelper .set(getActivity(),
+     * R.string.pref_is_profile_pic_set, true); } return; } else {
+     * intent.setData(mImageCaptureUri); intent.putExtra("outputX", 150);
+     * intent.putExtra("outputY", 150); intent.putExtra("aspectX", 1);
+     * intent.putExtra("aspectY", 1); intent.putExtra("scale", true);
+     * intent.putExtra("return-data", true); if (size == 1) { Intent i = new
+     * Intent(intent); ResolveInfo res = list.get(0); i.setComponent(new
+     * ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+     * startActivityForResult(i, CROP_FROM_CAMERA); } else { for (ResolveInfo
+     * res : list) { final CropOption co = new CropOption(); co.title =
+     * getActivity() .getPackageManager()
+     * .getApplicationLabel(res.activityInfo.applicationInfo); co.icon =
+     * getActivity() .getPackageManager()
+     * .getApplicationIcon(res.activityInfo.applicationInfo); co.appIntent = new
+     * Intent(intent); co.appIntent.setComponent(new
+     * ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+     * cropOptions.add(co); } CropOptionAdapter adapter = new
+     * CropOptionAdapter(getActivity(), cropOptions); AlertDialog.Builder
+     * builder = new AlertDialog.Builder(getActivity());
+     * builder.setTitle("Choose an Application to Crop Image");
+     * builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+     * public void onClick(DialogInterface dialog, int item) {
+     * startActivityForResult(cropOptions.get(item).appIntent,
+     * CROP_FROM_CAMERA); } }); builder.setOnCancelListener(new
+     * DialogInterface.OnCancelListener() {
+     * @Override public void onCancel(DialogInterface dialog) { mCompressedPhoto
+     * = PhotoUtils .rotateBitmapIfNeededAndCompressIfTold(getActivity(),
+     * mImageCaptureUri, source, true); if (mCompressedPhoto != null) {
+     * mProfileImageView.setImageBitmap(mCompressedPhoto);
+     * PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
+     * SharedPreferenceHelper .set(getActivity(),
+     * R.string.pref_is_profile_pic_set, true); } } }); AlertDialog alert =
+     * builder.create(); alert.show(); } } } // End of doCrop
+     */
 
     private void setAndSaveImage(final Uri uri, final int source_of_image) {
         String source_string;
@@ -401,16 +392,11 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     }
 
     private void saveProfileInfoToServer(final String firstName,
-                    final String lastName, final String aboutMeDescription) {
+                    final String lastName, final String aboutMeDescription,
+                    String profilePicPath) {
 
-        /*
-         * final BlRequest request = new BlRequest(Method.POST,
-         * RequestId.SAVE_USER_PROFILE, HttpConstants .getApiBaseUrl() +
-         * ApiEndpoints.BOOK_INFO, null, this, this); final Map<String, String>
-         * params = new HashMap<String, String>(); //params.put(HttpConstants.Q,
-         * bookId); request.setParams(params); addRequestToQueue(request, true,
-         * R.string.unable_to_fetch_book_info);
-         */
+        String url = HttpConstants.getApiBaseUrl()
+                        + ApiEndpoints.UPDATE_USER_INFO;
 
         final JSONObject updateUserJson = new JSONObject();
 
@@ -419,11 +405,18 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             updateUserJson.put(HttpConstants.LAST_NAME, lastName);
             updateUserJson.put(HttpConstants.DESCRIPTION, aboutMeDescription);
 
-            //final BlRequest updateUserProfileRequest = new BlRequest(Method.PUT, RequestId.SAVE_USER_PROFILE, HttpConstants
-                           // .getApiBaseUrl() + ApiEndpoints.UPDATE_USER_INFO, updateUserJson
-                           // .toString(), this, this);
+            BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, this, this);
+            updateUserProfileRequest.addFile("profile_pic", profilePicPath);
+            updateUserProfileRequest
+                            .addMultipartParam(HttpConstants.FIRST_NAME, "text/plain", firstName);
+            updateUserProfileRequest
+                            .addMultipartParam(HttpConstants.LAST_NAME, "text/plain", lastName);
+            updateUserProfileRequest
+                            .addMultipartParam(HttpConstants.DESCRIPTION, "text/plain", aboutMeDescription);
 
-            //addRequestToQueue(updateUserProfileRequest, true, 0);
+            // updateUserProfileRequest.addMultiPartParam(); (HttpConstants.FIRST_NAME, "text/plain", firstName);
+
+            addRequestToQueue(updateUserProfileRequest, true, 0);
         } catch (final JSONException e) {
             e.printStackTrace();
         }
@@ -431,12 +424,12 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onErrorResponse(VolleyError error, Request<?> request) {
-        // TODO Auto-generated method stub
+        Log.v(TAG, "Volley error");
     }
 
     @Override
     public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
-        // TODO Auto-generated method stub
+        Log.v(TAG, response.toString());
     }
 
 }
