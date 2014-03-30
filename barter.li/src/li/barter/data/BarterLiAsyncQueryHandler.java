@@ -70,6 +70,8 @@ class BarterLiAsyncQueryHandler {
      * Method for inserting rows into the database
      * 
      * @param token Unique id for this operation
+     * @param cookie Any extra object to be passed into the query to be returned
+     *            when the query completes. Can be <code>null</code>
      * @param table The table to insert into
      * @param nullColumnHack column names are known and an empty row can't be
      *            inserted. If not set to null, the nullColumnHack parameter
@@ -81,12 +83,12 @@ class BarterLiAsyncQueryHandler {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    void startInsert(final int token, final String table,
+    void startInsert(final int token, final Object cookie, final String table,
                     final String nullColumnHack, final ContentValues values,
                     final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
-        final QueryTask task = new QueryTask(Type.INSERT, token, callback);
+        final QueryTask task = new QueryTask(Type.INSERT, token, cookie, callback);
         task.mTableName = table;
         task.mNullColumnHack = nullColumnHack;
         task.mValues = values;
@@ -99,6 +101,8 @@ class BarterLiAsyncQueryHandler {
      * Delete rows from the database
      * 
      * @param token A unique id for this operation
+     * @param cookie Any extra object to be passed into the query to be returned
+     *            when the query completes. Can be <code>null</code>
      * @param table The table to delete from
      * @param selection The WHERE clause
      * @param selectionArgs Arguments for the where clause
@@ -107,12 +111,12 @@ class BarterLiAsyncQueryHandler {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    void startDelete(final int token, final String table,
+    void startDelete(final int token, final Object cookie, final String table,
                     final String selection, final String[] selectionArgs,
                     final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
-        final QueryTask task = new QueryTask(Type.DELETE, token, callback);
+        final QueryTask task = new QueryTask(Type.DELETE, token, cookie, callback);
         task.mTableName = table;
         task.mSelection = selection;
         task.mSelectionArgs = selectionArgs;
@@ -126,6 +130,8 @@ class BarterLiAsyncQueryHandler {
      * Updates the table with the given data
      * 
      * @param A unique id for this operation
+     * @param cookie Any extra object to be passed into the query to be returned
+     *            when the query completes. Can be <code>null</code>
      * @param table The table to update
      * @param values The fields to update
      * @param selection The WHERE clause
@@ -135,12 +141,12 @@ class BarterLiAsyncQueryHandler {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    void startUpdate(final int token, final String table,
+    void startUpdate(final int token, final Object cookie, final String table,
                     final ContentValues values, final String selection,
                     final String[] selectionArgs, final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
-        final QueryTask task = new QueryTask(Type.UPDATE, token, callback);
+        final QueryTask task = new QueryTask(Type.UPDATE, token, cookie, callback);
         task.mTableName = table;
         task.mValues = values;
         task.mSelection = selection;
@@ -155,6 +161,8 @@ class BarterLiAsyncQueryHandler {
      * Query the given table, returning a Cursor over the result set.
      * 
      * @param token A unique id for this query
+     * @param cookie Any extra object to be passed into the query to be returned
+     *            when the query completes. Can be <code>null</code>
      * @param distinct <code>true</code> if dataset should be unique
      * @param table The table to query
      * @param columns The columns to fetch
@@ -167,14 +175,14 @@ class BarterLiAsyncQueryHandler {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    void startQuery(final int token, final boolean distinct,
-                    final String table, final String[] columns,
-                    final String selection, final String[] selectionArgs,
-                    final String groupBy, final String having,
-                    final String orderBy, final String limit,
-                    final AsyncDbQueryCallback callback) {
+    void startQuery(final int token, final Object cookie,
+                    final boolean distinct, final String table,
+                    final String[] columns, final String selection,
+                    final String[] selectionArgs, final String groupBy,
+                    final String having, final String orderBy,
+                    final String limit, final AsyncDbQueryCallback callback) {
 
-        final QueryTask task = new QueryTask(Type.QUERY, token, callback);
+        final QueryTask task = new QueryTask(Type.QUERY, token, cookie, callback);
         task.mDistinct = distinct;
         task.mTableName = table;
         task.mColumns = columns;
@@ -267,6 +275,11 @@ class BarterLiAsyncQueryHandler {
         private final int            mToken;
 
         /**
+         * Any extra cookie sent along with the query
+         */
+        private final Object         mCookie;
+
+        /**
          * Callback for the result of the operation
          */
         private AsyncDbQueryCallback mCallback;
@@ -291,11 +304,15 @@ class BarterLiAsyncQueryHandler {
          * 
          * @param type The {@link Type} of task
          * @param token The token to pass into the callback
+         * @param cookie Any extra object to be passed into the query to be
+         *            returned when the query completes. Can be
+         *            <code>null</code>
          * @param callback The Callback for when the db query completes
          */
-        private QueryTask(final Type type, final int token, final AsyncDbQueryCallback callback) {
+        private QueryTask(final Type type, final int token, final Object cookie, final AsyncDbQueryCallback callback) {
             mType = type;
             mToken = token;
+            mCookie = cookie;
             mCallback = callback;
             mCancelled = false;
         }
@@ -354,30 +371,27 @@ class BarterLiAsyncQueryHandler {
         @Override
         protected void onPostExecute(final QueryResult result) {
 
-            if (!result.mTask.mCancelled) {
-                switch (result.mTask.mType) {
+            final QueryTask task = result.mTask;
+            if (!task.mCancelled) {
+                switch (task.mType) {
 
                     case INSERT: {
-                        result.mTask.mCallback
-                                        .onInsertComplete(result.mTask.mToken, result.mInsertRowId);
+                        task.mCallback.onInsertComplete(task.mToken, task.mCookie, result.mInsertRowId);
                         break;
                     }
 
                     case DELETE: {
-                        result.mTask.mCallback
-                                        .onDeleteComplete(result.mTask.mToken, result.mDeleteCount);
+                        task.mCallback.onDeleteComplete(task.mToken, task.mCookie, result.mDeleteCount);
                         break;
                     }
 
                     case UPDATE: {
-                        result.mTask.mCallback
-                                        .onUpdateComplete(result.mTask.mToken, result.mUpdateCount);
+                        task.mCallback.onUpdateComplete(task.mToken, task.mCookie, result.mUpdateCount);
                         break;
                     }
 
                     case QUERY: {
-                        result.mTask.mCallback
-                                        .onQueryComplete(result.mTask.mToken, result.mCursor);
+                        task.mCallback.onQueryComplete(task.mToken, task.mCookie, result.mCursor);
                         break;
                     }
                 }
