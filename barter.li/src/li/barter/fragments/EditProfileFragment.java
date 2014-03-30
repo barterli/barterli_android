@@ -16,12 +16,19 @@
 
 package li.barter.fragments;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +53,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -85,7 +93,7 @@ import li.barter.utils.AppConstants.RequestCodes;
 public class EditProfileFragment extends AbstractBarterLiFragment implements
                 OnClickListener {
 
-    private static final String TAG              = "EditProfileFragment";
+    private static final String TAG                     = "EditProfileFragment";
 
     private TextView            mFirstNameTextView;
     private TextView            mLastNameTextView;
@@ -93,14 +101,15 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     private TextView            mPreferredLocationTextView;
     private ImageView           mProfileImageView;
     private ImageView           mEditPreferredLocationImageView;
+    private boolean             mWasProfileImageChanged = false;
     private Uri                 mImageCaptureUri;
     private Bitmap              mCompressedPhoto;
     private File                mAvatarfile;
     // private Boolean mHasAboutMeDescriptionChanged = false;
 
-    private static final int    PICK_FROM_CAMERA = 1;
-    private static final int    CROP_FROM_CAMERA = 2;
-    private static final int    PICK_FROM_FILE   = 3;
+    private static final int    PICK_FROM_CAMERA        = 1;
+    private static final int    CROP_FROM_CAMERA        = 2;
+    private static final int    PICK_FROM_FILE          = 3;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -202,13 +211,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 SharedPreferenceHelper
                                 .set(getActivity(), R.string.pref_profile_about_me_description, mAboutMe);
 
-                if (mAvatarfile.exists()) {
-                    saveProfileInfoToServer(mFirstName, mLastName, mAboutMe, mAvatarfile.getAbsolutePath());
-                } else {
-                    showToast("Will see later", false);
-                }
+                saveProfileInfoToServer(mFirstName, mLastName, mAboutMe, mWasProfileImageChanged);
 
-               // showToast("Saved", false);
+                // showToast("Saved", false);
                 return true;
             }
 
@@ -395,31 +400,54 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_is_profile_pic_set, true);
         }
-
+        mWasProfileImageChanged = true;
     }
 
     private void saveProfileInfoToServer(final String firstName,
                     final String lastName, final String aboutMeDescription,
-                    String profilePicPath) {
+                    final Boolean shouldIncludePic) {
 
         String url = HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.UPDATE_USER_INFO;
+        
+        JSONObject mUserProfileObject = new JSONObject();
+        JSONObject mUserProfileMasterObject = new JSONObject();
+        try {
+            mUserProfileObject.put(HttpConstants.FIRST_NAME, firstName);
+            mUserProfileObject.put(HttpConstants.LAST_NAME, lastName);
+            mUserProfileObject.put(HttpConstants.DESCRIPTION, aboutMeDescription);
+            String mProfilePicPath = mAvatarfile.getAbsolutePath();
+            mUserProfileMasterObject.put("user", mUserProfileObject.toString());
+            BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
+            updateUserProfileRequest
+            .addMultipartParam("user", "application/json", mUserProfileMasterObject.toString());
+            updateUserProfileRequest
+                            .addFile(HttpConstants.PROFILE_PIC, mProfilePicPath);
+            updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
+            addRequestToQueue(updateUserProfileRequest, true, 0);
+            
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
 
-        BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
-        updateUserProfileRequest
-                        .addFile(HttpConstants.PROFILE_PIC, profilePicPath);
-        updateUserProfileRequest
+       // Log.v(TAG, userProfileObject.toString());
+
+        /*updateUserProfileRequest
                         .addMultipartParam(HttpConstants.FIRST_NAME, "text/plain", firstName);
         updateUserProfileRequest
                         .addMultipartParam(HttpConstants.LAST_NAME, "text/plain", lastName);
         updateUserProfileRequest
-                        .addMultipartParam(HttpConstants.DESCRIPTION, "text/plain", aboutMeDescription);
+                        .addMultipartParam(HttpConstants.DESCRIPTION, "text/plain", aboutMeDescription); */
 
-        Log.v(TAG, profilePicPath);
+        //if (shouldIncludePic && mAvatarfile.exists()) {
 
-        //updateUserProfileRequest.setRequestId(RequestId.UPDATE_USER);
-        //addRequestToQueue(updateUserProfileRequest, true, 0);
-    }
+            //Log.v(TAG, mProfilePicPath);
+        //}
+
+    
 
     @Override
     public void onSuccess(int requestId, IBlRequestContract request,
@@ -435,5 +463,91 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         Log.v(TAG, "Volley error");
 
     }
+    
+    /*private class buyMFAsyncTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            
+            uploadUserPhoto(mAvatarfile);
+            
+            /*HttpClient client = new DefaultHttpClient();
+            HttpPost post = new HttpPost("http://162.243.198.171/api/v1/user_update.json");
+            MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();        
+            multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            multipartEntity.addPart("profile", new FileBody(mAvatarfile));
+            post.setEntity(multipartEntity.build());
+            HttpResponse response;
+            try {
+                response = client.execute(post);
+                Log.v(TAG, convertStreamToString(response.getEntity().getContent()));
+                HttpEntity entity = response.getEntity();
+            } catch (ClientProtocolException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } 
+            
+            return null;
+        }
+        
+        
+        
+    } */
+    
+    
+   /* @SuppressWarnings("deprecation")
+    public void uploadUserPhoto(File image) {
+
+        try {
+
+            HttpPut httpput = new HttpPut("http://162.243.198.171:3000/api/v1/user_update.json");
+            httpput.setHeader("Authorization", "Token token=\"BxCVf-ABa6jxNebxCQ9L\", email=\"rao@gmail.com\"");
+            HttpClient client = new DefaultHttpClient();
+            //MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);  
+            
+            MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();        
+            multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+          
+            
+            JSONObject profileObject = new JSONObject();
+            profileObject.put("first_name", "Sharath");
+            profileObject.put("last_name", "Pandeshwar");
+            profileObject.put("description", "I shall not give up!");
+           // StringBody s = new StringBody("{\"first_name\":\"sharath\"}", "application/json", Charset.forName("UTF-8"));
+           // Log.v("TEst",s.);
+            
+            
+            Log.v("TEst",profileObject.toString());
+            multipartEntity.addPart("user", new StringBody(profileObject.toString(), "application/json", Charset.forName("UTF-8"))); 
+            multipartEntity.addPart("user", s); 
+            //multipartEntity.addPart("profile", new FileBody(image));
+            //httpput.setEntity(multipartEntity);
+            httpput.setEntity(multipartEntity.build());
+
+            client.execute(httpput, new PhotoUploadResponseHandler());
+
+        } catch (Exception e) {
+            Log.v("Log", "Exception");
+        }
+    }
+
+    private class PhotoUploadResponseHandler implements ResponseHandler<Object> {
+
+        @Override
+        public Object handleResponse(HttpResponse response)
+                throws ClientProtocolException, IOException {
+
+            HttpEntity r_entity = response.getEntity();
+            String responseString = EntityUtils.toString(r_entity);
+            Log.d("UPLOAD", responseString);
+
+            return null;
+        }
+
+    } */
+    
+    
 
 }
