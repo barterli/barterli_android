@@ -35,6 +35,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import li.barter.R;
@@ -202,7 +203,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         final String author = args.getString(Keys.AUTHOR);
         final String description = args.getString(Keys.DESCRIPTION);
         final String publicationYear = args.getString(Keys.PUBLICATION_YEAR);
-        final String[] barterTypes = args.getStringArray(Keys.BARTER_TYPES);
+        final List<String> barterTypes = args
+                        .getStringArrayList(Keys.BARTER_TYPES);
 
         mIsbnEditText.setText(mBookId);
         mTitleEditText.setText(title);
@@ -238,11 +240,19 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     /**
      * Updates the barter types checkboxes
      * 
-     * @param barterTypes An array of barter types chosen for the book
+     * @param barterTypes A list of barter types chosen for the book
      */
-    private void setCheckBoxesForBarterTypes(final String[] barterTypes) {
-        if ((barterTypes != null) && (barterTypes.length >= 1)) {
-            // TODO Set barter types
+    private void setCheckBoxesForBarterTypes(final List<String> barterTypes) {
+        if (barterTypes != null) {
+            for (CheckBox checkBox : mBarterTypeCheckBoxes) {
+
+                if (barterTypes.contains(checkBox
+                                .getTag(R.string.tag_barter_type))) {
+                    checkBox.setChecked(true);
+                } else {
+                    checkBox.setChecked(false);
+                }
+            }
         }
     }
 
@@ -271,7 +281,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             requestObject.put(HttpConstants.BOOK, bookJson);
 
             final BlRequest createBookRequest = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.BOOKS, bookJson.toString(), mVolleyCallbacks);
+                            + ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
             createBookRequest.setRequestId(RequestId.CREATE_BOOK);
             addRequestToQueue(createBookRequest, true, 0);
         } catch (final JSONException e) {
