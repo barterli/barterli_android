@@ -125,6 +125,7 @@ public class HttpConstants {
     public static final String SUCCESS                     = "success";
     public static final String LOCATION                    = "location";
     public static final String ERROR_CODE                  = "error_code";
+    public static final String ERROR_MESSAGE               = "error_message";
     public static final String USER                        = "user";
     public static final String FIRST_NAME                  = "first_name";
     public static final String LAST_NAME                   = "last_name";

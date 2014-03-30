@@ -23,6 +23,8 @@ import android.support.v4.app.Fragment;
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 
 /**
@@ -60,6 +62,19 @@ public class HomeActivity extends AbstractBarterLiActivity {
     @Override
     protected Object getVolleyTag() {
         return TAG;
+    }
+
+    @Override
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
+        
+    }
+
+    @Override
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
+        
     }
 
 }

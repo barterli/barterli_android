@@ -49,11 +49,10 @@ public class BlRequest extends JsonRequest<ResponseInfo> implements
      *            the request type
      * @param url The API endpoint
      * @param requestBody A string represention of the Json request body
-     * @param listener The {@link Listener} for the response
-     * @param errorListener The {@link ErrorListener} for the error response
+     * @param volleyCallbacks A {@link VolleyCallbacks} reference to receive the volley callbacks
      */
-    public BlRequest(final int method, final String url, final String requestBody, final Listener<ResponseInfo> listener, final ErrorListener errorListener) {
-        super(method, url, requestBody, listener, errorListener);
+    public BlRequest(final int method, final String url, final String requestBody, final VolleyCallbacks volleyCallbacks) {
+        super(method, url, requestBody, volleyCallbacks, volleyCallbacks);
     }
 
     @Override
@@ -79,11 +78,7 @@ public class BlRequest extends JsonRequest<ResponseInfo> implements
             try {
 
                 final HttpResponseParser parser = new HttpResponseParser();
-                final ResponseInfo responseInfo = parser
-                                .getErrorResponse(mRequestId, new String(volleyError.networkResponse.data, HTTP.UTF_8));
-                final BlBadRequestError badRequestError = new BlBadRequestError(mRequestId, responseInfo.errorCode);
-                badRequestError.setResponseBundle(responseInfo.responseBundle);
-                return badRequestError;
+                return parser.getErrorResponse(mRequestId, new String(volleyError.networkResponse.data, HTTP.UTF_8));
             } catch (final UnsupportedEncodingException e) {
                 return new ParseError(e);
             } catch (final JSONException e) {

@@ -36,7 +36,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.http.HttpConstants;
+import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
+import li.barter.http.ResponseInfo;
+import li.barter.http.VolleyCallbacks;
+import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.TypefaceCache;
@@ -47,7 +51,8 @@ import li.barter.widgets.TypefaceCache;
  * 
  * @author Vinay S Shenoy
  */
-public abstract class AbstractBarterLiFragment extends Fragment {
+public abstract class AbstractBarterLiFragment extends Fragment implements
+                IHttpCallbacks {
 
     private static final String TAG = "BaseBarterLiFragment";
 
@@ -61,7 +66,11 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      */
     protected int               mContainerViewId;
 
-    private RequestQueue        mRequestQueue;
+    /**
+     * {@link VolleyCallbacks} for encapsulating the Volley response flow
+     */
+    protected VolleyCallbacks   mVolleyCallbacks;
+
     private ImageLoader         mImageLoader;
     private AtomicInteger       mRequestCounter;
 
@@ -69,10 +78,11 @@ public abstract class AbstractBarterLiFragment extends Fragment {
     public void onAttach(final Activity activity) {
         super.onAttach(activity);
         mIsAttached = true;
-        mRequestQueue = ((IVolleyHelper) activity.getApplication())
-                        .getRequestQueue();
+        final RequestQueue requestQueue = ((IVolleyHelper) activity
+                        .getApplication()).getRequestQueue();
         mImageLoader = ((IVolleyHelper) activity.getApplication())
                         .getImageLoader();
+        mVolleyCallbacks = new VolleyCallbacks(requestQueue, this);
         mRequestCounter = new AtomicInteger(0);
     }
 
@@ -124,7 +134,7 @@ public abstract class AbstractBarterLiFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mIsAttached = false;
-        mRequestQueue = null;
+        mVolleyCallbacks = null;
         mImageLoader = null;
         mRequestCounter = null;
     }
@@ -150,7 +160,7 @@ public abstract class AbstractBarterLiFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        mRequestQueue.cancelAll(getVolleyTag());
+        mVolleyCallbacks.cancelAll(getVolleyTag());
         getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
@@ -181,7 +191,7 @@ public abstract class AbstractBarterLiFragment extends Fragment {
                 addHeadersToRequest(request);
                 mRequestCounter.incrementAndGet();
                 getActivity().setProgressBarIndeterminateVisibility(true);
-                mRequestQueue.add(request);
+                mVolleyCallbacks.queue(request);
             } else if (showErrorOnNoNetwork) {
                 showToast(errorMsgResId != 0 ? errorMsgResId
                                 : R.string.no_network_connection, false);
@@ -209,16 +219,6 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      * @return An Object that's the tag for this fragment
      */
     protected abstract Object getVolleyTag();
-
-    /**
-     * Call this whenever a request has finished, whether successfully or error
-     */
-    protected void onRequestFinished() {
-
-        if (mRequestCounter.decrementAndGet() == 0) {
-            getActivity().setProgressBarIndeterminateVisibility(false);
-        }
-    }
 
     /**
      * Display a {@link Toast} message
@@ -309,6 +309,41 @@ public abstract class AbstractBarterLiFragment extends Fragment {
     public void onBackPressed() {
 
         getFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onPreExecute(IBlRequestContract request) {
+        mRequestCounter.incrementAndGet();
+        if (mIsAttached) {
+            getActivity().setProgressBarIndeterminateVisibility(true);
+        }
+    }
+
+    @Override
+    public void onPostExecute(IBlRequestContract request) {
+        if (mRequestCounter.decrementAndGet() == 0 && mIsAttached) {
+            getActivity().setProgressBarIndeterminateVisibility(false);
+        }
+    }
+
+    @Override
+    public abstract void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response);
+
+    @Override
+    public abstract void onBadRequestError(int requestId,
+                    IBlRequestContract request, int errorCode,
+                    String errorMessage, Bundle errorResponseBundle);
+
+    @Override
+    public void onAuthError(int requestId, IBlRequestContract request) {
+        //TODO Show Login Fragment and ask user to login again
+    }
+
+    @Override
+    public void onOtherError(int requestId, IBlRequestContract request,
+                    int errorCode) {
+        //TODO Show generic network error message
     }
 
 }

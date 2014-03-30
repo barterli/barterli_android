@@ -16,11 +16,7 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request;
 import com.android.volley.Request.Method;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,6 +40,7 @@ import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -51,7 +48,7 @@ import li.barter.utils.Logger;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-                OnClickListener, Listener<ResponseInfo>, ErrorListener {
+                OnClickListener {
 
     private static final String TAG = "AddOrEditBookFragment";
 
@@ -174,7 +171,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private void getBookInfoFromServer(final String bookId) {
 
         final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.BOOK_INFO, null, this, this);
+                        + ApiEndpoints.BOOK_INFO, null, mVolleyCallbacks);
         final Map<String, String> params = new HashMap<String, String>();
         request.setRequestId(RequestId.GET_BOOK_INFO);
         params.put(HttpConstants.Q, bookId);
@@ -212,7 +209,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             // TODO Add barter types
             final BlRequest createBookRequest = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.BOOKS, createBookJson.toString(), this, this);
+                            + ApiEndpoints.BOOKS, createBookJson.toString(), mVolleyCallbacks);
             createBookRequest.setRequestId(RequestId.CREATE_BOOK);
             addRequestToQueue(createBookRequest, true, 0);
         } catch (final JSONException e) {
@@ -272,38 +269,24 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onErrorResponse(final VolleyError error,
-                    final Request<?> request) {
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
 
-        onRequestFinished();
-        if (request instanceof BlRequest) {
-
-            final int requestId = ((BlRequest) request).getRequestId();
-
-            if (requestId == RequestId.GET_BOOK_INFO) {
-                showToast(R.string.unable_to_fetch_book_info, false);
-            }
+        if (requestId == RequestId.GET_BOOK_INFO) {
+            //TODO Read book info from bundle
+        } else if (requestId == RequestId.CREATE_BOOK) {
+            showToast(R.string.book_added, true);
+            getFragmentManager().popBackStack();
         }
 
     }
 
     @Override
-    public void onResponse(final ResponseInfo response,
-                    final Request<ResponseInfo> request) {
-
-        onRequestFinished();
-
-        if (request instanceof BlRequest) {
-
-            //TODO Read book details from response
-            final int requestId = ((BlRequest) request).getRequestId();
-
-            /*
-             * if (requestId == RequestId.GET_BOOK_INFO) {
-             * readBookDetailsFromResponse(response); } else if (requestId ==
-             * RequestId.CREATE_BOOK) { showToast(R.string.book_added, true);
-             * getFragmentManager().popBackStack(); }
-             */
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
+        if (requestId == RequestId.GET_BOOK_INFO) {
+            showToast(R.string.unable_to_fetch_book_info, false);
         }
     }
 

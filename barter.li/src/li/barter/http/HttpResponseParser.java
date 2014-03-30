@@ -380,15 +380,14 @@ public class HttpResponseParser {
      * 
      * @param requestId The {@linkplain RequestId} for the request
      * @param response The response from the server
-     * @return a {@linkplain ResponseInfo} object representing the response
+     * @return a {@linkplain BlBadRequestError} object representing the response
      * @throws JSONException If the response was an invalid json
      */
-    public ResponseInfo getErrorResponse(final int requestId,
+    public BlBadRequestError getErrorResponse(final int requestId,
                     final String response) throws JSONException {
 
         Logger.d(TAG, "Request Id %d\nResponse %s", requestId, response);
-        final ResponseInfo responseInfo = parseErrorResponse(requestId, response);
-        return responseInfo;
+        return parseErrorResponse(requestId, response);
     }
 
     /**
@@ -396,20 +395,22 @@ public class HttpResponseParser {
      * 
      * @param requestId The {@linkplain RequestId} for the request
      * @param response The Json response from server
-     * @return a {@linkplain ResponseInfo} object representing the response
+     * @return a {@link BlBadRequestError} object representing the error
      * @throws JSONException If the response was invalid json
      */
-    private ResponseInfo parseErrorResponse(final int requestId,
+    private BlBadRequestError parseErrorResponse(final int requestId,
                     final String response) throws JSONException {
 
-        final ResponseInfo responseInfo = new ResponseInfo(false);
         final JSONObject errorObject = new JSONObject(response);
 
         final int errorCode = JsonUtils
                         .readInt(errorObject, HttpConstants.ERROR_CODE, true, true);
-        responseInfo.errorCode = errorCode;
+        final String errorMessage = JsonUtils
+                        .readString(errorObject, HttpConstants.ERROR_MESSAGE, true, true);
         //Parse error response specific to any request here
-        return responseInfo;
+
+        final BlBadRequestError error = new BlBadRequestError(errorCode, errorMessage);
+        return error;
 
     }
 

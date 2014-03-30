@@ -16,11 +16,7 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request;
 import com.android.volley.Request.Method;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -62,6 +58,7 @@ import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
@@ -80,8 +77,8 @@ import li.barter.widgets.FullWidthDrawerLayout;
  *         a Map that the user can use to easily switch locations
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
-                LocationListener, Listener<ResponseInfo>, ErrorListener,
-                LoaderCallbacks<Cursor>, CancelableCallback, DrawerListener {
+                LocationListener, LoaderCallbacks<Cursor>, CancelableCallback,
+                DrawerListener {
 
     private static final String           TAG            = "BooksAroundMeFragment";
 
@@ -239,7 +236,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private void fetchBooksAroundMe(final Location center, final int radius) {
 
         final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.SEARCH, null, this, this);
+                        + ApiEndpoints.SEARCH, null, mVolleyCallbacks);
         request.setRequestId(RequestId.SEARCH_BOOKS);
 
         if (center != null) {
@@ -402,24 +399,24 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onErrorResponse(final VolleyError error,
-                    final Request<?> request) {
-        onRequestFinished();
-        Logger.e(TAG, error, "Parse Error");
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
 
-        if (request instanceof BlRequest) {
-
-            if (((BlRequest) request).getRequestId() == RequestId.SEARCH_BOOKS) {
-                showToast(R.string.unable_to_fetch_books, true);
-            }
+        if (requestId == RequestId.SEARCH_BOOKS) {
+            /*
+             * Do nothing because the loader will take care of reloading the
+             * data
+             */
         }
     }
 
     @Override
-    public void onResponse(final ResponseInfo response,
-                    final Request<ResponseInfo> request) {
-        onRequestFinished();
-
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
+        if (requestId == RequestId.SEARCH_BOOKS) {
+            showToast(R.string.unable_to_fetch_books, true);
+        }
     }
 
     @Override
