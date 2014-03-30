@@ -225,11 +225,13 @@ public class AppConstants {
         public static final String LOGIN_FROM_NAV_DRAWER                           = "login_from_nav_drawer";
         public static final String SELECT_PREFERRED_LOCATION_FROM_LOGIN            = "select_preferred_location_from_login";
         public static final String SELECT_PREFERRED_LOCATION_FROM_ADD_OR_EDIT_BOOK = "select_preferred_location_from_add_or_edit_book";
+        public static final String OSS_LICENSES                                    = "oss_licenses";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
         public static final String BS_ADD_BOOK                                     = "to_add_book";
         public static final String BS_PREFERRED_LOCATION                           = "to_preferred_location";
+
     }
 
     /**

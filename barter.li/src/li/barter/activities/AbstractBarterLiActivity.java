@@ -59,6 +59,7 @@ import li.barter.adapters.HomeNavDrawerAdapter;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.FragmentTransition;
 import li.barter.fragments.LoginFragment;
+import li.barter.fragments.OssLicenseFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.ResponseInfo;
@@ -201,11 +202,20 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     private Runnable makeRunnableForNavDrawerClick(final int position) {
 
         Runnable runnable = null;
+        final AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
         switch (position) {
 
         //My Profile
             case 0: {
 
+                /*
+                 * If the master fragment is already the login fragment, don't
+                 * load it again. TODO Check for Profile Fragment also
+                 */
+                if (masterFragment != null
+                                && masterFragment instanceof LoginFragment) {
+                    return null;
+                }
                 runnable = new Runnable() {
 
                     @Override
@@ -241,7 +251,13 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Open source
             case 3: {
-
+                if (masterFragment != null
+                                && masterFragment instanceof OssLicenseFragment) {
+                    return null;
+                }
+                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                .instantiate(this, OssLicenseFragment.class
+                                                .getName(), null), FragmentTags.OSS_LICENSES, true, null);
                 break;
             }
 
