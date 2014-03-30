@@ -44,7 +44,6 @@ import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
-import li.barter.http.JsonUtils;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -63,6 +62,14 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private EditText            mPublicationYearEditText;
     private String              mBookId;
     private boolean             mHasFetchedDetails;
+
+    /**
+     * On resume, if <code>true</code> and the user has logged in, immediately
+     * perform the request to add the book to server. This is to handle where
+     * the case where tries to add a book without logging in and we move to the
+     * login flow
+     */
+    private boolean             mShouldSubmitOnResume;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -105,6 +112,12 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         }
 
+        if (savedInstanceState != null) {
+            mShouldSubmitOnResume = savedInstanceState
+                            .getBoolean(Keys.SUBMIT_ON_RESUME);
+
+        }
+
         setActionBarDrawerToggleEnabled(false);
         return view;
     }
@@ -113,6 +126,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.HAS_FETCHED_INFO, mHasFetchedDetails);
+        outState.putBoolean(Keys.SUBMIT_ON_RESUME, mShouldSubmitOnResume);
     }
 
     @Override
@@ -207,12 +221,21 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (mShouldSubmitOnResume) {
+            createBookOnServer();
+        }
+    }
+
+    @Override
     public void onClick(final View v) {
 
         if ((v.getId() == R.id.button_submit) && isInputValid()) {
 
             if (!isLoggedIn()) {
 
+                mShouldSubmitOnResume = true;
                 final Bundle loginArgs = new Bundle(1);
                 loginArgs.putString(Keys.BACKSTACK_TAG, FragmentTags.BS_ADD_BOOK);
 
@@ -222,10 +245,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             } else {
 
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), SelectPreferredLocationFragment.class
-                                                .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_ADD_OR_EDIT_BOOK, true, FragmentTags.BS_PREFERRED_LOCATION);
-                //createBookOnServer();
+                createBookOnServer();
             }
         }
     }

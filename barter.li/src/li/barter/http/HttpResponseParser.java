@@ -23,7 +23,6 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.os.Bundle;
-import android.text.TextUtils;
 
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
