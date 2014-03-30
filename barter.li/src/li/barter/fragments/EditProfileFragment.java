@@ -37,6 +37,7 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -48,6 +49,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -77,61 +79,81 @@ import li.barter.utils.AppConstants.RequestCodes;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class EditProfileFragment extends AbstractBarterLiFragment implements
-        OnClickListener, Listener<ResponseInfo>, ErrorListener {
+                OnClickListener, Listener<ResponseInfo>, ErrorListener {
 
-    private static final String TAG = "EditProfileFragment";
+    private static final String TAG              = "EditProfileFragment";
 
-    private TextView mFirstNameTextView;
-    private TextView mLastNameTextView;
-    private TextView mAboutMeTextView;
-    private ImageView mProfileImageView;
-    private ImageView mEditPreferredLocationImageView;
-    private Uri mImageCaptureUri;
-    private Bitmap mCompressedPhoto;
+    private TextView            mFirstNameTextView;
+    private TextView            mLastNameTextView;
+    private TextView            mAboutMeTextView;
+    private ImageView           mProfileImageView;
+    private ImageView           mEditPreferredLocationImageView;
+    private Uri                 mImageCaptureUri;
+    private Bitmap              mCompressedPhoto;
     // private Boolean mHasAboutMeDescriptionChanged = false;
 
-    private static final int PICK_FROM_CAMERA = 1;
-    private static final int CROP_FROM_CAMERA = 2;
-    private static final int PICK_FROM_FILE = 3;
+    private static final int    PICK_FROM_CAMERA = 1;
+    private static final int    CROP_FROM_CAMERA = 2;
+    private static final int    PICK_FROM_FILE   = 3;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
-            final ViewGroup container, final Bundle savedInstanceState) {
+                    final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         setHasOptionsMenu(true);
         final View view = inflater
-                .inflate(R.layout.fragment_profile_edit, null);
+                        .inflate(R.layout.fragment_profile_edit, null);
 
-        
-        mFirstNameTextView = (TextView) view.findViewById(R.id.profile_name_first_name);
-        mLastNameTextView = (TextView) view.findViewById(R.id.profile_name_last_name);
+        mFirstNameTextView = (TextView) view
+                        .findViewById(R.id.profile_name_first_name);
+        mLastNameTextView = (TextView) view
+                        .findViewById(R.id.profile_name_last_name);
         mAboutMeTextView = (TextView) view.findViewById(R.id.about_me);
         mProfileImageView = (ImageView) view
-                .findViewById(R.id.profile_pic_thumbnail);
+                        .findViewById(R.id.profile_pic_thumbnail);
         mEditPreferredLocationImageView = (ImageView) view
-                .findViewById(R.id.edit_current_location_button);
+                        .findViewById(R.id.edit_current_location_button_in_edit_page);
 
         mProfileImageView.setOnClickListener(this);
         mEditPreferredLocationImageView.setOnClickListener(this);
 
-        if (SharedPreferenceHelper.getBoolean(getActivity(),
-                R.string.pref_is_about_me_description_set)) {
-            mAboutMeTextView.setText(SharedPreferenceHelper.getString(
-                    getActivity(), R.string.pref_is_about_me_description_set));
-        } 
+        if (SharedPreferenceHelper
+                        .getBoolean(getActivity(), R.string.pref_is_about_me_description_set)) {
+            mAboutMeTextView.setText(SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_is_about_me_description_set));
+        }
 
-        if (SharedPreferenceHelper.getBoolean(getActivity(),
-                R.string.pref_is_profile_pic_set)) {
-            File mAvatarfile = new File(
-                    Environment.getExternalStorageDirectory(),
-                    "barterli_avatar_small.png");
+        if (SharedPreferenceHelper
+                        .getBoolean(getActivity(), R.string.pref_is_profile_pic_set)) {
+            File mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
             if (mAvatarfile.exists()) {
                 Bitmap bmp = BitmapFactory.decodeFile(mAvatarfile
-                        .getAbsolutePath());
+                                .getAbsolutePath());
                 mProfileImageView.setImageBitmap(bmp);
             }
         }
 
+        if (SharedPreferenceHelper
+                        .contains(getActivity(), R.string.pref_profile_first_name)) {
+            mFirstNameTextView
+                            .setText(SharedPreferenceHelper
+                                            .getString(getActivity(), R.string.pref_profile_first_name));
+        }
+
+        if (SharedPreferenceHelper
+                        .contains(getActivity(), R.string.pref_profile_last_name)) {
+            mLastNameTextView
+                            .setText(SharedPreferenceHelper
+                                            .getString(getActivity(), R.string.pref_profile_last_name));
+        }
+
+        if (SharedPreferenceHelper
+                        .contains(getActivity(), R.string.pref_profile_about_me_description)) {
+            mAboutMeTextView.setText(SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_profile_about_me_description));
+        }
+
+        setActionBarDrawerToggleEnabled(false);
         return view;
     }
 
@@ -150,7 +172,20 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             }
 
             case R.id.action_profile_save: {
-                showToast("save initiated", false);
+
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_profile_first_name, mFirstNameTextView
+                                                .getText().toString());
+
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_profile_last_name, mLastNameTextView
+                                                .getText().toString());
+
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_profile_about_me_description, mAboutMeTextView
+                                                .getText().toString());
+
+                showToast("Saved", false);
                 return true;
             }
 
@@ -197,25 +232,27 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         switch (requestCode) {
             case PICK_FROM_CAMERA:
-                doCrop(PICK_FROM_CAMERA);
+                //doCrop(PICK_FROM_CAMERA);
+                setAndSaveImage(mImageCaptureUri, PICK_FROM_CAMERA);
                 break;
 
             case PICK_FROM_FILE:
                 mImageCaptureUri = data.getData();
-                doCrop(PICK_FROM_FILE);
+                setAndSaveImage(mImageCaptureUri, PICK_FROM_FILE);
+                //doCrop(PICK_FROM_FILE);
                 break;
 
             case CROP_FROM_CAMERA:
                 Bundle extras = data.getExtras();
-
                 if (extras != null) {
                     mCompressedPhoto = extras.getParcelable("data");
                     mProfileImageView.setImageBitmap(mCompressedPhoto);
                 }
                 PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
-                SharedPreferenceHelper.set(getActivity(),
-                        R.string.pref_is_profile_pic_set, true);
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_is_profile_pic_set, true);
                 break;
+
         }
     } // End of onActivityResult
 
@@ -226,8 +263,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         final String[] items = new String[] {
                 "From Camera", "From Gallery"
         };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.select_dialog_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, items);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
@@ -235,11 +271,12 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
                 if (item == 0) { // Pick from camera
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    mImageCaptureUri = Uri.fromFile(new File(Environment
-                            .getExternalStorageDirectory(),
-                            "barterli_avatar.jpg"));
-                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
-                            mImageCaptureUri);
+
+                    File f = new File(android.os.Environment
+                                    .getExternalStorageDirectory(), "barterli_avatar.jpg");
+
+                    mImageCaptureUri = Uri.fromFile(f);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
 
                     try {
                         intent.putExtra("return-data", true);
@@ -252,8 +289,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(Intent.createChooser(intent,
-                            "Complete Action Using"), PICK_FROM_FILE);
+                    startActivityForResult(Intent
+                                    .createChooser(intent, "Complete Action Using"), PICK_FROM_FILE);
                 }
             }
         });
@@ -262,9 +299,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         dialog.show();
     } // End of editSetProfilePictureDialog
 
-    
-    
     private void doCrop(final int source_of_image) {
+        Log.v("DO-CROP", mImageCaptureUri.toString());
         final ArrayList<CropOption> cropOptions = new ArrayList<CropOption>();
         String source_string;
         if (source_of_image == PICK_FROM_FILE) {
@@ -272,27 +308,21 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         } else {
             source_string = "Camera";
         }
-
         final String source = source_string;
-
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setType("image/*");
-
         List<ResolveInfo> list = getActivity().getPackageManager()
-                .queryIntentActivities(intent, 0);
+                        .queryIntentActivities(intent, 0);
         int size = list.size();
-
         if (size == 0) {
             showToast("Could not find an App to Crop Image", false);
             mCompressedPhoto = PhotoUtils
-                    .rotateBitmapIfNeededAndCompressIfTold(getActivity(),
-                            mImageCaptureUri, source, true);
+                            .rotateBitmapIfNeededAndCompressIfTold(getActivity(), mImageCaptureUri, source, true);
             if (mCompressedPhoto != null) {
                 mProfileImageView.setImageBitmap(mCompressedPhoto);
-                PhotoUtils.saveImage(mCompressedPhoto,
-                        "barterli_avatar_small.png");
-                SharedPreferenceHelper.set(getActivity(),
-                        R.string.pref_is_profile_pic_set, true);
+                PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_is_profile_pic_set, true);
             }
             return;
         } else {
@@ -303,57 +333,42 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             intent.putExtra("aspectY", 1);
             intent.putExtra("scale", true);
             intent.putExtra("return-data", true);
-
             if (size == 1) {
                 Intent i = new Intent(intent);
                 ResolveInfo res = list.get(0);
-                i.setComponent(new ComponentName(res.activityInfo.packageName,
-                        res.activityInfo.name));
+                i.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
                 startActivityForResult(i, CROP_FROM_CAMERA);
             } else {
                 for (ResolveInfo res : list) {
                     final CropOption co = new CropOption();
-                    co.title = getActivity().getPackageManager()
-                            .getApplicationLabel(
-                                    res.activityInfo.applicationInfo);
-                    co.icon = getActivity().getPackageManager()
-                            .getApplicationIcon(
-                                    res.activityInfo.applicationInfo);
+                    co.title = getActivity()
+                                    .getPackageManager()
+                                    .getApplicationLabel(res.activityInfo.applicationInfo);
+                    co.icon = getActivity()
+                                    .getPackageManager()
+                                    .getApplicationIcon(res.activityInfo.applicationInfo);
                     co.appIntent = new Intent(intent);
-                    co.appIntent
-                            .setComponent(new ComponentName(
-                                    res.activityInfo.packageName,
-                                    res.activityInfo.name));
+                    co.appIntent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
                     cropOptions.add(co);
                 }
-
-                CropOptionAdapter adapter = new CropOptionAdapter(
-                        getActivity(), cropOptions);
-                AlertDialog.Builder builder = new AlertDialog.Builder(
-                        getActivity());
+                CropOptionAdapter adapter = new CropOptionAdapter(getActivity(), cropOptions);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Choose an Application to Crop Image");
-                builder.setAdapter(adapter,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int item) {
-                                startActivityForResult(
-                                        cropOptions.get(item).appIntent,
-                                        CROP_FROM_CAMERA);
-                            }
-                        });
-
+                builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        startActivityForResult(cropOptions.get(item).appIntent, CROP_FROM_CAMERA);
+                    }
+                });
                 builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
                         mCompressedPhoto = PhotoUtils
-                                .rotateBitmapIfNeededAndCompressIfTold(
-                                        getActivity(), mImageCaptureUri,
-                                        source, true);
+                                        .rotateBitmapIfNeededAndCompressIfTold(getActivity(), mImageCaptureUri, source, true);
                         if (mCompressedPhoto != null) {
                             mProfileImageView.setImageBitmap(mCompressedPhoto);
-                            PhotoUtils.saveImage(mCompressedPhoto,
-                                    "barterli_avatar_small.png");
-                            SharedPreferenceHelper.set(getActivity(),
-                                    R.string.pref_is_profile_pic_set, true);
+                            PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
+                            SharedPreferenceHelper
+                                            .set(getActivity(), R.string.pref_is_profile_pic_set, true);
                         }
                     }
                 });
@@ -362,46 +377,66 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             }
         }
     } // End of doCrop
-    
-    
-    
-    private void saveProfileInfoToServer(final String firstName, final String lastName, final String aboutMeDescription) {
 
-       /* final BlRequest request = new BlRequest(Method.POST, RequestId.SAVE_USER_PROFILE, HttpConstants
-                        .getApiBaseUrl() + ApiEndpoints.BOOK_INFO, null, this, this);
-        final Map<String, String> params = new HashMap<String, String>();
-        //params.put(HttpConstants.Q, bookId);
-        request.setParams(params);
-        addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);*/
-    	
+    private void setAndSaveImage(final Uri uri, final int source_of_image) {
+        String source_string;
+        if (source_of_image == PICK_FROM_FILE) {
+            source_string = "Gallery";
+        } else {
+            source_string = "Camera";
+        }
+
+        //final String source = source_string;
+
+        mCompressedPhoto = PhotoUtils
+                        .rotateBitmapIfNeededAndCompressIfTold(getActivity(), uri, source_string, true);
+
+        if (mCompressedPhoto != null) {
+            mProfileImageView.setImageBitmap(mCompressedPhoto);
+            PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_is_profile_pic_set, true);
+        }
+
+    }
+
+    private void saveProfileInfoToServer(final String firstName,
+                    final String lastName, final String aboutMeDescription) {
+
+        /*
+         * final BlRequest request = new BlRequest(Method.POST,
+         * RequestId.SAVE_USER_PROFILE, HttpConstants .getApiBaseUrl() +
+         * ApiEndpoints.BOOK_INFO, null, this, this); final Map<String, String>
+         * params = new HashMap<String, String>(); //params.put(HttpConstants.Q,
+         * bookId); request.setParams(params); addRequestToQueue(request, true,
+         * R.string.unable_to_fetch_book_info);
+         */
+
         final JSONObject updateUserJson = new JSONObject();
 
         try {
-        	updateUserJson.put(HttpConstants.FIRST_NAME, firstName);
-        	updateUserJson.put(HttpConstants.LAST_NAME, lastName);
-        	updateUserJson.put(HttpConstants.DESCRIPTION, aboutMeDescription);
+            updateUserJson.put(HttpConstants.FIRST_NAME, firstName);
+            updateUserJson.put(HttpConstants.LAST_NAME, lastName);
+            updateUserJson.put(HttpConstants.DESCRIPTION, aboutMeDescription);
 
-            final BlRequest createBookRequest = new BlRequest(Method.PUT, RequestId.SAVE_USER_PROFILE, HttpConstants
+            final BlRequest updateUserProfileRequest = new BlRequest(Method.PUT, RequestId.SAVE_USER_PROFILE, HttpConstants
                             .getApiBaseUrl() + ApiEndpoints.UPDATE_USER_INFO, updateUserJson
                             .toString(), this, this);
 
-            addRequestToQueue(createBookRequest, true, 0);
+            addRequestToQueue(updateUserProfileRequest, true, 0);
         } catch (final JSONException e) {
             e.printStackTrace();
         }
-    	
-    	
     }
 
-    
-	@Override
-	public void onErrorResponse(VolleyError error, Request<?> request) {
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public void onErrorResponse(VolleyError error, Request<?> request) {
+        // TODO Auto-generated method stub
+    }
 
-	@Override
-	public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
-		// TODO Auto-generated method stub	
-	}
-    
+    @Override
+    public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+        // TODO Auto-generated method stub
+    }
+
 }

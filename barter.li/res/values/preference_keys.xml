@@ -29,7 +29,9 @@
     
     <string name="pref_is_about_me_description_set">pref_is_about_me_description_set</string>
     <string name="pref_about_me_description">pref_about_me_description</string>
-
     <string name="pref_is_profile_pic_set">pref_is_profile_pic_set</string>
+    <string name="pref_profile_first_name">pref_profile_first_name</string>
+    <string name="pref_profile_last_name">pref_profile_last_name</string>
+    <string name="pref_profile_about_me_description">pref_profile_about_me_description</string>
     
 </resources>

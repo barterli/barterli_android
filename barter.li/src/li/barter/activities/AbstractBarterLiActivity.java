@@ -183,8 +183,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
 
                     @Override
                     public void run() {
-                        //if (isLoggedIn()) { //TODO to be removed
-                    	if (true) {
+                        if (isLoggedIn()) {
                             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                     .instantiate(AbstractBarterLiActivity.this, ProfileFragment.class
                                                     .getName(), null), FragmentTags.PROFILE, true, null);

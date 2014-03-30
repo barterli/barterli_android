@@ -15,68 +15,95 @@
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/profile_name_first_name"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/profile_pic_thumbnail"
         android:layout_toRightOf="@id/profile_pic_thumbnail"
         android:ellipsize="end"
-        android:singleLine="true"
         android:hint="@string/first_name_hint"
-        android:textSize="@dimen/text_large"
+        android:singleLine="true"
+        android:textSize="@dimen/text_medium"
+        android:layout_marginRight="@dimen/margin_medium"
         app:fontStyle="alegreya_regular" />
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/profile_name_last_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_name_first_name"
+        android:layout_toRightOf="@id/profile_pic_thumbnail"
+        android:ellipsize="end"
+        android:hint="@string/last_name_hint"
+        android:singleLine="true"
+        android:textSize="@dimen/text_medium"
+        android:layout_marginRight="@dimen/margin_medium"
+        app:fontStyle="alegreya_regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/about_me_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/profile_pic_thumbnail"
-        android:layout_below="@+id/profile_name_first_name"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:hint="@string/last_name_hint"
-        android:textSize="@dimen/text_large"
+        android:layout_alignLeft="@+id/profile_pic_thumbnail"
+        android:layout_below="@id/profile_pic_thumbnail"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:text="@string/about_me_label"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
         app:fontStyle="alegreya_regular" />
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/about_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_name_last_name"
-        android:layout_toRightOf="@id/profile_pic_thumbnail"
+        android:layout_below="@id/about_me_label"
+        android:layout_alignLeft="@+id/profile_pic_thumbnail"
+        android:layout_marginRight="@dimen/margin_medium"
         android:hint="@string/profile_description"
         android:inputType="textMultiLine"
         android:lines="3"
         android:maxLength="140"
         android:singleLine="false"
         android:textSize="@dimen/text_small"
+        android:textColor="@color/dark_gray"
         app:fontStyle="alegreya_regular" />
 
-    <ImageView
-        android:id="@+id/edit_current_location_button"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/about_me"
-        android:layout_marginLeft="@dimen/margin_minimum"
-        android:layout_marginRight="@dimen/margin_minimum"
-        android:layout_marginTop="@dimen/margin_minimum"
-        android:contentDescription="@string/edit_preferred_location_description"
-        android:src="@drawable/ic_action_edit" />
-
     <li.barter.widgets.TypefacedTextView
-        android:id="@+id/current_location_text"
+        android:id="@+id/current_location_text_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/edit_current_location_button"
-        android:layout_alignLeft="@id/about_me"
+        android:layout_alignLeft="@+id/profile_pic_thumbnail"
         android:layout_below="@id/about_me"
-        android:layout_marginTop="@dimen/margin_minimum"
-        android:layout_toLeftOf="@id/edit_current_location_button"
+        android:layout_marginTop="@dimen/margin_medium"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="4th Block Koramangala, Bangalore"
+        android:text="@string/current_location_text_label"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="alegreya_regular" />
+
+  <li.barter.widgets.TypefacedTextView
+        android:id="@+id/current_location_text_in_edit_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/about_me"
+        android:layout_below="@id/current_location_text_label"
+        android:layout_marginTop="@dimen/margin_minimum"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/default_current_location_text"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
         app:fontStyle="alegreya_regular" />
+
+    <ImageView
+        android:id="@+id/edit_current_location_button_in_edit_page"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/current_location_text_label"
+        android:layout_marginRight="@dimen/margin_minimum"
+        android:layout_marginTop="@dimen/margin_minimum"
+        android:layout_toRightOf="@id/current_location_text_in_edit_page"
+        android:contentDescription="@string/edit_preferred_location_description"
+        android:src="@drawable/ic_action_edit" />  
 
 </RelativeLayout>

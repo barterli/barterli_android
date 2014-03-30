@@ -18,8 +18,13 @@
 
     <!-- Profile Fragment  -->
     <string name="profile_pic_description">Profile Picture</string>
+    <string name="default_profile_name">Profile Name</string>
 	<string name="profile_description">Short information about you.</string>
 	<string name="edit_preferred_location_description">Edit Preferred Location</string>
+	<string name="default_current_location_text">Set your preferred Location</string>
+	
+	<string name="about_me_label">About Me</string>
+	<string name="current_location_text_label">Preferred Location</string>
 	
 	<string name="edit_profile">Edit</string>
 	<string name="save_profile">Save</string>
