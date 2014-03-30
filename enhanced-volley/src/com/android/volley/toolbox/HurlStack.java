@@ -199,15 +199,18 @@ public class HurlStack implements HttpStack {
             for (String key : multipartParams.keySet()) {
                 MultiPartParam param = multipartParams.get(key);
 
-                writer.append(boundary)
-                                .append(CRLF)
+                final String part = new StringBuilder(boundary).append(CRLF)
                                 .append(String.format(HEADER_CONTENT_DISPOSITION
                                                 + COLON_SPACE + FORM_DATA, key))
                                 .append(CRLF)
                                 .append(HEADER_CONTENT_TYPE + COLON_SPACE
                                                 + param.contentType)
                                 .append(CRLF).append(CRLF).append(param.value)
-                                .append(CRLF).flush();
+                                .append(CRLF).toString();
+                if(VolleyLog.sDebug) {
+                    VolleyLog.d("%s", part);
+                }
+                writer.append(part).flush();
             }
 
             for (String key : filesToUpload.keySet()) {
@@ -224,8 +227,7 @@ public class HurlStack implements HttpStack {
                                     .getAbsolutePath()));
                 }
 
-                writer.append(boundary)
-                                .append(CRLF)
+                final String part = new StringBuilder(boundary).append(CRLF)
                                 .append(String.format(HEADER_CONTENT_DISPOSITION
                                                 + COLON_SPACE
                                                 + FORM_DATA
@@ -237,7 +239,12 @@ public class HurlStack implements HttpStack {
                                 .append(CRLF)
                                 .append(HEADER_CONTENT_TRANSFER_ENCODING
                                                 + COLON_SPACE + BINARY)
-                                .append(CRLF).append(CRLF).flush();
+                                .append(CRLF).append(CRLF).toString();
+                if(VolleyLog.sDebug) {
+                    VolleyLog.d("%s", part);
+                }
+                writer.append(part)
+                                .flush();
 
                 BufferedInputStream input = null;
                 try {

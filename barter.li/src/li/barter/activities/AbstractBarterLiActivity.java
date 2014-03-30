@@ -20,6 +20,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
 import android.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -417,8 +420,9 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * @param isLong Whether it is a long toast
      */
     public void showToast(final String toastMessage, final boolean isLong) {
-        Toast.makeText(this, toastMessage, isLong ? Toast.LENGTH_LONG
-                        : Toast.LENGTH_SHORT).show();
+        Crouton.makeText(this, toastMessage, Style.INFO).show();
+        /*Toast.makeText(this, toastMessage, isLong ? Toast.LENGTH_LONG
+                        : Toast.LENGTH_SHORT).show();*/
     }
 
     /**
@@ -428,8 +432,9 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * @param isLong Whether it is a long toast
      */
     public void showToast(final int toastMessageResId, final boolean isLong) {
-        Toast.makeText(this, toastMessageResId, isLong ? Toast.LENGTH_LONG
-                        : Toast.LENGTH_SHORT).show();
+        Crouton.makeText(this, toastMessageResId, Style.INFO).show();
+        /*Toast.makeText(this, toastMessageResId, isLong ? Toast.LENGTH_LONG
+                        : Toast.LENGTH_SHORT).show();*/
     }
 
     /**

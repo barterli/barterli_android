@@ -142,6 +142,8 @@ public class HttpConstants {
     public static final String METERS                      = "meters";
     public static final String LOCATIONS                   = "locations";
     public static final String TOKEN                       = "token";
+    public static final String BOOK                        = "book";
+    public static final String TAG_NAMES                   = "tag_names";
     public static final String HEADER_AUTHORIZATION_FORMAT = "Token token=\"%s\", email=\"%s\"";
     public static final String HEADER_AUTHORIZATION        = "Authorization";
     

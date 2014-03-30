@@ -18,9 +18,11 @@ package li.barter.fragments;
 
 import com.android.volley.Request.Method;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -30,25 +32,35 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import li.barter.R;
+import li.barter.data.DBInterface;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
+import li.barter.data.TableLocations;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-                OnClickListener {
+                OnClickListener, AsyncDbQueryCallback {
 
     private static final String TAG = "AddOrEditBookFragment";
 
@@ -57,6 +69,13 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private EditText            mAuthorEditText;
     private EditText            mDescriptionEditText;
     private EditText            mPublicationYearEditText;
+    private CheckBox            mBarterCheckBox;
+    private CheckBox            mReadCheckBox;
+    private CheckBox            mSellCheckBox;
+    private CheckBox            mWishlistCheckBox;
+    private CheckBox            mGiveAwayCheckBox;
+    private CheckBox            mKeepPrivateCheckBox;
+    private CheckBox[]          mBarterTypeCheckBoxes;
     private String              mBookId;
     private boolean             mHasFetchedDetails;
 
@@ -74,14 +93,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         init(container);
         final View view = inflater
                         .inflate(R.layout.fragment_add_or_edit_book, container, false);
-        mIsbnEditText = (EditText) view.findViewById(R.id.edit_text_isbn);
-        mTitleEditText = (EditText) view.findViewById(R.id.edit_text_title);
-        mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
-        mDescriptionEditText = (EditText) view
-                        .findViewById(R.id.edit_text_description);
-        mPublicationYearEditText = (EditText) view
-                        .findViewById(R.id.edit_text_publication_year);
-
+        initViews(view);
         view.findViewById(R.id.button_submit).setOnClickListener(this);
 
         getActivity().getWindow()
@@ -119,6 +131,59 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         return view;
     }
 
+    /**
+     * Gets references to the Views
+     * 
+     * @param view The content view of the fragment
+     */
+    private void initViews(final View view) {
+        mIsbnEditText = (EditText) view.findViewById(R.id.edit_text_isbn);
+        mTitleEditText = (EditText) view.findViewById(R.id.edit_text_title);
+        mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
+        mDescriptionEditText = (EditText) view
+                        .findViewById(R.id.edit_text_description);
+        mPublicationYearEditText = (EditText) view
+                        .findViewById(R.id.edit_text_publication_year);
+
+        initBarterTypeCheckBoxes(view);
+
+    }
+
+    /**
+     * Gets the references to the barter type checkboxes, set the tags to
+     * simplify building the tags array when sending the request to server
+     * 
+     * @param view The content view of the fragment
+     */
+    private void initBarterTypeCheckBoxes(View view) {
+        mBarterCheckBox = (CheckBox) view.findViewById(R.id.checkbox_barter);
+        mReadCheckBox = (CheckBox) view.findViewById(R.id.checkbox_read);
+        mSellCheckBox = (CheckBox) view.findViewById(R.id.checkbox_sell);
+        mWishlistCheckBox = (CheckBox) view
+                        .findViewById(R.id.checkbox_wishlist);
+        mGiveAwayCheckBox = (CheckBox) view
+                        .findViewById(R.id.checkbox_give_away);
+        mKeepPrivateCheckBox = (CheckBox) view
+                        .findViewById(R.id.checkbox_keep_private);
+
+        //Set the barter tags
+        mBarterCheckBox.setTag(R.string.tag_barter_type, BarterType.BARTER);
+        mReadCheckBox.setTag(R.string.tag_barter_type, BarterType.READ);
+        mSellCheckBox.setTag(R.string.tag_barter_type, BarterType.SALE);
+        mWishlistCheckBox.setTag(R.string.tag_barter_type, BarterType.RENT);
+        mGiveAwayCheckBox.setTag(R.string.tag_barter_type, BarterType.FREE);
+        mKeepPrivateCheckBox
+                        .setTag(R.string.tag_barter_type, BarterType.PRIVATE);
+
+        mBarterTypeCheckBoxes = new CheckBox[6];
+        mBarterTypeCheckBoxes[0] = mBarterCheckBox;
+        mBarterTypeCheckBoxes[1] = mReadCheckBox;
+        mBarterTypeCheckBoxes[2] = mSellCheckBox;
+        mBarterTypeCheckBoxes[3] = mWishlistCheckBox;
+        mBarterTypeCheckBoxes[4] = mGiveAwayCheckBox;
+        mBarterTypeCheckBoxes[5] = mKeepPrivateCheckBox;
+    }
+
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -146,7 +211,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         final String author = args.getString(Keys.AUTHOR);
         final String description = args.getString(Keys.DESCRIPTION);
         final String publicationYear = args.getString(Keys.PUBLICATION_YEAR);
-        final String[] barterTypes = args.getStringArray(Keys.BARTER_TYPES);
+        final List<String> barterTypes = args
+                        .getStringArrayList(Keys.BARTER_TYPES);
 
         mIsbnEditText.setText(mBookId);
         mTitleEditText.setText(title);
@@ -182,34 +248,54 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     /**
      * Updates the barter types checkboxes
      * 
-     * @param barterTypes An array of barter types chosen for the book
+     * @param barterTypes A list of barter types chosen for the book
      */
-    private void setCheckBoxesForBarterTypes(final String[] barterTypes) {
-        if ((barterTypes != null) && (barterTypes.length >= 1)) {
-            // TODO Set barter types
+    private void setCheckBoxesForBarterTypes(final List<String> barterTypes) {
+        if (barterTypes != null) {
+            for (CheckBox checkBox : mBarterTypeCheckBoxes) {
+
+                if (barterTypes.contains(checkBox
+                                .getTag(R.string.tag_barter_type))) {
+                    checkBox.setChecked(true);
+                } else {
+                    checkBox.setChecked(false);
+                }
+            }
         }
     }
 
     /**
      * Add the book to the server
+     * 
+     * @param locationObject The location at which to create the book, if
+     *            <code>null</code>, uses the user's preferred location
      */
-    private void createBookOnServer() {
+    private void createBookOnServer(final JSONObject locationObject) {
 
-        final JSONObject createBookJson = new JSONObject();
+        if (mShouldSubmitOnResume) {
+            mShouldSubmitOnResume = false;
+        }
 
         try {
-            createBookJson.put(HttpConstants.TITLE, mTitleEditText.getText()
-                            .toString());
-            createBookJson.put(HttpConstants.AUTHOR, mAuthorEditText.getText()
-                            .toString());
-            createBookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
-                            .getText().toString());
-            createBookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYearEditText
-                            .getText().toString());
 
-            // TODO Add barter types
+            final JSONObject requestObject = new JSONObject();
+            final JSONObject bookJson = new JSONObject();
+            bookJson.put(HttpConstants.TITLE, mTitleEditText.getText()
+                            .toString());
+            bookJson.put(HttpConstants.AUTHOR, mAuthorEditText.getText()
+                            .toString());
+            bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
+                            .getText().toString());
+            bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYearEditText
+                            .getText().toString());
+            bookJson.put(HttpConstants.TAG_NAMES, getBarterTagsArray());
+            if (locationObject != null) {
+                bookJson.put(HttpConstants.LOCATION, locationObject);
+            }
+            requestObject.put(HttpConstants.BOOK, bookJson);
+
             final BlRequest createBookRequest = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.BOOKS, createBookJson.toString(), mVolleyCallbacks);
+                            + ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
             createBookRequest.setRequestId(RequestId.CREATE_BOOK);
             addRequestToQueue(createBookRequest, true, 0);
         } catch (final JSONException e) {
@@ -217,12 +303,42 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         }
     }
 
+    /**
+     * Build the tags array for books
+     * 
+     * @return A {@link JSONArray} representing the barter tags
+     */
+    private JSONArray getBarterTagsArray() {
+
+        final JSONArray tagNamesArray = new JSONArray();
+
+        for (CheckBox checkBox : mBarterTypeCheckBoxes) {
+
+            if (checkBox.isChecked()) {
+                tagNamesArray.put(checkBox.getTag(R.string.tag_barter_type));
+            }
+        }
+        return tagNamesArray;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         if (mShouldSubmitOnResume) {
-            createBookOnServer();
+            createBookOnServer(null);
         }
+    }
+
+    /**
+     * Loads the user's preferred location from the DB
+     */
+    private void loadPreferredLocation() {
+
+        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
+                        + SQLConstants.EQUALS_ARG, new String[] {
+            SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_location)
+        }, null, null, null, null, this);
     }
 
     @Override
@@ -241,8 +357,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                                                 .getName(), loginArgs), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.BS_ADD_BOOK);
 
             } else {
-
-                createBookOnServer();
+                createBookOnServer(null);
             }
         }
     }
@@ -264,6 +379,21 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         if (!isValid) {
             mTitleEditText.setError(getString(R.string.error_enter_title));
+        }
+
+        //Validation for at least one barter type set
+        if (isValid) {
+
+            //Flag to check if at least one of the barter checkboxes is checked
+            boolean anyOneChecked = false;
+            for (CheckBox checkBox : mBarterTypeCheckBoxes) {
+                anyOneChecked |= checkBox.isChecked();
+            }
+
+            isValid &= anyOneChecked;
+            if (!isValid) {
+                showToast(R.string.select_a_barter_type, false);
+            }
         }
         return isValid;
     }
@@ -288,6 +418,56 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if (requestId == RequestId.GET_BOOK_INFO) {
             showToast(R.string.unable_to_fetch_book_info, false);
         }
+    }
+
+    @Override
+    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+
+    }
+
+    @Override
+    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+
+    }
+
+    @Override
+    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+
+        if (token == QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK) {
+
+            try {
+                if (cursor.moveToFirst()) {
+                    final JSONObject locationObject = new JSONObject();
+                    locationObject.put(HttpConstants.NAME, cursor.getString(cursor
+                                    .getColumnIndex(DatabaseColumns.NAME)));
+                    locationObject.put(HttpConstants.ADDRESS, cursor.getString(cursor
+                                    .getColumnIndex(DatabaseColumns.ADDRESS)));
+                    locationObject.put(HttpConstants.LATITUDE, cursor.getDouble(cursor
+                                    .getColumnIndex(DatabaseColumns.LATITUDE)));
+                    locationObject.put(HttpConstants.LONGITUDE, cursor.getDouble(cursor
+                                    .getColumnIndex(DatabaseColumns.LONGITUDE)));
+
+                    //TODO Show location address
+                }
+
+            } catch (JSONException e) {
+                Logger.e(TAG, e, "Unable to build location object");
+            } finally {
+                cursor.close();
+            }
+
+        }
+    }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK);
     }
 
 }

@@ -263,4 +263,14 @@ public class AppConstants {
         public static final int SEARCH_BOOKS = 201;
     }
 
+    /**
+     * Constant interface. DO NOT IMPLEMENT
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static interface QueryTokens {
+
+        public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK = 1;
+    }
+
 }

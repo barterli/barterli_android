@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import li.barter.utils.Logger;
 
 /**
- * @author vinaysshenoy {@link SQLiteOpenHelper} to provide database
+ * @author Vinay S Shenoy {@link SQLiteOpenHelper} to provide database
  *         connectivity for the application. The Methods of this class should
  *         not be accessed directly. Access them through the
  *         {@linkplain DBInterface} class
@@ -37,17 +37,17 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String                   TAG        = "BarterLiSQLiteOpenHelper";
 
-    // Lock for synchronized methods
+    /** Lock for synchronized methods */
     private static final Object                   LOCK       = new Object();
 
-    // Database file name and version
+    /** Database file name and version */
     private static final String                   DB_NAME    = "barterli.sqlite";
     private static final int                      DB_VERSION = 1;
 
-    // SQLite Open Helper instance
+    /** SQLite Open Helper instance */
     private static BarterLiSQLiteOpenHelper       sSQLiteOpenHelper;
 
-    // Array of loader entries to hold for notifying changes
+    /** Array of loader entries to hold for notifying changes */
     private final ArrayList<SQLiteLoaderObserver> mActiveLoaders;
 
     /**
@@ -66,6 +66,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
             if (sSQLiteOpenHelper == null) {
 
                 synchronized (LOCK) {
+
                     sSQLiteOpenHelper = new BarterLiSQLiteOpenHelper(context.getApplicationContext(), DB_NAME, null, DB_VERSION);
                 }
             }
