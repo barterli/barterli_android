@@ -32,6 +32,8 @@ import java.io.UnsupportedEncodingException;
 import li.barter.R;
 import li.barter.adapters.ChatAdapter;
 import li.barter.http.HttpConstants;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
 import li.barter.http.rabbitmq.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector;
 import li.barter.http.rabbitmq.ChatRabbitMQConnector.OnReceiveMessageHandler;
@@ -127,5 +129,20 @@ public class ChatFragment extends AbstractBarterLiFragment implements
             mChatAdapter.addMessage(text);
         }
 
+    }
+
+    @Override
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
+        // TODO Auto-generated method stub
+        
     }
 }

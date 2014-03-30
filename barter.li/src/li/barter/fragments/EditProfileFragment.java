@@ -67,6 +67,7 @@ import li.barter.adapters.CropOptionAdapter;
 import li.barter.http.BlMultiPartRequest;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
+import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
@@ -82,7 +83,7 @@ import li.barter.utils.AppConstants.RequestCodes;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class EditProfileFragment extends AbstractBarterLiFragment implements
-                OnClickListener, Listener<ResponseInfo>, ErrorListener {
+                OnClickListener {
 
     private static final String TAG              = "EditProfileFragment";
 
@@ -94,6 +95,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     private ImageView           mEditPreferredLocationImageView;
     private Uri                 mImageCaptureUri;
     private Bitmap              mCompressedPhoto;
+    private File                mAvatarfile;
     // private Boolean mHasAboutMeDescriptionChanged = false;
 
     private static final int    PICK_FROM_CAMERA = 1;
@@ -122,6 +124,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         mProfileImageView.setOnClickListener(this);
         mEditPreferredLocationImageView.setOnClickListener(this);
+        mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
 
         if (SharedPreferenceHelper
                         .getBoolean(getActivity(), R.string.pref_is_about_me_description_set)) {
@@ -131,7 +134,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         if (SharedPreferenceHelper
                         .getBoolean(getActivity(), R.string.pref_is_profile_pic_set)) {
-            File mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
+
             if (mAvatarfile.exists()) {
                 Bitmap bmp = BitmapFactory.decodeFile(mAvatarfile
                                 .getAbsolutePath());
@@ -199,9 +202,13 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 SharedPreferenceHelper
                                 .set(getActivity(), R.string.pref_profile_about_me_description, mAboutMe);
 
-                //saveProfileInfoToServer(mFirstName, mLastName, mAboutMe);
+                if (mAvatarfile.exists()) {
+                    saveProfileInfoToServer(mFirstName, mLastName, mAboutMe, mAvatarfile.getAbsolutePath());
+                } else {
+                    showToast("Will see later", false);
+                }
 
-                showToast("Saved", false);
+               // showToast("Saved", false);
                 return true;
             }
 
@@ -228,8 +235,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.edit_current_location_button_in_edit_page: {
-                showToast("Edit Preferred Location!", false);
-               loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                // showToast("Edit Preferred Location!", false);
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), SelectPreferredLocationFragment.class
                                                 .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true, FragmentTags.PROFILE);
 
@@ -292,10 +299,10 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 if (item == 0) { // Pick from camera
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                    File f = new File(android.os.Environment
+                    File mProfileFile = new File(android.os.Environment
                                     .getExternalStorageDirectory(), "barterli_avatar.jpg");
 
-                    mImageCaptureUri = Uri.fromFile(f);
+                    mImageCaptureUri = Uri.fromFile(mProfileFile);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
 
                     try {
@@ -398,38 +405,35 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         String url = HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.UPDATE_USER_INFO;
 
-        final JSONObject updateUserJson = new JSONObject();
+        BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
+        updateUserProfileRequest
+                        .addFile(HttpConstants.PROFILE_PIC, profilePicPath);
+        updateUserProfileRequest
+                        .addMultipartParam(HttpConstants.FIRST_NAME, "text/plain", firstName);
+        updateUserProfileRequest
+                        .addMultipartParam(HttpConstants.LAST_NAME, "text/plain", lastName);
+        updateUserProfileRequest
+                        .addMultipartParam(HttpConstants.DESCRIPTION, "text/plain", aboutMeDescription);
 
-        try {
-            updateUserJson.put(HttpConstants.FIRST_NAME, firstName);
-            updateUserJson.put(HttpConstants.LAST_NAME, lastName);
-            updateUserJson.put(HttpConstants.DESCRIPTION, aboutMeDescription);
+        Log.v(TAG, profilePicPath);
 
-            BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, this, this);
-            updateUserProfileRequest.addFile("profile_pic", profilePicPath);
-            updateUserProfileRequest
-                            .addMultipartParam(HttpConstants.FIRST_NAME, "text/plain", firstName);
-            updateUserProfileRequest
-                            .addMultipartParam(HttpConstants.LAST_NAME, "text/plain", lastName);
-            updateUserProfileRequest
-                            .addMultipartParam(HttpConstants.DESCRIPTION, "text/plain", aboutMeDescription);
-
-            // updateUserProfileRequest.addMultiPartParam(); (HttpConstants.FIRST_NAME, "text/plain", firstName);
-
-            addRequestToQueue(updateUserProfileRequest, true, 0);
-        } catch (final JSONException e) {
-            e.printStackTrace();
-        }
+        //updateUserProfileRequest.setRequestId(RequestId.UPDATE_USER);
+        //addRequestToQueue(updateUserProfileRequest, true, 0);
     }
 
     @Override
-    public void onErrorResponse(VolleyError error, Request<?> request) {
-        Log.v(TAG, "Volley error");
-    }
-
-    @Override
-    public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
         Log.v(TAG, response.toString());
+
+    }
+
+    @Override
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
+        Log.v(TAG, "Volley error");
+
     }
 
 }

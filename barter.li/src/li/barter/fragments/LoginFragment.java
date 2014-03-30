@@ -16,11 +16,7 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request;
 import com.android.volley.Request.Method;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.facebook.Session;
 
 import org.json.JSONException;
@@ -43,6 +39,7 @@ import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
@@ -52,7 +49,7 @@ import li.barter.utils.SharedPreferenceHelper;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class LoginFragment extends AbstractBarterLiFragment implements
-                OnClickListener, Listener<ResponseInfo>, ErrorListener {
+                OnClickListener {
 
     private static final String TAG                = "LoginFragment";
 
@@ -153,7 +150,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             requestObject.put(HttpConstants.EMAIL, email);
             requestObject.put(HttpConstants.PASSWORD, password);
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.CREATE_USER, requestObject.toString(), this, this);
+                            + ApiEndpoints.CREATE_USER, requestObject.toString(), mVolleyCallbacks);
             request.setRequestId(RequestId.CREATE_USER);
             addRequestToQueue(request, true, 0);
         } catch (final JSONException e) {
@@ -205,85 +202,77 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onErrorResponse(final VolleyError error,
-                    final Request<?> request) {
-        onRequestFinished();
-        showToast(R.string.error_unable_to_login, false);
-        //TODO Show error sent from server if 400
-        Logger.e(TAG, error, "Error Response");
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
+        if (requestId == RequestId.CREATE_USER) {
+
+            final Bundle userInfo = response.responseBundle;
+
+            UserInfo.INSTANCE.setAuthToken(userInfo
+                            .getString(HttpConstants.AUTH_TOKEN));
+            UserInfo.INSTANCE.setEmail(userInfo.getString(HttpConstants.EMAIL));
+            UserInfo.INSTANCE.setId(userInfo.getString(HttpConstants.ID));
+
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_auth_token, userInfo
+                                            .getString(HttpConstants.AUTH_TOKEN));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_email, userInfo
+                                            .getString(HttpConstants.EMAIL));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_description, userInfo
+                                            .getString(HttpConstants.DESCRIPTION));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_first_name, userInfo
+                                            .getString(HttpConstants.FIRST_NAME));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_last_name, userInfo
+                                            .getString(HttpConstants.LAST_NAME));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_user_id, userInfo
+                                            .getString(HttpConstants.ID));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_location, userInfo
+                                            .getString(HttpConstants.LOCATION));
+
+            final String locationId = userInfo
+                            .getString(HttpConstants.LOCATION);
+            if (TextUtils.isEmpty(locationId)) {
+                final Bundle myArgs = getArguments();
+                Bundle preferredLocationArgs = null;
+                if (myArgs != null) {
+                    preferredLocationArgs = new Bundle(myArgs);
+                }
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), SelectPreferredLocationFragment.class
+                                                .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
+
+            } else {
+                final String tag = getTag();
+                if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+                    //TODO Load profile screen 
+                } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
+                    /*
+                     * TODO Figure out a way to notify to the AddBookFragment
+                     * that login is done and book upload should commence. Maybe
+                     * an event log in Abstract class? Maybe get the instance of
+                     * the fragment and load it again?
+                     */
+                    onUpNavigate();
+                }
+            }
+
+        }
 
     }
 
     @Override
-    public void onResponse(final ResponseInfo response,
-                    final Request<ResponseInfo> request) {
-        onRequestFinished();
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
 
-        if (request instanceof BlRequest) {
-
-            final int requestId = ((BlRequest) request).getRequestId();
-
-            if (requestId == RequestId.CREATE_USER) {
-
-                final Bundle userInfo = response.responseBundle;
-
-                UserInfo.INSTANCE.setAuthToken(userInfo
-                                .getString(HttpConstants.AUTH_TOKEN));
-                UserInfo.INSTANCE.setEmail(userInfo
-                                .getString(HttpConstants.EMAIL));
-                UserInfo.INSTANCE.setId(userInfo.getString(HttpConstants.ID));
-
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_auth_token, userInfo
-                                                .getString(HttpConstants.AUTH_TOKEN));
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_email, userInfo
-                                                .getString(HttpConstants.EMAIL));
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_description, userInfo
-                                                .getString(HttpConstants.DESCRIPTION));
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_first_name, userInfo
-                                                .getString(HttpConstants.FIRST_NAME));
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_last_name, userInfo
-                                                .getString(HttpConstants.LAST_NAME));
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_user_id, userInfo
-                                                .getString(HttpConstants.ID));
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_location, userInfo
-                                                .getString(HttpConstants.LOCATION));
-
-                final String locationId = userInfo
-                                .getString(HttpConstants.LOCATION);
-                if (TextUtils.isEmpty(locationId)) {
-                    final Bundle myArgs = getArguments();
-                    Bundle preferredLocationArgs = null;
-                    if (myArgs != null) {
-                        preferredLocationArgs = new Bundle(myArgs);
-                    }
-                    loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                    .instantiate(getActivity(), SelectPreferredLocationFragment.class
-                                                    .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
-
-                } else {
-                    final String tag = getTag();
-                    if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
-                        //TODO Load profile screen 
-                    } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
-                        /*
-                         * TODO Figure out a way to notify to the
-                         * AddBookFragment that login is done and book upload
-                         * should commence. Maybe an event log in Abstract
-                         * class? Maybe get the instance of the fragment and
-                         * load it again?
-                         */
-                        onUpNavigate();
-                    }
-                }
-
-            }
+        if (requestId == RequestId.CREATE_USER) {
+            showToast(errorMessage, false);
         }
     }
 

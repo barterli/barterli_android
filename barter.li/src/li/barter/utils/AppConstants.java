@@ -208,6 +208,8 @@ public class AppConstants {
         public static final String MAP_MOVED_ONCE     = "map_moved_once";
         public static final String DRAWER_OPENED_ONCE = "drawer_opened_once";
         public static final String HAS_FETCHED_INFO   = "has_fetched_info";
+        public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
+        public static final String LOCATIONS          = "locations";
 
     }
 

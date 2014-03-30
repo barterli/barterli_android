@@ -56,9 +56,13 @@ import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.FragmentTransition;
 import li.barter.fragments.LoginFragment;
 import li.barter.fragments.ProfileFragment;
+import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
-import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.http.ResponseInfo;
+import li.barter.http.VolleyCallbacks;
+import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants.DeviceInfo;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.TypefaceCache;
@@ -67,14 +71,18 @@ import li.barter.widgets.TypefacedSpan;
 /**
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
  */
-public abstract class AbstractBarterLiActivity extends FragmentActivity {
+public abstract class AbstractBarterLiActivity extends FragmentActivity
+                implements IHttpCallbacks {
 
     private static final String       TAG                         = "BaseBarterLiActivity";
 
     private static final int          ACTION_BAR_DISPLAY_MASK     = ActionBar.DISPLAY_HOME_AS_UP
                                                                                   | ActionBar.DISPLAY_SHOW_TITLE;
 
-    private RequestQueue              mRequestQueue;
+    /**
+     * {@link VolleyCallbacks} for encapsulating Volley request responses
+     */
+    protected VolleyCallbacks         mVolleyCallbacks;
     private ImageLoader               mImageLoader;
     private AtomicInteger             mRequestCounter;
 
@@ -159,8 +167,12 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
             getActionBar().setDisplayOptions(ACTION_BAR_DISPLAY_MASK);
             setActionBarTitle(getTitle().toString());
         }
-        mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
+
+        final RequestQueue requestQueue = ((IVolleyHelper) getApplication())
+                        .getRequestQueue();
         mImageLoader = ((IVolleyHelper) getApplication()).getImageLoader();
+
+        mVolleyCallbacks = new VolleyCallbacks(requestQueue, this);
         mRequestCounter = new AtomicInteger(0);
         setProgressBarIndeterminateVisibility(false);
         mHandler = new Handler();
@@ -263,9 +275,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
         // TODO Add Headers to request objects
         if (isConnectedToInternet()) {
             request.setTag(getVolleyTag());
-            mRequestCounter.incrementAndGet();
-            setProgressBarIndeterminateVisibility(true);
-            mRequestQueue.add(request);
+            mVolleyCallbacks.queue(request);
         } else if (showErrorOnNoNetwork) {
             showToast(errorMsgResId != 0 ? errorMsgResId
                             : R.string.no_network_connection, false);
@@ -280,21 +290,11 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      */
     protected abstract Object getVolleyTag();
 
-    /**
-     * Call this whenever a request has finished, whether successfully or error
-     */
-    protected void onRequestFinished() {
-
-        if (mRequestCounter.decrementAndGet() == 0) {
-            setProgressBarIndeterminateVisibility(false);
-        }
-    }
-
     @Override
     protected void onStop() {
         super.onStop();
         // Cancel all pending requests because they shouldn't be delivered
-        mRequestQueue.cancelAll(getVolleyTag());
+        mVolleyCallbacks.cancelAll(getVolleyTag());
         setProgressBarIndeterminateVisibility(false);
     }
 
@@ -579,7 +579,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
 
         menu.setGroupEnabled(R.id.group_hide_on_drawer_open, !drawerOpen);
         menu.setGroupVisible(R.id.group_hide_on_drawer_open, !drawerOpen);
-
     }
 
     /**
@@ -660,6 +659,39 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
         return (AbstractBarterLiFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.frame_content);
 
+    }
+
+    @Override
+    public void onPreExecute(IBlRequestContract request) {
+        mRequestCounter.incrementAndGet();
+        setProgressBarIndeterminateVisibility(true);
+    }
+
+    @Override
+    public void onPostExecute(IBlRequestContract request) {
+        if (mRequestCounter.decrementAndGet() == 0) {
+            setProgressBarIndeterminateVisibility(false);
+        }
+    }
+
+    @Override
+    public abstract void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response);
+
+    @Override
+    public abstract void onBadRequestError(int requestId,
+                    IBlRequestContract request, int errorCode,
+                    String errorMessage, Bundle errorResponseBundle);
+
+    @Override
+    public void onAuthError(int requestId, IBlRequestContract request) {
+        //TODO Show Login Fragment and ask user to login again
+    }
+
+    @Override
+    public void onOtherError(int requestId, IBlRequestContract request,
+                    int errorCode) {
+        //TODO Show generic network error message
     }
 
 }

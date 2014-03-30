@@ -19,8 +19,6 @@ package li.barter.http;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyError.ErrorCode;
 import com.android.volley.toolbox.HttpHeaderParser;
@@ -36,8 +34,8 @@ import java.io.UnsupportedEncodingException;
  * 
  * @author Vinay S Shenoy
  */
-public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo> implements
-                IBlRequestContract {
+public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo>
+                implements IBlRequestContract {
 
     /**
      * An identifier for the request that was made
@@ -48,11 +46,11 @@ public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo> implement
      * @param method One of the constants from {@link Method} class to identify
      *            the request type
      * @param url The API endpoint
-     * @param listener The {@link Listener} for the response
-     * @param errorListener The {@link ErrorListener} for the error response
+     * @param volleyCallbacks The {@link VolleyCallbacks} reference to receive
+     *            the callbacks
      */
-    public BlMultiPartRequest(final int method, final String url, final Listener<ResponseInfo> listener, final ErrorListener errorListener) {
-        super(method, url, listener, errorListener);
+public BlMultiPartRequest(final int method, final String url, final String requestBody, final VolleyCallbacks volleyCallbacks) {
+    super(method, url, volleyCallbacks, volleyCallbacks);
     }
 
     @Override
@@ -78,11 +76,7 @@ public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo> implement
             try {
 
                 final HttpResponseParser parser = new HttpResponseParser();
-                final ResponseInfo responseInfo = parser
-                                .getErrorResponse(mRequestId, new String(volleyError.networkResponse.data, HTTP.UTF_8));
-                final BlBadRequestError badRequestError = new BlBadRequestError(mRequestId, responseInfo.errorCode);
-                badRequestError.setResponseBundle(responseInfo.responseBundle);
-                return badRequestError;
+                return parser.getErrorResponse(mRequestId, new String(volleyError.networkResponse.data, HTTP.UTF_8));
             } catch (final UnsupportedEncodingException e) {
                 return new ParseError(e);
             } catch (final JSONException e) {

@@ -22,6 +22,8 @@ import java.util.List;
 
 import li.barter.R;
 import li.barter.adapters.CropOptionAdapter;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
 import li.barter.models.CropOption;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.PhotoUtils;
@@ -196,6 +198,21 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                 break;
             }
         }
+    }
+
+    @Override
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
+        // TODO Auto-generated method stub
+        
     }
 
     /**

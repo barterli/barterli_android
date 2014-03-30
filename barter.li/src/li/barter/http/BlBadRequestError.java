@@ -17,7 +17,6 @@
 package li.barter.http;
 
 import com.android.volley.BadRequestError;
-import com.android.volley.NetworkResponse;
 
 import android.os.Bundle;
 
@@ -31,52 +30,14 @@ public class BlBadRequestError extends BadRequestError {
 
     private static final long serialVersionUID = 1L;
 
-    public final int          requestId;
-    public final int          errorCode;
-    private Bundle            mResponseBundle;
+    public final int          serverErrorCode;
+    public final String       serverErrorMessage;
+    public Bundle             responseBundle;
 
-    public BlBadRequestError(final int requestId, final int errorCode) {
+    public BlBadRequestError(final int serverErrorCode, final String serverErrorMessage) {
         super();
-        this.requestId = requestId;
-        this.errorCode = errorCode;
-    }
-
-    public BlBadRequestError(final int requestId, final int errorCode, final NetworkResponse networkResponse) {
-        super(networkResponse);
-        this.requestId = requestId;
-        this.errorCode = errorCode;
-    }
-
-    public BlBadRequestError(final int requestId, final int errorCode, final String exceptionMessage, final Throwable reason) {
-        super(exceptionMessage, reason);
-        this.requestId = requestId;
-        this.errorCode = errorCode;
-    }
-
-    public BlBadRequestError(final int requestId, final int errorCode, final String exceptionMessage) {
-        super(exceptionMessage);
-        this.requestId = requestId;
-        this.errorCode = errorCode;
-    }
-
-    public BlBadRequestError(final int requestId, final int errorCode, final Throwable cause) {
-        super(cause);
-        this.requestId = requestId;
-        this.errorCode = errorCode;
-    }
-
-    /**
-     * @return the Response Bundle
-     */
-    public Bundle getResponseBundle() {
-        return mResponseBundle;
-    }
-
-    /**
-     * @param responseBundle the Response info bundle to set
-     */
-    public void setResponseBundle(final Bundle responseBundle) {
-        mResponseBundle = responseBundle;
+        this.serverErrorCode = serverErrorCode;
+        this.serverErrorMessage = serverErrorMessage;
     }
 
 }

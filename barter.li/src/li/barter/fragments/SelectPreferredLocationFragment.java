@@ -16,11 +16,7 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request;
 import com.android.volley.Request.Method;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.CancelableCallback;
@@ -51,10 +47,12 @@ import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.parcelables.Hangout;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 
@@ -64,8 +62,7 @@ import li.barter.utils.SharedPreferenceHelper;
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
-                implements Listener<ResponseInfo>, ErrorListener,
-                CancelableCallback, OnInfoWindowClickListener,
+                implements CancelableCallback, OnInfoWindowClickListener,
                 OnMarkerDragListener {
 
     private static final String  TAG                      = "SelectPreferredLocationFragment";
@@ -133,10 +130,16 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         mMapView.onCreate(savedInstanceState);
         setUpMapListeners();
         moveMapToLocation(DeviceInfo.INSTANCE.getLatestLocation());
-        if ((savedInstanceState == null) || (mHangouts == null)) {
+
+        if (savedInstanceState != null) {
+            mHangouts = (Hangout[]) savedInstanceState
+                            .getParcelableArray(Keys.LOCATIONS);
+        }
+
+        if (mHangouts == null || mHangouts.length == 0) {
             fetchHangoutsForLocation(DeviceInfo.INSTANCE.getLatestLocation(), 1000);
         } else {
-            //Set fetched hangouts to adapter
+            addMarkersToMap(mHangouts);
         }
         setActionBarDrawerToggleEnabled(false);
         return contentView;
@@ -153,7 +156,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                     final int radius) {
 
         final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.HANGOUTS, null, this, this);
+                        + ApiEndpoints.HANGOUTS, null, mVolleyCallbacks);
         request.setRequestId(RequestId.HANGOUTS);
 
         final Map<String, String> params = new HashMap<String, String>(3);
@@ -174,6 +177,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         if (mMapView != null) {
             mMapView.onSaveInstanceState(outState);
         }
+        outState.putParcelableArray(Keys.LOCATIONS, mHangouts);
     }
 
     @Override
@@ -263,19 +267,29 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     }
 
     @Override
-    public void onErrorResponse(final VolleyError error,
-                    final Request<?> request) {
-        onRequestFinished();
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
+        if (requestId == RequestId.HANGOUTS) {
+            mHangouts = (Hangout[]) response.responseBundle
+                            .getParcelableArray(HttpConstants.LOCATIONS);
+            addMarkersToMap(mHangouts);
+        } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
 
-        if (request instanceof BlRequest) {
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_location, response.responseBundle
+                                            .getString(HttpConstants.LOCATION));
+            onUpNavigate();
+        }
+    }
 
-            final int requestId = ((BlRequest) request).getRequestId();
-            if (requestId == RequestId.HANGOUTS) {
-                showToast(R.string.unable_to_fetch_hangouts, true);
-            } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
-                showToast(R.string.error_unable_to_set_preferred_location, true);
-            }
-
+    @Override
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
+        if (requestId == RequestId.HANGOUTS) {
+            showToast(R.string.unable_to_fetch_hangouts, true);
+        } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
+            showToast(R.string.error_unable_to_set_preferred_location, true);
         }
     }
 
@@ -287,29 +301,6 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onResponse(final ResponseInfo response,
-                    final Request<ResponseInfo> request) {
-        onRequestFinished();
-
-        if (request instanceof BlRequest) {
-
-            final int requestId = ((BlRequest) request).getRequestId();
-            if (requestId == RequestId.HANGOUTS) {
-                mHangouts = (Hangout[]) response.responseBundle
-                                .getParcelableArray(HttpConstants.LOCATIONS);
-                addMarkersToMap(mHangouts);
-            } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
-
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_location, response.responseBundle
-                                                .getString(HttpConstants.LOCATION));
-                onUpNavigate();
-            }
-        }
-
     }
 
     /**
@@ -392,7 +383,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
             requestBody.put(HttpConstants.LONGITUDE, longitude);
 
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody.toString(), this, this);
+                            + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody.toString(), mVolleyCallbacks);
             addRequestToQueue(request, true, 0);
             request.setRequestId(RequestId.SET_USER_PREFERRED_LOCATION);
         } catch (JSONException e) {

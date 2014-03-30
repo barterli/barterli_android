@@ -42,6 +42,8 @@ import java.io.IOException;
 import java.util.Collection;
 
 import li.barter.R;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.ResultCodes;
 import li.barter.utils.Logger;
@@ -274,6 +276,19 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 
         setResult(ResultCodes.SUCCESS, intent);
         finish();
+
+    }
+
+    @Override
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
+
+    }
+
+    @Override
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
 
     }
 
