@@ -116,9 +116,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            popBackStack();
+            onUpNavigate();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -159,9 +159,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void getBookInfoFromServer(final String bookId) {
 
-        final BlRequest request = new BlRequest(Method.POST, RequestId.GET_BOOK_INFO, HttpConstants
-                        .getApiBaseUrl() + ApiEndpoints.BOOK_INFO, null, this, this);
+        final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                        + ApiEndpoints.BOOK_INFO, null, this, this);
         final Map<String, String> params = new HashMap<String, String>();
+        request.setRequestId(RequestId.GET_BOOK_INFO);
         params.put(HttpConstants.Q, bookId);
         request.setParams(params);
         addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
@@ -196,10 +197,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                             .getText().toString());
 
             // TODO Add barter types
-            final BlRequest createBookRequest = new BlRequest(Method.POST, RequestId.CREATE_BOOK, HttpConstants
-                            .getApiBaseUrl() + ApiEndpoints.BOOKS, createBookJson
-                            .toString(), this, this);
-
+            final BlRequest createBookRequest = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.BOOKS, createBookJson.toString(), this, this);
+            createBookRequest.setRequestId(RequestId.CREATE_BOOK);
             addRequestToQueue(createBookRequest, true, 0);
         } catch (final JSONException e) {
             e.printStackTrace();
@@ -215,13 +215,17 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
                 final Bundle loginArgs = new Bundle(1);
                 loginArgs.putString(Keys.BACKSTACK_TAG, FragmentTags.BS_ADD_BOOK);
-                
+
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), LoginFragment.class
                                                 .getName(), loginArgs), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.BS_ADD_BOOK);
 
             } else {
-                createBookOnServer();
+
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), SelectPreferredLocationFragment.class
+                                                .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_ADD_OR_EDIT_BOOK, true, FragmentTags.BS_PREFERRED_LOCATION);
+                //createBookOnServer();
             }
         }
     }
@@ -281,41 +285,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
              * getFragmentManager().popBackStack(); }
              */
         }
-    }
-
-    /**
-     * Reads the book details from the response and populates the text fields
-     * 
-     * @param response The {@link JSONObject} which contains the response
-     */
-    private void readBookDetailsFromResponse(final JSONObject response) {
-
-        mHasFetchedDetails = true;
-        final String bookTitle = JsonUtils
-                        .readString(response, HttpConstants.TITLE);
-        final String bookDescription = JsonUtils
-                        .readString(response, HttpConstants.DESCRIPTION);
-
-        JSONObject authorObject = JsonUtils
-                        .readJSONObject(response, HttpConstants.AUTHORS);
-        String authorName = null;
-        if (authorObject != null) {
-            authorObject = JsonUtils
-                            .readJSONObject(authorObject, HttpConstants.AUTHOR);
-            if (authorObject != null) {
-                authorName = JsonUtils
-                                .readString(authorObject, HttpConstants.NAME);
-            }
-        }
-
-        final String publicationYear = JsonUtils
-                        .readString(response, HttpConstants.PUBLICATION_YEAR);
-
-        mTitleEditText.setText(bookTitle);
-        mDescriptionEditText.setText(bookDescription);
-        mAuthorEditText.setText(authorName);
-        mPublicationYearEditText.setText(publicationYear);
-
     }
 
 }

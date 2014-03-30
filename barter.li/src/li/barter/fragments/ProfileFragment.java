@@ -149,7 +149,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case android.R.id.home: {
-                popBackStack();
+                onUpNavigate();
                 return true;
             }
 

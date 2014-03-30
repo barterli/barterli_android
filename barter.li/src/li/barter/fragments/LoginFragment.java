@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -89,11 +90,10 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-
-            popBackStack();
+            onUpNavigate();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -152,11 +152,11 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             requestObject.put(HttpConstants.PROVIDER, AppConstants.MANUAL);
             requestObject.put(HttpConstants.EMAIL, email);
             requestObject.put(HttpConstants.PASSWORD, password);
-            final BlRequest request = new BlRequest(Method.POST, RequestId.CREATE_USER, HttpConstants
-                            .getApiBaseUrl() + ApiEndpoints.CREATE_USER, requestObject
-                            .toString(), this, this);
+            final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.CREATE_USER, requestObject.toString(), this, this);
+            request.setRequestId(RequestId.CREATE_USER);
             addRequestToQueue(request, true, 0);
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             // Should never happen
             Logger.e(TAG, e, "Error building create user json");
         }
@@ -205,7 +205,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onErrorResponse(VolleyError error, Request<?> request) {
+    public void onErrorResponse(final VolleyError error,
+                    final Request<?> request) {
         onRequestFinished();
         showToast(R.string.error_unable_to_login, false);
         //TODO Show error sent from server if 400
@@ -214,7 +215,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+    public void onResponse(final ResponseInfo response,
+                    final Request<ResponseInfo> request) {
         onRequestFinished();
 
         if (request instanceof BlRequest) {
@@ -225,8 +227,11 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
                 final Bundle userInfo = response.responseBundle;
 
-                UserInfo.INSTANCE.authToken = userInfo
-                                .getString(HttpConstants.AUTH_TOKEN);
+                UserInfo.INSTANCE.setAuthToken(userInfo
+                                .getString(HttpConstants.AUTH_TOKEN));
+                UserInfo.INSTANCE.setEmail(userInfo
+                                .getString(HttpConstants.EMAIL));
+                UserInfo.INSTANCE.setId(userInfo.getString(HttpConstants.ID));
 
                 SharedPreferenceHelper
                                 .set(getActivity(), R.string.pref_auth_token, userInfo
@@ -250,28 +255,34 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                                 .set(getActivity(), R.string.pref_location, userInfo
                                                 .getString(HttpConstants.LOCATION));
 
-                final String tag = getTag();
+                final String locationId = userInfo
+                                .getString(HttpConstants.LOCATION);
+                if (TextUtils.isEmpty(locationId)) {
+                    final Bundle myArgs = getArguments();
+                    Bundle preferredLocationArgs = null;
+                    if (myArgs != null) {
+                        preferredLocationArgs = new Bundle(myArgs);
+                    }
+                    loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                    .instantiate(getActivity(), SelectPreferredLocationFragment.class
+                                                    .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
 
-                if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
-                    //TODO Load profile screen
-                } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
-
-                    final String locationId = userInfo
-                                    .getString(HttpConstants.LOCATION);
-
-                    if (TextUtils.isEmpty(locationId)) {
-                        //TODO Open fragment to set preferred location
-                        Logger.v(TAG, "No location, open select location screen");
-                    } else {
+                } else {
+                    final String tag = getTag();
+                    if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+                        //TODO Load profile screen 
+                    } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
                         /*
                          * TODO Figure out a way to notify to the
                          * AddBookFragment that login is done and book upload
                          * should commence. Maybe an event log in Abstract
-                         * class?
+                         * class? Maybe get the instance of the fragment and
+                         * load it again?
                          */
-                        popBackStack();
+                        onUpNavigate();
                     }
                 }
+
             }
         }
     }

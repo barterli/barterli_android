@@ -20,13 +20,15 @@
     <group android:id="@+id/group_hide_on_drawer_open" >
         <item
             android:id="@+id/action_scan_book"
+            android:icon="@drawable/ic_action_camera"
             android:orderInCategory="1"
-            android:showAsAction="never"
+            android:showAsAction="ifRoom"
             android:title="@string/scan_book"/>
         <item
             android:id="@+id/action_add_book"
+            android:icon="@drawable/ic_action_new"
             android:orderInCategory="2"
-            android:showAsAction="never"
+            android:showAsAction="ifRoom"
             android:title="@string/add_book"/>
     </group>
 

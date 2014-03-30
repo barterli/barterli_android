@@ -167,7 +167,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case android.R.id.home: {
-                popBackStack();
+                onUpNavigate();
                 return true;
             }
 
@@ -419,11 +419,11 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             updateUserJson.put(HttpConstants.LAST_NAME, lastName);
             updateUserJson.put(HttpConstants.DESCRIPTION, aboutMeDescription);
 
-            final BlRequest updateUserProfileRequest = new BlRequest(Method.PUT, RequestId.SAVE_USER_PROFILE, HttpConstants
-                            .getApiBaseUrl() + ApiEndpoints.UPDATE_USER_INFO, updateUserJson
-                            .toString(), this, this);
+            //final BlRequest updateUserProfileRequest = new BlRequest(Method.PUT, RequestId.SAVE_USER_PROFILE, HttpConstants
+                           // .getApiBaseUrl() + ApiEndpoints.UPDATE_USER_INFO, updateUserJson
+                           // .toString(), this, this);
 
-            addRequestToQueue(updateUserProfileRequest, true, 0);
+            //addRequestToQueue(updateUserProfileRequest, true, 0);
         } catch (final JSONException e) {
             e.printStackTrace();
         }

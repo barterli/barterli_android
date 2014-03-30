@@ -33,7 +33,7 @@ public class TableLocations {
 
     public static final String  NAME = "LOCATIONS";
 
-    public static void create(SQLiteDatabase db) {
+    public static void create(final SQLiteDatabase db) {
 
         final String columnDef = TextUtils
                         .join(SQLConstants.COMMA, new String[] {
@@ -41,11 +41,6 @@ public class TableLocations {
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCATION_ID, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.NAME, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ADDRESS, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.POSTAL_CODE, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCALITY, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.CITY, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.STATE, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.COUNTRY, ""),
                                 String.format(Locale.US, SQLConstants.DATA_REAL, DatabaseColumns.LATITUDE, 0.0),
                                 String.format(Locale.US, SQLConstants.DATA_REAL, DatabaseColumns.LONGITUDE, 0.0)
                         });
@@ -56,7 +51,8 @@ public class TableLocations {
 
     }
 
-    public static void upgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public static void upgrade(final SQLiteDatabase db, final int oldVersion,
+                    final int newVersion) {
 
         //Add any data migration code here. Default is to drop and rebuild the table
         db.execSQL(String

@@ -21,7 +21,6 @@ import com.android.volley.Request.Method;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
-import com.google.android.gms.internal.dr;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,12 +63,12 @@ import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
-import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.Logger;
 import li.barter.utils.MapDrawerInteractionHelper;
@@ -193,7 +192,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
             mMapAlreadyMovedOnce = false;
-            fetchBooksAroundMe(UserInfo.INSTANCE.latestLocation, 1);
+            fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), 1);
         } else {
             mDrawerOpenedAutomatically = savedInstanceState
                             .getBoolean(Keys.DRAWER_OPENED_ONCE);
@@ -217,7 +216,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
+    public void onViewStateRestored(final Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         mMapDrawerBlurHelper.onRestoreState();
     }
@@ -237,10 +236,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * @param center The {@link Location} representing the center
      * @param radius The radius(in kilometers) to search in
      */
-    private void fetchBooksAroundMe(Location center, int radius) {
+    private void fetchBooksAroundMe(final Location center, final int radius) {
 
-        BlRequest request = new BlRequest(Method.GET, RequestId.SEARCH_BOOKS, HttpConstants.getApiBaseUrl()
+        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.SEARCH, null, this, this);
+        request.setRequestId(RequestId.SEARCH_BOOKS);
 
         if (center != null) {
             final Map<String, String> params = new HashMap<String, String>(2);
@@ -320,7 +320,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLocationChanged(final Location location) {
 
-        UserInfo.INSTANCE.latestLocation = location;
+        DeviceInfo.INSTANCE.setLatestLocation(location);
 
         if (!mMapAlreadyMovedOnce) {
 
@@ -333,8 +333,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             if (googleMap != null) {
                 googleMap.setMyLocationEnabled(false);
                 googleMap.animateCamera(CameraUpdateFactory
-                                .newLatLngZoom(new LatLng(UserInfo.INSTANCE.latestLocation
-                                                .getLatitude(), UserInfo.INSTANCE.latestLocation
+                                .newLatLngZoom(new LatLng(DeviceInfo.INSTANCE
+                                                .getLatestLocation()
+                                                .getLatitude(), DeviceInfo.INSTANCE
+                                                .getLatestLocation()
                                                 .getLongitude()), MAP_ZOOM_LEVEL), this);
 
             }
@@ -381,7 +383,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mMapAlreadyMovedOnce = true;
             final int searchRadius = Math.round(Utils
                             .getShortestRadiusFromCenter(mMapView) / 1000);
-            fetchBooksAroundMe(UserInfo.INSTANCE.latestLocation, searchRadius);
+            fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), searchRadius);
         }
         mMapDrawerBlurHelper.onMapZoomedIn();
     }
@@ -400,7 +402,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onErrorResponse(VolleyError error, Request<?> request) {
+    public void onErrorResponse(final VolleyError error,
+                    final Request<?> request) {
         onRequestFinished();
         Logger.e(TAG, error, "Parse Error");
 
@@ -413,13 +416,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+    public void onResponse(final ResponseInfo response,
+                    final Request<ResponseInfo> request) {
         onRequestFinished();
 
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int loaderId, Bundle args) {
+    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
 
         if (loaderId == Loaders.SEARCH_BOOKS) {
             return new SQLiteLoader(getActivity(), false, TableSearchBooks.NAME, null, null, null, null, null, null, null);
@@ -429,7 +433,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
 
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
@@ -444,7 +448,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(final Loader<Cursor> loader) {
 
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
             mBooksAroundMeAdapter.swapCursor(null);
@@ -460,12 +464,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onDrawerClosed(View drawerView) {
+    public void onDrawerClosed(final View drawerView) {
 
     }
 
     @Override
-    public void onDrawerOpened(View drawerView) {
+    public void onDrawerOpened(final View drawerView) {
 
         if (drawerView == mBooksDrawerView) {
             final int searchRadius = Math.round(Utils
@@ -475,12 +479,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onDrawerSlide(View drawerView, float slideOffset) {
+    public void onDrawerSlide(final View drawerView, final float slideOffset) {
 
     }
 
     @Override
-    public void onDrawerStateChanged(int state) {
+    public void onDrawerStateChanged(final int state) {
 
     }
 

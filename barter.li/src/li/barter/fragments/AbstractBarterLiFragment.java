@@ -29,10 +29,13 @@ import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.http.HttpConstants;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
@@ -82,8 +85,8 @@ public abstract class AbstractBarterLiFragment extends Fragment {
         mContainerViewId = container.getId();
     }
 
-    protected void setActionBarDrawerToggleEnabled(boolean enabled) {
-        AbstractBarterLiActivity activity = (AbstractBarterLiActivity) getActivity();
+    protected void setActionBarDrawerToggleEnabled(final boolean enabled) {
+        final AbstractBarterLiActivity activity = (AbstractBarterLiActivity) getActivity();
         if (activity.hasNavigationDrawer()) {
             activity.setActionBarDrawerToggleEnabled(enabled);
         }
@@ -175,6 +178,7 @@ public abstract class AbstractBarterLiFragment extends Fragment {
         if (mIsAttached) {
             request.setTag(getVolleyTag());
             if (isConnectedToInternet()) {
+                addHeadersToRequest(request);
                 mRequestCounter.incrementAndGet();
                 getActivity().setProgressBarIndeterminateVisibility(true);
                 mRequestQueue.add(request);
@@ -183,6 +187,19 @@ public abstract class AbstractBarterLiFragment extends Fragment {
                                 : R.string.no_network_connection, false);
             }
         }
+    }
+
+    /**
+     * Add Request Headers to the headers
+     * 
+     * @param request The request to add the headers to
+     */
+    private void addHeadersToRequest(Request<?> request) {
+
+        final Map<String, String> headers = new HashMap<String, String>(1);
+        headers.put(HttpConstants.HEADER_AUTHORIZATION, UserInfo.INSTANCE
+                        .getAuthHeader());
+        request.setHeaders(headers);
     }
 
     /**
@@ -265,23 +282,33 @@ public abstract class AbstractBarterLiFragment extends Fragment {
      * Is the user logged in
      */
     protected boolean isLoggedIn() {
-        return !TextUtils.isEmpty(UserInfo.INSTANCE.authToken);
+        return !TextUtils.isEmpty(UserInfo.INSTANCE.getAuthToken());
     }
 
     /**
      * Pops the fragment from the backstack, checking to see if the bundle args
      * have {@linkplain Keys#BACKSTACK_TAG} which gives the name of the
-     * backstack tag to pop to
+     * backstack tag to pop to. This is mainly for providing Up navigation
      */
-    protected void popBackStack() {
+    public void onUpNavigate() {
         final Bundle args = getArguments();
 
-        if (args != null && args.containsKey(Keys.BACKSTACK_TAG)) {
+        if ((args != null) && args.containsKey(Keys.BACKSTACK_TAG)) {
             getFragmentManager()
                             .popBackStack(args.getString(Keys.BACKSTACK_TAG), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } else {
             getFragmentManager().popBackStack();
         }
+    }
+
+    /**
+     * Handles the behaviour for onBackPressed() Default behavious is to pop the
+     * frament manager's backstack. Child fragments must override this if they
+     * wish to provide custom behaviour
+     */
+    public void onBackPressed() {
+
+        getFragmentManager().popBackStack();
     }
 
 }

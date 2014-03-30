@@ -58,7 +58,8 @@ import li.barter.fragments.LoginFragment;
 import li.barter.fragments.ProfileFragment;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.NetworkDetails;
+import li.barter.utils.AppConstants.DeviceInfo;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
@@ -122,13 +123,14 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * R.array.nav_drawer_titles
      */
     private final OnItemClickListener mNavDrawerItemClickListener = new OnItemClickListener() {
+                                                                      @Override
                                                                       public void onItemClick(
-                                                                                      AdapterView<?> parent,
-                                                                                      View view,
-                                                                                      int position,
-                                                                                      long id) {
+                                                                                      final AdapterView<?> parent,
+                                                                                      final View view,
+                                                                                      final int position,
+                                                                                      final long id) {
 
-                                                                          Runnable launchRunnable = makeRunnableForNavDrawerClick(position);
+                                                                          final Runnable launchRunnable = makeRunnableForNavDrawerClick(position);
                                                                           if (launchRunnable != null) {
                                                                               //Give time for drawer to close before performing the action
                                                                               mHandler.postDelayed(launchRunnable, 250);
@@ -188,9 +190,13 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
                                     .instantiate(AbstractBarterLiActivity.this, ProfileFragment.class
                                                     .getName(), null), FragmentTags.PROFILE, true, null);
                         } else {
+
+                            final Bundle loginArgs = new Bundle(1);
+                            loginArgs.putString(Keys.BACKSTACK_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+
                             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                             .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
-                                                            .getName(), null), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, null);
+                                                            .getName(), loginArgs), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, FragmentTags.BS_BOOKS_AROUND_ME);
                         }
 
                     }
@@ -304,7 +310,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * @return <code>true</code> if connected, <code>false</code> otherwise
      */
     public boolean isConnectedToInternet() {
-        return NetworkDetails.INSTANCE.isNetworkConnected;
+        return DeviceInfo.INSTANCE.isNetworkConnected();
     }
 
     @Override
@@ -497,7 +503,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      *            the Action Bar drawer toggle
      */
     protected void initDrawer(final int navDrawerResId, final int navListResId,
-                    boolean attachToActionBar) {
+                    final boolean attachToActionBar) {
 
         mDrawerLayout = (DrawerLayout) findViewById(navDrawerResId);
 
@@ -601,7 +607,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * @param enabled <code>true</code> to enable the Action Bar drawer toggle,
      *            <code>false</code> to disable it
      */
-    public void setActionBarDrawerToggleEnabled(boolean enabled) {
+    public void setActionBarDrawerToggleEnabled(final boolean enabled) {
 
         if (mHasNavigationDrawer) {
 
@@ -616,14 +622,44 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity {
      * Is the user logged in
      */
     protected boolean isLoggedIn() {
-        return !TextUtils.isEmpty(UserInfo.INSTANCE.authToken);
+        return !TextUtils.isEmpty(UserInfo.INSTANCE.getAuthToken());
     }
-    
+
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
+    public void onWindowFocusChanged(final boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         //Reset background to reduce overdaw
         getWindow().setBackgroundDrawable(null);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        final AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
+        if ((masterFragment != null)
+                        && (getSupportFragmentManager()
+                                        .getBackStackEntryCount() > 0)) {
+            masterFragment.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * Returns the current master fragment. In single pane layout, this is the
+     * fragment in the main content. In a multi-pane layout, returns the
+     * fragment in the master container, which is the one responsible for
+     * coordination
+     * 
+     * @return <code>null</code> If no fragment is loaded,the
+     *         {@link AbstractBarterLiFragment} implementation which is the
+     *         current master fragment otherwise
+     */
+    public AbstractBarterLiFragment getCurrentMasterFragment() {
+
+        return (AbstractBarterLiFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.frame_content);
+
     }
 
 }

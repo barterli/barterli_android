@@ -28,37 +28,42 @@ import java.util.Locale;
 /** Logging helper class. Repurposed from the AOSP Volley source */
 public class Logger {
 
-    public static void v(String tag, String format, Object... args) {
+    public static void v(final String tag, final String format,
+                    final Object... args) {
         if (AppConstants.DEBUG) {
             Log.v(tag, buildMessage(format, args));
         }
     }
 
-    public static void d(String tag, String format, Object... args) {
+    public static void d(final String tag, final String format,
+                    final Object... args) {
         if (AppConstants.DEBUG) {
             Log.d(tag, buildMessage(format, args));
         }
     }
 
-    public static void e(String tag, String format, Object... args) {
+    public static void e(final String tag, final String format,
+                    final Object... args) {
         Log.e(tag, buildMessage(format, args));
     }
 
-    public static void e(String tag, Throwable tr, String format,
-                    Object... args) {
+    public static void e(final String tag, final Throwable tr,
+                    final String format, final Object... args) {
         Log.e(tag, buildMessage(format, args), tr);
     }
 
-    public static void w(String tag, String format, Object... args) {
+    public static void w(final String tag, final String format,
+                    final Object... args) {
         Log.w(tag, buildMessage(format, args));
     }
 
-    public static void w(String tag, Throwable tr, String format,
-                    Object... args) {
+    public static void w(final String tag, final Throwable tr,
+                    final String format, final Object... args) {
         Log.w(tag, buildMessage(format, args), tr);
     }
 
-    public static void i(String tag, String format, Object... args) {
+    public static void i(final String tag, final String format,
+                    final Object... args) {
         if (AppConstants.DEBUG) {
             Log.i(tag, buildMessage(format, args));
         }
@@ -68,17 +73,18 @@ public class Logger {
      * Formats the caller's provided message and prepends useful info like
      * calling thread ID and method name.
      */
-    private static String buildMessage(String format, Object... args) {
-        String msg = (args == null) ? format : String
+    private static String buildMessage(final String format,
+                    final Object... args) {
+        final String msg = (args == null) ? format : String
                         .format(Locale.US, format, args);
-        StackTraceElement[] trace = new Throwable().fillInStackTrace()
+        final StackTraceElement[] trace = new Throwable().fillInStackTrace()
                         .getStackTrace();
 
         String caller = "<unknown>";
         // Walk up the stack looking for the first caller outside of VolleyLog.
         // It will be at least two frames up, so start there.
         for (int i = 2; i < trace.length; i++) {
-            Class<?> clazz = trace[i].getClass();
+            final Class<?> clazz = trace[i].getClass();
             if (!clazz.equals(Logger.class)) {
                 String callingClass = trace[i].getClassName();
                 callingClass = callingClass.substring(callingClass
@@ -113,7 +119,7 @@ public class Logger {
             public final long   thread;
             public final long   time;
 
-            public Marker(String name, long thread, long time) {
+            public Marker(final String name, final long thread, final long time) {
                 this.name = name;
                 this.thread = thread;
                 this.time = time;
@@ -124,7 +130,7 @@ public class Logger {
         private boolean            mFinished = false;
 
         /** Adds a marker to this log with the specified name. */
-        public synchronized void add(String name, long threadId) {
+        public synchronized void add(final String name, final long threadId) {
             if (mFinished) {
                 throw new IllegalStateException("Marker added to finished log");
             }
@@ -140,18 +146,18 @@ public class Logger {
          * 
          * @param header Header string to print above the marker log.
          */
-        public synchronized void finish(String header) {
+        public synchronized void finish(final String header) {
             mFinished = true;
 
-            long duration = getTotalDuration();
+            final long duration = getTotalDuration();
             if (duration <= MIN_DURATION_FOR_LOGGING_MS) {
                 return;
             }
 
             long prevTime = mMarkers.get(0).time;
             d(TAG, "(%-4d ms) %s", duration, header);
-            for (Marker marker : mMarkers) {
-                long thisTime = marker.time;
+            for (final Marker marker : mMarkers) {
+                final long thisTime = marker.time;
                 d(TAG, "(+%-4d) [%2d] %s", (thisTime - prevTime), marker.thread, marker.name);
                 prevTime = thisTime;
             }
@@ -176,8 +182,8 @@ public class Logger {
                 return 0;
             }
 
-            long first = mMarkers.get(0).time;
-            long last = mMarkers.get(mMarkers.size() - 1).time;
+            final long first = mMarkers.get(0).time;
+            final long last = mMarkers.get(mMarkers.size() - 1).time;
             return last - first;
         }
     }

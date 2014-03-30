@@ -51,7 +51,7 @@ class BarterLiAsyncQueryHandler {
     /**
      * Map of tokens to async tasks
      */
-    private Map<Integer, QueryTask> mTasks;
+    private final Map<Integer, QueryTask> mTasks;
 
     BarterLiAsyncQueryHandler() {
 
@@ -195,12 +195,12 @@ class BarterLiAsyncQueryHandler {
      * 
      * @param token The token to cancel
      */
-    void cancel(int token) {
+    void cancel(final int token) {
 
-        for (Iterator<Map.Entry<Integer, QueryTask>> it = mTasks.entrySet()
-                        .iterator(); it.hasNext();) {
-            Map.Entry<Integer, QueryTask> entry = it.next();
-            QueryTask task = entry.getValue();
+        for (final Iterator<Map.Entry<Integer, QueryTask>> it = mTasks
+                        .entrySet().iterator(); it.hasNext();) {
+            final Map.Entry<Integer, QueryTask> entry = it.next();
+            final QueryTask task = entry.getValue();
             if (task.mToken == token) {
                 task.mCancelled = true;
                 task.mCallback = null;
@@ -246,7 +246,7 @@ class BarterLiAsyncQueryHandler {
          * 
          * @param task The {@link QueryTask} that triggered this result
          */
-        private QueryResult(QueryTask task) {
+        private QueryResult(final QueryTask task) {
             mTask = task;
         }
     }
@@ -293,7 +293,7 @@ class BarterLiAsyncQueryHandler {
          * @param token The token to pass into the callback
          * @param callback The Callback for when the db query completes
          */
-        private QueryTask(Type type, int token, AsyncDbQueryCallback callback) {
+        private QueryTask(final Type type, final int token, final AsyncDbQueryCallback callback) {
             mType = type;
             mToken = token;
             mCallback = callback;
@@ -311,7 +311,7 @@ class BarterLiAsyncQueryHandler {
                     AsyncTask<QueryTask, Void, QueryResult> {
 
         @Override
-        protected QueryResult doInBackground(QueryTask... params) {
+        protected QueryResult doInBackground(final QueryTask... params) {
 
             final QueryTask task = params[0];
             final QueryResult result = new QueryResult(task);
@@ -352,7 +352,7 @@ class BarterLiAsyncQueryHandler {
         }
 
         @Override
-        protected void onPostExecute(QueryResult result) {
+        protected void onPostExecute(final QueryResult result) {
 
             if (!result.mTask.mCancelled) {
                 switch (result.mTask.mType) {

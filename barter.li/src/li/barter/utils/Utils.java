@@ -16,7 +16,6 @@
 
 package li.barter.utils;
 
-import com.google.android.gms.internal.ed;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
@@ -36,7 +35,7 @@ import android.view.View;
 
 import java.util.Map;
 
-import li.barter.utils.AppConstants.NetworkDetails;
+import li.barter.utils.AppConstants.DeviceInfo;
 
 /**
  * @author Vinay S Shenoy Utility methods for barter.li
@@ -48,22 +47,25 @@ public class Utils {
     /**
      * Reads the network info from service and sets up the singleton
      */
-    public static void setupNetworkInfo(Context context) {
+    public static void setupNetworkInfo(final Context context) {
 
         final ConnectivityManager connManager = (ConnectivityManager) context
                         .getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
-            NetworkDetails.INSTANCE.isNetworkConnected = activeNetwork
-                            .isConnectedOrConnecting();
-            NetworkDetails.INSTANCE.currentNetworkType = activeNetwork
-                            .getType();
+            DeviceInfo.INSTANCE.setNetworkConnected(activeNetwork
+                            .isConnectedOrConnecting());
+            DeviceInfo.INSTANCE.setCurrentNetworkType(activeNetwork
+                            .getType());
         } else {
-            NetworkDetails.INSTANCE.isNetworkConnected = false;
-            NetworkDetails.INSTANCE.currentNetworkType = ConnectivityManager.TYPE_DUMMY;
+            DeviceInfo.INSTANCE.setNetworkConnected(false);
+            DeviceInfo.INSTANCE
+                            .setCurrentNetworkType(ConnectivityManager.TYPE_DUMMY);
         }
 
-        Logger.d(TAG, "Network State Updated Connected: %b Type: %d", NetworkDetails.INSTANCE.isNetworkConnected, NetworkDetails.INSTANCE.currentNetworkType);
+        Logger.d(TAG, "Network State Updated Connected: %b Type: %d", DeviceInfo.INSTANCE
+                        .isNetworkConnected(), DeviceInfo.INSTANCE
+                        .getCurrentNetworkType());
     }
 
     /**
@@ -111,7 +113,7 @@ public class Utils {
      * @param map The map to fetch the center location of
      * @return The center of the map
      */
-    public static Location getCenterLocationOfMap(GoogleMap map) {
+    public static Location getCenterLocationOfMap(final GoogleMap map) {
         final LatLng latLng = map.getCameraPosition().target;
         final Location location = new Location(LocationManager.PASSIVE_PROVIDER);
         location.setLatitude(latLng.latitude);
@@ -127,7 +129,7 @@ public class Utils {
      * @param map The {@link MapView} to calculate the radius from
      * @return The shortest radius(in metres), or 0 of the map is not intialized
      */
-    public static float getShortestRadiusFromCenter(MapView mapView) {
+    public static float getShortestRadiusFromCenter(final MapView mapView) {
 
         float radius = 0.0f;
 
@@ -138,11 +140,11 @@ public class Utils {
             // To hold the coordinates of the center line of the map
             Point[] screenCenterEdgePoints = null;
             screenCenterEdgePoints = getShorterDimensionEdgePoints(mapView);
-            Location[] locations = getLocationsFromPoints(map, screenCenterEdgePoints);
+            final Location[] locations = getLocationsFromPoints(map, screenCenterEdgePoints);
 
             if (locations.length == 2) {
-                Location startLocation = locations[0];
-                Location endLocation = locations[1];
+                final Location startLocation = locations[0];
+                final Location endLocation = locations[1];
                 final float[] results = new float[1];
                 Location.distanceBetween(startLocation.getLatitude(), startLocation
                                 .getLongitude(), endLocation.getLatitude(), endLocation
@@ -163,8 +165,8 @@ public class Utils {
      * @return An array of {@link Location}s with a 1-to-1 mapping between the
      *         input points
      */
-    public static Location[] getLocationsFromPoints(GoogleMap map,
-                    Point[] points) {
+    public static Location[] getLocationsFromPoints(final GoogleMap map,
+                    final Point[] points) {
         final Location[] locations = new Location[points.length];
 
         for (int i = 0; i < points.length; i++) {
@@ -181,10 +183,11 @@ public class Utils {
      * @param point The {@link Point} in the MapView, in screen pixels
      * @return A {@link Location} object
      */
-    public static Location pointToLocation(GoogleMap map, Point point) {
+    public static Location pointToLocation(final GoogleMap map,
+                    final Point point) {
 
         final LatLng latLng = map.getProjection().fromScreenLocation(point);
-        Location location = new Location(LocationManager.PASSIVE_PROVIDER);
+        final Location location = new Location(LocationManager.PASSIVE_PROVIDER);
 
         if (latLng != null) {
             location.setLatitude(latLng.latitude);
@@ -202,7 +205,7 @@ public class Utils {
      *         view. If in landscape, the points will be returned as top,
      *         bottom. Otherwise left, right
      */
-    public static Point[] getShorterDimensionEdgePoints(View view) {
+    public static Point[] getShorterDimensionEdgePoints(final View view) {
 
         final Point[] edgePoints = new Point[2];
 
@@ -238,7 +241,7 @@ public class Utils {
      * @return <code>true</code> if view is in landscape mode,
      *         <code>false</code> if it is in portrait mode
      */
-    public static boolean isViewInLandscape(View view) {
+    public static boolean isViewInLandscape(final View view) {
         return view.getWidth() >= view.getHeight();
     }
 }
