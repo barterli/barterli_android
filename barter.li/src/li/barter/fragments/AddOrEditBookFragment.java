@@ -463,5 +463,11 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         }
     }
+    
+    @Override
+    public void onStop() {
+        super.onStop();
+        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK);
+    }
 
 }

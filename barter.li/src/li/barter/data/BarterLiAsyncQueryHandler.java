@@ -205,6 +205,10 @@ class BarterLiAsyncQueryHandler {
      */
     void cancel(final int token) {
 
+        //If the token is not present, we need not iterate through the map at all
+        if(!mTasks.containsKey(token)) {
+            return;
+        }
         for (final Iterator<Map.Entry<Integer, QueryTask>> it = mTasks
                         .entrySet().iterator(); it.hasNext();) {
             final Map.Entry<Integer, QueryTask> entry = it.next();
@@ -324,7 +328,7 @@ class BarterLiAsyncQueryHandler {
      * 
      * @author Vinay S Shenoy
      */
-    private static class QueryAsyncTask extends
+    private class QueryAsyncTask extends
                     AsyncTask<QueryTask, Void, QueryResult> {
 
         @Override
@@ -396,6 +400,8 @@ class BarterLiAsyncQueryHandler {
                     }
                 }
             }
+            mTasks.remove(task.mToken);
+
         }
     }
 
