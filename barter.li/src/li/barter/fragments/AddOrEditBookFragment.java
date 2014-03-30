@@ -18,6 +18,7 @@ package li.barter.fragments;
 
 import com.android.volley.Request.Method;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import java.util.HashMap;
@@ -42,6 +44,7 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.Logger;
@@ -57,6 +60,13 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private EditText            mAuthorEditText;
     private EditText            mDescriptionEditText;
     private EditText            mPublicationYearEditText;
+    private CheckBox            mBarterCheckBox;
+    private CheckBox            mReadCheckBox;
+    private CheckBox            mSellCheckBox;
+    private CheckBox            mWishlistCheckBox;
+    private CheckBox            mGiveAwayCheckBox;
+    private CheckBox            mKeepPrivateCheckBox;
+    private CheckBox[]          mBarterTypeCheckBoxes;
     private String              mBookId;
     private boolean             mHasFetchedDetails;
 
@@ -74,14 +84,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         init(container);
         final View view = inflater
                         .inflate(R.layout.fragment_add_or_edit_book, container, false);
-        mIsbnEditText = (EditText) view.findViewById(R.id.edit_text_isbn);
-        mTitleEditText = (EditText) view.findViewById(R.id.edit_text_title);
-        mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
-        mDescriptionEditText = (EditText) view
-                        .findViewById(R.id.edit_text_description);
-        mPublicationYearEditText = (EditText) view
-                        .findViewById(R.id.edit_text_publication_year);
-
+        initViews(view);
         view.findViewById(R.id.button_submit).setOnClickListener(this);
 
         getActivity().getWindow()
@@ -117,6 +120,59 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         setActionBarDrawerToggleEnabled(false);
         return view;
+    }
+
+    /**
+     * Gets references to the Views
+     * 
+     * @param view The content view of the fragment
+     */
+    private void initViews(final View view) {
+        mIsbnEditText = (EditText) view.findViewById(R.id.edit_text_isbn);
+        mTitleEditText = (EditText) view.findViewById(R.id.edit_text_title);
+        mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
+        mDescriptionEditText = (EditText) view
+                        .findViewById(R.id.edit_text_description);
+        mPublicationYearEditText = (EditText) view
+                        .findViewById(R.id.edit_text_publication_year);
+
+        initBarterTypeCheckBoxes(view);
+
+    }
+
+    /**
+     * Gets the references to the barter type checkboxes, set the tags to
+     * simplify building the tags array when sending the request to server
+     * 
+     * @param view The content view of the fragment
+     */
+    private void initBarterTypeCheckBoxes(View view) {
+        mBarterCheckBox = (CheckBox) view.findViewById(R.id.checkbox_barter);
+        mReadCheckBox = (CheckBox) view.findViewById(R.id.checkbox_read);
+        mSellCheckBox = (CheckBox) view.findViewById(R.id.checkbox_sell);
+        mWishlistCheckBox = (CheckBox) view
+                        .findViewById(R.id.checkbox_wishlist);
+        mGiveAwayCheckBox = (CheckBox) view
+                        .findViewById(R.id.checkbox_give_away);
+        mKeepPrivateCheckBox = (CheckBox) view
+                        .findViewById(R.id.checkbox_keep_private);
+
+        //Set the barter tags
+        mBarterCheckBox.setTag(R.string.tag_barter_type, BarterType.BARTER);
+        mReadCheckBox.setTag(R.string.tag_barter_type, BarterType.READ);
+        mSellCheckBox.setTag(R.string.tag_barter_type, BarterType.SALE);
+        mWishlistCheckBox.setTag(R.string.tag_barter_type, BarterType.RENT);
+        mGiveAwayCheckBox.setTag(R.string.tag_barter_type, BarterType.FREE);
+        mKeepPrivateCheckBox
+                        .setTag(R.string.tag_barter_type, BarterType.PRIVATE);
+
+        mBarterTypeCheckBoxes = new CheckBox[6];
+        mBarterTypeCheckBoxes[0] = mBarterCheckBox;
+        mBarterTypeCheckBoxes[1] = mReadCheckBox;
+        mBarterTypeCheckBoxes[2] = mSellCheckBox;
+        mBarterTypeCheckBoxes[3] = mWishlistCheckBox;
+        mBarterTypeCheckBoxes[4] = mGiveAwayCheckBox;
+        mBarterTypeCheckBoxes[5] = mKeepPrivateCheckBox;
     }
 
     @Override
@@ -195,26 +251,50 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void createBookOnServer() {
 
-        final JSONObject createBookJson = new JSONObject();
+        if (mShouldSubmitOnResume) {
+            mShouldSubmitOnResume = false;
+        }
 
         try {
-            createBookJson.put(HttpConstants.TITLE, mTitleEditText.getText()
-                            .toString());
-            createBookJson.put(HttpConstants.AUTHOR, mAuthorEditText.getText()
-                            .toString());
-            createBookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
-                            .getText().toString());
-            createBookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYearEditText
-                            .getText().toString());
 
-            // TODO Add barter types
+            final JSONObject requestObject = new JSONObject();
+            final JSONObject bookJson = new JSONObject();
+            bookJson.put(HttpConstants.TITLE, mTitleEditText.getText()
+                            .toString());
+            bookJson.put(HttpConstants.AUTHOR, mAuthorEditText.getText()
+                            .toString());
+            bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
+                            .getText().toString());
+            bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYearEditText
+                            .getText().toString());
+            bookJson.put(HttpConstants.TAG_NAMES, getBarterTagsArray());
+            requestObject.put(HttpConstants.BOOK, bookJson);
+
             final BlRequest createBookRequest = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.BOOKS, createBookJson.toString(), mVolleyCallbacks);
+                            + ApiEndpoints.BOOKS, bookJson.toString(), mVolleyCallbacks);
             createBookRequest.setRequestId(RequestId.CREATE_BOOK);
             addRequestToQueue(createBookRequest, true, 0);
         } catch (final JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Build the tags array for books
+     * 
+     * @return A {@link JSONArray} representing the barter tags
+     */
+    private JSONArray getBarterTagsArray() {
+
+        final JSONArray tagNamesArray = new JSONArray();
+
+        for (CheckBox checkBox : mBarterTypeCheckBoxes) {
+
+            if (checkBox.isChecked()) {
+                tagNamesArray.put(checkBox.getTag(R.string.tag_barter_type));
+            }
+        }
+        return tagNamesArray;
     }
 
     @Override
@@ -264,6 +344,21 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         if (!isValid) {
             mTitleEditText.setError(getString(R.string.error_enter_title));
+        }
+
+        //Validation for at least one barter type set
+        if (isValid) {
+
+            //Flag to check if at least one of the barter checkboxes is checked
+            boolean anyOneChecked = false;
+            for (CheckBox checkBox : mBarterTypeCheckBoxes) {
+                anyOneChecked |= checkBox.isChecked();
+            }
+
+            isValid &= anyOneChecked;
+            if (!isValid) {
+                showToast(R.string.select_a_barter_type, false);
+            }
         }
         return isValid;
     }
