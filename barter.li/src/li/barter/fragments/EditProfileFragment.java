@@ -456,6 +456,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
             BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
 
+            Log.v(TAG, url);
+            Log.v(TAG, mUserProfileMasterObject.toString());
+            
             updateUserProfileRequest
                             .addMultipartParam(HttpConstants.USER, "application/json", mUserProfileMasterObject
                                             .toString());
