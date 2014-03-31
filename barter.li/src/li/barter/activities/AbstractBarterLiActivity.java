@@ -21,9 +21,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
-import de.keyboardsurfer.android.widget.crouton.Style;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
@@ -41,6 +41,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,7 +50,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -59,6 +60,7 @@ import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.FragmentTransition;
 import li.barter.fragments.LoginFragment;
 import li.barter.fragments.ProfileFragment;
+import li.barter.fragments.OssLicenseFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.ResponseInfo;
@@ -77,10 +79,20 @@ import li.barter.widgets.TypefacedSpan;
 public abstract class AbstractBarterLiActivity extends FragmentActivity
                 implements IHttpCallbacks {
 
-    private static final String       TAG                         = "BaseBarterLiActivity";
+    private static final String TAG                     = "BaseBarterLiActivity";
 
-    private static final int          ACTION_BAR_DISPLAY_MASK     = ActionBar.DISPLAY_HOME_AS_UP
-                                                                                  | ActionBar.DISPLAY_SHOW_TITLE;
+    private static final int    ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
+                                                                        | ActionBar.DISPLAY_SHOW_TITLE;
+
+    /**
+     * @author Vinay S Shenoy Enum to handle the different types of Alerts that
+     *         can be shown
+     */
+    public enum AlertStyle {
+        ALERT,
+        INFO,
+        ERROR
+    }
 
     /**
      * {@link VolleyCallbacks} for encapsulating Volley request responses
@@ -191,11 +203,20 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     private Runnable makeRunnableForNavDrawerClick(final int position) {
 
         Runnable runnable = null;
+        final AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
         switch (position) {
 
         //My Profile
             case 0: {
 
+                /*
+                 * If the master fragment is already the login fragment, don't
+                 * load it again. TODO Check for Profile Fragment also
+                 */
+                if (masterFragment != null
+                                && masterFragment instanceof LoginFragment) {
+                    return null;
+                }
                 runnable = new Runnable() {
 
                     @Override
@@ -233,7 +254,13 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Open source
             case 3: {
-
+                if (masterFragment != null
+                                && masterFragment instanceof OssLicenseFragment) {
+                    return null;
+                }
+                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                .instantiate(this, OssLicenseFragment.class
+                                                .getName(), null), FragmentTags.OSS_LICENSES, true, null);
                 break;
             }
 
@@ -280,8 +307,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             request.setTag(getVolleyTag());
             mVolleyCallbacks.queue(request);
         } else if (showErrorOnNoNetwork) {
-            showToast(errorMsgResId != 0 ? errorMsgResId
-                            : R.string.no_network_connection, false);
+            showCrouton(errorMsgResId != 0 ? errorMsgResId
+                            : R.string.no_network_connection, AlertStyle.ERROR);
         }
     }
 
@@ -414,31 +441,24 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     }
 
     /**
-     * Display a {@link Toast} message
+     * Display an alert, with a string message
      * 
-     * @param toastMessage The message to display
-     * @param isLong Whether it is a long toast
+     * @param message The message to display
+     * @param style The {@link AlertStyle} of message to display
      */
-    public void showToast(final String toastMessage, final boolean isLong) {
-        Crouton.makeText(this, toastMessage, Style.INFO).show();
-        /*
-         * Toast.makeText(this, toastMessage, isLong ? Toast.LENGTH_LONG :
-         * Toast.LENGTH_SHORT).show();
-         */
+    public void showCrouton(final String message, final AlertStyle style) {
+        Crouton.make(this, getCroutonViewForStyle(this, message, style)).show();
+
     }
 
     /**
-     * Display a {@link Toast} message
+     * Display an alert, with a string message
      * 
-     * @param toastMessageResId The message string resource Id to display
-     * @param isLong Whether it is a long toast
+     * @param messageResId The message to display
+     * @param style The {@link AlertStyle} of message to display
      */
-    public void showToast(final int toastMessageResId, final boolean isLong) {
-        Crouton.makeText(this, toastMessageResId, Style.INFO).show();
-        /*
-         * Toast.makeText(this, toastMessageResId, isLong ? Toast.LENGTH_LONG :
-         * Toast.LENGTH_SHORT).show();
-         */
+    public void showCrouton(final int messageResId, final AlertStyle style) {
+        showCrouton(getString(messageResId), style);
     }
 
     /**
@@ -701,6 +721,41 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     public void onOtherError(int requestId, IBlRequestContract request,
                     int errorCode) {
         //TODO Show generic network error message
+    }
+
+    /**
+     * Creates a Crouton View based on the style
+     * 
+     * @param context {@link Context} reference to get the
+     *            {@link LayoutInflater} reference
+     * @param message The message to display
+     * @param style The style of Crouton
+     * @return A View to display as a Crouton
+     */
+    private static View getCroutonViewForStyle(Context context, String message,
+                    AlertStyle style) {
+        int layoutResId = R.layout.crouton_info; //Default layout
+        switch (style) {
+
+            case ALERT: {
+                layoutResId = R.layout.crouton_alert;
+                break;
+            }
+
+            case ERROR: {
+                layoutResId = R.layout.crouton_error;
+                break;
+            }
+
+            case INFO: {
+                layoutResId = R.layout.crouton_info;
+            }
+        }
+        final View croutonText = LayoutInflater.from(context)
+                        .inflate(layoutResId, null);
+        ((TextView) croutonText.findViewById(R.id.text_message))
+                        .setText(message);
+        return croutonText;
     }
 
 }

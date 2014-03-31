@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -272,7 +273,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                     Bundle errorResponseBundle) {
 
         if (requestId == RequestId.CREATE_USER) {
-            showToast(errorMessage, false);
+            showCrouton(errorMessage, AlertStyle.ERROR);
         }
     }
 

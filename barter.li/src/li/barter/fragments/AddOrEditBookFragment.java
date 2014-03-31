@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -392,7 +393,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             isValid &= anyOneChecked;
             if (!isValid) {
-                showToast(R.string.select_a_barter_type, false);
+                showCrouton(R.string.select_a_barter_type, AlertStyle.ALERT);
             }
         }
         return isValid;
@@ -405,7 +406,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if (requestId == RequestId.GET_BOOK_INFO) {
             //TODO Read book info from bundle
         } else if (requestId == RequestId.CREATE_BOOK) {
-            showToast(R.string.book_added, true);
+            showCrouton(R.string.book_added, AlertStyle.ALERT);
             getFragmentManager().popBackStack();
         }
 
@@ -416,7 +417,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
         if (requestId == RequestId.GET_BOOK_INFO) {
-            showToast(R.string.unable_to_fetch_book_info, false);
+            showCrouton(R.string.unable_to_fetch_book_info, AlertStyle.ERROR);
         }
     }
 

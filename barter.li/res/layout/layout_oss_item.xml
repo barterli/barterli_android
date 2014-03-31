@@ -14,19 +14,13 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources>
-
-    <color name="apptheme_color">#2C7E9C</color>
-    <color name="global_bg">#DCE0DA</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="transparent">#00FFFFFF</color>
-    <color name="dark_gray">#565051</color>
-    <color name="silver">#C0C0C0</color>
-    <color name="overlay_black_15p">#26000000</color>
-    <color name="overlay_black_40p">#66000000</color>
-    <color name="crouton_error">#FFFF4444</color>
-    <color name="crouton_alert">#FF99CC00</color>
-    <color name="crouton_info">#FF33B5E5</color>
-
-</resources>
+<li.barter.widgets.TypefacedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:autoLink="web"
+    android:padding="@dimen/activity_margin"
+    android:textSize="@dimen/text_medium"
+    android:textColor="@color/black"
+    app:fontStyle="alegreya_regular" />
+   

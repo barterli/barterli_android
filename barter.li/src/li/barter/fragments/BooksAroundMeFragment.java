@@ -51,6 +51,7 @@ import java.util.Map;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.ScanIsbnActivity;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.TableSearchBooks;
@@ -415,7 +416,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
         if (requestId == RequestId.SEARCH_BOOKS) {
-            showToast(R.string.unable_to_fetch_books, true);
+            showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
         }
     }
 
