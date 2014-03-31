@@ -17,6 +17,7 @@
 package li.barter.adapters;
 
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -41,6 +42,11 @@ public class BooksAroundMeAdapter extends CursorAdapter {
     private final ImageLoader   mImageLoader;
 
     /**
+     * Format string for formatting the location of books
+     */
+    private final String        mLocationFormat;
+
+    /**
      * @param context A reference to the {@link Context}
      * @param imageLoader An {@link ImageLoader} reference for loading images
      *            from the network
@@ -48,6 +54,7 @@ public class BooksAroundMeAdapter extends CursorAdapter {
     public BooksAroundMeAdapter(final Context context, final ImageLoader imageLoader) {
         super(context, null, 0);
         mImageLoader = imageLoader;
+        mLocationFormat = context.getString(R.string.location_format);
     }
 
     @Override
@@ -60,12 +67,16 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         ((TextView) view.getTag(R.id.text_book_desc))
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.DESCRIPTION)));
+        ((TextView) view.getTag(R.id.text_book_location))
+                        .setText(String.format(mLocationFormat, cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.NAME)), cursor
+                                        .getString(cursor
+                                                        .getColumnIndex(DatabaseColumns.ADDRESS))));
 
-        /*
-         * ((NetworkImageView) view.getTag(R.id.image_book))
-         * .setImageUrl(cursor.getString(cursor
-         * .getColumnIndex(DatabaseColumns.IMAGE_URL)), mImageLoader);
-         */
+        ((NetworkImageView) view.getTag(R.id.image_book))
+                        .setImageUrl(cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.IMAGE_URL)), mImageLoader);
+
     }
 
     @Override
@@ -77,6 +88,8 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         view.setTag(R.id.image_book, view.findViewById(R.id.image_book));
         view.setTag(R.id.text_book_name, view.findViewById(R.id.text_book_name));
         view.setTag(R.id.text_book_desc, view.findViewById(R.id.text_book_desc));
+        view.setTag(R.id.text_book_location, view
+                        .findViewById(R.id.text_book_location));
         return view;
     }
 
