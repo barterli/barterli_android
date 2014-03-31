@@ -109,8 +109,7 @@ public class HttpConstants {
     public static final String AUTHOR                      = "author";
     public static final String NAME                        = "name";
     public static final String PUBLICATION_YEAR            = "publication_year";
-    public static final String BARTER_TYPE                 = "barter_type";
-    public static final String USER_ID                     = "user_id";
+    public static final String PUBLICATION_MONTH           = "publication_month";
     public static final String IMAGE_URL                   = "image_url";
     public static final String SEARCH                      = "search";
     public static final String LATITUDE                    = "latitude";
@@ -140,6 +139,10 @@ public class HttpConstants {
     public static final String TOKEN                       = "token";
     public static final String BOOK                        = "book";
     public static final String TAG_NAMES                   = "tag_names";
+    public static final String TAGS                        = "tags";
+    public static final String ID_LOCATION                 = "id_location";
+    public static final String ID_BOOK                     = "id_book";
+    public static final String ID_USER                     = "id_user";
     public static final String HEADER_AUTHORIZATION_FORMAT = "Token token=\"%s\", email=\"%s\"";
     public static final String HEADER_AUTHORIZATION        = "Authorization";
 

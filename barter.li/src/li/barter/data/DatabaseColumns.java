@@ -23,18 +23,20 @@ package li.barter.data;
  */
 public interface DatabaseColumns {
 
-    public static final String BOOK_ID     = "book_id";
-    public static final String ISBN_10     = "isbn_10";
-    public static final String ISBN_13     = "isbn_13";
-    public static final String DESCRIPTION = "description";
-    public static final String TITLE       = "title";
-    public static final String AUTHOR      = "author";
-    public static final String BARTER_TYPE = "barter_type";
-    public static final String USER_ID     = "user_id";
-    public static final String IMAGE_URL   = "image_url";
-    public static final String LOCATION_ID = "location_id";
-    public static final String NAME        = "name";
-    public static final String ADDRESS     = "address";
-    public static final String LATITUDE    = "latitude";
-    public static final String LONGITUDE   = "longitude";
+    public static final String BOOK_ID           = "book_id";
+    public static final String ISBN_10           = "isbn_10";
+    public static final String ISBN_13           = "isbn_13";
+    public static final String DESCRIPTION       = "description";
+    public static final String TITLE             = "title";
+    public static final String AUTHOR            = "author";
+    public static final String BARTER_TYPE       = "barter_type";
+    public static final String USER_ID           = "user_id";
+    public static final String IMAGE_URL         = "image_url";
+    public static final String LOCATION_ID       = "location_id";
+    public static final String NAME              = "name";
+    public static final String ADDRESS           = "address";
+    public static final String LATITUDE          = "latitude";
+    public static final String LONGITUDE         = "longitude";
+    public static final String PUBLICATION_YEAR  = "publication_year";
+    public static final String PUBLICATION_MONTH = "publication_month";
 }

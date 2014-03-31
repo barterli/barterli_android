@@ -91,6 +91,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     public void onCreate(final SQLiteDatabase db) {
         TableSearchBooks.create(db);
         TableLocations.create(db);
+        TableMyBooks.create(db);
 
     }
 
@@ -99,6 +100,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
                     final int newVersion) {
         TableSearchBooks.upgrade(db, oldVersion, newVersion);
         TableLocations.upgrade(db, oldVersion, newVersion);
+        TableMyBooks.upgrade(db, oldVersion, newVersion);
     }
 
     /**

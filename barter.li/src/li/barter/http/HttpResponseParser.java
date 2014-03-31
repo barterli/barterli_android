@@ -293,7 +293,7 @@ public class HttpResponseParser {
         }
 
         final String bookId = JsonUtils
-                        .readString(bookObject, HttpConstants.ID, true, true);
+                        .readString(bookObject, HttpConstants.ID_BOOK, true, true);
 
         values.put(DatabaseColumns.BOOK_ID, bookId);
         values.put(DatabaseColumns.ISBN_10, JsonUtils
@@ -303,15 +303,19 @@ public class HttpResponseParser {
         values.put(DatabaseColumns.AUTHOR, JsonUtils
                         .readString(bookObject, HttpConstants.AUTHOR, false, false));
         values.put(DatabaseColumns.BARTER_TYPE, JsonUtils
-                        .readString(bookObject, HttpConstants.BARTER_TYPE, false, false));
+                        .readString(bookObject, HttpConstants.TAGS, false, false));
         values.put(DatabaseColumns.USER_ID, JsonUtils
-                        .readString(bookObject, HttpConstants.USER_ID, false, false));
+                        .readString(bookObject, HttpConstants.ID_USER, false, false));
         values.put(DatabaseColumns.TITLE, JsonUtils
                         .readString(bookObject, HttpConstants.TITLE, false, false));
         values.put(DatabaseColumns.DESCRIPTION, JsonUtils
                         .readString(bookObject, HttpConstants.DESCRIPTION, false, false));
         values.put(DatabaseColumns.IMAGE_URL, JsonUtils
                         .readString(bookObject, HttpConstants.IMAGE_URL, false, false));
+        values.put(DatabaseColumns.PUBLICATION_YEAR, JsonUtils
+                        .readString(bookObject, HttpConstants.PUBLICATION_YEAR, false, false));
+        values.put(DatabaseColumns.PUBLICATION_MONTH, JsonUtils
+                        .readString(bookObject, HttpConstants.PUBLICATION_MONTH, false, false));
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(bookObject, HttpConstants.LOCATION, false, false);
@@ -342,7 +346,7 @@ public class HttpResponseParser {
         }
 
         final String locationId = JsonUtils
-                        .readString(locationObject, HttpConstants.ID, true, true);
+                        .readString(locationObject, HttpConstants.ID_LOCATION, true, true);
         values.put(DatabaseColumns.LOCATION_ID, locationId);
         values.put(DatabaseColumns.NAME, JsonUtils
                         .readString(locationObject, HttpConstants.NAME, true, true));
