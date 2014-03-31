@@ -16,11 +16,8 @@
 package li.barter.fragments;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import li.barter.R;
-import li.barter.adapters.CropOptionAdapter;
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -32,28 +29,15 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
-import li.barter.models.CropOption;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.QueryTokens;
-import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
 
-import org.json.JSONObject;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,18 +45,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.Request.Method;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.MultiPartRequest;
 
 /**
  * @author Sharath Pandeshwar
@@ -82,20 +59,12 @@ import com.android.volley.toolbox.MultiPartRequest;
 public class ProfileFragment extends AbstractBarterLiFragment implements
                 AsyncDbQueryCallback {
 
-    private static final String TAG              = "ProfileFragment";
+    private static final String TAG = "ProfileFragment";
 
     private TextView            mProfileNameTextView;
     private TextView            mAboutMeTextView;
     private TextView            mPreferredLocationTextView;
     private ImageView           mProfileImageView;
-    //private ImageView           mEditPreferredLocationImageView;
-    private Uri                 mImageCaptureUri;
-    private Bitmap              mCompressedPhoto;
-    // private Boolean mHasAboutMeDescriptionChanged = false;
-
-    private static final int    PICK_FROM_CAMERA = 1;
-    private static final int    CROP_FROM_CAMERA = 2;
-    private static final int    PICK_FROM_FILE   = 3;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -228,7 +197,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
         // TODO Auto-generated method stub
-        if(requestId == RequestId.GET_USER_PROFILE){
+        if (requestId == RequestId.GET_USER_PROFILE) {
             Log.v(TAG, response.toString());
         }
 
@@ -260,12 +229,11 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
     }
 
-    private void fetchMyBooks(){
+    private void fetchMyBooks() {
         final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.GET_USER_INFO, null, mVolleyCallbacks);
         request.setRequestId(RequestId.GET_USER_PROFILE);
         addRequestToQueue(request, true, 0);
     }
-
 
 }
