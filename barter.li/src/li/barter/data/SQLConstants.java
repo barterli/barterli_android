@@ -23,7 +23,12 @@ package li.barter.data;
  */
 public interface SQLConstants {
     public static final String CREATE_TABLE         = "CREATE TABLE IF NOT EXISTS %s (%s);";
+    public static final String CREATE_VIEW          = "CREATE VIEW IF NOT EXISTS %s AS %s;";
+    public static final String SELECT_FROM_WHERE    = "SELECT %s FROM %s WHERE %s";
+    public static final String TABLE_ALIAS          = "%s %s";
+    public static final String ALIAS_COLUMN         = "%s.%s";
     public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS %s;";
+    public static final String DROP_VIEW_IF_EXISTS  = "DROP VIEW IF EXISTS %s;";
     public static final String DATA_TEXT            = "%s TEXT DEFAULT '%s' ";
     public static final String DATA_INTEGER         = "%s INTEGER DEFAULT %d ";
     public static final String DATA_REAL            = "%s REAL DEFAULT %f ";

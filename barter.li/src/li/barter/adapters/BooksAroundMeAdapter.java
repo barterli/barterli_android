@@ -36,7 +36,9 @@ import li.barter.data.DatabaseColumns;
  */
 public class BooksAroundMeAdapter extends CursorAdapter {
 
-    private final ImageLoader mImageLoader;
+    private static final String TAG = "BooksAroundMeAdapter";
+
+    private final ImageLoader   mImageLoader;
 
     /**
      * @param context A reference to the {@link Context}
@@ -58,6 +60,7 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         ((TextView) view.getTag(R.id.text_book_desc))
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.DESCRIPTION)));
+
         /*
          * ((NetworkImageView) view.getTag(R.id.image_book))
          * .setImageUrl(cursor.getString(cursor

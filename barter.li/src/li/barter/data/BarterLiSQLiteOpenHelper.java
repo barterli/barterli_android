@@ -89,18 +89,27 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
+        
+        //Create tables
         TableSearchBooks.create(db);
         TableLocations.create(db);
         TableMyBooks.create(db);
-
+        
+        //Create Views
+        ViewSearchBooksWithLocations.create(db);
     }
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, final int oldVersion,
                     final int newVersion) {
+        
+        //Upgrade tables
         TableSearchBooks.upgrade(db, oldVersion, newVersion);
         TableLocations.upgrade(db, oldVersion, newVersion);
         TableMyBooks.upgrade(db, oldVersion, newVersion);
+        
+        //Upgrade Views
+        ViewSearchBooksWithLocations.upgrade(db, oldVersion, newVersion);
     }
 
     /**
