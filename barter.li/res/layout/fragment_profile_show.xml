@@ -22,8 +22,8 @@
         android:ellipsize="end"
         android:singleLine="true"
         android:text="@string/default_profile_name"
-        android:textSize="@dimen/text_large"
         android:textColor="@color/black"
+        android:textSize="@dimen/text_large"
         android:textStyle="bold"
         app:fontStyle="alegreya_regular" />
 
@@ -35,8 +35,8 @@
         android:layout_below="@id/profile_pic_thumbnail"
         android:layout_marginTop="@dimen/margin_medium"
         android:text="@string/about_me_label"
-        android:textSize="@dimen/text_medium"
         android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
         app:fontStyle="alegreya_regular" />
 
     <li.barter.widgets.TypefacedTextView
@@ -45,11 +45,11 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/profile_pic_thumbnail"
         android:layout_below="@id/about_me_label"
+        android:layout_marginRight="@dimen/margin_medium"
         android:layout_marginTop="@dimen/margin_minimum"
         android:hint="@string/profile_description"
-        android:textSize="@dimen/text_medium"
-        android:layout_marginRight="@dimen/margin_medium"
         android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_medium"
         app:fontStyle="alegreya_regular" />
 
     <li.barter.widgets.TypefacedTextView
@@ -80,7 +80,8 @@
         android:textSize="@dimen/text_small"
         app:fontStyle="alegreya_regular" />
 
-    <ImageView
+    <!--
+          <ImageView
         android:id="@+id/edit_current_location_button"
         android:layout_width="20dp"
         android:layout_height="20dp"
@@ -90,5 +91,6 @@
         android:layout_toRightOf="@+id/current_location_text"
         android:contentDescription="@string/edit_preferred_location_description"
         android:src="@drawable/ic_action_edit" />
+    -->
 
 </RelativeLayout>

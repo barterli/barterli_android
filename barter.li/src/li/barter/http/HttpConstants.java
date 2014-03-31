@@ -38,7 +38,7 @@ public class HttpConstants {
                         "192.168.1.123",
                         5672),
         DEV(
-                        "http://162.243.198.171:3000/api/v",
+                        "http://162.243.198.171/api/v",
                         API_VERSION,
                         "162.243.198.171",
                         5672),
@@ -86,6 +86,7 @@ public class HttpConstants {
         public static final String SEARCH                  = "/search.json";
 
         public static final String UPDATE_USER_INFO        = "/user_update.json";
+        public static final String GET_USER_INFO        = "/current_user_profile";
     }
 
     /**
@@ -100,6 +101,7 @@ public class HttpConstants {
         public static final int HANGOUTS                    = 104;
         public static final int SET_USER_PREFERRED_LOCATION = 105;
         public static final int SAVE_USER_PROFILE           = 110;
+        public static final int GET_USER_PROFILE           = 111;
     }
 
     public static final String ID                          = "id";
@@ -146,7 +148,7 @@ public class HttpConstants {
     public static final String TAG_NAMES                   = "tag_names";
     public static final String HEADER_AUTHORIZATION_FORMAT = "Token token=\"%s\", email=\"%s\"";
     public static final String HEADER_AUTHORIZATION        = "Authorization";
-    
-    public static final String PROFILE_PIC        = "profile";
+
+    public static final String PROFILE_PIC                 = "profile";
 
 }

@@ -202,8 +202,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                     public void run() {
                         if (isLoggedIn()) {
                             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                    .instantiate(AbstractBarterLiActivity.this, ProfileFragment.class
-                                                    .getName(), null), FragmentTags.PROFILE, true, null);
+                                            .instantiate(AbstractBarterLiActivity.this, ProfileFragment.class
+                                                            .getName(), null), FragmentTags.PROFILE, true, null);
                         } else {
 
                             final Bundle loginArgs = new Bundle(1);
@@ -421,8 +421,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      */
     public void showToast(final String toastMessage, final boolean isLong) {
         Crouton.makeText(this, toastMessage, Style.INFO).show();
-        /*Toast.makeText(this, toastMessage, isLong ? Toast.LENGTH_LONG
-                        : Toast.LENGTH_SHORT).show();*/
+        /*
+         * Toast.makeText(this, toastMessage, isLong ? Toast.LENGTH_LONG :
+         * Toast.LENGTH_SHORT).show();
+         */
     }
 
     /**
@@ -433,8 +435,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      */
     public void showToast(final int toastMessageResId, final boolean isLong) {
         Crouton.makeText(this, toastMessageResId, Style.INFO).show();
-        /*Toast.makeText(this, toastMessageResId, isLong ? Toast.LENGTH_LONG
-                        : Toast.LENGTH_SHORT).show();*/
+        /*
+         * Toast.makeText(this, toastMessageResId, isLong ? Toast.LENGTH_LONG :
+         * Toast.LENGTH_SHORT).show();
+         */
     }
 
     /**

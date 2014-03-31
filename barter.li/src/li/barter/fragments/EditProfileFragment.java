@@ -28,8 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,8 +68,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.CropOptionAdapter;
+import li.barter.data.DBInterface;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
+import li.barter.data.TableLocations;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.http.BlMultiPartRequest;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
@@ -80,9 +84,11 @@ import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.models.CropOption;
+import li.barter.utils.Logger;
 import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.RequestCodes;
 
 /**
@@ -91,7 +97,7 @@ import li.barter.utils.AppConstants.RequestCodes;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class EditProfileFragment extends AbstractBarterLiFragment implements
-                OnClickListener {
+                OnClickListener, AsyncDbQueryCallback {
 
     private static final String TAG                     = "EditProfileFragment";
 
@@ -173,8 +179,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         if (SharedPreferenceHelper
                         .contains(getActivity(), R.string.pref_location)) {
-            mPreferredLocationTextView.setText(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_location));
+            loadPreferredLocation();
         }
 
         setActionBarDrawerToggleEnabled(false);
@@ -223,6 +228,39 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         }
     }
 
+    private void loadPreferredLocation() {
+
+        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
+                        + SQLConstants.EQUALS_ARG, new String[] {
+            SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_location)
+        }, null, null, null, null, this);
+    }
+
+    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+        if (token == QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE) {
+
+            if (cursor.moveToFirst()) {
+                String mPrefAddressName = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.NAME))
+                                + ", "
+                                + cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.ADDRESS));
+
+                mPreferredLocationTextView.setText(mPrefAddressName);
+            }
+
+            cursor.close();
+
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE);
+    }
+
     /*
      * (non-Javadoc)
      * @see li.barter.fragments.AbstractBarterLiFragment#getVolleyTag()
@@ -240,7 +278,6 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.edit_current_location_button_in_edit_page: {
-                // showToast("Edit Preferred Location!", false);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), SelectPreferredLocationFragment.class
                                                 .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true, FragmentTags.PROFILE);
@@ -407,52 +444,45 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                     final String lastName, final String aboutMeDescription,
                     final Boolean shouldIncludePic) {
 
-        String url = HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.UPDATE_USER_INFO;
-        
+        // String url = HttpConstants.getApiBaseUrl()
+        //+ ApiEndpoints.UPDATE_USER_INFO;
+        String url = "http://162.243.198.171/api/v1/user_update.json";
+
         JSONObject mUserProfileObject = new JSONObject();
         JSONObject mUserProfileMasterObject = new JSONObject();
         try {
             mUserProfileObject.put(HttpConstants.FIRST_NAME, firstName);
             mUserProfileObject.put(HttpConstants.LAST_NAME, lastName);
-            mUserProfileObject.put(HttpConstants.DESCRIPTION, aboutMeDescription);
-            String mProfilePicPath = mAvatarfile.getAbsolutePath();
-            mUserProfileMasterObject.put("user", mUserProfileObject.toString());
+            mUserProfileObject
+                            .put(HttpConstants.DESCRIPTION, aboutMeDescription);
+            mUserProfileMasterObject.put("user", mUserProfileObject);
+
             BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
+
             updateUserProfileRequest
-            .addMultipartParam("user", "application/json", mUserProfileMasterObject.toString());
+                            .addMultipartParam("user", "application/json", mUserProfileMasterObject
+                                            .toString());
+            String mProfilePicPath = mAvatarfile.getAbsolutePath();
             updateUserProfileRequest
                             .addFile(HttpConstants.PROFILE_PIC, mProfilePicPath);
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
             addRequestToQueue(updateUserProfileRequest, true, 0);
-            
+
         } catch (JSONException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
     }
-
-       // Log.v(TAG, userProfileObject.toString());
-
-        /*updateUserProfileRequest
-                        .addMultipartParam(HttpConstants.FIRST_NAME, "text/plain", firstName);
-        updateUserProfileRequest
-                        .addMultipartParam(HttpConstants.LAST_NAME, "text/plain", lastName);
-        updateUserProfileRequest
-                        .addMultipartParam(HttpConstants.DESCRIPTION, "text/plain", aboutMeDescription); */
-
-        //if (shouldIncludePic && mAvatarfile.exists()) {
-
-            //Log.v(TAG, mProfilePicPath);
-        //}
-
-    
 
     @Override
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
         Log.v(TAG, response.toString());
+        //TODO roll back to showProfile Activity
+        if(requestId == RequestId.SAVE_USER_PROFILE){
+            onUpNavigate();
+        }
+        
 
     }
 
@@ -463,91 +493,23 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         Log.v(TAG, "Volley error");
 
     }
-    
-    /*private class buyMFAsyncTask extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            
-            uploadUserPhoto(mAvatarfile);
-            
-            /*HttpClient client = new DefaultHttpClient();
-            HttpPost post = new HttpPost("http://162.243.198.171/api/v1/user_update.json");
-            MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();        
-            multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-            multipartEntity.addPart("profile", new FileBody(mAvatarfile));
-            post.setEntity(multipartEntity.build());
-            HttpResponse response;
-            try {
-                response = client.execute(post);
-                Log.v(TAG, convertStreamToString(response.getEntity().getContent()));
-                HttpEntity entity = response.getEntity();
-            } catch (ClientProtocolException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } 
-            
-            return null;
-        }
-        
-        
-        
-    } */
-    
-    
-   /* @SuppressWarnings("deprecation")
-    public void uploadUserPhoto(File image) {
 
-        try {
+    @Override
+    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+        // TODO Auto-generated method stub
 
-            HttpPut httpput = new HttpPut("http://162.243.198.171:3000/api/v1/user_update.json");
-            httpput.setHeader("Authorization", "Token token=\"BxCVf-ABa6jxNebxCQ9L\", email=\"rao@gmail.com\"");
-            HttpClient client = new DefaultHttpClient();
-            //MultipartEntity multipartEntity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);  
-            
-            MultipartEntityBuilder multipartEntity = MultipartEntityBuilder.create();        
-            multipartEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-          
-            
-            JSONObject profileObject = new JSONObject();
-            profileObject.put("first_name", "Sharath");
-            profileObject.put("last_name", "Pandeshwar");
-            profileObject.put("description", "I shall not give up!");
-           // StringBody s = new StringBody("{\"first_name\":\"sharath\"}", "application/json", Charset.forName("UTF-8"));
-           // Log.v("TEst",s.);
-            
-            
-            Log.v("TEst",profileObject.toString());
-            multipartEntity.addPart("user", new StringBody(profileObject.toString(), "application/json", Charset.forName("UTF-8"))); 
-            multipartEntity.addPart("user", s); 
-            //multipartEntity.addPart("profile", new FileBody(image));
-            //httpput.setEntity(multipartEntity);
-            httpput.setEntity(multipartEntity.build());
-
-            client.execute(httpput, new PhotoUploadResponseHandler());
-
-        } catch (Exception e) {
-            Log.v("Log", "Exception");
-        }
     }
 
-    private class PhotoUploadResponseHandler implements ResponseHandler<Object> {
+    @Override
+    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+        // TODO Auto-generated method stub
 
-        @Override
-        public Object handleResponse(HttpResponse response)
-                throws ClientProtocolException, IOException {
+    }
 
-            HttpEntity r_entity = response.getEntity();
-            String responseString = EntityUtils.toString(r_entity);
-            Log.d("UPLOAD", responseString);
+    @Override
+    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+        // TODO Auto-generated method stub
 
-            return null;
-        }
-
-    } */
-    
-    
+    }
 
 }

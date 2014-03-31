@@ -1,5 +1,4 @@
 /*******************************************************************************
- * Copyright 2014, barter.li
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +21,20 @@ import java.util.List;
 
 import li.barter.R;
 import li.barter.adapters.CropOptionAdapter;
+import li.barter.data.DBInterface;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
+import li.barter.data.TableLocations;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.http.BlRequest;
+import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.models.CropOption;
 import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
 
@@ -38,6 +47,7 @@ import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -70,7 +80,7 @@ import com.android.volley.toolbox.MultiPartRequest;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ProfileFragment extends AbstractBarterLiFragment implements
-                OnClickListener {
+                AsyncDbQueryCallback {
 
     private static final String TAG              = "ProfileFragment";
 
@@ -78,7 +88,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     private TextView            mAboutMeTextView;
     private TextView            mPreferredLocationTextView;
     private ImageView           mProfileImageView;
-    private ImageView           mEditPreferredLocationImageView;
+    //private ImageView           mEditPreferredLocationImageView;
     private Uri                 mImageCaptureUri;
     private Bitmap              mCompressedPhoto;
     // private Boolean mHasAboutMeDescriptionChanged = false;
@@ -101,11 +111,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.current_location_text);
         mProfileImageView = (ImageView) view
                         .findViewById(R.id.profile_pic_thumbnail);
-        mEditPreferredLocationImageView = (ImageView) view
-                        .findViewById(R.id.edit_current_location_button);
-
-        mProfileImageView.setOnClickListener(this);
-        mEditPreferredLocationImageView.setOnClickListener(this);
 
         if (SharedPreferenceHelper
                         .getBoolean(getActivity(), R.string.pref_is_profile_pic_set)) {
@@ -134,8 +139,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         if (SharedPreferenceHelper
                         .contains(getActivity(), R.string.pref_location)) {
-            mPreferredLocationTextView.setText(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_location));
+            loadPreferredLocation();
         }
 
         if (SharedPreferenceHelper
@@ -147,6 +151,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         }
 
         setActionBarDrawerToggleEnabled(false);
+        fetchMyBooks();
         return view;
     }
 
@@ -177,6 +182,39 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         }
     }
 
+    private void loadPreferredLocation() {
+
+        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
+                        + SQLConstants.EQUALS_ARG, new String[] {
+            SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_location)
+        }, null, null, null, null, this);
+    }
+
+    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+        if (token == QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE) {
+
+            if (cursor.moveToFirst()) {
+                String mPrefAddressName = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.NAME))
+                                + ", "
+                                + cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.ADDRESS));
+
+                mPreferredLocationTextView.setText(mPrefAddressName);
+            }
+
+            cursor.close();
+
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE);
+    }
+
     /*
      * (non-Javadoc)
      * @see li.barter.fragments.AbstractBarterLiFragment#getVolleyTag()
@@ -186,25 +224,14 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         return TAG;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.view.View.OnClickListener#onClick(android.view.View)
-     */
-    @Override
-    public void onClick(final View v) {
-        switch (v.getId()) {
-            case R.id.edit_current_location_button: {
-                showToast("Edit Preferred Location!", false);
-                break;
-            }
-        }
-    }
-
     @Override
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
         // TODO Auto-generated method stub
-        
+        if(requestId == RequestId.GET_USER_PROFILE){
+            Log.v(TAG, response.toString());
+        }
+
     }
 
     @Override
@@ -212,98 +239,33 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
         // TODO Auto-generated method stub
-        
+
     }
 
-    /**
-     * Method to handle click on profile image
-     */
-    /*
-     * private void editSetProfilePictureDialog() { final String[] items = new
-     * String[] { "From Camera", "From Gallery" }; ArrayAdapter<String> adapter
-     * = new ArrayAdapter<String>(getActivity(),
-     * android.R.layout.select_dialog_item, items); AlertDialog.Builder builder
-     * = new AlertDialog.Builder(getActivity()); builder.setAdapter(adapter, new
-     * DialogInterface.OnClickListener() { public void onClick(DialogInterface
-     * dialog, int item) { if (item == 0) { // Pick from camera Intent intent =
-     * new Intent(MediaStore.ACTION_IMAGE_CAPTURE); mImageCaptureUri =
-     * Uri.fromFile(new File(Environment .getExternalStorageDirectory(),
-     * "barterli_avatar.jpg"));
-     * intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
-     * mImageCaptureUri); try { intent.putExtra("return-data", true);
-     * startActivityForResult(intent, PICK_FROM_CAMERA); } catch
-     * (ActivityNotFoundException e) { e.printStackTrace(); } } else { // pick
-     * from file Intent intent = new Intent(); intent.setType("image/*");
-     * intent.setAction(Intent.ACTION_GET_CONTENT);
-     * startActivityForResult(Intent.createChooser(intent,
-     * "Complete Action Using"), PICK_FROM_FILE); } } }); final AlertDialog
-     * dialog = builder.create(); dialog.show(); } // End of
-     * editSetProfilePictureDialog
-     */
+    @Override
+    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+        // TODO Auto-generated method stub
 
-    /*
-     * private void doCrop(final int source_of_image) { final
-     * ArrayList<CropOption> cropOptions = new ArrayList<CropOption>(); String
-     * source_string; if (source_of_image == PICK_FROM_FILE) { source_string =
-     * "Gallery"; } else { source_string = "Camera"; } final String source =
-     * source_string; Intent intent = new
-     * Intent("com.android.camera.action.CROP"); intent.setType("image/*");
-     * List<ResolveInfo> list = getActivity().getPackageManager()
-     * .queryIntentActivities(intent, 0); int size = list.size(); if (size == 0)
-     * { showToast("Could not find an App to Crop Image", false);
-     * mCompressedPhoto = PhotoUtils
-     * .rotateBitmapIfNeededAndCompressIfTold(getActivity(), mImageCaptureUri,
-     * source, true); if (mCompressedPhoto != null) {
-     * mProfileImageView.setImageBitmap(mCompressedPhoto);
-     * PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
-     * SharedPreferenceHelper.set(getActivity(),
-     * R.string.pref_is_profile_pic_set, true); } return; } else {
-     * intent.setData(mImageCaptureUri); intent.putExtra("outputX", 150);
-     * intent.putExtra("outputY", 150); intent.putExtra("aspectX", 1);
-     * intent.putExtra("aspectY", 1); intent.putExtra("scale", true);
-     * intent.putExtra("return-data", true); if (size == 1) { Intent i = new
-     * Intent(intent); ResolveInfo res = list.get(0); i.setComponent(new
-     * ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-     * startActivityForResult(i, CROP_FROM_CAMERA); } else { for (ResolveInfo
-     * res : list) { final CropOption co = new CropOption(); co.title =
-     * getActivity().getPackageManager() .getApplicationLabel(
-     * res.activityInfo.applicationInfo); co.icon =
-     * getActivity().getPackageManager() .getApplicationIcon(
-     * res.activityInfo.applicationInfo); co.appIntent = new Intent(intent);
-     * co.appIntent .setComponent(new ComponentName(
-     * res.activityInfo.packageName, res.activityInfo.name));
-     * cropOptions.add(co); } CropOptionAdapter adapter = new CropOptionAdapter(
-     * getActivity(), cropOptions); AlertDialog.Builder builder = new
-     * AlertDialog.Builder( getActivity());
-     * builder.setTitle("Choose an Application to Crop Image");
-     * builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-     * public void onClick(DialogInterface dialog, int item) {
-     * startActivityForResult( cropOptions.get(item).appIntent,
-     * CROP_FROM_CAMERA); } }); builder.setOnCancelListener(new
-     * DialogInterface.OnCancelListener() {
-     * @Override public void onCancel(DialogInterface dialog) { mCompressedPhoto
-     * = PhotoUtils .rotateBitmapIfNeededAndCompressIfTold( getActivity(),
-     * mImageCaptureUri, source, true); if (mCompressedPhoto != null) {
-     * mProfileImageView.setImageBitmap(mCompressedPhoto);
-     * PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
-     * SharedPreferenceHelper.set(getActivity(),
-     * R.string.pref_is_profile_pic_set, true); } } }); AlertDialog alert =
-     * builder.create(); alert.show(); } } } // End of doCrop
-     */
+    }
 
-    /*
-     * public void sendImageToServer(String url) { MultiPartRequest<JSONObject>
-     * multipartRequest = new MultiPartRequest<JSONObject>( Method.POST, url,
-     * sListener, eListener) {
-     * @Override protected Response<JSONObject> parseNetworkResponse(
-     * NetworkResponse response) { // TODO Auto-generated method stub return
-     * null; } }; } Response.ErrorListener eListener = new
-     * Response.ErrorListener() {
-     * @Override public void onErrorResponse(VolleyError error, Request<?>
-     * request) { } }; Response.Listener<JSONObject> sListener = new
-     * Response.Listener<JSONObject>() {
-     * @Override public void onResponse(JSONObject response, Request<JSONObject>
-     * request) { // TODO Auto-generated method stub } };
-     */
+    @Override
+    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+        // TODO Auto-generated method stub
+
+    }
+
+    private void fetchMyBooks(){
+        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+                        + ApiEndpoints.GET_USER_INFO, null, mVolleyCallbacks);
+        request.setRequestId(RequestId.GET_USER_PROFILE);
+        addRequestToQueue(request, true, 0);
+    }
+
 
 }
