@@ -192,16 +192,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         outState.putBoolean(Keys.SUBMIT_ON_RESUME, mShouldSubmitOnResume);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onUpNavigate();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
     /**
      * @param args The Fragment arguments
      */

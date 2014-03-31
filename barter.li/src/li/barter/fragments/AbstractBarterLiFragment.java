@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import java.util.HashMap;
@@ -139,6 +140,16 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         mVolleyCallbacks = null;
         mImageLoader = null;
         mRequestCounter = null;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onUpNavigate();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     /**

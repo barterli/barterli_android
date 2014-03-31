@@ -88,17 +88,6 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-
-        if (item.getItemId() == android.R.id.home) {
-            onUpNavigate();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     protected Object getVolleyTag() {
         return TAG;
     }
