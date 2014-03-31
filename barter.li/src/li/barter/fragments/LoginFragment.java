@@ -253,12 +253,6 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
                     //TODO Load profile screen 
                 } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
-                    /*
-                     * TODO Figure out a way to notify to the AddBookFragment
-                     * that login is done and book upload should commence. Maybe
-                     * an event log in Abstract class? Maybe get the instance of
-                     * the fragment and load it again?
-                     */
                     onUpNavigate();
                 }
             }

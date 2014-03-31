@@ -204,7 +204,7 @@ public class AppConstants {
         public static final String BARTER_TYPES       = "barter_types";
         public static final String SYMBOLOGY          = "symbology";
         public static final String TYPE               = "type";
-        public static final String BACKSTACK_TAG      = "backstack_tag";
+        public static final String UP_NAVIGATION_TAG  = "up_navigation_tag";
         public static final String MAP_MOVED_ONCE     = "map_moved_once";
         public static final String DRAWER_OPENED_ONCE = "drawer_opened_once";
         public static final String HAS_FETCHED_INFO   = "has_fetched_info";

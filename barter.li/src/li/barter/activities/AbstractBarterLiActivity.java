@@ -225,7 +225,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                         } else {
 
                             final Bundle loginArgs = new Bundle(1);
-                            loginArgs.putString(Keys.BACKSTACK_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+                            loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
 
                             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                             .instantiate(AbstractBarterLiActivity.this, LoginFragment.class

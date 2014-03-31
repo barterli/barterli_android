@@ -351,7 +351,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
                 mShouldSubmitOnResume = true;
                 final Bundle loginArgs = new Bundle(1);
-                loginArgs.putString(Keys.BACKSTACK_TAG, FragmentTags.BS_ADD_BOOK);
+                loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_ADD_BOOK);
 
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), LoginFragment.class
