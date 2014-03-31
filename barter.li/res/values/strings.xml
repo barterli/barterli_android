@@ -50,7 +50,8 @@
     <string name="title_label">Book Title</string>
     <string name="author_label">Author</string>
     <string name="description_label">Description</string>
-    <string name="publication_year_label">Published On</string>
+    <string name="publication_year_label">Publication Year</string>
+    <string name="publication_month_label">Publication Month</string>
     <string name="barter_type_label">Barter Type</string>
     <string name="error_enter_title">Enter a book title</string>
     <string name="book_added">Book has been added!</string>
@@ -99,6 +100,20 @@
         <item>No open source licences were violated in the making of this app.</item>
         <item>What is barter.li? Who\'s behind it?</item>
         <item>The inspiration for barter.li.</item>
+    </string-array>
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>Decenber</item>
     </string-array>
 
 </resources>
