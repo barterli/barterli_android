@@ -35,6 +35,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 /**
+ * This class includes utility functions to work with images.
+ * 
  * @author Sharath Pandeshwar
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -62,6 +64,8 @@ public class PhotoUtils {
      */
 
     /**
+     * Save the image locally
+     * 
      * @param bitmap Bitmap of image to be saved
      * @param title title to be given to the image to be saved
      */
@@ -81,6 +85,8 @@ public class PhotoUtils {
     }
 
     /**
+     * Get orientation of the image
+     * 
      * @param context
      * @param photoUri
      * @return orientation of the image
@@ -99,6 +105,8 @@ public class PhotoUtils {
     }
 
     /**
+     * Rotate the BitMap and/or compress
+     * 
      * @param Context
      * @param uri
      * @param source : Options are "Gallery", "Camera"

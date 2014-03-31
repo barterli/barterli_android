@@ -2,23 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="@color/transparent"
+    android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/profile_pic_thumbnail"
+        android:id="@+id/image_profile_pic"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_margin="@dimen/margin_medium"
         android:contentDescription="@string/profile_pic_description"
-        android:src="@drawable/empty_profile" />
+        android:src="@drawable/pic_avatar" />
 
     <li.barter.widgets.TypefacedEditText
-        android:id="@+id/profile_name_first_name"
+        android:id="@+id/text_first_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/profile_pic_thumbnail"
-        android:layout_toRightOf="@id/profile_pic_thumbnail"
+        android:layout_alignTop="@id/image_profile_pic"
+        android:layout_toRightOf="@id/image_profile_pic"
         android:ellipsize="end"
         android:hint="@string/first_name_hint"
         android:singleLine="true"
@@ -27,11 +27,11 @@
         app:fontStyle="alegreya_regular" />
 
     <li.barter.widgets.TypefacedEditText
-        android:id="@+id/profile_name_last_name"
+        android:id="@+id/text_last_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profile_name_first_name"
-        android:layout_toRightOf="@id/profile_pic_thumbnail"
+        android:layout_below="@id/text_first_name"
+        android:layout_toRightOf="@id/image_profile_pic"
         android:ellipsize="end"
         android:hint="@string/last_name_hint"
         android:singleLine="true"
@@ -40,11 +40,11 @@
         app:fontStyle="alegreya_regular" />
 
     <li.barter.widgets.TypefacedTextView
-        android:id="@+id/about_me_label"
+        android:id="@+id/label_about_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/profile_pic_thumbnail"
-        android:layout_below="@id/profile_pic_thumbnail"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/image_profile_pic"
         android:layout_marginTop="@dimen/margin_medium"
         android:text="@string/about_me_label"
         android:textColor="@color/black"
@@ -52,11 +52,11 @@
         app:fontStyle="alegreya_regular" />
 
     <li.barter.widgets.TypefacedEditText
-        android:id="@+id/about_me"
+        android:id="@+id/text_about_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/about_me_label"
-        android:layout_alignLeft="@+id/profile_pic_thumbnail"
+        android:layout_below="@id/label_about_me"
+        android:layout_alignLeft="@id/image_profile_pic"
         android:layout_marginRight="@dimen/margin_medium"
         android:hint="@string/profile_description"
         android:inputType="textMultiLine"
@@ -68,11 +68,11 @@
         app:fontStyle="alegreya_regular" />
 
     <li.barter.widgets.TypefacedTextView
-        android:id="@+id/current_location_text_label"
+        android:id="@+id/label_current_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/profile_pic_thumbnail"
-        android:layout_below="@id/about_me"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/text_about_me"
         android:layout_marginTop="@dimen/margin_medium"
         android:ellipsize="end"
         android:singleLine="true"
@@ -82,11 +82,11 @@
         app:fontStyle="alegreya_regular" />
 
   <li.barter.widgets.TypefacedTextView
-        android:id="@+id/current_location_text_in_edit_page"
+        android:id="@+id/text_current_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/about_me"
-        android:layout_below="@id/current_location_text_label"
+        android:layout_alignLeft="@id/text_about_me"
+        android:layout_below="@id/label_current_location"
         android:layout_marginTop="@dimen/margin_minimum"
         android:ellipsize="end"
         android:singleLine="true"
@@ -96,14 +96,14 @@
         app:fontStyle="alegreya_regular" />
 
     <ImageView
-        android:id="@+id/edit_current_location_button_in_edit_page"
+        android:id="@+id/button_edit_current_location"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_below="@+id/current_location_text_label"
-        android:layout_marginRight="@dimen/margin_minimum"
+        android:layout_below="@+id/text_about_me"
+        android:layout_marginLeft="@dimen/margin_minimum"
         android:layout_marginTop="@dimen/margin_minimum"
-        android:layout_toRightOf="@id/current_location_text_in_edit_page"
+        android:layout_toRightOf="@id/label_current_location"
         android:contentDescription="@string/edit_preferred_location_description"
-        android:src="@drawable/ic_action_edit" />  
+        android:src="@drawable/ic_action_edit_dark" />  
 
 </RelativeLayout>

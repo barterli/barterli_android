@@ -19,6 +19,6 @@
         <item
             android:id="@+id/action_edit_profile"
             android:showAsAction="ifRoom"
-            android:icon="@drawable/ic_action_edit_light"
+            android:icon="@drawable/ic_action_edit"
             android:title="@string/edit_profile"/>
 </menu>

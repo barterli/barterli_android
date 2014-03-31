@@ -251,7 +251,10 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             } else {
                 final String tag = getTag();
                 if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
-                    //TODO Load profile screen 
+                    loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                    .instantiate(getActivity(), ProfileFragment.class
+                                                    .getName(), null), FragmentTags.PROFILE, false, FragmentTags.BOOKS_AROUND_ME);
+
                 } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
                     /*
                      * TODO Figure out a way to notify to the AddBookFragment

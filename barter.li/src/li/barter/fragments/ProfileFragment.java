@@ -16,6 +16,7 @@
 package li.barter.fragments;
 
 import java.io.File;
+import java.util.Locale;
 
 import li.barter.R;
 import li.barter.data.DBInterface;
@@ -39,6 +40,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,12 +61,13 @@ import com.android.volley.Request.Method;
 public class ProfileFragment extends AbstractBarterLiFragment implements
                 AsyncDbQueryCallback {
 
-    private static final String TAG = "ProfileFragment";
+    private static final String TAG          = "ProfileFragment";
 
     private TextView            mProfileNameTextView;
     private TextView            mAboutMeTextView;
     private TextView            mPreferredLocationTextView;
     private ImageView           mProfileImageView;
+    private String              mDefaultName = "Your Name";
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -74,36 +77,47 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         final View view = inflater
                         .inflate(R.layout.fragment_profile_show, null);
 
-        mProfileNameTextView = (TextView) view.findViewById(R.id.profile_name);
-        mAboutMeTextView = (TextView) view.findViewById(R.id.about_me);
+        mProfileNameTextView = (TextView) view
+                        .findViewById(R.id.text_profile_name);
+        mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
         mPreferredLocationTextView = (TextView) view
-                        .findViewById(R.id.current_location_text);
+                        .findViewById(R.id.text_current_location);
         mProfileImageView = (ImageView) view
-                        .findViewById(R.id.profile_pic_thumbnail);
+                        .findViewById(R.id.image_profile_pic);
 
-        if (SharedPreferenceHelper
-                        .getBoolean(getActivity(), R.string.pref_is_profile_pic_set)) {
-            File mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
-            if (mAvatarfile.exists()) {
-                Bitmap bmp = BitmapFactory.decodeFile(mAvatarfile
-                                .getAbsolutePath());
-                mProfileImageView.setImageBitmap(bmp);
-            }
+        File mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
+        if (mAvatarfile.exists()) {
+            Bitmap bmp = BitmapFactory
+                            .decodeFile(mAvatarfile.getAbsolutePath());
+            mProfileImageView.setImageBitmap(bmp);
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_profile_first_name)) {
+                        .contains(getActivity(), R.string.pref_first_name)
+                        && !(TextUtils.isEmpty(SharedPreferenceHelper
+                                        .getString(getActivity(), R.string.pref_first_name)))) {
 
-            String fullName = SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_profile_first_name)
-                            + " ";
+            String mFirstName = SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_first_name);
+
+            Log.v(TAG, mFirstName);
+
+            String mLastName = "";
 
             if (SharedPreferenceHelper
-                            .contains(getActivity(), R.string.pref_profile_last_name)) {
-                fullName += SharedPreferenceHelper
-                                .getString(getActivity(), R.string.pref_profile_last_name);
+                            .contains(getActivity(), R.string.pref_last_name)) {
+                mLastName = SharedPreferenceHelper
+                                .getString(getActivity(), R.string.pref_last_name);
             }
-            mProfileNameTextView.setText(fullName);
+
+            String mFullName = String.format(Locale.US, mFirstName + " "
+                            + mLastName);
+            if (TextUtils.isEmpty(mFullName)) {
+                mFullName = mDefaultName;
+            }
+            mProfileNameTextView.setText(mFullName);
+        } else {
+            mProfileNameTextView.setText(mDefaultName);
         }
 
         if (SharedPreferenceHelper
@@ -112,9 +126,9 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_profile_about_me_description)) {
+                        .contains(getActivity(), R.string.pref_description)) {
             mAboutMeTextView.setText(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_profile_about_me_description));
+                            .getString(getActivity(), R.string.pref_description));
         } else {
             mAboutMeTextView.setVisibility(View.INVISIBLE);
         }
@@ -151,6 +165,11 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         }
     }
 
+    /**
+     * Load the user's preferred location from DB Table and show it in the
+     * profile page.
+     */
+
     private void loadPreferredLocation() {
 
         DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
@@ -184,10 +203,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see li.barter.fragments.AbstractBarterLiFragment#getVolleyTag()
-     */
     @Override
     protected Object getVolleyTag() {
         return TAG;
@@ -228,6 +243,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         // TODO Auto-generated method stub
 
     }
+
+    /**
+     * Fetches books owned by the current user
+     */
 
     private void fetchMyBooks() {
         final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()

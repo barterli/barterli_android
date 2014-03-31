@@ -26,6 +26,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.json.JSONException;
@@ -111,11 +112,11 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     private Uri                 mImageCaptureUri;
     private Bitmap              mCompressedPhoto;
     private File                mAvatarfile;
-    // private Boolean mHasAboutMeDescriptionChanged = false;
+    private String              mAvatarFileName         = "barterli_avatar_small.png";
 
-    private static final int    PICK_FROM_CAMERA        = 1;
-    private static final int    CROP_FROM_CAMERA        = 2;
-    private static final int    PICK_FROM_FILE          = 3;
+    private static final int    sPickFromCamera         = 1;
+    private static final int    sCropFromCamera         = 2;
+    private static final int    sPickFromFile           = 3;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -125,56 +126,43 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         final View view = inflater
                         .inflate(R.layout.fragment_profile_edit, null);
 
-        mFirstNameTextView = (TextView) view
-                        .findViewById(R.id.profile_name_first_name);
-        mLastNameTextView = (TextView) view
-                        .findViewById(R.id.profile_name_last_name);
-        mAboutMeTextView = (TextView) view.findViewById(R.id.about_me);
+        mFirstNameTextView = (TextView) view.findViewById(R.id.text_first_name);
+        mLastNameTextView = (TextView) view.findViewById(R.id.text_last_name);
+        mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
         mPreferredLocationTextView = (TextView) view
-                        .findViewById(R.id.current_location_text_in_edit_page);
+                        .findViewById(R.id.text_current_location);
         mProfileImageView = (ImageView) view
-                        .findViewById(R.id.profile_pic_thumbnail);
+                        .findViewById(R.id.image_profile_pic);
         mEditPreferredLocationImageView = (ImageView) view
-                        .findViewById(R.id.edit_current_location_button_in_edit_page);
+                        .findViewById(R.id.button_edit_current_location);
 
         mProfileImageView.setOnClickListener(this);
         mEditPreferredLocationImageView.setOnClickListener(this);
-        mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
+        mAvatarfile = new File(Environment.getExternalStorageDirectory(), mAvatarFileName);
 
-        if (SharedPreferenceHelper
-                        .getBoolean(getActivity(), R.string.pref_is_about_me_description_set)) {
-            mAboutMeTextView.setText(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_is_about_me_description_set));
+        if (mAvatarfile.exists()) {
+            Bitmap bmp = BitmapFactory
+                            .decodeFile(mAvatarfile.getAbsolutePath());
+            mProfileImageView.setImageBitmap(bmp);
         }
 
         if (SharedPreferenceHelper
-                        .getBoolean(getActivity(), R.string.pref_is_profile_pic_set)) {
-
-            if (mAvatarfile.exists()) {
-                Bitmap bmp = BitmapFactory.decodeFile(mAvatarfile
-                                .getAbsolutePath());
-                mProfileImageView.setImageBitmap(bmp);
-            }
-        }
-
-        if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_profile_first_name)) {
+                        .contains(getActivity(), R.string.pref_first_name)) {
             mFirstNameTextView
                             .setText(SharedPreferenceHelper
-                                            .getString(getActivity(), R.string.pref_profile_first_name));
+                                            .getString(getActivity(), R.string.pref_first_name));
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_profile_last_name)) {
-            mLastNameTextView
-                            .setText(SharedPreferenceHelper
-                                            .getString(getActivity(), R.string.pref_profile_last_name));
+                        .contains(getActivity(), R.string.pref_last_name)) {
+            mLastNameTextView.setText(SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_last_name));
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_profile_about_me_description)) {
+                        .contains(getActivity(), R.string.pref_description)) {
             mAboutMeTextView.setText(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_profile_about_me_description));
+                            .getString(getActivity(), R.string.pref_description));
         }
 
         if (SharedPreferenceHelper
@@ -208,17 +196,17 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
                 //TODO move saving to shared preference to network success listener
                 SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_profile_first_name, mFirstName);
+                                .set(getActivity(), R.string.pref_first_name, mFirstName);
 
                 SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_profile_last_name, mLastName);
+                                .set(getActivity(), R.string.pref_last_name, mLastName);
 
                 SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_profile_about_me_description, mAboutMe);
+                                .set(getActivity(), R.string.pref_description, mAboutMe);
 
-                saveProfileInfoToServer(mFirstName, mLastName, mAboutMe, mWasProfileImageChanged);
+                saveProfileInfoToServer(mFirstName, mLastName, mAboutMe, mWasProfileImageChanged, mAvatarfile
+                                .getAbsolutePath());
 
-                // showToast("Saved", false);
                 return true;
             }
 
@@ -228,8 +216,12 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         }
     }
 
-    private void loadPreferredLocation() {
+    /**
+     * Load the user's preferred location from DB Table and show it in the
+     * profile page.
+     */
 
+    private void loadPreferredLocation() {
         DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
                         + SQLConstants.EQUALS_ARG, new String[] {
             SharedPreferenceHelper
@@ -241,13 +233,15 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         if (token == QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE) {
 
             if (cursor.moveToFirst()) {
-                String mPrefAddressName = cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.NAME))
-                                + ", "
-                                + cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.ADDRESS));
+                String mPrefPlaceName = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.NAME));
+                String mPrefPlaceAddress = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.ADDRESS));
 
-                mPreferredLocationTextView.setText(mPrefAddressName);
+                String mPrefPlace = String.format(Locale.US, mPrefPlaceName
+                                + ", " + mPrefPlaceAddress);
+
+                mPreferredLocationTextView.setText(mPrefPlace);
             }
 
             cursor.close();
@@ -261,31 +255,23 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see li.barter.fragments.AbstractBarterLiFragment#getVolleyTag()
-     */
     @Override
     protected Object getVolleyTag() {
         return TAG;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see android.view.View.OnClickListener#onClick(android.view.View)
-     */
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-            case R.id.edit_current_location_button_in_edit_page: {
+            case R.id.button_edit_current_location: {
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), SelectPreferredLocationFragment.class
-                                                .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true, FragmentTags.PROFILE);
+                                                .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true, FragmentTags.BS_PROFILE);
 
                 break;
             }
 
-            case R.id.profile_pic_thumbnail: {
+            case R.id.image_profile_pic: {
                 editSetProfilePictureDialog();
                 break;
             }
@@ -300,26 +286,24 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             return;
 
         switch (requestCode) {
-            case PICK_FROM_CAMERA:
+            case sPickFromCamera:
                 //doCrop(PICK_FROM_CAMERA);
-                setAndSaveImage(mImageCaptureUri, PICK_FROM_CAMERA);
+                setAndSaveImage(mImageCaptureUri, sPickFromCamera);
                 break;
 
-            case PICK_FROM_FILE:
+            case sPickFromFile:
                 mImageCaptureUri = data.getData();
-                setAndSaveImage(mImageCaptureUri, PICK_FROM_FILE);
+                setAndSaveImage(mImageCaptureUri, sPickFromFile);
                 //doCrop(PICK_FROM_FILE);
                 break;
 
-            case CROP_FROM_CAMERA:
+            case sCropFromCamera:
                 Bundle extras = data.getExtras();
                 if (extras != null) {
                     mCompressedPhoto = extras.getParcelable("data");
                     mProfileImageView.setImageBitmap(mCompressedPhoto);
                 }
                 PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_is_profile_pic_set, true);
                 break;
 
         }
@@ -349,7 +333,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
                     try {
                         intent.putExtra("return-data", true);
-                        startActivityForResult(intent, PICK_FROM_CAMERA);
+                        startActivityForResult(intent, sPickFromCamera);
                     } catch (ActivityNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -359,7 +343,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent
-                                    .createChooser(intent, "Complete Action Using"), PICK_FROM_FILE);
+                                    .createChooser(intent, "Complete Action Using"), sPickFromFile);
                 }
             }
         });
@@ -418,35 +402,47 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
      * builder.create(); alert.show(); } } } // End of doCrop
      */
 
+    /**
+     * Set the Profile Image and Save it locally
+     * 
+     * @param uri URI of the image to be saved.
+     * @param source_of_image If the image was from Gallery or Camera
+     */
+
     private void setAndSaveImage(final Uri uri, final int source_of_image) {
         String source_string;
-        if (source_of_image == PICK_FROM_FILE) {
+        if (source_of_image == sPickFromFile) {
             source_string = "Gallery";
         } else {
             source_string = "Camera";
         }
-
-        //final String source = source_string;
 
         mCompressedPhoto = PhotoUtils
                         .rotateBitmapIfNeededAndCompressIfTold(getActivity(), uri, source_string, true);
 
         if (mCompressedPhoto != null) {
             mProfileImageView.setImageBitmap(mCompressedPhoto);
-            PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_is_profile_pic_set, true);
+            PhotoUtils.saveImage(mCompressedPhoto, mAvatarFileName);
         }
         mWasProfileImageChanged = true;
     }
 
+    /**
+     * Method to update the user profile.
+     * 
+     * @param firstName First Name of the person
+     * @param lastName Last Name of the person
+     * @param aboutMeDescription A Brief Introduction about the person
+     * @param shouldIncludePic Should the Profile picture be sent.
+     * @param Path of the image file to be sent, if should be sent.
+     */
+
     private void saveProfileInfoToServer(final String firstName,
                     final String lastName, final String aboutMeDescription,
-                    final Boolean shouldIncludePic) {
+                    final Boolean shouldIncludePic, String profilePicPath) {
 
-        // String url = HttpConstants.getApiBaseUrl()
-        //+ ApiEndpoints.UPDATE_USER_INFO;
-        String url = "http://162.243.198.171/api/v1/user_update.json";
+        String url = HttpConstants.getApiBaseUrl()
+                        + ApiEndpoints.UPDATE_USER_INFO;
 
         JSONObject mUserProfileObject = new JSONObject();
         JSONObject mUserProfileMasterObject = new JSONObject();
@@ -455,16 +451,16 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             mUserProfileObject.put(HttpConstants.LAST_NAME, lastName);
             mUserProfileObject
                             .put(HttpConstants.DESCRIPTION, aboutMeDescription);
-            mUserProfileMasterObject.put("user", mUserProfileObject);
+            mUserProfileMasterObject
+                            .put(HttpConstants.USER, mUserProfileObject);
 
             BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
 
             updateUserProfileRequest
-                            .addMultipartParam("user", "application/json", mUserProfileMasterObject
+                            .addMultipartParam(HttpConstants.USER, "application/json", mUserProfileMasterObject
                                             .toString());
-            String mProfilePicPath = mAvatarfile.getAbsolutePath();
             updateUserProfileRequest
-                            .addFile(HttpConstants.PROFILE_PIC, mProfilePicPath);
+                            .addFile(HttpConstants.PROFILE_PIC, profilePicPath);
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
             addRequestToQueue(updateUserProfileRequest, true, 0);
 
@@ -479,10 +475,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                     ResponseInfo response) {
         Log.v(TAG, response.toString());
         //TODO roll back to showProfile Activity
-        if(requestId == RequestId.SAVE_USER_PROFILE){
+        if (requestId == RequestId.SAVE_USER_PROFILE) {
             onUpNavigate();
         }
-        
 
     }
 
