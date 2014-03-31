@@ -406,8 +406,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if (requestId == RequestId.GET_BOOK_INFO) {
             //TODO Read book info from bundle
         } else if (requestId == RequestId.CREATE_BOOK) {
-            showCrouton(R.string.book_added, AlertStyle.ALERT);
-            getFragmentManager().popBackStack();
+            Logger.v(TAG, "Created Book Id %s", response.responseBundle
+                            .getString(HttpConstants.ID_BOOK));
+            // TODO Launch book detail screen for the created book
         }
 
     }
@@ -464,7 +465,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         }
     }
-    
+
     @Override
     public void onStop() {
         super.onStop();

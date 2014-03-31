@@ -28,6 +28,7 @@ import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableLocations;
+import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.parcelables.Hangout;
@@ -248,7 +249,7 @@ public class HttpResponseParser {
 
         final String locationId = parseAndStoreLocation(locationObject);
         final Bundle responseBundle = new Bundle(1);
-        responseBundle.putString(HttpConstants.LOCATION, locationId);
+        responseBundle.putString(HttpConstants.ID_LOCATION, locationId);
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
     }
@@ -371,10 +372,28 @@ public class HttpResponseParser {
     /**
      * @param response
      * @return
+     * @throws JSONException
      */
-    private ResponseInfo parseCreateBookResponse(final String response) {
-        // TODO Parse get create book response
-        return new ResponseInfo();
+    private ResponseInfo parseCreateBookResponse(final String response)
+                    throws JSONException {
+        final ResponseInfo responseInfo = new ResponseInfo();
+
+        final JSONObject responseObject = new JSONObject(response);
+        final JSONObject bookObject = JsonUtils
+                        .readJSONObject(responseObject, HttpConstants.BOOK, true, true);
+
+        final ContentValues values = new ContentValues();
+        final String bookId = readBookDetailsIntoContentValues(bookObject, values, true);
+
+        if (DBInterface.insert(TableMyBooks.NAME, null, values, true) >= 0) {
+
+            final Bundle responseBundle = new Bundle(1);
+            responseBundle.putString(HttpConstants.ID_BOOK, bookId);
+            responseInfo.responseBundle = responseBundle;
+        } else {
+            responseInfo.success = false;
+        }
+        return responseInfo;
     }
 
     /**

@@ -59,9 +59,14 @@ public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo>
 
         final HttpResponseParser parser = new HttpResponseParser();
         try {
-            return Response.success(parser
-                            .getSuccessResponse(mRequestId, new String(response.data, HTTP.UTF_8)), HttpHeaderParser
-                            .parseCacheHeaders(response));
+            final ResponseInfo responseInfo = parser
+                            .getSuccessResponse(mRequestId, new String(response.data, HTTP.UTF_8));
+            
+            if(responseInfo.success) {
+                return Response.success(responseInfo, HttpHeaderParser.parseCacheHeaders(response));
+            }
+            
+            return Response.error(new ParseError("Unable to parse and store data!"));
         } catch (final JSONException e) {
             return Response.error(new ParseError(e));
         } catch (final UnsupportedEncodingException e) {

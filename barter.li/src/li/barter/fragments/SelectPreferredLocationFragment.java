@@ -278,7 +278,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_location, response.responseBundle
-                                            .getString(HttpConstants.LOCATION));
+                                            .getString(HttpConstants.ID_LOCATION));
             onUpNavigate();
         }
     }

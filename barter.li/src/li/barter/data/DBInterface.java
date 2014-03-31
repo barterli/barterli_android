@@ -41,7 +41,7 @@ public class DBInterface {
     /**
      * Insert a row into the database
      * 
-     * @table The table to insert into
+     * @param table The table to insert into
      * @param nullColumnHack column names are known and an empty row can't be
      *            inserted. If not set to null, the nullColumnHack parameter
      *            provides the name of nullable column name to explicitly insert
