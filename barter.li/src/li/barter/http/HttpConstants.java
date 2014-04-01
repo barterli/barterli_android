@@ -33,7 +33,7 @@ public class HttpConstants {
     private enum Server {
 
         LOCAL(
-                        "http://192.168.1.123:3000/api/v",
+                        "http://192.168.1.122:3000/api/v",
                         API_VERSION,
                         "192.168.1.123",
                         5672),
@@ -84,18 +84,24 @@ public class HttpConstants {
         public static final String HANGOUTS                = "/hangouts.json";
         public static final String USER_PREFERRED_LOCATION = "/user_preferred_location.json";
         public static final String SEARCH                  = "/search.json";
+
+        public static final String UPDATE_USER_INFO        = "/user_update.json";
+        public static final String GET_USER_INFO           = "/current_user_profile";
     }
 
     /**
      * Empty interface to store http request identifiers
      */
     public static interface RequestId {
+
         public static final int GET_BOOK_INFO               = 100;
         public static final int CREATE_BOOK                 = 101;
         public static final int SEARCH_BOOKS                = 102;
         public static final int CREATE_USER                 = 103;
         public static final int HANGOUTS                    = 104;
         public static final int SET_USER_PREFERRED_LOCATION = 105;
+        public static final int SAVE_USER_PROFILE           = 110;
+        public static final int GET_USER_PROFILE            = 111;
     }
 
     public static final String ID                          = "id";
@@ -145,5 +151,7 @@ public class HttpConstants {
     public static final String ID_USER                     = "id_user";
     public static final String HEADER_AUTHORIZATION_FORMAT = "Token token=\"%s\", email=\"%s\"";
     public static final String HEADER_AUTHORIZATION        = "Authorization";
+
+    public static final String PROFILE_PIC                 = "profile";
 
 }

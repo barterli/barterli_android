@@ -14,17 +14,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <string name="pref_auth_token">auth_token</string>
-    <string name="pref_location">location</string>
-    <string name="pref_email">email</string>
-    <string name="pref_description">description</string>
-    <string name="pref_first_name">first_name</string>
-    <string name="pref_last_name">last_name</string>
-    <string name="pref_user_id">user_id</string>
-    <string name="pref_fb_username">fb_username</string>
-    <string name="pref_fb_userid">fb_userid</string>
-    <string name="pref_fb_access_token">fb_access_token</string>
-
-</resources>
+        <item
+            android:id="@+id/action_profile_save"
+            android:showAsAction="ifRoom"
+            android:title="@string/text_save_profile"/>
+</menu>

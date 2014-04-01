@@ -3,3 +3,5 @@
 **/.DS_Store
 /barter.li/res/values/api_keys.xml
 /.metadata/*
+enhanced-volley/.classpath
+barter.li/res/values/license.xml

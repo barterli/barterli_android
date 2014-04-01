@@ -224,13 +224,19 @@ public class AppConstants {
         public static final String LOGIN_TO_ADD_BOOK                               = "login_to_add_book";
         public static final String LOGIN_FROM_NAV_DRAWER                           = "login_from_nav_drawer";
         public static final String SELECT_PREFERRED_LOCATION_FROM_LOGIN            = "select_preferred_location_from_login";
+        public static final String SELECT_PREFERRED_LOCATION_FROM_PROFILE          = "select_preferred_location_from_profile";
         public static final String SELECT_PREFERRED_LOCATION_FROM_ADD_OR_EDIT_BOOK = "select_preferred_location_from_add_or_edit_book";
         public static final String OSS_LICENSES                                    = "oss_licenses";
 
         /* Tags for fragment backstack popping and providing up navigation */
+
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
         public static final String BS_ADD_BOOK                                     = "to_add_book";
         public static final String BS_PREFERRED_LOCATION                           = "to_preferred_location";
+
+        public static final String PROFILE                                         = "profile";
+        public static final String EDIT_PROFILE                                    = "edit_profile";
+        public static final String BS_PROFILE                                      = "to_edit_profile";
 
     }
 
@@ -256,6 +262,7 @@ public class AppConstants {
     public static interface Loaders {
 
         public static final int SEARCH_BOOKS = 201;
+        public static final int GET_MY_BOOKS = 205;
     }
 
     /**
@@ -265,7 +272,9 @@ public class AppConstants {
      */
     public static interface QueryTokens {
 
-        public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK = 1;
+        public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK  = 1;
+        public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 5;
+        public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 6;
     }
 
 }

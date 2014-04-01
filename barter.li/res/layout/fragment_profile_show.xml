@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent" >
+
+    <ImageView
+        android:id="@+id/image_profile_pic"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="@dimen/margin_medium"
+        android:contentDescription="@string/image_profile_pic_description"
+        android:src="@drawable/pic_avatar" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/image_profile_pic"
+        android:layout_toRightOf="@id/image_profile_pic"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/text_default_profile_name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_large"
+        android:textStyle="bold"
+        app:fontStyle="alegreya_regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/label_about_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/image_profile_pic"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:text="@string/label_about_me"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="alegreya_regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_about_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/label_about_me"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_minimum"
+        android:hint="@string/label_about_me"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="alegreya_regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/label_current_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/text_about_me"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/label_current_location"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="alegreya_regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_current_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/label_current_location"
+        android:layout_marginTop="@dimen/margin_minimum"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/text_default_current_location"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_small"
+        app:fontStyle="alegreya_regular" />
+
+</RelativeLayout>

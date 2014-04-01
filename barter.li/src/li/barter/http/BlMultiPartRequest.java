@@ -49,8 +49,8 @@ public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo>
      * @param volleyCallbacks The {@link VolleyCallbacks} reference to receive
      *            the callbacks
      */
-    public BlMultiPartRequest(final int method, final String url, final String requestBody, final VolleyCallbacks volleyCallbacks) {
-        super(method, url, volleyCallbacks, volleyCallbacks);
+public BlMultiPartRequest(final int method, final String url, final String requestBody, final VolleyCallbacks volleyCallbacks) {
+    super(method, url, volleyCallbacks, volleyCallbacks);
     }
 
     @Override

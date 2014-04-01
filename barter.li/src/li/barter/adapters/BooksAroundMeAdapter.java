@@ -67,6 +67,7 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         ((TextView) view.getTag(R.id.text_book_desc))
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.DESCRIPTION)));
+
         ((TextView) view.getTag(R.id.text_book_location))
                         .setText(String.format(mLocationFormat, cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.NAME)), cursor

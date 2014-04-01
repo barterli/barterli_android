@@ -447,7 +447,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
             mBooksAroundMeAdapter.swapCursor(null);
         }

@@ -77,6 +77,10 @@ public class HttpResponseParser {
                 return parseCreateUserResponse(response);
             }
 
+            case RequestId.SAVE_USER_PROFILE: {
+                return parseCreateUserResponse(response);
+            }
+
             case RequestId.HANGOUTS: {
                 return parseHangoutsResponse(response);
             }

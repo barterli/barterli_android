@@ -59,6 +59,7 @@ import li.barter.adapters.HomeNavDrawerAdapter;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.FragmentTransition;
 import li.barter.fragments.LoginFragment;
+import li.barter.fragments.ProfileFragment;
 import li.barter.fragments.OssLicenseFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
@@ -221,7 +222,9 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                     @Override
                     public void run() {
                         if (isLoggedIn()) {
-                            //TODO Load Profile screen
+                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                            .instantiate(AbstractBarterLiActivity.this, ProfileFragment.class
+                                                            .getName(), null), FragmentTags.PROFILE, true, null);
                         } else {
 
                             final Bundle loginArgs = new Bundle(1);
@@ -445,6 +448,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      */
     public void showCrouton(final String message, final AlertStyle style) {
         Crouton.make(this, getCroutonViewForStyle(this, message, style)).show();
+
     }
 
     /**
