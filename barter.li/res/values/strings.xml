@@ -36,6 +36,7 @@
     <string name="no_network_connection">No network connection!</string>
     <string name="toggle_map">Toggle Map</string>
     <string name="tap_to_set_preferred_location">Tap to set me as your preferred location.</string>
+    <string name="location_format" formatted="false">\@%s, %s</string>
     <string name="app_id">458716080895923</string>
 
     <!-- Strings for AddBookActivity -->
@@ -50,7 +51,8 @@
     <string name="title_label">Book Title</string>
     <string name="author_label">Author</string>
     <string name="description_label">Description</string>
-    <string name="publication_year_label">Published On</string>
+    <string name="publication_year_label">Publication Year</string>
+    <string name="publication_month_label">Publication Month</string>
     <string name="barter_type_label">Barter Type</string>
     <string name="error_enter_title">Enter a book title</string>
     <string name="book_added">Book has been added!</string>
@@ -100,9 +102,22 @@
         <item>What is barter.li? Who\'s behind it?</item>
         <item>The inspiration for barter.li.</item>
     </string-array>
+    <string-array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>Decenber</item>
+    </string-array>
 
     <!-- String Related to Profile -->
-
     <string name="pref_auth_token">auth_token</string>
     <string name="pref_location">location</string>
     <string name="pref_email">email</string>
@@ -114,5 +129,19 @@
     <string name="pref_fb_userid">fb_userid</string>
     <string name="pref_fb_access_token">fb_access_token</string>
     <string name="local_profile_image">barterli_avatar_small.png</string>
+
+    <string name="image_profile_pic_description">Profile Picture</string>
+    <string name="text_default_profile_name">Profile Name</string>
+	<string name="text_profile_description">Short information about you.</string>
+	
+	<string name="button_edit_preferred_location">Edit Preferred Location</string>
+	<string name="text_default_current_location">Set your preferred Location</string>
+	
+	<string name="label_about_me">About Me</string>
+	<string name="label_current_location">Preferred Location</string>
+	<string name="text_edit_profile">Edit</string>
+	<string name="text_save_profile">Save</string>
+	<string name="hint_first_name">First Name</string>
+	<string name="hint_last_name">Last Name</string>
 
 </resources>

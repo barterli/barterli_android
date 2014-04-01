@@ -20,5 +20,5 @@
             android:id="@+id/action_edit_profile"
             android:showAsAction="ifRoom"
             android:icon="@drawable/ic_action_edit"
-            android:title="@string/edit_profile"/>
+            android:title="@string/text_edit_profile"/>
 </menu>
