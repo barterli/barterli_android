@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import java.util.HashMap;
@@ -139,6 +140,16 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         mVolleyCallbacks = null;
         mImageLoader = null;
         mRequestCounter = null;
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onUpNavigate();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -289,15 +300,15 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
 
     /**
      * Pops the fragment from the backstack, checking to see if the bundle args
-     * have {@linkplain Keys#BACKSTACK_TAG} which gives the name of the
+     * have {@linkplain Keys#UP_NAVIGATION_TAG} which gives the name of the
      * backstack tag to pop to. This is mainly for providing Up navigation
      */
     public void onUpNavigate() {
         final Bundle args = getArguments();
 
-        if ((args != null) && args.containsKey(Keys.BACKSTACK_TAG)) {
+        if ((args != null) && args.containsKey(Keys.UP_NAVIGATION_TAG)) {
             getFragmentManager()
-                            .popBackStack(args.getString(Keys.BACKSTACK_TAG), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            .popBackStack(args.getString(Keys.UP_NAVIGATION_TAG), FragmentManager.POP_BACK_STACK_INCLUSIVE);
         } else {
             getFragmentManager().popBackStack();
         }

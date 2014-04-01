@@ -89,16 +89,29 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(final SQLiteDatabase db) {
+
+        //Create tables
         TableSearchBooks.create(db);
         TableLocations.create(db);
+        TableMyBooks.create(db);
 
+        //Create Views
+        ViewSearchBooksWithLocations.create(db);
+        ViewMyBooksWithLocations.create(db);
     }
 
     @Override
     public void onUpgrade(final SQLiteDatabase db, final int oldVersion,
                     final int newVersion) {
+
+        //Upgrade tables
         TableSearchBooks.upgrade(db, oldVersion, newVersion);
         TableLocations.upgrade(db, oldVersion, newVersion);
+        TableMyBooks.upgrade(db, oldVersion, newVersion);
+
+        //Upgrade Views
+        ViewSearchBooksWithLocations.upgrade(db, oldVersion, newVersion);
+        ViewMyBooksWithLocations.upgrade(db, oldVersion, newVersion);
     }
 
     /**
@@ -228,7 +241,12 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         //TODO Optimize this later, Maybe a sorted list of loaders by table name?
         for (final SQLiteLoaderObserver entry : mActiveLoaders) {
             Logger.d(TAG, "Notify change: %s", entry.table);
-            if (entry.table.equals(table)) {
+            /*
+             * Using contains instead of equals because we are using View, which
+             * are just named by appending the table names. Notifying should
+             * also update any Loaders connected to the Views
+             */
+            if (entry.table.contains(table)) {
                 entry.loader.onContentChanged();
             }
         }

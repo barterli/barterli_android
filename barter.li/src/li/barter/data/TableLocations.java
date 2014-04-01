@@ -45,7 +45,7 @@ public class TableLocations {
                                 String.format(Locale.US, SQLConstants.DATA_REAL, DatabaseColumns.LONGITUDE, 0.0)
                         });
 
-        Logger.d(TAG, "Column Def:", columnDef);
+        Logger.d(TAG, "Column Def: %s", columnDef);
         db.execSQL(String
                         .format(Locale.US, SQLConstants.CREATE_TABLE, NAME, columnDef));
 

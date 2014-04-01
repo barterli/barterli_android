@@ -50,11 +50,11 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
-import li.barter.activities.ScanIsbnActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.data.SQLiteLoader;
-import li.barter.data.TableSearchBooks;
+import li.barter.data.ViewSearchBooksWithLocations;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -424,7 +424,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
 
         if (loaderId == Loaders.SEARCH_BOOKS) {
-            return new SQLiteLoader(getActivity(), false, TableSearchBooks.NAME, null, null, null, null, null, null, null);
+            return new SQLiteLoader(getActivity(), false, ViewSearchBooksWithLocations.NAME, null, null, null, null, null, null, null);
         } else {
             return null;
         }
@@ -447,7 +447,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
             mBooksAroundMeAdapter.swapCursor(null);
         }

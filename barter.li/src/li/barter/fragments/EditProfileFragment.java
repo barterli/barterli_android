@@ -194,16 +194,6 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 String mLastName = mLastNameTextView.getText().toString();
                 String mAboutMe = mAboutMeTextView.getText().toString();
 
-                //TODO move saving to shared preference to network success listener
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_first_name, mFirstName);
-
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_last_name, mLastName);
-
-                SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_description, mAboutMe);
-
                 saveProfileInfoToServer(mFirstName, mLastName, mAboutMe, mWasProfileImageChanged, mAvatarfile
                                 .getAbsolutePath());
 
@@ -456,14 +446,14 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
             BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
 
-            Log.v(TAG, url);
-            Log.v(TAG, mUserProfileMasterObject.toString());
-            
             updateUserProfileRequest
                             .addMultipartParam(HttpConstants.USER, "application/json", mUserProfileMasterObject
                                             .toString());
-            updateUserProfileRequest
-                            .addFile(HttpConstants.PROFILE_PIC, profilePicPath);
+            if (shouldIncludePic) {
+                updateUserProfileRequest
+                                .addFile(HttpConstants.PROFILE_PIC, profilePicPath);
+            }
+
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
             addRequestToQueue(updateUserProfileRequest, true, 0);
 
@@ -476,9 +466,19 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     @Override
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
-        Log.v(TAG, response.toString());
-        //TODO roll back to showProfile Activity
+
         if (requestId == RequestId.SAVE_USER_PROFILE) {
+            final Bundle userInfo = response.responseBundle;
+
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_description, userInfo
+                                            .getString(HttpConstants.DESCRIPTION));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_first_name, userInfo
+                                            .getString(HttpConstants.FIRST_NAME));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_last_name, userInfo
+                                            .getString(HttpConstants.LAST_NAME));
             onUpNavigate();
         }
 

@@ -182,16 +182,6 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onUpNavigate();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     protected Object getVolleyTag() {
         return TAG;
     }
@@ -278,7 +268,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_location, response.responseBundle
-                                            .getString(HttpConstants.LOCATION));
+                                            .getString(HttpConstants.ID_LOCATION));
             onUpNavigate();
         }
     }

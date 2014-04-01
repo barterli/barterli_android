@@ -33,7 +33,7 @@ public class HttpConstants {
     private enum Server {
 
         LOCAL(
-                        "http://192.168.1.123:3000/api/v",
+                        "http://192.168.1.122:3000/api/v",
                         API_VERSION,
                         "192.168.1.123",
                         5672),
@@ -86,7 +86,7 @@ public class HttpConstants {
         public static final String SEARCH                  = "/search.json";
 
         public static final String UPDATE_USER_INFO        = "/user_update.json";
-        public static final String GET_USER_INFO        = "/current_user_profile";
+        public static final String GET_USER_INFO           = "/current_user_profile";
     }
 
     /**
@@ -101,7 +101,7 @@ public class HttpConstants {
         public static final int HANGOUTS                    = 104;
         public static final int SET_USER_PREFERRED_LOCATION = 105;
         public static final int SAVE_USER_PROFILE           = 110;
-        public static final int GET_USER_PROFILE           = 111;
+        public static final int GET_USER_PROFILE            = 111;
     }
 
     public static final String ID                          = "id";
@@ -115,8 +115,7 @@ public class HttpConstants {
     public static final String AUTHOR                      = "author";
     public static final String NAME                        = "name";
     public static final String PUBLICATION_YEAR            = "publication_year";
-    public static final String BARTER_TYPE                 = "barter_type";
-    public static final String USER_ID                     = "user_id";
+    public static final String PUBLICATION_MONTH           = "publication_month";
     public static final String IMAGE_URL                   = "image_url";
     public static final String SEARCH                      = "search";
     public static final String LATITUDE                    = "latitude";
@@ -146,6 +145,10 @@ public class HttpConstants {
     public static final String TOKEN                       = "token";
     public static final String BOOK                        = "book";
     public static final String TAG_NAMES                   = "tag_names";
+    public static final String TAGS                        = "tags";
+    public static final String ID_LOCATION                 = "id_location";
+    public static final String ID_BOOK                     = "id_book";
+    public static final String ID_USER                     = "id_user";
     public static final String HEADER_AUTHORIZATION_FORMAT = "Token token=\"%s\", email=\"%s\"";
     public static final String HEADER_AUTHORIZATION        = "Authorization";
 

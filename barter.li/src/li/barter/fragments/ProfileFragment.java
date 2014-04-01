@@ -22,7 +22,10 @@ import li.barter.R;
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
+import li.barter.data.SQLiteLoader;
 import li.barter.data.TableLocations;
+import li.barter.data.ViewMyBooksWithLocations;
+import li.barter.data.ViewSearchBooksWithLocations;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
@@ -31,7 +34,9 @@ import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 
 import android.database.Cursor;
@@ -40,6 +45,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -59,7 +66,7 @@ import com.android.volley.Request.Method;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ProfileFragment extends AbstractBarterLiFragment implements
-                AsyncDbQueryCallback {
+                AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 
     private static final String TAG          = "ProfileFragment";
 
@@ -100,8 +107,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
             String mFirstName = SharedPreferenceHelper
                             .getString(getActivity(), R.string.pref_first_name);
 
-            Log.v(TAG, mFirstName);
-
             String mLastName = "";
 
             if (SharedPreferenceHelper
@@ -134,7 +139,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         }
 
         setActionBarDrawerToggleEnabled(false);
-        fetchMyBooks();
+        //fetchMyBooks();
         return view;
     }
 
@@ -171,7 +176,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
      */
 
     private void loadPreferredLocation() {
-
         DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
                         + SQLConstants.EQUALS_ARG, new String[] {
             SharedPreferenceHelper
@@ -248,11 +252,37 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
      * Fetches books owned by the current user
      */
 
-    private void fetchMyBooks() {
-        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.GET_USER_INFO, null, mVolleyCallbacks);
-        request.setRequestId(RequestId.GET_USER_PROFILE);
-        addRequestToQueue(request, true, 0);
+    /*
+     * private void fetchMyBooks() { final BlRequest request = new
+     * BlRequest(Method.GET, HttpConstants.getApiBaseUrl() +
+     * ApiEndpoints.GET_USER_INFO, null, mVolleyCallbacks);
+     * request.setRequestId(RequestId.GET_USER_PROFILE);
+     * addRequestToQueue(request, true, 0); }
+     */
+
+    @Override
+    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
+        if (loaderId == Loaders.GET_MY_BOOKS) {
+            return new SQLiteLoader(getActivity(), false, ViewMyBooksWithLocations.NAME, null, null, null, null, null, null, null);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
+        if (loader.getId() == Loaders.GET_MY_BOOKS) {
+            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
+            //mBooksAroundMeAdapter.swapCursor(cursor);
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(final Loader<Cursor> loader) {
+        if (loader.getId() == Loaders.GET_MY_BOOKS) {
+            //mBooksAroundMeAdapter.swapCursor(null);
+        }
     }
 
 }

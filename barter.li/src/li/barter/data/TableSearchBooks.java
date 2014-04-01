@@ -49,10 +49,12 @@ public class TableSearchBooks {
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BARTER_TYPE, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.USER_ID, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCATION_ID, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.IMAGE_URL, "")
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.IMAGE_URL, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.PUBLICATION_YEAR, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.PUBLICATION_MONTH, "")
                         });
 
-        Logger.d(TAG, "Column Def:", columnDef);
+        Logger.d(TAG, "Column Def: %s", columnDef);
         db.execSQL(String
                         .format(Locale.US, SQLConstants.CREATE_TABLE, NAME, columnDef));
 

@@ -28,6 +28,7 @@ import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableLocations;
+import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.parcelables.Hangout;
@@ -73,6 +74,10 @@ public class HttpResponseParser {
             }
 
             case RequestId.CREATE_USER: {
+                return parseCreateUserResponse(response);
+            }
+
+            case RequestId.SAVE_USER_PROFILE: {
                 return parseCreateUserResponse(response);
             }
 
@@ -248,7 +253,7 @@ public class HttpResponseParser {
 
         final String locationId = parseAndStoreLocation(locationObject);
         final Bundle responseBundle = new Bundle(1);
-        responseBundle.putString(HttpConstants.LOCATION, locationId);
+        responseBundle.putString(HttpConstants.ID_LOCATION, locationId);
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
     }
@@ -293,7 +298,7 @@ public class HttpResponseParser {
         }
 
         final String bookId = JsonUtils
-                        .readString(bookObject, HttpConstants.ID, true, true);
+                        .readString(bookObject, HttpConstants.ID_BOOK, true, true);
 
         values.put(DatabaseColumns.BOOK_ID, bookId);
         values.put(DatabaseColumns.ISBN_10, JsonUtils
@@ -303,15 +308,19 @@ public class HttpResponseParser {
         values.put(DatabaseColumns.AUTHOR, JsonUtils
                         .readString(bookObject, HttpConstants.AUTHOR, false, false));
         values.put(DatabaseColumns.BARTER_TYPE, JsonUtils
-                        .readString(bookObject, HttpConstants.BARTER_TYPE, false, false));
+                        .readString(bookObject, HttpConstants.TAGS, false, false));
         values.put(DatabaseColumns.USER_ID, JsonUtils
-                        .readString(bookObject, HttpConstants.USER_ID, false, false));
+                        .readString(bookObject, HttpConstants.ID_USER, false, false));
         values.put(DatabaseColumns.TITLE, JsonUtils
                         .readString(bookObject, HttpConstants.TITLE, false, false));
         values.put(DatabaseColumns.DESCRIPTION, JsonUtils
                         .readString(bookObject, HttpConstants.DESCRIPTION, false, false));
         values.put(DatabaseColumns.IMAGE_URL, JsonUtils
                         .readString(bookObject, HttpConstants.IMAGE_URL, false, false));
+        values.put(DatabaseColumns.PUBLICATION_YEAR, JsonUtils
+                        .readString(bookObject, HttpConstants.PUBLICATION_YEAR, false, false));
+        values.put(DatabaseColumns.PUBLICATION_MONTH, JsonUtils
+                        .readString(bookObject, HttpConstants.PUBLICATION_MONTH, false, false));
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(bookObject, HttpConstants.LOCATION, false, false);
@@ -342,7 +351,7 @@ public class HttpResponseParser {
         }
 
         final String locationId = JsonUtils
-                        .readString(locationObject, HttpConstants.ID, true, true);
+                        .readString(locationObject, HttpConstants.ID_LOCATION, true, true);
         values.put(DatabaseColumns.LOCATION_ID, locationId);
         values.put(DatabaseColumns.NAME, JsonUtils
                         .readString(locationObject, HttpConstants.NAME, true, true));
@@ -367,10 +376,28 @@ public class HttpResponseParser {
     /**
      * @param response
      * @return
+     * @throws JSONException
      */
-    private ResponseInfo parseCreateBookResponse(final String response) {
-        // TODO Parse get create book response
-        return new ResponseInfo();
+    private ResponseInfo parseCreateBookResponse(final String response)
+                    throws JSONException {
+        final ResponseInfo responseInfo = new ResponseInfo();
+
+        final JSONObject responseObject = new JSONObject(response);
+        final JSONObject bookObject = JsonUtils
+                        .readJSONObject(responseObject, HttpConstants.BOOK, true, true);
+
+        final ContentValues values = new ContentValues();
+        final String bookId = readBookDetailsIntoContentValues(bookObject, values, true);
+
+        if (DBInterface.insert(TableMyBooks.NAME, null, values, true) >= 0) {
+
+            final Bundle responseBundle = new Bundle(1);
+            responseBundle.putString(HttpConstants.ID_BOOK, bookId);
+            responseInfo.responseBundle = responseBundle;
+        } else {
+            responseInfo.success = false;
+        }
+        return responseInfo;
     }
 
     /**

@@ -60,17 +60,6 @@ public class OssLicenseFragment extends AbstractBarterLiFragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == android.R.id.home) {
-            onUpNavigate();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     protected Object getVolleyTag() {
         return TAG;
     }

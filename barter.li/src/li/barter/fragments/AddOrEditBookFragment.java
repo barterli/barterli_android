@@ -192,16 +192,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         outState.putBoolean(Keys.SUBMIT_ON_RESUME, mShouldSubmitOnResume);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onUpNavigate();
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
     /**
      * @param args The Fragment arguments
      */
@@ -351,7 +341,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
                 mShouldSubmitOnResume = true;
                 final Bundle loginArgs = new Bundle(1);
-                loginArgs.putString(Keys.BACKSTACK_TAG, FragmentTags.BS_ADD_BOOK);
+                loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_ADD_BOOK);
 
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), LoginFragment.class
@@ -406,8 +396,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if (requestId == RequestId.GET_BOOK_INFO) {
             //TODO Read book info from bundle
         } else if (requestId == RequestId.CREATE_BOOK) {
-            showCrouton(R.string.book_added, AlertStyle.ALERT);
-            getFragmentManager().popBackStack();
+            Logger.v(TAG, "Created Book Id %s", response.responseBundle
+                            .getString(HttpConstants.ID_BOOK));
+            // TODO Launch book detail screen for the created book
         }
 
     }
@@ -464,7 +455,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         }
     }
-    
+
     @Override
     public void onStop() {
         super.onStop();
