@@ -18,7 +18,7 @@
 
     <string name="app_name">barter.li</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="service_chat">Chat Service</string>
 
     <!-- menu strings -->
     <string name="signup">Sign Up</string>
@@ -129,19 +129,16 @@
     <string name="pref_fb_userid">fb_userid</string>
     <string name="pref_fb_access_token">fb_access_token</string>
     <string name="local_profile_image">barterli_avatar_small.png</string>
-
     <string name="image_profile_pic_description">Profile Picture</string>
     <string name="text_default_profile_name">Profile Name</string>
-	<string name="text_profile_description">Short information about you.</string>
-	
-	<string name="button_edit_preferred_location">Edit Preferred Location</string>
-	<string name="text_default_current_location">Set your preferred Location</string>
-	
-	<string name="label_about_me">About Me</string>
-	<string name="label_current_location">Preferred Location</string>
-	<string name="text_edit_profile">Edit</string>
-	<string name="text_save_profile">Save</string>
-	<string name="hint_first_name">First Name</string>
-	<string name="hint_last_name">Last Name</string>
+    <string name="text_profile_description">Short information about you.</string>
+    <string name="button_edit_preferred_location">Edit Preferred Location</string>
+    <string name="text_default_current_location">Set your preferred Location</string>
+    <string name="label_about_me">About Me</string>
+    <string name="label_current_location">Preferred Location</string>
+    <string name="text_edit_profile">Edit</string>
+    <string name="text_save_profile">Save</string>
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
 
 </resources>

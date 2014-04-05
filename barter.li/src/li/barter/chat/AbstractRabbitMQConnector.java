@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter.http.rabbitmq;
+package li.barter.chat;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -115,7 +115,7 @@ public abstract class AbstractRabbitMQConnector {
             return false;
         }
     }
-
+    
     /**
      * Publish a message to a queue
      * 
@@ -123,7 +123,7 @@ public abstract class AbstractRabbitMQConnector {
      * @param routingKey The routing key
      * @param message The message to publish
      */
-    protected void publish(final String queueName, final String routingKey,
+    public void publish(final String queueName, final String routingKey,
                     final String message) {
         if ((mChannel != null) && mChannel.isOpen()) {
             try {
