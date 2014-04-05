@@ -41,8 +41,6 @@ public interface DatabaseColumns {
     public static final String PUBLICATION_MONTH        = "publication_month";
     public static final String SENDER_ID                = "sender_id";
     public static final String RECEIVER_ID              = "receiver_id";
-    public static final String SENDER_PROFILE_PICTURE   = "sender_profile_picture";
-    public static final String RECEIVER_PROFILE_PICTURE = "receiver_profile_picture";
     public static final String FIRST_NAME               = "first_name";
     public static final String LAST_NAME                = "last_name";
     public static final String PROFILE_PICTURE          = "profile_picture";
