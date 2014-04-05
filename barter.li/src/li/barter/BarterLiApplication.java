@@ -23,10 +23,12 @@ import com.android.volley.toolbox.Volley;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.view.ViewConfiguration;
 
 import java.lang.reflect.Field;
 
+import li.barter.chat.ChatService;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.UserInfo;
@@ -75,6 +77,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         mImageLoader = new ImageLoader(mRequestQueue);
         readUserInfoFromSharedPref();
         Utils.setupNetworkInfo(this);
+        
     };
 
     /**

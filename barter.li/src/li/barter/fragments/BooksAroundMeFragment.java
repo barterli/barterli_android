@@ -191,6 +191,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mDrawerOpenedAutomatically = false;
             mMapAlreadyMovedOnce = false;
             fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), 1);
+
         } else {
             mDrawerOpenedAutomatically = savedInstanceState
                             .getBoolean(Keys.DRAWER_OPENED_ONCE);

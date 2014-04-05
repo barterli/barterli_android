@@ -28,10 +28,13 @@ import android.text.TextUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.http.HttpConstants;
+import li.barter.utils.AppConstants;
+import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
 
 /**
@@ -59,10 +62,14 @@ public class ChatService extends Service implements OnReceiveMessageHandler {
 
     private static final String    ROUTING_KEY        = "shared.key";
 
+    private static final String    OUTPUT_TIME_FORMAT = "dd MMM, h:m a";
+
     private final IBinder          mChatServiceBinder = new ChatServiceBinder();
 
     /** {@link ChatRabbitMQConnector} instance for listening to messages */
     private ChatRabbitMQConnector  mMessageConsumer;
+
+    private DateFormatter          mDateFormatter;
 
     /**
      * Task to connect to Rabbit MQ Chat server
@@ -75,6 +82,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler {
         mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
                         .getChatPort(), "/", "node.barterli", ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
+        mDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, OUTPUT_TIME_FORMAT);
+
     }
 
     /**
@@ -101,21 +110,24 @@ public class ChatService extends Service implements OnReceiveMessageHandler {
 
             if (mConnectTask == null) {
                 mConnectTask = new ConnectToChatAsyncTask();
-            }
-
-            Status connectingStatus = mConnectTask.getStatus();
-
-            if (connectingStatus != Status.RUNNING) {
-
-                // We are not already attempting to connect, let's try connecting
-                if (connectingStatus == Status.PENDING) {
-                    //Cancel a pending task
-                    mConnectTask.cancel(false);
-                }
-
-                //TODO Use actual user id here
                 mConnectTask.execute("barterli", "barter", generateQueueNameFromUserId("user1"), ROUTING_KEY);
+            } else {
+                Status connectingStatus = mConnectTask.getStatus();
+
+                if (connectingStatus != Status.RUNNING) {
+
+                    // We are not already attempting to connect, let's try connecting
+                    if (connectingStatus == Status.PENDING) {
+                        //Cancel a pending task
+                        mConnectTask.cancel(false);
+                    }
+
+                    mConnectTask = new ConnectToChatAsyncTask();
+                    //TODO Use actual user id here
+                    mConnectTask.execute("barterli", "barter", generateQueueNameFromUserId("user1"), ROUTING_KEY);
+                }
             }
+
         }
         return START_STICKY;
     }

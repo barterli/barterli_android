@@ -43,7 +43,7 @@ public class TableChatMessages {
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.MESSAGE, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.MESSAGE_TIMESTAMP, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.MESSAGE_TIMESTAMP_HUMAN, ""),
-                                String.format(Locale.US, SQLConstants.DATA_INTEGER, DatabaseColumns.MESSAGE_TIMESTAMP_EPOCH)
+                                String.format(Locale.US, SQLConstants.DATA_INTEGER, DatabaseColumns.MESSAGE_TIMESTAMP_EPOCH, 0)
                         });
 
         Logger.d(TAG, "Column Def: %s", columnDef);
