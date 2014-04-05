@@ -121,9 +121,9 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         return mRequestQueue;
     }
 
-    @Override
+    /*@Override
     public ImageLoader getImageLoader() {
         return mImageLoader;
-    }
+    }*/
 
 }

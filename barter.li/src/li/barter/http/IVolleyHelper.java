@@ -33,10 +33,10 @@ public interface IVolleyHelper {
      */
     public RequestQueue getRequestQueue();
 
-    /**
+   /* *//**
      * Gets an instance of the Application's {@link ImageLoader}
      * 
      * @return the Application's {@link ImageLoader}
-     */
-    public ImageLoader getImageLoader();
+     *//*
+    public ImageLoader getImageLoader();*/
 }

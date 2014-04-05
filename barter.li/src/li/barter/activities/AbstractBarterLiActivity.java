@@ -98,7 +98,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * {@link VolleyCallbacks} for encapsulating Volley request responses
      */
     protected VolleyCallbacks         mVolleyCallbacks;
-    private ImageLoader               mImageLoader;
     private AtomicInteger             mRequestCounter;
 
     private ActivityTransition        mActivityTransition;
@@ -185,7 +184,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
         final RequestQueue requestQueue = ((IVolleyHelper) getApplication())
                         .getRequestQueue();
-        mImageLoader = ((IVolleyHelper) getApplication()).getImageLoader();
 
         mVolleyCallbacks = new VolleyCallbacks(requestQueue, this);
         mRequestCounter = new AtomicInteger(0);
@@ -281,15 +279,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
         return runnable;
     };
-
-    /**
-     * Reference to the {@link ImageLoader}
-     * 
-     * @return The {@link ImageLoader} for loading images from ntwork
-     */
-    protected ImageLoader getImageLoader() {
-        return mImageLoader;
-    }
 
     /**
      * Add a request on the network queue
