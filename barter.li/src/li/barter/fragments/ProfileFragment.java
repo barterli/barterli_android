@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.Locale;
 
 import li.barter.R;
+import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -55,10 +56,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
+import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 /**
  * @author Sharath Pandeshwar
@@ -68,13 +72,26 @@ import com.android.volley.Request.Method;
 public class ProfileFragment extends AbstractBarterLiFragment implements
                 AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 
-    private static final String TAG          = "ProfileFragment";
+    private static final String           TAG          = "ProfileFragment";
 
-    private TextView            mProfileNameTextView;
-    private TextView            mAboutMeTextView;
-    private TextView            mPreferredLocationTextView;
-    private ImageView           mProfileImageView;
-    private String              mDefaultName = "Your Name";
+    private TextView                      mProfileNameTextView;
+    private TextView                      mAboutMeTextView;
+    private TextView                      mPreferredLocationTextView;
+    private ImageView                     mProfileImageView;
+    private String                        mDefaultName = "Your Name";
+
+    private GridView                      mBooksAroundMeGridView;
+
+    /**
+     * {@link BooksAroundMeAdapter} instance for the Books
+     */
+    private BooksAroundMeAdapter          mBooksAroundMeAdapter;
+
+    /**
+     * {@link AnimationAdapter} implementation to provide appearance animations
+     * for the book items as they are brought in
+     */
+    private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -91,6 +108,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.text_current_location);
         mProfileImageView = (ImageView) view
                         .findViewById(R.id.image_profile_pic);
+        mBooksAroundMeGridView = (GridView) view
+                        .findViewById(R.id.grid_my_books);
 
         File mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
         if (mAvatarfile.exists()) {
@@ -138,8 +157,13 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
             mAboutMeTextView.setVisibility(View.INVISIBLE);
         }
 
+        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity(), getImageLoader());
+        mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
+        mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
+        mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
+
         setActionBarDrawerToggleEnabled(false);
-        //fetchMyBooks();
+        fetchMyBooks();
         return view;
     }
 
@@ -252,13 +276,9 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
      * Fetches books owned by the current user
      */
 
-    /*
-     * private void fetchMyBooks() { final BlRequest request = new
-     * BlRequest(Method.GET, HttpConstants.getApiBaseUrl() +
-     * ApiEndpoints.GET_USER_INFO, null, mVolleyCallbacks);
-     * request.setRequestId(RequestId.GET_USER_PROFILE);
-     * addRequestToQueue(request, true, 0); }
-     */
+    private void fetchMyBooks() {
+        getLoaderManager().restartLoader(Loaders.GET_MY_BOOKS, null, this);
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
@@ -273,7 +293,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         if (loader.getId() == Loaders.GET_MY_BOOKS) {
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-            //mBooksAroundMeAdapter.swapCursor(cursor);
+            mBooksAroundMeAdapter.swapCursor(cursor);
         }
 
     }
@@ -281,7 +301,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
         if (loader.getId() == Loaders.GET_MY_BOOKS) {
-            //mBooksAroundMeAdapter.swapCursor(null);
+            mBooksAroundMeAdapter.swapCursor(null);
         }
     }
 

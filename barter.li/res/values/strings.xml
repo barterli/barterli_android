@@ -88,7 +88,8 @@
     <!-- Strings for Nav drawer -->
     <string-array name="nav_drawer_titles">
         <item>My Profile</item>
-        <item>Send feedback</item>
+        <item>Suggest Feature</item>
+        <item>Report Bug</item>
         <item>Help out barter.li</item>
         <item>Open Source</item>
         <item>About us</item>
@@ -96,7 +97,8 @@
     </string-array>
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile, update your info, view your saved books.</item>
-        <item>Got a bug? An idea? Some feedback? Tell us about it.</item>
+        <item>Got an idea? Let us Know.</item>
+        <item>Got a bug? Tell us about it.</item>
         <item>Contribute to bater.li.</item>
         <item>No open source licences were violated in the making of this app.</item>
         <item>What is barter.li? Who\'s behind it?</item>
@@ -143,5 +145,9 @@
 	<string name="text_save_profile">Save</string>
 	<string name="hint_first_name">First Name</string>
 	<string name="hint_last_name">Last Name</string>
-
+	<string name="label_my_books">My Books</string>
+	
+	<!-- Strings/URLs related to ShowWebViewFragment -->
+	<string name="url_google">http://www.google.com</string> 
+	<string name="url_me">http://barter.li</string> 
 </resources>
