@@ -213,6 +213,8 @@ public class AppConstants {
         
         // Keys related to ShowWebViewFragment
         public static final String URL_TO_LOAD          = "url_to_load";
+        
+        //Keys 
     
     }
 
@@ -231,6 +233,8 @@ public class AppConstants {
         public static final String SELECT_PREFERRED_LOCATION_FROM_ADD_OR_EDIT_BOOK = "select_preferred_location_from_add_or_edit_book";
         public static final String OSS_LICENSES                                    = "oss_licenses";
         public static final String SHOW_WEBVIEW                                    = "show_webview";
+        public static final String REPORT_BUGS                                    = "report_bugs";
+        public static final String SUGGEST_FEATURE                                    = "suggest_feature";
 
         /* Tags for fragment backstack popping and providing up navigation */
 

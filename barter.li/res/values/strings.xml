@@ -90,7 +90,7 @@
         <item>My Profile</item>
         <item>Suggest Feature</item>
         <item>Report Bug</item>
-        <item>Help out barter.li</item>
+        <item>Collaborate with barter.li</item>
         <item>Open Source</item>
         <item>About us</item>
         <item>Tribute</item>
@@ -99,7 +99,7 @@
         <item>Check out your profile, update your info, view your saved books.</item>
         <item>Got an idea? Let us Know.</item>
         <item>Got a bug? Tell us about it.</item>
-        <item>Contribute to bater.li.</item>
+        <item>Let us work together.</item>
         <item>No open source licences were violated in the making of this app.</item>
         <item>What is barter.li? Who\'s behind it?</item>
         <item>The inspiration for barter.li.</item>
@@ -150,4 +150,14 @@
 	<!-- Strings/URLs related to ShowWebViewFragment -->
 	<string name="url_google">http://www.google.com</string> 
 	<string name="url_me">http://barter.li</string> 
+	
+	<!-- String Related to Report Bug -->
+	<string name="text_report_bug">Report Bug</string> 
+	<string name="button_submit">Submit</string>
+	<string name="text_bug_title">Barter.Li/Reported Bug</string>
+	
+	<!-- String Related to Suggest Feature -->
+	<string name="text_suggest_feature">Suggest a Feature</string>
+	<string name="text_suggest_feature_title">Barter.Li/Suggest Feature</string> 
+	
 </resources>

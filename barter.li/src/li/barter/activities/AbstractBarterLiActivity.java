@@ -63,7 +63,9 @@ import li.barter.fragments.FragmentTransition;
 import li.barter.fragments.LoginFragment;
 import li.barter.fragments.ProfileFragment;
 import li.barter.fragments.OssLicenseFragment;
+import li.barter.fragments.ReportBugFragment;
 import li.barter.fragments.ShowWebViewFragment;
+import li.barter.fragments.SuggestFeatureFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.ResponseInfo;
@@ -247,13 +249,59 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Suggest Feature
             case 1: {
+                if (masterFragment != null
+                                && masterFragment instanceof SuggestFeatureFragment) {
+                    return null;
+                }
 
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isLoggedIn()) {
+                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                            .instantiate(AbstractBarterLiActivity.this, SuggestFeatureFragment.class
+                                                            .getName(), null), FragmentTags.SUGGEST_FEATURE, true, null);
+                        } else {
+
+                            final Bundle loginArgs = new Bundle(1);
+                            loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+
+                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                            .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
+                                                            .getName(), loginArgs), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, FragmentTags.BS_BOOKS_AROUND_ME);
+                        }
+
+                    }
+                };
                 break;
             }
 
             //Report Bug
             case 2: {
+                if (masterFragment != null
+                                && masterFragment instanceof ReportBugFragment) {
+                    return null;
+                }
 
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isLoggedIn()) {
+                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                            .instantiate(AbstractBarterLiActivity.this, ReportBugFragment.class
+                                                            .getName(), null), FragmentTags.REPORT_BUGS, true, null);
+                        } else {
+
+                            final Bundle loginArgs = new Bundle(1);
+                            loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+
+                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                            .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
+                                                            .getName(), loginArgs), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, FragmentTags.BS_BOOKS_AROUND_ME);
+                        }
+
+                    }
+                };
                 break;
             }
 
