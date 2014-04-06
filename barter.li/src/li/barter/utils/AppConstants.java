@@ -212,6 +212,11 @@ public class AppConstants {
         public static final String HAS_FETCHED_INFO   = "has_fetched_info";
         public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
         public static final String LOCATIONS          = "locations";
+
+        // Keys related to ShowWebViewFragment
+        public static final String URL_TO_LOAD        = "url_to_load";
+
+        //Keys 
         public static final String MESSAGE            = "message";
 
     }
@@ -230,6 +235,10 @@ public class AppConstants {
         public static final String SELECT_PREFERRED_LOCATION_FROM_PROFILE          = "select_preferred_location_from_profile";
         public static final String SELECT_PREFERRED_LOCATION_FROM_ADD_OR_EDIT_BOOK = "select_preferred_location_from_add_or_edit_book";
         public static final String OSS_LICENSES                                    = "oss_licenses";
+        public static final String SHOW_WEBVIEW                                    = "show_webview";
+        public static final String REPORT_BUGS                                     = "report_bugs";
+        public static final String SUGGEST_FEATURE                                 = "suggest_feature";
+        public static final String COLLABORATE                                     = "collaborate";
 
         /* Tags for fragment backstack popping and providing up navigation */
 

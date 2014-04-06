@@ -88,16 +88,18 @@
     <!-- Strings for Nav drawer -->
     <string-array name="nav_drawer_titles">
         <item>My Profile</item>
-        <item>Send feedback</item>
-        <item>Help out barter.li</item>
+        <item>Suggest Feature</item>
+        <item>Report Bug</item>
+        <item>Collaborate with barter.li</item>
         <item>Open Source</item>
         <item>About us</item>
         <item>Tribute</item>
     </string-array>
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile, update your info, view your saved books.</item>
-        <item>Got a bug? An idea? Some feedback? Tell us about it.</item>
-        <item>Contribute to bater.li.</item>
+        <item>Got an idea? Let us Know.</item>
+        <item>Got a bug? Tell us about it.</item>
+        <item>Let us work together.</item>
         <item>No open source licences were violated in the making of this app.</item>
         <item>What is barter.li? Who\'s behind it?</item>
         <item>The inspiration for barter.li.</item>
@@ -140,5 +142,32 @@
     <string name="text_save_profile">Save</string>
     <string name="hint_first_name">First Name</string>
     <string name="hint_last_name">Last Name</string>
+    <string name="label_my_books">My Books</string>
+
+    <!-- Strings/URLs related to ShowWebViewFragment -->
+    <string name="url_google">http://www.google.com</string>
+    <string name="url_me">http://barter.li</string>
+
+    <!-- String Related to Report Bug -->
+    <string name="text_report_bug">Report Bug</string>
+    <string name="button_submit">Submit</string>
+    <string name="text_bug_title">Barter.Li/Reported Bug</string>
+    <string name="hint_report_bug">Enter Your Findings Here.</string>
+
+    <!-- String Related to Suggest Feature -->
+    <string name="text_suggest_feature">Suggest a Feature</string>
+    <string name="text_suggest_feature_title">Barter.Li/Suggest Feature</string>
+    <string name="hint_suggest_feature">Enter Your Thoughts Here.</string>
+
+    <!-- String Related to Collaborate Page -->
+    <string name="text_collaborate">I am interested to partner in the role of</string>
+    <string name="sponsor">Sponsor</string>
+    <string name="designer">Designer</string>
+    <string name="developer">Developer</string>
+    <string name="user">User</string>
+    <string name="volunteer">Volunteer</string>
+    <string name="barterli_email">joinus@barter.li</string>
+    
+    <string name="hint_about_me_description">About Me.</string>
 
 </resources>

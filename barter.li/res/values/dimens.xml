@@ -32,8 +32,10 @@
     <dimen name="nav_drawer_width">240dp</dimen>
     <dimen name="book_height">120dp</dimen>
     <dimen name="book_image_width">90dp</dimen>
+    
+    
 
-    <!-- Texy sizes -->
+    <!-- Text sizes -->
     <dimen name="text_micro">12sp</dimen>
     <dimen name="text_small">14sp</dimen>
     <dimen name="text_medium">18sp</dimen>

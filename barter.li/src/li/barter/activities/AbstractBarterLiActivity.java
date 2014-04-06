@@ -40,6 +40,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,21 +52,27 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
 import li.barter.adapters.HomeNavDrawerAdapter;
 import li.barter.fragments.AbstractBarterLiFragment;
+import li.barter.fragments.CollaborateFragment;
 import li.barter.fragments.FragmentTransition;
 import li.barter.fragments.LoginFragment;
 import li.barter.fragments.ProfileFragment;
 import li.barter.fragments.OssLicenseFragment;
+import li.barter.fragments.ReportBugFragment;
+import li.barter.fragments.ShowWebViewFragment;
+import li.barter.fragments.SuggestFeatureFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.ResponseInfo;
 import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
+import li.barter.utils.Logger;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -129,7 +136,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
     /**
      * Whether the nav drawer associated with this activity is also associated
-     * with the drawer togglw. Is valid only if
+     * with the drawer toggle. Is valid only if
      * <code>mHasNavigationDrawer</code> is <code>true</code>
      */
     private boolean                   mIsActionBarNavDrawerToggleEnabled;
@@ -239,19 +246,62 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             }
 
-            //Send feedback
+            //Suggest Feature
             case 1: {
+                if (masterFragment != null
+                                && masterFragment instanceof SuggestFeatureFragment) {
+                    return null;
+                }
 
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(AbstractBarterLiActivity.this, SuggestFeatureFragment.class
+                                                        .getName(), null), FragmentTags.SUGGEST_FEATURE, true, null);
+                    }
+                };
                 break;
             }
 
-            //Help out barter.li
+            //Report Bug
             case 2: {
+                if (masterFragment != null
+                                && masterFragment instanceof ReportBugFragment) {
+                    return null;
+                }
+
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(AbstractBarterLiActivity.this, ReportBugFragment.class
+                                                        .getName(), null), FragmentTags.REPORT_BUGS, true, null);
+                    }
+                };
+                break;
+            }
+
+            //Collaborate with barter.li
+            case 3: {
+                if (masterFragment != null
+                                && masterFragment instanceof CollaborateFragment) {
+                    return null;
+                }
+
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(AbstractBarterLiActivity.this, CollaborateFragment.class
+                                                        .getName(), null), FragmentTags.COLLABORATE, true, null);
+                    }
+                };
                 break;
             }
 
             //Open source
-            case 3: {
+            case 4: {
                 if (masterFragment != null
                                 && masterFragment instanceof OssLicenseFragment) {
                     return null;
@@ -263,12 +313,24 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             }
 
             //About us
-            case 4: {
+            case 5: {
+                Bundle showWebViewArgs = new Bundle();
+                showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
+                                .getString(R.string.url_me));
+                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                .instantiate(this, ShowWebViewFragment.class
+                                                .getName(), showWebViewArgs), FragmentTags.SHOW_WEBVIEW, true, null);
                 break;
             }
 
             //Tribute
-            case 5: {
+            case 6: {
+                Bundle showWebViewArgs = new Bundle();
+                showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
+                                .getString(R.string.url_google));
+                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                .instantiate(this, ShowWebViewFragment.class
+                                                .getName(), showWebViewArgs), FragmentTags.SHOW_WEBVIEW, true, null);
                 break;
             }
 
