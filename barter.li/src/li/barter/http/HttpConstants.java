@@ -151,6 +151,10 @@ public class HttpConstants {
     public static final String ID_USER                     = "id_user";
     public static final String HEADER_AUTHORIZATION_FORMAT = "Token token=\"%s\", email=\"%s\"";
     public static final String HEADER_AUTHORIZATION        = "Authorization";
+    public static final String SENDER_ID                   = "sender_id";
+    public static final String RECEIVER_ID                 = "receiver_id";
+    public static final String MESSAGE                     = "message";
+    public static final String TIME                        = "time";
 
     public static final String PROFILE_PIC                 = "profile";
 

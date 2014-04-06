@@ -17,14 +17,18 @@
 package li.barter.chat;
 
 import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
-import android.text.TextUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -32,8 +36,15 @@ import java.text.ParseException;
 
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
+import li.barter.data.DBInterface;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.TableChatMessages;
 import li.barter.http.HttpConstants;
+import li.barter.http.JsonUtils;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
 
@@ -56,13 +67,15 @@ import li.barter.utils.Logger;
  * 
  * @author Vinay S Shenoy
  */
-public class ChatService extends Service implements OnReceiveMessageHandler {
+public class ChatService extends Service implements OnReceiveMessageHandler, AsyncDbQueryCallback {
 
     private static final String    TAG                = "ChatService";
-
     private static final String    ROUTING_KEY        = "shared.key";
-
     private static final String    OUTPUT_TIME_FORMAT = "dd MMM, h:m a";
+    private static final String    VIRTUAL_HOST       = "/";
+    private static final String    EXCHANGE           = "node.barterli";
+    private static final String    USERNAME           = "barterli";
+    private static final String    PASSWORD           = "barter";
 
     private final IBinder          mChatServiceBinder = new ChatServiceBinder();
 
@@ -80,7 +93,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler {
     public void onCreate() {
         super.onCreate();
         mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
-                        .getChatPort(), "/", "node.barterli", ExchangeType.DIRECT);
+                        .getChatPort(), VIRTUAL_HOST, EXCHANGE, ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
         mDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, OUTPUT_TIME_FORMAT);
 
@@ -110,7 +123,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler {
 
             if (mConnectTask == null) {
                 mConnectTask = new ConnectToChatAsyncTask();
-                mConnectTask.execute("barterli", "barter", generateQueueNameFromUserId("user1"), ROUTING_KEY);
+                mConnectTask.execute(USERNAME, PASSWORD, generateQueueNameFromUserId("user1"), ROUTING_KEY);
             } else {
                 Status connectingStatus = mConnectTask.getStatus();
 
@@ -124,7 +137,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler {
 
                     mConnectTask = new ConnectToChatAsyncTask();
                     //TODO Use actual user id here
-                    mConnectTask.execute("barterli", "barter", generateQueueNameFromUserId("user1"), ROUTING_KEY);
+                    mConnectTask.execute(USERNAME, PASSWORD, generateQueueNameFromUserId("user1"), ROUTING_KEY);
                 }
             }
 
@@ -187,18 +200,46 @@ public class ChatService extends Service implements OnReceiveMessageHandler {
     @Override
     public void onReceiveMessage(byte[] message) {
 
-        //TODO Read sender info
         String text = "";
         try {
             text = new String(message, HTTP.UTF_8);
             Logger.d(TAG, "Received:" + text);
+            final JSONObject messageJson = new JSONObject(text);
+
+            final String senderId = JsonUtils
+                            .readString(messageJson, HttpConstants.SENDER_ID, true, true);
+            final String receiverId = JsonUtils
+                            .readString(messageJson, HttpConstants.RECEIVER_ID, true, true);
+            final String messageText = JsonUtils
+                            .readString(messageJson, HttpConstants.MESSAGE, true, true);
+            final String timestamp = JsonUtils
+                            .readString(messageJson, HttpConstants.TIME, true, true);
+            
+            final ContentValues values = new ContentValues(7);
+            
+            values.put(DatabaseColumns.SENDER_ID, senderId);
+            values.put(DatabaseColumns.RECEIVER_ID, receiverId);
+            values.put(DatabaseColumns.MESSAGE, messageText);
+            values.put(DatabaseColumns.MESSAGE_TIMESTAMP, timestamp);
+            values.put(DatabaseColumns.MESSAGE_TIMESTAMP_EPOCH, mDateFormatter.getEpoch(timestamp));
+            values.put(DatabaseColumns.MESSAGE_TIMESTAMP_HUMAN, mDateFormatter.getOutputTimestamp(timestamp));
+            
+            //Bundle to receive as the cookie in the insert callback so that notification can be shown
+            final Bundle cookie = new Bundle(2);
+            cookie.putString(Keys.MESSAGE, messageText);
+            
+            DBInterface.insertAsync(QueryTokens.INSERT_CHAT_INTO_TABLE, cookie, TableChatMessages.NAME, null, values, true, this);
+            
+
         } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();
+            //Shouldn't be happening
+        } catch (JSONException e) {
+            Logger.e(TAG, e, "Invalid Chat Json");
+        } catch (ParseException e) {
+            Logger.e(TAG, e, "Invalid chat timestamp");
         }
 
-        if (!TextUtils.isEmpty(text)) {
-            //TODO Store Chats in table, send notification
-        }
     }
 
     /**
@@ -231,6 +272,29 @@ public class ChatService extends Service implements OnReceiveMessageHandler {
             }
             return null;
         }
+    }
+
+    @Override
+    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+
+        if(token == QueryTokens.INSERT_CHAT_INTO_TABLE) {
+            //TODO Show notification
+        }
+    }
+
+    @Override
+    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+        
+    }
+
+    @Override
+    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+        
+    }
+
+    @Override
+    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+        
     }
 
 }

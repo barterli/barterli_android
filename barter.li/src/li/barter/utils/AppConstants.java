@@ -37,6 +37,7 @@ public class AppConstants {
     public static final String  FACEBOOK         = "facebook";
     public static final String  MANUAL           = "manual";
     public static final String  TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
+    public static final String  CHAT_ID_FORMAT   = "%s#%s";
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -211,6 +212,7 @@ public class AppConstants {
         public static final String HAS_FETCHED_INFO   = "has_fetched_info";
         public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
         public static final String LOCATIONS          = "locations";
+        public static final String MESSAGE            = "message";
 
     }
 
@@ -273,9 +275,13 @@ public class AppConstants {
      */
     public static interface QueryTokens {
 
+        //1-100 for load queries
         public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK  = 1;
-        public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 5;
-        public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 6;
+        public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 2;
+        public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 3;
+
+        //100-200 for insert queries
+        public static final int INSERT_CHAT_INTO_TABLE               = 100;
     }
 
 }
