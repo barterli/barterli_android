@@ -94,6 +94,12 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <!-- Services -->
+        <service
+            android:name="li.barter.chat.ChatService"
+            android:exported="false"
+            android:label="@string/service_chat" />
     </application>
 
 </manifest>

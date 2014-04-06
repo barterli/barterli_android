@@ -85,12 +85,16 @@ public class HttpResponseParser {
             case RequestId.HANGOUTS: {
                 return parseHangoutsResponse(response);
             }
-            
+
             case RequestId.REPORT_BUG: {
                 return parseReportBugOrSuggestFeatureResponse(response);
             }
-            
+
             case RequestId.SUGGEST_FEATURE: {
+                return parseReportBugOrSuggestFeatureResponse(response);
+            }
+
+            case RequestId.COLLABORATE_REQUEST: {
                 return parseReportBugOrSuggestFeatureResponse(response);
             }
 
@@ -104,8 +108,6 @@ public class HttpResponseParser {
             }
         }
     }
-    
-
 
     /**
      * Method for parsing the create user/login response
@@ -410,19 +412,22 @@ public class HttpResponseParser {
         }
         return responseInfo;
     }
-    
+
     /**
      * Method for parsing report bug response
+     * 
      * @param response
      * @return
-     * @throws JSONException 
+     * @throws JSONException
      */
 
-    private ResponseInfo parseReportBugOrSuggestFeatureResponse(String response) throws JSONException {
+    private ResponseInfo parseReportBugOrSuggestFeatureResponse(String response)
+                    throws JSONException {
         final ResponseInfo responseInfo = new ResponseInfo();
         final JSONObject responseObject = new JSONObject(response);
-        String mStatus = JsonUtils.readString(responseObject, HttpConstants.STATUS, true, true);
-        
+        String mStatus = JsonUtils
+                        .readString(responseObject, HttpConstants.STATUS, true, true);
+
         final Bundle responseBundle = new Bundle(1);
         responseBundle.putString(HttpConstants.STATUS, mStatus);
         responseInfo.responseBundle = responseBundle;

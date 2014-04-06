@@ -38,17 +38,19 @@
         android:layout_margin="@dimen/margin_medium"
         android:lines="6"
         android:singleLine="false"
+        android:hint="@string/hint_suggest_feature"
         android:textSize="@dimen/text_medium"
         app:fontStyle="alegreya_regular" />
 
     <li.barter.widgets.TypefacedButton
         android:id="@+id/button_submit_feature"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/submit_button_width"
+        android:layout_height="wrap_content"
         android:layout_below="@id/text_feature_description"
         android:layout_margin="@dimen/margin_medium"
         android:text="@string/button_submit"
         android:textSize="@dimen/text_medium"
+        android:textStyle="bold"
         app:fontStyle="alegreya_regular" />
 
 </RelativeLayout>

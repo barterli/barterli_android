@@ -88,6 +88,7 @@ public class HttpConstants {
         public static final String UPDATE_USER_INFO        = "/user_update.json";
         public static final String GET_USER_INFO           = "/current_user_profile";
         public static final String REPORT_BUG           = "/feedback";
+        public static final String COLLABORATE_REQUEST           = "/register";
     }
 
     /**
@@ -105,6 +106,7 @@ public class HttpConstants {
         public static final int GET_USER_PROFILE            = 111;
         public static final int REPORT_BUG            = 112;
         public static final int SUGGEST_FEATURE            = 113;
+        public static final int COLLABORATE_REQUEST            = 114;
     }
 
     public static final String ID                          = "id";
@@ -163,4 +165,8 @@ public class HttpConstants {
     public static final String BUG_LABEL                = "label";
     public static final String LABEL_FOR_BUG                = "bug";
     public static final String LABEL_FOR_FEATURE                = "feature";
+    
+    //Related to Collaborate with Barter.Li 
+    public static final String REGISTER_TYPE                = "register_type";
+    public static final String BODY                = "body";
 }

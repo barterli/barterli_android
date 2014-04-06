@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package li.barter.http.rabbitmq;
+package li.barter.chat;
 
 import com.rabbitmq.client.QueueingConsumer;
 
@@ -55,7 +55,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
     private final Handler           mHandler       = new Handler();
 
     // Create runnable for posting back to main thread
-    final Runnable                  mReturnMessage = new Runnable() {
+    private final Runnable          mReturnMessage = new Runnable() {
                                                        @Override
                                                        public void run() {
                                                            mOnReceiveMessageHandler
@@ -63,7 +63,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                                                        }
                                                    };
 
-    final Runnable                  mConsumeRunner = new Runnable() {
+    private final Runnable          mConsumeRunner = new Runnable() {
                                                        @Override
                                                        public void run() {
                                                            consume();
@@ -74,24 +74,23 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
      * Create Exchange and then start consuming. A binding needs to be added
      * before any messages will be delivered
      */
-    public boolean connectToRabbitMQ(final String queueName,
+    public boolean connectToRabbitMQ(final String userName,
+                    final String password, final String queueName,
                     final boolean durable, final boolean exclusive,
                     final boolean autoDelete, final Map<String, Object> args) {
-        if (super.connectToRabbitMQ("barterli", "barter")) {
+        if (super.connectToRabbitMQ(userName, password)) {
 
             try {
                 Logger.d(TAG, "Connected");
-                mQueue = mChannel
-                                .queueDeclare(queueName, durable, exclusive, autoDelete, args)
-                                .getQueue();
+                mQueue = declareQueue(queueName, durable, exclusive, autoDelete, args);
                 mSubscription = new QueueingConsumer(mChannel);
                 mChannel.basicConsume(mQueue, false, mSubscription);
+                if (mExchangeType == ExchangeType.FANOUT) {
+                    addBinding("");// fanout has default binding
+                }
             } catch (final IOException e) {
                 e.printStackTrace();
                 return false;
-            }
-            if (mExchangeType == ExchangeType.FANOUT) {
-                addBinding("");// fanout has default binding
             }
 
             setIsRunning(true);
@@ -106,14 +105,42 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
      * Add a binding between this consumers Queue and the Exchange with
      * routingKey
      * 
-     * @param routingKey the binding key eg GOOG
+     * @param routingKey
+     * @throws IOException If the binding could not be done
      */
-    public void addBinding(final String routingKey) {
-        try {
-            mChannel.queueBind(mQueue, mExchange, routingKey);
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+    public void addBinding(final String routingKey) throws IOException {
+        addBinding(mQueue, routingKey);
+    }
+
+    /**
+     * Add a binding between a queue and a routing key on this consumers
+     * exchange. The queue should already have been declared
+     * 
+     * @param queue The queue to bind to
+     * @param routingKey The routing key
+     * @throws IOException If the binding could not be done
+     */
+    public void addBinding(final String queue, final String routingKey)
+                    throws IOException {
+        mChannel.queueBind(queue, mExchange, routingKey);
+    }
+
+    /**
+     * Declare a queue on this exchange
+     * 
+     * @param queue The queue to declare
+     * @param durable
+     * @param exclusive
+     * @param autoDelete
+     * @param args
+     * @return The queue name
+     * @throws IOException If the queue could not be declared
+     */
+    public String declareQueue(final String queue, boolean durable,
+                    boolean exclusive, boolean autoDelete,
+                    Map<String, Object> args) throws IOException {
+        return mChannel.queueDeclare(queue, durable, exclusive, autoDelete, args)
+                        .getQueue();
     }
 
     /**
@@ -121,13 +148,10 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
      * routingKey
      * 
      * @param routingKey the binding key
+     * @throws IOException If the binding could not be removed
      */
-    public void removeBinding(final String routingKey) {
-        try {
-            mChannel.queueUnbind(mQueue, mExchange, routingKey);
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
+    public void removeBinding(final String routingKey) throws IOException {
+        mChannel.queueUnbind(mQueue, mExchange, routingKey);
     }
 
     /**
@@ -154,7 +178,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                             mChannel.basicAck(delivery.getEnvelope()
                                             .getDeliveryTag(), false);
                         } catch (final IOException e) {
-                            e.printStackTrace();
+                            Logger.e(TAG, e, "Unable to ack message");
                         }
                     } catch (final InterruptedException ie) {
                         ie.printStackTrace();
@@ -164,16 +188,6 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
         };
         thread.start();
 
-    }
-
-    /**
-     * Publish a message to this consumer's queue
-     * 
-     * @param routingKey The binding key
-     * @param message The message to publish
-     */
-    public void publish(final String routingKey, final String message) {
-        publish(mQueue, routingKey, message);
     }
 
 }

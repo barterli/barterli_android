@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2014, barter.li
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+    http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:padding="@dimen/activity_margin" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/label_collaborate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_minimum"
+            android:text="@string/text_collaborate"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_large"
+            app:fontStyle="alegreya_regular" />
+
+        <RadioGroup
+            android:id="@+id/radio_enlist_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/label_collaborate"
+            android:layout_margin="@dimen/margin_minimum"
+            android:orientation="vertical" >
+
+            <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_sponsor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sponsor"
+                app:fontStyle="alegreya_regular" />
+
+            <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_designer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/designer"
+                app:fontStyle="alegreya_regular" />
+
+            <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_developer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/developer"
+                app:fontStyle="alegreya_regular" />
+
+            <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user"
+                app:fontStyle="alegreya_regular" />
+
+            <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_volunteer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/volunteer"
+                app:fontStyle="alegreya_regular" />
+        </RadioGroup>
+
+        <li.barter.widgets.TypefacedEditText
+            android:id="@+id/text_about_me"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/radio_enlist_options"
+            android:layout_margin="@dimen/margin_medium"
+            android:hint="@string/hint_about_me_description"
+            android:lines="4"
+            android:singleLine="false"
+            android:textSize="@dimen/text_medium"
+            app:fontStyle="alegreya_regular" />
+
+        <li.barter.widgets.TypefacedButton
+            android:id="@+id/button_submit_enlisting"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_about_me"
+            android:layout_margin="@dimen/margin_medium"
+            android:text="@string/button_submit"
+            android:textSize="@dimen/text_medium"
+            android:textStyle="bold"
+            app:fontStyle="alegreya_regular" />
+    </RelativeLayout>
+
+</ScrollView>

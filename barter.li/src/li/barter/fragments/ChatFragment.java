@@ -16,28 +16,25 @@
 
 package li.barter.fragments;
 
-import org.apache.http.protocol.HTTP;
-
-import android.os.AsyncTask;
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.IBinder;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.io.UnsupportedEncodingException;
-
 import li.barter.R;
 import li.barter.adapters.ChatAdapter;
-import li.barter.http.HttpConstants;
+import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
+import li.barter.chat.ChatService;
+import li.barter.chat.ChatService.ChatServiceBinder;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.http.rabbitmq.AbstractRabbitMQConnector.ExchangeType;
-import li.barter.http.rabbitmq.ChatRabbitMQConnector;
-import li.barter.http.rabbitmq.ChatRabbitMQConnector.OnReceiveMessageHandler;
-import li.barter.utils.Logger;
 
 /**
  * Activity for displaying Chat Messages
@@ -46,16 +43,17 @@ import li.barter.utils.Logger;
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ChatFragment extends AbstractBarterLiFragment implements
-                OnReceiveMessageHandler {
+                OnReceiveMessageHandler, ServiceConnection {
 
-    private static final String   TAG = "ChatFragment";
+    private static final String TAG = "ChatFragment";
 
-    private ChatAdapter           mChatAdapter;
+    private ChatAdapter         mChatAdapter;
 
-    private ListView              mChatListView;
+    private ListView            mChatListView;
 
-    /** {@link ChatRabbitMQConnector} instance for listening to messages */
-    private ChatRabbitMQConnector mMessageConsumer;
+    private ChatService         mChatService;
+
+    private boolean             mBoundToChatService;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -67,57 +65,34 @@ public class ChatFragment extends AbstractBarterLiFragment implements
         mChatAdapter = new ChatAdapter(getActivity());
         mChatListView.setAdapter(mChatAdapter);
 
-        //TODO Implement a chat service to take care of this
-        mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
-                        .getChatPort(), "/", "node.barterli", ExchangeType.DIRECT);
-        mMessageConsumer.setOnReceiveMessageHandler(this);
-
         setActionBarDrawerToggleEnabled(false);
+
         return view;
     }
 
-    
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        //Bind to chat service
+        final Intent chatServiceBindIntent = new Intent(activity, ChatService.class);
+        activity.bindService(chatServiceBindIntent, this, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onPause() {
+        if (mBoundToChatService) {
+            getActivity().unbindService(this);
+        }
+        super.onPause();
+    }
+
     @Override
     protected Object getVolleyTag() {
         return TAG;
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mMessageConsumer.dispose();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(final Void... params) {
-                if (mMessageConsumer
-                                .connectToRabbitMQ("user1", false, false, true, null)) {
-                    mMessageConsumer.addBinding("shared.key");
-                }
-                return null;
-            }
-        }.execute();
-
-    }
-
-    @Override
     public void onReceiveMessage(final byte[] message) {
-
-        String text = "";
-        try {
-            text = new String(message, HTTP.UTF_8);
-            Logger.d(TAG, "Received:" + text);
-        } catch (final UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-        if (!TextUtils.isEmpty(text)) {
-            mChatAdapter.addMessage(text);
-        }
 
     }
 
@@ -125,7 +100,7 @@ public class ChatFragment extends AbstractBarterLiFragment implements
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -133,6 +108,18 @@ public class ChatFragment extends AbstractBarterLiFragment implements
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
         // TODO Auto-generated method stub
-        
+
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+
+        mBoundToChatService = true;
+        mChatService = ((ChatServiceBinder) service).getService();
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+        mBoundToChatService = false;
     }
 }

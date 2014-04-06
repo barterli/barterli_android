@@ -235,6 +235,7 @@ public class AppConstants {
         public static final String SHOW_WEBVIEW                                    = "show_webview";
         public static final String REPORT_BUGS                                    = "report_bugs";
         public static final String SUGGEST_FEATURE                                    = "suggest_feature";
+        public static final String COLLABORATE                                    = "collaborate";
 
         /* Tags for fragment backstack popping and providing up navigation */
 
