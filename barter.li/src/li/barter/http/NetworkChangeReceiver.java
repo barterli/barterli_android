@@ -21,7 +21,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 
+import li.barter.BarterLiApplication;
 import li.barter.utils.Utils;
+import li.barter.utils.AppConstants.DeviceInfo;
 
 /**
  * Receiver for monitoring network changes
@@ -38,6 +40,9 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
                                         .equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
 
             Utils.setupNetworkInfo(context);
+            if (DeviceInfo.INSTANCE.isNetworkConnected()) {
+                BarterLiApplication.startChatService();
+            }
         }
     }
 

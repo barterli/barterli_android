@@ -18,7 +18,6 @@ package li.barter;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
 import android.app.Application;
@@ -31,6 +30,7 @@ import java.lang.reflect.Field;
 import li.barter.chat.ChatService;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
@@ -53,8 +53,6 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
 
     private RequestQueue        mRequestQueue;
 
-    private ImageLoader         mImageLoader;
-
     /**
      * Gets a reference to the application context
      */
@@ -74,10 +72,12 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         overrideHardwareMenuButton();
         VolleyLog.sDebug = AppConstants.DEBUG;
         mRequestQueue = Volley.newRequestQueue(this);
-        mImageLoader = new ImageLoader(mRequestQueue);
         readUserInfoFromSharedPref();
         Utils.setupNetworkInfo(this);
-        
+        if (DeviceInfo.INSTANCE.isNetworkConnected()) {
+            startChatService();
+        }
+
     };
 
     /**
@@ -124,9 +124,14 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         return mRequestQueue;
     }
 
-    /*@Override
-    public ImageLoader getImageLoader() {
-        return mImageLoader;
-    }*/
+    /**
+     * Start the chat service. The connection doesn't happen if the user isn't
+     * logged in.
+     */
+    public static void startChatService() {
+
+        final Intent intent = new Intent(sStaticContext, ChatService.class);
+        sStaticContext.startService(intent);
+    }
 
 }

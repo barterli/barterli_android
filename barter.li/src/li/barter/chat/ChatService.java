@@ -28,6 +28,7 @@ import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Binder;
 import android.os.IBinder;
+import android.text.TextUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -49,6 +50,7 @@ import li.barter.http.HttpConstants;
 import li.barter.http.JsonUtils;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
@@ -77,8 +79,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 AsyncDbQueryCallback {
 
     private static final String    TAG                = "ChatService";
-    private static final String    ROUTING_KEY        = "shared.key";
     private static final String    OUTPUT_TIME_FORMAT = "dd MMM, h:m a";
+    private static final String    QUEUE_NAME_FORMAT  = "%squeue";
     private static final String    VIRTUAL_HOST       = "/";
     private static final String    EXCHANGE           = "node.barterli";
     private static final String    USERNAME           = "barterli";
@@ -132,11 +134,12 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (!mMessageConsumer.isRunning()) {
+        if (isLoggedIn() && !mMessageConsumer.isRunning()) {
 
             if (mConnectTask == null) {
                 mConnectTask = new ConnectToChatAsyncTask();
-                mConnectTask.execute(USERNAME, PASSWORD, generateQueueNameFromUserId("user1"), ROUTING_KEY);
+                mConnectTask.execute(USERNAME, PASSWORD, generateQueueNameFromUserId(UserInfo.INSTANCE
+                                .getId()), UserInfo.INSTANCE.getId());
             } else {
                 Status connectingStatus = mConnectTask.getStatus();
 
@@ -150,12 +153,20 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
                     mConnectTask = new ConnectToChatAsyncTask();
                     //TODO Use actual user id here
-                    mConnectTask.execute(USERNAME, PASSWORD, generateQueueNameFromUserId("user1"), ROUTING_KEY);
+                    mConnectTask.execute(USERNAME, PASSWORD, generateQueueNameFromUserId(UserInfo.INSTANCE
+                                    .getId()), UserInfo.INSTANCE.getId());
                 }
             }
 
         }
         return START_STICKY;
+    }
+
+    /**
+     * Check if user is logged in or not
+     */
+    private boolean isLoggedIn() {
+        return !TextUtils.isEmpty(UserInfo.INSTANCE.getId());
     }
 
     @Override
@@ -188,8 +199,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             try {
                 final String queue = mMessageConsumer
                                 .declareQueue(generateQueueNameFromUserId(toUserId), false, false, true, null);
-                mMessageConsumer.addBinding(queue, ROUTING_KEY);
-                mMessageConsumer.publish(queue, ROUTING_KEY, message);
+                mMessageConsumer.addBinding(queue, UserInfo.INSTANCE.getId());
+                mMessageConsumer.publish(queue, UserInfo.INSTANCE.getId(), message);
                 return true;
             } catch (IOException e) {
                 return false;
@@ -206,8 +217,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @return The queue name for the user id
      */
     private String generateQueueNameFromUserId(String userId) {
-        //TODO Discuss how to generate queue names for user Ids
-        return userId;
+        return String.format(Locale.US, QUEUE_NAME_FORMAT, userId);
     }
 
     @Override
