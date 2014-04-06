@@ -23,15 +23,16 @@ import android.text.TextUtils;
 import java.util.Locale;
 
 import li.barter.utils.Logger;
+import li.barter.utils.AppConstants.ChatType;
 
 /**
- * @author Vinay S Shenoy Table representing a list of chat messages
+ * @author Vinay S Shenoy Table representing a list of chats
  */
-public class TableChatMessages {
+public class TableChats {
 
-    private static final String TAG  = "TableChatMessages";
+    private static final String TAG  = "TableChats";
 
-    public static final String  NAME = "CHAT_MESSAGES";
+    public static final String  NAME = "CHATS";
 
     public static void create(final SQLiteDatabase db) {
 
@@ -39,12 +40,10 @@ public class TableChatMessages {
                         .join(SQLConstants.COMMA, new String[] {
                                 String.format(Locale.US, SQLConstants.DATA_INTEGER_PK, BaseColumns._ID),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.CHAT_ID, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.SENDER_ID, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.RECEIVER_ID, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.MESSAGE, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TIMESTAMP, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TIMESTAMP_HUMAN, ""),
-                                String.format(Locale.US, SQLConstants.DATA_INTEGER, DatabaseColumns.TIMESTAMP_EPOCH, 0)
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LAST_MESSAGE_ID, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.USER_ID, ""),
+                                String.format(Locale.US, SQLConstants.DATA_INTEGER, DatabaseColumns.UNREAD_COUNT, 0)
                         });
 
         Logger.d(TAG, "Column Def: %s", columnDef);

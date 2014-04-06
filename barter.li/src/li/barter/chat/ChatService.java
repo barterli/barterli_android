@@ -220,9 +220,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
             values.put(DatabaseColumns.SENDER_ID, senderId);
             values.put(DatabaseColumns.RECEIVER_ID, receiverId);
             values.put(DatabaseColumns.MESSAGE, messageText);
-            values.put(DatabaseColumns.MESSAGE_TIMESTAMP, timestamp);
-            values.put(DatabaseColumns.MESSAGE_TIMESTAMP_EPOCH, mDateFormatter.getEpoch(timestamp));
-            values.put(DatabaseColumns.MESSAGE_TIMESTAMP_HUMAN, mDateFormatter.getOutputTimestamp(timestamp));
+            values.put(DatabaseColumns.TIMESTAMP, timestamp);
+            values.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter.getEpoch(timestamp));
+            values.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter.getOutputTimestamp(timestamp));
             
             //Bundle to receive as the cookie in the insert callback so that notification can be shown
             final Bundle cookie = new Bundle(2);

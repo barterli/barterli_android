@@ -284,4 +284,15 @@ public class AppConstants {
         public static final int INSERT_CHAT_INTO_TABLE               = 100;
     }
 
+    /**
+     * Constant interface. DO NOT IMPLEMENT
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static interface ChatType {
+
+        public static final String PERSONAL = "personal";
+        public static final String GROUP    = "group";
+    }
+
 }
