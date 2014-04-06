@@ -40,6 +40,7 @@
         android:singleLine="false"
         android:hint="@string/hint_suggest_feature"
         android:textSize="@dimen/text_medium"
+        android:inputType="textCapSentences"
         app:fontStyle="alegreya_regular" />
 
     <li.barter.widgets.TypefacedButton

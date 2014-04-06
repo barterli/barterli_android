@@ -89,6 +89,7 @@
             android:lines="4"
             android:singleLine="false"
             android:textSize="@dimen/text_medium"
+            android:inputType="textCapSentences"
             app:fontStyle="alegreya_regular" />
 
         <li.barter.widgets.TypefacedButton

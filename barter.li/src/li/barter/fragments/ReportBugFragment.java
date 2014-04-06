@@ -113,7 +113,11 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
             String mStatus = response.responseBundle
                             .getString(HttpConstants.STATUS);
             if (mStatus.equals(HttpConstants.SUCCESS)) {
-                showCrouton("Thanks For Your Invaluable Feedback", AlertStyle.INFO);
+                String mMessage = "Thanks for reporting bug. ";
+                if(!isLoggedIn()){
+                    mMessage += "Make the most by registering and adding books.";
+                }
+                showCrouton(mMessage, AlertStyle.INFO);
                 mReportedBugTextView.setText("");
             } else {
                 showCrouton("Something went Wrong.", AlertStyle.ERROR);

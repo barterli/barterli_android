@@ -256,20 +256,9 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 runnable = new Runnable() {
                     @Override
                     public void run() {
-                        if (isLoggedIn()) {
-                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                            .instantiate(AbstractBarterLiActivity.this, SuggestFeatureFragment.class
-                                                            .getName(), null), FragmentTags.SUGGEST_FEATURE, true, null);
-                        } else {
-
-                            final Bundle loginArgs = new Bundle(1);
-                            loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-
-                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                            .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
-                                                            .getName(), loginArgs), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, FragmentTags.BS_BOOKS_AROUND_ME);
-                        }
-
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(AbstractBarterLiActivity.this, SuggestFeatureFragment.class
+                                                        .getName(), null), FragmentTags.SUGGEST_FEATURE, true, null);
                     }
                 };
                 break;
@@ -285,20 +274,9 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 runnable = new Runnable() {
                     @Override
                     public void run() {
-                        if (isLoggedIn()) {
-                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                            .instantiate(AbstractBarterLiActivity.this, ReportBugFragment.class
-                                                            .getName(), null), FragmentTags.REPORT_BUGS, true, null);
-                        } else {
-
-                            final Bundle loginArgs = new Bundle(1);
-                            loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-
-                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                            .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
-                                                            .getName(), loginArgs), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, FragmentTags.BS_BOOKS_AROUND_ME);
-                        }
-
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(AbstractBarterLiActivity.this, ReportBugFragment.class
+                                                        .getName(), null), FragmentTags.REPORT_BUGS, true, null);
                     }
                 };
                 break;
@@ -314,20 +292,9 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 runnable = new Runnable() {
                     @Override
                     public void run() {
-                        if (isLoggedIn()) {
-                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                            .instantiate(AbstractBarterLiActivity.this, CollaborateFragment.class
-                                                            .getName(), null), FragmentTags.COLLABORATE, true, null);
-                        } else {
-
-                            final Bundle loginArgs = new Bundle(1);
-                            loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-
-                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                            .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
-                                                            .getName(), loginArgs), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, FragmentTags.BS_BOOKS_AROUND_ME);
-                        }
-
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(AbstractBarterLiActivity.this, CollaborateFragment.class
+                                                        .getName(), null), FragmentTags.COLLABORATE, true, null);
                     }
                 };
                 break;

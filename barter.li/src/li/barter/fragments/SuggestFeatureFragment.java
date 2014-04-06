@@ -115,7 +115,11 @@ public class SuggestFeatureFragment extends AbstractBarterLiFragment implements
             String mStatus = response.responseBundle
                             .getString(HttpConstants.STATUS);
             if (mStatus.equals(HttpConstants.SUCCESS)) {
-                showCrouton("Thanks For Your Invaluable Feedback", AlertStyle.INFO);
+                String mMessage = "Thanks for your invaluable feedback. ";
+                if(!isLoggedIn()){
+                    mMessage += "Make the most by registering and adding books.";
+                }
+                showCrouton(mMessage, AlertStyle.INFO);
                 mSuggestFeatureTextView.setText("");
             } else {
                 showCrouton("Something went Wrong.", AlertStyle.ERROR);

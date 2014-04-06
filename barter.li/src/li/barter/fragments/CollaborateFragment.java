@@ -16,11 +16,8 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request.Method;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -34,13 +31,9 @@ import android.widget.RadioGroup;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
-import li.barter.http.BlRequest;
-import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.http.HttpConstants.ApiEndpoints;
-import li.barter.http.HttpConstants.RequestId;
-import li.barter.utils.Logger;
+
 
 /**
  * Fragment to Collect Collaboration enlistings.
@@ -97,8 +90,6 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button_submit_enlisting: {
-                String ReportedBugTitle = getResources()
-                                .getString(R.string.text_bug_title);
                 String mAboutMeText = mAboutMeTextView.getText().toString();
 
                 if (!(mEnlistAsSponsorRadioButton.isChecked()
@@ -121,22 +112,29 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
                     return;
                 }
 
+                String[] mRecipients = new String[1];
+                mRecipients[0] = getResources()
+                                .getString(R.string.barterli_email);
+                String mSubject = "Collaborate Request for Barter.Li in the role of "
+                                + mSelectedRole;
+                sendEmail(mRecipients, mSubject, mAboutMeText);
+
                 //Make a NetWork request Here
-                final JSONObject requestObject = new JSONObject();
-
-                try {
-                    requestObject.put(HttpConstants.REGISTER_TYPE, mSelectedRole);
-                    requestObject.put(HttpConstants.BODY, mAboutMeText);
-
-                    final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                                    + ApiEndpoints.COLLABORATE_REQUEST, requestObject
-                                    .toString(), mVolleyCallbacks);
-                    request.setRequestId(RequestId.COLLABORATE_REQUEST);
-                    addRequestToQueue(request, true, 0);
-                } catch (final JSONException e) {
-                    // Should never happen
-                    Logger.e(TAG, e, "Error building report bug json");
-                }
+                //                final JSONObject requestObject = new JSONObject();
+                //
+                //                try {
+                //                    requestObject.put(HttpConstants.REGISTER_TYPE, mSelectedRole);
+                //                    requestObject.put(HttpConstants.BODY, mAboutMeText);
+                //
+                //                    final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                //                                    + ApiEndpoints.COLLABORATE_REQUEST, requestObject
+                //                                    .toString(), mVolleyCallbacks);
+                //                    request.setRequestId(RequestId.COLLABORATE_REQUEST);
+                //                    addRequestToQueue(request, true, 0);
+                //                } catch (final JSONException e) {
+                //                    // Should never happen
+                //                    Logger.e(TAG, e, "Error building report bug json");
+                //                }
 
             }
         }
@@ -150,26 +148,35 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     @Override
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
-
-        if (requestId == RequestId.COLLABORATE_REQUEST) {
-            String mStatus = response.responseBundle
-                            .getString(HttpConstants.STATUS);
-            if (mStatus.equals(HttpConstants.SUCCESS)) {
-                showCrouton("Thanks for registering with us. We shall get back to you shortly.", AlertStyle.INFO);
-                mAboutMeTextView.setText("");
-                mEnlistOptionsRadioGroup.clearCheck();
-            } else {
-                showCrouton("Something went Wrong.", AlertStyle.ERROR);
-            }
-
-        }
-
+        //        if (requestId == RequestId.COLLABORATE_REQUEST) {
+        //            String mStatus = response.responseBundle
+        //                            .getString(HttpConstants.STATUS);
+        //            if (mStatus.equals(HttpConstants.SUCCESS)) {
+        //                showCrouton("Thanks for registering with us. We shall get back to you shortly.", AlertStyle.INFO);
+        //                mAboutMeTextView.setText("");
+        //                mEnlistOptionsRadioGroup.clearCheck();
+        //            } else {
+        //                showCrouton("Something went Wrong.", AlertStyle.ERROR);
+        //            }
+        //
+        //        }
     }
 
     @Override
     public void onBadRequestError(int requestId, IBlRequestContract request,
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
+    }
+
+    private void sendEmail(final String[] recipients, final String subject,
+                    final String message) {
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, recipients);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, message);
+        emailIntent.setType("text/plain");
+        startActivity(Intent
+                        .createChooser(emailIntent, "Choose an Email client :"));
     }
 
 }
