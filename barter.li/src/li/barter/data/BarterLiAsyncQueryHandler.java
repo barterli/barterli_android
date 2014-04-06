@@ -346,18 +346,21 @@ class BarterLiAsyncQueryHandler {
                     result.mInsertRowId = BarterLiSQLiteOpenHelper
                                     .getInstance(BarterLiApplication.getStaticContext())
                                     .insert(task.mTableName, task.mNullColumnHack, task.mValues, task.mAutoNotify);
+                    break;
                 }
 
                 case DELETE: {
                     result.mDeleteCount = BarterLiSQLiteOpenHelper
                                     .getInstance(BarterLiApplication.getStaticContext())
                                     .delete(task.mTableName, task.mSelection, task.mSelectionArgs, task.mAutoNotify);
+                    break;
                 }
 
                 case UPDATE: {
                     result.mUpdateCount = BarterLiSQLiteOpenHelper
                                     .getInstance(BarterLiApplication.getStaticContext())
                                     .update(task.mTableName, task.mValues, task.mSelection, task.mSelectionArgs, task.mAutoNotify);
+                    break;
 
                 }
 
@@ -365,6 +368,7 @@ class BarterLiAsyncQueryHandler {
                     result.mCursor = BarterLiSQLiteOpenHelper
                                     .getInstance(BarterLiApplication.getStaticContext())
                                     .query(task.mDistinct, task.mTableName, task.mColumns, task.mSelection, task.mSelectionArgs, task.mGroupBy, task.mHaving, task.mOrderBy, task.mLimit);
+                    break;
                 }
             }
 

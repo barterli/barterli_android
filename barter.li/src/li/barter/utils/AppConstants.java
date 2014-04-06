@@ -36,7 +36,7 @@ public class AppConstants {
 
     public static final String  FACEBOOK         = "facebook";
     public static final String  MANUAL           = "manual";
-    public static final String  TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
+    public static final String  TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public static final String  CHAT_ID_FORMAT   = "%s#%s";
 
     /**

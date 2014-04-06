@@ -61,6 +61,7 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.ChatType;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
@@ -256,10 +257,12 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             final JSONObject messageJson = new JSONObject(text);
             final JSONObject senderObject = JsonUtils
                             .readJSONObject(messageJson, HttpConstants.SENDER, true, true);
+            final JSONObject receiverObject = JsonUtils
+                            .readJSONObject(messageJson, HttpConstants.RECEIVER, true, true);
             final String senderId = JsonUtils
                             .readString(senderObject, HttpConstants.ID_USER, true, true);
-            final String receiverId = SharedPreferenceHelper
-                            .getString(this, R.string.pref_user_id);
+            final String receiverId = JsonUtils
+                            .readString(receiverObject, HttpConstants.ID_USER, true, true);
             final String messageText = JsonUtils
                             .readString(messageJson, HttpConstants.MESSAGE, true, true);
             final String timestamp = JsonUtils
@@ -281,23 +284,17 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
             DBInterface.insertAsync(QueryTokens.INSERT_CHAT_MESSAGE, chatValues, TableChatMessages.NAME, null, chatValues, true, this);
 
-            //Parse and store sender info
-            final String senderFirstName = JsonUtils
-                            .readString(senderObject, HttpConstants.FIRST_NAME, true, false);
-            final String senderLastName = JsonUtils
-                            .readString(senderObject, HttpConstants.LAST_NAME, true, false);
-            final String senderImage = JsonUtils
-                            .readString(senderObject, HttpConstants.PROFILE_IMAGE, true, false);
+            /*
+             * Parse and store sender info. We will receive messages both when
+             * we send and receive, so we need to check the sender id if it is
+             * our own id first to detect who send the message
+             */
 
-            final ContentValues senderValues = new ContentValues(4);
-            senderValues.put(DatabaseColumns.USER_ID, senderId);
-            senderValues.put(DatabaseColumns.FIRST_NAME, senderFirstName);
-            senderValues.put(DatabaseColumns.LAST_NAME, senderLastName);
-            senderValues.put(DatabaseColumns.PROFILE_PICTURE, senderImage);
-
-            DBInterface.updateAsync(QueryTokens.UPDATE_USER_FOR_CHAT, senderValues, TableUsers.NAME, senderValues, mUserSelection, new String[] {
-                senderId
-            }, true, this);
+            if (senderId.equals(UserInfo.INSTANCE.getId())) {
+                parseAndStoreSenderInfo(receiverId, receiverObject);
+            } else {
+                parseAndStoreSenderInfo(senderId, senderObject);
+            }
 
         } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -308,6 +305,35 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             Logger.e(TAG, e, "Invalid chat timestamp");
         }
 
+    }
+
+    /**
+     * Parses the user info of the user who send the message and updates the
+     * local users table
+     * 
+     * @param senderId The id for the user who send the chat message
+     * @param senderObject The Sender object received in the chat message
+     * @throws JSONException If the JSON is invalid
+     */
+    private void parseAndStoreSenderInfo(final String senderId,
+                    final JSONObject senderObject) throws JSONException {
+
+        final String senderFirstName = JsonUtils
+                        .readString(senderObject, HttpConstants.FIRST_NAME, true, false);
+        final String senderLastName = JsonUtils
+                        .readString(senderObject, HttpConstants.LAST_NAME, true, false);
+        final String senderImage = JsonUtils
+                        .readString(senderObject, HttpConstants.PROFILE_IMAGE, true, false);
+
+        final ContentValues senderValues = new ContentValues(4);
+        senderValues.put(DatabaseColumns.USER_ID, senderId);
+        senderValues.put(DatabaseColumns.FIRST_NAME, senderFirstName);
+        senderValues.put(DatabaseColumns.LAST_NAME, senderLastName);
+        senderValues.put(DatabaseColumns.PROFILE_PICTURE, senderImage);
+
+        DBInterface.updateAsync(QueryTokens.UPDATE_USER_FOR_CHAT, senderValues, TableUsers.NAME, senderValues, mUserSelection, new String[] {
+            senderId
+        }, true, this);
     }
 
     /**
@@ -362,10 +388,16 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     ContentValues values = new ContentValues(4);
                     values.put(DatabaseColumns.CHAT_ID, chatId);
                     values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
-                    values.put(DatabaseColumns.CHAT_TYPE, chatData
-                                    .getAsString(DatabaseColumns.CHAT_TYPE));
-                    values.put(DatabaseColumns.USER_ID, chatData
-                                    .getAsString(DatabaseColumns.USER_ID));
+                    values.put(DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL);
+
+                    final String senderId = chatData
+                                    .getAsString(DatabaseColumns.SENDER_ID);
+                    final String receiverId = chatData
+                                    .getAsString(DatabaseColumns.RECEIVER_ID);
+
+                    values.put(DatabaseColumns.USER_ID, senderId
+                                    .equals(UserInfo.INSTANCE.getId()) ? receiverId
+                                    : senderId);
 
                     Logger.v(TAG, "Updating chats for Id %s", chatId);
                     DBInterface.updateAsync(QueryTokens.UPDATE_CHAT, values, TableChats.NAME, values, mChatSelection, new String[] {
