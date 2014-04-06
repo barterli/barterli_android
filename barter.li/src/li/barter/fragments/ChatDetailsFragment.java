@@ -26,9 +26,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import li.barter.R;
@@ -51,13 +54,15 @@ import li.barter.utils.AppConstants.Loaders;
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ChatDetailsFragment extends AbstractBarterLiFragment implements
-                ServiceConnection, LoaderCallbacks<Cursor> {
+                ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener {
 
     private static final String TAG            = "ChatFragment";
 
     private ChatDetailAdapter   mChatDetailAdapter;
 
     private ListView            mChatListView;
+
+    private EditText            mSubmitChatEditText;
 
     private ChatService         mChatService;
 
@@ -78,6 +83,11 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         mChatDetailAdapter = new ChatDetailAdapter(getActivity(), null);
         mChatListView.setAdapter(mChatDetailAdapter);
         mChatId = getArguments().getString(Keys.CHAT_ID);
+
+        mSubmitChatEditText = (EditText) view
+                        .findViewById(R.id.edit_text_chat_message);
+
+        view.findViewById(R.id.button_send).setOnClickListener(this);
         setActionBarDrawerToggleEnabled(false);
         getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
         return view;
@@ -146,7 +156,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
-        if(loader.getId() == Loaders.CHAT_DETAILS) {
+        if (loader.getId() == Loaders.CHAT_DETAILS) {
             mChatDetailAdapter.swapCursor(cursor);
         }
     }
@@ -154,8 +164,24 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
-        if(loader.getId() == Loaders.CHAT_DETAILS) {
+        if (loader.getId() == Loaders.CHAT_DETAILS) {
             mChatDetailAdapter.swapCursor(null);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (v.getId() == R.id.button_send) {
+            final String message = mSubmitChatEditText.getText().toString();
+
+            if (!TextUtils.isEmpty(message)) {
+                if (mBoundToChatService) {
+
+                    //TODO Finish chat functionality
+                    mChatService.sendMessageToUser("5e1811f3529f0151", message);
+                }
+            }
         }
     }
 }

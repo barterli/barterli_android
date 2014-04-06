@@ -14,9 +14,47 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_chats"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:divider="@color/transparent"
-    android:dividerHeight="2dp" />
+    android:background="@color/transparent" >
+
+    <RelativeLayout
+        android:id="@+id/container_submit_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/margin_minimum"
+        android:paddingRight="@dimen/margin_minimum" >
+
+        <li.barter.widgets.TypefacedButton
+            android:id="@+id/button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/send"
+            app:fontStyle="alegreya_bold" />
+
+        <li.barter.widgets.TypefacedEditText
+            android:id="@+id/edit_text_chat_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/button_send"
+            android:hint="@string/enter_message"
+            android:inputType="textMultiLine|textCapSentences|textAutoComplete"
+            android:singleLine="false" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/list_chats"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/container_submit_message"
+        android:divider="@color/transparent"
+        android:dividerHeight="2dp" />
+
+</RelativeLayout>

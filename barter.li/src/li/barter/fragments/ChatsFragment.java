@@ -16,21 +16,12 @@
 
 package li.barter.fragments;
 
-import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -39,12 +30,9 @@ import android.widget.ListView;
 
 import li.barter.R;
 import li.barter.adapters.ChatsAdapter;
-import li.barter.chat.ChatService;
-import li.barter.chat.ChatService.ChatServiceBinder;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
-import li.barter.data.TableChatMessages;
 import li.barter.data.ViewChatsWithMessagesAndUsers;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
@@ -59,17 +47,13 @@ import li.barter.utils.AppConstants.Loaders;
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ChatsFragment extends AbstractBarterLiFragment implements
-                LoaderCallbacks<Cursor>, OnItemClickListener, ServiceConnection {
+                LoaderCallbacks<Cursor>, OnItemClickListener {
 
     private static final String TAG = "ChatsFragment";
 
     private ChatsAdapter        mChatsAdapter;
 
     private ListView            mChatsListView;
-
-    private ChatService         mChatService;
-
-    private boolean             mBoundToChatService;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -84,53 +68,7 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
 
         setActionBarDrawerToggleEnabled(false);
         getLoaderManager().restartLoader(Loaders.ALL_CHATS, null, this);
-        setHasOptionsMenu(true);
         return view;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_books_around_me, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_scan_book) {
-
-            if (mBoundToChatService) {
-                mChatService.sendMessageToUser("5e1811f3529f0151", "The most amazing app ever!!");
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        //Bind to chat service
-        final Intent chatServiceBindIntent = new Intent(activity, ChatService.class);
-        activity.bindService(chatServiceBindIntent, this, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void onDetach() {
-        if (mBoundToChatService) {
-            getActivity().unbindService(this);
-        }
-        super.onDetach();
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-
-        mBoundToChatService = true;
-        mChatService = ((ChatServiceBinder) service).getService();
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-        mBoundToChatService = false;
     }
 
     @Override
@@ -187,8 +125,9 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
             final Bundle args = new Bundle(1);
             args.putString(Keys.CHAT_ID, chatId);
 
-            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment.instantiate(getActivity(), ChatDetailsFragment.class
-                            .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
+            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                            .instantiate(getActivity(), ChatDetailsFragment.class
+                                            .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
         }
     }
 
