@@ -33,6 +33,9 @@ import android.support.v8.renderscript.RenderScript;
 import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import li.barter.utils.AppConstants.DeviceInfo;
@@ -55,8 +58,7 @@ public class Utils {
         if (activeNetwork != null) {
             DeviceInfo.INSTANCE.setNetworkConnected(activeNetwork
                             .isConnectedOrConnecting());
-            DeviceInfo.INSTANCE.setCurrentNetworkType(activeNetwork
-                            .getType());
+            DeviceInfo.INSTANCE.setCurrentNetworkType(activeNetwork.getType());
         } else {
             DeviceInfo.INSTANCE.setNetworkConnected(false);
             DeviceInfo.INSTANCE
@@ -243,5 +245,18 @@ public class Utils {
      */
     public static boolean isViewInLandscape(final View view) {
         return view.getWidth() >= view.getHeight();
+    }
+
+    /**
+     * Makes an SHA1 Hash of the given string
+     * @param string The string to shash
+     * @return The hashed string
+     * @throws NoSuchAlgorithmException
+     */
+    public static String sha1(final String string) throws NoSuchAlgorithmException {
+        final MessageDigest digest = MessageDigest.getInstance("SHA-1");
+        digest.reset();
+        byte[] data = digest.digest(string.getBytes());
+        return String.format("%0" + (data.length * 2) + "X", new BigInteger(1, data));
     }
 }

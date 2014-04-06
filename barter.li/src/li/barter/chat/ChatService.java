@@ -32,21 +32,27 @@ import android.os.IBinder;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.util.Locale;
 
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
 import li.barter.data.TableChatMessages;
+import li.barter.data.TableChats;
 import li.barter.http.HttpConstants;
 import li.barter.http.JsonUtils;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.ChatType;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
+import li.barter.utils.Utils;
 
 /**
  * Bound service to send and receive chat messages. The service will receive
@@ -67,7 +73,8 @@ import li.barter.utils.Logger;
  * 
  * @author Vinay S Shenoy
  */
-public class ChatService extends Service implements OnReceiveMessageHandler, AsyncDbQueryCallback {
+public class ChatService extends Service implements OnReceiveMessageHandler,
+                AsyncDbQueryCallback {
 
     private static final String    TAG                = "ChatService";
     private static final String    ROUTING_KEY        = "shared.key";
@@ -78,6 +85,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
     private static final String    PASSWORD           = "barter";
 
     private final IBinder          mChatServiceBinder = new ChatServiceBinder();
+
+    private final String           mChatSelection     = DatabaseColumns.CHAT_ID
+                                                                      + SQLConstants.EQUALS_ARG;
 
     /** {@link ChatRabbitMQConnector} instance for listening to messages */
     private ChatRabbitMQConnector  mMessageConsumer;
@@ -214,22 +224,21 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
                             .readString(messageJson, HttpConstants.MESSAGE, true, true);
             final String timestamp = JsonUtils
                             .readString(messageJson, HttpConstants.TIME, true, true);
-            
+
+            final String chatId = generateChatId(receiverId, senderId);
             final ContentValues values = new ContentValues(7);
-            
+
+            values.put(DatabaseColumns.CHAT_ID, chatId);
             values.put(DatabaseColumns.SENDER_ID, senderId);
             values.put(DatabaseColumns.RECEIVER_ID, receiverId);
             values.put(DatabaseColumns.MESSAGE, messageText);
             values.put(DatabaseColumns.TIMESTAMP, timestamp);
-            values.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter.getEpoch(timestamp));
-            values.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter.getOutputTimestamp(timestamp));
-            
-            //Bundle to receive as the cookie in the insert callback so that notification can be shown
-            final Bundle cookie = new Bundle(2);
-            cookie.putString(Keys.MESSAGE, messageText);
-            
-            DBInterface.insertAsync(QueryTokens.INSERT_CHAT_INTO_TABLE, cookie, TableChatMessages.NAME, null, values, true, this);
-            
+            values.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter
+                            .getEpoch(timestamp));
+            values.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter
+                            .getOutputTimestamp(timestamp));
+
+            DBInterface.insertAsync(QueryTokens.INSERT_CHAT_MESSAGE, values, TableChatMessages.NAME, null, values, true, this);
 
         } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -277,24 +286,100 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
     @Override
     public void onInsertComplete(int token, Object cookie, long insertRowId) {
 
-        if(token == QueryTokens.INSERT_CHAT_INTO_TABLE) {
+        if (token == QueryTokens.INSERT_CHAT_MESSAGE) {
+
+            assert (cookie != null);
+            assert (cookie instanceof ContentValues);
+            Logger.v(TAG, "Inserted chat with row Id %d with cookie %s", insertRowId, cookie);
+            //Try to update the Chats table
+            final ContentValues chatData = (ContentValues) cookie;
+            final String chatId = chatData.getAsString(DatabaseColumns.CHAT_ID);
+
+            ContentValues values = new ContentValues(4);
+            values.put(DatabaseColumns.CHAT_ID, chatId);
+            values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
+            values.put(DatabaseColumns.CHAT_TYPE, chatData
+                            .getAsString(DatabaseColumns.CHAT_TYPE));
+            values.put(DatabaseColumns.USER_ID, chatData
+                            .getAsString(DatabaseColumns.USER_ID));
+
+            Logger.v(TAG, "Updating chats for Id %s", chatId);
+            DBInterface.updateAsync(QueryTokens.UPDATE_CHAT, values, TableChats.NAME, values, mChatSelection, new String[] {
+                chatId
+            }, true, this);
+        } else if (token == QueryTokens.INSERT_CHAT) {
+            assert (cookie != null);
+            assert (cookie instanceof ContentValues);
+            //Chat was successfully created. Show notification.
             //TODO Show notification
         }
     }
 
     @Override
     public void onDeleteComplete(int token, Object cookie, int deleteCount) {
-        
+
     }
 
     @Override
     public void onUpdateComplete(int token, Object cookie, int updateCount) {
-        
+
+        if (token == QueryTokens.UPDATE_CHAT) {
+            //Unable to update chats table, create a row
+            assert (cookie != null);
+            assert (cookie instanceof ContentValues);
+
+            if (updateCount == 0) {
+                Logger.v(TAG, "Chat not found. Inserting %s", cookie);
+                DBInterface.insertAsync(QueryTokens.INSERT_CHAT, cookie, TableChats.NAME, null, (ContentValues) cookie, true, this);
+            } else {
+                Logger.v(TAG, "Chat Updated!");
+                //TODO Show notification
+            }
+        }
     }
 
     @Override
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {
-        
+
     }
 
+    /**
+     * Generates as chat ID which will be unique for a given sernder/receiver
+     * pair
+     * 
+     * @param receiverId The receiver of the chat
+     * @param senderId The sender of the chat
+     * @return The chat Id
+     */
+    private String generateChatId(String receiverId, String senderId) {
+
+        /*
+         * Method of generating the chat ID is simple. First we compare the two
+         * ids and combine them in ascending order separate by a '#'. Then we
+         * SHA1 the result to make the chat id
+         */
+
+        String combined = null;
+        if (receiverId.compareTo(senderId) < 0) {
+            combined = String
+                            .format(Locale.US, AppConstants.CHAT_ID_FORMAT, receiverId, senderId);
+        } else {
+            combined = String
+                            .format(Locale.US, AppConstants.CHAT_ID_FORMAT, senderId, receiverId);
+        }
+
+        String hashed = null;
+
+        try {
+            hashed = Utils.sha1(combined);
+        } catch (NoSuchAlgorithmException e) {
+            /*
+             * Shouldn't happen sinch SHA-1 is standard, but in case it does use
+             * the combined string directly since they are local chat IDs
+             */
+            hashed = combined;
+        }
+
+        return hashed;
+    }
 }

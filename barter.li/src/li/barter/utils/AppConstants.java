@@ -212,12 +212,7 @@ public class AppConstants {
         public static final String HAS_FETCHED_INFO   = "has_fetched_info";
         public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
         public static final String LOCATIONS          = "locations";
-
-        // Keys related to ShowWebViewFragment
         public static final String URL_TO_LOAD        = "url_to_load";
-
-        //Keys 
-        public static final String MESSAGE            = "message";
 
     }
 
@@ -289,8 +284,12 @@ public class AppConstants {
         public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 2;
         public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 3;
 
-        //100-200 for insert queries
-        public static final int INSERT_CHAT_INTO_TABLE               = 100;
+        //101-200 for insert queries
+        public static final int INSERT_CHAT_MESSAGE                  = 101;
+        public static final int INSERT_CHAT                          = 102;
+
+        //201-300 for update queries
+        public static final int UPDATE_CHAT                          = 201;
     }
 
     /**
