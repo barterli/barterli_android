@@ -16,6 +16,9 @@
 
 package li.barter.chat;
 
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +30,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.text.TextUtils;
 
@@ -46,8 +50,16 @@ import li.barter.data.SQLConstants;
 import li.barter.data.TableChatMessages;
 import li.barter.data.TableChats;
 import li.barter.data.TableUsers;
+import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.IVolleyHelper;
 import li.barter.http.JsonUtils;
+import li.barter.http.VolleyCallbacks;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.ResponseInfo;
+import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
@@ -76,7 +88,7 @@ import li.barter.utils.Utils;
  * @author Vinay S Shenoy
  */
 public class ChatService extends Service implements OnReceiveMessageHandler,
-                AsyncDbQueryCallback {
+                AsyncDbQueryCallback, IHttpCallbacks {
 
     private static final String    TAG                = "ChatService";
     private static final String    OUTPUT_TIME_FORMAT = "dd MMM, h:m a";
@@ -99,6 +111,10 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     private DateFormatter          mDateFormatter;
 
+    private RequestQueue           mRequestQueue;
+
+    private VolleyCallbacks        mVolleyCallbacks;
+
     /**
      * Task to connect to Rabbit MQ Chat server
      */
@@ -111,6 +127,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                         .getChatPort(), VIRTUAL_HOST, EXCHANGE, ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
         mDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, OUTPUT_TIME_FORMAT);
+        mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
+        mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
 
     }
 
@@ -171,11 +189,12 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (mMessageConsumer.isRunning()) {
             mMessageConsumer.dispose();
             mMessageConsumer = null;
         }
+        mVolleyCallbacks.cancelAll(TAG);
+        super.onDestroy();
     }
 
     /**
@@ -193,21 +212,27 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param message The message to send
      * @return Whether the message was delivered to the chat server or not
      */
-    public boolean sendMessageToUser(String toUserId, String message) {
-        //TODO Construct the message
-        if (mMessageConsumer.isRunning()) {
-            try {
-                final String queue = mMessageConsumer
-                                .declareQueue(generateQueueNameFromUserId(toUserId), false, false, true, null);
-                mMessageConsumer.addBinding(queue, UserInfo.INSTANCE.getId());
-                mMessageConsumer.publish(queue, UserInfo.INSTANCE.getId(), message);
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
-        } else {
-            return false;
+    public void sendMessageToUser(String toUserId, String message) {
+
+        if (!isLoggedIn()) {
+            return;
         }
+        final JSONObject requestObject = new JSONObject();
+        try {
+            requestObject.put(HttpConstants.SENDER_ID, UserInfo.INSTANCE
+                            .getId());
+            requestObject.put(HttpConstants.RECEIVER_ID, "5e1811f3529f0151");
+            requestObject.put(HttpConstants.MESSAGE, message);
+            final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.AMPQ, requestObject.toString(), mVolleyCallbacks);
+            request.setRequestId(RequestId.AMPQ);
+            request.setTag(TAG);
+            mVolleyCallbacks.queue(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            //Should never happen
+        }
+
     }
 
     /**
@@ -443,5 +468,78 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         }
 
         return hashed;
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * li.barter.http.VolleyCallbacks.IHttpCallbacks#onPreExecute(li.barter.
+     * http.IBlRequestContract)
+     */
+    @Override
+    public void onPreExecute(IBlRequestContract request) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * li.barter.http.VolleyCallbacks.IHttpCallbacks#onPostExecute(li.barter
+     * .http.IBlRequestContract)
+     */
+    @Override
+    public void onPostExecute(IBlRequestContract request) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see li.barter.http.VolleyCallbacks.IHttpCallbacks#onSuccess(int,
+     * li.barter.http.IBlRequestContract, li.barter.http.ResponseInfo)
+     */
+    @Override
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see li.barter.http.VolleyCallbacks.IHttpCallbacks#onBadRequestError(int,
+     * li.barter.http.IBlRequestContract, int, java.lang.String,
+     * android.os.Bundle)
+     */
+    @Override
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see li.barter.http.VolleyCallbacks.IHttpCallbacks#onAuthError(int,
+     * li.barter.http.IBlRequestContract)
+     */
+    @Override
+    public void onAuthError(int requestId, IBlRequestContract request) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see li.barter.http.VolleyCallbacks.IHttpCallbacks#onOtherError(int,
+     * li.barter.http.IBlRequestContract, int)
+     */
+    @Override
+    public void onOtherError(int requestId, IBlRequestContract request,
+                    int errorCode) {
+        // TODO Auto-generated method stub
+
     }
 }

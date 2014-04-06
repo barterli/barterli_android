@@ -84,6 +84,7 @@ public class HttpConstants {
         public static final String HANGOUTS                = "/hangouts.json";
         public static final String USER_PREFERRED_LOCATION = "/user_preferred_location.json";
         public static final String SEARCH                  = "/search.json";
+        public static final String AMPQ                    = "/ampq.json";
 
         public static final String UPDATE_USER_INFO        = "/user_update.json";
         public static final String GET_USER_INFO           = "/current_user_profile";
@@ -107,6 +108,7 @@ public class HttpConstants {
         public static final int REPORT_BUG                  = 112;
         public static final int SUGGEST_FEATURE             = 113;
         public static final int COLLABORATE_REQUEST         = 114;
+        public static final int AMPQ                        = 115;
     }
 
     public static final String ID                          = "id";
@@ -162,15 +164,13 @@ public class HttpConstants {
     public static final String RECEIVER                    = "receiver";
     public static final String PROFILE_IMAGE               = "profile_image";
     public static final String PROFILE_PIC                 = "profile";
-
-    //Related to Report Bug/Suggested Feature
     public static final String BUG_TITLE                   = "title";
     public static final String BUG_BODY                    = "body";
     public static final String BUG_LABEL                   = "label";
     public static final String LABEL_FOR_BUG               = "bug";
     public static final String LABEL_FOR_FEATURE           = "feature";
-
-    //Related to Collaborate with Barter.Li 
     public static final String REGISTER_TYPE               = "register_type";
     public static final String BODY                        = "body";
+    public static final String SENDER_ID                   = "sender_id";
+    public static final String RECEIVER_ID                 = "receiver_id";
 }

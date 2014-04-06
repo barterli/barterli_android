@@ -16,6 +16,7 @@
 
 package li.barter.utils;
 
+import com.android.volley.Request;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
@@ -36,9 +37,12 @@ import android.view.View;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Map;
 
+import li.barter.http.HttpConstants;
 import li.barter.utils.AppConstants.DeviceInfo;
+import li.barter.utils.AppConstants.UserInfo;
 
 /**
  * @author Vinay S Shenoy Utility methods for barter.li
@@ -259,4 +263,5 @@ public class Utils {
         byte[] data = digest.digest(string.getBytes());
         return String.format("%0" + (data.length * 2) + "X", new BigInteger(1, data));
     }
+    
 }

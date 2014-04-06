@@ -101,11 +101,25 @@ public class HttpResponseParser {
                 return parseSetUserPreferredLocationResponse(response);
             }
 
+            case RequestId.AMPQ: {
+                return parseAmpqResponse(response);
+            }
+
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
                                 + requestId);
             }
         }
+    }
+
+    /**
+     * Parse the response for Ampq
+     * 
+     * @param response The response from server
+     * @return
+     */
+    private ResponseInfo parseAmpqResponse(String response) {
+        return new ResponseInfo();
     }
 
     /**

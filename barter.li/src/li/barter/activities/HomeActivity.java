@@ -23,6 +23,7 @@ import android.support.v4.app.Fragment;
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
+import li.barter.fragments.ChatFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
@@ -54,8 +55,13 @@ public class HomeActivity extends AbstractBarterLiActivity {
     private void loadBooksAroundMeFragment() {
 
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                        .instantiate(this, BooksAroundMeFragment.class
-                                        .getName(), null), FragmentTags.BOOKS_AROUND_ME, false, null);
+                        .instantiate(this, ChatFragment.class.getName(), null), FragmentTags.BOOKS_AROUND_ME, false, null);
+
+        /*
+         * loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+         * .instantiate(this, BooksAroundMeFragment.class .getName(), null),
+         * FragmentTags.BOOKS_AROUND_ME, false, null);
+         */
 
     }
 
@@ -67,14 +73,14 @@ public class HomeActivity extends AbstractBarterLiActivity {
     @Override
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
-        
+
     }
 
     @Override
     public void onBadRequestError(int requestId, IBlRequestContract request,
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
-        
+
     }
 
 }
