@@ -21,20 +21,28 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import li.barter.R;
-import li.barter.adapters.ChatAdapter;
-import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
+import li.barter.adapters.ChatDetailAdapter;
 import li.barter.chat.ChatService;
 import li.barter.chat.ChatService.ChatServiceBinder;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
+import li.barter.data.SQLiteLoader;
+import li.barter.data.TableChatMessages;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.Loaders;
 
 /**
  * Activity for displaying Chat Messages
@@ -42,12 +50,12 @@ import li.barter.http.ResponseInfo;
  * @author Vinay S Shenoy
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
-public class ChatFragment extends AbstractBarterLiFragment implements
-                OnReceiveMessageHandler, ServiceConnection {
+public class ChatDetailsFragment extends AbstractBarterLiFragment implements
+                ServiceConnection, LoaderCallbacks<Cursor> {
 
-    private static final String TAG = "ChatFragment";
+    private static final String TAG            = "ChatFragment";
 
-    private ChatAdapter         mChatAdapter;
+    private ChatDetailAdapter   mChatDetailAdapter;
 
     private ListView            mChatListView;
 
@@ -55,17 +63,23 @@ public class ChatFragment extends AbstractBarterLiFragment implements
 
     private boolean             mBoundToChatService;
 
+    private final String        mChatSelection = DatabaseColumns.CHAT_ID
+                                                               + SQLConstants.EQUALS_ARG;
+
+    private String              mChatId;
+
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         final View view = inflater
-                        .inflate(R.layout.fragment_chat, container, false);
+                        .inflate(R.layout.fragment_chat_details, container, false);
         mChatListView = (ListView) view.findViewById(R.id.list_chats);
-        mChatAdapter = new ChatAdapter(getActivity());
-        mChatListView.setAdapter(mChatAdapter);
-
+        mChatDetailAdapter = new ChatDetailAdapter(getActivity(), null);
+        mChatListView.setAdapter(mChatDetailAdapter);
+        mChatId = getArguments().getString(Keys.CHAT_ID);
         setActionBarDrawerToggleEnabled(false);
+        getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
         return view;
     }
 
@@ -78,21 +92,16 @@ public class ChatFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onPause() {
+    public void onDetach() {
         if (mBoundToChatService) {
             getActivity().unbindService(this);
         }
-        super.onPause();
+        super.onDetach();
     }
 
     @Override
     protected Object getVolleyTag() {
         return TAG;
-    }
-
-    @Override
-    public void onReceiveMessage(final byte[] message) {
-
     }
 
     @Override
@@ -120,5 +129,33 @@ public class ChatFragment extends AbstractBarterLiFragment implements
     @Override
     public void onServiceDisconnected(ComponentName name) {
         mBoundToChatService = false;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+        if (id == Loaders.CHAT_DETAILS) {
+            return new SQLiteLoader(getActivity(), false, TableChatMessages.NAME, null, mChatSelection, new String[] {
+                mChatId
+            }, null, null, DatabaseColumns.TIMESTAMP_EPOCH
+                            + SQLConstants.DESCENDING, null);
+        }
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        if(loader.getId() == Loaders.CHAT_DETAILS) {
+            mChatDetailAdapter.swapCursor(cursor);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+        if(loader.getId() == Loaders.CHAT_DETAILS) {
+            mChatDetailAdapter.swapCursor(null);
+        }
     }
 }

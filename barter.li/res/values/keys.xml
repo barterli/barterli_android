@@ -17,8 +17,9 @@
 
     <string name="drawer_open">drawer_open</string>
     <string name="drawer_closed">drawer_closed</string>
-    
+
     <!-- View tag keys. These don't need values -->
-    <string name="tag_barter_type"/>
+    <string name="tag_barter_type" />
+    <string name="tag_chat_id" />
 
 </resources>

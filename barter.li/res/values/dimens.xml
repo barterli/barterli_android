@@ -33,7 +33,8 @@
     <dimen name="book_height">120dp</dimen>
     <dimen name="book_image_width">90dp</dimen>
     <dimen name="chats_item_height">90dp</dimen>
-
+    <dimen name="chat_detail_image_size">50dp</dimen>
+    <dimen name="chat_detail_margin">40dp</dimen>
     <!-- Text sizes -->
     <dimen name="text_micro">12sp</dimen>
     <dimen name="text_small">14sp</dimen>

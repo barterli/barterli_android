@@ -213,6 +213,7 @@ public class AppConstants {
         public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
         public static final String LOCATIONS          = "locations";
         public static final String URL_TO_LOAD        = "url_to_load";
+        public static final String CHAT_ID            = "chat_id";
 
     }
 
@@ -237,6 +238,7 @@ public class AppConstants {
         public static final String PROFILE                                         = "profile";
         public static final String EDIT_PROFILE                                    = "edit_profile";
         public static final String CHATS                                           = "chats";
+        public static final String CHAT_DETAILS                                    = "chat_details";
 
         /* Tags for fragment backstack popping and providing up navigation */
 
@@ -272,6 +274,7 @@ public class AppConstants {
         public static final int SEARCH_BOOKS = 201;
         public static final int GET_MY_BOOKS = 202;
         public static final int ALL_CHATS    = 203;
+        public static final int CHAT_DETAILS = 204;
     }
 
     /**

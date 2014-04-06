@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/li.barter"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent"
+    android:padding="@dimen/margin_minimum" >
+
+    <ImageView
+        android:id="@+id/image_user"
+        android:layout_width="@dimen/chat_detail_image_size"
+        android:layout_height="@dimen/chat_detail_image_size"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@color/transparent"
+        android:contentDescription="@string/app_name"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pic_avatar" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_chat_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/chat_detail_margin"
+        android:background="@drawable/msg_in_bubble"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="alegreya_regular" />
+
+</RelativeLayout>
