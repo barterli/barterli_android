@@ -287,9 +287,11 @@ public class AppConstants {
         //101-200 for insert queries
         public static final int INSERT_CHAT_MESSAGE                  = 101;
         public static final int INSERT_CHAT                          = 102;
+        public static final int INSERT_USER_FOR_CHAT                 = 103;
 
         //201-300 for update queries
         public static final int UPDATE_CHAT                          = 201;
+        public static final int UPDATE_USER_FOR_CHAT                 = 202;
     }
 
     /**

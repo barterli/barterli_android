@@ -27,7 +27,6 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.IBinder;
 
 import java.io.IOException;
@@ -36,6 +35,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.Locale;
 
+import li.barter.R;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
@@ -44,14 +44,14 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableChatMessages;
 import li.barter.data.TableChats;
+import li.barter.data.TableUsers;
 import li.barter.http.HttpConstants;
 import li.barter.http.JsonUtils;
 import li.barter.utils.AppConstants;
-import li.barter.utils.AppConstants.ChatType;
-import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
 
 /**
@@ -87,6 +87,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     private final IBinder          mChatServiceBinder = new ChatServiceBinder();
 
     private final String           mChatSelection     = DatabaseColumns.CHAT_ID
+                                                                      + SQLConstants.EQUALS_ARG;
+
+    private final String           mUserSelection     = DatabaseColumns.USER_ID
                                                                       + SQLConstants.EQUALS_ARG;
 
     /** {@link ChatRabbitMQConnector} instance for listening to messages */
@@ -210,35 +213,56 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     @Override
     public void onReceiveMessage(byte[] message) {
 
+        //TODO Break this method out for readability
         String text = "";
         try {
             text = new String(message, HTTP.UTF_8);
             Logger.d(TAG, "Received:" + text);
             final JSONObject messageJson = new JSONObject(text);
-
+            final JSONObject senderObject = JsonUtils
+                            .readJSONObject(messageJson, HttpConstants.SENDER, true, true);
             final String senderId = JsonUtils
-                            .readString(messageJson, HttpConstants.SENDER_ID, true, true);
-            final String receiverId = JsonUtils
-                            .readString(messageJson, HttpConstants.RECEIVER_ID, true, true);
+                            .readString(senderObject, HttpConstants.ID_USER, true, true);
+            final String receiverId = SharedPreferenceHelper
+                            .getString(this, R.string.pref_user_id);
             final String messageText = JsonUtils
                             .readString(messageJson, HttpConstants.MESSAGE, true, true);
             final String timestamp = JsonUtils
                             .readString(messageJson, HttpConstants.TIME, true, true);
 
+            //Insert the chat message into DB
             final String chatId = generateChatId(receiverId, senderId);
-            final ContentValues values = new ContentValues(7);
+            final ContentValues chatValues = new ContentValues(7);
 
-            values.put(DatabaseColumns.CHAT_ID, chatId);
-            values.put(DatabaseColumns.SENDER_ID, senderId);
-            values.put(DatabaseColumns.RECEIVER_ID, receiverId);
-            values.put(DatabaseColumns.MESSAGE, messageText);
-            values.put(DatabaseColumns.TIMESTAMP, timestamp);
-            values.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter
+            chatValues.put(DatabaseColumns.CHAT_ID, chatId);
+            chatValues.put(DatabaseColumns.SENDER_ID, senderId);
+            chatValues.put(DatabaseColumns.RECEIVER_ID, receiverId);
+            chatValues.put(DatabaseColumns.MESSAGE, messageText);
+            chatValues.put(DatabaseColumns.TIMESTAMP, timestamp);
+            chatValues.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter
                             .getEpoch(timestamp));
-            values.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter
+            chatValues.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter
                             .getOutputTimestamp(timestamp));
 
-            DBInterface.insertAsync(QueryTokens.INSERT_CHAT_MESSAGE, values, TableChatMessages.NAME, null, values, true, this);
+            DBInterface.insertAsync(QueryTokens.INSERT_CHAT_MESSAGE, chatValues, TableChatMessages.NAME, null, chatValues, true, this);
+
+            //Parse and store sender info
+            final String senderFirstName = JsonUtils
+                            .readString(senderObject, HttpConstants.FIRST_NAME, true, false);
+            final String senderLastName = JsonUtils
+                            .readString(senderObject, HttpConstants.LAST_NAME, true, false);
+            final String senderImage = JsonUtils
+                            .readString(senderObject, HttpConstants.PROFILE_IMAGE, true, false);
+
+            final ContentValues senderValues = new ContentValues(4);
+            senderValues.put(DatabaseColumns.USER_ID, senderId);
+            senderValues.put(DatabaseColumns.FIRST_NAME, senderFirstName);
+            senderValues.put(DatabaseColumns.LAST_NAME, senderLastName);
+            senderValues.put(DatabaseColumns.PROFILE_PICTURE, senderImage);
+
+            DBInterface.updateAsync(QueryTokens.UPDATE_USER_FOR_CHAT, senderValues, TableUsers.NAME, senderValues, mUserSelection, new String[] {
+                senderId
+            }, true, this);
 
         } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -286,33 +310,52 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     @Override
     public void onInsertComplete(int token, Object cookie, long insertRowId) {
 
-        if (token == QueryTokens.INSERT_CHAT_MESSAGE) {
+        switch (token) {
 
-            assert (cookie != null);
-            assert (cookie instanceof ContentValues);
-            Logger.v(TAG, "Inserted chat with row Id %d with cookie %s", insertRowId, cookie);
-            //Try to update the Chats table
-            final ContentValues chatData = (ContentValues) cookie;
-            final String chatId = chatData.getAsString(DatabaseColumns.CHAT_ID);
+            case QueryTokens.INSERT_CHAT_MESSAGE: {
+                assert (cookie != null);
+                assert (cookie instanceof ContentValues);
 
-            ContentValues values = new ContentValues(4);
-            values.put(DatabaseColumns.CHAT_ID, chatId);
-            values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
-            values.put(DatabaseColumns.CHAT_TYPE, chatData
-                            .getAsString(DatabaseColumns.CHAT_TYPE));
-            values.put(DatabaseColumns.USER_ID, chatData
-                            .getAsString(DatabaseColumns.USER_ID));
+                if (insertRowId >= 0) {
+                    Logger.v(TAG, "Inserted chat with row Id %d with cookie %s", insertRowId, cookie);
+                    //TODO Show notification
+                    //Try to update the Chats table
+                    final ContentValues chatData = (ContentValues) cookie;
+                    final String chatId = chatData
+                                    .getAsString(DatabaseColumns.CHAT_ID);
 
-            Logger.v(TAG, "Updating chats for Id %s", chatId);
-            DBInterface.updateAsync(QueryTokens.UPDATE_CHAT, values, TableChats.NAME, values, mChatSelection, new String[] {
-                chatId
-            }, true, this);
-        } else if (token == QueryTokens.INSERT_CHAT) {
-            assert (cookie != null);
-            assert (cookie instanceof ContentValues);
-            //Chat was successfully created. Show notification.
-            //TODO Show notification
+                    ContentValues values = new ContentValues(4);
+                    values.put(DatabaseColumns.CHAT_ID, chatId);
+                    values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
+                    values.put(DatabaseColumns.CHAT_TYPE, chatData
+                                    .getAsString(DatabaseColumns.CHAT_TYPE));
+                    values.put(DatabaseColumns.USER_ID, chatData
+                                    .getAsString(DatabaseColumns.USER_ID));
+
+                    Logger.v(TAG, "Updating chats for Id %s", chatId);
+                    DBInterface.updateAsync(QueryTokens.UPDATE_CHAT, values, TableChats.NAME, values, mChatSelection, new String[] {
+                        chatId
+                    }, true, this);
+                } else {
+                    //Rare case
+                    Logger.e(TAG, "Unable to insert chat message");
+                }
+                break;
+            }
+
+            case QueryTokens.INSERT_CHAT: {
+                assert (cookie != null);
+                assert (cookie instanceof ContentValues);
+                //Chat was successfully created
+                break;
+            }
+
+            case QueryTokens.INSERT_USER_FOR_CHAT: {
+                //Nothing to do here as of now
+                break;
+            }
         }
+
     }
 
     @Override
@@ -324,16 +367,25 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     public void onUpdateComplete(int token, Object cookie, int updateCount) {
 
         if (token == QueryTokens.UPDATE_CHAT) {
-            //Unable to update chats table, create a row
             assert (cookie != null);
             assert (cookie instanceof ContentValues);
 
             if (updateCount == 0) {
+                //Unable to update chats table, create a row
                 Logger.v(TAG, "Chat not found. Inserting %s", cookie);
                 DBInterface.insertAsync(QueryTokens.INSERT_CHAT, cookie, TableChats.NAME, null, (ContentValues) cookie, true, this);
             } else {
                 Logger.v(TAG, "Chat Updated!");
                 //TODO Show notification
+            }
+        } else if (token == QueryTokens.UPDATE_USER_FOR_CHAT) {
+            assert (cookie != null);
+            assert (cookie instanceof ContentValues);
+
+            if (updateCount == 0) {
+                //Unable to update user, create the user
+                Logger.v(TAG, "User not found. Inserting %s", cookie);
+                DBInterface.insertAsync(QueryTokens.INSERT_USER_FOR_CHAT, cookie, TableUsers.NAME, null, (ContentValues) cookie, true, this);
             }
         }
     }
