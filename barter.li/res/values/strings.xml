@@ -88,6 +88,7 @@
     <!-- Strings for Nav drawer -->
     <string-array name="nav_drawer_titles">
         <item>My Profile</item>
+        <item>Chats</item>
         <item>Suggest Feature</item>
         <item>Report Bug</item>
         <item>Collaborate with barter.li</item>
@@ -97,6 +98,7 @@
     </string-array>
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile, update your info, view your saved books.</item>
+        <item>Your ongoing chats</item>
         <item>Got an idea? Let us Know.</item>
         <item>Got a bug? Tell us about it.</item>
         <item>Let us work together.</item>
@@ -167,7 +169,6 @@
     <string name="user">User</string>
     <string name="volunteer">Volunteer</string>
     <string name="barterli_email">joinus@barter.li</string>
-    
     <string name="hint_about_me_description">About Me.</string>
 
 </resources>

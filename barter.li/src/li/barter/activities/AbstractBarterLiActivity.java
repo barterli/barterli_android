@@ -59,6 +59,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import li.barter.R;
 import li.barter.adapters.HomeNavDrawerAdapter;
 import li.barter.fragments.AbstractBarterLiFragment;
+import li.barter.fragments.ChatsFragment;
 import li.barter.fragments.CollaborateFragment;
 import li.barter.fragments.FragmentTransition;
 import li.barter.fragments.LoginFragment;
@@ -246,8 +247,29 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             }
 
-            //Suggest Feature
+            //My Chats
             case 1: {
+
+                if (masterFragment != null
+                                && masterFragment instanceof ChatsFragment) {
+                    return null;
+                }
+
+                //TODO Check for login
+                runnable = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(AbstractBarterLiActivity.this, ChatsFragment.class
+                                                        .getName(), null), FragmentTags.CHATS, true, FragmentTags.BS_CHATS);
+                    }
+                };
+                break;
+            }
+
+            //Suggest Feature
+            case 2: {
                 if (masterFragment != null
                                 && masterFragment instanceof SuggestFeatureFragment) {
                     return null;
@@ -265,7 +287,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             }
 
             //Report Bug
-            case 2: {
+            case 3: {
                 if (masterFragment != null
                                 && masterFragment instanceof ReportBugFragment) {
                     return null;
@@ -283,7 +305,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             }
 
             //Collaborate with barter.li
-            case 3: {
+            case 4: {
                 if (masterFragment != null
                                 && masterFragment instanceof CollaborateFragment) {
                     return null;
@@ -301,7 +323,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             }
 
             //Open source
-            case 4: {
+            case 5: {
                 if (masterFragment != null
                                 && masterFragment instanceof OssLicenseFragment) {
                     return null;
@@ -313,7 +335,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             }
 
             //About us
-            case 5: {
+            case 6: {
                 Bundle showWebViewArgs = new Bundle();
                 showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
                                 .getString(R.string.url_me));
@@ -324,7 +346,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             }
 
             //Tribute
-            case 6: {
+            case 7: {
                 Bundle showWebViewArgs = new Bundle();
                 showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
                                 .getString(R.string.url_google));

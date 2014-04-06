@@ -24,9 +24,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -69,7 +66,6 @@ public class ChatFragment extends AbstractBarterLiFragment implements
         mChatListView.setAdapter(mChatAdapter);
 
         setActionBarDrawerToggleEnabled(false);
-        setHasOptionsMenu(true);
         return view;
     }
 
@@ -79,22 +75,6 @@ public class ChatFragment extends AbstractBarterLiFragment implements
         //Bind to chat service
         final Intent chatServiceBindIntent = new Intent(activity, ChatService.class);
         activity.bindService(chatServiceBindIntent, this, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_books_around_me, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_scan_book) {
-            if (mBoundToChatService) {
-                mChatService.sendMessageToUser("", "This is a test message. Hope it works. ^_^");
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

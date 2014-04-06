@@ -234,16 +234,17 @@ public class AppConstants {
         public static final String REPORT_BUGS                                     = "report_bugs";
         public static final String SUGGEST_FEATURE                                 = "suggest_feature";
         public static final String COLLABORATE                                     = "collaborate";
+        public static final String PROFILE                                         = "profile";
+        public static final String EDIT_PROFILE                                    = "edit_profile";
+        public static final String CHATS                                           = "chats";
 
         /* Tags for fragment backstack popping and providing up navigation */
 
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
         public static final String BS_ADD_BOOK                                     = "to_add_book";
         public static final String BS_PREFERRED_LOCATION                           = "to_preferred_location";
-
-        public static final String PROFILE                                         = "profile";
-        public static final String EDIT_PROFILE                                    = "edit_profile";
         public static final String BS_PROFILE                                      = "to_edit_profile";
+        public static final String BS_CHATS                                        = "to_chats";
 
     }
 
@@ -269,7 +270,8 @@ public class AppConstants {
     public static interface Loaders {
 
         public static final int SEARCH_BOOKS = 201;
-        public static final int GET_MY_BOOKS = 205;
+        public static final int GET_MY_BOOKS = 202;
+        public static final int ALL_CHATS    = 203;
     }
 
     /**

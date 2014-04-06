@@ -40,7 +40,6 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.Locale;
 
-import li.barter.R;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
@@ -52,13 +51,13 @@ import li.barter.data.TableChats;
 import li.barter.data.TableUsers;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.JsonUtils;
-import li.barter.http.VolleyCallbacks;
-import li.barter.http.HttpConstants.ApiEndpoints;
-import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.ResponseInfo;
+import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.ChatType;
@@ -66,7 +65,6 @@ import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
-import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
 
 /**
@@ -116,6 +114,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     private VolleyCallbacks        mVolleyCallbacks;
 
+    private String                 mQueueName;
+
     /**
      * Task to connect to Rabbit MQ Chat server
      */
@@ -155,10 +155,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
         if (isLoggedIn() && !mMessageConsumer.isRunning()) {
 
+            mQueueName = generateQueueNameFromUserId(UserInfo.INSTANCE.getId());
             if (mConnectTask == null) {
                 mConnectTask = new ConnectToChatAsyncTask();
-                mConnectTask.execute(USERNAME, PASSWORD, generateQueueNameFromUserId(UserInfo.INSTANCE
-                                .getId()), UserInfo.INSTANCE.getId());
+                mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
+                                .getId());
             } else {
                 Status connectingStatus = mConnectTask.getStatus();
 
@@ -172,8 +173,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
                     mConnectTask = new ConnectToChatAsyncTask();
                     //TODO Use actual user id here
-                    mConnectTask.execute(USERNAME, PASSWORD, generateQueueNameFromUserId(UserInfo.INSTANCE
-                                    .getId()), UserInfo.INSTANCE.getId());
+                    mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
+                                    .getId());
                 }
             }
 
@@ -222,7 +223,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         try {
             requestObject.put(HttpConstants.SENDER_ID, UserInfo.INSTANCE
                             .getId());
-            requestObject.put(HttpConstants.RECEIVER_ID, "5e1811f3529f0151");
+            requestObject.put(HttpConstants.RECEIVER_ID, toUserId);
             requestObject.put(HttpConstants.MESSAGE, message);
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.AMPQ, requestObject.toString(), mVolleyCallbacks);
@@ -502,76 +503,38 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         return hashed;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * li.barter.http.VolleyCallbacks.IHttpCallbacks#onPreExecute(li.barter.
-     * http.IBlRequestContract)
-     */
     @Override
     public void onPreExecute(IBlRequestContract request) {
-        // TODO Auto-generated method stub
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see
-     * li.barter.http.VolleyCallbacks.IHttpCallbacks#onPostExecute(li.barter
-     * .http.IBlRequestContract)
-     */
     @Override
     public void onPostExecute(IBlRequestContract request) {
-        // TODO Auto-generated method stub
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see li.barter.http.VolleyCallbacks.IHttpCallbacks#onSuccess(int,
-     * li.barter.http.IBlRequestContract, li.barter.http.ResponseInfo)
-     */
     @Override
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
-        // TODO Auto-generated method stub
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see li.barter.http.VolleyCallbacks.IHttpCallbacks#onBadRequestError(int,
-     * li.barter.http.IBlRequestContract, int, java.lang.String,
-     * android.os.Bundle)
-     */
     @Override
     public void onBadRequestError(int requestId, IBlRequestContract request,
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
-        // TODO Auto-generated method stub
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see li.barter.http.VolleyCallbacks.IHttpCallbacks#onAuthError(int,
-     * li.barter.http.IBlRequestContract)
-     */
     @Override
     public void onAuthError(int requestId, IBlRequestContract request) {
         // TODO Auto-generated method stub
 
     }
 
-    /*
-     * (non-Javadoc)
-     * @see li.barter.http.VolleyCallbacks.IHttpCallbacks#onOtherError(int,
-     * li.barter.http.IBlRequestContract, int)
-     */
     @Override
     public void onOtherError(int requestId, IBlRequestContract request,
                     int errorCode) {
-        // TODO Auto-generated method stub
 
     }
 }
