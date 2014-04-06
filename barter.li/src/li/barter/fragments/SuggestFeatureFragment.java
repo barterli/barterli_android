@@ -58,7 +58,8 @@ public class SuggestFeatureFragment extends AbstractBarterLiFragment implements
                     Bundle savedInstanceState) {
         init(container);
         setActionBarDrawerToggleEnabled(false);
-        final View view = inflater.inflate(R.layout.fragment_suggest_feature, null);
+        final View view = inflater
+                        .inflate(R.layout.fragment_suggest_feature, null);
         mSuggestFeatureTextView = (EditText) view
                         .findViewById(R.id.text_feature_description);
         mSubmitFeatureButton = (Button) view

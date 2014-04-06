@@ -157,7 +157,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
             mAboutMeTextView.setVisibility(View.INVISIBLE);
         }
 
-        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity(), getImageLoader());
+        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
         mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
         mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);

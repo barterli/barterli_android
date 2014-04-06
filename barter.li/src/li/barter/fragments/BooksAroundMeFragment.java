@@ -180,7 +180,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mMapDrawerBlurHelper = new MapDrawerInteractionHelper(getActivity(), mDrawerLayout, mBooksDrawerView, mMapView);
         mMapDrawerBlurHelper.init(this);
 
-        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity(), getImageLoader());
+        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
         mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
         mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
@@ -191,6 +191,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mDrawerOpenedAutomatically = false;
             mMapAlreadyMovedOnce = false;
             fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), 1);
+
         } else {
             mDrawerOpenedAutomatically = savedInstanceState
                             .getBoolean(Keys.DRAWER_OPENED_ONCE);

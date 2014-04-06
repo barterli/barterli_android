@@ -49,10 +49,11 @@ public class ShowWebViewFragment extends AbstractBarterLiFragment {
         init(container);
         //setHasOptionsMenu(true);
         setActionBarDrawerToggleEnabled(false);
-        final View view = inflater.inflate(R.layout.fragment_show_webview, null);
+        final View view = inflater
+                        .inflate(R.layout.fragment_show_webview, null);
         mWebView = (WebView) view.findViewById(R.id.view_web);
         mWebView.setWebViewClient(new myWebViewClient());
-        
+
         final Bundle myArgs = getArguments();
         String mUrlToLoad = myArgs.getString(Keys.URL_TO_LOAD);
         mWebView.loadUrl(mUrlToLoad);
@@ -74,7 +75,7 @@ public class ShowWebViewFragment extends AbstractBarterLiFragment {
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
     }
-    
+
     public class myWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {

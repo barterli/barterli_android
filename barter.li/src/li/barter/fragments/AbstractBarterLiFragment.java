@@ -74,7 +74,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      */
     protected VolleyCallbacks   mVolleyCallbacks;
 
-    private ImageLoader         mImageLoader;
     private AtomicInteger       mRequestCounter;
 
     @Override
@@ -83,8 +82,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         mIsAttached = true;
         final RequestQueue requestQueue = ((IVolleyHelper) activity
                         .getApplication()).getRequestQueue();
-        mImageLoader = ((IVolleyHelper) activity.getApplication())
-                        .getImageLoader();
         mVolleyCallbacks = new VolleyCallbacks(requestQueue, this);
         mRequestCounter = new AtomicInteger(0);
     }
@@ -138,7 +135,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         super.onDetach();
         mIsAttached = false;
         mVolleyCallbacks = null;
-        mImageLoader = null;
         mRequestCounter = null;
     }
     
@@ -176,15 +172,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         Crouton.clearCroutonsForActivity(getActivity());
         mVolleyCallbacks.cancelAll(getVolleyTag());
         getActivity().setProgressBarIndeterminateVisibility(false);
-    }
-
-    /**
-     * Reference to the {@link ImageLoader}
-     * 
-     * @return The {@link ImageLoader} for loading images from ntwork
-     */
-    protected ImageLoader getImageLoader() {
-        return mImageLoader;
     }
 
     /**

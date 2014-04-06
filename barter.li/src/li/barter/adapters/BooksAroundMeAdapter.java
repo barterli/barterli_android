@@ -16,8 +16,7 @@
 
 package li.barter.adapters;
 
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.picasso.Picasso;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -25,6 +24,7 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import li.barter.R;
@@ -39,8 +39,6 @@ public class BooksAroundMeAdapter extends CursorAdapter {
 
     private static final String TAG = "BooksAroundMeAdapter";
 
-    private final ImageLoader   mImageLoader;
-
     /**
      * Format string for formatting the location of books
      */
@@ -48,12 +46,9 @@ public class BooksAroundMeAdapter extends CursorAdapter {
 
     /**
      * @param context A reference to the {@link Context}
-     * @param imageLoader An {@link ImageLoader} reference for loading images
-     *            from the network
      */
-    public BooksAroundMeAdapter(final Context context, final ImageLoader imageLoader) {
+    public BooksAroundMeAdapter(final Context context) {
         super(context, null, 0);
-        mImageLoader = imageLoader;
         mLocationFormat = context.getString(R.string.location_format);
     }
 
@@ -74,9 +69,10 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                                         .getString(cursor
                                                         .getColumnIndex(DatabaseColumns.ADDRESS))));
 
-        ((NetworkImageView) view.getTag(R.id.image_book))
-                        .setImageUrl(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.IMAGE_URL)), mImageLoader);
+        Picasso.with(context)
+                        .load(cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.IMAGE_URL)))
+                        .fit().into((ImageView) view.getTag(R.id.image_book));
 
     }
 

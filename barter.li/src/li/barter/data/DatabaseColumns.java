@@ -23,20 +23,30 @@ package li.barter.data;
  */
 public interface DatabaseColumns {
 
-    public static final String BOOK_ID           = "book_id";
-    public static final String ISBN_10           = "isbn_10";
-    public static final String ISBN_13           = "isbn_13";
-    public static final String DESCRIPTION       = "description";
-    public static final String TITLE             = "title";
-    public static final String AUTHOR            = "author";
-    public static final String BARTER_TYPE       = "barter_type";
-    public static final String USER_ID           = "user_id";
-    public static final String IMAGE_URL         = "image_url";
-    public static final String LOCATION_ID       = "location_id";
-    public static final String NAME              = "name";
-    public static final String ADDRESS           = "address";
-    public static final String LATITUDE          = "latitude";
-    public static final String LONGITUDE         = "longitude";
-    public static final String PUBLICATION_YEAR  = "publication_year";
-    public static final String PUBLICATION_MONTH = "publication_month";
+    public static final String BOOK_ID                  = "book_id";
+    public static final String ISBN_10                  = "isbn_10";
+    public static final String ISBN_13                  = "isbn_13";
+    public static final String DESCRIPTION              = "description";
+    public static final String TITLE                    = "title";
+    public static final String AUTHOR                   = "author";
+    public static final String BARTER_TYPE              = "barter_type";
+    public static final String USER_ID                  = "user_id";
+    public static final String IMAGE_URL                = "image_url";
+    public static final String LOCATION_ID              = "location_id";
+    public static final String NAME                     = "name";
+    public static final String ADDRESS                  = "address";
+    public static final String LATITUDE                 = "latitude";
+    public static final String LONGITUDE                = "longitude";
+    public static final String PUBLICATION_YEAR         = "publication_year";
+    public static final String PUBLICATION_MONTH        = "publication_month";
+    public static final String SENDER_ID                = "sender_id";
+    public static final String RECEIVER_ID              = "receiver_id";
+    public static final String FIRST_NAME               = "first_name";
+    public static final String LAST_NAME                = "last_name";
+    public static final String PROFILE_PICTURE          = "profile_picture";
+    public static final String MESSAGE_TIMESTAMP        = "message_timestamp";
+    public static final String MESSAGE                  = "message";
+    public static final String MESSAGE_TIMESTAMP_HUMAN  = "message_timestamp_human";
+    public static final String MESSAGE_TIMESTAMP_EPOCH  = "message_timestamp_epoch";
+
 }

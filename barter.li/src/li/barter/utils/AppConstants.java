@@ -32,10 +32,11 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG    = true;
+    public static final boolean DEBUG            = true;
 
-    public static final String  FACEBOOK = "facebook";
-    public static final String  MANUAL   = "manual";
+    public static final String  FACEBOOK         = "facebook";
+    public static final String  MANUAL           = "manual";
+    public static final String  TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
 
     /**
      * Singleton to hold frequently accessed info in memory
