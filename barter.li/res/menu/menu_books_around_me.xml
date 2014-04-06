@@ -20,7 +20,7 @@
     <group android:id="@+id/group_hide_on_drawer_open" >
         <item
             android:id="@+id/action_scan_book"
-            android:icon="@drawable/ic_action_camera"
+            android:icon="@drawable/ic_action_barcode"
             android:orderInCategory="1"
             android:showAsAction="ifRoom"
             android:title="@string/scan_book"/>
