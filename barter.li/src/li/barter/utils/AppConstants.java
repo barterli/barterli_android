@@ -212,6 +212,7 @@ public class AppConstants {
         public static final String HAS_FETCHED_INFO   = "has_fetched_info";
         public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
         public static final String LOCATIONS          = "locations";
+        public static final String BOOK_ID          = "book_id";
 
         // Keys related to ShowWebViewFragment
         public static final String URL_TO_LOAD        = "url_to_load";
@@ -239,6 +240,7 @@ public class AppConstants {
         public static final String REPORT_BUGS                                     = "report_bugs";
         public static final String SUGGEST_FEATURE                                 = "suggest_feature";
         public static final String COLLABORATE                                     = "collaborate";
+        public static final String SHOW_SINGLE_BOOK                                     = "show_single_book";
 
         /* Tags for fragment backstack popping and providing up navigation */
 
@@ -288,6 +290,8 @@ public class AppConstants {
         public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK  = 1;
         public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 2;
         public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 3;
+        
+        public static final int LOAD_MY_BOOKS               = 11;
 
         //100-200 for insert queries
         public static final int INSERT_CHAT_INTO_TABLE               = 100;
