@@ -21,43 +21,103 @@
     android:background="@android:color/transparent"
     android:padding="@dimen/activity_margin" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/text_isbn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_margin"
-            app:fontStyle="alegreya_regular" />
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/book_avatar"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_margin"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_large"
+            android:textStyle="bold"
             app:fontStyle="alegreya_regular" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/text_title"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_large"
+            app:fontStyle="alegreya_regular" />
+
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/label_isbn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_author"
             android:layout_marginTop="@dimen/activity_margin"
+            android:text="@string/isbn_label"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium"
+            app:fontStyle="alegreya_regular" />
+
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/text_isbn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/label_isbn"
+            android:layout_marginTop="@dimen/margin_xx_small"
+            android:textSize="@dimen/text_small"
+            app:fontStyle="alegreya_regular" />
+
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/label_publication_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_isbn"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:text="@string/publication_date_label"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium"
+            app:fontStyle="alegreya_regular" />
+
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/text_publication_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/label_publication_date"
+            android:layout_marginTop="@dimen/margin_xx_small"
+            android:textSize="@dimen/text_small"
+            app:fontStyle="alegreya_regular" />
+
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/label_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_publication_date"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:text="@string/description_label"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium"
             app:fontStyle="alegreya_regular" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_margin"
+            android:layout_below="@id/label_description"
+            android:layout_marginTop="@dimen/margin_xx_small"
+            android:textSize="@dimen/text_small"
             app:fontStyle="alegreya_regular" />
 
         <LinearLayout
+            android:id="@+id/layout_barter_options1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/text_description"
             android:orientation="horizontal" >
 
             <li.barter.widgets.TypefacedTextView
@@ -77,9 +137,10 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layout_barter_options"
+            android:id="@+id/layout_barter_options2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/layout_barter_options1"
             android:layout_marginTop="@dimen/activity_margin"
             android:orientation="vertical" >
 
@@ -107,6 +168,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_barter_options3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -155,6 +217,6 @@
                     app:fontStyle="alegreya_regular" />
             </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
 </ScrollView>

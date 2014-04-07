@@ -16,6 +16,9 @@
 
 package li.barter.chat;
 
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,24 +32,40 @@ import android.os.AsyncTask.Status;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.TextUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.util.Locale;
 
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
 import li.barter.data.TableChatMessages;
+import li.barter.data.TableChats;
+import li.barter.data.TableUsers;
+import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.IVolleyHelper;
 import li.barter.http.JsonUtils;
+import li.barter.http.ResponseInfo;
+import li.barter.http.VolleyCallbacks;
+import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
-import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.ChatType;
 import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
+import li.barter.utils.Utils;
 
 /**
  * Bound service to send and receive chat messages. The service will receive
@@ -67,11 +86,12 @@ import li.barter.utils.Logger;
  * 
  * @author Vinay S Shenoy
  */
-public class ChatService extends Service implements OnReceiveMessageHandler, AsyncDbQueryCallback {
+public class ChatService extends Service implements OnReceiveMessageHandler,
+                AsyncDbQueryCallback, IHttpCallbacks {
 
     private static final String    TAG                = "ChatService";
-    private static final String    ROUTING_KEY        = "shared.key";
     private static final String    OUTPUT_TIME_FORMAT = "dd MMM, h:m a";
+    private static final String    QUEUE_NAME_FORMAT  = "%squeue";
     private static final String    VIRTUAL_HOST       = "/";
     private static final String    EXCHANGE           = "node.barterli";
     private static final String    USERNAME           = "barterli";
@@ -79,10 +99,22 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
 
     private final IBinder          mChatServiceBinder = new ChatServiceBinder();
 
+    private final String           mChatSelection     = DatabaseColumns.CHAT_ID
+                                                                      + SQLConstants.EQUALS_ARG;
+
+    private final String           mUserSelection     = DatabaseColumns.USER_ID
+                                                                      + SQLConstants.EQUALS_ARG;
+
     /** {@link ChatRabbitMQConnector} instance for listening to messages */
     private ChatRabbitMQConnector  mMessageConsumer;
 
     private DateFormatter          mDateFormatter;
+
+    private RequestQueue           mRequestQueue;
+
+    private VolleyCallbacks        mVolleyCallbacks;
+
+    private String                 mQueueName;
 
     /**
      * Task to connect to Rabbit MQ Chat server
@@ -96,6 +128,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
                         .getChatPort(), VIRTUAL_HOST, EXCHANGE, ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
         mDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, OUTPUT_TIME_FORMAT);
+        mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
+        mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
 
     }
 
@@ -119,11 +153,13 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        if (!mMessageConsumer.isRunning()) {
+        if (isLoggedIn() && !mMessageConsumer.isRunning()) {
 
+            mQueueName = generateQueueNameFromUserId(UserInfo.INSTANCE.getId());
             if (mConnectTask == null) {
                 mConnectTask = new ConnectToChatAsyncTask();
-                mConnectTask.execute(USERNAME, PASSWORD, generateQueueNameFromUserId("user1"), ROUTING_KEY);
+                mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
+                                .getId());
             } else {
                 Status connectingStatus = mConnectTask.getStatus();
 
@@ -137,7 +173,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
 
                     mConnectTask = new ConnectToChatAsyncTask();
                     //TODO Use actual user id here
-                    mConnectTask.execute(USERNAME, PASSWORD, generateQueueNameFromUserId("user1"), ROUTING_KEY);
+                    mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
+                                    .getId());
                 }
             }
 
@@ -145,13 +182,21 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
         return START_STICKY;
     }
 
+    /**
+     * Check if user is logged in or not
+     */
+    private boolean isLoggedIn() {
+        return !TextUtils.isEmpty(UserInfo.INSTANCE.getId());
+    }
+
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (mMessageConsumer.isRunning()) {
             mMessageConsumer.dispose();
             mMessageConsumer = null;
         }
+        mVolleyCallbacks.cancelAll(TAG);
+        super.onDestroy();
     }
 
     /**
@@ -169,21 +214,27 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
      * @param message The message to send
      * @return Whether the message was delivered to the chat server or not
      */
-    public boolean sendMessageToUser(String toUserId, String message) {
-        //TODO Construct the message
-        if (mMessageConsumer.isRunning()) {
-            try {
-                final String queue = mMessageConsumer
-                                .declareQueue(generateQueueNameFromUserId(toUserId), false, false, true, null);
-                mMessageConsumer.addBinding(queue, ROUTING_KEY);
-                mMessageConsumer.publish(queue, ROUTING_KEY, message);
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
-        } else {
-            return false;
+    public void sendMessageToUser(String toUserId, String message) {
+
+        if (!isLoggedIn()) {
+            return;
         }
+        final JSONObject requestObject = new JSONObject();
+        try {
+            requestObject.put(HttpConstants.SENDER_ID, UserInfo.INSTANCE
+                            .getId());
+            requestObject.put(HttpConstants.RECEIVER_ID, toUserId);
+            requestObject.put(HttpConstants.MESSAGE, message);
+            final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.AMPQ, requestObject.toString(), mVolleyCallbacks);
+            request.setRequestId(RequestId.AMPQ);
+            request.setTag(TAG);
+            mVolleyCallbacks.queue(request);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            //Should never happen
+        }
+
     }
 
     /**
@@ -193,43 +244,58 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
      * @return The queue name for the user id
      */
     private String generateQueueNameFromUserId(String userId) {
-        //TODO Discuss how to generate queue names for user Ids
-        return userId;
+        return String.format(Locale.US, QUEUE_NAME_FORMAT, userId);
     }
 
     @Override
     public void onReceiveMessage(byte[] message) {
 
+        //TODO Break this method out for readability
         String text = "";
         try {
             text = new String(message, HTTP.UTF_8);
             Logger.d(TAG, "Received:" + text);
             final JSONObject messageJson = new JSONObject(text);
-
+            final JSONObject senderObject = JsonUtils
+                            .readJSONObject(messageJson, HttpConstants.SENDER, true, true);
+            final JSONObject receiverObject = JsonUtils
+                            .readJSONObject(messageJson, HttpConstants.RECEIVER, true, true);
             final String senderId = JsonUtils
-                            .readString(messageJson, HttpConstants.SENDER_ID, true, true);
+                            .readString(senderObject, HttpConstants.ID_USER, true, true);
             final String receiverId = JsonUtils
-                            .readString(messageJson, HttpConstants.RECEIVER_ID, true, true);
+                            .readString(receiverObject, HttpConstants.ID_USER, true, true);
             final String messageText = JsonUtils
                             .readString(messageJson, HttpConstants.MESSAGE, true, true);
             final String timestamp = JsonUtils
                             .readString(messageJson, HttpConstants.TIME, true, true);
-            
-            final ContentValues values = new ContentValues(7);
-            
-            values.put(DatabaseColumns.SENDER_ID, senderId);
-            values.put(DatabaseColumns.RECEIVER_ID, receiverId);
-            values.put(DatabaseColumns.MESSAGE, messageText);
-            values.put(DatabaseColumns.MESSAGE_TIMESTAMP, timestamp);
-            values.put(DatabaseColumns.MESSAGE_TIMESTAMP_EPOCH, mDateFormatter.getEpoch(timestamp));
-            values.put(DatabaseColumns.MESSAGE_TIMESTAMP_HUMAN, mDateFormatter.getOutputTimestamp(timestamp));
-            
-            //Bundle to receive as the cookie in the insert callback so that notification can be shown
-            final Bundle cookie = new Bundle(2);
-            cookie.putString(Keys.MESSAGE, messageText);
-            
-            DBInterface.insertAsync(QueryTokens.INSERT_CHAT_INTO_TABLE, cookie, TableChatMessages.NAME, null, values, true, this);
-            
+
+            //Insert the chat message into DB
+            final String chatId = generateChatId(receiverId, senderId);
+            final ContentValues chatValues = new ContentValues(7);
+
+            chatValues.put(DatabaseColumns.CHAT_ID, chatId);
+            chatValues.put(DatabaseColumns.SENDER_ID, senderId);
+            chatValues.put(DatabaseColumns.RECEIVER_ID, receiverId);
+            chatValues.put(DatabaseColumns.MESSAGE, messageText);
+            chatValues.put(DatabaseColumns.TIMESTAMP, timestamp);
+            chatValues.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter
+                            .getEpoch(timestamp));
+            chatValues.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter
+                            .getOutputTimestamp(timestamp));
+
+            DBInterface.insertAsync(QueryTokens.INSERT_CHAT_MESSAGE, chatValues, TableChatMessages.NAME, null, chatValues, true, this);
+
+            /*
+             * Parse and store sender info. We will receive messages both when
+             * we send and receive, so we need to check the sender id if it is
+             * our own id first to detect who send the message
+             */
+
+            if (senderId.equals(UserInfo.INSTANCE.getId())) {
+                parseAndStoreSenderInfo(receiverId, receiverObject);
+            } else {
+                parseAndStoreSenderInfo(senderId, senderObject);
+            }
 
         } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -240,6 +306,35 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
             Logger.e(TAG, e, "Invalid chat timestamp");
         }
 
+    }
+
+    /**
+     * Parses the user info of the user who send the message and updates the
+     * local users table
+     * 
+     * @param senderId The id for the user who send the chat message
+     * @param senderObject The Sender object received in the chat message
+     * @throws JSONException If the JSON is invalid
+     */
+    private void parseAndStoreSenderInfo(final String senderId,
+                    final JSONObject senderObject) throws JSONException {
+
+        final String senderFirstName = JsonUtils
+                        .readString(senderObject, HttpConstants.FIRST_NAME, true, false);
+        final String senderLastName = JsonUtils
+                        .readString(senderObject, HttpConstants.LAST_NAME, true, false);
+        final String senderImage = JsonUtils
+                        .readString(senderObject, HttpConstants.PROFILE_IMAGE, true, false);
+
+        final ContentValues senderValues = new ContentValues(4);
+        senderValues.put(DatabaseColumns.USER_ID, senderId);
+        senderValues.put(DatabaseColumns.FIRST_NAME, senderFirstName);
+        senderValues.put(DatabaseColumns.LAST_NAME, senderLastName);
+        senderValues.put(DatabaseColumns.PROFILE_PICTURE, senderImage);
+
+        DBInterface.updateAsync(QueryTokens.UPDATE_USER_FOR_CHAT, senderValues, TableUsers.NAME, senderValues, mUserSelection, new String[] {
+            senderId
+        }, true, this);
     }
 
     /**
@@ -277,24 +372,169 @@ public class ChatService extends Service implements OnReceiveMessageHandler, Asy
     @Override
     public void onInsertComplete(int token, Object cookie, long insertRowId) {
 
-        if(token == QueryTokens.INSERT_CHAT_INTO_TABLE) {
-            //TODO Show notification
+        switch (token) {
+
+            case QueryTokens.INSERT_CHAT_MESSAGE: {
+                assert (cookie != null);
+                assert (cookie instanceof ContentValues);
+
+                if (insertRowId >= 0) {
+                    Logger.v(TAG, "Inserted chat with row Id %d with cookie %s", insertRowId, cookie);
+                    //TODO Show notification
+                    //Try to update the Chats table
+                    final ContentValues chatData = (ContentValues) cookie;
+                    final String chatId = chatData
+                                    .getAsString(DatabaseColumns.CHAT_ID);
+
+                    ContentValues values = new ContentValues(4);
+                    values.put(DatabaseColumns.CHAT_ID, chatId);
+                    values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
+                    values.put(DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL);
+
+                    final String senderId = chatData
+                                    .getAsString(DatabaseColumns.SENDER_ID);
+                    final String receiverId = chatData
+                                    .getAsString(DatabaseColumns.RECEIVER_ID);
+
+                    values.put(DatabaseColumns.USER_ID, senderId
+                                    .equals(UserInfo.INSTANCE.getId()) ? receiverId
+                                    : senderId);
+
+                    Logger.v(TAG, "Updating chats for Id %s", chatId);
+                    DBInterface.updateAsync(QueryTokens.UPDATE_CHAT, values, TableChats.NAME, values, mChatSelection, new String[] {
+                        chatId
+                    }, true, this);
+                } else {
+                    //Rare case
+                    Logger.e(TAG, "Unable to insert chat message");
+                }
+                break;
+            }
+
+            case QueryTokens.INSERT_CHAT: {
+                assert (cookie != null);
+                assert (cookie instanceof ContentValues);
+                //Chat was successfully created
+                break;
+            }
+
+            case QueryTokens.INSERT_USER_FOR_CHAT: {
+                //Nothing to do here as of now
+                break;
+            }
         }
+
     }
 
     @Override
     public void onDeleteComplete(int token, Object cookie, int deleteCount) {
-        
+
     }
 
     @Override
     public void onUpdateComplete(int token, Object cookie, int updateCount) {
-        
+
+        if (token == QueryTokens.UPDATE_CHAT) {
+            assert (cookie != null);
+            assert (cookie instanceof ContentValues);
+
+            if (updateCount == 0) {
+                //Unable to update chats table, create a row
+                Logger.v(TAG, "Chat not found. Inserting %s", cookie);
+                DBInterface.insertAsync(QueryTokens.INSERT_CHAT, cookie, TableChats.NAME, null, (ContentValues) cookie, true, this);
+            } else {
+                Logger.v(TAG, "Chat Updated!");
+                //TODO Show notification
+            }
+        } else if (token == QueryTokens.UPDATE_USER_FOR_CHAT) {
+            assert (cookie != null);
+            assert (cookie instanceof ContentValues);
+
+            if (updateCount == 0) {
+                //Unable to update user, create the user
+                Logger.v(TAG, "User not found. Inserting %s", cookie);
+                DBInterface.insertAsync(QueryTokens.INSERT_USER_FOR_CHAT, cookie, TableUsers.NAME, null, (ContentValues) cookie, true, this);
+            }
+        }
     }
 
     @Override
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {
-        
+
     }
 
+    /**
+     * Generates as chat ID which will be unique for a given sernder/receiver
+     * pair
+     * 
+     * @param receiverId The receiver of the chat
+     * @param senderId The sender of the chat
+     * @return The chat Id
+     */
+    private String generateChatId(String receiverId, String senderId) {
+
+        /*
+         * Method of generating the chat ID is simple. First we compare the two
+         * ids and combine them in ascending order separate by a '#'. Then we
+         * SHA1 the result to make the chat id
+         */
+
+        String combined = null;
+        if (receiverId.compareTo(senderId) < 0) {
+            combined = String
+                            .format(Locale.US, AppConstants.CHAT_ID_FORMAT, receiverId, senderId);
+        } else {
+            combined = String
+                            .format(Locale.US, AppConstants.CHAT_ID_FORMAT, senderId, receiverId);
+        }
+
+        String hashed = null;
+
+        try {
+            hashed = Utils.sha1(combined);
+        } catch (NoSuchAlgorithmException e) {
+            /*
+             * Shouldn't happen sinch SHA-1 is standard, but in case it does use
+             * the combined string directly since they are local chat IDs
+             */
+            hashed = combined;
+        }
+
+        return hashed;
+    }
+
+    @Override
+    public void onPreExecute(IBlRequestContract request) {
+
+    }
+
+    @Override
+    public void onPostExecute(IBlRequestContract request) {
+
+    }
+
+    @Override
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
+
+    }
+
+    @Override
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
+
+    }
+
+    @Override
+    public void onAuthError(int requestId, IBlRequestContract request) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onOtherError(int requestId, IBlRequestContract request,
+                    int errorCode) {
+
+    }
 }

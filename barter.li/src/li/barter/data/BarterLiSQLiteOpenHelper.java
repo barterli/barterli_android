@@ -94,12 +94,14 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         TableSearchBooks.create(db);
         TableLocations.create(db);
         TableMyBooks.create(db);
-        TableChatMessages.create(db);
         TableUsers.create(db);
+        TableChats.create(db);
+        TableChatMessages.create(db);
 
         //Create Views
         ViewSearchBooksWithLocations.create(db);
         ViewMyBooksWithLocations.create(db);
+        ViewChatsWithMessagesAndUsers.create(db);
     }
 
     @Override
@@ -110,12 +112,14 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         TableSearchBooks.upgrade(db, oldVersion, newVersion);
         TableLocations.upgrade(db, oldVersion, newVersion);
         TableMyBooks.upgrade(db, oldVersion, newVersion);
-        TableChatMessages.upgrade(db, oldVersion, newVersion);
         TableUsers.upgrade(db, oldVersion, newVersion);
+        TableChats.upgrade(db, oldVersion, newVersion);
+        TableChatMessages.upgrade(db, oldVersion, newVersion);
 
         //Upgrade Views
         ViewSearchBooksWithLocations.upgrade(db, oldVersion, newVersion);
         ViewMyBooksWithLocations.upgrade(db, oldVersion, newVersion);
+        ViewChatsWithMessagesAndUsers.upgrade(db, oldVersion, newVersion);
     }
 
     /**

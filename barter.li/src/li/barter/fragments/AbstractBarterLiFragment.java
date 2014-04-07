@@ -18,7 +18,6 @@ package li.barter.fragments;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
@@ -31,14 +30,11 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
-import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.ResponseInfo;
@@ -46,6 +42,7 @@ import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Utils;
 import li.barter.widgets.TypefaceCache;
 
 /**
@@ -189,7 +186,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         if (mIsAttached) {
             request.setTag(getVolleyTag());
             if (isConnectedToInternet()) {
-                addHeadersToRequest(request);
                 mRequestCounter.incrementAndGet();
                 getActivity().setProgressBarIndeterminateVisibility(true);
                 mVolleyCallbacks.queue(request);
@@ -198,19 +194,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
                                 : R.string.no_network_connection, AlertStyle.ERROR);
             }
         }
-    }
-
-    /**
-     * Add Request Headers to the headers
-     * 
-     * @param request The request to add the headers to
-     */
-    private void addHeadersToRequest(Request<?> request) {
-
-        final Map<String, String> headers = new HashMap<String, String>(1);
-        headers.put(HttpConstants.HEADER_AUTHORIZATION, UserInfo.INSTANCE
-                        .getAuthHeader());
-        request.setHeaders(headers);
     }
 
     /**

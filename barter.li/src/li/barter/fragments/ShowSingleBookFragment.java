@@ -42,6 +42,7 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import li.barter.R;
@@ -75,7 +76,7 @@ public class ShowSingleBookFragment extends AbstractBarterLiFragment implements
     private TextView            mTitleTextView;
     private TextView            mAuthorTextView;
     private TextView            mDescriptionTextView;
-    private TextView            mPublicationYearTextView;
+    private TextView            mPublicationDateTextView;
     private CheckBox            mBarterCheckBox;
     private CheckBox            mReadCheckBox;
     private CheckBox            mSellCheckBox;
@@ -99,8 +100,6 @@ public class ShowSingleBookFragment extends AbstractBarterLiFragment implements
                                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         final Bundle extras = getArguments();
 
-        // If extras are null, it means that user has to decided to add the
-        // book completely manually
         if (extras != null) {
             mBookId = extras.getString(Keys.BOOK_ID);
         }
@@ -131,8 +130,8 @@ public class ShowSingleBookFragment extends AbstractBarterLiFragment implements
         mAuthorTextView = (TextView) view.findViewById(R.id.text_author);
         mDescriptionTextView = (TextView) view
                         .findViewById(R.id.text_description);
-        mPublicationYearTextView = (TextView) view
-                        .findViewById(R.id.text_publication_year);
+        mPublicationDateTextView = (TextView) view
+                        .findViewById(R.id.text_publication_date);
 
     }
 
@@ -208,9 +207,15 @@ public class ShowSingleBookFragment extends AbstractBarterLiFragment implements
                                 .getColumnIndex(DatabaseColumns.AUTHOR)));
                 mDescriptionTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.DESCRIPTION)));
+                mPublicationDateTextView.setText(cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR)));
                 Log.v(TAG, cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.BARTER_TYPE)));
             }
+            //            while(cursor.moveToNext()){
+            //                Log.v(TAG, "Description " + cursor.getString(cursor.getColumnIndex(DatabaseColumns.DESCRIPTION)));
+            //                Log.v(TAG, "Barter Type " + cursor.getString(cursor.getColumnIndex(DatabaseColumns.BARTER_TYPE)));
+            //            }
         }
 
     }

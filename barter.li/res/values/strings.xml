@@ -37,7 +37,9 @@
     <string name="toggle_map">Toggle Map</string>
     <string name="tap_to_set_preferred_location">Tap to set me as your preferred location.</string>
     <string name="location_format" formatted="false">\@%s, %s</string>
+    <string name="send">Send</string>
     <string name="app_id">458716080895923</string>
+    <string name="enter_message">Enter your message</string>
 
     <!-- Strings for AddBookActivity -->
     <string name="search_hint">Search by Title|Author|ISBN</string>
@@ -53,6 +55,7 @@
     <string name="description_label">Description</string>
     <string name="publication_year_label">Publication Year</string>
     <string name="publication_month_label">Publication Month</string>
+    <string name="publication_date_label">Publication</string>
     <string name="barter_type_label">Barter Type</string>
     <string name="error_enter_title">Enter a book title</string>
     <string name="book_added">Book has been added!</string>
@@ -88,6 +91,7 @@
     <!-- Strings for Nav drawer -->
     <string-array name="nav_drawer_titles">
         <item>My Profile</item>
+        <item>Chats</item>
         <item>Suggest Feature</item>
         <item>Report Bug</item>
         <item>Collaborate with barter.li</item>
@@ -97,6 +101,7 @@
     </string-array>
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile, update your info, view your saved books.</item>
+        <item>Your ongoing chats</item>
         <item>Got an idea? Let us Know.</item>
         <item>Got a bug? Tell us about it.</item>
         <item>Let us work together.</item>
@@ -167,7 +172,8 @@
     <string name="user">User</string>
     <string name="volunteer">Volunteer</string>
     <string name="barterli_email">joinus@barter.li</string>
-    
     <string name="hint_about_me_description">About Me.</string>
+    
+    <!-- String Related to Show Single Book Fragment -->
 
 </resources>

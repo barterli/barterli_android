@@ -23,7 +23,6 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.os.Bundle;
-import android.util.Log;
 
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
@@ -102,11 +101,25 @@ public class HttpResponseParser {
                 return parseSetUserPreferredLocationResponse(response);
             }
 
+            case RequestId.AMPQ: {
+                return parseAmpqResponse(response);
+            }
+
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
                                 + requestId);
             }
         }
+    }
+
+    /**
+     * Parse the response for Ampq
+     * 
+     * @param response The response from server
+     * @return
+     */
+    private ResponseInfo parseAmpqResponse(String response) {
+        return new ResponseInfo();
     }
 
     /**
@@ -127,8 +140,8 @@ public class HttpResponseParser {
                         .readJSONObject(responseObject, HttpConstants.USER, true, true);
 
         final Bundle responseBundle = new Bundle();
-        responseBundle.putString(HttpConstants.ID, JsonUtils
-                        .readString(userObject, HttpConstants.ID, true, true));
+        responseBundle.putString(HttpConstants.ID_USER, JsonUtils
+                        .readString(userObject, HttpConstants.ID_USER, true, true));
         responseBundle.putString(HttpConstants.AUTH_TOKEN, JsonUtils
                         .readString(userObject, HttpConstants.AUTH_TOKEN, true, true));
         responseBundle.putString(HttpConstants.EMAIL, JsonUtils

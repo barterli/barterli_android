@@ -33,9 +33,9 @@ public class HttpConstants {
     private enum Server {
 
         LOCAL(
-                        "http://192.168.1.122:3000/api/v",
+                        "http://192.168.1.138:3000/api/v",
                         API_VERSION,
-                        "192.168.1.123",
+                        "192.168.1.138",
                         5672),
         DEV(
                         "http://162.243.198.171/api/v",
@@ -84,11 +84,12 @@ public class HttpConstants {
         public static final String HANGOUTS                = "/hangouts.json";
         public static final String USER_PREFERRED_LOCATION = "/user_preferred_location.json";
         public static final String SEARCH                  = "/search.json";
+        public static final String AMPQ                    = "/ampq.json";
 
         public static final String UPDATE_USER_INFO        = "/user_update.json";
         public static final String GET_USER_INFO           = "/current_user_profile";
-        public static final String REPORT_BUG           = "/feedback";
-        public static final String COLLABORATE_REQUEST           = "/register";
+        public static final String REPORT_BUG              = "/feedback";
+        public static final String COLLABORATE_REQUEST     = "/register";
     }
 
     /**
@@ -104,9 +105,10 @@ public class HttpConstants {
         public static final int SET_USER_PREFERRED_LOCATION = 105;
         public static final int SAVE_USER_PROFILE           = 110;
         public static final int GET_USER_PROFILE            = 111;
-        public static final int REPORT_BUG            = 112;
-        public static final int SUGGEST_FEATURE            = 113;
-        public static final int COLLABORATE_REQUEST            = 114;
+        public static final int REPORT_BUG                  = 112;
+        public static final int SUGGEST_FEATURE             = 113;
+        public static final int COLLABORATE_REQUEST         = 114;
+        public static final int AMPQ                        = 115;
     }
 
     public static final String ID                          = "id";
@@ -156,21 +158,19 @@ public class HttpConstants {
     public static final String ID_USER                     = "id_user";
     public static final String HEADER_AUTHORIZATION_FORMAT = "Token token=\"%s\", email=\"%s\"";
     public static final String HEADER_AUTHORIZATION        = "Authorization";
-    public static final String SENDER_ID                   = "sender_id";
-    public static final String RECEIVER_ID                 = "receiver_id";
     public static final String MESSAGE                     = "message";
     public static final String TIME                        = "time";
-
+    public static final String SENDER                      = "sender";
+    public static final String RECEIVER                    = "receiver";
+    public static final String PROFILE_IMAGE               = "profile_image";
     public static final String PROFILE_PIC                 = "profile";
-    
-    //Related to Report Bug/Suggested Feature
-    public static final String BUG_TITLE                 = "title";
-    public static final String BUG_BODY                 = "body";
-    public static final String BUG_LABEL                = "label";
-    public static final String LABEL_FOR_BUG                = "bug";
-    public static final String LABEL_FOR_FEATURE                = "feature";
-    
-    //Related to Collaborate with Barter.Li 
-    public static final String REGISTER_TYPE                = "register_type";
-    public static final String BODY                = "body";
+    public static final String BUG_TITLE                   = "title";
+    public static final String BUG_BODY                    = "body";
+    public static final String BUG_LABEL                   = "label";
+    public static final String LABEL_FOR_BUG               = "bug";
+    public static final String LABEL_FOR_FEATURE           = "feature";
+    public static final String REGISTER_TYPE               = "register_type";
+    public static final String BODY                        = "body";
+    public static final String SENDER_ID                   = "sender_id";
+    public static final String RECEIVER_ID                 = "receiver_id";
 }

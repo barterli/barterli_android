@@ -27,7 +27,6 @@ public interface SQLConstants {
     public static final String SELECT_FROM_WHERE    = "SELECT %s FROM %s WHERE %s";
     public static final String TABLE_ALIAS          = "%s %s";
     public static final String ALIAS_COLUMN         = "%s.%s";
-    public static final String ALIAS_COLUMN_AS      = "%s.%s AS %s";
     public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS %s;";
     public static final String DROP_VIEW_IF_EXISTS  = "DROP VIEW IF EXISTS %s;";
     public static final String DATA_TEXT            = "%s TEXT DEFAULT '%s' ";

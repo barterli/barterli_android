@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.BlRequest;
@@ -201,7 +202,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             UserInfo.INSTANCE.setAuthToken(userInfo
                             .getString(HttpConstants.AUTH_TOKEN));
             UserInfo.INSTANCE.setEmail(userInfo.getString(HttpConstants.EMAIL));
-            UserInfo.INSTANCE.setId(userInfo.getString(HttpConstants.ID));
+            UserInfo.INSTANCE.setId(userInfo.getString(HttpConstants.ID_USER));
 
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_auth_token, userInfo
@@ -220,10 +221,12 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                                             .getString(HttpConstants.LAST_NAME));
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_user_id, userInfo
-                                            .getString(HttpConstants.ID));
+                                            .getString(HttpConstants.ID_USER));
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_location, userInfo
                                             .getString(HttpConstants.LOCATION));
+            
+            BarterLiApplication.startChatService();
 
             final String locationId = userInfo
                             .getString(HttpConstants.LOCATION);

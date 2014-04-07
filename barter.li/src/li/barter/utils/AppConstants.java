@@ -36,7 +36,7 @@ public class AppConstants {
 
     public static final String  FACEBOOK         = "facebook";
     public static final String  MANUAL           = "manual";
-    public static final String  TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss Z";
+    public static final String  TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
     public static final String  CHAT_ID_FORMAT   = "%s#%s";
 
     /**
@@ -212,13 +212,13 @@ public class AppConstants {
         public static final String HAS_FETCHED_INFO   = "has_fetched_info";
         public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
         public static final String LOCATIONS          = "locations";
-        public static final String BOOK_ID          = "book_id";
+
+        public static final String BOOK_ID            = "book_id";
+
+        public static final String CHAT_ID            = "chat_id";
 
         // Keys related to ShowWebViewFragment
         public static final String URL_TO_LOAD        = "url_to_load";
-
-        //Keys 
-        public static final String MESSAGE            = "message";
 
     }
 
@@ -240,17 +240,20 @@ public class AppConstants {
         public static final String REPORT_BUGS                                     = "report_bugs";
         public static final String SUGGEST_FEATURE                                 = "suggest_feature";
         public static final String COLLABORATE                                     = "collaborate";
-        public static final String SHOW_SINGLE_BOOK                                     = "show_single_book";
+
+        public static final String SHOW_SINGLE_BOOK                                = "show_single_book";
+        public static final String PROFILE                                         = "profile";
+        public static final String EDIT_PROFILE                                    = "edit_profile";
+        public static final String CHATS                                           = "chats";
+        public static final String CHAT_DETAILS                                    = "chat_details";
 
         /* Tags for fragment backstack popping and providing up navigation */
 
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
         public static final String BS_ADD_BOOK                                     = "to_add_book";
         public static final String BS_PREFERRED_LOCATION                           = "to_preferred_location";
-
-        public static final String PROFILE                                         = "profile";
-        public static final String EDIT_PROFILE                                    = "edit_profile";
         public static final String BS_PROFILE                                      = "to_edit_profile";
+        public static final String BS_CHATS                                        = "to_chats";
 
     }
 
@@ -276,7 +279,9 @@ public class AppConstants {
     public static interface Loaders {
 
         public static final int SEARCH_BOOKS = 201;
-        public static final int GET_MY_BOOKS = 205;
+        public static final int GET_MY_BOOKS = 202;
+        public static final int ALL_CHATS    = 203;
+        public static final int CHAT_DETAILS = 204;
     }
 
     /**
@@ -290,11 +295,28 @@ public class AppConstants {
         public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK  = 1;
         public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 2;
         public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 3;
-        
-        public static final int LOAD_MY_BOOKS               = 11;
 
-        //100-200 for insert queries
-        public static final int INSERT_CHAT_INTO_TABLE               = 100;
+        public static final int LOAD_MY_BOOKS                        = 11;
+
+        //101-200 for insert queries
+        public static final int INSERT_CHAT_MESSAGE                  = 101;
+        public static final int INSERT_CHAT                          = 102;
+        public static final int INSERT_USER_FOR_CHAT                 = 103;
+
+        //201-300 for update queries
+        public static final int UPDATE_CHAT                          = 201;
+        public static final int UPDATE_USER_FOR_CHAT                 = 202;
+    }
+
+    /**
+     * Constant interface. DO NOT IMPLEMENT
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static interface ChatType {
+
+        public static final String PERSONAL = "personal";
+        public static final String GROUP    = "group";
     }
 
 }

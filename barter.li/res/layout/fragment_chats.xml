@@ -18,5 +18,4 @@
     android:id="@+id/list_chats"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:divider="@color/transparent"
-    android:dividerHeight="2dp" />
+    android:cacheColorHint="@color/transparent" />

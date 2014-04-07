@@ -25,7 +25,11 @@ import com.android.volley.VolleyError.ErrorCode;
 
 import android.os.Bundle;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.utils.AppConstants.UserInfo;
 
 /**
  * Class to encapsulate Volley Listeners
@@ -95,7 +99,21 @@ public class VolleyCallbacks implements Listener<ResponseInfo>, ErrorListener {
     public void queue(Request<?> request) {
 
         assert (request instanceof IBlRequestContract);
+        addHeadersToRequest(request);
         mRequestQueue.add(request);
+    }
+    
+    /**
+     * Add Request Headers to the headers
+     * 
+     * @param request The request to add the headers to
+     */
+    private void addHeadersToRequest(Request<?> request) {
+
+        final Map<String, String> headers = new HashMap<String, String>(1);
+        headers.put(HttpConstants.HEADER_AUTHORIZATION, UserInfo.INSTANCE
+                        .getAuthHeader());
+        request.setHeaders(headers);
     }
     
     /**
