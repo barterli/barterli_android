@@ -104,6 +104,10 @@ public class HttpResponseParser {
             case RequestId.AMPQ: {
                 return parseAmpqResponse(response);
             }
+            
+            case RequestId.TRIBUTE: {
+            	return parseTributeResponse(response);
+            }
 
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
@@ -121,6 +125,30 @@ public class HttpResponseParser {
     private ResponseInfo parseAmpqResponse(String response) {
         return new ResponseInfo();
     }
+    
+    
+    /**
+     * Parse the response for Ampq
+     * 
+     * @param response The response from server
+     * @return
+     */
+    private ResponseInfo parseTributeResponse(String response) throws JSONException {
+        final ResponseInfo responseInfo = new ResponseInfo();
+        //return new ResponseInfo();
+
+        final JSONObject responseObject = new JSONObject(response);
+        final JSONObject tributeObject = JsonUtils
+                        .readJSONObject(responseObject, HttpConstants.TRIBUTE, true, true);
+        final Bundle responseBundle = new Bundle();
+        responseBundle.putString(HttpConstants.TRIBUTE_IMAGE_URL, JsonUtils
+               .readString(tributeObject, HttpConstants.TRIBUTE_IMAGE_URL, false, false));
+        responseBundle.putString(HttpConstants.TRIBUTE_TEXT, JsonUtils
+                .readString(tributeObject, HttpConstants.TRIBUTE_TEXT, false, false));
+        responseInfo.responseBundle = responseBundle;
+        return responseInfo;
+    }
+
 
     /**
      * Method for parsing the create user/login response
