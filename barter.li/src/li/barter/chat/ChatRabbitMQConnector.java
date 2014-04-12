@@ -16,7 +16,9 @@
 
 package li.barter.chat;
 
+import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
+import com.rabbitmq.client.ShutdownSignalException;
 
 import android.os.Handler;
 
@@ -182,6 +184,10 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                         }
                     } catch (final InterruptedException ie) {
                         ie.printStackTrace();
+                    } catch(ShutdownSignalException e) {
+                        e.printStackTrace();
+                    } catch(ConsumerCancelledException e) {
+                        e.printStackTrace();
                     }
                 }
             }
