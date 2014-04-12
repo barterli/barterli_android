@@ -173,4 +173,14 @@
     <string name="barterli_email">joinus@barter.li</string>
     <string name="hint_about_me_description">About Me.</string>
 
+    <!-- Strings related to open source licenses -->
+    <string-array name="oss_titles">
+        <item>Facebook Android SDK, Licensed under the Apache v2.0 License\nhttps://github.com/facebook/facebook-android-sdk</item>
+        <item>enhanced-volley, A networking toolkit based on Volley, from the Android Open Source Project. Licenced under the Apache v2.0 License.\nhttps://github.com/vinaysshenoy/enhanced-volley</item>
+        <item>android-quick-response-code, A library for scanning barcodes. Licensed under the Apache v2.0 License.\nhttps://github.com/phishman3579/android-quick-response-code</item>
+        <item>NineOldAndroids, A backport of the Android 3.0 Animation API. Licensed under the Apache v2.0 License.\nhttps://github.com/JakeWharton/NineOldAndroids/</item>
+        <item>ListViewAnimations, A library to easily add animations to List Items. Licensed under the Apache v2.0 License.\nhttps://github.com/nhaarman/ListViewAnimations</item>
+        <item>Crouton, Context sensitive notifications for Android. Licensed under the Apache v2.0 License.\nhttps://github.com/keyboardsurfer/Crouton</item>
+    </string-array>
+
 </resources>
