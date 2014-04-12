@@ -55,6 +55,7 @@
     <string name="description_label">Description</string>
     <string name="publication_year_label">Publication Year</string>
     <string name="publication_month_label">Publication Month</string>
+    <string name="publication_date_label">Publication</string>
     <string name="barter_type_label">Barter Type</string>
     <string name="error_enter_title">Enter a book title</string>
     <string name="book_added">Book has been added!</string>
@@ -172,6 +173,8 @@
     <string name="volunteer">Volunteer</string>
     <string name="barterli_email">joinus@barter.li</string>
     <string name="hint_about_me_description">About Me.</string>
+    
+    <!-- String Related to Show Single Book Fragment -->
 
     <!-- Strings related to open source licenses -->
     <string-array name="oss_titles">
