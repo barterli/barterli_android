@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import android.app.Service;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -40,6 +41,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.Locale;
 
+import li.barter.BarterLiApplication;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
@@ -56,6 +58,7 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.JsonUtils;
+import li.barter.http.NetworkChangeReceiver;
 import li.barter.http.ResponseInfo;
 import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
@@ -71,11 +74,12 @@ import li.barter.utils.Utils;
  * Bound service to send and receive chat messages. The service will receive
  * chat messages and update them in the chats database. <br/>
  * <br/>
- * This service needs to be triggered in three cases -
+ * This service needs to be triggered in two cases -
  * <ol>
- * <li>On device boot</li>
- * <li>On application launch</li>
- * <li>On network connectivity resumed(if it was lost)</li>
+ * <li>On application launch - This is done in
+ * {@link BarterLiApplication#onCreate()}</li>
+ * <li>On network connectivity resumed(if it was lost) - This is done in
+ * {@link NetworkChangeReceiver#onReceive(Context, Intent)}</li>
  * </ol>
  * <br/>
  * This will take care of keeping it tied to the chat server and listening for

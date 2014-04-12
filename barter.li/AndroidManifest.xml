@@ -89,7 +89,7 @@
         <receiver
             android:name="li.barter.http.NetworkChangeReceiver"
             android:exported="true"
-            android:label="@string/app_name" >
+            android:label="@string/receiver_network" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>

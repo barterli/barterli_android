@@ -17,6 +17,7 @@
 <resources>
 
     <string name="app_name">barter.li</string>
+    <string name="receiver_network">Network Change Receiver</string>
     <string name="action_settings">Settings</string>
     <string name="service_chat">Chat Service</string>
 
