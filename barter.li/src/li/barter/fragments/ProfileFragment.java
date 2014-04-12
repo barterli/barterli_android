@@ -177,7 +177,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                                 mShowBooksArgs.putString(Keys.BOOK_ID, mBookId);
 
                                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                                .instantiate(getActivity(), ShowSingleBookFragment.class
+                                                .instantiate(getActivity(), MyBookDetailFragment.class
                                                                 .getName(), mShowBooksArgs), FragmentTags.SHOW_SINGLE_BOOK, true, FragmentTags.BS_PROFILE);
                             }
                         });

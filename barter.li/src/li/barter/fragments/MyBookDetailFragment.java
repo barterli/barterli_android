@@ -67,7 +67,7 @@ import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
-public class ShowSingleBookFragment extends AbstractBarterLiFragment implements
+public class MyBookDetailFragment extends AbstractBarterLiFragment implements
                 AsyncDbQueryCallback {
 
     private static final String TAG = "ShowSingleBookFragment";
@@ -92,7 +92,7 @@ public class ShowSingleBookFragment extends AbstractBarterLiFragment implements
         init(container);
         setHasOptionsMenu(true);
         final View view = inflater
-                        .inflate(R.layout.fragment_show_single_book, container, false);
+                        .inflate(R.layout.fragment_my_book_detail, container, false);
         initViews(view);
 
         getActivity().getWindow()
@@ -217,6 +217,8 @@ public class ShowSingleBookFragment extends AbstractBarterLiFragment implements
                 //Log.v(TAG, cursor.getString(cursor
                                 //.getColumnIndex(DatabaseColumns.BARTER_TYPE)));
             }
+            
+            cursor.close();
         }
 
     }
