@@ -16,9 +16,17 @@
 
 package li.barter.adapters;
 
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+
 import li.barter.R;
 import li.barter.models.Team;
+import li.barter.utils.ImageByte;
+import li.barter.utils.Logger;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +40,8 @@ import android.widget.TextView;
  * @author Vinay S Shenoy
  */
 public class TeamAdapter extends BaseAdapter {
+	
+	 private static final String TAG       = "TeamAdapter";
 
     /**
      * A String array containing the Linces to display
@@ -76,14 +86,54 @@ public class TeamAdapter extends BaseAdapter {
         }
         
         Team c = getItem(position);
-
-        TextView mTeamEmailView = (TextView) view
-                .findViewById(R.id.team_email);
-        mTeamEmailView.setText(c.getEmail());
+        //TextView mTeamEmailView = (TextView) view
+        //       .findViewById(R.id.team_email);
+        //mTeamEmailView.setText(c.getEmail());
         TextView mTeamDescView = (TextView) view.findViewById(R.id.team_desc);
-        mTeamDescView.setText(c.getDesc());
+        TextView mTeamNameView = (TextView) view.findViewById(R.id.team_name);
+        mTeamNameView.setText(c.getName());
+        mTeamDescView.setText(c.getDescription());
         ImageView mTeamImageView = (ImageView) view.findViewById(R.id.team_image);
+        mTeamImageView.setImageResource(R.drawable.download_image);
+        new FetchImageTask(mTeamImageView).execute(c.getImageUrl());
         return view;
+    }
+    
+    
+    private class FetchImageTask extends AsyncTask<String,Void,Bitmap> {
+	    private  WeakReference<ImageView> imageViewReference;
+        @Override
+        public Bitmap doInBackground(String... params) {
+        	Bitmap bitmap = null;
+        	for (String image_url : params) {
+        	  try {
+        		if(image_url == null)
+        			return null;
+        		byte[] bitmapBytes = new ImageByte().getUrlBytes(image_url);
+                bitmap = BitmapFactory
+                .decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
+        	  }
+        	  catch (IOException e1) {
+                  e1.printStackTrace();
+              }
+                
+        	}
+        	return bitmap;	
+       }
+        
+        public FetchImageTask(ImageView imageView){
+        	imageViewReference = new WeakReference<ImageView>(imageView);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+        	if(bitmap == null)
+        	  return;
+    	    ImageView imageView = imageViewReference.get();
+    	    imageView.setImageBitmap(bitmap);  
+       
+        }	
+        
     }
 
 }

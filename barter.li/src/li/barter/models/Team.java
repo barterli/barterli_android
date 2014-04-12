@@ -8,7 +8,7 @@ import android.os.Parcelable.Creator;
 
 public class Team implements Parcelable {
     private String mName;
-    private String mDesc;
+    private String mDescription;
     private String mEmail;
     private String mImageUrl;
     
@@ -29,12 +29,12 @@ public class Team implements Parcelable {
 		mName = name;
 	}
 
-	public String getDesc() {
-		return mDesc;
+	public String getDescription() {
+		return mDescription;
 	}
 
-	public void setDesc(String desc) {
-		mDesc = desc;
+	public void setDescription(String description) {
+		mDescription = description;
 	}
 
 	public String getEmail() {
@@ -58,7 +58,7 @@ public class Team implements Parcelable {
     public Team(final Parcel source) {
         mName = source.readString();
         mEmail = source.readString();
-        mDesc = source.readString();
+        mDescription = source.readString();
         mImageUrl = source.readString();
     }
 
@@ -66,7 +66,7 @@ public class Team implements Parcelable {
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(mName);
         dest.writeString(mEmail);
-        dest.writeString(mDesc);
+        dest.writeString(mDescription);
         dest.writeString(mImageUrl);
     }
 

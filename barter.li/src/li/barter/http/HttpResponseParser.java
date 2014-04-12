@@ -172,6 +172,7 @@ public class HttpResponseParser {
          for (int i = 0; i < teamArray.length; i++) {
              teamObject = JsonUtils
                              .readJSONObject(teamResults, i, true, true);
+             Logger.e(TAG, teamObject.toString());
              teamArray[i] = new Team();
              readTeamObjectIntoTeam(teamObject, teamArray[i]);
          }
@@ -378,15 +379,14 @@ public class HttpResponseParser {
                 .readString(teamObject, HttpConstants.EMAIL, false, false));
     	String name = JsonUtils
                 .readString(teamObject, HttpConstants.NAME, true, true);
-    	String desc = JsonUtils
+    	String description = JsonUtils
                 .readString(teamObject, HttpConstants.DESCRIPTION, false, false);
     	String imageUrl = JsonUtils
                 .readString(teamObject, HttpConstants.IMAGE_URL, false, false);
         team.setName(name);
         team.setEmail(email);
-        team.setDesc(desc);
+        team.setDescription(description);
         team.setImageUrl(imageUrl);
-
     }
 
     /**
