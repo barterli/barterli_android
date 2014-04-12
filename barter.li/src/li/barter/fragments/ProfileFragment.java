@@ -261,7 +261,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                     ResponseInfo response) {
         // TODO Auto-generated method stub
         if (requestId == RequestId.GET_USER_PROFILE) {
-            Log.v(TAG, response.toString());
         }
 
     }

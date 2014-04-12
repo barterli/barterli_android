@@ -155,7 +155,12 @@ public class ShowSingleBookFragment extends AbstractBarterLiFragment implements
             }
 
             case R.id.action_edit_profile: {
-                showCrouton("Edit this book", AlertStyle.ALERT);
+                Bundle mEditBookArgs = new Bundle();
+                mEditBookArgs.putString(Keys.BOOK_ID, mBookId);
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                        .instantiate(getActivity(), AddOrEditBookFragment.class
+                                        .getName(), mEditBookArgs), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_SINGLE_BOOK);
+                
                 return true;
             }
 
@@ -209,13 +214,9 @@ public class ShowSingleBookFragment extends AbstractBarterLiFragment implements
                                 .getColumnIndex(DatabaseColumns.DESCRIPTION)));
                 mPublicationDateTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR)));
-                Log.v(TAG, cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.BARTER_TYPE)));
+                //Log.v(TAG, cursor.getString(cursor
+                                //.getColumnIndex(DatabaseColumns.BARTER_TYPE)));
             }
-            //            while(cursor.moveToNext()){
-            //                Log.v(TAG, "Description " + cursor.getString(cursor.getColumnIndex(DatabaseColumns.DESCRIPTION)));
-            //                Log.v(TAG, "Barter Type " + cursor.getString(cursor.getColumnIndex(DatabaseColumns.BARTER_TYPE)));
-            //            }
         }
 
     }

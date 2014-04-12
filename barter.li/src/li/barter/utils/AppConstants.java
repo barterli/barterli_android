@@ -32,12 +32,12 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG            = true;
+    public static final boolean DEBUG = true;
 
-    public static final String  FACEBOOK         = "facebook";
-    public static final String  MANUAL           = "manual";
-    public static final String  TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-    public static final String  CHAT_ID_FORMAT   = "%s#%s";
+    public static final String FACEBOOK = "facebook";
+    public static final String MANUAL = "manual";
+    public static final String TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String CHAT_ID_FORMAT = "%s#%s";
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -103,10 +103,11 @@ public class AppConstants {
         public String getAuthHeader() {
 
             if (TextUtils.isEmpty(mAuthHeader)
-                            && !TextUtils.isEmpty(mAuthToken)
-                            && !TextUtils.isEmpty(mEmail)) {
+                    && !TextUtils.isEmpty(mAuthToken)
+                    && !TextUtils.isEmpty(mEmail)) {
                 mAuthHeader = String
-                                .format(Locale.US, HttpConstants.HEADER_AUTHORIZATION_FORMAT, mAuthToken, mEmail);
+                        .format(Locale.US, HttpConstants.HEADER_AUTHORIZATION_FORMAT, mAuthToken,
+                                mEmail);
             }
             return mAuthHeader;
         }
@@ -125,9 +126,9 @@ public class AppConstants {
 
         private final Location defaultLocation = new Location(LocationManager.PASSIVE_PROVIDER);
 
-        private boolean        mIsNetworkConnected;
-        private int            mCurrentNetworkType;
-        private Location       mLatestLocation;
+        private boolean mIsNetworkConnected;
+        private int mCurrentNetworkType;
+        private Location mLatestLocation;
 
         private DeviceInfo() {
             reset();
@@ -187,7 +188,7 @@ public class AppConstants {
     public static interface ResultCodes {
 
         public static final int FAILURE = -1;
-        public static final int CANCEL  = 0;
+        public static final int CANCEL = 0;
         public static final int SUCCESS = 1;
     }
 
@@ -198,27 +199,27 @@ public class AppConstants {
      */
     public static interface Keys {
 
-        public static final String ISBN               = "isbn";
-        public static final String BOOK_TITLE         = "book_title";
-        public static final String AUTHOR             = "author";
-        public static final String DESCRIPTION        = "description";
-        public static final String PUBLICATION_YEAR   = "publication_year";
-        public static final String BARTER_TYPES       = "barter_types";
-        public static final String SYMBOLOGY          = "symbology";
-        public static final String TYPE               = "type";
-        public static final String UP_NAVIGATION_TAG  = "up_navigation_tag";
-        public static final String MAP_MOVED_ONCE     = "map_moved_once";
+        public static final String ISBN = "isbn";
+        public static final String BOOK_TITLE = "book_title";
+        public static final String AUTHOR = "author";
+        public static final String DESCRIPTION = "description";
+        public static final String PUBLICATION_YEAR = "publication_year";
+        public static final String BARTER_TYPES = "barter_types";
+        public static final String SYMBOLOGY = "symbology";
+        public static final String TYPE = "type";
+        public static final String UP_NAVIGATION_TAG = "up_navigation_tag";
+        public static final String MAP_MOVED_ONCE = "map_moved_once";
         public static final String DRAWER_OPENED_ONCE = "drawer_opened_once";
-        public static final String HAS_FETCHED_INFO   = "has_fetched_info";
-        public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
-        public static final String LOCATIONS          = "locations";
+        public static final String HAS_FETCHED_INFO = "has_fetched_info";
+        public static final String SUBMIT_ON_RESUME = "submit_on_resumt";
+        public static final String LOCATIONS = "locations";
 
-        public static final String BOOK_ID            = "book_id";
+        public static final String BOOK_ID = "book_id";
 
-        public static final String CHAT_ID            = "chat_id";
+        public static final String CHAT_ID = "chat_id";
 
         // Keys related to ShowWebViewFragment
-        public static final String URL_TO_LOAD        = "url_to_load";
+        public static final String URL_TO_LOAD = "url_to_load";
 
     }
 
@@ -228,33 +229,33 @@ public class AppConstants {
      * @author Vinay S Shenoy
      */
     public static interface FragmentTags {
-        public static final String BOOKS_AROUND_ME                                 = "books_around_me";
-        public static final String ADD_OR_EDIT_BOOK                                = "add_or_edit_book";
-        public static final String LOGIN_TO_ADD_BOOK                               = "login_to_add_book";
-        public static final String LOGIN_FROM_NAV_DRAWER                           = "login_from_nav_drawer";
-        public static final String SELECT_PREFERRED_LOCATION_FROM_LOGIN            = "select_preferred_location_from_login";
-        public static final String SELECT_PREFERRED_LOCATION_FROM_PROFILE          = "select_preferred_location_from_profile";
+        public static final String BOOKS_AROUND_ME = "books_around_me";
+        public static final String ADD_OR_EDIT_BOOK = "add_or_edit_book";
+        public static final String LOGIN_TO_ADD_BOOK = "login_to_add_book";
+        public static final String LOGIN_FROM_NAV_DRAWER = "login_from_nav_drawer";
+        public static final String SELECT_PREFERRED_LOCATION_FROM_LOGIN = "select_preferred_location_from_login";
+        public static final String SELECT_PREFERRED_LOCATION_FROM_PROFILE = "select_preferred_location_from_profile";
         public static final String SELECT_PREFERRED_LOCATION_FROM_ADD_OR_EDIT_BOOK = "select_preferred_location_from_add_or_edit_book";
-        public static final String OSS_LICENSES                                    = "oss_licenses";
-        public static final String SHOW_WEBVIEW                                    = "show_webview";
-        public static final String REPORT_BUGS                                     = "report_bugs";
-        public static final String SUGGEST_FEATURE                                 = "suggest_feature";
-        public static final String COLLABORATE                                     = "collaborate";
+        public static final String OSS_LICENSES = "oss_licenses";
+        public static final String SHOW_WEBVIEW = "show_webview";
+        public static final String REPORT_BUGS = "report_bugs";
+        public static final String SUGGEST_FEATURE = "suggest_feature";
+        public static final String COLLABORATE = "collaborate";
 
-        public static final String SHOW_SINGLE_BOOK                                = "show_single_book";
-        public static final String PROFILE                                         = "profile";
-        public static final String EDIT_PROFILE                                    = "edit_profile";
-        public static final String CHATS                                           = "chats";
-        public static final String CHAT_DETAILS                                    = "chat_details";
+        public static final String SHOW_SINGLE_BOOK = "show_single_book";
+        public static final String PROFILE = "profile";
+        public static final String EDIT_PROFILE = "edit_profile";
+        public static final String CHATS = "chats";
+        public static final String CHAT_DETAILS = "chat_details";
 
         /* Tags for fragment backstack popping and providing up navigation */
 
-        public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
-        public static final String BS_ADD_BOOK                                     = "to_add_book";
-        public static final String BS_PREFERRED_LOCATION                           = "to_preferred_location";
-        public static final String BS_PROFILE                                      = "to_edit_profile";
-        public static final String BS_CHATS                                        = "to_chats";
-
+        public static final String BS_BOOKS_AROUND_ME = "to_books_around_me";
+        public static final String BS_ADD_BOOK = "to_add_book";
+        public static final String BS_PREFERRED_LOCATION = "to_preferred_location";
+        public static final String BS_PROFILE = "to_edit_profile";
+        public static final String BS_CHATS = "to_chats";
+        public static final String BS_SINGLE_BOOK = "to_edit_book";
     }
 
     /**
@@ -263,12 +264,12 @@ public class AppConstants {
      * @author Vinay S Shenoy
      */
     public static interface BarterType {
-        public static final String FREE    = "free";
+        public static final String FREE = "free";
         public static final String PRIVATE = "private";
-        public static final String BARTER  = "barter";
-        public static final String SALE    = "sale";
-        public static final String RENT    = "rent";
-        public static final String READ    = "read";
+        public static final String BARTER = "barter";
+        public static final String SALE = "sale";
+        public static final String RENT = "rent";
+        public static final String READ = "read";
     }
 
     /**
@@ -280,7 +281,7 @@ public class AppConstants {
 
         public static final int SEARCH_BOOKS = 201;
         public static final int GET_MY_BOOKS = 202;
-        public static final int ALL_CHATS    = 203;
+        public static final int ALL_CHATS = 203;
         public static final int CHAT_DETAILS = 204;
     }
 
@@ -291,21 +292,21 @@ public class AppConstants {
      */
     public static interface QueryTokens {
 
-        //1-100 for load queries
-        public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK  = 1;
+        // 1-100 for load queries
+        public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK = 1;
         public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 2;
         public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 3;
 
-        public static final int LOAD_MY_BOOKS                        = 11;
+        public static final int LOAD_MY_BOOKS = 11;
 
-        //101-200 for insert queries
-        public static final int INSERT_CHAT_MESSAGE                  = 101;
-        public static final int INSERT_CHAT                          = 102;
-        public static final int INSERT_USER_FOR_CHAT                 = 103;
+        // 101-200 for insert queries
+        public static final int INSERT_CHAT_MESSAGE = 101;
+        public static final int INSERT_CHAT = 102;
+        public static final int INSERT_USER_FOR_CHAT = 103;
 
-        //201-300 for update queries
-        public static final int UPDATE_CHAT                          = 201;
-        public static final int UPDATE_USER_FOR_CHAT                 = 202;
+        // 201-300 for update queries
+        public static final int UPDATE_CHAT = 201;
+        public static final int UPDATE_USER_FOR_CHAT = 202;
     }
 
     /**
@@ -316,7 +317,7 @@ public class AppConstants {
     public static interface ChatType {
 
         public static final String PERSONAL = "personal";
-        public static final String GROUP    = "group";
+        public static final String GROUP = "group";
     }
 
 }
