@@ -168,10 +168,10 @@ public class HttpResponseParser {
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
 
             //First try to update the table if a book already exists
-            if (DBInterface.update(TableMyBooks.NAME, values, selection, args, false) == 0) {
+            if (DBInterface.update(TableMyBooks.NAME, values, selection, args, true) == 0) {
 
                 // Unable to update, insert the item
-                DBInterface.insert(TableMyBooks.NAME, null, values, false);
+                DBInterface.insert(TableMyBooks.NAME, null, values, true);
             }
         }
 
@@ -244,13 +244,12 @@ public class HttpResponseParser {
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
 
             //First try to update the table if a book already exists
-            if (DBInterface.update(TableSearchBooks.NAME, values, selection, args, false) == 0) {
+            if (DBInterface.update(TableSearchBooks.NAME, values, selection, args, true) == 0) {
 
                 // Unable to update, insert the item
-                DBInterface.insert(TableSearchBooks.NAME, null, values, false);
+                DBInterface.insert(TableSearchBooks.NAME, null, values, true);
             }
         }
-        DBInterface.notifyChange(TableSearchBooks.NAME);
         return responseInfo;
     }
 
@@ -387,6 +386,7 @@ public class HttpResponseParser {
             
             values.put(DatabaseColumns.BARTER_TYPE, TextUtils.join(AppConstants.BARTER_TYPE_SEPARATOR, tags));
         }
+        Logger.v(TAG, "Book Response: %s\nValues: %s", bookObject.toString(2), values.toString());
         return bookId;
     }
 
