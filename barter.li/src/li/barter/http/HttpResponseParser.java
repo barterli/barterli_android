@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
@@ -32,6 +33,7 @@ import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.parcelables.Hangout;
+import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
 
 /**
@@ -333,8 +335,6 @@ public class HttpResponseParser {
                         .readString(bookObject, HttpConstants.ISBN_13, false, false));
         values.put(DatabaseColumns.AUTHOR, JsonUtils
                         .readString(bookObject, HttpConstants.AUTHOR, false, false));
-        values.put(DatabaseColumns.BARTER_TYPE, JsonUtils
-                        .readString(bookObject, HttpConstants.TAGS, false, false));
         values.put(DatabaseColumns.USER_ID, JsonUtils
                         .readString(bookObject, HttpConstants.ID_USER, false, false));
         values.put(DatabaseColumns.TITLE, JsonUtils
@@ -353,6 +353,18 @@ public class HttpResponseParser {
 
         if (locationObject != null) {
             values.put(DatabaseColumns.LOCATION_ID, parseAndStoreLocation(locationObject));
+        }
+        
+        final JSONArray tagsArray = JsonUtils.readJSONArray(bookObject, HttpConstants.TAGS, true, true);
+        
+        if(tagsArray.length() > 0) {
+            final String[] tags = new String[tagsArray.length()];
+            
+            for(int i = 0; i < tagsArray.length(); i++) {
+                tags[i] = JsonUtils.readString(tagsArray, i, true, true);
+            }
+            
+            values.put(DatabaseColumns.BARTER_TYPE, TextUtils.join(AppConstants.BARTER_TYPE_SEPARATOR, tags));
         }
         return bookId;
     }

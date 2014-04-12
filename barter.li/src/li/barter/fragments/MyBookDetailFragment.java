@@ -16,55 +16,34 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request.Method;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import li.barter.R;
-import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
-import li.barter.data.TableLocations;
 import li.barter.data.TableMyBooks;
-import li.barter.http.BlRequest;
-import li.barter.http.HttpConstants;
-import li.barter.http.HttpConstants.ApiEndpoints;
-import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
-import li.barter.utils.SharedPreferenceHelper;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class MyBookDetailFragment extends AbstractBarterLiFragment implements
@@ -115,7 +94,6 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
             mBookId
         }, null, null, null, null, this);
 
-        //DBInterface.queryAsync(QueryTokens.LOAD_MY_BOOKS, null, false, TableMyBooks.NAME, null, null, null, null, null, null, null, this);
 
     }
 
@@ -132,7 +110,43 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.text_description);
         mPublicationDateTextView = (TextView) view
                         .findViewById(R.id.text_publication_date);
+        initBarterTypeCheckBoxes(view);
 
+    }
+    
+    /**
+     * Gets the references to the barter type checkboxes, set the tags to
+     * simplify building the tags array when sending the request to server
+     * 
+     * @param view The content view of the fragment
+     */
+    private void initBarterTypeCheckBoxes(View view) {
+        mBarterCheckBox = (CheckBox) view.findViewById(R.id.checkbox_barter);
+        mReadCheckBox = (CheckBox) view.findViewById(R.id.checkbox_read);
+        mSellCheckBox = (CheckBox) view.findViewById(R.id.checkbox_sell);
+        mWishlistCheckBox = (CheckBox) view
+                        .findViewById(R.id.checkbox_wishlist);
+        mGiveAwayCheckBox = (CheckBox) view
+                        .findViewById(R.id.checkbox_give_away);
+        mKeepPrivateCheckBox = (CheckBox) view
+                        .findViewById(R.id.checkbox_keep_private);
+
+        // Set the barter tags
+        mBarterCheckBox.setTag(R.string.tag_barter_type, BarterType.BARTER);
+        mReadCheckBox.setTag(R.string.tag_barter_type, BarterType.READ);
+        mSellCheckBox.setTag(R.string.tag_barter_type, BarterType.SALE);
+        mWishlistCheckBox.setTag(R.string.tag_barter_type, BarterType.RENT);
+        mGiveAwayCheckBox.setTag(R.string.tag_barter_type, BarterType.FREE);
+        mKeepPrivateCheckBox
+                        .setTag(R.string.tag_barter_type, BarterType.PRIVATE);
+
+        mBarterTypeCheckBoxes = new CheckBox[6];
+        mBarterTypeCheckBoxes[0] = mBarterCheckBox;
+        mBarterTypeCheckBoxes[1] = mReadCheckBox;
+        mBarterTypeCheckBoxes[2] = mSellCheckBox;
+        mBarterTypeCheckBoxes[3] = mWishlistCheckBox;
+        mBarterTypeCheckBoxes[4] = mGiveAwayCheckBox;
+        mBarterTypeCheckBoxes[5] = mKeepPrivateCheckBox;
     }
     
     @Override
@@ -224,13 +238,36 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
                                 .getColumnIndex(DatabaseColumns.DESCRIPTION)));
                 mPublicationDateTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR)));
-                //Log.v(TAG, cursor.getString(cursor
-                                //.getColumnIndex(DatabaseColumns.BARTER_TYPE)));
+                
+                final String barterType = cursor.getString(cursor.getColumnIndex(DatabaseColumns.BARTER_TYPE));
+                
+                if(!TextUtils.isEmpty(barterType)) {
+                    setBarterCheckboxes(barterType);
+                }
             }
             
             cursor.close();
         }
 
+    }
+
+    /**
+     * Checks the supported barter type of the book and updates the checkboxes
+     * @param barterType The barter types supported by the book
+     */
+    private void setBarterCheckboxes(String barterType) {
+
+        final String[] barterTypes = barterType.split(AppConstants.BARTER_TYPE_SEPARATOR);
+        
+        for(String token : barterTypes) {
+            
+            for(CheckBox eachCheckBox : mBarterTypeCheckBoxes) {
+                
+                if(eachCheckBox.getTag(R.string.tag_barter_type).equals(token)) {
+                    eachCheckBox.setChecked(true);
+                }
+            }
+        }
     }
 
 }

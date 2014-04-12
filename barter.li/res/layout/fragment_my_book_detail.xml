@@ -31,8 +31,8 @@
             android:id="@+id/book_avatar"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_title"
@@ -154,6 +154,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
+                    android:checked="false"
+                    android:enabled="false"
                     android:text="@string/barter"
                     app:fontStyle="alegreya_regular" />
 
@@ -163,6 +165,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:checked="false"
+                    android:enabled="false"
                     android:text="@string/read"
                     app:fontStyle="alegreya_regular" />
             </LinearLayout>
@@ -180,6 +183,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:checked="false"
+                    android:enabled="false"
                     android:text="@string/sell"
                     app:fontStyle="alegreya_regular" />
 
@@ -189,6 +193,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:checked="false"
+                    android:enabled="false"
                     android:text="@string/wishlist"
                     app:fontStyle="alegreya_regular" />
             </LinearLayout>
@@ -204,6 +209,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:checked="false"
+                    android:enabled="false"
                     android:text="@string/give_away"
                     app:fontStyle="alegreya_regular" />
 
@@ -213,6 +219,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:checked="false"
+                    android:enabled="false"
                     android:text="@string/keep_private"
                     app:fontStyle="alegreya_regular" />
             </LinearLayout>
