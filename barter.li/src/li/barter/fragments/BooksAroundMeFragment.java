@@ -361,6 +361,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (mMapView != null) {
             mMapView.onDestroy();
         }
+        mMapDrawerBlurHelper.cleanup();
     }
 
     @Override
