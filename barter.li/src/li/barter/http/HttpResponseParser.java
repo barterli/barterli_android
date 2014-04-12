@@ -16,14 +16,6 @@
 
 package li.barter.http;
 
-import org.apache.http.HttpStatus;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.ContentValues;
-import android.os.Bundle;
-
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -31,8 +23,17 @@ import li.barter.data.TableLocations;
 import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.models.Team;
 import li.barter.parcelables.Hangout;
 import li.barter.utils.Logger;
+
+import org.apache.http.HttpStatus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.ContentValues;
+import android.os.Bundle;
 
 /**
  * Class that reads an API response and parses it and stores it in the database
@@ -108,6 +109,10 @@ public class HttpResponseParser {
             case RequestId.TRIBUTE: {
             	return parseTributeResponse(response);
             }
+            
+            case RequestId.TEAM: {
+            	return parseTeamResponse(response);
+            }
 
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
@@ -128,7 +133,7 @@ public class HttpResponseParser {
     
     
     /**
-     * Parse the response for Ampq
+     * Parse the response for Tribute
      * 
      * @param response The response from server
      * @return
@@ -147,6 +152,33 @@ public class HttpResponseParser {
                 .readString(tributeObject, HttpConstants.TRIBUTE_TEXT, false, false));
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
+    }
+    
+    
+    
+    /**
+     * Parse the response for Team
+     * 
+     * @param response The response from server
+     * @return
+     */
+    private ResponseInfo parseTeamResponse(String response) throws JSONException {
+    	final ResponseInfo responseInfo = new ResponseInfo();
+        final JSONObject responseObject = new JSONObject(response);
+        final JSONArray teamResults = JsonUtils
+                .readJSONArray(responseObject, HttpConstants.TEAM, true, true);
+         final Team[] teamArray = new Team[teamResults.length()];
+         JSONObject teamObject = null;
+         for (int i = 0; i < teamArray.length; i++) {
+             teamObject = JsonUtils
+                             .readJSONObject(teamResults, i, true, true);
+             teamArray[i] = new Team();
+             readTeamObjectIntoTeam(teamObject, teamArray[i]);
+         }
+         final Bundle responseBundle = new Bundle(1);
+         responseBundle.putParcelableArray(HttpConstants.TEAM, teamArray);
+         responseInfo.responseBundle = responseBundle;
+         return responseInfo;
     }
 
 
@@ -330,6 +362,30 @@ public class HttpResponseParser {
                         .readDouble(hangoutObject, HttpConstants.LATITUDE, true, true);
         hangout.longitude = JsonUtils
                         .readDouble(hangoutObject, HttpConstants.LONGITUDE, true, true);
+
+    }
+    
+    /**
+     * Reads a TEAM {@link JSONObject} into a {@link Team} model
+     * 
+     * @param teamObject The Json response representing a Team
+     * @param team The {@link Team} model to write into
+     * @throws JSONException If the Json is invalid
+     */
+    private void readTeamObjectIntoTeam(final JSONObject teamObject,
+                    final Team team) throws JSONException {
+    	String email = (JsonUtils
+                .readString(teamObject, HttpConstants.EMAIL, false, false));
+    	String name = JsonUtils
+                .readString(teamObject, HttpConstants.NAME, true, true);
+    	String desc = JsonUtils
+                .readString(teamObject, HttpConstants.DESCRIPTION, false, false);
+    	String imageUrl = JsonUtils
+                .readString(teamObject, HttpConstants.IMAGE_URL, false, false);
+        team.setName(name);
+        team.setEmail(email);
+        team.setDesc(desc);
+        team.setImageUrl(imageUrl);
 
     }
 

@@ -91,6 +91,7 @@ public class HttpConstants {
         public static final String REPORT_BUG              = "/feedback";
         public static final String COLLABORATE_REQUEST     = "/register";
         public static final String TRIBUTE                 = "/tribute.json";
+        public static final String TEAM                = "/team.json";
     }
 
     /**
@@ -111,6 +112,7 @@ public class HttpConstants {
         public static final int COLLABORATE_REQUEST         = 114;
         public static final int AMPQ                        = 115;
         public static final int TRIBUTE                     = 116;
+        public static final int TEAM                        = 117;
     }
 
     public static final String ID                          = "id";
@@ -178,4 +180,6 @@ public class HttpConstants {
     public static final String TRIBUTE                     = "tribute";
     public static final String TRIBUTE_IMAGE_URL           = "image_url";
     public static final String TRIBUTE_TEXT                = "message";
+    public static final String TEAM                        = "team";
+    public static final String DESC                        = "desc";
 }

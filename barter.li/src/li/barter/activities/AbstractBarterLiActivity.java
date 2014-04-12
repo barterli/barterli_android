@@ -30,6 +30,7 @@ import li.barter.fragments.ProfileFragment;
 import li.barter.fragments.ReportBugFragment;
 import li.barter.fragments.ShowWebViewFragment;
 import li.barter.fragments.SuggestFeatureFragment;
+import li.barter.fragments.TeamFragment;
 import li.barter.fragments.TributeFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
@@ -355,6 +356,25 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 			                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
 			                                 .instantiate(AbstractBarterLiActivity.this, TributeFragment.class
 			                                                 .getName(), null), FragmentTags.TRIBUTE, true, null);
+			             }
+			         };
+			            	
+			            	break;
+			            }
+            //Tribute
+            case 8: {
+
+			        if (masterFragment != null
+			                         && masterFragment instanceof TeamFragment) {
+			             return null;
+			         }
+			
+			         runnable = new Runnable() {
+			             @Override
+			             public void run() {
+			                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+			                                 .instantiate(AbstractBarterLiActivity.this, TeamFragment.class
+			                                                 .getName(), null), FragmentTags.TEAM, true, null);
 			             }
 			         };
 			            	
