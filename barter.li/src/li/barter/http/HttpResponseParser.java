@@ -154,6 +154,26 @@ public class HttpResponseParser {
                         .readString(userObject, HttpConstants.FIRST_NAME, false, false));
         responseBundle.putString(HttpConstants.LAST_NAME, JsonUtils
                         .readString(userObject, HttpConstants.LAST_NAME, false, false));
+        
+        final JSONArray booksArray = JsonUtils.readJSONArray(userObject, HttpConstants.BOOKS, true, true);
+        
+        JSONObject bookObject = null;
+        final ContentValues values = new ContentValues();
+        final String selection = DatabaseColumns.BOOK_ID
+                        + SQLConstants.EQUALS_ARG;
+        final String[] args = new String[1];
+        for (int i = 0; i < booksArray.length(); i++) {
+            bookObject = JsonUtils
+                            .readJSONObject(booksArray, i, true, true);
+            args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
+
+            //First try to update the table if a book already exists
+            if (DBInterface.update(TableMyBooks.NAME, values, selection, args, false) == 0) {
+
+                // Unable to update, insert the item
+                DBInterface.insert(TableMyBooks.NAME, null, values, false);
+            }
+        }
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(userObject, HttpConstants.LOCATION, false, false);
@@ -224,12 +244,13 @@ public class HttpResponseParser {
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
 
             //First try to update the table if a book already exists
-            if (DBInterface.update(TableSearchBooks.NAME, values, selection, args, true) == 0) {
+            if (DBInterface.update(TableSearchBooks.NAME, values, selection, args, false) == 0) {
 
                 // Unable to update, insert the item
-                DBInterface.insert(TableSearchBooks.NAME, null, values, true);
+                DBInterface.insert(TableSearchBooks.NAME, null, values, false);
             }
         }
+        DBInterface.notifyChange(TableSearchBooks.NAME);
         return responseInfo;
     }
 

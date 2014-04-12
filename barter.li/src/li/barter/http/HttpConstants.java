@@ -173,4 +173,5 @@ public class HttpConstants {
     public static final String BODY                        = "body";
     public static final String SENDER_ID                   = "sender_id";
     public static final String RECEIVER_ID                 = "receiver_id";
+    public static final String BOOKS                       = "books";
 }
