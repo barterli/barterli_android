@@ -34,6 +34,7 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 
@@ -319,9 +320,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             final Bundle showBooksArgs = new Bundle();
             showBooksArgs.putString(Keys.BOOK_ID, bookId);
+            showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
 
             loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), MyBookDetailFragment.class
+                            .instantiate(getActivity(), BookDetailFragment.class
                                             .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_PROFILE, true, FragmentTags.BS_PROFILE);
         }
     }

@@ -25,8 +25,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -36,18 +38,19 @@ import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableMyBooks;
+import li.barter.data.TableSearchBooks;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
-import li.barter.utils.AppConstants;
-import li.barter.utils.Logger;
+import li.barter.utils.AppConstants.UserInfo;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
-public class MyBookDetailFragment extends AbstractBarterLiFragment implements
-                AsyncDbQueryCallback {
+public class BookDetailFragment extends AbstractBarterLiFragment implements
+                AsyncDbQueryCallback, OnClickListener {
 
     private static final String TAG = "ShowSingleBookFragment";
 
@@ -63,7 +66,11 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
     private CheckBox            mGiveAwayCheckBox;
     private CheckBox            mKeepPrivateCheckBox;
     private CheckBox[]          mBarterTypeCheckBoxes;
+    private Button              mChatWithOwnerButton;
+
     private String              mBookId;
+    private String              mUserId;
+    private boolean             mOwnedByUser;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -71,7 +78,7 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
         init(container);
         setHasOptionsMenu(true);
         final View view = inflater
-                        .inflate(R.layout.fragment_my_book_detail, container, false);
+                        .inflate(R.layout.fragment_book_detail, container, false);
         initViews(view);
 
         getActivity().getWindow()
@@ -81,19 +88,48 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
 
         if (extras != null) {
             mBookId = extras.getString(Keys.BOOK_ID);
+            mUserId = extras.getString(Keys.USER_ID);
+
+            if (mUserId != null && mUserId.equals(UserInfo.INSTANCE.getId())) {
+                mOwnedByUser = true;
+            } else {
+                mOwnedByUser = false;
+            }
         }
 
+        updateViewForUser();
         loadBookDetails();
         setActionBarDrawerToggleEnabled(false);
         return view;
     }
 
-    private void loadBookDetails() {
-        DBInterface.queryAsync(QueryTokens.LOAD_MY_BOOKS, null, false, TableMyBooks.NAME, null, DatabaseColumns.BOOK_ID
-                        + SQLConstants.EQUALS_ARG, new String[] {
-            mBookId
-        }, null, null, null, null, this);
+    /**
+     * Checks whether the book belongs to the current user or not, and updates
+     * the UI accordingly
+     */
+    private void updateViewForUser() {
 
+        if (mOwnedByUser) {
+            mChatWithOwnerButton.setEnabled(false);
+            mChatWithOwnerButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void loadBookDetails() {
+
+        if (mOwnedByUser) {
+            //Reached here either by creating a new book, OR by tapping a book item in My Profile
+            DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableMyBooks.NAME, null, DatabaseColumns.BOOK_ID
+                            + SQLConstants.EQUALS_ARG, new String[] {
+                mBookId
+            }, null, null, null, null, this);
+        } else {
+            //Reached here by tapping a book item in Books Around Me screen
+            DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_OTHER_USER, null, false, TableSearchBooks.NAME, null, DatabaseColumns.BOOK_ID
+                            + SQLConstants.EQUALS_ARG, new String[] {
+                mBookId
+            }, null, null, null, null, this);
+        }
 
     }
 
@@ -110,10 +146,11 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.text_description);
         mPublicationDateTextView = (TextView) view
                         .findViewById(R.id.text_publication_date);
+        mChatWithOwnerButton = (Button) view.findViewById(R.id.button_chat);
         initBarterTypeCheckBoxes(view);
 
     }
-    
+
     /**
      * Gets the references to the barter type checkboxes, set the tags to
      * simplify building the tags array when sending the request to server
@@ -148,7 +185,7 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
         mBarterTypeCheckBoxes[4] = mGiveAwayCheckBox;
         mBarterTypeCheckBoxes[5] = mKeepPrivateCheckBox;
     }
-    
+
     @Override
     public void onBackPressed() {
 
@@ -166,7 +203,10 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_profile_show, menu);
+
+        if (mOwnedByUser) {
+            inflater.inflate(R.menu.menu_profile_show, menu);
+        }
     }
 
     @Override
@@ -182,9 +222,9 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
                 Bundle mEditBookArgs = new Bundle();
                 mEditBookArgs.putString(Keys.BOOK_ID, mBookId);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), AddOrEditBookFragment.class
-                                        .getName(), mEditBookArgs), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_SINGLE_BOOK);
-                
+                                .instantiate(getActivity(), AddOrEditBookFragment.class
+                                                .getName(), mEditBookArgs), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_SINGLE_BOOK);
+
                 return true;
             }
 
@@ -226,7 +266,8 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
     @Override
     public void onQueryComplete(int token, Object cookie, Cursor cursor) {
 
-        if (token == QueryTokens.LOAD_MY_BOOKS) {
+        if (token == QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER
+                        || token == QueryTokens.LOAD_BOOK_DETAIL_OTHER_USER) {
             if (cursor.moveToFirst()) {
                 mIsbnTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.ISBN_10)));
@@ -236,16 +277,18 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
                                 .getColumnIndex(DatabaseColumns.AUTHOR)));
                 mDescriptionTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.DESCRIPTION)));
-                mPublicationDateTextView.setText(cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR)));
-                
-                final String barterType = cursor.getString(cursor.getColumnIndex(DatabaseColumns.BARTER_TYPE));
-                
-                if(!TextUtils.isEmpty(barterType)) {
+                mPublicationDateTextView
+                                .setText(cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR)));
+
+                final String barterType = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.BARTER_TYPE));
+
+                if (!TextUtils.isEmpty(barterType)) {
                     setBarterCheckboxes(barterType);
                 }
             }
-            
+
             cursor.close();
         }
 
@@ -253,20 +296,29 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
 
     /**
      * Checks the supported barter type of the book and updates the checkboxes
+     * 
      * @param barterType The barter types supported by the book
      */
     private void setBarterCheckboxes(String barterType) {
 
-        final String[] barterTypes = barterType.split(AppConstants.BARTER_TYPE_SEPARATOR);
-        
-        for(String token : barterTypes) {
-            
-            for(CheckBox eachCheckBox : mBarterTypeCheckBoxes) {
-                
-                if(eachCheckBox.getTag(R.string.tag_barter_type).equals(token)) {
+        final String[] barterTypes = barterType
+                        .split(AppConstants.BARTER_TYPE_SEPARATOR);
+
+        for (String token : barterTypes) {
+
+            for (CheckBox eachCheckBox : mBarterTypeCheckBoxes) {
+
+                if (eachCheckBox.getTag(R.string.tag_barter_type).equals(token)) {
                     eachCheckBox.setChecked(true);
                 }
             }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.button_chat) {
+            //TODO Launch Chat Fragment for chatting with user
         }
     }
 

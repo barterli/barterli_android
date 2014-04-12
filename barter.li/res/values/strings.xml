@@ -80,6 +80,7 @@
     <string name="wishlist">Wishlist</string>
     <string name="keep_private">Keep Private</string>
     <string name="submit">Submit</string>
+    <string name="chat_with_owner">Chat with owner</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>
     <string name="email_label">Email Id</string>
@@ -174,8 +175,9 @@
     <string name="volunteer">Volunteer</string>
     <string name="barterli_email">joinus@barter.li</string>
     <string name="hint_about_me_description">About Me.</string>
-    
+
     <!-- String Related to Show Single Book Fragment -->
+
 
     <!-- Strings related to open source licenses -->
     <string-array name="oss_titles">

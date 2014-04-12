@@ -223,6 +223,14 @@
                     android:text="@string/keep_private"
                     app:fontStyle="alegreya_regular" />
             </LinearLayout>
+
+            <li.barter.widgets.TypefacedButton
+                android:id="@+id/button_chat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin"
+                android:text="@string/chat_with_owner"
+                app:fontStyle="alegreya_bold" />
         </LinearLayout>
     </RelativeLayout>
 

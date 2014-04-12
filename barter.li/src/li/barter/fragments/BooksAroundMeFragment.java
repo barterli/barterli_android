@@ -42,6 +42,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
 
@@ -53,6 +55,7 @@ import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksAroundMeAdapter;
+import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.ViewSearchBooksWithLocations;
 import li.barter.http.BlRequest;
@@ -67,6 +70,7 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.Logger;
 import li.barter.utils.MapDrawerInteractionHelper;
@@ -79,7 +83,7 @@ import li.barter.widgets.FullWidthDrawerLayout;
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LocationListener, LoaderCallbacks<Cursor>, CancelableCallback,
-                DrawerListener {
+                DrawerListener, OnItemClickListener {
 
     private static final String           TAG            = "BooksAroundMeFragment";
 
@@ -184,6 +188,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
         mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
         mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
+        mBooksAroundMeGridView.setOnItemClickListener(this);
 
         mGooglePlayClientWrapper = new GooglePlayClientWrapper((AbstractBarterLiActivity) getActivity(), this);
 
@@ -485,6 +490,28 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onDrawerStateChanged(final int state) {
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+        if (parent.getId() == R.id.grid_books_around_me) {
+
+            Cursor cursor = (Cursor) mBooksAroundMeAdapter.getItem(position);
+
+            final String bookId = cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.BOOK_ID));
+            final String userId = cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.USER_ID));
+
+            final Bundle showBooksArgs = new Bundle();
+            showBooksArgs.putString(Keys.BOOK_ID, bookId);
+            showBooksArgs.putString(Keys.USER_ID, userId);
+
+            loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                            .instantiate(getActivity(), BookDetailFragment.class
+                                            .getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, null);
+        }
     }
 
 }

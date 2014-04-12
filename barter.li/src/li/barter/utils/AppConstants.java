@@ -213,12 +213,9 @@ public class AppConstants {
         public static final String HAS_FETCHED_INFO   = "has_fetched_info";
         public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
         public static final String LOCATIONS          = "locations";
-
         public static final String BOOK_ID            = "book_id";
-
         public static final String CHAT_ID            = "chat_id";
-
-        // Keys related to ShowWebViewFragment
+        public static final String USER_ID            = "user_id";
         public static final String URL_TO_LOAD        = "url_to_load";
 
     }
@@ -243,6 +240,7 @@ public class AppConstants {
         public static final String COLLABORATE                                     = "collaborate";
         public static final String MY_BOOK_FROM_PROFILE                            = "my_book_from_profile";
         public static final String MY_BOOK_FROM_ADD_OR_EDIT                        = "my_book_from_add_or_edit";
+        public static final String BOOK_FROM_BOOKS_AROUND_ME                       = "book_from_books_around_me";
         public static final String PROFILE                                         = "profile";
         public static final String EDIT_PROFILE                                    = "edit_profile";
         public static final String CHATS                                           = "chats";
@@ -296,8 +294,8 @@ public class AppConstants {
         public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK  = 1;
         public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 2;
         public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 3;
-
-        public static final int LOAD_MY_BOOKS                        = 11;
+        public static final int LOAD_BOOK_DETAIL_CURRENT_USER        = 4;
+        public static final int LOAD_BOOK_DETAIL_OTHER_USER          = 5;
 
         // 101-200 for insert queries
         public static final int INSERT_CHAT_MESSAGE                  = 101;

@@ -56,6 +56,7 @@ import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 
@@ -417,11 +418,12 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             
             final String bookId = response.responseBundle
                             .getString(HttpConstants.ID_BOOK);
-            final Bundle showBooksArgs = new Bundle(2);
+            final Bundle showBooksArgs = new Bundle(3);
             showBooksArgs.putString(Keys.BOOK_ID, bookId);
             showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+            showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
             loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), MyBookDetailFragment.class
+                            .instantiate(getActivity(), BookDetailFragment.class
                                             .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
         }
 
