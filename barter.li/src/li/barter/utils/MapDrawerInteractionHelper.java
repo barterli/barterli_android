@@ -169,7 +169,6 @@ public class MapDrawerInteractionHelper implements DrawerListener,
         mDrawerLayout = drawerLayout;
         mDrawerView = drawerView;
         mMapView = mapView;
-        mRenderScript = RenderScript.create(context);
     }
 
     /**
@@ -190,6 +189,15 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     public void onPause() {
 
         unscheduleMapHideTask();
+        mRenderScript.destroy();
+    }
+    
+    /**
+     * Call in {@link Activity#onResume()} or in {@link Fragment#onResume()}
+     */
+    public void onResume() {
+        mRenderScript = RenderScript.create(mContext);
+        
     }
 
     /**
@@ -526,11 +534,6 @@ public class MapDrawerInteractionHelper implements DrawerListener,
         return result;
     }
     
-    /**
-     * Call this in the onDestroy() methods of your Activity/Fragment
-     */
-    public void cleanup() {
-        mRenderScript.destroy();
-    }
+    
 
 }

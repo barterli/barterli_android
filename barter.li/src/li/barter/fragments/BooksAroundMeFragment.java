@@ -353,6 +353,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onResume() {
         super.onResume();
         mMapView.onResume();
+        mMapDrawerBlurHelper.onResume();
     }
 
     @Override
@@ -361,7 +362,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (mMapView != null) {
             mMapView.onDestroy();
         }
-        mMapDrawerBlurHelper.cleanup();
     }
 
     @Override

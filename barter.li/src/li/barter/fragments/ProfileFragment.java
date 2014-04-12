@@ -70,7 +70,8 @@ import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnim
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ProfileFragment extends AbstractBarterLiFragment implements
-                AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
+                AsyncDbQueryCallback, LoaderCallbacks<Cursor>,
+                OnItemClickListener {
 
     private static final String           TAG          = "ProfileFragment";
 
@@ -162,28 +163,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
         mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
 
-        mBooksAroundMeGridView
-                        .setOnItemClickListener(new OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent,
-                                            View view, int position, long id) {
-                                Cursor cursor = (Cursor) mBooksAroundMeAdapter
-                                                .getItem(position);
-
-                                String mBookId = cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.BOOK_ID));
-
-                                Bundle mShowBooksArgs = new Bundle();
-                                mShowBooksArgs.putString(Keys.BOOK_ID, mBookId);
-
-                                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                                .instantiate(getActivity(), MyBookDetailFragment.class
-                                                                .getName(), mShowBooksArgs), FragmentTags.SHOW_SINGLE_BOOK, true, FragmentTags.BS_PROFILE);
-                            }
-                        });
+        mBooksAroundMeGridView.setOnItemClickListener(this);
 
         setActionBarDrawerToggleEnabled(false);
-        fetchMyBooks();
+        loadMyBooks();
         return view;
     }
 
@@ -295,7 +278,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
      * Fetches books owned by the current user
      */
 
-    private void fetchMyBooks() {
+    private void loadMyBooks() {
         getLoaderManager().restartLoader(Loaders.GET_MY_BOOKS, null, this);
     }
 
@@ -321,6 +304,25 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public void onLoaderReset(final Loader<Cursor> loader) {
         if (loader.getId() == Loaders.GET_MY_BOOKS) {
             mBooksAroundMeAdapter.swapCursor(null);
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+
+        if (parent.getId() == R.id.grid_my_books) {
+            Cursor cursor = (Cursor) mBooksAroundMeAdapter.getItem(position);
+
+            final String bookId = cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.BOOK_ID));
+
+            final Bundle showBooksArgs = new Bundle();
+            showBooksArgs.putString(Keys.BOOK_ID, bookId);
+
+            loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                            .instantiate(getActivity(), MyBookDetailFragment.class
+                                            .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_PROFILE, true, FragmentTags.BS_PROFILE);
         }
     }
 

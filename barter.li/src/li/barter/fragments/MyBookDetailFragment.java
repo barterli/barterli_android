@@ -134,6 +134,16 @@ public class MyBookDetailFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.text_publication_date);
 
     }
+    
+    @Override
+    public void onBackPressed() {
+
+        if (getTag().equals(FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT)) {
+            onUpNavigate();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     protected Object getVolleyTag() {
