@@ -31,11 +31,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.adapters.ChatDetailAdapter;
+import li.barter.chat.ChatAcknowledge;
 import li.barter.chat.ChatService;
 import li.barter.chat.ChatService.ChatServiceBinder;
 import li.barter.data.DatabaseColumns;
@@ -56,22 +59,38 @@ import li.barter.utils.AppConstants.Loaders;
 public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener {
 
-    private static final String TAG            = "ChatFragment";
+    private static final String     TAG            = "ChatFragment";
 
-    private ChatDetailAdapter   mChatDetailAdapter;
+    private ChatDetailAdapter       mChatDetailAdapter;
 
-    private ListView            mChatListView;
+    private ListView                mChatListView;
 
-    private EditText            mSubmitChatEditText;
+    private EditText                mSubmitChatEditText;
 
-    private ChatService         mChatService;
+    private Button                  mSubmitChatButton;
 
-    private boolean             mBoundToChatService;
+    private ChatService             mChatService;
 
-    private final String        mChatSelection = DatabaseColumns.CHAT_ID
-                                                               + SQLConstants.EQUALS_ARG;
+    private boolean                 mBoundToChatService;
 
-    private String              mChatId;
+    private final String            mChatSelection = DatabaseColumns.CHAT_ID
+                                                                   + SQLConstants.EQUALS_ARG;
+
+    /**
+     * The Id of the Chat
+     */
+    private String                  mChatId;
+
+    /**
+     * Id of the user with whom the current user is chatting
+     */
+    private String                  mWithUserId;
+
+    /**
+     * Implementation of {@link ConcreteChatAcknowledge} to receive
+     * notifications when chat requests are complete
+     */
+    private ConcreteChatAcknowledge mAcknowledge;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -83,14 +102,31 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         mChatDetailAdapter = new ChatDetailAdapter(getActivity(), null);
         mChatListView.setAdapter(mChatDetailAdapter);
         mChatId = getArguments().getString(Keys.CHAT_ID);
+        mWithUserId = getArguments().getString(Keys.USER_ID);
 
         mSubmitChatEditText = (EditText) view
                         .findViewById(R.id.edit_text_chat_message);
 
-        view.findViewById(R.id.button_send).setOnClickListener(this);
+        mSubmitChatButton = (Button) view.findViewById(R.id.button_send);
+        mSubmitChatButton.setOnClickListener(this);
+
         setActionBarDrawerToggleEnabled(false);
+
         getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
+        mAcknowledge = new ConcreteChatAcknowledge();
         return view;
+    }
+    
+    @Override
+    public void onPause() {
+        mAcknowledge.mChatDetailsFragment = null;
+        super.onPause();
+    }
+    
+    @Override
+    public void onResume() {
+        mAcknowledge.mChatDetailsFragment = this;
+        super.onResume();
     }
 
     @Override
@@ -176,12 +212,71 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
             final String message = mSubmitChatEditText.getText().toString();
 
             if (!TextUtils.isEmpty(message)) {
-                if (mBoundToChatService) {
-
-                    //TODO Finish chat functionality
-                    mChatService.sendMessageToUser("5e1811f3529f0151", message);
+                if (mBoundToChatService && mChatService.isConnectedToChat()) {
+                    setActionEnabled(false);
+                    mChatService.sendMessageToUser(mWithUserId, message, mAcknowledge);
+                } else {
+                    showCrouton(R.string.error_not_connected_to_chat_service, AlertStyle.ERROR);
                 }
             }
         }
+    }
+
+    /**
+     * While a chat message is being sent, disable sending of any more chats
+     * until the current one either fails or succeeds
+     * 
+     * @param enabled <code>true</code> to enable the actions,
+     *            <code>false</code> to disable
+     */
+    private void setActionEnabled(boolean enabled) {
+        mSubmitChatEditText.setEnabled(enabled);
+        mSubmitChatButton.setEnabled(enabled);
+    }
+
+    /**
+     * Concrete implementation of {@link ChatAcknowledge} for receiving
+     * callbacks when a sent chat message completes. The reason we are making a
+     * concrete implementation is because the fragment can go to background or
+     * get destroyed before the request completes(which is done in
+     * {@link ChatService}). This class will act as a check to make sure the
+     * fragment is still visible before updating the UI
+     * 
+     * @author Vinay S Shenoy
+     */
+    private static class ConcreteChatAcknowledge implements ChatAcknowledge {
+
+        private ChatDetailsFragment mChatDetailsFragment;
+
+        @Override
+        public void onChatRequestComplete(boolean success) {
+
+            if (mChatDetailsFragment != null
+                            && mChatDetailsFragment.isVisible()) {
+
+                mChatDetailsFragment.onChatComplete(success);
+            }
+        }
+
+    }
+
+    /**
+     * Whether the sent chat message was sent successfully or not
+     * 
+     * @param success <code>true</code> if the message was sent sucessfully,
+     *            <code>false</code> otherwise
+     */
+    public void onChatComplete(boolean success) {
+
+        if (success) {
+            //Clear the submit chat text since it was sent successfully
+            mSubmitChatEditText.setText(null);
+        } else {
+            //Show error message
+            showCrouton(R.string.error_unable_to_send_chat, AlertStyle.ERROR);
+        }
+
+        setActionEnabled(true);
+
     }
 }

@@ -71,6 +71,8 @@
     <string name="error_password_minimum_length">Password must be at least %d characters long.</string>
     <string name="error_unable_to_login">Unable to login.</string>
     <string name="error_unable_to_set_preferred_location">Unable to set preferred location for user.</string>
+    <string name="error_not_connected_to_chat_service">Not connected to chat service.</string>
+    <string name="error_unable_to_send_chat">Not able to send chat message</string>
 
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>

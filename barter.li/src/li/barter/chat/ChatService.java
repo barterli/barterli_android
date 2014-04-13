@@ -216,9 +216,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * 
      * @param toUserId The user Id to send the message to
      * @param message The message to send
-     * @return Whether the message was delivered to the chat server or not
+     * @param acknowledge An implementation of {@link ChatAcknowledge} to be
+     *            notified when the chat request completes
      */
-    public void sendMessageToUser(String toUserId, String message) {
+    public void sendMessageToUser(String toUserId, String message,
+                    ChatAcknowledge acknowledge) {
 
         if (!isLoggedIn()) {
             return;
@@ -229,8 +231,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                             .getId());
             requestObject.put(HttpConstants.RECEIVER_ID, toUserId);
             requestObject.put(HttpConstants.MESSAGE, message);
-            final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.AMPQ, requestObject.toString(), mVolleyCallbacks);
+            final ChatRequest request = new ChatRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.AMPQ, requestObject.toString(), mVolleyCallbacks, acknowledge);
             request.setRequestId(RequestId.AMPQ);
             request.setTag(TAG);
             mVolleyCallbacks.queue(request);
@@ -475,7 +477,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param senderId The sender of the chat
      * @return The chat Id
      */
-    private String generateChatId(String receiverId, String senderId) {
+    public static String generateChatId(String receiverId, String senderId) {
 
         /*
          * Method of generating the chat ID is simple. First we compare the two
@@ -521,6 +523,18 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
 
+        if (requestId == RequestId.AMPQ) {
+
+            if (request instanceof ChatRequest) {
+
+                final ChatAcknowledge acknowledge = ((ChatRequest) request)
+                                .getAcknowledge();
+
+                if (acknowledge != null) {
+                    acknowledge.onChatRequestComplete(true);
+                }
+            }
+        }
     }
 
     @Override
@@ -528,17 +542,52 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
 
+        if (requestId == RequestId.AMPQ) {
+
+            if (request instanceof ChatRequest) {
+
+                final ChatAcknowledge acknowledge = ((ChatRequest) request)
+                                .getAcknowledge();
+
+                if (acknowledge != null) {
+                    acknowledge.onChatRequestComplete(false);
+                }
+            }
+        }
     }
 
     @Override
     public void onAuthError(int requestId, IBlRequestContract request) {
-        // TODO Auto-generated method stub
 
+        if (requestId == RequestId.AMPQ) {
+
+            if (request instanceof ChatRequest) {
+
+                final ChatAcknowledge acknowledge = ((ChatRequest) request)
+                                .getAcknowledge();
+
+                if (acknowledge != null) {
+                    acknowledge.onChatRequestComplete(false);
+                }
+            }
+        }
     }
 
     @Override
     public void onOtherError(int requestId, IBlRequestContract request,
                     int errorCode) {
 
+        if (requestId == RequestId.AMPQ) {
+
+            if (request instanceof ChatRequest) {
+
+                final ChatAcknowledge acknowledge = ((ChatRequest) request)
+                                .getAcknowledge();
+
+                if (acknowledge != null) {
+                    acknowledge.onChatRequestComplete(false);
+                }
+            }
+        }
     }
 }

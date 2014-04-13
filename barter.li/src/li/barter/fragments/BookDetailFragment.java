@@ -33,6 +33,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import li.barter.R;
+import li.barter.chat.ChatService;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -318,7 +319,20 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.button_chat) {
-            //TODO Launch Chat Fragment for chatting with user
+
+            if (isLoggedIn()) {
+                final Bundle args = new Bundle(2);
+                args.putString(Keys.CHAT_ID, ChatService
+                                .generateChatId(mUserId, UserInfo.INSTANCE
+                                                .getId()));
+                args.putString(Keys.USER_ID, mUserId);
+
+                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), ChatDetailsFragment.class
+                                                .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
+            } else {
+                // Show Login Fragment
+            }
         }
     }
 

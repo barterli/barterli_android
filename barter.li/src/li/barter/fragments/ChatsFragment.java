@@ -120,10 +120,13 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
 
         if (parent.getId() == R.id.list_chats) {
 
-            final String chatId = (String) view.getTag(R.string.tag_chat_id);
+            final Cursor cursor = (Cursor) mChatsAdapter.getItem(position);
 
-            final Bundle args = new Bundle(1);
-            args.putString(Keys.CHAT_ID, chatId);
+            final Bundle args = new Bundle(2);
+            args.putString(Keys.CHAT_ID, cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.CHAT_ID)));
+            args.putString(Keys.USER_ID, cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.USER_ID)));
 
             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                             .instantiate(getActivity(), ChatDetailsFragment.class
