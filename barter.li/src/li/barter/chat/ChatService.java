@@ -23,8 +23,8 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
@@ -37,6 +37,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
 import java.io.IOException;
@@ -47,6 +48,7 @@ import java.util.Locale;
 
 import li.barter.BarterLiApplication;
 import li.barter.R;
+import li.barter.activities.HomeActivity;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
@@ -68,6 +70,7 @@ import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.ChatType;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
@@ -155,17 +158,17 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mNotificationBuilder = new Builder(this);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mUnreadMessageCount = 0;
-        
-        //testNotifications();
+
+        testNotifications();
     }
-    
+
     private void testNotifications() {
-        showChatReceivedNotification("Some crap1", "Vinay S Shenoy", "I WANTZ THAT BOOKZ!!!");
+        showChatReceivedNotification("Some crap1", "jsdjksncjdn", "Vinay S Shenoy", "I WANTZ THAT BOOKZ!!!");
         new Handler().postDelayed(new Runnable() {
-            
+
             @Override
             public void run() {
-                showChatReceivedNotification("Some crap2", "Some random idiot", "FUUUUUUUUUUU....");
+                showChatReceivedNotification("Some crap2", "janckjdnc", "Some random idiot", "FUUUUUUUUUUU....");
             }
         }, 5000);
     }
@@ -333,7 +336,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 parseAndStoreChatUserInfo(receiverId, receiverObject);
             } else {
                 final String senderName = parseAndStoreChatUserInfo(senderId, senderObject);
-                showChatReceivedNotification(chatId, senderName, messageText);
+                showChatReceivedNotification(chatId, senderId, senderName, messageText);
             }
 
         } catch (final UnsupportedEncodingException e) {
@@ -634,29 +637,39 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * 
      * @param chatId The ID of the chat. This is so that the right chat detail
      *            fragment can be launched when the notification is tapped
+     * @param withUserId The id of the user who sent the notification
      * @param senderName The name of the sender
      * @param messageText The message body
      */
-    private void showChatReceivedNotification(String chatId, String senderName,
-                    String messageText) {
+    private void showChatReceivedNotification(String chatId, String withUserId,
+                    String senderName, String messageText) {
 
         mUnreadMessageCount++;
-        Notification notification = null;
+        final Intent resultIntent = new Intent(this, HomeActivity.class);
         if (mUnreadMessageCount == 1) {
-            notification = mNotificationBuilder
-                            .setSmallIcon(R.drawable.ic_launcher)
+            mNotificationBuilder.setSmallIcon(R.drawable.ic_launcher)
                             .setContentTitle(senderName)
-                            .setContentText(messageText).setAutoCancel(true)
-                            .build();
+                            .setContentText(messageText).setAutoCancel(true);
+            resultIntent.setAction(AppConstants.ACTION_SHOW_CHAT_DETAIL);
+            resultIntent.putExtra(Keys.CHAT_ID, chatId);
+            resultIntent.putExtra(Keys.USER_ID, withUserId);
 
         } else {
-            notification = mNotificationBuilder
+            mNotificationBuilder
                             .setSmallIcon(R.drawable.ic_launcher)
                             .setContentTitle(getString(R.string.new_messages, mUnreadMessageCount))
-                            .setContentText(messageText).setAutoCancel(true)
-                            .build();
+                            .setContentText(messageText).setAutoCancel(true);
+            resultIntent.setAction(AppConstants.ACTION_SHOW_ALL_CHATS);
         }
-        mNotificationManager.notify(MESSAGE_NOTIFICATION_ID, notification);
+
+        final TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
+        taskStackBuilder.addNextIntent(resultIntent);
+        final PendingIntent pendingIntent = taskStackBuilder
+                        .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mNotificationBuilder.setContentIntent(pendingIntent);
+        mNotificationManager
+                        .notify(MESSAGE_NOTIFICATION_ID, mNotificationBuilder
+                                        .build());
 
     }
 

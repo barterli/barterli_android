@@ -386,7 +386,6 @@ public class HttpResponseParser {
             
             values.put(DatabaseColumns.BARTER_TYPE, TextUtils.join(AppConstants.BARTER_TYPE_SEPARATOR, tags));
         }
-        Logger.v(TAG, "Book Response: %s\nValues: %s", bookObject.toString(2), values.toString());
         return bookId;
     }
 
