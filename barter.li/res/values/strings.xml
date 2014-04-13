@@ -41,6 +41,7 @@
     <string name="send">Send</string>
     <string name="app_id">458716080895923</string>
     <string name="enter_message">Enter your message</string>
+    <string name="new_messages">%d new messages!</string>
 
     <!-- Strings for AddBookActivity -->
     <string name="search_hint">Search by Title|Author|ISBN</string>
