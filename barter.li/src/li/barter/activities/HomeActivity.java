@@ -94,7 +94,7 @@ public class HomeActivity extends AbstractBarterLiActivity {
         args.putString(Keys.CHAT_ID, chatId);
         args.putString(Keys.USER_ID, userId);
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                        .instantiate(this, ChatDetailsFragment.class.getName(), null), FragmentTags.BOOKS_AROUND_ME, false, null);
+                        .instantiate(this, ChatDetailsFragment.class.getName(), args), FragmentTags.BOOKS_AROUND_ME, false, null);
 
     }
 
