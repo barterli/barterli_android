@@ -245,7 +245,8 @@ public class AppConstants {
         public static final String EDIT_PROFILE                                    = "edit_profile";
         public static final String CHATS                                           = "chats";
         public static final String CHAT_DETAILS                                    = "chat_details";
-
+        public static final String TRIBUTE                                         = "Tribute";
+        public static final String TEAM                                            = "Team";
         /* Tags for fragment backstack popping and providing up navigation */
 
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";

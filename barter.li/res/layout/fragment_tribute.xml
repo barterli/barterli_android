@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        >
+        <ImageView
+            android:id="@+id/tribute_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            />
+    </RelativeLayout>
+    <TextView 
+      android:id="@+id/tribute_text"
+      android:layout_width="match_parent"
+      android:layout_height="100dp"
+      android:gravity="center"
+      android:background="#FFFFFF"
+      />
+</LinearLayout>

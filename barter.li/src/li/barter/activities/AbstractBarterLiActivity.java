@@ -16,12 +16,33 @@
 
 package li.barter.activities;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-
+import li.barter.R;
+import li.barter.adapters.HomeNavDrawerAdapter;
+import li.barter.fragments.AbstractBarterLiFragment;
+import li.barter.fragments.ChatsFragment;
+import li.barter.fragments.CollaborateFragment;
+import li.barter.fragments.FragmentTransition;
+import li.barter.fragments.LoginFragment;
+import li.barter.fragments.OssLicenseFragment;
+import li.barter.fragments.ProfileFragment;
+import li.barter.fragments.ReportBugFragment;
+import li.barter.fragments.ShowWebViewFragment;
+import li.barter.fragments.SuggestFeatureFragment;
+import li.barter.fragments.TeamFragment;
+import li.barter.fragments.TributeFragment;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.IVolleyHelper;
+import li.barter.http.ResponseInfo;
+import li.barter.http.VolleyCallbacks;
+import li.barter.http.VolleyCallbacks.IHttpCallbacks;
+import li.barter.utils.AppConstants.DeviceInfo;
+import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.UserInfo;
+import li.barter.widgets.TypefaceCache;
+import li.barter.widgets.TypefacedSpan;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -40,7 +61,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,34 +72,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 
-import li.barter.R;
-import li.barter.adapters.HomeNavDrawerAdapter;
-import li.barter.fragments.AbstractBarterLiFragment;
-import li.barter.fragments.ChatsFragment;
-import li.barter.fragments.CollaborateFragment;
-import li.barter.fragments.FragmentTransition;
-import li.barter.fragments.LoginFragment;
-import li.barter.fragments.ProfileFragment;
-import li.barter.fragments.OssLicenseFragment;
-import li.barter.fragments.ReportBugFragment;
-import li.barter.fragments.ShowWebViewFragment;
-import li.barter.fragments.SuggestFeatureFragment;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.IVolleyHelper;
-import li.barter.http.ResponseInfo;
-import li.barter.http.VolleyCallbacks;
-import li.barter.http.VolleyCallbacks.IHttpCallbacks;
-import li.barter.utils.Logger;
-import li.barter.utils.AppConstants.DeviceInfo;
-import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.AppConstants.UserInfo;
-import li.barter.widgets.TypefaceCache;
-import li.barter.widgets.TypefacedSpan;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 /**
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
@@ -347,14 +344,42 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Tribute
             case 7: {
-                Bundle showWebViewArgs = new Bundle();
-                showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
-                                .getString(R.string.url_google));
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(this, ShowWebViewFragment.class
-                                                .getName(), showWebViewArgs), FragmentTags.SHOW_WEBVIEW, true, null);
-                break;
-            }
+
+			        if (masterFragment != null
+			                         && masterFragment instanceof TributeFragment) {
+			             return null;
+			         }
+			
+			         runnable = new Runnable() {
+			             @Override
+			             public void run() {
+			                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+			                                 .instantiate(AbstractBarterLiActivity.this, TributeFragment.class
+			                                                 .getName(), null), FragmentTags.TRIBUTE, true, null);
+			             }
+			         };
+			            	
+			            	break;
+			            }
+            //Tribute
+            case 8: {
+
+			        if (masterFragment != null
+			                         && masterFragment instanceof TeamFragment) {
+			             return null;
+			         }
+			
+			         runnable = new Runnable() {
+			             @Override
+			             public void run() {
+			                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+			                                 .instantiate(AbstractBarterLiActivity.this, TeamFragment.class
+			                                                 .getName(), null), FragmentTags.TEAM, true, null);
+			             }
+			         };
+			            	
+			            	break;
+			            }
 
             default: {
                 runnable = null;

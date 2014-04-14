@@ -102,6 +102,7 @@
         <item>Open Source</item>
         <item>About us</item>
         <item>Tribute</item>
+        <item>Team</item>
     </string-array>
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile, update your info, view your saved books.</item>
@@ -112,6 +113,7 @@
         <item>No open source licences were violated in the making of this app.</item>
         <item>What is barter.li? Who\'s behind it?</item>
         <item>The inspiration for barter.li.</item>
+         <item>The team behind barter.li.</item>
     </string-array>
     <string-array name="months">
         <item>January</item>
