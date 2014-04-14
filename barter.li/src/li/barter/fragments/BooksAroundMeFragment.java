@@ -31,6 +31,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -142,6 +143,19 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private MapDrawerInteractionHelper    mMapDrawerBlurHelper;
 
+    /**
+     * Holds the value of the previous search radius to prevent querying for
+     * books from server again
+     */
+    private int                           mPrevSearchRadius;
+
+    /**
+     * Used to remember the last location so that we can avoid fetching the
+     * books again if the last fetched locations, and current fetched locations
+     * are close by
+     */
+    private Location                      mLastFetchedLocation;
+
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
@@ -194,19 +208,27 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                             .getBoolean(Keys.DRAWER_OPENED_ONCE);
             mMapAlreadyMovedOnce = savedInstanceState
                             .getBoolean(Keys.MAP_MOVED_ONCE);
+            mLastFetchedLocation = savedInstanceState
+                            .getParcelable(Keys.LAST_FETCHED_LOCATION);
+            mPrevSearchRadius = savedInstanceState
+                            .getInt(Keys.LAST_FETCHED_SEARCH_RADIUS);
         }
 
         loadBookSearchResults();
         setActionBarDrawerToggleEnabled(true);
         return contentView;
     }
-    
+
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.DRAWER_OPENED_ONCE, mDrawerOpenedAutomatically);
         outState.putBoolean(Keys.MAP_MOVED_ONCE, mMapAlreadyMovedOnce);
-        mMapView.onSaveInstanceState(outState);
+        outState.putParcelable(Keys.LAST_FETCHED_LOCATION, mLastFetchedLocation);
+        outState.putInt(Keys.LAST_FETCHED_SEARCH_RADIUS, mPrevSearchRadius);
+        if (mMapView != null) {
+            mMapView.onSaveInstanceState(outState);
+        }
     }
 
     @Override
@@ -232,23 +254,40 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void fetchBooksAroundMe(final Location center, final int radius) {
 
-        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.SEARCH, null, mVolleyCallbacks);
-        request.setRequestId(RequestId.SEARCH_BOOKS);
-
         if (center != null) {
+
+            if (mLastFetchedLocation != null) {
+
+                /*
+                 * If the current centers distance is at a point close to the
+                 * current one, don't fetch since the books were fetched with
+                 * the center as the distance
+                 */
+                if ((Utils.distanceBetween(center, mLastFetchedLocation) / 1000) < (mPrevSearchRadius / 2)) {
+                    Logger.v(TAG, "Points are really close. Don't fetch");
+                    return;
+                }
+            }
+            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.SEARCH, null, mVolleyCallbacks);
+            request.setRequestId(RequestId.SEARCH_BOOKS);
+
             final Map<String, String> params = new HashMap<String, String>(2);
             params.put(HttpConstants.LATITUDE, String.valueOf(center
                             .getLatitude()));
             params.put(HttpConstants.LONGITUDE, String.valueOf(center
                             .getLongitude()));
 
+            request.addExtra(Keys.LOCATION, center);
+            request.addExtra(Keys.SEARCH_RADIUS, radius);
+
             if (radius >= 1) {
                 params.put(HttpConstants.RADIUS, String.valueOf(radius));
             }
             request.setParams(params);
+            addRequestToQueue(request, true, 0);
         }
-        addRequestToQueue(request, true, 0);
+
     }
 
     @Override
@@ -301,6 +340,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     public void updateLocation(final Location location) {
 
+        if (location.getLatitude() == 0.0 && location.getLongitude() == 0.0) {
+            return;
+        }
         if (!mMapAlreadyMovedOnce) {
 
             /*
@@ -335,7 +377,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mMapView.onResume();
         mMapDrawerBlurHelper.onResume();
         final Location latestLocation = DeviceInfo.INSTANCE.getLatestLocation();
-        if(latestLocation.getLatitude() != 0.0 && latestLocation.getLongitude() != 0.0) {
+        if (latestLocation.getLatitude() != 0.0
+                        && latestLocation.getLongitude() != 0.0) {
             updateLocation(latestLocation);
         }
     }
@@ -369,7 +412,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                             .getShortestRadiusFromCenter(mMapView) / 1000);
             fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), searchRadius);
         }
-        mMapDrawerBlurHelper.onMapZoomedIn();
+
     }
 
     /**
@@ -390,6 +433,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                     ResponseInfo response) {
 
         if (requestId == RequestId.SEARCH_BOOKS) {
+
+            mLastFetchedLocation = (Location) request.getExtras()
+                            .get(Keys.LOCATION);
+            mPrevSearchRadius = (Integer) request.getExtras()
+                            .get(Keys.SEARCH_RADIUS);
+
             /*
              * Do nothing because the loader will take care of reloading the
              * data

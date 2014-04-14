@@ -18,6 +18,8 @@ package li.barter.http;
 
 import com.android.volley.Request;
 
+import java.util.Map;
+
 /**
  * @author Vinay S Shenoy Interface that represents the common methods all
  *         custom implementations of {@link Request}s in the app must honour
@@ -33,5 +35,21 @@ public interface IBlRequestContract {
      * @return The request Id
      */
     public int getRequestId();
+    
+    /**
+     * Gets the extras associated with this request
+     * 
+     * @return The extras returned with this request. Will not be
+     *         <code>null</code>
+     */
+    public Map<String, Object> getExtras();
+
+    /**
+     * Add an extra to the request
+     * 
+     * @param key The key
+     * @param value The value to map to the key
+     */
+    public void addExtra(String key, Object value);
 
 }
