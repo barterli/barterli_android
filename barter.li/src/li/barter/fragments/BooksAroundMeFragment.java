@@ -261,7 +261,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 /*
                  * If the current centers distance is at a point close to the
                  * current one, don't fetch since the books were fetched with
-                 * the center as the distance
+                 * the center as the distance TODO Investigate the case where
+                 * the user just zooms the map in/out without moving it around
+                 * because the center will not change, only the search radius,
+                 * thus preventing the books from getting fetched
                  */
                 if ((Utils.distanceBetween(center, mLastFetchedLocation) / 1000) < (mPrevSearchRadius / 2)) {
                     Logger.v(TAG, "Points are really close. Don't fetch");
