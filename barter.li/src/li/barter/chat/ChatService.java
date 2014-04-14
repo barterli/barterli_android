@@ -159,7 +159,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mUnreadMessageCount = 0;
 
-        testNotifications();
+        //testNotifications();
     }
 
     private void testNotifications() {
