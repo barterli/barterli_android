@@ -25,6 +25,7 @@ import org.json.JSONObject;
 
 import android.app.Service;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -40,6 +41,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.Locale;
 
+import li.barter.BarterLiApplication;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
@@ -56,6 +58,7 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.JsonUtils;
+import li.barter.http.NetworkChangeReceiver;
 import li.barter.http.ResponseInfo;
 import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
@@ -71,11 +74,12 @@ import li.barter.utils.Utils;
  * Bound service to send and receive chat messages. The service will receive
  * chat messages and update them in the chats database. <br/>
  * <br/>
- * This service needs to be triggered in three cases -
+ * This service needs to be triggered in two cases -
  * <ol>
- * <li>On device boot</li>
- * <li>On application launch</li>
- * <li>On network connectivity resumed(if it was lost)</li>
+ * <li>On application launch - This is done in
+ * {@link BarterLiApplication#onCreate()}</li>
+ * <li>On network connectivity resumed(if it was lost) - This is done in
+ * {@link NetworkChangeReceiver#onReceive(Context, Intent)}</li>
  * </ol>
  * <br/>
  * This will take care of keeping it tied to the chat server and listening for
@@ -212,9 +216,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * 
      * @param toUserId The user Id to send the message to
      * @param message The message to send
-     * @return Whether the message was delivered to the chat server or not
+     * @param acknowledge An implementation of {@link ChatAcknowledge} to be
+     *            notified when the chat request completes
      */
-    public void sendMessageToUser(String toUserId, String message) {
+    public void sendMessageToUser(String toUserId, String message,
+                    ChatAcknowledge acknowledge) {
 
         if (!isLoggedIn()) {
             return;
@@ -225,8 +231,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                             .getId());
             requestObject.put(HttpConstants.RECEIVER_ID, toUserId);
             requestObject.put(HttpConstants.MESSAGE, message);
-            final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.AMPQ, requestObject.toString(), mVolleyCallbacks);
+            final ChatRequest request = new ChatRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.AMPQ, requestObject.toString(), mVolleyCallbacks, acknowledge);
             request.setRequestId(RequestId.AMPQ);
             request.setTag(TAG);
             mVolleyCallbacks.queue(request);
@@ -471,7 +477,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param senderId The sender of the chat
      * @return The chat Id
      */
-    private String generateChatId(String receiverId, String senderId) {
+    public static String generateChatId(String receiverId, String senderId) {
 
         /*
          * Method of generating the chat ID is simple. First we compare the two
@@ -517,6 +523,18 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
 
+        if (requestId == RequestId.AMPQ) {
+
+            if (request instanceof ChatRequest) {
+
+                final ChatAcknowledge acknowledge = ((ChatRequest) request)
+                                .getAcknowledge();
+
+                if (acknowledge != null) {
+                    acknowledge.onChatRequestComplete(true);
+                }
+            }
+        }
     }
 
     @Override
@@ -524,17 +542,52 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     int errorCode, String errorMessage,
                     Bundle errorResponseBundle) {
 
+        if (requestId == RequestId.AMPQ) {
+
+            if (request instanceof ChatRequest) {
+
+                final ChatAcknowledge acknowledge = ((ChatRequest) request)
+                                .getAcknowledge();
+
+                if (acknowledge != null) {
+                    acknowledge.onChatRequestComplete(false);
+                }
+            }
+        }
     }
 
     @Override
     public void onAuthError(int requestId, IBlRequestContract request) {
-        // TODO Auto-generated method stub
 
+        if (requestId == RequestId.AMPQ) {
+
+            if (request instanceof ChatRequest) {
+
+                final ChatAcknowledge acknowledge = ((ChatRequest) request)
+                                .getAcknowledge();
+
+                if (acknowledge != null) {
+                    acknowledge.onChatRequestComplete(false);
+                }
+            }
+        }
     }
 
     @Override
     public void onOtherError(int requestId, IBlRequestContract request,
                     int errorCode) {
 
+        if (requestId == RequestId.AMPQ) {
+
+            if (request instanceof ChatRequest) {
+
+                final ChatAcknowledge acknowledge = ((ChatRequest) request)
+                                .getAcknowledge();
+
+                if (acknowledge != null) {
+                    acknowledge.onChatRequestComplete(false);
+                }
+            }
+        }
     }
 }

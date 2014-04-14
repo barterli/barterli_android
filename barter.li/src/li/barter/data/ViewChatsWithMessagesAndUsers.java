@@ -46,6 +46,7 @@ public class ViewChatsWithMessagesAndUsers {
                         .join(",", new String[] {
                                 String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_CHATS, BaseColumns._ID),
                                 String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_CHATS, DatabaseColumns.CHAT_ID),
+                                String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_CHATS, DatabaseColumns.USER_ID),
                                 DatabaseColumns.CHAT_TYPE,
                                 DatabaseColumns.PROFILE_PICTURE,
                                 DatabaseColumns.FIRST_NAME,

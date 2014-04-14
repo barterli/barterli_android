@@ -36,6 +36,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
+import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.RenderScript;
+import android.support.v8.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
 
 /**
@@ -48,6 +51,7 @@ public class MapDrawerInteractionHelper implements DrawerListener,
                 SnapshotReadyCallback, OnMapLoadedCallback {
 
     private static final String TAG                 = "MapDrawBlurHelper";
+    private static final Object LOCK                = new Object();
 
     /**
      * A reference to the context
@@ -145,14 +149,9 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     private MapView      mMapView;
 
     /**
-     * Construct a {@link MapDrawerInteractionHelper}. Use the setMethods() and
-     * call init to begin tracking the Map and Drawer events
-     * 
-     * @param context A {@link Context} reference
+     * Renderscript reference for blurring the bitmap
      */
-    public MapDrawerInteractionHelper(final Context context) {
-        mContext = context;
-    }
+    private RenderScript mRenderScript;
 
     /**
      * Construct a {@link MapDrawerInteractionHelper} with the drawer layout,
@@ -190,6 +189,15 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     public void onPause() {
 
         unscheduleMapHideTask();
+        mRenderScript.destroy();
+    }
+    
+    /**
+     * Call in {@link Activity#onResume()} or in {@link Fragment#onResume()}
+     */
+    public void onResume() {
+        mRenderScript = RenderScript.create(mContext);
+        
     }
 
     /**
@@ -465,8 +473,7 @@ public class MapDrawerInteractionHelper implements DrawerListener,
     public void onSnapshotReady(Bitmap snapshot) {
 
         /* Create a blurred version of the Map snapshot */
-        final BitmapDrawable backgroundDrawable = new BitmapDrawable(mContext.getResources(), Utils
-                        .blurImage(mContext, snapshot, MAP_BLUR));
+        final BitmapDrawable backgroundDrawable = new BitmapDrawable(mContext.getResources(), blurImage(mContext, snapshot, MAP_BLUR));
 
         mTransitionDrawableLayers[0] = mTransparentColorDrawable;
         mTransitionDrawableLayers[1] = backgroundDrawable;
@@ -497,5 +504,36 @@ public class MapDrawerInteractionHelper implements DrawerListener,
         mMapSnapshotRequested = false;
 
     }
+
+    /**
+     * Generate a blurred Bitmap from an input Bitmap
+     * 
+     * @param context
+     * @param input The bitmap to be blurred
+     * @param blurRadius The blur radius, between 1 & 25, inclusive
+     * @return The blurred Bitmap
+     */
+    private Bitmap blurImage(final Context context, final Bitmap input,
+                    final int blurRadius) {
+        final Allocation alloc = Allocation.createFromBitmap(mRenderScript, input);
+
+        final ScriptIntrinsicBlur blur = ScriptIntrinsicBlur
+                        .create(mRenderScript, alloc.getElement());
+        blur.setRadius(blurRadius);
+        blur.setInput(alloc);
+
+        final Bitmap result = Bitmap.createBitmap(input.getWidth(), input
+                        .getHeight(), input.getConfig());
+        final Allocation outAlloc = Allocation
+                        .createFromBitmap(mRenderScript, result);
+        blur.forEach(outAlloc);
+        outAlloc.copyTo(result);
+
+        alloc.destroy();
+        outAlloc.destroy();
+        return result;
+    }
+    
+    
 
 }

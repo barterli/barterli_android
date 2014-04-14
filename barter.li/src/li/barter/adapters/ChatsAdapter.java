@@ -48,9 +48,6 @@ public class ChatsAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        view.setTag(R.string.tag_chat_id, cursor.getString(cursor
-                        .getColumnIndex(DatabaseColumns.CHAT_ID)));
-
         ((TextView) view.getTag(R.id.text_user_name))
                         .setText(String.format(mUserNameFormat, cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.FIRST_NAME)), cursor

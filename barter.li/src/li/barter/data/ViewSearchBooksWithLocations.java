@@ -46,6 +46,7 @@ public class ViewSearchBooksWithLocations {
                         .join(",", new String[] {
                                 String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_SEARCH_BOOKS, BaseColumns._ID),
                                 DatabaseColumns.BOOK_ID,
+                                DatabaseColumns.USER_ID,
                                 DatabaseColumns.TITLE,
                                 DatabaseColumns.IMAGE_URL,
                                 DatabaseColumns.DESCRIPTION,

@@ -245,7 +245,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
                     loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                     .instantiate(getActivity(), ProfileFragment.class
-                                                    .getName(), null), FragmentTags.PROFILE, false, FragmentTags.BOOKS_AROUND_ME);
+                                                    .getName(), null), FragmentTags.PROFILE, true, FragmentTags.BOOKS_AROUND_ME);
 
                 } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
                     onUpNavigate();

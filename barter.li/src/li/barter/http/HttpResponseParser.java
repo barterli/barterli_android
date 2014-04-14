@@ -16,6 +16,14 @@
 
 package li.barter.http;
 
+
+import org.apache.http.HttpStatus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import android.content.ContentValues;
+import android.os.Bundle;
+import android.text.TextUtils;
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -25,6 +33,7 @@ import li.barter.data.TableSearchBooks;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.models.Team;
 import li.barter.parcelables.Hangout;
+import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
 
 import org.apache.http.HttpStatus;
@@ -213,6 +222,26 @@ public class HttpResponseParser {
                         .readString(userObject, HttpConstants.FIRST_NAME, false, false));
         responseBundle.putString(HttpConstants.LAST_NAME, JsonUtils
                         .readString(userObject, HttpConstants.LAST_NAME, false, false));
+        
+        final JSONArray booksArray = JsonUtils.readJSONArray(userObject, HttpConstants.BOOKS, true, true);
+        
+        JSONObject bookObject = null;
+        final ContentValues values = new ContentValues();
+        final String selection = DatabaseColumns.BOOK_ID
+                        + SQLConstants.EQUALS_ARG;
+        final String[] args = new String[1];
+        for (int i = 0; i < booksArray.length(); i++) {
+            bookObject = JsonUtils
+                            .readJSONObject(booksArray, i, true, true);
+            args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
+
+            //First try to update the table if a book already exists
+            if (DBInterface.update(TableMyBooks.NAME, values, selection, args, true) == 0) {
+
+                // Unable to update, insert the item
+                DBInterface.insert(TableMyBooks.NAME, null, values, true);
+            }
+        }
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(userObject, HttpConstants.LOCATION, false, false);
@@ -417,8 +446,6 @@ public class HttpResponseParser {
                         .readString(bookObject, HttpConstants.ISBN_13, false, false));
         values.put(DatabaseColumns.AUTHOR, JsonUtils
                         .readString(bookObject, HttpConstants.AUTHOR, false, false));
-        values.put(DatabaseColumns.BARTER_TYPE, JsonUtils
-                        .readString(bookObject, HttpConstants.TAGS, false, false));
         values.put(DatabaseColumns.USER_ID, JsonUtils
                         .readString(bookObject, HttpConstants.ID_USER, false, false));
         values.put(DatabaseColumns.TITLE, JsonUtils
@@ -438,6 +465,19 @@ public class HttpResponseParser {
         if (locationObject != null) {
             values.put(DatabaseColumns.LOCATION_ID, parseAndStoreLocation(locationObject));
         }
+        
+        final JSONArray tagsArray = JsonUtils.readJSONArray(bookObject, HttpConstants.TAGS, true, true);
+        
+        if(tagsArray.length() > 0) {
+            final String[] tags = new String[tagsArray.length()];
+            
+            for(int i = 0; i < tagsArray.length(); i++) {
+                tags[i] = JsonUtils.readString(tagsArray, i, true, true);
+            }
+            
+            values.put(DatabaseColumns.BARTER_TYPE, TextUtils.join(AppConstants.BARTER_TYPE_SEPARATOR, tags));
+        }
+        Logger.v(TAG, "Book Response: %s\nValues: %s", bookObject.toString(2), values.toString());
         return bookId;
     }
 

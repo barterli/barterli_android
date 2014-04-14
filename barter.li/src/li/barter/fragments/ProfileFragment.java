@@ -26,17 +26,15 @@ import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.TableLocations;
 import li.barter.data.ViewMyBooksWithLocations;
-import li.barter.data.ViewSearchBooksWithLocations;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
-import li.barter.http.BlRequest;
-import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 
@@ -55,12 +53,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.android.volley.Request.Method;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
@@ -70,7 +71,8 @@ import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnim
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ProfileFragment extends AbstractBarterLiFragment implements
-                AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
+                AsyncDbQueryCallback, LoaderCallbacks<Cursor>,
+                OnItemClickListener {
 
     private static final String           TAG          = "ProfileFragment";
 
@@ -162,8 +164,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
         mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
 
+        mBooksAroundMeGridView.setOnItemClickListener(this);
+
         setActionBarDrawerToggleEnabled(false);
-        fetchMyBooks();
+        loadMyBooks();
         return view;
     }
 
@@ -241,7 +245,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                     ResponseInfo response) {
         // TODO Auto-generated method stub
         if (requestId == RequestId.GET_USER_PROFILE) {
-            Log.v(TAG, response.toString());
         }
 
     }
@@ -276,7 +279,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
      * Fetches books owned by the current user
      */
 
-    private void fetchMyBooks() {
+    private void loadMyBooks() {
         getLoaderManager().restartLoader(Loaders.GET_MY_BOOKS, null, this);
     }
 
@@ -302,6 +305,26 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public void onLoaderReset(final Loader<Cursor> loader) {
         if (loader.getId() == Loaders.GET_MY_BOOKS) {
             mBooksAroundMeAdapter.swapCursor(null);
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+
+        if (parent.getId() == R.id.grid_my_books) {
+            Cursor cursor = (Cursor) mBooksAroundMeAdapter.getItem(position);
+
+            final String bookId = cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.BOOK_ID));
+
+            final Bundle showBooksArgs = new Bundle();
+            showBooksArgs.putString(Keys.BOOK_ID, bookId);
+            showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
+
+            loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                            .instantiate(getActivity(), BookDetailFragment.class
+                                            .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_PROFILE, true, FragmentTags.BS_PROFILE);
         }
     }
 

@@ -4,9 +4,13 @@ barter.li Android App
 1. Download our Repo.
 
 2. Add the other projects as library projects.
+3. Remember to update your SDk and build tools to the latest versions. We use the Renderscript Support Library, which always gets updated to the latest build tools.
 
-3. You are good to go!
-4. If you do something cool, and you think we can benefit, feel free to send a pull request our way. We'll be updating our contribution guidelines very soon once the stable version of the app is out. The current target is March 31st, 2014 for the 1st Alpha Release.
+4. You'll need to register a Google Maps Api Keys v2 and add it in a file called api_keys.xml in the res/values folder. Make sure this is not pushed to your repo and keep it local o your machine.
+
+5. You are good to go!
+
+6. If you do something cool, and you think we can benefit, feel free to send a pull request our way. We'll be updating our contribution guidelines very soon once the stable version of the app is out. The current target is April 13, 2014 for the 1st Alpha Release.
 
 ## License
 

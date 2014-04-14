@@ -59,7 +59,7 @@ public class HttpConstants {
         }
     }
 
-    private static Server SERVER = Server.LOCAL;
+    private static Server SERVER = Server.DEV;
 
     public static String getApiBaseUrl() {
         return SERVER.mUrl;
@@ -182,4 +182,6 @@ public class HttpConstants {
     public static final String TRIBUTE_TEXT                = "message";
     public static final String TEAM                        = "team";
     public static final String DESC                        = "desc";
+    public static final String BOOKS                       = "books";
+
 }

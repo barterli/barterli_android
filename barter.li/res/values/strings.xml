@@ -17,6 +17,7 @@
 <resources>
 
     <string name="app_name">barter.li</string>
+    <string name="receiver_network">Network Change Receiver</string>
     <string name="action_settings">Settings</string>
     <string name="service_chat">Chat Service</string>
 
@@ -55,6 +56,7 @@
     <string name="description_label">Description</string>
     <string name="publication_year_label">Publication Year</string>
     <string name="publication_month_label">Publication Month</string>
+    <string name="publication_date_label">Publication</string>
     <string name="barter_type_label">Barter Type</string>
     <string name="error_enter_title">Enter a book title</string>
     <string name="book_added">Book has been added!</string>
@@ -69,6 +71,8 @@
     <string name="error_password_minimum_length">Password must be at least %d characters long.</string>
     <string name="error_unable_to_login">Unable to login.</string>
     <string name="error_unable_to_set_preferred_location">Unable to set preferred location for user.</string>
+    <string name="error_not_connected_to_chat_service">Not connected to chat service.</string>
+    <string name="error_unable_to_send_chat">Not able to send chat message</string>
 
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>
@@ -78,6 +82,7 @@
     <string name="wishlist">Wishlist</string>
     <string name="keep_private">Keep Private</string>
     <string name="submit">Submit</string>
+    <string name="chat_with_owner">Chat with owner</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>
     <string name="email_label">Email Id</string>
@@ -174,5 +179,18 @@
     <string name="volunteer">Volunteer</string>
     <string name="barterli_email">joinus@barter.li</string>
     <string name="hint_about_me_description">About Me.</string>
+
+    <!-- String Related to Show Single Book Fragment -->
+
+
+    <!-- Strings related to open source licenses -->
+    <string-array name="oss_titles">
+        <item>Facebook Android SDK, Licensed under the Apache v2.0 License\nhttps://github.com/facebook/facebook-android-sdk</item>
+        <item>enhanced-volley, A networking toolkit based on Volley, from the Android Open Source Project. Licenced under the Apache v2.0 License.\nhttps://github.com/vinaysshenoy/enhanced-volley</item>
+        <item>android-quick-response-code, A library for scanning barcodes. Licensed under the Apache v2.0 License.\nhttps://github.com/phishman3579/android-quick-response-code</item>
+        <item>NineOldAndroids, A backport of the Android 3.0 Animation API. Licensed under the Apache v2.0 License.\nhttps://github.com/JakeWharton/NineOldAndroids/</item>
+        <item>ListViewAnimations, A library to easily add animations to List Items. Licensed under the Apache v2.0 License.\nhttps://github.com/nhaarman/ListViewAnimations</item>
+        <item>Crouton, Context sensitive notifications for Android. Licensed under the Apache v2.0 License.\nhttps://github.com/keyboardsurfer/Crouton</item>
+    </string-array>
 
 </resources>

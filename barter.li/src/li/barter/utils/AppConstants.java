@@ -32,12 +32,13 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG            = true;
+    public static final boolean DEBUG                 = true;
 
-    public static final String  FACEBOOK         = "facebook";
-    public static final String  MANUAL           = "manual";
-    public static final String  TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
-    public static final String  CHAT_ID_FORMAT   = "%s#%s";
+    public static final String  FACEBOOK              = "facebook";
+    public static final String  MANUAL                = "manual";
+    public static final String  TIMESTAMP_FORMAT      = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String  CHAT_ID_FORMAT        = "%s#%s";
+    public static final String  BARTER_TYPE_SEPARATOR = ",";
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -212,8 +213,10 @@ public class AppConstants {
         public static final String HAS_FETCHED_INFO   = "has_fetched_info";
         public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
         public static final String LOCATIONS          = "locations";
-        public static final String URL_TO_LOAD        = "url_to_load";
+        public static final String BOOK_ID            = "book_id";
         public static final String CHAT_ID            = "chat_id";
+        public static final String USER_ID            = "user_id";
+        public static final String URL_TO_LOAD        = "url_to_load";
 
     }
 
@@ -235,6 +238,9 @@ public class AppConstants {
         public static final String REPORT_BUGS                                     = "report_bugs";
         public static final String SUGGEST_FEATURE                                 = "suggest_feature";
         public static final String COLLABORATE                                     = "collaborate";
+        public static final String MY_BOOK_FROM_PROFILE                            = "my_book_from_profile";
+        public static final String MY_BOOK_FROM_ADD_OR_EDIT                        = "my_book_from_add_or_edit";
+        public static final String BOOK_FROM_BOOKS_AROUND_ME                       = "book_from_books_around_me";
         public static final String PROFILE                                         = "profile";
         public static final String EDIT_PROFILE                                    = "edit_profile";
         public static final String CHATS                                           = "chats";
@@ -248,7 +254,7 @@ public class AppConstants {
         public static final String BS_PREFERRED_LOCATION                           = "to_preferred_location";
         public static final String BS_PROFILE                                      = "to_edit_profile";
         public static final String BS_CHATS                                        = "to_chats";
-
+        public static final String BS_SINGLE_BOOK                                  = "to_edit_book";
     }
 
     /**
@@ -285,17 +291,19 @@ public class AppConstants {
      */
     public static interface QueryTokens {
 
-        //1-100 for load queries
+        // 1-100 for load queries
         public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK  = 1;
         public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 2;
         public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 3;
+        public static final int LOAD_BOOK_DETAIL_CURRENT_USER        = 4;
+        public static final int LOAD_BOOK_DETAIL_OTHER_USER          = 5;
 
-        //101-200 for insert queries
+        // 101-200 for insert queries
         public static final int INSERT_CHAT_MESSAGE                  = 101;
         public static final int INSERT_CHAT                          = 102;
         public static final int INSERT_USER_FOR_CHAT                 = 103;
 
-        //201-300 for update queries
+        // 201-300 for update queries
         public static final int UPDATE_CHAT                          = 201;
         public static final int UPDATE_USER_FOR_CHAT                 = 202;
     }

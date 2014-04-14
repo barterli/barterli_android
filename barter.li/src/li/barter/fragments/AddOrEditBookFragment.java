@@ -56,6 +56,7 @@ import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 
@@ -167,7 +168,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mKeepPrivateCheckBox = (CheckBox) view
                         .findViewById(R.id.checkbox_keep_private);
 
-        //Set the barter tags
+        // Set the barter tags
         mBarterCheckBox.setTag(R.string.tag_barter_type, BarterType.BARTER);
         mReadCheckBox.setTag(R.string.tag_barter_type, BarterType.READ);
         mSellCheckBox.setTag(R.string.tag_barter_type, BarterType.SALE);
@@ -277,6 +278,13 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                             .toString());
             bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
                             .getText().toString());
+            if (mIsbnEditText.getText().toString().length() == 13) {
+                bookJson.put(HttpConstants.ISBN_13, mIsbnEditText.getText()
+                                .toString());
+            } else if (mIsbnEditText.getText().toString().length() == 10) {
+                bookJson.put(HttpConstants.ISBN_10, mIsbnEditText.getText()
+                                .toString());
+            }
             bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYearEditText
                             .getText().toString());
             bookJson.put(HttpConstants.TAG_NAMES, getBarterTagsArray());
@@ -315,7 +323,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        if (mShouldSubmitOnResume) {
+        if (mShouldSubmitOnResume && isLoggedIn()) {
             createBookOnServer(null);
         }
     }
@@ -365,6 +373,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         boolean isValid = true;
 
         final String title = mTitleEditText.getText().toString();
+        final String isbn = mIsbnEditText.getText().toString();
 
         isValid &= !TextUtils.isEmpty(title);
 
@@ -372,10 +381,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             mTitleEditText.setError(getString(R.string.error_enter_title));
         }
 
-        //Validation for at least one barter type set
+        // Validation for at least one barter type set
         if (isValid) {
 
-            //Flag to check if at least one of the barter checkboxes is checked
+            // Flag to check if at least one of the barter checkboxes is checked
             boolean anyOneChecked = false;
             for (CheckBox checkBox : mBarterTypeCheckBoxes) {
                 anyOneChecked |= checkBox.isChecked();
@@ -386,19 +395,36 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 showCrouton(R.string.select_a_barter_type, AlertStyle.ALERT);
             }
         }
+
+        if (!TextUtils.isEmpty(isbn)) {
+            isValid &= isNumeric(isbn);
+            if (!(isbn.length() == 13 || isbn.length() == 10)) {
+                isValid = false;
+            }
+        }
+
         return isValid;
     }
 
     @Override
     public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+            ResponseInfo response) {
 
         if (requestId == RequestId.GET_BOOK_INFO) {
-            //TODO Read book info from bundle
+            // TODO Read book info from bundle
         } else if (requestId == RequestId.CREATE_BOOK) {
             Logger.v(TAG, "Created Book Id %s", response.responseBundle
-                            .getString(HttpConstants.ID_BOOK));
-            // TODO Launch book detail screen for the created book
+                    .getString(HttpConstants.ID_BOOK));
+            
+            final String bookId = response.responseBundle
+                            .getString(HttpConstants.ID_BOOK);
+            final Bundle showBooksArgs = new Bundle(3);
+            showBooksArgs.putString(Keys.BOOK_ID, bookId);
+            showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+            showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
+            loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                            .instantiate(getActivity(), BookDetailFragment.class
+                                            .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
         }
 
     }
@@ -444,7 +470,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     locationObject.put(HttpConstants.LONGITUDE, cursor.getDouble(cursor
                                     .getColumnIndex(DatabaseColumns.LONGITUDE)));
 
-                    //TODO Show location address
+                    // TODO Show location address
                 }
 
             } catch (JSONException e) {
@@ -460,6 +486,22 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     public void onStop() {
         super.onStop();
         DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK);
+    }
+
+    /**
+     * Function to see if a string is numeric
+     * 
+     * @param str
+     * @return
+     */
+
+    private boolean isNumeric(String str) {
+        try {
+            double d = Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 
 }
