@@ -16,7 +16,10 @@
 
 package li.barter.activities;
 
+import com.google.android.gms.location.LocationListener;
+
 import android.app.ActionBar;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -29,6 +32,8 @@ import li.barter.fragments.ChatsFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
+import li.barter.utils.GooglePlayClientWrapper;
+import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 
@@ -37,9 +42,15 @@ import li.barter.utils.AppConstants.Keys;
  *         manages loading different fragments/options menus on Navigation items
  *         clicked
  */
-public class HomeActivity extends AbstractBarterLiActivity {
+public class HomeActivity extends AbstractBarterLiActivity implements
+                LocationListener {
 
-    private static final String TAG = "HomeActivity";
+    private static final String     TAG = "HomeActivity";
+
+    /**
+     * Helper for connecting to Google Play Services
+     */
+    private GooglePlayClientWrapper mGooglePlayClientWrapper;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -47,24 +58,46 @@ public class HomeActivity extends AbstractBarterLiActivity {
         setContentView(R.layout.activity_home);
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
+        mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
         if (savedInstanceState == null) {
 
             final String action = getIntent().getAction();
-            
-            if(action == null) {
+
+            if (action == null) {
                 loadBooksAroundMeFragment();
-            } else if(action.equals(AppConstants.ACTION_SHOW_ALL_CHATS)) {
+            } else if (action.equals(AppConstants.ACTION_SHOW_ALL_CHATS)) {
                 loadChatsFragment();
-            } else if(action.equals(AppConstants.ACTION_SHOW_CHAT_DETAIL)) {
-                loadChatDetailFragment(getIntent()
-                                .getStringExtra(Keys.CHAT_ID), getIntent()
+            } else if (action.equals(AppConstants.ACTION_SHOW_CHAT_DETAIL)) {
+                loadChatDetailFragment(getIntent().getStringExtra(Keys.CHAT_ID), getIntent()
                                 .getStringExtra(Keys.USER_ID));
             } else {
                 loadBooksAroundMeFragment();
             }
-                
+
         }
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mGooglePlayClientWrapper.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mGooglePlayClientWrapper.onStop();
+        super.onStop();
+    }
+
+    @Override
+    public void onLocationChanged(final Location location) {
+        DeviceInfo.INSTANCE.setLatestLocation(location);
+        final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
+
+        if (fragment instanceof BooksAroundMeFragment) {
+            ((BooksAroundMeFragment) fragment).updateLocation(location);
+        }
     }
 
     /**

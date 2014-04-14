@@ -42,10 +42,10 @@ public class GooglePlayClientWrapper implements ConnectionCallbacks,
     private static final String            TAG              = "GooglePlayClientWrapper";
 
     // Update frequency in milliseconds
-    private static final int               UPDATE_INTERVAL  = 5 * 60 * 1000;
+    private static final int               UPDATE_INTERVAL  = 15 * 60 * 1000;
 
     // A fast frequency ceiling in milliseconds
-    private static final long              FASTEST_INTERVAL = 1 * 60 * 1000;
+    private static final long              FASTEST_INTERVAL = 5 * 60 * 1000;
 
     private final LocationClient           mLocationClient;
 

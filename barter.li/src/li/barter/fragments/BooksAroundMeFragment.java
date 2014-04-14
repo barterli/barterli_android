@@ -17,7 +17,6 @@
 package li.barter.fragments;
 
 import com.android.volley.Request.Method;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.CancelableCallback;
@@ -51,7 +50,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
-import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksAroundMeAdapter;
@@ -70,8 +68,6 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
-import li.barter.utils.AppConstants.UserInfo;
-import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.Logger;
 import li.barter.utils.MapDrawerInteractionHelper;
 import li.barter.utils.Utils;
@@ -82,8 +78,8 @@ import li.barter.widgets.FullWidthDrawerLayout;
  *         a Map that the user can use to easily switch locations
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
-                LocationListener, LoaderCallbacks<Cursor>, CancelableCallback,
-                DrawerListener, OnItemClickListener {
+                LoaderCallbacks<Cursor>, CancelableCallback, DrawerListener,
+                OnItemClickListener {
 
     private static final String           TAG            = "BooksAroundMeFragment";
 
@@ -91,11 +87,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * Zoom level for the map when the location is retrieved
      */
     private static final float            MAP_ZOOM_LEVEL = 15;
-
-    /**
-     * Helper for connecting to Google Play Services
-     */
-    private GooglePlayClientWrapper       mGooglePlayClientWrapper;
 
     /**
      * {@link MapView} used to display the Map
@@ -167,7 +158,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
          * onCreate(Bundle) method, which makes forwarding that method
          * impossible. This is the workaround for that
          */
-        MapsInitializer.initialize(getActivity());
+        if (savedInstanceState == null) {
+            MapsInitializer.initialize(getActivity());
+        }
+
         mMapView = (MapView) contentView.findViewById(R.id.map_books_around_me);
         mMapView.onCreate(savedInstanceState);
         mDrawerLayout = (FullWidthDrawerLayout) contentView
@@ -190,8 +184,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
         mBooksAroundMeGridView.setOnItemClickListener(this);
 
-        mGooglePlayClientWrapper = new GooglePlayClientWrapper((AbstractBarterLiActivity) getActivity(), this);
-
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
             mMapAlreadyMovedOnce = false;
@@ -208,15 +200,13 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         setActionBarDrawerToggleEnabled(true);
         return contentView;
     }
-
+    
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.DRAWER_OPENED_ONCE, mDrawerOpenedAutomatically);
         outState.putBoolean(Keys.MAP_MOVED_ONCE, mMapAlreadyMovedOnce);
-        if (mMapView != null) {
-            mMapView.onSaveInstanceState(outState);
-        }
+        mMapView.onSaveInstanceState(outState);
     }
 
     @Override
@@ -309,22 +299,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         return TAG;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mGooglePlayClientWrapper.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        mGooglePlayClientWrapper.onStop();
-        super.onStop();
-    }
-
-    @Override
-    public void onLocationChanged(final Location location) {
-
-        DeviceInfo.INSTANCE.setLatestLocation(location);
+    public void updateLocation(final Location location) {
 
         if (!mMapAlreadyMovedOnce) {
 
@@ -359,6 +334,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         super.onResume();
         mMapView.onResume();
         mMapDrawerBlurHelper.onResume();
+        final Location latestLocation = DeviceInfo.INSTANCE.getLatestLocation();
+        if(latestLocation.getLatitude() != 0.0 && latestLocation.getLongitude() != 0.0) {
+            updateLocation(latestLocation);
+        }
     }
 
     @Override
