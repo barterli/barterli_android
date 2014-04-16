@@ -183,5 +183,8 @@ public class HttpConstants {
     public static final String TEAM                        = "team";
     public static final String DESC                        = "desc";
     public static final String BOOKS                       = "books";
+    public static final String PAGE						   = "page";
+    public static final String PERLIMIT					   = "per";
+    		
 
 }
