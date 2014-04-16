@@ -62,11 +62,11 @@ public class ChatsAdapter extends CursorAdapter {
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN)));
 
-        Picasso.with(context)
+       /* Picasso.with(context)
                         .load(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.PROFILE_PICTURE)))
                         .fit().error(R.drawable.pic_avatar)
-                        .into((ImageView) view.getTag(R.id.image_user));
+                        .into((ImageView) view.getTag(R.id.image_user));*/
     }
 
     @Override

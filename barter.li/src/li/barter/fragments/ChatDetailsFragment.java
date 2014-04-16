@@ -194,6 +194,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
         if (loader.getId() == Loaders.CHAT_DETAILS) {
             mChatDetailAdapter.swapCursor(cursor);
+            mChatListView.smoothScrollToPosition(mChatDetailAdapter.getCount() - 1);
         }
     }
 
