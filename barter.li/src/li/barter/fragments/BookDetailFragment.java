@@ -148,6 +148,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mPublicationDateTextView = (TextView) view
                         .findViewById(R.id.text_publication_date);
         mChatWithOwnerButton = (Button) view.findViewById(R.id.button_chat);
+        mChatWithOwnerButton.setOnClickListener(this);
         initBarterTypeCheckBoxes(view);
 
     }
