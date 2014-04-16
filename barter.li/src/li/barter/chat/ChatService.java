@@ -402,6 +402,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             assert (params[1] != null);
             assert (params[2] != null);
             assert (params[3] != null);
+            Logger.v(TAG, "Username %s, Password %s, Queue %s, Routing Key %s", params[0], params[1], params[2], params[3]);
             if (mMessageConsumer
                             .connectToRabbitMQ(params[0], params[1], params[2], false, false, true, null)) {
                 try {

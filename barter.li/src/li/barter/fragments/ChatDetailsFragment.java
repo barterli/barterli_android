@@ -184,7 +184,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
             return new SQLiteLoader(getActivity(), false, TableChatMessages.NAME, null, mChatSelection, new String[] {
                 mChatId
             }, null, null, DatabaseColumns.TIMESTAMP_EPOCH
-                            + SQLConstants.DESCENDING, null);
+                            + SQLConstants.ASCENDING, null);
         }
         return null;
     }
