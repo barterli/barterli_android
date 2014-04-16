@@ -42,13 +42,13 @@
             android:layout_below="@id/label_collaborate"
             android:layout_margin="@dimen/margin_minimum"
             android:orientation="vertical" >
-
-            <li.barter.widgets.TypefacedRadioButton
-                android:id="@+id/radio_sponsor"
+  <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sponsor"
+                android:text="@string/campus_ambassador"
                 app:fontStyle="alegreya_regular" />
+        
 
             <li.barter.widgets.TypefacedRadioButton
                 android:id="@+id/radio_designer"
@@ -64,11 +64,11 @@
                 android:text="@string/developer"
                 app:fontStyle="alegreya_regular" />
 
-            <li.barter.widgets.TypefacedRadioButton
-                android:id="@+id/radio_user"
+              <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_sponsor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/user"
+                android:text="@string/sponsor"
                 app:fontStyle="alegreya_regular" />
 
             <li.barter.widgets.TypefacedRadioButton
