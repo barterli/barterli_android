@@ -31,7 +31,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -256,21 +255,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (center != null) {
 
-            if (mLastFetchedLocation != null) {
-
-                /*
-                 * If the current centers distance is at a point close to the
-                 * current one, don't fetch since the books were fetched with
-                 * the center as the distance TODO Investigate the case where
-                 * the user just zooms the map in/out without moving it around
-                 * because the center will not change, only the search radius,
-                 * thus preventing the books from getting fetched
-                 */
-                if ((Utils.distanceBetween(center, mLastFetchedLocation) / 1000) < (mPrevSearchRadius / 2)) {
-                    Logger.v(TAG, "Points are really close. Don't fetch");
-                    return;
-                }
-            }
             final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.SEARCH, null, mVolleyCallbacks);
             request.setRequestId(RequestId.SEARCH_BOOKS);
@@ -509,6 +493,35 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (drawerView == mBooksDrawerView) {
             final int searchRadius = Math.round(Utils
                             .getShortestRadiusFromCenter(mMapView) / 1000);
+            final Location center = Utils.getCenterLocationOfMap(getMap());
+
+            if (mLastFetchedLocation != null) {
+
+                /*
+                 * If the current centers distance is at a point close to the
+                 * current one, don't fetch since the books were fetched with
+                 * the center as the distance TODO Investigate the case where
+                 * the user just zooms the map in/out without moving it around
+                 * because the center will not change, only the search radius,
+                 * thus preventing the books from getting fetched
+                 */
+
+                final float distanceBetweenCurAndLastFetchedLocations = Utils
+                                .distanceBetween(center, mLastFetchedLocation) / 1000;
+
+                /*
+                 * If there's less than 1 km distance between the current
+                 * location and the location where we last fetched the books AND
+                 * the search radius is lesser than the older search radius, we
+                 * don't need to fetch the books again since the current set
+                 * will include those
+                 */
+                if (distanceBetweenCurAndLastFetchedLocations <= 1
+                                && searchRadius <= mPrevSearchRadius) {
+                    Logger.v(TAG, "Points are really close. Don't fetch");
+                    return;
+                }
+            }
             fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), searchRadius);
         }
     }
