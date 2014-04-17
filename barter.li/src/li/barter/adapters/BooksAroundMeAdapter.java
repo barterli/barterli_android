@@ -20,6 +20,8 @@ import com.squareup.picasso.Picasso;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,6 +89,7 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         view.setTag(R.id.text_book_desc, view.findViewById(R.id.text_book_desc));
         view.setTag(R.id.text_book_location, view
                         .findViewById(R.id.text_book_location));
+        
         return view;
     }
 

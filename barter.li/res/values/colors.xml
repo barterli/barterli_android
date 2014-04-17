@@ -18,8 +18,8 @@
 
     <color name="apptheme_color">#2C7E9C</color>
     <color name="global_bg">#DCE0DA</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="dark_gray">#565051</color>
     <color name="silver">#C0C0C0</color>
