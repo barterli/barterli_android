@@ -15,8 +15,15 @@
 
 package li.barter.fragments;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import com.android.volley.Request.Method;
+import com.squareup.picasso.Picasso;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import li.barter.R;
 import li.barter.http.BlRequest;
@@ -25,19 +32,7 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.utils.ImageByte;
 import li.barter.utils.Logger;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.android.volley.Request.Method;
 
 /**
  * @author Sharath Pandeshwar
@@ -92,12 +87,11 @@ public class TributeFragment  extends AbstractBarterLiFragment {
 
         if (requestId == RequestId.TRIBUTE) {
             	try {
-                   String image_url = response.responseBundle.getString(HttpConstants.TRIBUTE_IMAGE_URL);
-                   String message = response.responseBundle.getString(HttpConstants.TRIBUTE_TEXT);
+                   final String imageUrl = response.responseBundle.getString(HttpConstants.TRIBUTE_IMAGE_URL);
+                   final String message = response.responseBundle.getString(HttpConstants.TRIBUTE_TEXT);
                    mTributeTextView.setText(message);
-                   new FetchImageTask().execute(image_url);
-                   Logger.e(TAG, image_url);
-                  // mTributeTextView.setText(message);
+                   Picasso.with(getActivity()).load(imageUrl).fit().into(mTributeImageView);
+                   Logger.v(TAG, imageUrl);
                    
                      
             	}
@@ -115,34 +109,4 @@ public class TributeFragment  extends AbstractBarterLiFragment {
     }
     
     
-    private class FetchImageTask extends AsyncTask<String,Void,Bitmap> {
-        @Override
-        public Bitmap doInBackground(String... params) {
-        	Bitmap bitmap = null;
-        	for (String image_url : params) {
-        	  try {
-        		byte[] bitmapBytes = new ImageByte().getUrlBytes(image_url);
-                bitmap = BitmapFactory
-                .decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
-        	  }
-        	  catch (IOException e1) {
-                  e1.printStackTrace();
-              }
-                
-        	}
-        	return bitmap;	
-       }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-        	
-        	mTributeImageView.setImageBitmap(bitmap);  
-       
-        }	
-        
-    }
-    
-
-    
-
 }

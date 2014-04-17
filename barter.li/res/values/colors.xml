@@ -28,5 +28,6 @@
     <color name="crouton_error">#FFFF4444</color>
     <color name="crouton_alert">#FF99CC00</color>
     <color name="crouton_info">#FF33B5E5</color>
+    <color name="red">#FF0000</color>
 
 </resources>

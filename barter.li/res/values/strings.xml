@@ -75,6 +75,7 @@
     <string name="error_unable_to_set_preferred_location">Unable to set preferred location for user.</string>
     <string name="error_not_connected_to_chat_service">Not connected to chat service.</string>
     <string name="error_unable_to_send_chat">Not able to send chat message</string>
+    <string name="no_personal_info">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this bug report will be available publicly.</string>
 
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>
@@ -115,7 +116,7 @@
         <item>No open source licences were violated in the making of this app.</item>
         <item>What is barter.li? Who\'s behind it?</item>
         <item>The inspiration for barter.li.</item>
-         <item>The team behind barter.li.</item>
+        <item>The team behind barter.li.</item>
     </string-array>
     <string-array name="months">
         <item>January</item>

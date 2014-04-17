@@ -48,12 +48,12 @@ public class TeamFragment extends AbstractBarterLiFragment {
      * List that displays the Oss Licenses
      */
     private ListView            mListView;
-    private Team []       mTeams;
+    private Team[]              mTeams;
 
     /**
-     * Adapter for displaying Oss Licenses
+     * Adapter for displaying Team members
      */
-    private TeamAdapter  mTeamAdapter;
+    private TeamAdapter         mTeamAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,7 +64,7 @@ public class TeamFragment extends AbstractBarterLiFragment {
         setActionBarDrawerToggleEnabled(false);
         // Make a call to server
         try {
-            
+
             final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.TEAM, null, mVolleyCallbacks);
             request.setRequestId(RequestId.TEAM);
@@ -86,15 +86,17 @@ public class TeamFragment extends AbstractBarterLiFragment {
                     ResponseInfo response) {
 
         if (requestId == RequestId.TEAM) {
-        	try {
-        		Logger.e(TAG, response.responseBundle.toString());
-        		mTeams = (Team [])response.responseBundle.getParcelableArray(HttpConstants.TEAM);
-        		Logger.e(TAG, response.responseBundle.getParcelableArray(HttpConstants.TEAM).toString());
-        		mTeamAdapter = new TeamAdapter(getActivity(), mTeams);
-        	    mListView.setAdapter(mTeamAdapter) ;              
-                 
-        	}
-        	catch (final Exception e) {
+            try {
+                Logger.v(TAG, response.responseBundle.toString());
+                mTeams = (Team[]) response.responseBundle
+                                .getParcelableArray(HttpConstants.TEAM);
+                Logger.v(TAG, response.responseBundle
+                                .getParcelableArray(HttpConstants.TEAM)
+                                .toString());
+                mTeamAdapter = new TeamAdapter(getActivity(), mTeams);
+                mListView.setAdapter(mTeamAdapter);
+
+            } catch (final Exception e) {
                 // Should never happen
                 Logger.e(TAG, e, "Error parsing json response");
             }

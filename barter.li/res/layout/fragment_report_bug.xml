@@ -32,22 +32,33 @@
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/text_bug_description"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/label_report_bug"
         android:layout_margin="@dimen/margin_medium"
+        android:hint="@string/hint_report_bug"
+        android:inputType="textCapSentences"
         android:lines="6"
         android:singleLine="false"
-        android:hint="@string/hint_report_bug"
         android:textSize="@dimen/text_medium"
-        android:inputType="textCapSentences"
         app:fontStyle="alegreya_regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/label_personal_info_warning"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_bug_description"
+        android:layout_margin="@dimen/margin_medium"
+        android:gravity="center"
+        android:text="@string/no_personal_info"
+        android:textColor="@color/red"
+        android:textSize="@dimen/text_medium" />
 
     <li.barter.widgets.TypefacedButton
         android:id="@+id/button_report_bug"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/text_bug_description"
+        android:layout_below="@id/label_personal_info_warning"
         android:layout_margin="@dimen/margin_medium"
         android:text="@string/button_submit"
         android:textSize="@dimen/text_medium"
