@@ -77,20 +77,21 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
 
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         if (id == Loaders.ALL_CHATS) {
             return new SQLiteLoader(getActivity(), false, ViewChatsWithMessagesAndUsers.NAME, null, null, null, null, null, DatabaseColumns.TIMESTAMP_EPOCH
                             + SQLConstants.DESCENDING, null);
@@ -99,7 +100,7 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         if (loader.getId() == Loaders.ALL_CHATS) {
             mChatsAdapter.swapCursor(cursor);
         }
@@ -107,7 +108,7 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(final Loader<Cursor> loader) {
 
         if (loader.getId() == Loaders.ALL_CHATS) {
             mChatsAdapter.swapCursor(null);
@@ -115,8 +116,8 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                    long id) {
+    public void onItemClick(final AdapterView<?> parent, final View view,
+                    final int position, final long id) {
 
         if (parent.getId() == R.id.list_chats) {
 

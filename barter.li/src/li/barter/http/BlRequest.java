@@ -125,16 +125,16 @@ public class BlRequest extends JsonRequest<ResponseInfo> implements
      * @param value The value to map to the key
      */
     @Override
-    public void addExtra(String key, Object value) {
+    public void addExtra(final String key, final Object value) {
 
-        if(mExtras == null) {
+        if (mExtras == null) {
             mExtras = new HashMap<String, Object>();
         }
         mExtras.put(key, value);
     }
 
     @Override
-    public void setRequestId(int requestId) {
+    public void setRequestId(final int requestId) {
         mRequestId = requestId;
     }
 

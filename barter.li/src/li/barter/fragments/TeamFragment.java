@@ -16,6 +16,14 @@
 
 package li.barter.fragments;
 
+import com.android.volley.Request.Method;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
+
 import li.barter.R;
 import li.barter.adapters.TeamAdapter;
 import li.barter.http.BlRequest;
@@ -26,14 +34,6 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.models.Team;
 import li.barter.utils.Logger;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
-
-import com.android.volley.Request.Method;
 
 /**
  * @author Vinay S Shenoy Fragment to display OSS Software used in the
@@ -56,8 +56,8 @@ public class TeamFragment extends AbstractBarterLiFragment {
     private TeamAdapter         mTeamAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                    Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater,
+                    final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         mListView = (ListView) inflater
                         .inflate(R.layout.fragment_team, container, false);
@@ -82,8 +82,9 @@ public class TeamFragment extends AbstractBarterLiFragment {
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
         if (requestId == RequestId.TEAM) {
             try {
@@ -105,9 +106,9 @@ public class TeamFragment extends AbstractBarterLiFragment {
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
 
     }
 

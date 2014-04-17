@@ -31,11 +31,11 @@ import java.util.Locale;
  */
 public class DateFormatter {
 
-    private static final String TAG = "DateFormatter";
+    private static final String    TAG = "DateFormatter";
 
-    private SimpleDateFormat    mInputTimestampParser;
+    private final SimpleDateFormat mInputTimestampParser;
 
-    private SimpleDateFormat    mOutputTimestampParser;
+    private SimpleDateFormat       mOutputTimestampParser;
 
     /**
      * Constructs a {@link DateFormatter} with an input pattern
@@ -49,7 +49,7 @@ public class DateFormatter {
      */
     public DateFormatter(final String inPattern, final String outPattern) {
 
-        assert (inPattern != null && !inPattern.equals(""));
+        assert ((inPattern != null) && !inPattern.equals(""));
         mInputTimestampParser = new SimpleDateFormat(inPattern, Locale.getDefault());
 
         if (!TextUtils.isEmpty(outPattern)) {

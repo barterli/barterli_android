@@ -35,7 +35,6 @@ import org.json.JSONObject;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -137,7 +136,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                             .getParcelableArray(Keys.LOCATIONS);
         }
 
-        if (mHangouts == null || mHangouts.length == 0) {
+        if ((mHangouts == null) || (mHangouts.length == 0)) {
             fetchHangoutsForLocation(DeviceInfo.INSTANCE.getLatestLocation(), 1000);
         } else {
             addMarkersToMap(mHangouts);
@@ -258,8 +257,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
         if (requestId == RequestId.HANGOUTS) {
             mHangouts = (Hangout[]) response.responseBundle
                             .getParcelableArray(HttpConstants.LOCATIONS);
@@ -274,9 +274,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
         if (requestId == RequestId.HANGOUTS) {
             showCrouton(R.string.unable_to_fetch_hangouts, AlertStyle.ERROR);
         } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
@@ -363,8 +363,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
      * @param latitude The latitude of the location
      * @param longitude The longitude of the location
      */
-    private void setUserPreferredLocation(String name, String address,
-                    double latitude, double longitude) {
+    private void setUserPreferredLocation(final String name,
+                    final String address, final double latitude,
+                    final double longitude) {
 
         final JSONObject requestBody = new JSONObject();
         try {
@@ -377,7 +378,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                             + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody.toString(), mVolleyCallbacks);
             addRequestToQueue(request, true, 0);
             request.setRequestId(RequestId.SET_USER_PREFERRED_LOCATION);
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             e.printStackTrace();
         }
 

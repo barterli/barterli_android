@@ -186,12 +186,13 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(final Intent intent) {
         return mChatServiceBinder;
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, final int flags,
+                    final int startId) {
 
         if (isLoggedIn() && !mMessageConsumer.isRunning()) {
 
@@ -201,7 +202,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
                                 .getId());
             } else {
-                Status connectingStatus = mConnectTask.getStatus();
+                final Status connectingStatus = mConnectTask.getStatus();
 
                 if (connectingStatus != Status.RUNNING) {
 
@@ -255,8 +256,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param acknowledge An implementation of {@link ChatAcknowledge} to be
      *            notified when the chat request completes
      */
-    public void sendMessageToUser(String toUserId, String message,
-                    ChatAcknowledge acknowledge) {
+    public void sendMessageToUser(final String toUserId, final String message,
+                    final ChatAcknowledge acknowledge) {
 
         if (!isLoggedIn()) {
             return;
@@ -272,7 +273,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             request.setRequestId(RequestId.AMPQ);
             request.setTag(TAG);
             mVolleyCallbacks.queue(request);
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             e.printStackTrace();
             //Should never happen
         }
@@ -285,12 +286,12 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param userId The user Id to generate the queue name for
      * @return The queue name for the user id
      */
-    private String generateQueueNameFromUserId(String userId) {
+    private String generateQueueNameFromUserId(final String userId) {
         return String.format(Locale.US, QUEUE_NAME_FORMAT, userId);
     }
 
     @Override
-    public void onReceiveMessage(byte[] message) {
+    public void onReceiveMessage(final byte[] message) {
 
         //TODO Break this method out for readability
         String text = "";
@@ -342,9 +343,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();
             //Shouldn't be happening
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             Logger.e(TAG, e, "Invalid Chat Json");
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             Logger.e(TAG, e, "Invalid chat timestamp");
         }
 
@@ -393,7 +394,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     private class ConnectToChatAsyncTask extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(final String... params) {
 
             //Validation
             assert (params != null);
@@ -407,7 +408,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                             .connectToRabbitMQ(params[0], params[1], params[2], false, false, true, null)) {
                 try {
                     mMessageConsumer.addBinding(params[3]);
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     mMessageConsumer.dispose();
                 }
             }
@@ -416,7 +417,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+    public void onInsertComplete(final int token, final Object cookie,
+                    final long insertRowId) {
 
         switch (token) {
 
@@ -432,7 +434,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     final String chatId = chatData
                                     .getAsString(DatabaseColumns.CHAT_ID);
 
-                    ContentValues values = new ContentValues(4);
+                    final ContentValues values = new ContentValues(4);
                     values.put(DatabaseColumns.CHAT_ID, chatId);
                     values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
                     values.put(DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL);
@@ -475,12 +477,14 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+    public void onDeleteComplete(final int token, final Object cookie,
+                    final int deleteCount) {
 
     }
 
     @Override
-    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+    public void onUpdateComplete(final int token, final Object cookie,
+                    final int updateCount) {
 
         if (token == QueryTokens.UPDATE_CHAT) {
             assert (cookie != null);
@@ -507,7 +511,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+    public void onQueryComplete(final int token, final Object cookie,
+                    final Cursor cursor) {
 
     }
 
@@ -519,7 +524,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param senderId The sender of the chat
      * @return The chat Id
      */
-    public static String generateChatId(String receiverId, String senderId) {
+    public static String generateChatId(final String receiverId,
+                    final String senderId) {
 
         /*
          * Method of generating the chat ID is simple. First we compare the two
@@ -540,7 +546,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
         try {
             hashed = Utils.sha1(combined);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             /*
              * Shouldn't happen sinch SHA-1 is standard, but in case it does use
              * the combined string directly since they are local chat IDs
@@ -552,18 +558,19 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onPreExecute(IBlRequestContract request) {
+    public void onPreExecute(final IBlRequestContract request) {
 
     }
 
     @Override
-    public void onPostExecute(IBlRequestContract request) {
+    public void onPostExecute(final IBlRequestContract request) {
 
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -580,9 +587,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -599,7 +606,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onAuthError(int requestId, IBlRequestContract request) {
+    public void onAuthError(final int requestId,
+                    final IBlRequestContract request) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -616,8 +624,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onOtherError(int requestId, IBlRequestContract request,
-                    int errorCode) {
+    public void onOtherError(final int requestId,
+                    final IBlRequestContract request, final int errorCode) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -642,8 +650,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param senderName The name of the sender
      * @param messageText The message body
      */
-    private void showChatReceivedNotification(String chatId, String withUserId,
-                    String senderName, String messageText) {
+    private void showChatReceivedNotification(final String chatId,
+                    final String withUserId, final String senderName,
+                    final String messageText) {
 
         mUnreadMessageCount++;
         final Intent resultIntent = new Intent(this, HomeActivity.class);

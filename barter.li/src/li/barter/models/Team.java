@@ -1,19 +1,17 @@
+
 package li.barter.models;
 
-import li.barter.parcelables.Hangout;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
-
 
 public class Team implements Parcelable {
     private String mName;
     private String mDescription;
     private String mEmail;
     private String mImageUrl;
-    
+
     public Team() {
-  
+
     }
 
     @Override
@@ -21,38 +19,37 @@ public class Team implements Parcelable {
         return mName;
     }
 
-	public String getName() {
-		return mName;
-	}
+    public String getName() {
+        return mName;
+    }
 
-	public void setName(String name) {
-		mName = name;
-	}
+    public void setName(final String name) {
+        mName = name;
+    }
 
-	public String getDescription() {
-		return mDescription;
-	}
+    public String getDescription() {
+        return mDescription;
+    }
 
-	public void setDescription(String description) {
-		mDescription = description;
-	}
+    public void setDescription(final String description) {
+        mDescription = description;
+    }
 
-	public String getEmail() {
-		return mEmail;
-	}
+    public String getEmail() {
+        return mEmail;
+    }
 
-	public void setEmail(String email) {
-		mEmail = email;
-	}
+    public void setEmail(final String email) {
+        mEmail = email;
+    }
 
-	public String getImageUrl() {
-		return mImageUrl;
-	}
+    public String getImageUrl() {
+        return mImageUrl;
+    }
 
-	public void setImageUrl(String imageUrl) {
-		mImageUrl = imageUrl;
-	}
-	
+    public void setImageUrl(final String imageUrl) {
+        mImageUrl = imageUrl;
+    }
 
     //Constructor to read from parcel
     public Team(final Parcel source) {
@@ -78,21 +75,17 @@ public class Team implements Parcelable {
     /* REQUIRED FOR PARCELLABLE. DO NOT MODIFY IN ANY WAY */
     public static final Creator<Team> CREATOR = new Creator<Team>() {
 
-                                                     @Override
-                                                     public Team createFromParcel(
-                                                                     final Parcel source) {
-                                                         return new Team(source);
-                                                     }
+                                                  @Override
+                                                  public Team createFromParcel(
+                                                                  final Parcel source) {
+                                                      return new Team(source);
+                                                  }
 
-                                                     @Override
-                                                     public Team[] newArray(
-                                                                     final int size) {
-                                                         return new Team[size];
-                                                     }
-                                                 };
-
-
-   
+                                                  @Override
+                                                  public Team[] newArray(
+                                                                  final int size) {
+                                                      return new Team[size];
+                                                  }
+                                              };
 
 }
-

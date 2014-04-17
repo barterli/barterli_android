@@ -91,7 +91,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             mBookId = extras.getString(Keys.BOOK_ID);
             mUserId = extras.getString(Keys.USER_ID);
 
-            if (mUserId != null && mUserId.equals(UserInfo.INSTANCE.getId())) {
+            if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
                 mOwnedByUser = true;
             } else {
                 mOwnedByUser = false;
@@ -159,7 +159,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
      * 
      * @param view The content view of the fragment
      */
-    private void initBarterTypeCheckBoxes(View view) {
+    private void initBarterTypeCheckBoxes(final View view) {
         mBarterCheckBox = (CheckBox) view.findViewById(R.id.checkbox_barter);
         mReadCheckBox = (CheckBox) view.findViewById(R.id.checkbox_read);
         mSellCheckBox = (CheckBox) view.findViewById(R.id.checkbox_sell);
@@ -221,7 +221,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             }
 
             case R.id.action_edit_profile: {
-                Bundle mEditBookArgs = new Bundle();
+                final Bundle mEditBookArgs = new Bundle();
                 mEditBookArgs.putString(Keys.BOOK_ID, mBookId);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), AddOrEditBookFragment.class
@@ -237,39 +237,44 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
     }
 
     @Override
-    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+    public void onInsertComplete(final int token, final Object cookie,
+                    final long insertRowId) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+    public void onDeleteComplete(final int token, final Object cookie,
+                    final int deleteCount) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+    public void onUpdateComplete(final int token, final Object cookie,
+                    final int updateCount) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+    public void onQueryComplete(final int token, final Object cookie,
+                    final Cursor cursor) {
 
-        if (token == QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER
-                        || token == QueryTokens.LOAD_BOOK_DETAIL_OTHER_USER) {
+        if ((token == QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER)
+                        || (token == QueryTokens.LOAD_BOOK_DETAIL_OTHER_USER)) {
             if (cursor.moveToFirst()) {
                 mIsbnTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.ISBN_10)));
@@ -301,14 +306,14 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
      * 
      * @param barterType The barter types supported by the book
      */
-    private void setBarterCheckboxes(String barterType) {
+    private void setBarterCheckboxes(final String barterType) {
 
         final String[] barterTypes = barterType
                         .split(AppConstants.BARTER_TYPE_SEPARATOR);
 
-        for (String token : barterTypes) {
+        for (final String token : barterTypes) {
 
-            for (CheckBox eachCheckBox : mBarterTypeCheckBoxes) {
+            for (final CheckBox eachCheckBox : mBarterTypeCheckBoxes) {
 
                 if (eachCheckBox.getTag(R.string.tag_barter_type).equals(token)) {
                     eachCheckBox.setChecked(true);
@@ -318,7 +323,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         if (v.getId() == R.id.button_chat) {
 
             if (isLoggedIn()) {
@@ -327,7 +332,8 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                                 .generateChatId(mUserId, UserInfo.INSTANCE
                                                 .getId()));
                 args.putString(Keys.USER_ID, mUserId);
-                args.putString(Keys.BOOK_TITLE, mTitleTextView.getText().toString());
+                args.putString(Keys.BOOK_TITLE, mTitleTextView.getText()
+                                .toString());
 
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), ChatDetailsFragment.class

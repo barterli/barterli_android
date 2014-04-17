@@ -29,7 +29,7 @@ import android.text.TextUtils;
 public class SharedPreferenceHelper {
 
     private static final String TAG = "SharedPreferenceHelper";
-    
+
     /**
      * Checks whether the preferences contains a key or not
      * 
@@ -167,7 +167,7 @@ public class SharedPreferenceHelper {
 
             try {
                 return Double.parseDouble(stringValue);
-            } catch (NumberFormatException e) {
+            } catch (final NumberFormatException e) {
                 Logger.e(TAG, e, "Incorrect double value");
                 return defValue;
             }

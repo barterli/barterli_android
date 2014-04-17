@@ -48,7 +48,7 @@ public class TeamAdapter extends BaseAdapter {
      */
     private final LayoutInflater mLayoutInflater;
 
-    public TeamAdapter(Context context, Team[] mTeams) {
+    public TeamAdapter(final Context context, final Team[] mTeams) {
 
         mTeamMembers = mTeams;
         mLayoutInflater = LayoutInflater.from(context);
@@ -61,17 +61,18 @@ public class TeamAdapter extends BaseAdapter {
     }
 
     @Override
-    public Team getItem(int position) {
+    public Team getItem(final int position) {
         return mTeamMembers[position];
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView,
+                    final ViewGroup parent) {
 
         View view = convertView;
 

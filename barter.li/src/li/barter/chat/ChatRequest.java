@@ -16,8 +16,6 @@
 
 package li.barter.chat;
 
-import com.android.volley.Request.Method;
-
 import li.barter.http.BlRequest;
 import li.barter.http.VolleyCallbacks;
 
@@ -34,7 +32,7 @@ public class ChatRequest extends BlRequest {
      * {@link ChatAcknowledge} to receive the callback when the chat request
      * completes
      */
-    private ChatAcknowledge mAcknowledge;
+    private final ChatAcknowledge mAcknowledge;
 
     /**
      * @param method One of the constants from {@link Method} class to identify
@@ -46,7 +44,7 @@ public class ChatRequest extends BlRequest {
      * @param acknowledge A {@link ChatAcknowledge} callback for when the
      *            request completes
      */
-    public ChatRequest(int method, String url, String requestBody, VolleyCallbacks volleyCallbacks, ChatAcknowledge acknowledge) {
+    public ChatRequest(final int method, final String url, final String requestBody, final VolleyCallbacks volleyCallbacks, final ChatAcknowledge acknowledge) {
         super(method, url, requestBody, volleyCallbacks);
         mAcknowledge = acknowledge;
     }

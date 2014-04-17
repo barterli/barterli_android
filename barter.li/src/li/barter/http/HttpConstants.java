@@ -91,7 +91,7 @@ public class HttpConstants {
         public static final String REPORT_BUG              = "/feedback";
         public static final String COLLABORATE_REQUEST     = "/register";
         public static final String TRIBUTE                 = "/tribute.json";
-        public static final String TEAM                = "/team.json";
+        public static final String TEAM                    = "/team.json";
     }
 
     /**
@@ -183,8 +183,7 @@ public class HttpConstants {
     public static final String TEAM                        = "team";
     public static final String DESC                        = "desc";
     public static final String BOOKS                       = "books";
-    public static final String PAGE						   = "page";
-    public static final String PERLIMIT					   = "per";
-    		
+    public static final String PAGE                        = "page";
+    public static final String PERLIMIT                    = "per";
 
 }

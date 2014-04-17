@@ -16,7 +16,6 @@
 
 package li.barter.fragments;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,7 +32,6 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-
 
 /**
  * Fragment to Collect Collaboration enlistings.
@@ -55,8 +53,8 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     private RadioGroup          mEnlistOptionsRadioGroup;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                    Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater,
+                    final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         setActionBarDrawerToggleEnabled(false);
         final View view = inflater
@@ -87,10 +85,11 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.button_submit_enlisting: {
-                String mAboutMeText = mAboutMeTextView.getText().toString();
+                final String mAboutMeText = mAboutMeTextView.getText()
+                                .toString();
 
                 if (!(mEnlistAsSponsorRadioButton.isChecked()
                                 || mEnlistAsDesignerRadioButton.isChecked()
@@ -101,21 +100,22 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
                     return;
                 }
 
-                int mRadioButtonID = mEnlistOptionsRadioGroup
+                final int mRadioButtonID = mEnlistOptionsRadioGroup
                                 .getCheckedRadioButtonId();
-                RadioButton mChosenRadioButton = (RadioButton) mEnlistOptionsRadioGroup
+                final RadioButton mChosenRadioButton = (RadioButton) mEnlistOptionsRadioGroup
                                 .findViewById(mRadioButtonID);
-                String mSelectedRole = mChosenRadioButton.getText().toString();
+                final String mSelectedRole = mChosenRadioButton.getText()
+                                .toString();
 
                 if (TextUtils.isEmpty(mAboutMeText)) {
                     showCrouton("Please include a short description about you.", AlertStyle.ERROR);
                     return;
                 }
 
-                String[] mRecipients = new String[1];
+                final String[] mRecipients = new String[1];
                 mRecipients[0] = getResources()
                                 .getString(R.string.barterli_email);
-                String mSubject = "Collaborate Request for Barter.Li in the role of "
+                final String mSubject = "Collaborate Request for Barter.Li in the role of "
                                 + mSelectedRole;
                 sendEmail(mRecipients, mSubject, mAboutMeText);
 
@@ -146,8 +146,9 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
         //        if (requestId == RequestId.COLLABORATE_REQUEST) {
         //            String mStatus = response.responseBundle
         //                            .getString(HttpConstants.STATUS);
@@ -163,14 +164,14 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
     }
 
     private void sendEmail(final String[] recipients, final String subject,
                     final String message) {
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        final Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_EMAIL, recipients);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
         emailIntent.putExtra(Intent.EXTRA_TEXT, message);

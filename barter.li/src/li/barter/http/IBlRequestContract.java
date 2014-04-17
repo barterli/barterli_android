@@ -35,7 +35,7 @@ public interface IBlRequestContract {
      * @return The request Id
      */
     public int getRequestId();
-    
+
     /**
      * Gets the extras associated with this request
      * 

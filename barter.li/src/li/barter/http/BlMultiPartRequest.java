@@ -43,8 +43,8 @@ public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo>
     /**
      * An identifier for the request that was made
      */
-    private int mRequestId;
-    
+    private int                 mRequestId;
+
     /**
      * Any extras that can be passed into the request
      */
@@ -57,8 +57,8 @@ public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo>
      * @param volleyCallbacks The {@link VolleyCallbacks} reference to receive
      *            the callbacks
      */
-public BlMultiPartRequest(final int method, final String url, final String requestBody, final VolleyCallbacks volleyCallbacks) {
-    super(method, url, volleyCallbacks, volleyCallbacks);
+    public BlMultiPartRequest(final int method, final String url, final String requestBody, final VolleyCallbacks volleyCallbacks) {
+        super(method, url, volleyCallbacks, volleyCallbacks);
     }
 
     @Override
@@ -69,11 +69,12 @@ public BlMultiPartRequest(final int method, final String url, final String reque
         try {
             final ResponseInfo responseInfo = parser
                             .getSuccessResponse(mRequestId, new String(response.data, HTTP.UTF_8));
-            
-            if(responseInfo.success) {
-                return Response.success(responseInfo, HttpHeaderParser.parseCacheHeaders(response));
+
+            if (responseInfo.success) {
+                return Response.success(responseInfo, HttpHeaderParser
+                                .parseCacheHeaders(response));
             }
-            
+
             return Response.error(new ParseError("Unable to parse and store data!"));
         } catch (final JSONException e) {
             return Response.error(new ParseError(e));
@@ -99,7 +100,7 @@ public BlMultiPartRequest(final int method, final String url, final String reque
             return super.parseNetworkError(volleyError);
         }
     }
-    
+
     /**
      * Gets the extras associated with this request
      * 
@@ -123,16 +124,16 @@ public BlMultiPartRequest(final int method, final String url, final String reque
      * @param value The value to map to the key
      */
     @Override
-    public void addExtra(String key, Object value) {
+    public void addExtra(final String key, final Object value) {
 
-        if(mExtras == null) {
+        if (mExtras == null) {
             mExtras = new HashMap<String, Object>();
         }
         mExtras.put(key, value);
     }
 
     @Override
-    public void setRequestId(int requestId) {
+    public void setRequestId(final int requestId) {
         mRequestId = requestId;
     }
 

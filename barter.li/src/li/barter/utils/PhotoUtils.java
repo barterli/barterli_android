@@ -16,9 +16,6 @@
 
 package li.barter.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.ContentUris;
@@ -32,7 +29,9 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.util.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  * This class includes utility functions to work with images.
@@ -70,16 +69,17 @@ public class PhotoUtils {
      * @param title title to be given to the image to be saved
      */
 
-    public static void saveImage(Bitmap bitmap, String title) {
-        File file = new File(Environment.getExternalStorageDirectory(), title);
-        if (file.exists())
+    public static void saveImage(final Bitmap bitmap, final String title) {
+        final File file = new File(Environment.getExternalStorageDirectory(), title);
+        if (file.exists()) {
             file.delete();
+        }
         try {
-            FileOutputStream out = new FileOutputStream(file);
+            final FileOutputStream out = new FileOutputStream(file);
             bitmap.compress(Bitmap.CompressFormat.PNG, 90, out);
             out.flush();
             out.close();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }
@@ -91,8 +91,8 @@ public class PhotoUtils {
      * @param photoUri
      * @return orientation of the image
      */
-    public static int getOrientation(Context context, Uri photoUri) {
-        Cursor cursor = context.getContentResolver()
+    public static int getOrientation(final Context context, final Uri photoUri) {
+        final Cursor cursor = context.getContentResolver()
                         .query(photoUri, new String[] {
                             MediaStore.Images.ImageColumns.ORIENTATION
                         }, null, null, null);
@@ -114,8 +114,9 @@ public class PhotoUtils {
      * @return
      */
 
-    public static Bitmap rotateBitmapIfNeededAndCompressIfTold(Context context,
-                    Uri uri, String source, boolean shouldCompress) {
+    public static Bitmap rotateBitmapIfNeededAndCompressIfTold(
+                    final Context context, final Uri uri, final String source,
+                    final boolean shouldCompress) {
 
         if (!(source.equals("Camera") || (source.equals("Gallery")))) {
             return null;
@@ -127,12 +128,12 @@ public class PhotoUtils {
 
             tempPath = getPath(context, uri);
         } else {
-            File f = new File(uri.getPath());
+            final File f = new File(uri.getPath());
             tempPath = f.getAbsolutePath();
             //tempPath = getRealPathFromURI(uri, context);
 
         }
-        BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
+        final BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
         bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
 
         if (shouldCompress) {
@@ -146,11 +147,10 @@ public class PhotoUtils {
 
         if (source.equals("Gallery")) {
             if (PhotoUtils.getOrientation(context, uri) != 0) {
-                Matrix matrix = new Matrix();
+                final Matrix matrix = new Matrix();
                 matrix.postRotate(PhotoUtils.getOrientation(context, uri));
-                Bitmap rotatedBm = Bitmap
-                                .createBitmap(bm, 0, 0, bm.getWidth(), bm
-                                                .getHeight(), matrix, true);
+                final Bitmap rotatedBm = Bitmap.createBitmap(bm, 0, 0, bm
+                                .getWidth(), bm.getHeight(), matrix, true);
                 return rotatedBm;
             } else {
                 return bm;
@@ -164,7 +164,7 @@ public class PhotoUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
      */
-    public static boolean isMediaDocument(Uri uri) {
+    public static boolean isMediaDocument(final Uri uri) {
         return "com.android.providers.media.documents".equals(uri
                         .getAuthority());
     }
@@ -173,7 +173,7 @@ public class PhotoUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
      */
-    public static boolean isDownloadsDocument(Uri uri) {
+    public static boolean isDownloadsDocument(final Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri
                         .getAuthority());
     }
@@ -182,7 +182,7 @@ public class PhotoUtils {
      * @param uri The Uri to check.
      * @return Whether the Uri authority is ExternalStorageProvider.
      */
-    public static boolean isExternalStorageDocument(Uri uri) {
+    public static boolean isExternalStorageDocument(final Uri uri) {
         return "com.android.externalstorage.documents".equals(uri
                         .getAuthority());
     }
@@ -197,8 +197,8 @@ public class PhotoUtils {
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
-    public static String getDataColumn(Context context, Uri uri,
-                    String selection, String[] selectionArgs) {
+    public static String getDataColumn(final Context context, final Uri uri,
+                    final String selection, final String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -209,13 +209,14 @@ public class PhotoUtils {
         try {
             cursor = context.getContentResolver()
                             .query(uri, projection, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
+            if ((cursor != null) && cursor.moveToFirst()) {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
         } finally {
-            if (cursor != null)
+            if (cursor != null) {
                 cursor.close();
+            }
         }
         return null;
     }

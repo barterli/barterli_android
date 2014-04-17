@@ -206,7 +206,7 @@ class BarterLiAsyncQueryHandler {
     void cancel(final int token) {
 
         //If the token is not present, we need not iterate through the map at all
-        if(!mTasks.containsKey(token)) {
+        if (!mTasks.containsKey(token)) {
             return;
         }
         for (final Iterator<Map.Entry<Integer, QueryTask>> it = mTasks

@@ -115,7 +115,7 @@ public abstract class AbstractRabbitMQConnector {
             return false;
         }
     }
-    
+
     /**
      * Publish a message to a queue
      * 

@@ -72,7 +72,7 @@ public class AppConstants {
             return mAuthToken;
         }
 
-        public void setAuthToken(String authToken) {
+        public void setAuthToken(final String authToken) {
             if (authToken == null) {
                 mAuthToken = "";
             } else {
@@ -84,7 +84,7 @@ public class AppConstants {
             return mEmail;
         }
 
-        public void setEmail(String email) {
+        public void setEmail(final String email) {
             if (email == null) {
                 mEmail = "";
             } else {
@@ -96,7 +96,7 @@ public class AppConstants {
             return mId;
         }
 
-        public void setId(String id) {
+        public void setId(final String id) {
             if (id == null) {
                 mId = "";
             } else {
@@ -148,7 +148,7 @@ public class AppConstants {
             return mIsNetworkConnected;
         }
 
-        public void setNetworkConnected(boolean isNetworkConnected) {
+        public void setNetworkConnected(final boolean isNetworkConnected) {
             mIsNetworkConnected = isNetworkConnected;
         }
 
@@ -156,7 +156,7 @@ public class AppConstants {
             return mCurrentNetworkType;
         }
 
-        public void setCurrentNetworkType(int currentNetworkType) {
+        public void setCurrentNetworkType(final int currentNetworkType) {
             mCurrentNetworkType = currentNetworkType;
         }
 
@@ -164,7 +164,7 @@ public class AppConstants {
             return mLatestLocation;
         }
 
-        public void setLatestLocation(Location latestLocation) {
+        public void setLatestLocation(final Location latestLocation) {
             if (latestLocation == null) {
                 mLatestLocation = defaultLocation;
             }

@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -193,8 +192,9 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
         if (requestId == RequestId.CREATE_USER) {
 
             final Bundle userInfo = response.responseBundle;
@@ -225,7 +225,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_location, userInfo
                                             .getString(HttpConstants.LOCATION));
-            
+
             BarterLiApplication.startChatService();
 
             final String locationId = userInfo
@@ -257,9 +257,9 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
 
         if (requestId == RequestId.CREATE_USER) {
             showCrouton(errorMessage, AlertStyle.ERROR);

@@ -42,14 +42,14 @@ public class ChatDetailAdapter extends CursorAdapter {
      * View Types. If there are n types of views, these HAVE to be numbered from
      * 0 to n-1
      */
-    private static final int      INCOMING_MESSAGE = 0;
-    private static final int      OUTGOING_MESSAGE = 1;
+    private static final int            INCOMING_MESSAGE = 0;
+    private static final int            OUTGOING_MESSAGE = 1;
     /**
      * Map to maintain a reference between the positions and the view types
      */
-    private Map<Integer, Integer> mPositionViewTypeMap;
+    private final Map<Integer, Integer> mPositionViewTypeMap;
 
-    public ChatDetailAdapter(Context context, Cursor cursor) {
+    public ChatDetailAdapter(final Context context, final Cursor cursor) {
         super(context, cursor, 0);
         mPositionViewTypeMap = new HashMap<Integer, Integer>();
         buildMapForCursor(cursor);
@@ -62,10 +62,10 @@ public class ChatDetailAdapter extends CursorAdapter {
      * 
      * @param cursor The cursor to traverse
      */
-    private void buildMapForCursor(Cursor cursor) {
+    private void buildMapForCursor(final Cursor cursor) {
 
         mPositionViewTypeMap.clear();
-        if (cursor != null && !cursor.isClosed()) {
+        if ((cursor != null) && !cursor.isClosed()) {
             cursor.moveToPosition(-1);
             String receiverId = null;
             while (cursor.moveToNext()) {
@@ -92,7 +92,7 @@ public class ChatDetailAdapter extends CursorAdapter {
     }
 
     @Override
-    public int getItemViewType(int position) {
+    public int getItemViewType(final int position) {
 
         return mPositionViewTypeMap.get(position);
     }
@@ -104,14 +104,18 @@ public class ChatDetailAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(final View view, final Context context,
+                    final Cursor cursor) {
 
-        ((TextView) view.getTag(R.id.text_chat_message)).setText(cursor.getString(cursor.getColumnIndex(DatabaseColumns.MESSAGE)));
-        
+        ((TextView) view.getTag(R.id.text_chat_message))
+                        .setText(cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.MESSAGE)));
+
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+    public View newView(final Context context, final Cursor cursor,
+                    final ViewGroup parent) {
 
         final int viewType = mPositionViewTypeMap.get(cursor.getPosition());
         View view = null;

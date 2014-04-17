@@ -72,8 +72,8 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     private ChatService             mChatService;
 
     private boolean                 mBoundToChatService;
-    
-    private boolean mFirstLoad;
+
+    private boolean                 mFirstLoad;
 
     private final String            mChatSelection = DatabaseColumns.CHAT_ID
                                                                    + SQLConstants.EQUALS_ARG;
@@ -116,27 +116,27 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
         getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
         mAcknowledge = new ConcreteChatAcknowledge();
-        
-        if(savedInstanceState == null) {
+
+        if (savedInstanceState == null) {
             mFirstLoad = false;
         } else {
             mFirstLoad = savedInstanceState.getBoolean(Keys.FIRST_LOAD);
         }
         return view;
     }
-    
+
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.FIRST_LOAD, mFirstLoad);
     }
-    
+
     @Override
     public void onPause() {
         mAcknowledge.mChatDetailsFragment = null;
         super.onPause();
     }
-    
+
     @Override
     public void onResume() {
         mAcknowledge.mChatDetailsFragment = this;
@@ -144,7 +144,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(final Activity activity) {
         super.onAttach(activity);
         //Bind to chat service
         final Intent chatServiceBindIntent = new Intent(activity, ChatService.class);
@@ -165,34 +165,36 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
+    public void onServiceConnected(final ComponentName name,
+                    final IBinder service) {
 
         mBoundToChatService = true;
         mChatService = ((ChatServiceBinder) service).getService();
     }
 
     @Override
-    public void onServiceDisconnected(ComponentName name) {
+    public void onServiceDisconnected(final ComponentName name) {
         mBoundToChatService = false;
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
 
         if (id == Loaders.CHAT_DETAILS) {
             return new SQLiteLoader(getActivity(), false, TableChatMessages.NAME, null, mChatSelection, new String[] {
@@ -204,17 +206,19 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
 
         if (loader.getId() == Loaders.CHAT_DETAILS) {
-            
-            if(!mFirstLoad && cursor.getCount() == 0) {
+
+            if (!mFirstLoad && (cursor.getCount() == 0)) {
                 //First chat message, autofill the edit text with the message
                 mFirstLoad = true;
-                final String bookTitle = getArguments().getString(Keys.BOOK_TITLE);
-                
-                if(!TextUtils.isEmpty(bookTitle)) {
-                    mSubmitChatEditText.setText(getString(R.string.chat_opened_from, bookTitle));
+                final String bookTitle = getArguments()
+                                .getString(Keys.BOOK_TITLE);
+
+                if (!TextUtils.isEmpty(bookTitle)) {
+                    mSubmitChatEditText
+                                    .setText(getString(R.string.chat_opened_from, bookTitle));
                 }
             }
             mChatDetailAdapter.swapCursor(cursor);
@@ -223,7 +227,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(final Loader<Cursor> loader) {
 
         if (loader.getId() == Loaders.CHAT_DETAILS) {
             mChatDetailAdapter.swapCursor(null);
@@ -231,7 +235,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
 
         if (v.getId() == R.id.button_send) {
             final String message = mSubmitChatEditText.getText().toString();
@@ -254,7 +258,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
      * @param enabled <code>true</code> to enable the actions,
      *            <code>false</code> to disable
      */
-    private void setActionEnabled(boolean enabled) {
+    private void setActionEnabled(final boolean enabled) {
         mSubmitChatEditText.setEnabled(enabled);
         mSubmitChatButton.setEnabled(enabled);
     }
@@ -274,9 +278,9 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         private ChatDetailsFragment mChatDetailsFragment;
 
         @Override
-        public void onChatRequestComplete(boolean success) {
+        public void onChatRequestComplete(final boolean success) {
 
-            if (mChatDetailsFragment != null
+            if ((mChatDetailsFragment != null)
                             && mChatDetailsFragment.isVisible()) {
 
                 mChatDetailsFragment.onChatComplete(success);
@@ -291,7 +295,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
      * @param success <code>true</code> if the message was sent sucessfully,
      *            <code>false</code> otherwise
      */
-    public void onChatComplete(boolean success) {
+    public void onChatComplete(final boolean success) {
 
         if (success) {
             //Clear the submit chat text since it was sent successfully

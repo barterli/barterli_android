@@ -328,7 +328,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     public void updateLocation(final Location location) {
 
-        if (location.getLatitude() == 0.0 && location.getLongitude() == 0.0) {
+        if ((location.getLatitude() == 0.0) && (location.getLongitude() == 0.0)) {
             return;
         }
         if (!mMapAlreadyMovedOnce) {
@@ -366,7 +366,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void saveLastFetchedInfoToPref() {
 
-        if (mPrevSearchRadius > 0 && mLastFetchedLocation != null) {
+        if ((mPrevSearchRadius > 0) && (mLastFetchedLocation != null)) {
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_last_search_radius, mPrevSearchRadius);
             SharedPreferenceHelper
@@ -386,8 +386,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mMapView.onResume();
         mMapDrawerBlurHelper.onResume();
         final Location latestLocation = DeviceInfo.INSTANCE.getLatestLocation();
-        if (latestLocation.getLatitude() != 0.0
-                        && latestLocation.getLongitude() != 0.0) {
+        if ((latestLocation.getLatitude() != 0.0)
+                        && (latestLocation.getLongitude() != 0.0)) {
             updateLocation(latestLocation);
         }
     }
@@ -398,7 +398,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private void readLastFetchedInfoFromPref() {
 
         // Don't read from pref if already has fetched
-        if (mPrevSearchRadius == 0 && mLastFetchedLocation == null) {
+        if ((mPrevSearchRadius == 0) && (mLastFetchedLocation == null)) {
             mPrevSearchRadius = SharedPreferenceHelper
                             .getInt(getActivity(), R.string.pref_last_search_radius);
             mLastFetchedLocation = new Location(LocationManager.PASSIVE_PROVIDER);
@@ -440,11 +440,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             final Location center = Utils.getCenterLocationOfMap(getMap());
             final int searchRadius = Math.round(Utils
                             .getShortestRadiusFromCenter(mMapView) / 1000);
-            
-            if(searchRadius >= 20) {
+
+            if (searchRadius >= 20) {
                 return;
             }
-            
+
             mMapAlreadyMovedOnce = true;
 
             if (shouldRefetchBooks(center, searchRadius)) {
@@ -468,8 +468,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
         if (requestId == RequestId.SEARCH_BOOKS) {
 
@@ -486,9 +487,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
         if (requestId == RequestId.SEARCH_BOOKS) {
             showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
         }
@@ -563,7 +564,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * @return <code>true</code> if a new set should be fetched,
      *         <code>false</code> otherwise
      */
-    private boolean shouldRefetchBooks(Location center, int searchRadius) {
+    private boolean shouldRefetchBooks(final Location center,
+                    final int searchRadius) {
 
         if (mLastFetchedLocation != null) {
 
@@ -576,8 +578,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
              * radius is lesser than the older search radius, we don't need to
              * fetch the books again since the current set will include those
              */
-            if (distanceBetweenCurAndLastFetchedLocations <= 1.0f
-                            && searchRadius <= mPrevSearchRadius) {
+            if ((distanceBetweenCurAndLastFetchedLocations <= 1.0f)
+                            && (searchRadius <= mPrevSearchRadius)) {
                 Logger.v(TAG, "Points are really close. Don't fetch");
                 return false;
             }
@@ -598,11 +600,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                    long id) {
+    public void onItemClick(final AdapterView<?> parent, final View view,
+                    final int position, final long id) {
         if (parent.getId() == R.id.grid_books_around_me) {
 
-            Cursor cursor = (Cursor) mBooksAroundMeAdapter.getItem(position);
+            final Cursor cursor = (Cursor) mBooksAroundMeAdapter
+                            .getItem(position);
 
             final String bookId = cursor.getString(cursor
                             .getColumnIndex(DatabaseColumns.BOOK_ID));

@@ -32,10 +32,10 @@ import li.barter.fragments.ChatsFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
-import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.GooglePlayClientWrapper;
 
 /**
  * @author Vinay S Shenoy Main Activity for holding the Navigation Drawer and
@@ -148,15 +148,16 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
 
     }
 

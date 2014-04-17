@@ -16,14 +16,15 @@
 
 package li.barter.http;
 
-
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.text.TextUtils;
+
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -35,14 +36,6 @@ import li.barter.models.Team;
 import li.barter.parcelables.Hangout;
 import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
-
-import org.apache.http.HttpStatus;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.ContentValues;
-import android.os.Bundle;
 
 /**
  * Class that reads an API response and parses it and stores it in the database
@@ -114,13 +107,13 @@ public class HttpResponseParser {
             case RequestId.AMPQ: {
                 return parseAmpqResponse(response);
             }
-            
+
             case RequestId.TRIBUTE: {
-            	return parseTributeResponse(response);
+                return parseTributeResponse(response);
             }
-            
+
             case RequestId.TEAM: {
-            	return parseTeamResponse(response);
+                return parseTeamResponse(response);
             }
 
             default: {
@@ -136,18 +129,18 @@ public class HttpResponseParser {
      * @param response The response from server
      * @return
      */
-    private ResponseInfo parseAmpqResponse(String response) {
+    private ResponseInfo parseAmpqResponse(final String response) {
         return new ResponseInfo();
     }
-    
-    
+
     /**
      * Parse the response for Tribute
      * 
      * @param response The response from server
      * @return
      */
-    private ResponseInfo parseTributeResponse(String response) throws JSONException {
+    private ResponseInfo parseTributeResponse(final String response)
+                    throws JSONException {
         final ResponseInfo responseInfo = new ResponseInfo();
         //return new ResponseInfo();
 
@@ -156,41 +149,38 @@ public class HttpResponseParser {
                         .readJSONObject(responseObject, HttpConstants.TRIBUTE, true, true);
         final Bundle responseBundle = new Bundle();
         responseBundle.putString(HttpConstants.TRIBUTE_IMAGE_URL, JsonUtils
-               .readString(tributeObject, HttpConstants.TRIBUTE_IMAGE_URL, false, false));
+                        .readString(tributeObject, HttpConstants.TRIBUTE_IMAGE_URL, false, false));
         responseBundle.putString(HttpConstants.TRIBUTE_TEXT, JsonUtils
-                .readString(tributeObject, HttpConstants.TRIBUTE_TEXT, false, false));
+                        .readString(tributeObject, HttpConstants.TRIBUTE_TEXT, false, false));
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
     }
-    
-    
-    
+
     /**
      * Parse the response for Team
      * 
      * @param response The response from server
      * @return
      */
-    private ResponseInfo parseTeamResponse(String response) throws JSONException {
-    	final ResponseInfo responseInfo = new ResponseInfo();
+    private ResponseInfo parseTeamResponse(final String response)
+                    throws JSONException {
+        final ResponseInfo responseInfo = new ResponseInfo();
         final JSONObject responseObject = new JSONObject(response);
         final JSONArray teamResults = JsonUtils
-                .readJSONArray(responseObject, HttpConstants.TEAM, true, true);
-         final Team[] teamArray = new Team[teamResults.length()];
-         JSONObject teamObject = null;
-         for (int i = 0; i < teamArray.length; i++) {
-             teamObject = JsonUtils
-                             .readJSONObject(teamResults, i, true, true);
-             Logger.e(TAG, teamObject.toString());
-             teamArray[i] = new Team();
-             readTeamObjectIntoTeam(teamObject, teamArray[i]);
-         }
-         final Bundle responseBundle = new Bundle(1);
-         responseBundle.putParcelableArray(HttpConstants.TEAM, teamArray);
-         responseInfo.responseBundle = responseBundle;
-         return responseInfo;
+                        .readJSONArray(responseObject, HttpConstants.TEAM, true, true);
+        final Team[] teamArray = new Team[teamResults.length()];
+        JSONObject teamObject = null;
+        for (int i = 0; i < teamArray.length; i++) {
+            teamObject = JsonUtils.readJSONObject(teamResults, i, true, true);
+            Logger.e(TAG, teamObject.toString());
+            teamArray[i] = new Team();
+            readTeamObjectIntoTeam(teamObject, teamArray[i]);
+        }
+        final Bundle responseBundle = new Bundle(1);
+        responseBundle.putParcelableArray(HttpConstants.TEAM, teamArray);
+        responseInfo.responseBundle = responseBundle;
+        return responseInfo;
     }
-
 
     /**
      * Method for parsing the create user/login response
@@ -222,17 +212,17 @@ public class HttpResponseParser {
                         .readString(userObject, HttpConstants.FIRST_NAME, false, false));
         responseBundle.putString(HttpConstants.LAST_NAME, JsonUtils
                         .readString(userObject, HttpConstants.LAST_NAME, false, false));
-        
-        final JSONArray booksArray = JsonUtils.readJSONArray(userObject, HttpConstants.BOOKS, true, true);
-        
+
+        final JSONArray booksArray = JsonUtils
+                        .readJSONArray(userObject, HttpConstants.BOOKS, true, true);
+
         JSONObject bookObject = null;
         final ContentValues values = new ContentValues();
         final String selection = DatabaseColumns.BOOK_ID
                         + SQLConstants.EQUALS_ARG;
         final String[] args = new String[1];
         for (int i = 0; i < booksArray.length(); i++) {
-            bookObject = JsonUtils
-                            .readJSONObject(booksArray, i, true, true);
+            bookObject = JsonUtils.readJSONObject(booksArray, i, true, true);
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
 
             //First try to update the table if a book already exists
@@ -359,8 +349,8 @@ public class HttpResponseParser {
      * @return
      * @throws JSONException If response is invalid json
      */
-    private ResponseInfo parseSetUserPreferredLocationResponse(String response)
-                    throws JSONException {
+    private ResponseInfo parseSetUserPreferredLocationResponse(
+                    final String response) throws JSONException {
         final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
@@ -394,7 +384,7 @@ public class HttpResponseParser {
                         .readDouble(hangoutObject, HttpConstants.LONGITUDE, true, true);
 
     }
-    
+
     /**
      * Reads a TEAM {@link JSONObject} into a {@link Team} model
      * 
@@ -404,14 +394,14 @@ public class HttpResponseParser {
      */
     private void readTeamObjectIntoTeam(final JSONObject teamObject,
                     final Team team) throws JSONException {
-    	String email = (JsonUtils
-                .readString(teamObject, HttpConstants.EMAIL, false, false));
-    	String name = JsonUtils
-                .readString(teamObject, HttpConstants.NAME, true, true);
-    	String description = JsonUtils
-                .readString(teamObject, HttpConstants.DESCRIPTION, false, false);
-    	String imageUrl = JsonUtils
-                .readString(teamObject, HttpConstants.IMAGE_URL, false, false);
+        final String email = (JsonUtils
+                        .readString(teamObject, HttpConstants.EMAIL, false, false));
+        final String name = JsonUtils
+                        .readString(teamObject, HttpConstants.NAME, true, true);
+        final String description = JsonUtils
+                        .readString(teamObject, HttpConstants.DESCRIPTION, false, false);
+        final String imageUrl = JsonUtils
+                        .readString(teamObject, HttpConstants.IMAGE_URL, false, false);
         team.setName(name);
         team.setEmail(email);
         team.setDescription(description);
@@ -465,17 +455,19 @@ public class HttpResponseParser {
         if (locationObject != null) {
             values.put(DatabaseColumns.LOCATION_ID, parseAndStoreLocation(locationObject));
         }
-        
-        final JSONArray tagsArray = JsonUtils.readJSONArray(bookObject, HttpConstants.TAGS, true, true);
-        
-        if(tagsArray.length() > 0) {
+
+        final JSONArray tagsArray = JsonUtils
+                        .readJSONArray(bookObject, HttpConstants.TAGS, true, true);
+
+        if (tagsArray.length() > 0) {
             final String[] tags = new String[tagsArray.length()];
-            
-            for(int i = 0; i < tagsArray.length(); i++) {
+
+            for (int i = 0; i < tagsArray.length(); i++) {
                 tags[i] = JsonUtils.readString(tagsArray, i, true, true);
             }
-            
-            values.put(DatabaseColumns.BARTER_TYPE, TextUtils.join(AppConstants.BARTER_TYPE_SEPARATOR, tags));
+
+            values.put(DatabaseColumns.BARTER_TYPE, TextUtils
+                            .join(AppConstants.BARTER_TYPE_SEPARATOR, tags));
         }
         return bookId;
     }
@@ -557,11 +549,11 @@ public class HttpResponseParser {
      * @throws JSONException
      */
 
-    private ResponseInfo parseReportBugOrSuggestFeatureResponse(String response)
-                    throws JSONException {
+    private ResponseInfo parseReportBugOrSuggestFeatureResponse(
+                    final String response) throws JSONException {
         final ResponseInfo responseInfo = new ResponseInfo();
         final JSONObject responseObject = new JSONObject(response);
-        String mStatus = JsonUtils
+        final String mStatus = JsonUtils
                         .readString(responseObject, HttpConstants.STATUS, true, true);
 
         final Bundle responseBundle = new Bundle(1);

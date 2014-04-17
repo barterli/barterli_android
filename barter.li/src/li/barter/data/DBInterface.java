@@ -240,9 +240,10 @@ public class DBInterface {
                         .getInstance(BarterLiApplication.getStaticContext())
                         .notifyChange(tableName);
     }
-    
+
     /**
      * Cancels any pending async db operations
+     * 
      * @param token The token to cancel
      */
     public static void cancelAsyncQuery(final int token) {

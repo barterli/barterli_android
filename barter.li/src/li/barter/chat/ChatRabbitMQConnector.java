@@ -138,9 +138,9 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
      * @return The queue name
      * @throws IOException If the queue could not be declared
      */
-    public String declareQueue(final String queue, boolean durable,
-                    boolean exclusive, boolean autoDelete,
-                    Map<String, Object> args) throws IOException {
+    public String declareQueue(final String queue, final boolean durable,
+                    final boolean exclusive, final boolean autoDelete,
+                    final Map<String, Object> args) throws IOException {
         return mChannel.queueDeclare(queue, durable, exclusive, autoDelete, args)
                         .getQueue();
     }
@@ -185,10 +185,10 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                     } catch (final InterruptedException ie) {
                         ie.printStackTrace();
                         dispose();
-                    } catch(ShutdownSignalException e) {
+                    } catch (final ShutdownSignalException e) {
                         e.printStackTrace();
                         dispose();
-                    } catch(ConsumerCancelledException e) {
+                    } catch (final ConsumerCancelledException e) {
                         e.printStackTrace();
                         dispose();
                     }

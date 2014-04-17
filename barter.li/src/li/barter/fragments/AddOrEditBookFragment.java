@@ -27,7 +27,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -157,7 +156,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      * 
      * @param view The content view of the fragment
      */
-    private void initBarterTypeCheckBoxes(View view) {
+    private void initBarterTypeCheckBoxes(final View view) {
         mBarterCheckBox = (CheckBox) view.findViewById(R.id.checkbox_barter);
         mReadCheckBox = (CheckBox) view.findViewById(R.id.checkbox_read);
         mSellCheckBox = (CheckBox) view.findViewById(R.id.checkbox_sell);
@@ -244,7 +243,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void setCheckBoxesForBarterTypes(final List<String> barterTypes) {
         if (barterTypes != null) {
-            for (CheckBox checkBox : mBarterTypeCheckBoxes) {
+            for (final CheckBox checkBox : mBarterTypeCheckBoxes) {
 
                 if (barterTypes.contains(checkBox
                                 .getTag(R.string.tag_barter_type))) {
@@ -311,7 +310,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         final JSONArray tagNamesArray = new JSONArray();
 
-        for (CheckBox checkBox : mBarterTypeCheckBoxes) {
+        for (final CheckBox checkBox : mBarterTypeCheckBoxes) {
 
             if (checkBox.isChecked()) {
                 tagNamesArray.put(checkBox.getTag(R.string.tag_barter_type));
@@ -386,7 +385,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             // Flag to check if at least one of the barter checkboxes is checked
             boolean anyOneChecked = false;
-            for (CheckBox checkBox : mBarterTypeCheckBoxes) {
+            for (final CheckBox checkBox : mBarterTypeCheckBoxes) {
                 anyOneChecked |= checkBox.isChecked();
             }
 
@@ -398,7 +397,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         if (!TextUtils.isEmpty(isbn)) {
             isValid &= isNumeric(isbn);
-            if (!(isbn.length() == 13 || isbn.length() == 10)) {
+            if (!((isbn.length() == 13) || (isbn.length() == 10))) {
                 isValid = false;
             }
         }
@@ -407,15 +406,16 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-            ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
         if (requestId == RequestId.GET_BOOK_INFO) {
             // TODO Read book info from bundle
         } else if (requestId == RequestId.CREATE_BOOK) {
             Logger.v(TAG, "Created Book Id %s", response.responseBundle
-                    .getString(HttpConstants.ID_BOOK));
-            
+                            .getString(HttpConstants.ID_BOOK));
+
             final String bookId = response.responseBundle
                             .getString(HttpConstants.ID_BOOK);
             final Bundle showBooksArgs = new Bundle(3);
@@ -430,31 +430,35 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
         if (requestId == RequestId.GET_BOOK_INFO) {
             showCrouton(R.string.unable_to_fetch_book_info, AlertStyle.ERROR);
         }
     }
 
     @Override
-    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+    public void onInsertComplete(final int token, final Object cookie,
+                    final long insertRowId) {
 
     }
 
     @Override
-    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+    public void onDeleteComplete(final int token, final Object cookie,
+                    final int deleteCount) {
 
     }
 
     @Override
-    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+    public void onUpdateComplete(final int token, final Object cookie,
+                    final int updateCount) {
 
     }
 
     @Override
-    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+    public void onQueryComplete(final int token, final Object cookie,
+                    final Cursor cursor) {
 
         if (token == QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK) {
 
@@ -473,7 +477,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     // TODO Show location address
                 }
 
-            } catch (JSONException e) {
+            } catch (final JSONException e) {
                 Logger.e(TAG, e, "Unable to build location object");
             } finally {
                 cursor.close();
@@ -495,10 +499,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      * @return
      */
 
-    private boolean isNumeric(String str) {
+    private boolean isNumeric(final String str) {
         try {
-            double d = Double.parseDouble(str);
-        } catch (NumberFormatException nfe) {
+            final double d = Double.parseDouble(str);
+        } catch (final NumberFormatException nfe) {
             return false;
         }
         return true;

@@ -39,31 +39,28 @@ import li.barter.utils.Logger;
  */
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
-public class TributeFragment  extends AbstractBarterLiFragment {
+public class TributeFragment extends AbstractBarterLiFragment {
 
-    private static final String           TAG          = "TributeFragment";
+    private static final String TAG          = "TributeFragment";
 
-    private TextView                      mTributeTextView;
-    private ImageView                     mTributeImageView;
-    private String                        mDefaultName = "Tribute To Aaron Swartz";
+    private TextView            mTributeTextView;
+    private ImageView           mTributeImageView;
+    private final String        mDefaultName = "Tribute To Aaron Swartz";
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         setHasOptionsMenu(true);
-        final View view = inflater
-                        .inflate(R.layout.fragment_tribute, null);
+        final View view = inflater.inflate(R.layout.fragment_tribute, null);
 
-        mTributeTextView = (TextView) view
-                        .findViewById(R.id.tribute_text);
-        mTributeImageView = (ImageView) view
-                        .findViewById(R.id.tribute_image);
+        mTributeTextView = (TextView) view.findViewById(R.id.tribute_text);
+        mTributeImageView = (ImageView) view.findViewById(R.id.tribute_image);
         mTributeTextView.setText("");
-      
+
         // Make a call to server
         try {
-            
+
             final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.TRIBUTE, null, mVolleyCallbacks);
             request.setRequestId(RequestId.TRIBUTE);
@@ -72,7 +69,7 @@ public class TributeFragment  extends AbstractBarterLiFragment {
             // Should never happen
             Logger.e(TAG, e, "Error building report bug json");
         }
-  
+
         return view;
     }
 
@@ -82,31 +79,32 @@ public class TributeFragment  extends AbstractBarterLiFragment {
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
         if (requestId == RequestId.TRIBUTE) {
-            	try {
-                   final String imageUrl = response.responseBundle.getString(HttpConstants.TRIBUTE_IMAGE_URL);
-                   final String message = response.responseBundle.getString(HttpConstants.TRIBUTE_TEXT);
-                   mTributeTextView.setText(message);
-                   Picasso.with(getActivity()).load(imageUrl).fit().into(mTributeImageView);
-                   Logger.v(TAG, imageUrl);
-                   
-                     
-            	}
-            	catch (final Exception e) {
-                    // Should never happen
-                    Logger.e(TAG, e, "Error parsing json response");
-                }
+            try {
+                final String imageUrl = response.responseBundle
+                                .getString(HttpConstants.TRIBUTE_IMAGE_URL);
+                final String message = response.responseBundle
+                                .getString(HttpConstants.TRIBUTE_TEXT);
+                mTributeTextView.setText(message);
+                Picasso.with(getActivity()).load(imageUrl).fit()
+                                .into(mTributeImageView);
+                Logger.v(TAG, imageUrl);
+
+            } catch (final Exception e) {
+                // Should never happen
+                Logger.e(TAG, e, "Error parsing json response");
             }
-     }
+        }
+    }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
     }
-    
-    
+
 }

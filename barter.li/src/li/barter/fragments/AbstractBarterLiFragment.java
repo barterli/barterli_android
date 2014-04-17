@@ -42,7 +42,6 @@ import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
-import li.barter.utils.Utils;
 import li.barter.widgets.TypefaceCache;
 
 /**
@@ -134,7 +133,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         mVolleyCallbacks = null;
         mRequestCounter = null;
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -295,7 +294,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     }
 
     @Override
-    public void onPreExecute(IBlRequestContract request) {
+    public void onPreExecute(final IBlRequestContract request) {
         mRequestCounter.incrementAndGet();
         if (mIsAttached) {
             getActivity().setProgressBarIndeterminateVisibility(true);
@@ -303,8 +302,8 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     }
 
     @Override
-    public void onPostExecute(IBlRequestContract request) {
-        if (mRequestCounter.decrementAndGet() == 0 && mIsAttached) {
+    public void onPostExecute(final IBlRequestContract request) {
+        if ((mRequestCounter.decrementAndGet() == 0) && mIsAttached) {
             getActivity().setProgressBarIndeterminateVisibility(false);
         }
     }
@@ -319,13 +318,14 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
                     String errorMessage, Bundle errorResponseBundle);
 
     @Override
-    public void onAuthError(int requestId, IBlRequestContract request) {
+    public void onAuthError(final int requestId,
+                    final IBlRequestContract request) {
         //TODO Show Login Fragment and ask user to login again
     }
 
     @Override
-    public void onOtherError(int requestId, IBlRequestContract request,
-                    int errorCode) {
+    public void onOtherError(final int requestId,
+                    final IBlRequestContract request, final int errorCode) {
         //TODO Show generic network error message
     }
 

@@ -126,7 +126,7 @@ public class Utils {
      * @param end The end location
      * @return The distance between two locations(in metres)
      */
-    public static float distanceBetween(Location start, Location end) {
+    public static float distanceBetween(final Location start, final Location end) {
 
         final float[] results = new float[1];
         Location.distanceBetween(start.getLatitude(), start.getLongitude(), end
@@ -234,7 +234,7 @@ public class Utils {
                     throws NoSuchAlgorithmException {
         final MessageDigest digest = MessageDigest.getInstance("SHA-1");
         digest.reset();
-        byte[] data = digest.digest(string.getBytes());
+        final byte[] data = digest.digest(string.getBytes());
         return String.format("%0" + (data.length * 2) + "X", new BigInteger(1, data));
     }
 
