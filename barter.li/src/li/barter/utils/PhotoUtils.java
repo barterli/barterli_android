@@ -22,8 +22,11 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -137,7 +140,8 @@ public class PhotoUtils {
         bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
 
         if (shouldCompress) {
-            bm = Bitmap.createScaledBitmap(bm, 200, 200, true);
+           //bm = Bitmap.createScaledBitmap(bm, 125, 125, true);
+           bm = compressManageAspect(200, 200, bm);
         }
 
         //return bm;        
@@ -292,6 +296,21 @@ public class PhotoUtils {
         }
 
         return null;
+    }
+    
+    private static Bitmap compressManageAspect(int height, int width, Bitmap originalImage){
+        Bitmap compressedBitmap = Bitmap.createBitmap((int)width, (int)height, Config.ARGB_8888);
+        float originalWidth = originalImage.getWidth(), originalHeight = originalImage.getHeight();
+        Canvas canvas = new Canvas(compressedBitmap);
+        float scale = width/originalWidth;
+        float xTranslation = 0.0f, yTranslation = (height - originalHeight * scale)/2.0f;
+        Matrix transformation = new Matrix();
+        transformation.postTranslate(xTranslation, yTranslation);
+        transformation.preScale(scale, scale);
+        Paint paint = new Paint();
+        paint.setFilterBitmap(true);
+        canvas.drawBitmap(originalImage, transformation, paint);
+        return compressedBitmap;
     }
 
 }
