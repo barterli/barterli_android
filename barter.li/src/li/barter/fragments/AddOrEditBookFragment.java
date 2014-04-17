@@ -78,7 +78,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private CheckBox            mGiveAwayCheckBox;
     private CheckBox            mKeepPrivateCheckBox;
     private CheckBox[]          mBarterTypeCheckBoxes;
-    private String              mBookId;
+    private String              mIsbnNumber;
     private boolean             mHasFetchedDetails;
 
     /**
@@ -106,8 +106,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         // If extras are null, it means that user has to decided to add the
         // book completely manually
         if (extras != null) {
-            mBookId = extras.getString(Keys.ISBN);
-            Logger.d(TAG, "Book Id:" + mBookId);
+            mIsbnNumber = extras.getString(Keys.ISBN);
+            Logger.d(TAG, "Book Id:" + mIsbnNumber);
 
             if (savedInstanceState != null) {
                 mHasFetchedDetails = savedInstanceState
@@ -117,8 +117,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             else {
                 loadDetailsForIntent(extras);
             }
-            if (!mHasFetchedDetails && !TextUtils.isEmpty(mBookId)) {
-                getBookInfoFromServer(mBookId);
+            if (!mHasFetchedDetails && !TextUtils.isEmpty(mIsbnNumber)) {
+                getBookInfoFromServer(mIsbnNumber);
             }
 
         }
@@ -198,7 +198,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void loadDetailsForIntent(final Bundle args) {
 
-        mBookId = args.getString(Keys.ISBN);
+        mIsbnNumber = args.getString(Keys.ISBN);
         final String title = args.getString(Keys.BOOK_TITLE);
         final String author = args.getString(Keys.AUTHOR);
         final String description = args.getString(Keys.DESCRIPTION);
@@ -206,7 +206,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         final List<String> barterTypes = args
                         .getStringArrayList(Keys.BARTER_TYPES);
 
-        mIsbnEditText.setText(mBookId);
+        mIsbnEditText.setText(mIsbnNumber);
         mTitleEditText.setText(title);
         mAuthorEditText.setText(author);
         mDescriptionEditText.setText(description);

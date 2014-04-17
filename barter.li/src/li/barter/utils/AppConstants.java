@@ -32,13 +32,16 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG                 = true;
+    public static final boolean DEBUG                   = true;
 
-    public static final String  FACEBOOK              = "facebook";
-    public static final String  MANUAL                = "manual";
-    public static final String  TIMESTAMP_FORMAT      = "yyyy-MM-dd'T'HH:mm:ssZ";
-    public static final String  CHAT_ID_FORMAT        = "%s#%s";
-    public static final String  BARTER_TYPE_SEPARATOR = ",";
+    public static final String  FACEBOOK                = "facebook";
+    public static final String  MANUAL                  = "manual";
+    public static final String  TIMESTAMP_FORMAT        = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String  CHAT_ID_FORMAT          = "%s#%s";
+    public static final String  BARTER_TYPE_SEPARATOR   = ",";
+
+    public static final String  ACTION_SHOW_ALL_CHATS   = "li.barter.ACTION_SHOW_ALL_CHATS";
+    public static final String  ACTION_SHOW_CHAT_DETAIL = "li.barter.ACTION_SHOW_CHAT_DETAIL";
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -199,24 +202,29 @@ public class AppConstants {
      */
     public static interface Keys {
 
-        public static final String ISBN               = "isbn";
-        public static final String BOOK_TITLE         = "book_title";
-        public static final String AUTHOR             = "author";
-        public static final String DESCRIPTION        = "description";
-        public static final String PUBLICATION_YEAR   = "publication_year";
-        public static final String BARTER_TYPES       = "barter_types";
-        public static final String SYMBOLOGY          = "symbology";
-        public static final String TYPE               = "type";
-        public static final String UP_NAVIGATION_TAG  = "up_navigation_tag";
-        public static final String MAP_MOVED_ONCE     = "map_moved_once";
-        public static final String DRAWER_OPENED_ONCE = "drawer_opened_once";
-        public static final String HAS_FETCHED_INFO   = "has_fetched_info";
-        public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
-        public static final String LOCATIONS          = "locations";
-        public static final String BOOK_ID            = "book_id";
-        public static final String CHAT_ID            = "chat_id";
-        public static final String USER_ID            = "user_id";
-        public static final String URL_TO_LOAD        = "url_to_load";
+        public static final String ISBN                       = "isbn";
+        public static final String BOOK_TITLE                 = "book_title";
+        public static final String AUTHOR                     = "author";
+        public static final String DESCRIPTION                = "description";
+        public static final String PUBLICATION_YEAR           = "publication_year";
+        public static final String BARTER_TYPES               = "barter_types";
+        public static final String SYMBOLOGY                  = "symbology";
+        public static final String TYPE                       = "type";
+        public static final String UP_NAVIGATION_TAG          = "up_navigation_tag";
+        public static final String MAP_MOVED_ONCE             = "map_moved_once";
+        public static final String DRAWER_OPENED_ONCE         = "drawer_opened_once";
+        public static final String HAS_FETCHED_INFO           = "has_fetched_info";
+        public static final String SUBMIT_ON_RESUME           = "submit_on_resumt";
+        public static final String LOCATIONS                  = "locations";
+        public static final String BOOK_ID                    = "book_id";
+        public static final String CHAT_ID                    = "chat_id";
+        public static final String USER_ID                    = "user_id";
+        public static final String URL_TO_LOAD                = "url_to_load";
+        public static final String LOCATION                   = "location";
+        public static final String SEARCH_RADIUS              = "search_radius";
+        public static final String LAST_FETCHED_LOCATION      = "last_fetched_location";
+        public static final String LAST_FETCHED_SEARCH_RADIUS = "last_fetched_search_radius";
+        public static final String FIRST_LOAD                 = "first_load";
 
     }
 

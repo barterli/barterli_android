@@ -28,6 +28,9 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Request class for submitting multipart requests to Volley
@@ -41,6 +44,11 @@ public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo>
      * An identifier for the request that was made
      */
     private int mRequestId;
+    
+    /**
+     * Any extras that can be passed into the request
+     */
+    private Map<String, Object> mExtras;
 
     /**
      * @param method One of the constants from {@link Method} class to identify
@@ -90,6 +98,37 @@ public BlMultiPartRequest(final int method, final String url, final String reque
         } else {
             return super.parseNetworkError(volleyError);
         }
+    }
+    
+    /**
+     * Gets the extras associated with this request
+     * 
+     * @return The extras returned with this request. Will not be
+     *         <code>null</code>
+     */
+    @Override
+    public Map<String, Object> getExtras() {
+
+        if (mExtras != null) {
+            return mExtras;
+        }
+
+        return Collections.<String, Object> emptyMap();
+    }
+
+    /**
+     * Add an extra to the request
+     * 
+     * @param key The key
+     * @param value The value to map to the key
+     */
+    @Override
+    public void addExtra(String key, Object value) {
+
+        if(mExtras == null) {
+            mExtras = new HashMap<String, Object>();
+        }
+        mExtras.put(key, value);
     }
 
     @Override

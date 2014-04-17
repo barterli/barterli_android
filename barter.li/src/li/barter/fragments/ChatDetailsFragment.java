@@ -72,6 +72,8 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     private ChatService             mChatService;
 
     private boolean                 mBoundToChatService;
+    
+    private boolean mFirstLoad;
 
     private final String            mChatSelection = DatabaseColumns.CHAT_ID
                                                                    + SQLConstants.EQUALS_ARG;
@@ -114,7 +116,19 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
         getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
         mAcknowledge = new ConcreteChatAcknowledge();
+        
+        if(savedInstanceState == null) {
+            mFirstLoad = false;
+        } else {
+            mFirstLoad = savedInstanceState.getBoolean(Keys.FIRST_LOAD);
+        }
         return view;
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(Keys.FIRST_LOAD, mFirstLoad);
     }
     
     @Override
@@ -184,7 +198,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
             return new SQLiteLoader(getActivity(), false, TableChatMessages.NAME, null, mChatSelection, new String[] {
                 mChatId
             }, null, null, DatabaseColumns.TIMESTAMP_EPOCH
-                            + SQLConstants.DESCENDING, null);
+                            + SQLConstants.ASCENDING, null);
         }
         return null;
     }
@@ -193,7 +207,18 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 
         if (loader.getId() == Loaders.CHAT_DETAILS) {
+            
+            if(!mFirstLoad && cursor.getCount() == 0) {
+                //First chat message, autofill the edit text with the message
+                mFirstLoad = true;
+                final String bookTitle = getArguments().getString(Keys.BOOK_TITLE);
+                
+                if(!TextUtils.isEmpty(bookTitle)) {
+                    mSubmitChatEditText.setText(getString(R.string.chat_opened_from, bookTitle));
+                }
+            }
             mChatDetailAdapter.swapCursor(cursor);
+            mChatListView.smoothScrollToPosition(mChatDetailAdapter.getCount() - 1);
         }
     }
 

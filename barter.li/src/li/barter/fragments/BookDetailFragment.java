@@ -148,6 +148,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mPublicationDateTextView = (TextView) view
                         .findViewById(R.id.text_publication_date);
         mChatWithOwnerButton = (Button) view.findViewById(R.id.button_chat);
+        mChatWithOwnerButton.setOnClickListener(this);
         initBarterTypeCheckBoxes(view);
 
     }
@@ -321,11 +322,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         if (v.getId() == R.id.button_chat) {
 
             if (isLoggedIn()) {
-                final Bundle args = new Bundle(2);
+                final Bundle args = new Bundle(3);
                 args.putString(Keys.CHAT_ID, ChatService
                                 .generateChatId(mUserId, UserInfo.INSTANCE
                                                 .getId()));
                 args.putString(Keys.USER_ID, mUserId);
+                args.putString(Keys.BOOK_TITLE, mTitleTextView.getText().toString());
 
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), ChatDetailsFragment.class
