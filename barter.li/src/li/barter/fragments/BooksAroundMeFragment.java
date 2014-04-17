@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -70,6 +71,7 @@ import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
 import li.barter.utils.Logger;
 import li.barter.utils.MapDrawerInteractionHelper;
+import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
 import li.barter.widgets.FullWidthDrawerLayout;
 
@@ -200,7 +202,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
             mMapAlreadyMovedOnce = false;
-            fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), 1);
 
         } else {
             mDrawerOpenedAutomatically = savedInstanceState
@@ -354,13 +355,34 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPause() {
         super.onPause();
+        saveLastFetchedInfoToPref();
         mMapView.onPause();
         mMapDrawerBlurHelper.onPause();
+    }
+
+    /**
+     * Saves the last fetched info to shared preferences. This will be read
+     * again in onResume so as to prevent refetching of the books
+     */
+    private void saveLastFetchedInfoToPref() {
+
+        if (mPrevSearchRadius > 0 && mLastFetchedLocation != null) {
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_last_search_radius, mPrevSearchRadius);
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_last_fetched_latitude, mLastFetchedLocation
+                                            .getLatitude());
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_last_fetched_longitude, mLastFetchedLocation
+                                            .getLongitude());
+
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        readLastFetchedInfoFromPref();
         mMapView.onResume();
         mMapDrawerBlurHelper.onResume();
         final Location latestLocation = DeviceInfo.INSTANCE.getLatestLocation();
@@ -368,6 +390,26 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                         && latestLocation.getLongitude() != 0.0) {
             updateLocation(latestLocation);
         }
+    }
+
+    /**
+     * Reads the latest fetched locations from shared preferences
+     */
+    private void readLastFetchedInfoFromPref() {
+
+        // Don't read from pref if already has fetched
+        if (mPrevSearchRadius == 0 && mLastFetchedLocation == null) {
+            mPrevSearchRadius = SharedPreferenceHelper
+                            .getInt(getActivity(), R.string.pref_last_search_radius);
+            mLastFetchedLocation = new Location(LocationManager.PASSIVE_PROVIDER);
+            mLastFetchedLocation
+                            .setLatitude(SharedPreferenceHelper
+                                            .getDouble(getActivity(), R.string.pref_last_fetched_latitude));
+            mLastFetchedLocation
+                            .setLongitude(SharedPreferenceHelper
+                                            .getDouble(getActivity(), R.string.pref_last_fetched_longitude));
+        }
+
     }
 
     @Override
@@ -394,10 +436,20 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onFinish() {
         if (!mMapAlreadyMovedOnce) {
-            mMapAlreadyMovedOnce = true;
+
+            final Location center = Utils.getCenterLocationOfMap(getMap());
             final int searchRadius = Math.round(Utils
                             .getShortestRadiusFromCenter(mMapView) / 1000);
-            fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), searchRadius);
+            
+            if(searchRadius >= 20) {
+                return;
+            }
+            
+            mMapAlreadyMovedOnce = true;
+
+            if (shouldRefetchBooks(center, searchRadius)) {
+                fetchBooksAroundMe(center, searchRadius);
+            }
         }
 
     }
@@ -495,35 +547,44 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                             .getShortestRadiusFromCenter(mMapView) / 1000);
             final Location center = Utils.getCenterLocationOfMap(getMap());
 
-            if (mLastFetchedLocation != null) {
-
-                /*
-                 * If the current centers distance is at a point close to the
-                 * current one, don't fetch since the books were fetched with
-                 * the center as the distance TODO Investigate the case where
-                 * the user just zooms the map in/out without moving it around
-                 * because the center will not change, only the search radius,
-                 * thus preventing the books from getting fetched
-                 */
-
-                final float distanceBetweenCurAndLastFetchedLocations = Utils
-                                .distanceBetween(center, mLastFetchedLocation) / 1000;
-
-                /*
-                 * If there's less than 1 km distance between the current
-                 * location and the location where we last fetched the books AND
-                 * the search radius is lesser than the older search radius, we
-                 * don't need to fetch the books again since the current set
-                 * will include those
-                 */
-                if (distanceBetweenCurAndLastFetchedLocations <= 1
-                                && searchRadius <= mPrevSearchRadius) {
-                    Logger.v(TAG, "Points are really close. Don't fetch");
-                    return;
-                }
+            if (shouldRefetchBooks(center, searchRadius)) {
+                fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), searchRadius);
             }
-            fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), searchRadius);
+
         }
+    }
+
+    /**
+     * Checks if a new set of books should be fetched
+     * 
+     * @param center The new center point at which the books should be fetched
+     * @param searchRadius The new search radius for which the books are being
+     *            fetched
+     * @return <code>true</code> if a new set should be fetched,
+     *         <code>false</code> otherwise
+     */
+    private boolean shouldRefetchBooks(Location center, int searchRadius) {
+
+        if (mLastFetchedLocation != null) {
+
+            final float distanceBetweenCurAndLastFetchedLocations = Utils
+                            .distanceBetween(center, mLastFetchedLocation) / 1000;
+
+            /*
+             * If there's less than 1 km distance between the current location
+             * and the location where we last fetched the books AND the search
+             * radius is lesser than the older search radius, we don't need to
+             * fetch the books again since the current set will include those
+             */
+            if (distanceBetweenCurAndLastFetchedLocations <= 1.0f
+                            && searchRadius <= mPrevSearchRadius) {
+                Logger.v(TAG, "Points are really close. Don't fetch");
+                return false;
+            }
+
+        }
+
+        return true;
     }
 
     @Override

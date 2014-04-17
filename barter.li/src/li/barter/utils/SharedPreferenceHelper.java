@@ -19,6 +19,7 @@ package li.barter.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 /**
  * Shared Preference management
@@ -27,6 +28,8 @@ import android.preference.PreferenceManager;
  */
 public class SharedPreferenceHelper {
 
+    private static final String TAG = "SharedPreferenceHelper";
+    
     /**
      * Checks whether the preferences contains a key or not
      * 
@@ -126,6 +129,49 @@ public class SharedPreferenceHelper {
         final SharedPreferences preferences = PreferenceManager
                         .getDefaultSharedPreferences(context);
         return preferences.getFloat(context.getString(key), defValue);
+
+    }
+
+    /**
+     * Get double value for a particular key.
+     * 
+     * @param context
+     * @param key The string resource Id of the key
+     * @return value or 0.0 if no mapping exists
+     */
+    public static double getDouble(final Context context, final int key) {
+
+        return getDouble(context, key, 0.0);
+
+    }
+
+    /**
+     * Get double value for a particular key.
+     * 
+     * @param context
+     * @param key The string resource Id of the key
+     * @param defValue The default value to return if the requested key is not
+     *            present
+     * @return value or defValue if no mapping exists
+     */
+    public static double getDouble(final Context context, final int key,
+                    final double defValue) {
+
+        final SharedPreferences preferences = PreferenceManager
+                        .getDefaultSharedPreferences(context);
+        final String stringValue = getString(context, key);
+
+        if (TextUtils.isEmpty(stringValue)) {
+            return defValue;
+        } else {
+
+            try {
+                return Double.parseDouble(stringValue);
+            } catch (NumberFormatException e) {
+                Logger.e(TAG, e, "Incorrect double value");
+                return defValue;
+            }
+        }
 
     }
 
@@ -234,6 +280,24 @@ public class SharedPreferenceHelper {
         final SharedPreferences.Editor editor = preferences.edit();
 
         editor.putFloat(context.getString(key), value);
+        editor.commit();
+    }
+
+    /**
+     * Set double value for a key.
+     * 
+     * @param context
+     * @param key The string resource Id of the key
+     * @param value The value to set for the key
+     */
+    public static void set(final Context context, final int key,
+                    final double value) {
+
+        final SharedPreferences preferences = PreferenceManager
+                        .getDefaultSharedPreferences(context);
+        final SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString(context.getString(key), String.valueOf(value));
         editor.commit();
     }
 
