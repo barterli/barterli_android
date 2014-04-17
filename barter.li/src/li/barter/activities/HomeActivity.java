@@ -44,7 +44,7 @@ public class HomeActivity extends AbstractBarterLiActivity {
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
         if (savedInstanceState == null) {
-            //loadBooksAroundMeFragment();
+            loadBooksAroundMeFragment();
         }
 
     }
