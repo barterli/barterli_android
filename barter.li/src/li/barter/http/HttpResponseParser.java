@@ -78,8 +78,7 @@ public class HttpResponseParser {
             }
 
             case RequestId.SEARCH_BOOKS: {
-                //Delete the current search results before parsing the old ones
-                DBInterface.delete(TableSearchBooks.NAME, null, null, true);
+               
                 return parseSearchBooksResponse(response);
             }
 

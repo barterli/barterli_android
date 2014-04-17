@@ -39,6 +39,7 @@ public class AppConstants {
     public static final String  TIMESTAMP_FORMAT      = "yyyy-MM-dd'T'HH:mm:ssZ";
     public static final String  CHAT_ID_FORMAT        = "%s#%s";
     public static final String  BARTER_TYPE_SEPARATOR = ",";
+    public static final int	    DEFAULT_PERPAGE_LIMIT = 6;
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -306,6 +307,9 @@ public class AppConstants {
         // 201-300 for update queries
         public static final int UPDATE_CHAT                          = 201;
         public static final int UPDATE_USER_FOR_CHAT                 = 202;
+        
+        //301-400 for delete queries
+        public static final int DELETE_BOOKS_SEARCH_RESULTS			 = 301;
     }
 
     /**
