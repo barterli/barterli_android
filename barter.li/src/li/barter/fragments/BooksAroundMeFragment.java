@@ -429,7 +429,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         final int searchRadius = Math.round(Utils
                         .getShortestRadiusFromCenter(mMapView) / 1000);
 
-        if (searchRadius >= 20) {
+        if (searchRadius >= 25) {
             return;
         }
 
