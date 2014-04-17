@@ -22,8 +22,8 @@
 
     <ImageView
         android:id="@+id/image_profile_pic"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:layout_margin="@dimen/margin_minimum"
         android:contentDescription="@string/image_profile_pic_description"
         android:src="@drawable/pic_avatar" />
