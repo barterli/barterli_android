@@ -710,6 +710,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
 
             assert (cookie != null);
 
+            pageCount = 1;
             final Bundle args = (Bundle) cookie;
             fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION), args
                             .getInt(Keys.SEARCH_RADIUS));
