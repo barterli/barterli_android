@@ -88,7 +88,7 @@ import li.barter.widgets.FullWidthDrawerLayout;
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
 LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
-                OnItemClickListener {
+                OnItemClickListener, OnScrollListener {
 
     private static final String           TAG            = "BooksAroundMeFragment";
 
@@ -211,36 +211,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         mMapDrawerBlurHelper = new MapDrawerInteractionHelper(getActivity(), mDrawerLayout, mBooksDrawerView, mMapView);
         mMapDrawerBlurHelper.init(this);
 
-        mBooksAroundMeGridView.setOnScrollListener(new OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                // userScrolled is set to true in order to prevent auto scrolling on page load
-                if (scrollState == 1 || scrollState == 2) {
-                    userScrolled = true;
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                            int visibleItemCount, int totalItemCount) {
-
-                //TODO
-                boolean loadMore = /* maybe add a padding */
-                firstVisibleItem + visibleItemCount >= totalItemCount
-                                - AppConstants.DEFAULT_LOAD_BEFORE_COUNT;
-                Logger.d(TAG, "visible count: %d", visibleItemCount);
-
-                if (loadMore && userScrolled) {
-                    pageCount++;
-                    loadMore = false;
-                    userScrolled = false;
-                    fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), 1);
-
-                }
-
-            }
-        });
+        mBooksAroundMeGridView.setOnScrollListener(this);
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
@@ -266,6 +237,36 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         loadBookSearchResults();
         setActionBarDrawerToggleEnabled(true);
         return contentView;
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        // userScrolled is set to true in order to prevent auto scrolling on page load
+        if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+                        || scrollState == OnScrollListener.SCROLL_STATE_FLING) {
+            userScrolled = true;
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem,
+                    int visibleItemCount, int totalItemCount) {
+
+        //TODO
+        boolean loadMore = /* maybe add a padding */
+        firstVisibleItem + visibleItemCount >= totalItemCount
+                        - AppConstants.DEFAULT_LOAD_BEFORE_COUNT;
+        Logger.d(TAG, "visible count: %d", visibleItemCount);
+
+        if (loadMore && userScrolled) {
+            pageCount++;
+            loadMore = false;
+            userScrolled = false;
+            fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils
+                            .getShortestRadiusFromCenter(mMapView) / 1000));
+
+        }
+
     }
 
     @Override
