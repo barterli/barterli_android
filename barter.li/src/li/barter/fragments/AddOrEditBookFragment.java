@@ -79,6 +79,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private CheckBox[]          mBarterTypeCheckBoxes;
     private String              mIsbnNumber;
     private boolean             mHasFetchedDetails;
+    private boolean             mEditMode;
+    private String              mBookId;
 
     /**
      * On resume, if <code>true</code> and the user has logged in, immediately
@@ -105,19 +107,27 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         // If extras are null, it means that user has to decided to add the
         // book completely manually
         if (extras != null) {
-            mIsbnNumber = extras.getString(Keys.ISBN);
-            Logger.d(TAG, "Book Id:" + mIsbnNumber);
 
-            if (savedInstanceState != null) {
-                mHasFetchedDetails = savedInstanceState
-                                .getBoolean(Keys.HAS_FETCHED_INFO);
-            }
+            mEditMode = extras.getBoolean(Keys.EDIT_MODE);
 
-            else {
-                loadDetailsForIntent(extras);
-            }
-            if (!mHasFetchedDetails && !TextUtils.isEmpty(mIsbnNumber)) {
-                getBookInfoFromServer(mIsbnNumber);
+            if (mEditMode) {
+                mBookId = extras.getString(Keys.BOOK_ID);
+                //TODO Load book details from DB
+            } else {
+                mIsbnNumber = extras.getString(Keys.ISBN);
+                Logger.d(TAG, "Book Isbn:" + mIsbnNumber);
+
+                if (savedInstanceState != null) {
+                    mHasFetchedDetails = savedInstanceState
+                                    .getBoolean(Keys.HAS_FETCHED_INFO);
+                }
+
+                else {
+                    loadDetailsForIntent(extras);
+                }
+                if (!mHasFetchedDetails && !TextUtils.isEmpty(mIsbnNumber)) {
+                    getBookInfoFromServer(mIsbnNumber);
+                }
             }
 
         }
@@ -323,7 +333,12 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     public void onResume() {
         super.onResume();
         if (mShouldSubmitOnResume && isLoggedIn()) {
-            createBookOnServer(null);
+
+            if (mEditMode) {
+                //TODO Edit book
+            } else {
+                createBookOnServer(null);
+            }
         }
     }
 
@@ -355,7 +370,12 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                                                 .getName(), loginArgs), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.BS_ADD_BOOK);
 
             } else {
-                createBookOnServer(null);
+
+                if (mEditMode) {
+                    //TODO Update book
+                } else {
+                    createBookOnServer(null);
+                }
             }
         }
     }

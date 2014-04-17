@@ -221,11 +221,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             }
 
             case R.id.action_edit_profile: {
-                final Bundle mEditBookArgs = new Bundle();
-                mEditBookArgs.putString(Keys.BOOK_ID, mBookId);
+                final Bundle args = new Bundle(2);
+                args.putString(Keys.BOOK_ID, mBookId);
+                args.putBoolean(Keys.EDIT_MODE, true);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), AddOrEditBookFragment.class
-                                                .getName(), mEditBookArgs), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_SINGLE_BOOK);
+                                                .getName(), args), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_SINGLE_BOOK);
 
                 return true;
             }
