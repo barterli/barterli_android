@@ -44,8 +44,8 @@ public class ShowWebViewFragment extends AbstractBarterLiFragment {
     private WebView             mWebView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                    Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater,
+                    final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         //setHasOptionsMenu(true);
         setActionBarDrawerToggleEnabled(false);
@@ -55,7 +55,7 @@ public class ShowWebViewFragment extends AbstractBarterLiFragment {
         mWebView.setWebViewClient(new myWebViewClient());
 
         final Bundle myArgs = getArguments();
-        String mUrlToLoad = myArgs.getString(Keys.URL_TO_LOAD);
+        final String mUrlToLoad = myArgs.getString(Keys.URL_TO_LOAD);
         mWebView.loadUrl(mUrlToLoad);
         return view;
     }
@@ -66,19 +66,21 @@ public class ShowWebViewFragment extends AbstractBarterLiFragment {
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
     }
 
     public class myWebViewClient extends WebViewClient {
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        public boolean shouldOverrideUrlLoading(final WebView view,
+                        final String url) {
             view.loadUrl(url);
             return true;
         }

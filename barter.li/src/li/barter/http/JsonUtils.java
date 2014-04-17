@@ -22,8 +22,6 @@ import org.json.JSONObject;
 
 import java.util.Locale;
 
-import li.barter.utils.Logger;
-
 /**
  * Utility class for reading items from {@link JSONObject}s or {@link JSONArray}
  * s

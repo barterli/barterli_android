@@ -22,8 +22,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 
 import li.barter.BarterLiApplication;
-import li.barter.utils.Utils;
 import li.barter.utils.AppConstants.DeviceInfo;
+import li.barter.utils.Utils;
 
 /**
  * Receiver for monitoring network changes

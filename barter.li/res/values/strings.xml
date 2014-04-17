@@ -41,6 +41,8 @@
     <string name="send">Send</string>
     <string name="app_id">458716080895923</string>
     <string name="enter_message">Enter your message</string>
+    <string name="new_messages">%d new messages!</string>
+    <string name="chat_opened_from" formatted="false">This chat was opened from %s.</string>
 
     <!-- Strings for AddBookActivity -->
     <string name="search_hint">Search by Title|Author|ISBN</string>
@@ -73,6 +75,7 @@
     <string name="error_unable_to_set_preferred_location">Unable to set preferred location for user.</string>
     <string name="error_not_connected_to_chat_service">Not connected to chat service.</string>
     <string name="error_unable_to_send_chat">Not able to send chat message</string>
+    <string name="no_personal_info">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this bug report will be available publicly.</string>
 
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>
@@ -113,7 +116,7 @@
         <item>No open source licences were violated in the making of this app.</item>
         <item>What is barter.li? Who\'s behind it?</item>
         <item>The inspiration for barter.li.</item>
-         <item>The team behind barter.li.</item>
+        <item>The team behind barter.li.</item>
     </string-array>
     <string-array name="months">
         <item>January</item>
@@ -131,16 +134,6 @@
     </string-array>
 
     <!-- String Related to Profile -->
-    <string name="pref_auth_token">auth_token</string>
-    <string name="pref_location">location</string>
-    <string name="pref_email">email</string>
-    <string name="pref_description">description</string>
-    <string name="pref_first_name">first_name</string>
-    <string name="pref_last_name">last_name</string>
-    <string name="pref_user_id">user_id</string>
-    <string name="pref_fb_username">fb_username</string>
-    <string name="pref_fb_userid">fb_userid</string>
-    <string name="pref_fb_access_token">fb_access_token</string>
     <string name="local_profile_image">barterli_avatar_small.png</string>
     <string name="image_profile_pic_description">Profile Picture</string>
     <string name="text_default_profile_name">Profile Name</string>

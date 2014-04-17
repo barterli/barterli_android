@@ -54,6 +54,7 @@
             android:layout_marginLeft="@dimen/activity_margin"
             android:layout_marginRight="@dimen/activity_margin"
             android:background="@color/transparent"
+            android:cacheColorHint="@color/transparent"
             android:horizontalSpacing="@dimen/bookGridHorizontalSpacing"
             android:numColumns="@integer/grid_col_count"
             android:overScrollMode="never"

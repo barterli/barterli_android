@@ -22,8 +22,8 @@ import android.text.TextUtils;
 
 import java.util.Locale;
 
-import li.barter.utils.Logger;
 import li.barter.utils.AppConstants.ChatType;
+import li.barter.utils.Logger;
 
 /**
  * @author Vinay S Shenoy Table representing a list of chats

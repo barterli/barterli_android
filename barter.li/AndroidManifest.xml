@@ -52,7 +52,7 @@
         <!-- Meta data for Google Maps API -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyB7qmzzX4G4ZF--1hfTSU6YQrDcAmIzHXI" />
+            android:value="@string/google_maps_v2_api_key" />
 
         <!-- Meta data for Google Play Services -->
         <meta-data
@@ -67,7 +67,8 @@
         <!-- Activity declarations -->
         <activity
             android:name="li.barter.activities.HomeActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

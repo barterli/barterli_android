@@ -19,8 +19,6 @@ package li.barter.http;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyError.ErrorCode;
 import com.android.volley.toolbox.HttpHeaderParser;
@@ -30,6 +28,9 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Request class for submitting requests to Volley
@@ -42,14 +43,20 @@ public class BlRequest extends JsonRequest<ResponseInfo> implements
     /**
      * An identifier for the request that was made
      */
-    private int mRequestId;
+    private int                 mRequestId;
+
+    /**
+     * Any extras that can be passed into the request
+     */
+    private Map<String, Object> mExtras;
 
     /**
      * @param method One of the constants from {@link Method} class to identify
      *            the request type
      * @param url The API endpoint
      * @param requestBody A string represention of the Json request body
-     * @param volleyCallbacks A {@link VolleyCallbacks} reference to receive the volley callbacks
+     * @param volleyCallbacks A {@link VolleyCallbacks} reference to receive the
+     *            volley callbacks
      */
     public BlRequest(final int method, final String url, final String requestBody, final VolleyCallbacks volleyCallbacks) {
         super(method, url, requestBody, volleyCallbacks, volleyCallbacks);
@@ -63,11 +70,12 @@ public class BlRequest extends JsonRequest<ResponseInfo> implements
         try {
             final ResponseInfo responseInfo = parser
                             .getSuccessResponse(mRequestId, new String(response.data, HTTP.UTF_8));
-            
-            if(responseInfo.success) {
-                return Response.success(responseInfo, HttpHeaderParser.parseCacheHeaders(response));
+
+            if (responseInfo.success) {
+                return Response.success(responseInfo, HttpHeaderParser
+                                .parseCacheHeaders(response));
             }
-            
+
             return Response.error(new ParseError("Unable to parse and store data!"));
         } catch (final JSONException e) {
             return Response.error(new ParseError(e));
@@ -94,8 +102,39 @@ public class BlRequest extends JsonRequest<ResponseInfo> implements
         }
     }
 
+    /**
+     * Gets the extras associated with this request
+     * 
+     * @return The extras returned with this request. Will not be
+     *         <code>null</code>
+     */
     @Override
-    public void setRequestId(int requestId) {
+    public Map<String, Object> getExtras() {
+
+        if (mExtras != null) {
+            return mExtras;
+        }
+
+        return Collections.<String, Object> emptyMap();
+    }
+
+    /**
+     * Add an extra to the request
+     * 
+     * @param key The key
+     * @param value The value to map to the key
+     */
+    @Override
+    public void addExtra(final String key, final Object value) {
+
+        if (mExtras == null) {
+            mExtras = new HashMap<String, Object>();
+        }
+        mExtras.put(key, value);
+    }
+
+    @Override
+    public void setRequestId(final int requestId) {
         mRequestId = requestId;
     }
 

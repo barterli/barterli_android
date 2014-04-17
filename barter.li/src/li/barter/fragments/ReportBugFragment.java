@@ -34,10 +34,10 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
 import li.barter.utils.Logger;
 
 /**
@@ -54,8 +54,8 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
     private Button              mReportBugButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                    Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater,
+                    final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         setActionBarDrawerToggleEnabled(false);
         final View view = inflater.inflate(R.layout.fragment_report_bug, null);
@@ -67,12 +67,12 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.button_report_bug: {
-                String ReportedBugTitle = getResources()
+                final String ReportedBugTitle = getResources()
                                 .getString(R.string.text_bug_title);
-                String mReportedBugText = mReportedBugTextView.getText()
+                final String mReportedBugText = mReportedBugTextView.getText()
                                 .toString();
 
                 if (TextUtils.isEmpty(mReportedBugText)) {
@@ -106,15 +106,16 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
         if (requestId == RequestId.REPORT_BUG) {
-            String mStatus = response.responseBundle
+            final String mStatus = response.responseBundle
                             .getString(HttpConstants.STATUS);
             if (mStatus.equals(HttpConstants.SUCCESS)) {
                 String mMessage = "Thanks for reporting bug. ";
-                if(!isLoggedIn()){
+                if (!isLoggedIn()) {
                     mMessage += "Make the most by registering and adding books.";
                 }
                 showCrouton(mMessage, AlertStyle.INFO);
@@ -128,9 +129,9 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
     }
 
 }

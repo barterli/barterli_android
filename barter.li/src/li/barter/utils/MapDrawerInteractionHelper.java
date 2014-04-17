@@ -191,13 +191,13 @@ public class MapDrawerInteractionHelper implements DrawerListener,
         unscheduleMapHideTask();
         mRenderScript.destroy();
     }
-    
+
     /**
      * Call in {@link Activity#onResume()} or in {@link Fragment#onResume()}
      */
     public void onResume() {
         mRenderScript = RenderScript.create(mContext);
-        
+
     }
 
     /**
@@ -515,7 +515,8 @@ public class MapDrawerInteractionHelper implements DrawerListener,
      */
     private Bitmap blurImage(final Context context, final Bitmap input,
                     final int blurRadius) {
-        final Allocation alloc = Allocation.createFromBitmap(mRenderScript, input);
+        final Allocation alloc = Allocation
+                        .createFromBitmap(mRenderScript, input);
 
         final ScriptIntrinsicBlur blur = ScriptIntrinsicBlur
                         .create(mRenderScript, alloc.getElement());
@@ -533,7 +534,5 @@ public class MapDrawerInteractionHelper implements DrawerListener,
         outAlloc.destroy();
         return result;
     }
-    
-    
 
 }

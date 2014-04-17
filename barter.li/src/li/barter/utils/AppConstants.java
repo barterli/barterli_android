@@ -32,14 +32,28 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG                 = true;
+    public static final boolean DEBUG                   = true;
 
-    public static final String  FACEBOOK              = "facebook";
-    public static final String  MANUAL                = "manual";
-    public static final String  TIMESTAMP_FORMAT      = "yyyy-MM-dd'T'HH:mm:ssZ";
-    public static final String  CHAT_ID_FORMAT        = "%s#%s";
-    public static final String  BARTER_TYPE_SEPARATOR = ",";
-    public static final int	    DEFAULT_PERPAGE_LIMIT = 6;
+
+    public static final String  FACEBOOK                = "facebook";
+    public static final String  MANUAL                  = "manual";
+    public static final String  TIMESTAMP_FORMAT        = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String  CHAT_ID_FORMAT          = "%s#%s";
+    public static final String  BARTER_TYPE_SEPARATOR   = ",";
+
+    public static final String  ACTION_SHOW_ALL_CHATS   = "li.barter.ACTION_SHOW_ALL_CHATS";
+    public static final String  ACTION_SHOW_CHAT_DETAIL = "li.barter.ACTION_SHOW_CHAT_DETAIL";
+    
+    /*
+     * These are three constants for loading of books.
+     * DEFAULT_PERPAGE_LIMIT : Default Book count value loaded when app starts
+     * DEFAULT_PERPAGE_LIMIT_ONSCROLL : Default Book count value loaded when it scrolls
+     * DEFAULT_LOAD_BEFORE_COUNT : This is to be subtracted value from the List Count so as to prevent loading lag on scrolling fast
+     */
+    public static final int	    DEFAULT_PERPAGE_LIMIT = 10;
+    public static final int	    DEFAULT_PERPAGE_LIMIT_ONSCROLL = 10;
+    public static final int	    DEFAULT_LOAD_BEFORE_COUNT = 1;
+    
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -70,7 +84,7 @@ public class AppConstants {
             return mAuthToken;
         }
 
-        public void setAuthToken(String authToken) {
+        public void setAuthToken(final String authToken) {
             if (authToken == null) {
                 mAuthToken = "";
             } else {
@@ -82,7 +96,7 @@ public class AppConstants {
             return mEmail;
         }
 
-        public void setEmail(String email) {
+        public void setEmail(final String email) {
             if (email == null) {
                 mEmail = "";
             } else {
@@ -94,7 +108,7 @@ public class AppConstants {
             return mId;
         }
 
-        public void setId(String id) {
+        public void setId(final String id) {
             if (id == null) {
                 mId = "";
             } else {
@@ -146,7 +160,7 @@ public class AppConstants {
             return mIsNetworkConnected;
         }
 
-        public void setNetworkConnected(boolean isNetworkConnected) {
+        public void setNetworkConnected(final boolean isNetworkConnected) {
             mIsNetworkConnected = isNetworkConnected;
         }
 
@@ -154,7 +168,7 @@ public class AppConstants {
             return mCurrentNetworkType;
         }
 
-        public void setCurrentNetworkType(int currentNetworkType) {
+        public void setCurrentNetworkType(final int currentNetworkType) {
             mCurrentNetworkType = currentNetworkType;
         }
 
@@ -162,7 +176,7 @@ public class AppConstants {
             return mLatestLocation;
         }
 
-        public void setLatestLocation(Location latestLocation) {
+        public void setLatestLocation(final Location latestLocation) {
             if (latestLocation == null) {
                 mLatestLocation = defaultLocation;
             }
@@ -200,24 +214,29 @@ public class AppConstants {
      */
     public static interface Keys {
 
-        public static final String ISBN               = "isbn";
-        public static final String BOOK_TITLE         = "book_title";
-        public static final String AUTHOR             = "author";
-        public static final String DESCRIPTION        = "description";
-        public static final String PUBLICATION_YEAR   = "publication_year";
-        public static final String BARTER_TYPES       = "barter_types";
-        public static final String SYMBOLOGY          = "symbology";
-        public static final String TYPE               = "type";
-        public static final String UP_NAVIGATION_TAG  = "up_navigation_tag";
-        public static final String MAP_MOVED_ONCE     = "map_moved_once";
-        public static final String DRAWER_OPENED_ONCE = "drawer_opened_once";
-        public static final String HAS_FETCHED_INFO   = "has_fetched_info";
-        public static final String SUBMIT_ON_RESUME   = "submit_on_resumt";
-        public static final String LOCATIONS          = "locations";
-        public static final String BOOK_ID            = "book_id";
-        public static final String CHAT_ID            = "chat_id";
-        public static final String USER_ID            = "user_id";
-        public static final String URL_TO_LOAD        = "url_to_load";
+        public static final String ISBN                       = "isbn";
+        public static final String BOOK_TITLE                 = "book_title";
+        public static final String AUTHOR                     = "author";
+        public static final String DESCRIPTION                = "description";
+        public static final String PUBLICATION_YEAR           = "publication_year";
+        public static final String BARTER_TYPES               = "barter_types";
+        public static final String SYMBOLOGY                  = "symbology";
+        public static final String TYPE                       = "type";
+        public static final String UP_NAVIGATION_TAG          = "up_navigation_tag";
+        public static final String MAP_MOVED_ONCE             = "map_moved_once";
+        public static final String DRAWER_OPENED_ONCE         = "drawer_opened_once";
+        public static final String HAS_FETCHED_INFO           = "has_fetched_info";
+        public static final String SUBMIT_ON_RESUME           = "submit_on_resumt";
+        public static final String LOCATIONS                  = "locations";
+        public static final String BOOK_ID                    = "book_id";
+        public static final String CHAT_ID                    = "chat_id";
+        public static final String USER_ID                    = "user_id";
+        public static final String URL_TO_LOAD                = "url_to_load";
+        public static final String LOCATION                   = "location";
+        public static final String SEARCH_RADIUS              = "search_radius";
+        public static final String LAST_FETCHED_LOCATION      = "last_fetched_location";
+        public static final String LAST_FETCHED_SEARCH_RADIUS = "last_fetched_search_radius";
+        public static final String FIRST_LOAD                 = "first_load";
 
     }
 

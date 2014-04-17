@@ -17,7 +17,6 @@
 package li.barter.http;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 
 /**
  * @author Vinay S Shenoy Interface to hold the methods to represent the volley
@@ -33,10 +32,12 @@ public interface IVolleyHelper {
      */
     public RequestQueue getRequestQueue();
 
-   /* *//**
+    /* *//**
      * Gets an instance of the Application's {@link ImageLoader}
      * 
      * @return the Application's {@link ImageLoader}
-     *//*
-    public ImageLoader getImageLoader();*/
+     */
+    /*
+     * public ImageLoader getImageLoader();
+     */
 }

@@ -16,33 +16,11 @@
 
 package li.barter.activities;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 
-import li.barter.R;
-import li.barter.adapters.HomeNavDrawerAdapter;
-import li.barter.fragments.AbstractBarterLiFragment;
-import li.barter.fragments.ChatsFragment;
-import li.barter.fragments.CollaborateFragment;
-import li.barter.fragments.FragmentTransition;
-import li.barter.fragments.LoginFragment;
-import li.barter.fragments.OssLicenseFragment;
-import li.barter.fragments.ProfileFragment;
-import li.barter.fragments.ReportBugFragment;
-import li.barter.fragments.ShowWebViewFragment;
-import li.barter.fragments.SuggestFeatureFragment;
-import li.barter.fragments.TeamFragment;
-import li.barter.fragments.TributeFragment;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.IVolleyHelper;
-import li.barter.http.ResponseInfo;
-import li.barter.http.VolleyCallbacks;
-import li.barter.http.VolleyCallbacks.IHttpCallbacks;
-import li.barter.utils.AppConstants.DeviceInfo;
-import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.AppConstants.UserInfo;
-import li.barter.widgets.TypefaceCache;
-import li.barter.widgets.TypefacedSpan;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -73,10 +51,33 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
+import li.barter.R;
+import li.barter.adapters.HomeNavDrawerAdapter;
+import li.barter.fragments.AbstractBarterLiFragment;
+import li.barter.fragments.ChatsFragment;
+import li.barter.fragments.CollaborateFragment;
+import li.barter.fragments.FragmentTransition;
+import li.barter.fragments.LoginFragment;
+import li.barter.fragments.OssLicenseFragment;
+import li.barter.fragments.ProfileFragment;
+import li.barter.fragments.ReportBugFragment;
+import li.barter.fragments.ShowWebViewFragment;
+import li.barter.fragments.SuggestFeatureFragment;
+import li.barter.fragments.TeamFragment;
+import li.barter.fragments.TributeFragment;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.IVolleyHelper;
+import li.barter.http.ResponseInfo;
+import li.barter.http.VolleyCallbacks;
+import li.barter.http.VolleyCallbacks.IHttpCallbacks;
+import li.barter.utils.AppConstants.DeviceInfo;
+import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.UserInfo;
+import li.barter.widgets.TypefaceCache;
+import li.barter.widgets.TypefacedSpan;
 
 /**
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
@@ -216,8 +217,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                  * If the master fragment is already the login fragment, don't
                  * load it again. TODO Check for Profile Fragment also
                  */
-                if (masterFragment != null
-                                && masterFragment instanceof LoginFragment) {
+                if ((masterFragment != null)
+                                && (masterFragment instanceof LoginFragment)) {
                     return null;
                 }
                 runnable = new Runnable() {
@@ -247,8 +248,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             //My Chats
             case 1: {
 
-                if (masterFragment != null
-                                && masterFragment instanceof ChatsFragment) {
+                if ((masterFragment != null)
+                                && (masterFragment instanceof ChatsFragment)) {
                     return null;
                 }
 
@@ -267,8 +268,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Suggest Feature
             case 2: {
-                if (masterFragment != null
-                                && masterFragment instanceof SuggestFeatureFragment) {
+                if ((masterFragment != null)
+                                && (masterFragment instanceof SuggestFeatureFragment)) {
                     return null;
                 }
 
@@ -285,8 +286,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Report Bug
             case 3: {
-                if (masterFragment != null
-                                && masterFragment instanceof ReportBugFragment) {
+                if ((masterFragment != null)
+                                && (masterFragment instanceof ReportBugFragment)) {
                     return null;
                 }
 
@@ -303,8 +304,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Collaborate with barter.li
             case 4: {
-                if (masterFragment != null
-                                && masterFragment instanceof CollaborateFragment) {
+                if ((masterFragment != null)
+                                && (masterFragment instanceof CollaborateFragment)) {
                     return null;
                 }
 
@@ -321,8 +322,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Open source
             case 5: {
-                if (masterFragment != null
-                                && masterFragment instanceof OssLicenseFragment) {
+                if ((masterFragment != null)
+                                && (masterFragment instanceof OssLicenseFragment)) {
                     return null;
                 }
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
@@ -333,7 +334,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //About us
             case 6: {
-                Bundle showWebViewArgs = new Bundle();
+                final Bundle showWebViewArgs = new Bundle();
                 showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
                                 .getString(R.string.url_me));
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
@@ -345,41 +346,41 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             //Tribute
             case 7: {
 
-			        if (masterFragment != null
-			                         && masterFragment instanceof TributeFragment) {
-			             return null;
-			         }
-			
-			         runnable = new Runnable() {
-			             @Override
-			             public void run() {
-			                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-			                                 .instantiate(AbstractBarterLiActivity.this, TributeFragment.class
-			                                                 .getName(), null), FragmentTags.TRIBUTE, true, null);
-			             }
-			         };
-			            	
-			            	break;
-			            }
+                if ((masterFragment != null)
+                                && (masterFragment instanceof TributeFragment)) {
+                    return null;
+                }
+
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(AbstractBarterLiActivity.this, TributeFragment.class
+                                                        .getName(), null), FragmentTags.TRIBUTE, true, null);
+                    }
+                };
+
+                break;
+            }
             //Tribute
             case 8: {
 
-			        if (masterFragment != null
-			                         && masterFragment instanceof TeamFragment) {
-			             return null;
-			         }
-			
-			         runnable = new Runnable() {
-			             @Override
-			             public void run() {
-			                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-			                                 .instantiate(AbstractBarterLiActivity.this, TeamFragment.class
-			                                                 .getName(), null), FragmentTags.TEAM, true, null);
-			             }
-			         };
-			            	
-			            	break;
-			            }
+                if ((masterFragment != null)
+                                && (masterFragment instanceof TeamFragment)) {
+                    return null;
+                }
+
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(AbstractBarterLiActivity.this, TeamFragment.class
+                                                        .getName(), null), FragmentTags.TEAM, true, null);
+                    }
+                };
+
+                break;
+            }
 
             default: {
                 runnable = null;
@@ -793,13 +794,13 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     }
 
     @Override
-    public void onPreExecute(IBlRequestContract request) {
+    public void onPreExecute(final IBlRequestContract request) {
         mRequestCounter.incrementAndGet();
         setProgressBarIndeterminateVisibility(true);
     }
 
     @Override
-    public void onPostExecute(IBlRequestContract request) {
+    public void onPostExecute(final IBlRequestContract request) {
         if (mRequestCounter.decrementAndGet() == 0) {
             setProgressBarIndeterminateVisibility(false);
         }
@@ -815,13 +816,14 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                     String errorMessage, Bundle errorResponseBundle);
 
     @Override
-    public void onAuthError(int requestId, IBlRequestContract request) {
+    public void onAuthError(final int requestId,
+                    final IBlRequestContract request) {
         //TODO Show Login Fragment and ask user to login again
     }
 
     @Override
-    public void onOtherError(int requestId, IBlRequestContract request,
-                    int errorCode) {
+    public void onOtherError(final int requestId,
+                    final IBlRequestContract request, final int errorCode) {
         //TODO Show generic network error message
     }
 
@@ -834,8 +836,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * @param style The style of Crouton
      * @return A View to display as a Crouton
      */
-    private static View getCroutonViewForStyle(Context context, String message,
-                    AlertStyle style) {
+    private static View getCroutonViewForStyle(final Context context,
+                    final String message, final AlertStyle style) {
         int layoutResId = R.layout.crouton_info; //Default layout
         switch (style) {
 

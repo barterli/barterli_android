@@ -41,7 +41,7 @@ public class VolleyCallbacks implements Listener<ResponseInfo>, ErrorListener {
     private final RequestQueue   mRequestQueue;
     private final IHttpCallbacks mHttpCallbacks;
 
-    public VolleyCallbacks(RequestQueue requestQueue, IHttpCallbacks httpCallbacks) {
+    public VolleyCallbacks(final RequestQueue requestQueue, final IHttpCallbacks httpCallbacks) {
 
         mRequestQueue = requestQueue;
         mHttpCallbacks = httpCallbacks;
@@ -51,7 +51,8 @@ public class VolleyCallbacks implements Listener<ResponseInfo>, ErrorListener {
     }
 
     @Override
-    public void onErrorResponse(VolleyError error, Request<?> request) {
+    public void onErrorResponse(final VolleyError error,
+                    final Request<?> request) {
         //Requests used in the application SHOULD implement IBlRequestContract
         assert (request instanceof IBlRequestContract);
         final IBlRequestContract blRequestContract = (IBlRequestContract) request;
@@ -80,7 +81,8 @@ public class VolleyCallbacks implements Listener<ResponseInfo>, ErrorListener {
     }
 
     @Override
-    public void onResponse(ResponseInfo response, Request<ResponseInfo> request) {
+    public void onResponse(final ResponseInfo response,
+                    final Request<ResponseInfo> request) {
 
         //Requests used in the application SHOULD implement IBlRequestContract
         assert (request instanceof IBlRequestContract);
@@ -96,31 +98,32 @@ public class VolleyCallbacks implements Listener<ResponseInfo>, ErrorListener {
      *            MUST be a version of the application's custom request types
      *            and must implement {@link IBlRequestContract}
      */
-    public void queue(Request<?> request) {
+    public void queue(final Request<?> request) {
 
         assert (request instanceof IBlRequestContract);
         addHeadersToRequest(request);
         mRequestQueue.add(request);
     }
-    
+
     /**
      * Add Request Headers to the headers
      * 
      * @param request The request to add the headers to
      */
-    private void addHeadersToRequest(Request<?> request) {
+    private void addHeadersToRequest(final Request<?> request) {
 
         final Map<String, String> headers = new HashMap<String, String>(1);
         headers.put(HttpConstants.HEADER_AUTHORIZATION, UserInfo.INSTANCE
                         .getAuthHeader());
         request.setHeaders(headers);
     }
-    
+
     /**
      * Cancel any pending requests
+     * 
      * @param volleyTag The tag to use for cancelling requests
      */
-    public void cancelAll(Object volleyTag) {
+    public void cancelAll(final Object volleyTag) {
         mRequestQueue.cancelAll(volleyTag);
     }
 

@@ -16,43 +16,20 @@
 
 package li.barter.fragments;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import com.android.volley.Request.Method;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.android.volley.Request;
-import com.android.volley.Request.Method;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -68,29 +45,26 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.util.Locale;
+
 import li.barter.R;
-import li.barter.activities.AbstractBarterLiActivity;
-import li.barter.activities.ScanIsbnActivity;
-import li.barter.adapters.CropOptionAdapter;
 import li.barter.data.DBInterface;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableLocations;
-import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.http.BlMultiPartRequest;
-import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
-import li.barter.models.CropOption;
-import li.barter.utils.Logger;
-import li.barter.utils.PhotoUtils;
-import li.barter.utils.SharedPreferenceHelper;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.QueryTokens;
-import li.barter.utils.AppConstants.RequestCodes;
+import li.barter.utils.PhotoUtils;
+import li.barter.utils.SharedPreferenceHelper;
 
 /**
  * @author Sharath Pandeshwar
@@ -112,7 +86,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     private Uri                 mImageCaptureUri;
     private Bitmap              mCompressedPhoto;
     private File                mAvatarfile;
-    private String              mAvatarFileName         = "barterli_avatar_small.png";
+    private final String        mAvatarFileName         = "barterli_avatar_small.png";
 
     private static final int    sPickFromCamera         = 1;
     private static final int    sCropFromCamera         = 2;
@@ -141,8 +115,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         mAvatarfile = new File(Environment.getExternalStorageDirectory(), mAvatarFileName);
 
         if (mAvatarfile.exists()) {
-            Bitmap bmp = BitmapFactory
-                            .decodeFile(mAvatarfile.getAbsolutePath());
+            final Bitmap bmp = BitmapFactory.decodeFile(mAvatarfile
+                            .getAbsolutePath());
             mProfileImageView.setImageBitmap(bmp);
         }
 
@@ -190,9 +164,10 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
             case R.id.action_profile_save: {
 
-                String mFirstName = mFirstNameTextView.getText().toString();
-                String mLastName = mLastNameTextView.getText().toString();
-                String mAboutMe = mAboutMeTextView.getText().toString();
+                final String mFirstName = mFirstNameTextView.getText()
+                                .toString();
+                final String mLastName = mLastNameTextView.getText().toString();
+                final String mAboutMe = mAboutMeTextView.getText().toString();
 
                 saveProfileInfoToServer(mFirstName, mLastName, mAboutMe, mWasProfileImageChanged, mAvatarfile
                                 .getAbsolutePath());
@@ -219,17 +194,20 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         }, null, null, null, null, this);
     }
 
-    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+    @Override
+    public void onQueryComplete(final int token, final Object cookie,
+                    final Cursor cursor) {
         if (token == QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE) {
 
             if (cursor.moveToFirst()) {
-                String mPrefPlaceName = cursor.getString(cursor
+                final String mPrefPlaceName = cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.NAME));
-                String mPrefPlaceAddress = cursor.getString(cursor
+                final String mPrefPlaceAddress = cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.ADDRESS));
 
-                String mPrefPlace = String.format(Locale.US, mPrefPlaceName
-                                + ", " + mPrefPlaceAddress);
+                final String mPrefPlace = String
+                                .format(Locale.US, mPrefPlaceName + ", "
+                                                + mPrefPlaceAddress);
 
                 mPreferredLocationTextView.setText(mPrefPlace);
             }
@@ -269,11 +247,13 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(final int requestCode, final int resultCode,
+                    final Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK)
+        if (resultCode != Activity.RESULT_OK) {
             return;
+        }
 
         switch (requestCode) {
             case sPickFromCamera:
@@ -288,7 +268,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 break;
 
             case sCropFromCamera:
-                Bundle extras = data.getExtras();
+                final Bundle extras = data.getExtras();
                 if (extras != null) {
                     mCompressedPhoto = extras.getParcelable("data");
                     mProfileImageView.setImageBitmap(mCompressedPhoto);
@@ -306,16 +286,17 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         final String[] items = new String[] {
                 "From Camera", "From Gallery"
         };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, items);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, items);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
+            @Override
+            public void onClick(final DialogInterface dialog, final int item) {
 
                 if (item == 0) { // Pick from camera
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                    File mProfileFile = new File(android.os.Environment
+                    final File mProfileFile = new File(android.os.Environment
                                     .getExternalStorageDirectory(), "barterli_avatar.jpg");
 
                     mImageCaptureUri = Uri.fromFile(mProfileFile);
@@ -324,12 +305,12 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                     try {
                         intent.putExtra("return-data", true);
                         startActivityForResult(intent, sPickFromCamera);
-                    } catch (ActivityNotFoundException e) {
+                    } catch (final ActivityNotFoundException e) {
                         e.printStackTrace();
                     }
 
                 } else { // pick from file
-                    Intent intent = new Intent();
+                    final Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(Intent
@@ -429,13 +410,13 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     private void saveProfileInfoToServer(final String firstName,
                     final String lastName, final String aboutMeDescription,
-                    final Boolean shouldIncludePic, String profilePicPath) {
+                    final Boolean shouldIncludePic, final String profilePicPath) {
 
-        String url = HttpConstants.getApiBaseUrl()
+        final String url = HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.UPDATE_USER_INFO;
 
-        JSONObject mUserProfileObject = new JSONObject();
-        JSONObject mUserProfileMasterObject = new JSONObject();
+        final JSONObject mUserProfileObject = new JSONObject();
+        final JSONObject mUserProfileMasterObject = new JSONObject();
         try {
             mUserProfileObject.put(HttpConstants.FIRST_NAME, firstName);
             mUserProfileObject.put(HttpConstants.LAST_NAME, lastName);
@@ -444,7 +425,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             mUserProfileMasterObject
                             .put(HttpConstants.USER, mUserProfileObject);
 
-            BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
+            final BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
 
             updateUserProfileRequest
                             .addMultipartParam(HttpConstants.USER, "application/json", mUserProfileMasterObject
@@ -457,15 +438,16 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
             addRequestToQueue(updateUserProfileRequest, true, 0);
 
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             e.printStackTrace();
         }
 
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
         if (requestId == RequestId.SAVE_USER_PROFILE) {
             final Bundle userInfo = response.responseBundle;
@@ -485,27 +467,30 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
         Log.v(TAG, "Volley error");
 
     }
 
     @Override
-    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+    public void onInsertComplete(final int token, final Object cookie,
+                    final long insertRowId) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+    public void onDeleteComplete(final int token, final Object cookie,
+                    final int deleteCount) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+    public void onUpdateComplete(final int token, final Object cookie,
+                    final int updateCount) {
         // TODO Auto-generated method stub
 
     }

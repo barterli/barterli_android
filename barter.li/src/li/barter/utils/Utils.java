@@ -66,8 +66,6 @@ public class Utils {
                         .getCurrentNetworkType());
     }
 
-    
-
     /**
      * Checks if the current thread is the main thread or not
      * 
@@ -114,17 +112,26 @@ public class Utils {
             final Location[] locations = getLocationsFromPoints(map, screenCenterEdgePoints);
 
             if (locations.length == 2) {
-                final Location startLocation = locations[0];
-                final Location endLocation = locations[1];
-                final float[] results = new float[1];
-                Location.distanceBetween(startLocation.getLatitude(), startLocation
-                                .getLongitude(), endLocation.getLatitude(), endLocation
-                                .getLongitude(), results);
-                radius = results[0];
+                radius = distanceBetween(locations[0], locations[1]);
                 Logger.v(TAG, "Distance Calculated: %f", radius);
             }
         }
         return radius;
+    }
+
+    /**
+     * Gets the distance between two Locations(in metres)
+     * 
+     * @param start The start location
+     * @param end The end location
+     * @return The distance between two locations(in metres)
+     */
+    public static float distanceBetween(final Location start, final Location end) {
+
+        final float[] results = new float[1];
+        Location.distanceBetween(start.getLatitude(), start.getLongitude(), end
+                        .getLatitude(), end.getLongitude(), results);
+        return results[0];
     }
 
     /**
@@ -218,15 +225,17 @@ public class Utils {
 
     /**
      * Makes an SHA1 Hash of the given string
+     * 
      * @param string The string to shash
      * @return The hashed string
      * @throws NoSuchAlgorithmException
      */
-    public static String sha1(final String string) throws NoSuchAlgorithmException {
+    public static String sha1(final String string)
+                    throws NoSuchAlgorithmException {
         final MessageDigest digest = MessageDigest.getInstance("SHA-1");
         digest.reset();
-        byte[] data = digest.digest(string.getBytes());
+        final byte[] data = digest.digest(string.getBytes());
         return String.format("%0" + (data.length * 2) + "X", new BigInteger(1, data));
     }
-    
+
 }

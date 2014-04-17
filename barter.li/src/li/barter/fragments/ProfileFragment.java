@@ -15,28 +15,8 @@
 
 package li.barter.fragments;
 
-import java.io.File;
-import java.util.Locale;
-
-import li.barter.R;
-import li.barter.adapters.BooksAroundMeAdapter;
-import li.barter.data.DBInterface;
-import li.barter.data.DatabaseColumns;
-import li.barter.data.SQLConstants;
-import li.barter.data.SQLiteLoader;
-import li.barter.data.TableLocations;
-import li.barter.data.ViewMyBooksWithLocations;
-import li.barter.data.DBInterface.AsyncDbQueryCallback;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.ResponseInfo;
-import li.barter.http.HttpConstants.RequestId;
-import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.AppConstants.Loaders;
-import li.barter.utils.AppConstants.QueryTokens;
-import li.barter.utils.AppConstants.UserInfo;
-import li.barter.utils.Logger;
-import li.barter.utils.SharedPreferenceHelper;
+import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
+import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -47,23 +27,40 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import java.io.File;
+import java.util.Locale;
+
+import li.barter.R;
+import li.barter.adapters.BooksAroundMeAdapter;
+import li.barter.data.DBInterface;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
+import li.barter.data.SQLiteLoader;
+import li.barter.data.TableLocations;
+import li.barter.data.ViewMyBooksWithLocations;
+import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 
 /**
  * @author Sharath Pandeshwar
@@ -80,7 +77,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     private TextView                      mAboutMeTextView;
     private TextView                      mPreferredLocationTextView;
     private ImageView                     mProfileImageView;
-    private String                        mDefaultName = "Your Name";
+    private final String                  mDefaultName = "Your Name";
 
     private GridView                      mBooksAroundMeGridView;
 
@@ -113,10 +110,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeGridView = (GridView) view
                         .findViewById(R.id.grid_my_books);
 
-        File mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
+        final File mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
         if (mAvatarfile.exists()) {
-            Bitmap bmp = BitmapFactory
-                            .decodeFile(mAvatarfile.getAbsolutePath());
+            final Bitmap bmp = BitmapFactory.decodeFile(mAvatarfile
+                            .getAbsolutePath());
             mProfileImageView.setImageBitmap(bmp);
         }
 
@@ -125,7 +122,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                         && !(TextUtils.isEmpty(SharedPreferenceHelper
                                         .getString(getActivity(), R.string.pref_first_name)))) {
 
-            String mFirstName = SharedPreferenceHelper
+            final String mFirstName = SharedPreferenceHelper
                             .getString(getActivity(), R.string.pref_first_name);
 
             String mLastName = "";
@@ -211,11 +208,13 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         }, null, null, null, null, this);
     }
 
-    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+    @Override
+    public void onQueryComplete(final int token, final Object cookie,
+                    final Cursor cursor) {
         if (token == QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE) {
 
             if (cursor.moveToFirst()) {
-                String mPrefAddressName = cursor.getString(cursor
+                final String mPrefAddressName = cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.NAME))
                                 + ", "
                                 + cursor.getString(cursor
@@ -241,8 +240,9 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
         // TODO Auto-generated method stub
         if (requestId == RequestId.GET_USER_PROFILE) {
         }
@@ -250,27 +250,30 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+    public void onInsertComplete(final int token, final Object cookie,
+                    final long insertRowId) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+    public void onDeleteComplete(final int token, final Object cookie,
+                    final int deleteCount) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+    public void onUpdateComplete(final int token, final Object cookie,
+                    final int updateCount) {
         // TODO Auto-generated method stub
 
     }
@@ -309,11 +312,12 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                    long id) {
+    public void onItemClick(final AdapterView<?> parent, final View view,
+                    final int position, final long id) {
 
         if (parent.getId() == R.id.grid_my_books) {
-            Cursor cursor = (Cursor) mBooksAroundMeAdapter.getItem(position);
+            final Cursor cursor = (Cursor) mBooksAroundMeAdapter
+                            .getItem(position);
 
             final String bookId = cursor.getString(cursor
                             .getColumnIndex(DatabaseColumns.BOOK_ID));

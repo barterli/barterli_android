@@ -42,7 +42,7 @@ public class OssLicensesAdapter extends BaseAdapter {
      */
     private final LayoutInflater mLayoutInflater;
 
-    public OssLicensesAdapter(Context context, int licenseStringsResId) {
+    public OssLicensesAdapter(final Context context, final int licenseStringsResId) {
         mLicenseStrings = context.getResources()
                         .getStringArray(licenseStringsResId);
         mLayoutInflater = LayoutInflater.from(context);
@@ -55,17 +55,18 @@ public class OssLicensesAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return mLicenseStrings[position];
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView,
+                    final ViewGroup parent) {
 
         View view = convertView;
 

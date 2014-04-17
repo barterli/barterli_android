@@ -87,6 +87,7 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         view.setTag(R.id.text_book_desc, view.findViewById(R.id.text_book_desc));
         view.setTag(R.id.text_book_location, view
                         .findViewById(R.id.text_book_location));
+
         return view;
     }
 

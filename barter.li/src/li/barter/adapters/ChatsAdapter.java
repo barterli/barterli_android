@@ -16,15 +16,12 @@
 
 package li.barter.adapters;
 
-import com.squareup.picasso.Picasso;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import li.barter.R;
@@ -41,12 +38,13 @@ public class ChatsAdapter extends CursorAdapter {
 
     private final String        mUserNameFormat = "%s %s";
 
-    public ChatsAdapter(Context context, Cursor cursor) {
+    public ChatsAdapter(final Context context, final Cursor cursor) {
         super(context, cursor, 0);
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(final View view, final Context context,
+                    final Cursor cursor) {
 
         ((TextView) view.getTag(R.id.text_user_name))
                         .setText(String.format(mUserNameFormat, cursor.getString(cursor
@@ -62,15 +60,17 @@ public class ChatsAdapter extends CursorAdapter {
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN)));
 
-        Picasso.with(context)
-                        .load(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.PROFILE_PICTURE)))
-                        .fit().error(R.drawable.pic_avatar)
-                        .into((ImageView) view.getTag(R.id.image_user));
+        /*
+         * Picasso.with(context) .load(cursor.getString(cursor
+         * .getColumnIndex(DatabaseColumns.PROFILE_PICTURE)))
+         * .fit().error(R.drawable.pic_avatar) .into((ImageView)
+         * view.getTag(R.id.image_user));
+         */
     }
 
     @Override
-    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+    public View newView(final Context context, final Cursor cursor,
+                    final ViewGroup parent) {
         final View view = LayoutInflater.from(context)
                         .inflate(R.layout.layout_chat_item, parent, false);
 

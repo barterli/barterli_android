@@ -23,6 +23,8 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
@@ -32,7 +34,10 @@ import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat.Builder;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
 import java.io.IOException;
@@ -42,6 +47,8 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import li.barter.BarterLiApplication;
+import li.barter.R;
+import li.barter.activities.HomeActivity;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
@@ -51,7 +58,6 @@ import li.barter.data.SQLConstants;
 import li.barter.data.TableChatMessages;
 import li.barter.data.TableChats;
 import li.barter.data.TableUsers;
-import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
@@ -64,6 +70,7 @@ import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.ChatType;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
@@ -93,21 +100,26 @@ import li.barter.utils.Utils;
 public class ChatService extends Service implements OnReceiveMessageHandler,
                 AsyncDbQueryCallback, IHttpCallbacks {
 
-    private static final String    TAG                = "ChatService";
-    private static final String    OUTPUT_TIME_FORMAT = "dd MMM, h:m a";
-    private static final String    QUEUE_NAME_FORMAT  = "%squeue";
-    private static final String    VIRTUAL_HOST       = "/";
-    private static final String    EXCHANGE           = "node.barterli";
-    private static final String    USERNAME           = "barterli";
-    private static final String    PASSWORD           = "barter";
+    private static final String    TAG                     = "ChatService";
+    private static final String    OUTPUT_TIME_FORMAT      = "dd MMM, h:m a";
+    private static final String    QUEUE_NAME_FORMAT       = "%squeue";
+    private static final String    VIRTUAL_HOST            = "/";
+    private static final String    EXCHANGE                = "node.barterli";
+    private static final String    USERNAME                = "barterli";
+    private static final String    PASSWORD                = "barter";
 
-    private final IBinder          mChatServiceBinder = new ChatServiceBinder();
+    /**
+     * Notification Id for notifications related to messages
+     */
+    private static final int       MESSAGE_NOTIFICATION_ID = 1;
 
-    private final String           mChatSelection     = DatabaseColumns.CHAT_ID
-                                                                      + SQLConstants.EQUALS_ARG;
+    private final IBinder          mChatServiceBinder      = new ChatServiceBinder();
 
-    private final String           mUserSelection     = DatabaseColumns.USER_ID
-                                                                      + SQLConstants.EQUALS_ARG;
+    private final String           mChatSelection          = DatabaseColumns.CHAT_ID
+                                                                           + SQLConstants.EQUALS_ARG;
+
+    private final String           mUserSelection          = DatabaseColumns.USER_ID
+                                                                           + SQLConstants.EQUALS_ARG;
 
     /** {@link ChatRabbitMQConnector} instance for listening to messages */
     private ChatRabbitMQConnector  mMessageConsumer;
@@ -125,6 +137,15 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private ConnectToChatAsyncTask mConnectTask;
 
+    private Builder                mNotificationBuilder;
+
+    private NotificationManager    mNotificationManager;
+
+    /**
+     * Holds the number of unread received messages
+     */
+    private int                    mUnreadMessageCount;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -134,7 +155,22 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, OUTPUT_TIME_FORMAT);
         mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
         mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
+        mNotificationBuilder = new Builder(this);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mUnreadMessageCount = 0;
 
+        //testNotifications();
+    }
+
+    private void testNotifications() {
+        showChatReceivedNotification("Some crap1", "jsdjksncjdn", "Vinay S Shenoy", "I WANTZ THAT BOOKZ!!!");
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                showChatReceivedNotification("Some crap2", "janckjdnc", "Some random idiot", "FUUUUUUUUUUU....");
+            }
+        }, 5000);
     }
 
     /**
@@ -150,12 +186,13 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(final Intent intent) {
         return mChatServiceBinder;
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, final int flags,
+                    final int startId) {
 
         if (isLoggedIn() && !mMessageConsumer.isRunning()) {
 
@@ -165,7 +202,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
                                 .getId());
             } else {
-                Status connectingStatus = mConnectTask.getStatus();
+                final Status connectingStatus = mConnectTask.getStatus();
 
                 if (connectingStatus != Status.RUNNING) {
 
@@ -219,8 +256,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param acknowledge An implementation of {@link ChatAcknowledge} to be
      *            notified when the chat request completes
      */
-    public void sendMessageToUser(String toUserId, String message,
-                    ChatAcknowledge acknowledge) {
+    public void sendMessageToUser(final String toUserId, final String message,
+                    final ChatAcknowledge acknowledge) {
 
         if (!isLoggedIn()) {
             return;
@@ -236,7 +273,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             request.setRequestId(RequestId.AMPQ);
             request.setTag(TAG);
             mVolleyCallbacks.queue(request);
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             e.printStackTrace();
             //Should never happen
         }
@@ -249,12 +286,12 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param userId The user Id to generate the queue name for
      * @return The queue name for the user id
      */
-    private String generateQueueNameFromUserId(String userId) {
+    private String generateQueueNameFromUserId(final String userId) {
         return String.format(Locale.US, QUEUE_NAME_FORMAT, userId);
     }
 
     @Override
-    public void onReceiveMessage(byte[] message) {
+    public void onReceiveMessage(final byte[] message) {
 
         //TODO Break this method out for readability
         String text = "";
@@ -294,35 +331,36 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             /*
              * Parse and store sender info. We will receive messages both when
              * we send and receive, so we need to check the sender id if it is
-             * our own id first to detect who send the message
+             * our own id first to detect who sent the message
              */
-
             if (senderId.equals(UserInfo.INSTANCE.getId())) {
-                parseAndStoreSenderInfo(receiverId, receiverObject);
+                parseAndStoreChatUserInfo(receiverId, receiverObject);
             } else {
-                parseAndStoreSenderInfo(senderId, senderObject);
+                final String senderName = parseAndStoreChatUserInfo(senderId, senderObject);
+                showChatReceivedNotification(chatId, senderId, senderName, messageText);
             }
 
         } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();
             //Shouldn't be happening
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             Logger.e(TAG, e, "Invalid Chat Json");
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             Logger.e(TAG, e, "Invalid chat timestamp");
         }
 
     }
 
     /**
-     * Parses the user info of the user who send the message and updates the
+     * Parses the user info of the user who sent the message and updates the
      * local users table
      * 
-     * @param senderId The id for the user who send the chat message
+     * @param senderId The id for the user who sent the chat message
      * @param senderObject The Sender object received in the chat message
+     * @return The name of the sender
      * @throws JSONException If the JSON is invalid
      */
-    private void parseAndStoreSenderInfo(final String senderId,
+    private String parseAndStoreChatUserInfo(final String senderId,
                     final JSONObject senderObject) throws JSONException {
 
         final String senderFirstName = JsonUtils
@@ -341,6 +379,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         DBInterface.updateAsync(QueryTokens.UPDATE_USER_FOR_CHAT, senderValues, TableUsers.NAME, senderValues, mUserSelection, new String[] {
             senderId
         }, true, this);
+
+        return String.format("%s %s", senderFirstName, senderLastName);
     }
 
     /**
@@ -354,7 +394,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     private class ConnectToChatAsyncTask extends AsyncTask<String, Void, Void> {
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Void doInBackground(final String... params) {
 
             //Validation
             assert (params != null);
@@ -363,11 +403,12 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             assert (params[1] != null);
             assert (params[2] != null);
             assert (params[3] != null);
+            Logger.v(TAG, "Username %s, Password %s, Queue %s, Routing Key %s", params[0], params[1], params[2], params[3]);
             if (mMessageConsumer
                             .connectToRabbitMQ(params[0], params[1], params[2], false, false, true, null)) {
                 try {
                     mMessageConsumer.addBinding(params[3]);
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     mMessageConsumer.dispose();
                 }
             }
@@ -376,7 +417,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+    public void onInsertComplete(final int token, final Object cookie,
+                    final long insertRowId) {
 
         switch (token) {
 
@@ -392,7 +434,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     final String chatId = chatData
                                     .getAsString(DatabaseColumns.CHAT_ID);
 
-                    ContentValues values = new ContentValues(4);
+                    final ContentValues values = new ContentValues(4);
                     values.put(DatabaseColumns.CHAT_ID, chatId);
                     values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
                     values.put(DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL);
@@ -402,8 +444,10 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     final String receiverId = chatData
                                     .getAsString(DatabaseColumns.RECEIVER_ID);
 
-                    values.put(DatabaseColumns.USER_ID, senderId
-                                    .equals(UserInfo.INSTANCE.getId()) ? receiverId
+                    final boolean isSenderCurrentUser = senderId
+                                    .equals(UserInfo.INSTANCE.getId());
+
+                    values.put(DatabaseColumns.USER_ID, isSenderCurrentUser ? receiverId
                                     : senderId);
 
                     Logger.v(TAG, "Updating chats for Id %s", chatId);
@@ -433,12 +477,14 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+    public void onDeleteComplete(final int token, final Object cookie,
+                    final int deleteCount) {
 
     }
 
     @Override
-    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+    public void onUpdateComplete(final int token, final Object cookie,
+                    final int updateCount) {
 
         if (token == QueryTokens.UPDATE_CHAT) {
             assert (cookie != null);
@@ -465,7 +511,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+    public void onQueryComplete(final int token, final Object cookie,
+                    final Cursor cursor) {
 
     }
 
@@ -477,7 +524,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param senderId The sender of the chat
      * @return The chat Id
      */
-    public static String generateChatId(String receiverId, String senderId) {
+    public static String generateChatId(final String receiverId,
+                    final String senderId) {
 
         /*
          * Method of generating the chat ID is simple. First we compare the two
@@ -498,7 +546,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
         try {
             hashed = Utils.sha1(combined);
-        } catch (NoSuchAlgorithmException e) {
+        } catch (final NoSuchAlgorithmException e) {
             /*
              * Shouldn't happen sinch SHA-1 is standard, but in case it does use
              * the combined string directly since they are local chat IDs
@@ -510,18 +558,19 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onPreExecute(IBlRequestContract request) {
+    public void onPreExecute(final IBlRequestContract request) {
 
     }
 
     @Override
-    public void onPostExecute(IBlRequestContract request) {
+    public void onPostExecute(final IBlRequestContract request) {
 
     }
 
     @Override
-    public void onSuccess(int requestId, IBlRequestContract request,
-                    ResponseInfo response) {
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -538,9 +587,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request,
-                    int errorCode, String errorMessage,
-                    Bundle errorResponseBundle) {
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -557,7 +606,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onAuthError(int requestId, IBlRequestContract request) {
+    public void onAuthError(final int requestId,
+                    final IBlRequestContract request) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -574,8 +624,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onOtherError(int requestId, IBlRequestContract request,
-                    int errorCode) {
+    public void onOtherError(final int requestId,
+                    final IBlRequestContract request, final int errorCode) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -589,5 +639,57 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 }
             }
         }
+    }
+
+    /**
+     * Displays a notification for a received chat message
+     * 
+     * @param chatId The ID of the chat. This is so that the right chat detail
+     *            fragment can be launched when the notification is tapped
+     * @param withUserId The id of the user who sent the notification
+     * @param senderName The name of the sender
+     * @param messageText The message body
+     */
+    private void showChatReceivedNotification(final String chatId,
+                    final String withUserId, final String senderName,
+                    final String messageText) {
+
+        mUnreadMessageCount++;
+        final Intent resultIntent = new Intent(this, HomeActivity.class);
+        if (mUnreadMessageCount == 1) {
+            mNotificationBuilder.setSmallIcon(R.drawable.ic_launcher)
+                            .setContentTitle(senderName)
+                            .setContentText(messageText).setAutoCancel(true);
+            resultIntent.setAction(AppConstants.ACTION_SHOW_CHAT_DETAIL);
+            resultIntent.putExtra(Keys.CHAT_ID, chatId);
+            resultIntent.putExtra(Keys.USER_ID, withUserId);
+
+        } else {
+            mNotificationBuilder
+                            .setSmallIcon(R.drawable.ic_launcher)
+                            .setContentTitle(getString(R.string.new_messages, mUnreadMessageCount))
+                            .setContentText(messageText).setAutoCancel(true);
+            resultIntent.setAction(AppConstants.ACTION_SHOW_ALL_CHATS);
+        }
+
+        final TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
+        taskStackBuilder.addNextIntent(resultIntent);
+        final PendingIntent pendingIntent = taskStackBuilder
+                        .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mNotificationBuilder.setContentIntent(pendingIntent);
+        mNotificationManager
+                        .notify(MESSAGE_NOTIFICATION_ID, mNotificationBuilder
+                                        .build());
+
+    }
+
+    /**
+     * Cancels any notifications being displayed. Call this if the relevant
+     * screen is opened within the app
+     */
+    private void cancelMessageReceivedNotification() {
+
+        mNotificationManager.cancel(MESSAGE_NOTIFICATION_ID);
+        mUnreadMessageCount = 0;
     }
 }
