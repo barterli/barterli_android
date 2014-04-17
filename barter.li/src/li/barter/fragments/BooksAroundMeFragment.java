@@ -23,7 +23,6 @@ import com.google.android.gms.maps.GoogleMap.CancelableCallback;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
@@ -77,7 +76,6 @@ import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
-import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.Logger;
 import li.barter.utils.MapDrawerInteractionHelper;
 import li.barter.utils.SharedPreferenceHelper;
@@ -90,647 +88,670 @@ import li.barter.widgets.FullWidthDrawerLayout;
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
-                LoaderCallbacks<Cursor>, CancelableCallback, DrawerListener,AsyncDbQueryCallback,
-                OnItemClickListener {
+LoaderCallbacks<Cursor>, CancelableCallback, DrawerListener,AsyncDbQueryCallback,
+OnItemClickListener {
 
 
-    private static final String           TAG            = "BooksAroundMeFragment";
+	private static final String           TAG            = "BooksAroundMeFragment";
 
-    /**
-     * Zoom level for the map when the location is retrieved
-     */
-    private static final float            MAP_ZOOM_LEVEL = 15;
+	/**
+	 * Zoom level for the map when the location is retrieved
+	 */
+	private static final float            MAP_ZOOM_LEVEL = 15;
 
-    /**
-     * {@link MapView} used to display the Map
-     */
-    private MapView                       mMapView;
+	/**
+	 * {@link MapView} used to display the Map
+	 */
+	private MapView                       mMapView;
 
-    /**
-     * Drawer View on which the blurred Map snapshot is set
-     */
-    private View                          mBooksDrawerView;
+	/**
+	 * Drawer View on which the blurred Map snapshot is set
+	 */
+	private View                          mBooksDrawerView;
 
-    /**
-     * TextView which will provide drop down suggestions as user searches for
-     * books
-     */
-    private AutoCompleteTextView          mBooksAroundMeAutoCompleteTextView;
+	/**
+	 * TextView which will provide drop down suggestions as user searches for
+	 * books
+	 */
+	private AutoCompleteTextView          mBooksAroundMeAutoCompleteTextView;
 
-    /**
-     * GridView into which the book content will be placed
-     */
-    private GridView                      mBooksAroundMeGridView;
+	/**
+	 * GridView into which the book content will be placed
+	 */
+	private GridView                      mBooksAroundMeGridView;
 
-    /**
-     * {@link BooksAroundMeAdapter} instance for the Books
-     */
-    private BooksAroundMeAdapter          mBooksAroundMeAdapter;
+	/**
+	 * {@link BooksAroundMeAdapter} instance for the Books
+	 */
+	private BooksAroundMeAdapter          mBooksAroundMeAdapter;
 
-    /**
-     * {@link AnimationAdapter} implementation to provide appearance animations
-     * for the book items as they are brought in
-     */
-    private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
+	/**
+	 * {@link AnimationAdapter} implementation to provide appearance animations
+	 * for the book items as they are brought in
+	 */
+	private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
 
-    /**
-     * Drawer Layout that contains the Books grid and autocomplete search text
-     */
-    private FullWidthDrawerLayout         mDrawerLayout;
+	/**
+	 * Drawer Layout that contains the Books grid and autocomplete search text
+	 */
+	private FullWidthDrawerLayout         mDrawerLayout;
 
-    /**
-     * Flag that remembers whether the drawer has been opened at least once
-     * automatically
-     */
-    private boolean                       mDrawerOpenedAutomatically;
+	/**
+	 * Flag that remembers whether the drawer has been opened at least once
+	 * automatically
+	 */
+	private boolean                       mDrawerOpenedAutomatically;
 
-    /**
-     * Flag to indicate whether the Map has already been moved at least once to
-     * the user position
-     */
-    private boolean                       mMapAlreadyMovedOnce;
+	/**
+	 * Flag to indicate whether the Map has already been moved at least once to
+	 * the user position
+	 */
+	private boolean                       mMapAlreadyMovedOnce;
 
-    /**
-     * Class to manage the transitions for drawer events the map behind it
-     */
-    private MapDrawerInteractionHelper    mMapDrawerBlurHelper;
-    
-    
-    /**
-     * Default page count value which is incremented on scrolling {@link GridView}
-     */
-    private int pageCount=1;
-    private int preLast=0;
-    /**
-     * Flag to stop onScroll method to call when fragment loads
-     */
-    private boolean userScrolled=false;
-    
+	/**
+	 * Class to manage the transitions for drawer events the map behind it
+	 */
+	private MapDrawerInteractionHelper    mMapDrawerBlurHelper;
 
-    /**
-     * Holds the value of the previous search radius to prevent querying for
-     * books from server again
-     */
-    private int                           mPrevSearchRadius;
 
-    /**
-     * Used to remember the last location so that we can avoid fetching the
-     * books again if the last fetched locations, and current fetched locations
-     * are close by
-     */
-    private Location                      mLastFetchedLocation;
+	/**
+	 * Default page count value which is incremented on scrolling {@link GridView}
+	 */
+	private int pageCount=1;
 
-    @Override
-    public View onCreateView(final LayoutInflater inflater,
-                    final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
-        setHasOptionsMenu(true);
+	/**
+	 * Flag to stop onScroll method to call when fragment loads
+	 */
+	private boolean userScrolled=false;
 
-        final View contentView = inflater
-                        .inflate(R.layout.fragment_books_around_me, container, false);
 
-        /*
-         * The Google Maps V2 API states that when using MapView, we need to
-         * forward the onCreate(Bundle) method to the MapView, but since we are
-         * in a fragment, the onCreateView() gets called AFTER the
-         * onCreate(Bundle) method, which makes forwarding that method
-         * impossible. This is the workaround for that
-         */
-        if (savedInstanceState == null) {
-            MapsInitializer.initialize(getActivity());
-        }
+	/**
+	 * Holds the value of the previous search radius to prevent querying for
+	 * books from server again
+	 */
+	private int                           mPrevSearchRadius;
 
-        mMapView = (MapView) contentView.findViewById(R.id.map_books_around_me);
-        mMapView.onCreate(savedInstanceState);
-        mDrawerLayout = (FullWidthDrawerLayout) contentView
-                        .findViewById(R.id.drawer_layout);
-        mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+	/**
+	 * Used to remember the last location so that we can avoid fetching the
+	 * books again if the last fetched locations, and current fetched locations
+	 * are close by
+	 */
+	private Location                      mLastFetchedLocation;
 
-        mBooksDrawerView = contentView
-                        .findViewById(R.id.layout_books_container);
-        mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
-                        .findViewById(R.id.auto_complete_books_around_me);
-        mBooksAroundMeGridView = (GridView) contentView
-                        .findViewById(R.id.grid_books_around_me);
+	@Override
+	public View onCreateView(final LayoutInflater inflater,
+			final ViewGroup container, final Bundle savedInstanceState) {
+		init(container);
+		setHasOptionsMenu(true);
 
-        mMapDrawerBlurHelper = new MapDrawerInteractionHelper(getActivity(), mDrawerLayout, mBooksDrawerView, mMapView);
-        mMapDrawerBlurHelper.init(this);
-        
-       
+		final View contentView = inflater
+				.inflate(R.layout.fragment_books_around_me, container, false);
 
-        mBooksAroundMeGridView.setOnScrollListener(new OnScrollListener() {
-			
+		/*
+		 * The Google Maps V2 API states that when using MapView, we need to
+		 * forward the onCreate(Bundle) method to the MapView, but since we are
+		 * in a fragment, the onCreateView() gets called AFTER the
+		 * onCreate(Bundle) method, which makes forwarding that method
+		 * impossible. This is the workaround for that
+		 */
+		if (savedInstanceState == null) {
+			MapsInitializer.initialize(getActivity());
+		}
+
+		mMapView = (MapView) contentView.findViewById(R.id.map_books_around_me);
+		mMapView.onCreate(savedInstanceState);
+		mDrawerLayout = (FullWidthDrawerLayout) contentView
+				.findViewById(R.id.drawer_layout);
+		mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+
+		mBooksDrawerView = contentView
+				.findViewById(R.id.layout_books_container);
+		mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
+				.findViewById(R.id.auto_complete_books_around_me);
+		mBooksAroundMeGridView = (GridView) contentView
+				.findViewById(R.id.grid_books_around_me);
+
+		mMapDrawerBlurHelper = new MapDrawerInteractionHelper(getActivity(), mDrawerLayout, mBooksDrawerView, mMapView);
+		mMapDrawerBlurHelper.init(this);
+
+
+
+		mBooksAroundMeGridView.setOnScrollListener(new OnScrollListener() {
+
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			// userScrolled is set to true in order to prevent auto scrolling on page load
-				 if(scrollState == 1||scrollState == 2){
-			            userScrolled = true;
-			        } 
+				// userScrolled is set to true in order to prevent auto scrolling on page load
+				if(scrollState == 1||scrollState == 2){
+					userScrolled = true;
+				} 
 			}
-			
+
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				
+
 				//TODO
-				 boolean loadMore = /* maybe add a padding */
-						 firstVisibleItem + visibleItemCount >= totalItemCount-AppConstants.DEFAULT_LOAD_BEFORE_COUNT;
+				boolean loadMore = /* maybe add a padding */
+						firstVisibleItem + visibleItemCount >= totalItemCount-AppConstants.DEFAULT_LOAD_BEFORE_COUNT;
 						Logger.d(TAG, "visible count: %d",visibleItemCount);
-						
-						
-				        if(loadMore&&userScrolled) {
-				        	 pageCount++;
-				        	 loadMore=false;
-				        	 userScrolled=false;
-				        	 fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), 1);
-				        	 
-				        }
-				
+
+
+						if(loadMore&&userScrolled) {
+							pageCount++;
+							loadMore=false;
+							userScrolled=false;
+							fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation(), 1);
+
+						}
+
 			}
 		});
-        
-        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
-        mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
-        mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
-        mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
-        mBooksAroundMeGridView.setOnItemClickListener(this);
-
-        if (savedInstanceState == null) {
-            mDrawerOpenedAutomatically = false;
-            mMapAlreadyMovedOnce = false;
-
-        } else {
-            mDrawerOpenedAutomatically = savedInstanceState
-                            .getBoolean(Keys.DRAWER_OPENED_ONCE);
-            mMapAlreadyMovedOnce = savedInstanceState
-                            .getBoolean(Keys.MAP_MOVED_ONCE);
-            mLastFetchedLocation = savedInstanceState
-                            .getParcelable(Keys.LAST_FETCHED_LOCATION);
-            mPrevSearchRadius = savedInstanceState
-                            .getInt(Keys.LAST_FETCHED_SEARCH_RADIUS);
-        }
-
-        loadBookSearchResults();
-        setActionBarDrawerToggleEnabled(true);
-        return contentView;
-    }
-
-    @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(Keys.DRAWER_OPENED_ONCE, mDrawerOpenedAutomatically);
-        outState.putBoolean(Keys.MAP_MOVED_ONCE, mMapAlreadyMovedOnce);
-        outState.putParcelable(Keys.LAST_FETCHED_LOCATION, mLastFetchedLocation);
-        outState.putInt(Keys.LAST_FETCHED_SEARCH_RADIUS, mPrevSearchRadius);
-        if (mMapView != null) {
-            mMapView.onSaveInstanceState(outState);
-        }
-    }
-
-    @Override
-    public void onViewStateRestored(final Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        mMapDrawerBlurHelper.onRestoreState();
-    }
-
-    /**
-     * Starts the loader for book search results
-     */
-    private void loadBookSearchResults() {
-        //TODO Add filters for search results
-        getLoaderManager().restartLoader(Loaders.SEARCH_BOOKS, null, this);
-    }
-
-    /**
-     * Method to fetch books around me from the server centered at a location,
-     * and in a search radius
-     * 
-     * @param center The {@link Location} representing the center
-     * @param radius The radius(in kilometers) to search in
-     */
-    private void fetchBooksAroundMe(final Location center, final int radius) {
-
-        if (center != null) {
-
-            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.SEARCH, null, mVolleyCallbacks);
-            request.setRequestId(RequestId.SEARCH_BOOKS);
-
-            final Map<String, String> params = new HashMap<String, String>(2);
-            params.put(HttpConstants.LATITUDE, String.valueOf(center
-                            .getLatitude()));
-            params.put(HttpConstants.LONGITUDE, String.valueOf(center
-                            .getLongitude()));
-            params.put(HttpConstants.PAGE, String.valueOf(pageCount));
-            if(pageCount==1)
-            {
-            	params.put(HttpConstants.PERLIMIT, String.valueOf(AppConstants.DEFAULT_PERPAGE_LIMIT));	
-            }
-            else
-            {
-            	params.put(HttpConstants.PERLIMIT, String.valueOf(AppConstants.DEFAULT_PERPAGE_LIMIT_ONSCROLL));
-            }
-            request.addExtra(Keys.LOCATION, center);
-            request.addExtra(Keys.SEARCH_RADIUS, radius);
-
-            if (radius >= 1) {
-                params.put(HttpConstants.RADIUS, String.valueOf(radius));
-            }
-            request.setParams(params);
-            addRequestToQueue(request, true, 0);
-        }
-
-    }
-
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_books_around_me, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-
-            case R.id.action_scan_book: {
-                startActivityForResult(new Intent(getActivity(), ScanIsbnActivity.class), RequestCodes.SCAN_ISBN);
-                return true;
-            }
-
-            case R.id.action_add_book: {
-                loadAddOrEditBookFragment(null);
-                return true;
-            }
-
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
-        }
-    }
-
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode,
-                    final Intent data) {
-        if ((requestCode == RequestCodes.SCAN_ISBN)
-                        && (resultCode == ResultCodes.SUCCESS)) {
-
-            Bundle args = null;
-            if (data != null) {
-                args = data.getExtras();
-            }
-
-            loadAddOrEditBookFragment(args);
-
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    @Override
-    protected Object getVolleyTag() {
-        return TAG;
-    }
-
-    public void updateLocation(final Location location) {
-
-        if ((location.getLatitude() == 0.0) && (location.getLongitude() == 0.0)) {
-            return;
-        }
-        if (!mMapAlreadyMovedOnce) {
-
-            /*
-             * For the initial launch, move the Map to the user's current
-             * position as soon as the location is fetched
-             */
-            final GoogleMap googleMap = getMap();
-
-            if (googleMap != null) {
-                googleMap.setMyLocationEnabled(false);
-                
-                /*
-                 * For Zooming Effect
-                 */     
-//                googleMap.animateCamera(CameraUpdateFactory
-//                                .newLatLngZoom(new LatLng(DeviceInfo.INSTANCE
-//                                                .getLatestLocation()
-//                                                .getLatitude(), DeviceInfo.INSTANCE
-//                                                .getLatestLocation()
-//                                                .getLongitude()), MAP_ZOOM_LEVEL), this);
-                
-                /*
-                 * For Simple Effect
-                 */ 
-                googleMap.moveCamera(CameraUpdateFactory
-                      .newLatLngZoom(new LatLng(DeviceInfo.INSTANCE
-                      .getLatestLocation()
-                      .getLatitude(), DeviceInfo.INSTANCE
-                      .getLatestLocation()
-                      .getLongitude()), MAP_ZOOM_LEVEL));
-          
-        	
-               
-            }
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        saveLastFetchedInfoToPref();
-        mMapView.onPause();
-        mMapDrawerBlurHelper.onPause();
-    }
-
-    /**
-     * Saves the last fetched info to shared preferences. This will be read
-     * again in onResume so as to prevent refetching of the books
-     */
-    private void saveLastFetchedInfoToPref() {
-
-        if ((mPrevSearchRadius > 0) && (mLastFetchedLocation != null)) {
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_search_radius, mPrevSearchRadius);
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_fetched_latitude, mLastFetchedLocation
-                                            .getLatitude());
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_fetched_longitude, mLastFetchedLocation
-                                            .getLongitude());
-
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        readLastFetchedInfoFromPref();
-        mMapView.onResume();
-        mMapDrawerBlurHelper.onResume();
-        final Location latestLocation = DeviceInfo.INSTANCE.getLatestLocation();
-        if ((latestLocation.getLatitude() != 0.0)
-                        && (latestLocation.getLongitude() != 0.0)) {
-            updateLocation(latestLocation);
-        }
-    }
-
-    /**
-     * Reads the latest fetched locations from shared preferences
-     */
-    private void readLastFetchedInfoFromPref() {
-
-        // Don't read from pref if already has fetched
-        if ((mPrevSearchRadius == 0) && (mLastFetchedLocation == null)) {
-            mPrevSearchRadius = SharedPreferenceHelper
-                            .getInt(getActivity(), R.string.pref_last_search_radius);
-            mLastFetchedLocation = new Location(LocationManager.PASSIVE_PROVIDER);
-            mLastFetchedLocation
-                            .setLatitude(SharedPreferenceHelper
-                                            .getDouble(getActivity(), R.string.pref_last_fetched_latitude));
-            mLastFetchedLocation
-                            .setLongitude(SharedPreferenceHelper
-                                            .getDouble(getActivity(), R.string.pref_last_fetched_longitude));
-        }
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mMapView != null) {
-            mMapView.onDestroy();
-        }
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        if (mMapView != null) {
-            mMapView.onLowMemory();
-        }
-    }
-
-    @Override
-    public void onCancel() {
-
-    }
-
-    @Override
-    public void onFinish() {
-        if (!mMapAlreadyMovedOnce) {
-
-            final Location center = Utils.getCenterLocationOfMap(getMap());
-            final int searchRadius = Math.round(Utils
-                            .getShortestRadiusFromCenter(mMapView) / 1000);
-
-            if (searchRadius >= 20) {
-                return;
-            }
-
-            mMapAlreadyMovedOnce = true;
-
-            if (shouldRefetchBooks(center, searchRadius)) {
-                fetchBooksAroundMe(center, searchRadius);
-            }
-        }
-
-    }
-
-    /**
-     * Loads the Fragment to Add Or Edit Books
-     * 
-     * @param bookInfo The book info to load. Can be <code>null</code>, in which
-     *            case, it treats it as Add a new book flow
-     */
-    private void loadAddOrEditBookFragment(final Bundle bookInfo) {
-
-        loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), AddOrEditBookFragment.class
-                                        .getName(), bookInfo), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_BOOKS_AROUND_ME);
-    }
-
-    @Override
-    public void onSuccess(final int requestId,
-                    final IBlRequestContract request,
-                    final ResponseInfo response) {
-
-        if (requestId == RequestId.SEARCH_BOOKS) {
-
-            mLastFetchedLocation = (Location) request.getExtras()
-                            .get(Keys.LOCATION);
-            mPrevSearchRadius = (Integer) request.getExtras()
-                            .get(Keys.SEARCH_RADIUS);
-
-            /*
-             * Do nothing because the loader will take care of reloading the
-             * data
-             */
-        }
-    }
-
-    @Override
-    public void onBadRequestError(final int requestId,
-                    final IBlRequestContract request, final int errorCode,
-                    final String errorMessage, final Bundle errorResponseBundle) {
-        if (requestId == RequestId.SEARCH_BOOKS) {
-            showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
-        }
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
-
-        if (loaderId == Loaders.SEARCH_BOOKS) {
-            return new SQLiteLoader(getActivity(), false, ViewSearchBooksWithLocations.NAME, null, null, null, null, null, null, null);
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-
-        if (loader.getId() == Loaders.SEARCH_BOOKS) {
-
-            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-
-            {
-            	mBooksAroundMeAdapter.swapCursor(cursor);
-            	
-            }
-            if (!mDrawerOpenedAutomatically) {
-                // Open drawer automatically on map loaded if first launch
-                mDrawerOpenedAutomatically = true;
-                mDrawerLayout.openDrawer(mBooksDrawerView);
-            }
-        }
-    }
-
-    @Override
-    public void onLoaderReset(final Loader<Cursor> loader) {
-        if (loader.getId() == Loaders.SEARCH_BOOKS) {
-        	//TODO Delete the current search results before parsing the old ones
-            DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, null, TableSearchBooks.NAME, null, null, true, this);
-            mBooksAroundMeAdapter.swapCursor(null);
-        }
-    }
-
-    /**
-     * Gets a reference of the Google Map
-     */
-    private GoogleMap getMap() {
-
-        return mMapView.getMap();
-    }
-
-    @Override
-    public void onDrawerClosed(final View drawerView) {
-
-    }
-
-    @Override
-    public void onDrawerOpened(final View drawerView) {
-
-        if (drawerView == mBooksDrawerView) {
-            final int searchRadius = Math.round(Utils
-                            .getShortestRadiusFromCenter(mMapView) / 1000);
-            final Location center = Utils.getCenterLocationOfMap(getMap());
-
-            if (shouldRefetchBooks(center, searchRadius)) {
-                fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), searchRadius);
-            }
-
-        }
-    }
-
-    /**
-     * Checks if a new set of books should be fetched
-     * 
-     * @param center The new center point at which the books should be fetched
-     * @param searchRadius The new search radius for which the books are being
-     *            fetched
-     * @return <code>true</code> if a new set should be fetched,
-     *         <code>false</code> otherwise
-     */
-    private boolean shouldRefetchBooks(final Location center,
-                    final int searchRadius) {
-
-        if (mLastFetchedLocation != null) {
-
-            final float distanceBetweenCurAndLastFetchedLocations = Utils
-                            .distanceBetween(center, mLastFetchedLocation) / 1000;
-
-            /*
-             * If there's less than 1 km distance between the current location
-             * and the location where we last fetched the books AND the search
-             * radius is lesser than the older search radius, we don't need to
-             * fetch the books again since the current set will include those
-             */
-            if ((distanceBetweenCurAndLastFetchedLocations <= 1.0f)
-                            && (searchRadius <= mPrevSearchRadius)) {
-                Logger.v(TAG, "Points are really close. Don't fetch");
-                return false;
-            }
-
-        }
-
-        return true;
-    }
-
-    @Override
-    public void onDrawerSlide(final View drawerView, final float slideOffset) {
-
-    }
-
-    @Override
-    public void onDrawerStateChanged(final int state) {
-
-    }
-
-    @Override
-    public void onItemClick(final AdapterView<?> parent, final View view,
-                    final int position, final long id) {
-        if (parent.getId() == R.id.grid_books_around_me) {
-
-            final Cursor cursor = (Cursor) mBooksAroundMeAdapter
-                            .getItem(position);
-
-            final String bookId = cursor.getString(cursor
-                            .getColumnIndex(DatabaseColumns.BOOK_ID));
-            final String userId = cursor.getString(cursor
-                            .getColumnIndex(DatabaseColumns.USER_ID));
-
-            final Bundle showBooksArgs = new Bundle();
-            showBooksArgs.putString(Keys.BOOK_ID, bookId);
-            showBooksArgs.putString(Keys.USER_ID, userId);
-
-            loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), BookDetailFragment.class
-                                            .getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, null);
-        }
-    }
+
+		mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
+		mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
+		mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
+		mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
+		mBooksAroundMeGridView.setOnItemClickListener(this);
+
+		if (savedInstanceState == null) {
+			mDrawerOpenedAutomatically = false;
+			mMapAlreadyMovedOnce = false;
+
+		} else {
+			mDrawerOpenedAutomatically = savedInstanceState
+					.getBoolean(Keys.DRAWER_OPENED_ONCE);
+			mMapAlreadyMovedOnce = savedInstanceState
+					.getBoolean(Keys.MAP_MOVED_ONCE);
+			mLastFetchedLocation = savedInstanceState
+					.getParcelable(Keys.LAST_FETCHED_LOCATION);
+			mPrevSearchRadius = savedInstanceState
+					.getInt(Keys.LAST_FETCHED_SEARCH_RADIUS);
+		}
+
+		loadBookSearchResults();
+		setActionBarDrawerToggleEnabled(true);
+		return contentView;
+	}
+
+	@Override
+	public void onSaveInstanceState(final Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(Keys.DRAWER_OPENED_ONCE, mDrawerOpenedAutomatically);
+		outState.putBoolean(Keys.MAP_MOVED_ONCE, mMapAlreadyMovedOnce);
+		outState.putParcelable(Keys.LAST_FETCHED_LOCATION, mLastFetchedLocation);
+		outState.putInt(Keys.LAST_FETCHED_SEARCH_RADIUS, mPrevSearchRadius);
+		if (mMapView != null) {
+			mMapView.onSaveInstanceState(outState);
+		}
+	}
+
+	@Override
+	public void onViewStateRestored(final Bundle savedInstanceState) {
+		super.onViewStateRestored(savedInstanceState);
+		mMapDrawerBlurHelper.onRestoreState();
+	}
+
+	/**
+	 * Starts the loader for book search results
+	 */
+	private void loadBookSearchResults() {
+		//TODO Add filters for search results
+		getLoaderManager().restartLoader(Loaders.SEARCH_BOOKS, null, this);
+	}
+
+	/**
+	 * Method to fetch books around me from the server centered at a location,
+	 * and in a search radius
+	 * 
+	 * @param center The {@link Location} representing the center
+	 * @param radius The radius(in kilometers) to search in
+	 */
+	private void fetchBooksAroundMe(final Location center, final int radius) {
+
+		if (center != null) {
+
+			final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+					+ ApiEndpoints.SEARCH, null, mVolleyCallbacks);
+			request.setRequestId(RequestId.SEARCH_BOOKS);
+
+			final Map<String, String> params = new HashMap<String, String>(2);
+			params.put(HttpConstants.LATITUDE, String.valueOf(center
+					.getLatitude()));
+			params.put(HttpConstants.LONGITUDE, String.valueOf(center
+					.getLongitude()));
+			params.put(HttpConstants.PAGE, String.valueOf(pageCount));
+			if(pageCount==1)
+			{
+				params.put(HttpConstants.PERLIMIT, String.valueOf(AppConstants.DEFAULT_PERPAGE_LIMIT));	
+			}
+			else
+			{
+				params.put(HttpConstants.PERLIMIT, String.valueOf(AppConstants.DEFAULT_PERPAGE_LIMIT_ONSCROLL));
+			}
+			request.addExtra(Keys.LOCATION, center);
+			request.addExtra(Keys.SEARCH_RADIUS, radius);
+
+			if (radius >= 1) {
+				params.put(HttpConstants.RADIUS, String.valueOf(radius));
+			}
+			request.setParams(params);
+			addRequestToQueue(request, true, 0);
+		}
+
+	}
+
+	@Override
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+		inflater.inflate(R.menu.menu_books_around_me, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		switch (item.getItemId()) {
+
+		case R.id.action_scan_book: {
+			startActivityForResult(new Intent(getActivity(), ScanIsbnActivity.class), RequestCodes.SCAN_ISBN);
+			return true;
+		}
+
+		case R.id.action_add_book: {
+			loadAddOrEditBookFragment(null);
+			return true;
+		}
+
+		default: {
+			return super.onOptionsItemSelected(item);
+		}
+		}
+	}
+
+	@Override
+	public void onActivityResult(final int requestCode, final int resultCode,
+			final Intent data) {
+		if ((requestCode == RequestCodes.SCAN_ISBN)
+				&& (resultCode == ResultCodes.SUCCESS)) {
+
+			Bundle args = null;
+			if (data != null) {
+				args = data.getExtras();
+			}
+
+			loadAddOrEditBookFragment(args);
+
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
+		}
+	}
+
+	@Override
+	protected Object getVolleyTag() {
+		return TAG;
+	}
+
+	public void updateLocation(final Location location) {
+
+		if ((location.getLatitude() == 0.0) && (location.getLongitude() == 0.0)) {
+			return;
+		}
+		if (!mMapAlreadyMovedOnce) {
+
+			/*
+			 * For the initial launch, move the Map to the user's current
+			 * position as soon as the location is fetched
+			 */
+			final GoogleMap googleMap = getMap();
+
+			if (googleMap != null) {
+				googleMap.setMyLocationEnabled(false);
+
+				/*
+				 * For Zooming Effect
+				 */     
+				//                googleMap.animateCamera(CameraUpdateFactory
+				//                                .newLatLngZoom(new LatLng(DeviceInfo.INSTANCE
+				//                                                .getLatestLocation()
+				//                                                .getLatitude(), DeviceInfo.INSTANCE
+				//                                                .getLatestLocation()
+				//                                                .getLongitude()), MAP_ZOOM_LEVEL), this);
+
+				/*
+				 * For Simple Effect
+				 */ 
+
+				googleMap.moveCamera(CameraUpdateFactory
+						.newLatLngZoom(new LatLng(DeviceInfo.INSTANCE
+								.getLatestLocation()
+								.getLatitude(), DeviceInfo.INSTANCE
+								.getLatestLocation()
+								.getLongitude()), MAP_ZOOM_LEVEL));
+
+
+				/*
+				 * As there was no callback option in moveCamera ,
+				 * so i used piece of code here for updating the results when location changes
+				 */
+				
+				
+				final Location center = Utils.getCenterLocationOfMap(getMap());
+				final int searchRadius = Math.round(Utils
+						.getShortestRadiusFromCenter(mMapView) / 1000);
+
+				if (searchRadius >= 20) {
+					return;
+				}
+
+				mMapAlreadyMovedOnce = true;
+
+				if (shouldRefetchBooks(center, searchRadius)) {
+					//	 Delete the current search results before parsing the old ones
+					DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, null, TableSearchBooks.NAME, null, null, true, this);
+
+					fetchBooksAroundMe(center, searchRadius);
+				}
+			}
+
+
+
+		}
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		saveLastFetchedInfoToPref();
+		mMapView.onPause();
+		mMapDrawerBlurHelper.onPause();
+	}
+
+	/**
+	 * Saves the last fetched info to shared preferences. This will be read
+	 * again in onResume so as to prevent refetching of the books
+	 */
+	private void saveLastFetchedInfoToPref() {
+
+		if ((mPrevSearchRadius > 0) && (mLastFetchedLocation != null)) {
+			SharedPreferenceHelper
+			.set(getActivity(), R.string.pref_last_search_radius, mPrevSearchRadius);
+			SharedPreferenceHelper
+			.set(getActivity(), R.string.pref_last_fetched_latitude, mLastFetchedLocation
+					.getLatitude());
+			SharedPreferenceHelper
+			.set(getActivity(), R.string.pref_last_fetched_longitude, mLastFetchedLocation
+					.getLongitude());
+
+		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		readLastFetchedInfoFromPref();
+		mMapView.onResume();
+		mMapDrawerBlurHelper.onResume();
+		final Location latestLocation = DeviceInfo.INSTANCE.getLatestLocation();
+		if ((latestLocation.getLatitude() != 0.0)
+				&& (latestLocation.getLongitude() != 0.0)) {
+			updateLocation(latestLocation);
+		}
+	}
+
+	/**
+	 * Reads the latest fetched locations from shared preferences
+	 */
+	private void readLastFetchedInfoFromPref() {
+
+		// Don't read from pref if already has fetched
+		if ((mPrevSearchRadius == 0) && (mLastFetchedLocation == null)) {
+			mPrevSearchRadius = SharedPreferenceHelper
+					.getInt(getActivity(), R.string.pref_last_search_radius);
+			mLastFetchedLocation = new Location(LocationManager.PASSIVE_PROVIDER);
+			mLastFetchedLocation
+			.setLatitude(SharedPreferenceHelper
+					.getDouble(getActivity(), R.string.pref_last_fetched_latitude));
+			mLastFetchedLocation
+			.setLongitude(SharedPreferenceHelper
+					.getDouble(getActivity(), R.string.pref_last_fetched_longitude));
+		}
+
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mMapView != null) {
+			mMapView.onDestroy();
+		}
+	}
+
+	@Override
+	public void onLowMemory() {
+		super.onLowMemory();
+		if (mMapView != null) {
+			mMapView.onLowMemory();
+		}
+	}
+
+	@Override
+	public void onCancel() {
+
+	}
+
+	@Override
+	public void onFinish() {
+		if (!mMapAlreadyMovedOnce) {
+
+			final Location center = Utils.getCenterLocationOfMap(getMap());
+			final int searchRadius = Math.round(Utils
+					.getShortestRadiusFromCenter(mMapView) / 1000);
+
+			if (searchRadius >= 20) {
+				return;
+			}
+
+			mMapAlreadyMovedOnce = true;
+
+			if (shouldRefetchBooks(center, searchRadius)) {
+				fetchBooksAroundMe(center, searchRadius);
+			}
+		}
+
+	}
+
+	/**
+	 * Loads the Fragment to Add Or Edit Books
+	 * 
+	 * @param bookInfo The book info to load. Can be <code>null</code>, in which
+	 *            case, it treats it as Add a new book flow
+	 */
+	private void loadAddOrEditBookFragment(final Bundle bookInfo) {
+
+		loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+				.instantiate(getActivity(), AddOrEditBookFragment.class
+						.getName(), bookInfo), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_BOOKS_AROUND_ME);
+	}
+
+	@Override
+	public void onSuccess(final int requestId,
+			final IBlRequestContract request,
+			final ResponseInfo response) {
+
+		if (requestId == RequestId.SEARCH_BOOKS) {
+
+			mLastFetchedLocation = (Location) request.getExtras()
+					.get(Keys.LOCATION);
+			mPrevSearchRadius = (Integer) request.getExtras()
+					.get(Keys.SEARCH_RADIUS);
+
+			/*
+			 * Do nothing because the loader will take care of reloading the
+			 * data
+			 */
+		}
+	}
+
+	@Override
+	public void onBadRequestError(final int requestId,
+			final IBlRequestContract request, final int errorCode,
+			final String errorMessage, final Bundle errorResponseBundle) {
+		if (requestId == RequestId.SEARCH_BOOKS) {
+			showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
+		}
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
+
+		if (loaderId == Loaders.SEARCH_BOOKS) {
+			return new SQLiteLoader(getActivity(), false, ViewSearchBooksWithLocations.NAME, null, null, null, null, null, null, null);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
+
+		if (loader.getId() == Loaders.SEARCH_BOOKS) {
+
+			Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
+
+			{
+				mBooksAroundMeAdapter.swapCursor(cursor);
+
+			}
+			if (!mDrawerOpenedAutomatically) {
+				// Open drawer automatically on map loaded if first launch
+				mDrawerOpenedAutomatically = true;
+				mDrawerLayout.openDrawer(mBooksDrawerView);
+			}
+		}
+	}
+
+	@Override
+	public void onLoaderReset(final Loader<Cursor> loader) {
+		if (loader.getId() == Loaders.SEARCH_BOOKS) {
+			mBooksAroundMeAdapter.swapCursor(null);
+		}
+	}
+
+	/**
+	 * Gets a reference of the Google Map
+	 */
+	private GoogleMap getMap() {
+
+		return mMapView.getMap();
+	}
+
+	@Override
+	public void onDrawerClosed(final View drawerView) {
+
+	}
+
+	@Override
+	public void onDrawerOpened(final View drawerView) {
+
+		if (drawerView == mBooksDrawerView) {
+			final int searchRadius = Math.round(Utils
+					.getShortestRadiusFromCenter(mMapView) / 1000);
+			final Location center = Utils.getCenterLocationOfMap(getMap());
+
+			if (shouldRefetchBooks(center, searchRadius)) {
+				fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), searchRadius);
+			}
+
+		}
+	}
+
+	/**
+	 * Checks if a new set of books should be fetched
+	 * 
+	 * @param center The new center point at which the books should be fetched
+	 * @param searchRadius The new search radius for which the books are being
+	 *            fetched
+	 * @return <code>true</code> if a new set should be fetched,
+	 *         <code>false</code> otherwise
+	 */
+	private boolean shouldRefetchBooks(final Location center,
+			final int searchRadius) {
+
+		if (mLastFetchedLocation != null) {
+
+			final float distanceBetweenCurAndLastFetchedLocations = Utils
+					.distanceBetween(center, mLastFetchedLocation) / 1000;
+
+			/*
+			 * If there's less than 1 km distance between the current location
+			 * and the location where we last fetched the books AND the search
+			 * radius is lesser than the older search radius, we don't need to
+			 * fetch the books again since the current set will include those
+			 */
+			if ((distanceBetweenCurAndLastFetchedLocations <= 1.0f)
+					&& (searchRadius <= mPrevSearchRadius)) {
+				Logger.v(TAG, "Points are really close. Don't fetch");
+				return false;
+			}
+
+		}
+
+		return true;
+	}
+
+	@Override
+	public void onDrawerSlide(final View drawerView, final float slideOffset) {
+
+	}
+
+	@Override
+	public void onDrawerStateChanged(final int state) {
+
+	}
+
+	@Override
+	public void onItemClick(final AdapterView<?> parent, final View view,
+			final int position, final long id) {
+		if (parent.getId() == R.id.grid_books_around_me) {
+
+			final Cursor cursor = (Cursor) mBooksAroundMeAdapter
+					.getItem(position);
+
+			final String bookId = cursor.getString(cursor
+					.getColumnIndex(DatabaseColumns.BOOK_ID));
+			final String userId = cursor.getString(cursor
+					.getColumnIndex(DatabaseColumns.USER_ID));
+
+			final Bundle showBooksArgs = new Bundle();
+			showBooksArgs.putString(Keys.BOOK_ID, bookId);
+			showBooksArgs.putString(Keys.USER_ID, userId);
+
+			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+					.instantiate(getActivity(), BookDetailFragment.class
+							.getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, null);
+		}
+	}
 
 	@Override
 	public void onInsertComplete(int token, Object cookie, long insertRowId) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onDeleteComplete(int token, Object cookie, int deleteCount) {
 		// TODO Auto-generated method stub
-		 if (token == QueryTokens.DELETE_BOOKS_SEARCH_RESULTS){}
-			 
+		if (token == QueryTokens.DELETE_BOOKS_SEARCH_RESULTS){}
+
 	}
 
 	@Override
 	public void onUpdateComplete(int token, Object cookie, int updateCount) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onQueryComplete(int token, Object cookie, Cursor cursor) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
