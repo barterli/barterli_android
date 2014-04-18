@@ -16,12 +16,16 @@
 
 package li.barter.adapters;
 
+import com.squareup.picasso.Picasso;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -49,10 +53,20 @@ public class ChatDetailAdapter extends CursorAdapter {
      */
     private final Map<Integer, Integer> mPositionViewTypeMap;
 
+    /**
+     * Profile picture of the user the current user is chatting with
+     */
+    private String                      mChatUserProfilePic;
+
     public ChatDetailAdapter(final Context context, final Cursor cursor) {
         super(context, cursor, 0);
         mPositionViewTypeMap = new HashMap<Integer, Integer>();
         buildMapForCursor(cursor);
+    }
+
+    public void setChatUserProfilePic(String profileImage) {
+        mChatUserProfilePic = profileImage;
+        notifyDataSetChanged();
     }
 
     /**
@@ -110,6 +124,22 @@ public class ChatDetailAdapter extends CursorAdapter {
         ((TextView) view.getTag(R.id.text_chat_message))
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.MESSAGE)));
+
+        final int itemViewType = getItemViewType(cursor.getPosition());
+        if (itemViewType == INCOMING_MESSAGE) {
+            if (!TextUtils.isEmpty(mChatUserProfilePic)) {
+                Picasso.with(context).load(mChatUserProfilePic).fit()
+                                .error(R.drawable.pic_avatar)
+                                .into((ImageView) view.getTag(R.id.image_user));
+            }
+        } else if (itemViewType == OUTGOING_MESSAGE) {
+            final String imageUrl = UserInfo.INSTANCE.getProfilePicture();
+            if (!TextUtils.isEmpty(imageUrl)) {
+                Picasso.with(context).load(imageUrl).fit()
+                                .error(R.drawable.pic_avatar)
+                                .into((ImageView) view.getTag(R.id.image_user));
+            }
+        }
 
     }
 

@@ -53,10 +53,9 @@ public class AppConstants {
     public static final int     DEFAULT_PERPAGE_LIMIT          = 10;
     public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL = 10;
     public static final int     DEFAULT_LOAD_BEFORE_COUNT      = 1;
-    
+
     // Default Book Image url we getting from the server when there is no image
     public static final String  DEFAULT_BOOKIMAGE_URL          = "1_default.png";
-    
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -70,6 +69,7 @@ public class AppConstants {
         private String mAuthToken;
         private String mEmail;
         private String mId;
+        private String mProfilePicture;
         private String mAuthHeader;
 
         private UserInfo() {
@@ -81,6 +81,7 @@ public class AppConstants {
             mAuthHeader = "";
             mEmail = "";
             mId = "";
+            mProfilePicture = "";
         }
 
         public String getAuthToken() {
@@ -117,6 +118,20 @@ public class AppConstants {
             } else {
                 mId = id;
             }
+        }
+
+        public String getProfilePicture() {
+            return mProfilePicture;
+        }
+
+        public void setProfilePicture(final String profilePicture) {
+
+            if (profilePicture == null) {
+                mProfilePicture = "";
+            } else {
+                mProfilePicture = profilePicture;
+            }
+
         }
 
         public String getAuthHeader() {
@@ -242,7 +257,7 @@ public class AppConstants {
         public static final String FIRST_LOAD                 = "first_load";
         public static final String EDIT_MODE                  = "edit_mode";
         public static final String LAST_FETCHED_PAGENUMBER    = "last_fetched_pagenumber";
-        
+
     }
 
     /**
@@ -307,6 +322,7 @@ public class AppConstants {
         public static final int GET_MY_BOOKS = 202;
         public static final int ALL_CHATS    = 203;
         public static final int CHAT_DETAILS = 204;
+        public static final int USER_DETAILS = 205;
     }
 
     /**

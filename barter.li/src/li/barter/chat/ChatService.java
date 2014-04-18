@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
+import java.util.ArrayDeque;
 import java.util.Locale;
 
 import li.barter.BarterLiApplication;
@@ -146,9 +147,15 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private int                    mUnreadMessageCount;
 
+    /**
+     * Holds an array of chat messages, to be processed in order
+     */
+    private ArrayDeque<String>     mMessageQueue;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        mMessageQueue = new ArrayDeque<String>();
         mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
                         .getChatPort(), VIRTUAL_HOST, EXCHANGE, ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
@@ -267,6 +274,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             requestObject.put(HttpConstants.SENDER_ID, UserInfo.INSTANCE
                             .getId());
             requestObject.put(HttpConstants.RECEIVER_ID, toUserId);
+
             requestObject.put(HttpConstants.MESSAGE, message);
             final ChatRequest request = new ChatRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.AMPQ_EVENT_MACHINE, requestObject.toString(), mVolleyCallbacks, acknowledge);
@@ -298,7 +306,28 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         try {
             text = new String(message, HTTP.UTF_8);
             Logger.d(TAG, "Received:" + text);
-            final JSONObject messageJson = new JSONObject(text);
+
+            mMessageQueue.add(text);
+            if (mMessageQueue.size() == 1) {
+                //If there aren't any messages in the queue, process the message immediately
+                queueNextMessageForProcessing();
+            }
+
+        } catch (final UnsupportedEncodingException e) {
+            e.printStackTrace();
+            //Shouldn't be happening
+        }
+
+    }
+
+    /**
+     * Processes a received chat message
+     * 
+     * @param message The chat message
+     */
+    private void processChatMessage(final String message) {
+        try {
+            final JSONObject messageJson = new JSONObject(message);
             final JSONObject senderObject = JsonUtils
                             .readJSONObject(messageJson, HttpConstants.SENDER, true, true);
             final JSONObject receiverObject = JsonUtils
@@ -340,15 +369,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 showChatReceivedNotification(chatId, senderId, senderName, messageText);
             }
 
-        } catch (final UnsupportedEncodingException e) {
-            e.printStackTrace();
-            //Shouldn't be happening
         } catch (final JSONException e) {
             Logger.e(TAG, e, "Invalid Chat Json");
         } catch (final ParseException e) {
             Logger.e(TAG, e, "Invalid chat timestamp");
         }
-
     }
 
     /**
@@ -465,6 +490,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 assert (cookie != null);
                 assert (cookie instanceof ContentValues);
                 //Chat was successfully created
+                queueNextMessageForProcessing();
                 break;
             }
 
@@ -496,7 +522,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 DBInterface.insertAsync(QueryTokens.INSERT_CHAT, cookie, TableChats.NAME, null, (ContentValues) cookie, true, this);
             } else {
                 Logger.v(TAG, "Chat Updated!");
-                //TODO Show notification
+                queueNextMessageForProcessing();
             }
         } else if (token == QueryTokens.UPDATE_USER_FOR_CHAT) {
             assert (cookie != null);
@@ -507,6 +533,17 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 Logger.v(TAG, "User not found. Inserting %s", cookie);
                 DBInterface.insertAsync(QueryTokens.INSERT_USER_FOR_CHAT, cookie, TableUsers.NAME, null, (ContentValues) cookie, true, this);
             }
+        }
+    }
+
+    /**
+     * Checks whether there are any pending messages in the queue, and adds them
+     * for processing if there are
+     */
+    private void queueNextMessageForProcessing() {
+
+        if (mMessageQueue != null && mMessageQueue.peek() != null) {
+            processChatMessage(mMessageQueue.poll());
         }
     }
 
@@ -692,4 +729,5 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mNotificationManager.cancel(MESSAGE_NOTIFICATION_ID);
         mUnreadMessageCount = 0;
     }
+
 }
