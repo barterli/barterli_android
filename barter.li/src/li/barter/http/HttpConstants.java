@@ -84,7 +84,8 @@ public class HttpConstants {
         public static final String HANGOUTS                = "/hangouts.json";
         public static final String USER_PREFERRED_LOCATION = "/user_preferred_location.json";
         public static final String SEARCH                  = "/search.json";
-        public static final String AMPQ                    = "/ampq1.json";
+        public static final String AMPQ_EVENT_MACHINE      = "/ampq.json";
+        public static final String AMPQ_START_STOP         = "/ampq1.json";
 
         public static final String UPDATE_USER_INFO        = "/user_update.json";
         public static final String GET_USER_INFO           = "/current_user_profile";

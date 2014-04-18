@@ -434,17 +434,19 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         final int searchRadius = Math.round(Utils
                         .getShortestRadiusFromCenter(mMapView) / 1000);
 
-        if (searchRadius >= 20) {
+        if (searchRadius >= 25) {
             return;
         }
 
         mMapAlreadyMovedOnce = true;
 
         if (shouldRefetchBooks(center, searchRadius)) {
-            //   Delete the current search results before parsing the old ones
-            DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, null, TableSearchBooks.NAME, null, null, true, this);
 
-            fetchBooksAroundMe(center, searchRadius);
+            final Bundle cookie = new Bundle(2);
+            cookie.putParcelable(Keys.LOCATION, center);
+            cookie.putInt(Keys.SEARCH_RADIUS, searchRadius);
+            //   Delete the current search results before parsing the old ones
+            DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
         }
     }
 
@@ -622,7 +624,12 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
             final Location center = Utils.getCenterLocationOfMap(getMap());
 
             if (shouldRefetchBooks(center, searchRadius)) {
-                fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), searchRadius);
+
+                final Bundle cookie = new Bundle(2);
+                cookie.putParcelable(Keys.LOCATION, center);
+                cookie.putInt(Keys.SEARCH_RADIUS, searchRadius);
+                //   Delete the current search results before parsing the old ones
+                DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
             }
 
         }
@@ -703,8 +710,14 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
 
     @Override
     public void onDeleteComplete(int token, Object cookie, int deleteCount) {
-        // TODO Auto-generated method stub
         if (token == QueryTokens.DELETE_BOOKS_SEARCH_RESULTS) {
+
+            assert (cookie != null);
+
+            pageCount = 1;
+            final Bundle args = (Bundle) cookie;
+            fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION), args
+                            .getInt(Keys.SEARCH_RADIUS));
         }
 
     }
