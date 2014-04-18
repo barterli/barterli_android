@@ -47,11 +47,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
-import android.widget.Toast;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.ScanIsbnActivity;
@@ -714,7 +711,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
 
             assert (cookie != null);
 
-            pageCount = 1;
+            mPageCount = 1;
             final Bundle args = (Bundle) cookie;
             fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION), args
                             .getInt(Keys.SEARCH_RADIUS));
