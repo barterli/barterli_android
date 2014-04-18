@@ -26,9 +26,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
+import li.barter.utils.AppConstants;
 
 /**
  * Adapter used to display information for books around me
@@ -68,12 +69,17 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                                         .getColumnIndex(DatabaseColumns.NAME)), cursor
                                         .getString(cursor
                                                         .getColumnIndex(DatabaseColumns.ADDRESS))));
-
-        Picasso.with(context)
+        if(cursor.getString(cursor.getColumnIndex(DatabaseColumns.IMAGE_URL)).contains(AppConstants.DEFAULT_BOOKIMAGE_URL))
+        {
+        	((ImageView) view.getTag(R.id.image_book)).setImageResource(R.drawable.default_book_icon);
+        }
+        else
+        {
+        	Picasso.with(context)
                         .load(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.IMAGE_URL)))
                         .fit().into((ImageView) view.getTag(R.id.image_book));
-
+        }
     }
 
     @Override

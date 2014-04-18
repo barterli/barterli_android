@@ -408,13 +408,13 @@ public class MapDrawerInteractionHelper implements DrawerListener,
      */
     private void beginMapSnapshotProcess() {
 
-        mMapSnapshotRequested = true;
-        final GoogleMap googleMap = getMap();
-
-        if (googleMap != null) {
-            Logger.d(TAG, "Adding On Loaded Callback!");
-            googleMap.setOnMapLoadedCallback(this);
-        }
+//        mMapSnapshotRequested = true;
+//        final GoogleMap googleMap = getMap();
+//
+//        if (googleMap != null) {
+//            Logger.d(TAG, "Adding On Loaded Callback!");
+//            googleMap.setOnMapLoadedCallback(this);
+//        }
     }
 
     /**

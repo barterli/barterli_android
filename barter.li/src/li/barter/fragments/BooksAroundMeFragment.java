@@ -47,10 +47,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.ScanIsbnActivity;
@@ -155,12 +153,12 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
      * Default page count value which is incremented on scrolling
      * {@link GridView}
      */
-    private int                           pageCount      = 1;
+    private int                           mPageCount      = 1;
 
     /**
      * Flag to stop onScroll method to call when fragment loads
      */
-    private boolean                       userScrolled   = false;
+    private boolean                       mUserScrolled   = false;
 
     /**
      * Holds the value of the previous search radius to prevent querying for
@@ -232,6 +230,8 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                             .getParcelable(Keys.LAST_FETCHED_LOCATION);
             mPrevSearchRadius = savedInstanceState
                             .getInt(Keys.LAST_FETCHED_SEARCH_RADIUS);
+            mPageCount=savedInstanceState
+            		.getInt(Keys.LAST_FETCHED_PAGENUMBER);
         }
 
         loadBookSearchResults();
@@ -244,7 +244,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         // userScrolled is set to true in order to prevent auto scrolling on page load
         if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
                         || scrollState == OnScrollListener.SCROLL_STATE_FLING) {
-            userScrolled = true;
+            mUserScrolled = true;
         }
     }
 
@@ -258,10 +258,10 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                         - AppConstants.DEFAULT_LOAD_BEFORE_COUNT;
         Logger.d(TAG, "visible count: %d", visibleItemCount);
 
-        if (loadMore && userScrolled) {
-            pageCount++;
+        if (loadMore && mUserScrolled) {
+            mPageCount++;
             loadMore = false;
-            userScrolled = false;
+            mUserScrolled = false;
             fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils
                             .getShortestRadiusFromCenter(mMapView) / 1000));
 
@@ -276,6 +276,8 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         outState.putBoolean(Keys.MAP_MOVED_ONCE, mMapAlreadyMovedOnce);
         outState.putParcelable(Keys.LAST_FETCHED_LOCATION, mLastFetchedLocation);
         outState.putInt(Keys.LAST_FETCHED_SEARCH_RADIUS, mPrevSearchRadius);
+        outState.putInt(Keys.LAST_FETCHED_PAGENUMBER, mPageCount);
+        
         if (mMapView != null) {
             mMapView.onSaveInstanceState(outState);
         }
@@ -315,8 +317,8 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                             .getLatitude()));
             params.put(HttpConstants.LONGITUDE, String.valueOf(center
                             .getLongitude()));
-            params.put(HttpConstants.PAGE, String.valueOf(pageCount));
-            if (pageCount == 1) {
+            params.put(HttpConstants.PAGE, String.valueOf(mPageCount));
+            if (mPageCount == 1) {
                 params.put(HttpConstants.PERLIMIT, String
                                 .valueOf(AppConstants.DEFAULT_PERPAGE_LIMIT));
             } else {
@@ -608,7 +610,6 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
 
     @Override
     public void onDrawerClosed(final View drawerView) {
-
     }
 
     @Override
@@ -710,7 +711,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
 
             assert (cookie != null);
 
-            pageCount = 1;
+            mPageCount = 1;
             final Bundle args = (Bundle) cookie;
             fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION), args
                             .getInt(Keys.SEARCH_RADIUS));
