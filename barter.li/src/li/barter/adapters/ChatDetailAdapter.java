@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,15 +117,23 @@ public class ChatDetailAdapter extends CursorAdapter {
 
         final int itemViewType = getItemViewType(cursor.getPosition());
         if (itemViewType == INCOMING_MESSAGE) {
-            Picasso.with(context)
-                            .load(cursor.getString(cursor
-                                            .getColumnIndex(DatabaseColumns.PROFILE_PICTURE)))
-                            .fit().error(R.drawable.pic_avatar)
-                            .into((ImageView) view.getTag(R.id.image_user));
+            final String imageUrl = cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
+
+            if (!TextUtils.isEmpty(imageUrl)) {
+                Picasso.with(context).load(imageUrl).fit()
+                                .error(R.drawable.pic_avatar)
+                                .into((ImageView) view.getTag(R.id.image_user));
+            }
+
         } else if (itemViewType == OUTGOING_MESSAGE) {
-            Picasso.with(context).load(UserInfo.INSTANCE.getProfilePicture())
-                            .fit().error(R.drawable.pic_avatar)
-                            .into((ImageView) view.getTag(R.id.image_user));
+            final String imageUrl = UserInfo.INSTANCE.getProfilePicture();
+
+            if (!TextUtils.isEmpty(imageUrl)) {
+                Picasso.with(context).load(imageUrl).fit()
+                                .error(R.drawable.pic_avatar)
+                                .into((ImageView) view.getTag(R.id.image_user));
+            }
         }
 
     }
