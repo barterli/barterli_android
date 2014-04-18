@@ -186,6 +186,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                         ie.printStackTrace();
                     } catch (final ShutdownSignalException e) {
                         e.printStackTrace();
+                        setIsRunning(false);
                     } catch (final ConsumerCancelledException e) {
                         e.printStackTrace();
                     }
