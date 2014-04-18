@@ -18,6 +18,7 @@ package li.barter.fragments;
 
 import com.android.volley.Request.Method;
 import com.facebook.Session;
+import com.facebook.SessionState;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +33,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
 import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
@@ -85,6 +85,14 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         mSubmitButton.setOnClickListener(this);
         setActionBarDrawerToggleEnabled(false);
         return view;
+    }
+    
+    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
+        if (state.isOpened()) {
+            Logger.i(TAG, "Logged in...");
+        } else if (state.isClosed()) {
+            Logger.i(TAG, "Logged out...");
+        }
     }
 
     @Override

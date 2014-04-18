@@ -134,7 +134,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     /**
      * Loads the {@link BooksAroundMeFragment} into the fragment container
      */
-    private void loadBooksAroundMeFragment() {
+    public void loadBooksAroundMeFragment() {
 
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                         .instantiate(this, BooksAroundMeFragment.class

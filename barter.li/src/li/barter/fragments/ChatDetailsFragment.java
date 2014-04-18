@@ -24,19 +24,21 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatDetailAdapter;
 import li.barter.chat.ChatAcknowledge;
 import li.barter.chat.ChatService;
@@ -47,6 +49,7 @@ import li.barter.data.SQLiteLoader;
 import li.barter.data.TableChatMessages;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 
@@ -98,6 +101,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
+        setHasOptionsMenu(true);
         final View view = inflater
                         .inflate(R.layout.fragment_chat_details, container, false);
         mChatListView = (ListView) view.findViewById(R.id.list_chats);
@@ -131,6 +135,29 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         outState.putBoolean(Keys.FIRST_LOAD, mFirstLoad);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home: {
+            	 int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
+                 if (backStackEntryCount == 0) {
+                	 ((HomeActivity)getActivity()).loadBooksAroundMeFragment();
+                     return true;
+                 }
+                 else
+                 {
+                	 onUpNavigate();
+                	 return true;
+                 }
+                
+            }
+
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
+    }
     @Override
     public void onPause() {
         mAcknowledge.mChatDetailsFragment = null;
