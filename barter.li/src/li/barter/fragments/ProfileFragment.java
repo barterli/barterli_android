@@ -178,6 +178,11 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case android.R.id.home: {
+            	
+            	/*
+            	 * This function is called twice in order to prevent login fragment again to appear
+            	 */
+                onUpNavigate();
                 onUpNavigate();
                 return true;
             }
