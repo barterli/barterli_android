@@ -32,16 +32,27 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG                   = true;
+    public static final boolean DEBUG                          = true;
 
-    public static final String  FACEBOOK                = "facebook";
-    public static final String  MANUAL                  = "manual";
-    public static final String  TIMESTAMP_FORMAT        = "yyyy-MM-dd'T'HH:mm:ssZ";
-    public static final String  CHAT_ID_FORMAT          = "%s#%s";
-    public static final String  BARTER_TYPE_SEPARATOR   = ",";
+    public static final String  FACEBOOK                       = "facebook";
+    public static final String  MANUAL                         = "manual";
+    public static final String  TIMESTAMP_FORMAT               = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String  CHAT_ID_FORMAT                 = "%s#%s";
+    public static final String  BARTER_TYPE_SEPARATOR          = ",";
 
-    public static final String  ACTION_SHOW_ALL_CHATS   = "li.barter.ACTION_SHOW_ALL_CHATS";
-    public static final String  ACTION_SHOW_CHAT_DETAIL = "li.barter.ACTION_SHOW_CHAT_DETAIL";
+    public static final String  ACTION_SHOW_ALL_CHATS          = "li.barter.ACTION_SHOW_ALL_CHATS";
+    public static final String  ACTION_SHOW_CHAT_DETAIL        = "li.barter.ACTION_SHOW_CHAT_DETAIL";
+
+    /*
+     * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :
+     * Default Book count value loaded when app starts
+     * DEFAULT_PERPAGE_LIMIT_ONSCROLL : Default Book count value loaded when it
+     * scrolls DEFAULT_LOAD_BEFORE_COUNT : This is to be subtracted value from
+     * the List Count so as to prevent loading lag on scrolling fast
+     */
+    public static final int     DEFAULT_PERPAGE_LIMIT          = 10;
+    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL = 10;
+    public static final int     DEFAULT_LOAD_BEFORE_COUNT      = 1;
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -225,6 +236,7 @@ public class AppConstants {
         public static final String LAST_FETCHED_LOCATION      = "last_fetched_location";
         public static final String LAST_FETCHED_SEARCH_RADIUS = "last_fetched_search_radius";
         public static final String FIRST_LOAD                 = "first_load";
+        public static final String EDIT_MODE                  = "edit_mode";
 
     }
 
@@ -314,6 +326,9 @@ public class AppConstants {
         // 201-300 for update queries
         public static final int UPDATE_CHAT                          = 201;
         public static final int UPDATE_USER_FOR_CHAT                 = 202;
+
+        //301-400 for delete queries
+        public static final int DELETE_BOOKS_SEARCH_RESULTS          = 301;
     }
 
     /**

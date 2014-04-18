@@ -19,7 +19,6 @@ package li.barter.fragments;
 import com.android.volley.Request.Method;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.CancelableCallback;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.model.LatLng;
@@ -42,6 +41,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
@@ -54,8 +55,11 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksAroundMeAdapter;
+import li.barter.data.DBInterface;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLiteLoader;
+import li.barter.data.TableSearchBooks;
 import li.barter.data.ViewSearchBooksWithLocations;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
@@ -63,10 +67,12 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
 import li.barter.utils.Logger;
@@ -80,8 +86,9 @@ import li.barter.widgets.FullWidthDrawerLayout;
  *         a Map that the user can use to easily switch locations
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
-                LoaderCallbacks<Cursor>, CancelableCallback, DrawerListener,
-                OnItemClickListener {
+
+LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
+                OnItemClickListener, OnScrollListener {
 
     private static final String           TAG            = "BooksAroundMeFragment";
 
@@ -145,6 +152,17 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private MapDrawerInteractionHelper    mMapDrawerBlurHelper;
 
     /**
+     * Default page count value which is incremented on scrolling
+     * {@link GridView}
+     */
+    private int                           pageCount      = 1;
+
+    /**
+     * Flag to stop onScroll method to call when fragment loads
+     */
+    private boolean                       userScrolled   = false;
+
+    /**
      * Holds the value of the previous search radius to prevent querying for
      * books from server again
      */
@@ -193,6 +211,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mMapDrawerBlurHelper = new MapDrawerInteractionHelper(getActivity(), mDrawerLayout, mBooksDrawerView, mMapView);
         mMapDrawerBlurHelper.init(this);
 
+        mBooksAroundMeGridView.setOnScrollListener(this);
+
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
         mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
@@ -217,6 +237,36 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         loadBookSearchResults();
         setActionBarDrawerToggleEnabled(true);
         return contentView;
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        // userScrolled is set to true in order to prevent auto scrolling on page load
+        if (scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+                        || scrollState == OnScrollListener.SCROLL_STATE_FLING) {
+            userScrolled = true;
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem,
+                    int visibleItemCount, int totalItemCount) {
+
+        //TODO
+        boolean loadMore = /* maybe add a padding */
+        firstVisibleItem + visibleItemCount >= totalItemCount
+                        - AppConstants.DEFAULT_LOAD_BEFORE_COUNT;
+        Logger.d(TAG, "visible count: %d", visibleItemCount);
+
+        if (loadMore && userScrolled) {
+            pageCount++;
+            loadMore = false;
+            userScrolled = false;
+            fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils
+                            .getShortestRadiusFromCenter(mMapView) / 1000));
+
+        }
+
     }
 
     @Override
@@ -265,7 +315,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                             .getLatitude()));
             params.put(HttpConstants.LONGITUDE, String.valueOf(center
                             .getLongitude()));
-
+            params.put(HttpConstants.PAGE, String.valueOf(pageCount));
+            if (pageCount == 1) {
+                params.put(HttpConstants.PERLIMIT, String
+                                .valueOf(AppConstants.DEFAULT_PERPAGE_LIMIT));
+            } else {
+                params.put(HttpConstants.PERLIMIT, String
+                                .valueOf(AppConstants.DEFAULT_PERPAGE_LIMIT_ONSCROLL));
+            }
             request.addExtra(Keys.LOCATION, center);
             request.addExtra(Keys.SEARCH_RADIUS, radius);
 
@@ -341,14 +398,50 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             if (googleMap != null) {
                 googleMap.setMyLocationEnabled(false);
-                googleMap.animateCamera(CameraUpdateFactory
+
+                /*
+                 * For Simple Effect
+                 */
+                googleMap.moveCamera(CameraUpdateFactory
                                 .newLatLngZoom(new LatLng(DeviceInfo.INSTANCE
                                                 .getLatestLocation()
                                                 .getLatitude(), DeviceInfo.INSTANCE
                                                 .getLatestLocation()
-                                                .getLongitude()), MAP_ZOOM_LEVEL), this);
-
+                                                .getLongitude()), MAP_ZOOM_LEVEL));
+                /*
+                 * As there was no callback option in moveCamera , so i used
+                 * piece of code here for updating the results when location
+                 * changes
+                 */
+                fetchBooksOnLocationUpdate();
             }
+
+        }
+    }
+
+    /**
+     * When the location is updated, check to see if books need to be refreshed,
+     * and refresh them
+     */
+    private void fetchBooksOnLocationUpdate() {
+
+        final Location center = Utils.getCenterLocationOfMap(getMap());
+        final int searchRadius = Math.round(Utils
+                        .getShortestRadiusFromCenter(mMapView) / 1000);
+
+        if (searchRadius >= 25) {
+            return;
+        }
+
+        mMapAlreadyMovedOnce = true;
+
+        if (shouldRefetchBooks(center, searchRadius)) {
+
+            final Bundle cookie = new Bundle(2);
+            cookie.putParcelable(Keys.LOCATION, center);
+            cookie.putInt(Keys.SEARCH_RADIUS, searchRadius);
+            //   Delete the current search results before parsing the old ones
+            DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
         }
     }
 
@@ -428,32 +521,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         }
     }
 
-    @Override
-    public void onCancel() {
-
-    }
-
-    @Override
-    public void onFinish() {
-        if (!mMapAlreadyMovedOnce) {
-
-            final Location center = Utils.getCenterLocationOfMap(getMap());
-            final int searchRadius = Math.round(Utils
-                            .getShortestRadiusFromCenter(mMapView) / 1000);
-
-            if (searchRadius >= 20) {
-                return;
-            }
-
-            mMapAlreadyMovedOnce = true;
-
-            if (shouldRefetchBooks(center, searchRadius)) {
-                fetchBooksAroundMe(center, searchRadius);
-            }
-        }
-
-    }
-
     /**
      * Loads the Fragment to Add Or Edit Books
      * 
@@ -511,7 +578,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-            mBooksAroundMeAdapter.swapCursor(cursor);
+
+            {
+                mBooksAroundMeAdapter.swapCursor(cursor);
+
+            }
             if (!mDrawerOpenedAutomatically) {
                 // Open drawer automatically on map loaded if first launch
                 mDrawerOpenedAutomatically = true;
@@ -549,7 +620,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             final Location center = Utils.getCenterLocationOfMap(getMap());
 
             if (shouldRefetchBooks(center, searchRadius)) {
-                fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), searchRadius);
+
+                final Bundle cookie = new Bundle(2);
+                cookie.putParcelable(Keys.LOCATION, center);
+                cookie.putInt(Keys.SEARCH_RADIUS, searchRadius);
+                //   Delete the current search results before parsing the old ones
+                DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
             }
 
         }
@@ -620,6 +696,38 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                             .instantiate(getActivity(), BookDetailFragment.class
                                             .getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, null);
         }
+    }
+
+    @Override
+    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+        if (token == QueryTokens.DELETE_BOOKS_SEARCH_RESULTS) {
+
+            assert (cookie != null);
+
+            pageCount = 1;
+            final Bundle args = (Bundle) cookie;
+            fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION), args
+                            .getInt(Keys.SEARCH_RADIUS));
+        }
+
+    }
+
+    @Override
+    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+        // TODO Auto-generated method stub
+
     }
 
 }
