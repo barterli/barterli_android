@@ -115,7 +115,7 @@ public class ChatDetailAdapter extends CursorAdapter {
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.MESSAGE)));
 
-        final int itemViewType = getItemViewType(cursor.getPosition());
+        /*final int itemViewType = getItemViewType(cursor.getPosition());
         if (itemViewType == INCOMING_MESSAGE) {
             final String imageUrl = cursor.getString(cursor
                             .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
@@ -134,7 +134,7 @@ public class ChatDetailAdapter extends CursorAdapter {
                                 .error(R.drawable.pic_avatar)
                                 .into((ImageView) view.getTag(R.id.image_user));
             }
-        }
+        }*/
 
     }
 
