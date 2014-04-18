@@ -45,6 +45,7 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.TableChatMessages;
+import li.barter.data.TableUsers;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.Keys;
@@ -76,6 +77,9 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     private boolean                 mFirstLoad;
 
     private final String            mChatSelection = DatabaseColumns.CHAT_ID
+                                                                   + SQLConstants.EQUALS_ARG;
+
+    private final String            mUserSelection = DatabaseColumns.USER_ID
                                                                    + SQLConstants.EQUALS_ARG;
 
     /**
@@ -115,6 +119,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         setActionBarDrawerToggleEnabled(false);
 
         getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
+        getLoaderManager().restartLoader(Loaders.USER_DETAILS, null, this);
         mAcknowledge = new ConcreteChatAcknowledge();
 
         if (savedInstanceState == null) {
@@ -201,6 +206,10 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 mChatId
             }, null, null, DatabaseColumns.TIMESTAMP_EPOCH
                             + SQLConstants.ASCENDING, null);
+        } else if (id == Loaders.USER_DETAILS) {
+            return new SQLiteLoader(getActivity(), false, TableUsers.NAME, null, mUserSelection, new String[] {
+                mWithUserId
+            }, null, null, null, null);
         }
         return null;
     }
@@ -208,7 +217,8 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
 
-        if (loader.getId() == Loaders.CHAT_DETAILS) {
+        final int id = loader.getId();
+        if (id == Loaders.CHAT_DETAILS) {
 
             if (!mFirstLoad && (cursor.getCount() == 0)) {
                 //First chat message, autofill the edit text with the message
@@ -223,6 +233,14 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
             }
             mChatDetailAdapter.swapCursor(cursor);
             mChatListView.smoothScrollToPosition(mChatDetailAdapter.getCount() - 1);
+        } else if (id == Loaders.USER_DETAILS) {
+            if (cursor.moveToFirst()) {
+                final String profilePic = cursor
+                                .getString(cursor
+                                                .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
+
+                mChatDetailAdapter.setChatUserProfilePic(profilePic);
+            }
         }
     }
 

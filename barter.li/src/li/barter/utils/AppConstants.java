@@ -322,6 +322,7 @@ public class AppConstants {
         public static final int GET_MY_BOOKS = 202;
         public static final int ALL_CHATS    = 203;
         public static final int CHAT_DETAILS = 204;
+        public static final int USER_DETAILS = 205;
     }
 
     /**
