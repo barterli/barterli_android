@@ -274,6 +274,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             requestObject.put(HttpConstants.SENDER_ID, UserInfo.INSTANCE
                             .getId());
             requestObject.put(HttpConstants.RECEIVER_ID, toUserId);
+
             requestObject.put(HttpConstants.MESSAGE, message);
             final ChatRequest request = new ChatRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.AMPQ_EVENT_MACHINE, requestObject.toString(), mVolleyCallbacks, acknowledge);
@@ -541,7 +542,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private void queueNextMessageForProcessing() {
 
-        if(mMessageQueue != null && mMessageQueue.peek() != null) {
+        if (mMessageQueue != null && mMessageQueue.peek() != null) {
             processChatMessage(mMessageQueue.poll());
         }
     }

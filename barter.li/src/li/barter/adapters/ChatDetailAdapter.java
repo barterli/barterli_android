@@ -16,12 +16,15 @@
 
 package li.barter.adapters;
 
+import com.squareup.picasso.Picasso;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -110,6 +113,19 @@ public class ChatDetailAdapter extends CursorAdapter {
         ((TextView) view.getTag(R.id.text_chat_message))
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.MESSAGE)));
+
+        final int itemViewType = getItemViewType(cursor.getPosition());
+        if (itemViewType == INCOMING_MESSAGE) {
+            Picasso.with(context)
+                            .load(cursor.getString(cursor
+                                            .getColumnIndex(DatabaseColumns.PROFILE_PICTURE)))
+                            .fit().error(R.drawable.pic_avatar)
+                            .into((ImageView) view.getTag(R.id.image_user));
+        } else if (itemViewType == OUTGOING_MESSAGE) {
+            Picasso.with(context).load(UserInfo.INSTANCE.getProfilePicture())
+                            .fit().error(R.drawable.pic_avatar)
+                            .into((ImageView) view.getTag(R.id.image_user));
+        }
 
     }
 
