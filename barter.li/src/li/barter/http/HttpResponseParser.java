@@ -71,7 +71,7 @@ public class HttpResponseParser {
             }
 
             case RequestId.SEARCH_BOOKS: {
-               
+
                 return parseSearchBooksResponse(response);
             }
 
@@ -211,6 +211,8 @@ public class HttpResponseParser {
                         .readString(userObject, HttpConstants.FIRST_NAME, false, false));
         responseBundle.putString(HttpConstants.LAST_NAME, JsonUtils
                         .readString(userObject, HttpConstants.LAST_NAME, false, false));
+        responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
+                        .readString(userObject, HttpConstants.IMAGE_URL, false, false));
 
         final JSONArray booksArray = JsonUtils
                         .readJSONArray(userObject, HttpConstants.BOOKS, true, true);

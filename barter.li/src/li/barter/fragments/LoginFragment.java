@@ -211,6 +211,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                             .getString(HttpConstants.AUTH_TOKEN));
             UserInfo.INSTANCE.setEmail(userInfo.getString(HttpConstants.EMAIL));
             UserInfo.INSTANCE.setId(userInfo.getString(HttpConstants.ID_USER));
+            UserInfo.INSTANCE.setProfilePicture(userInfo
+                            .getString(HttpConstants.IMAGE_URL));
 
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_auth_token, userInfo
@@ -233,6 +235,9 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_location, userInfo
                                             .getString(HttpConstants.LOCATION));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_profile_image, userInfo
+                                            .getString(HttpConstants.IMAGE_URL));
 
             BarterLiApplication.startChatService();
 
