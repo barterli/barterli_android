@@ -53,6 +53,10 @@ public class AppConstants {
     public static final int     DEFAULT_PERPAGE_LIMIT          = 10;
     public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL = 10;
     public static final int     DEFAULT_LOAD_BEFORE_COUNT      = 1;
+    
+    // Default Book Image url we getting from the server when there is no image
+    public static final String  DEFAULT_BOOKIMAGE_URL          = "1_default.png";
+    
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -237,7 +241,8 @@ public class AppConstants {
         public static final String LAST_FETCHED_SEARCH_RADIUS = "last_fetched_search_radius";
         public static final String FIRST_LOAD                 = "first_load";
         public static final String EDIT_MODE                  = "edit_mode";
-
+        public static final String LAST_FETCHED_PAGENUMBER    = "last_fetched_pagenumber";
+        
     }
 
     /**

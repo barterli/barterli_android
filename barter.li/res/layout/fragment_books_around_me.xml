@@ -19,7 +19,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent" >
+    android:background="@color/global_bg" >
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/map_books_around_me"
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:background="@color/transparent"
+        android:background="@color/global_bg"
         android:orientation="vertical" >
 
         <li.barter.widgets.TypefacedAutoCompleteTextView
