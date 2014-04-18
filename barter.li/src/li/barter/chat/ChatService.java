@@ -152,15 +152,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private ArrayDeque<String>     mMessageQueue;
 
-    /**
-     * Handler to post messages
-     */
-    private Handler                mHandler;
-
     @Override
     public void onCreate() {
         super.onCreate();
-        mHandler = new Handler();
         mMessageQueue = new ArrayDeque<String>();
         mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
                         .getChatPort(), VIRTUAL_HOST, EXCHANGE, ExchangeType.DIRECT);
@@ -315,7 +309,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             mMessageQueue.add(text);
             if (mMessageQueue.size() == 1) {
                 //If there aren't any messages in the queue, process the message immediately
-                mHandler.post(new ChatProcessRunnable());
+                queueNextMessageForProcessing();
             }
 
         } catch (final UnsupportedEncodingException e) {
@@ -548,7 +542,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     private void queueNextMessageForProcessing() {
 
         if(mMessageQueue != null && mMessageQueue.peek() != null) {
-            mHandler.post(new ChatProcessRunnable());
+            processChatMessage(mMessageQueue.poll());
         }
     }
 
@@ -735,14 +729,4 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mUnreadMessageCount = 0;
     }
 
-    private class ChatProcessRunnable implements Runnable {
-
-        @Override
-        public void run() {
-
-            final String message = mMessageQueue.poll();
-            processChatMessage(message);
-        }
-
-    }
 }
