@@ -27,13 +27,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <com.facebook.widget.LoginButton
-        android:id="@+id/button_facebook_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/activity_margin"
-        />
+        <li.barter.widgets.TypefacedButton
+            android:id="@+id/button_facebook_login"
+            style="@style/ButtonAppTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:background="@drawable/selector_facebook_login"
+            android:text="@string/login_with_facebook"
+            android:textColor="@color/white"
+            app:fontStyle="alegreya_bold" />
 
         <li.barter.widgets.TypefacedButton
             android:id="@+id/button_google_login"

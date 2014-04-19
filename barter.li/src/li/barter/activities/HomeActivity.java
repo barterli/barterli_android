@@ -16,6 +16,7 @@
 
 package li.barter.activities;
 
+import com.facebook.AppEventsLogger;
 import com.google.android.gms.location.LocationListener;
 
 import android.app.ActionBar;
@@ -23,7 +24,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
@@ -83,6 +83,14 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         super.onStart();
         mGooglePlayClientWrapper.onStart();
     }
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	
+    	// Call the 'activateApp' method to log an app event for use in analytics and advertising reporting.  Do so in
+        // the onResume methods of the primary Activities that an app may be launched into.
+        AppEventsLogger.activateApp(this);
+    }
 
     @Override
     protected void onStop() {
@@ -99,7 +107,8 @@ public class HomeActivity extends AbstractBarterLiActivity implements
             ((BooksAroundMeFragment) fragment).updateLocation(location);
         }
     }
-
+    
+   
     /**
      * Loads the {@link ChatsFragment} into the fragment container
      */

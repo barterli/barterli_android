@@ -17,8 +17,11 @@
 package li.barter.fragments;
 
 import com.android.volley.Request.Method;
+import com.facebook.LoggingBehavior;
 import com.facebook.Session;
+import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
+import com.facebook.Settings;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,20 +53,20 @@ import li.barter.utils.SharedPreferenceHelper;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class LoginFragment extends AbstractBarterLiFragment implements
-                OnClickListener {
+                OnClickListener, StatusCallback {
 
     private static final String TAG                = "LoginFragment";
 
     /**
      * Minimum length of the entered password
      */
-    private final int           mMinPasswordLength = 8;
-
-    private Button              mFacebookLoginButton;
-    private Button              mGoogleLoginButton;
-    private Button              mSubmitButton;
-    private EditText            mEmailEditText;
-    private EditText            mPasswordEditText;
+    private final int          		  mMinPasswordLength = 8;
+    private Button        		 	  mFacebookLoginButton;
+    private Button            		  mGoogleLoginButton;
+    private Button            		  mSubmitButton;
+    private EditText          		  mEmailEditText;
+    private EditText          		  mPasswordEditText;
+   
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -80,6 +83,22 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         mPasswordEditText = (EditText) view
                         .findViewById(R.id.edit_text_password);
 
+        
+        Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
+        
+        Session session = Session.getActiveSession();
+        if (session == null) {
+            if (savedInstanceState != null) {
+                session = Session.restoreSession(getActivity(), null, this, savedInstanceState);
+            }
+            if (session == null) {
+                session = new Session(getActivity());
+            }
+            Session.setActiveSession(session);
+            if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
+                session.openForRead(new Session.OpenRequest(this).setCallback(this));
+            }
+        }
         mFacebookLoginButton.setOnClickListener(this);
         mGoogleLoginButton.setOnClickListener(this);
         mSubmitButton.setOnClickListener(this);
@@ -87,13 +106,15 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         return view;
     }
     
-    private void onSessionStateChange(Session session, SessionState state, Exception exception) {
-        if (state.isOpened()) {
-            Logger.i(TAG, "Logged in...");
-        } else if (state.isClosed()) {
-            Logger.i(TAG, "Logged out...");
-        }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Session session = Session.getActiveSession();
+        Session.saveSession(session, outState);
     }
+    
+    
 
     @Override
     protected Object getVolleyTag() {
@@ -106,6 +127,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         Session.getActiveSession()
                         .onActivityResult(getActivity(), requestCode, resultCode, data);
+        
     }
 
     @Override
@@ -115,6 +137,12 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
             case R.id.button_facebook_login: {
                 // TODO FacebookLoggerin
+            	  Session session = Session.getActiveSession();
+                  if (!session.isOpened() && !session.isClosed()) {
+                      session.openForRead(new Session.OpenRequest(this).setCallback(this));
+                  } else {
+                      Session.openActiveSession(getActivity(), this, true, this);
+                  }
                 break;
             }
 
@@ -147,6 +175,30 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             requestObject.put(HttpConstants.PROVIDER, AppConstants.MANUAL);
             requestObject.put(HttpConstants.EMAIL, email);
             requestObject.put(HttpConstants.PASSWORD, password);
+            final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.CREATE_USER, requestObject.toString(), mVolleyCallbacks);
+            request.setRequestId(RequestId.CREATE_USER);
+            addRequestToQueue(request, true, 0);
+        } catch (final JSONException e) {
+            // Should never happen
+            Logger.e(TAG, e, "Error building create user json");
+        }
+
+    }
+    
+    /**
+     * Call the login Api
+     * 
+     * @param oath token we get from providers
+     * @param facebook or google in our case
+     */
+    private void loginprovider(final String token, final String provider) {
+
+        final JSONObject requestObject = new JSONObject();
+
+        try {
+            requestObject.put(HttpConstants.PROVIDER, AppConstants.FACEBOOK);
+            requestObject.put(HttpConstants.ACCESS_TOKEN, token);
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.CREATE_USER, requestObject.toString(), mVolleyCallbacks);
             request.setRequestId(RequestId.CREATE_USER);
@@ -278,5 +330,18 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             showCrouton(errorMessage, AlertStyle.ERROR);
         }
     }
+
+
+
+
+	@Override
+	public void call(Session session, SessionState state, Exception exception) {
+		// TODO Auto-generated method stub
+		if(!session.getAccessToken().equals(""))
+		{
+		loginprovider(session.getAccessToken(), AppConstants.FACEBOOK);
+		}
+		
+	}
 
 }
