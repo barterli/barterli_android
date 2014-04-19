@@ -16,6 +16,8 @@
 
 package li.barter.fragments;
 
+import java.util.Arrays;
+
 import com.android.volley.Request.Method;
 import com.facebook.LoggingBehavior;
 import com.facebook.Session;
@@ -96,7 +98,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             }
             Session.setActiveSession(session);
             if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
-                session.openForRead(new Session.OpenRequest(this).setCallback(this));
+            	session.openForRead(new Session.OpenRequest(this).setPermissions(Arrays.asList(AppConstants.FBPERMISSIONS)).setCallback(this));
             }
         }
         mFacebookLoginButton.setOnClickListener(this);
@@ -139,7 +141,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 // TODO FacebookLoggerin
             	  Session session = Session.getActiveSession();
                   if (!session.isOpened() && !session.isClosed()) {
-                      session.openForRead(new Session.OpenRequest(this).setCallback(this));
+                	  session.openForRead(new Session.OpenRequest(this).setPermissions(Arrays.asList(AppConstants.FBPERMISSIONS)).setCallback(this));
                   } else {
                       Session.openActiveSession(getActivity(), this, true, this);
                   }
@@ -336,7 +338,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
 	@Override
 	public void call(Session session, SessionState state, Exception exception) {
-		// TODO Auto-generated method stub
+		// TODO session returns the user_token
 		if(!session.getAccessToken().equals(""))
 		{
 		loginprovider(session.getAccessToken(), AppConstants.FACEBOOK);
