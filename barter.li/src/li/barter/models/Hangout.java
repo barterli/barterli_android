@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package li.barter.parcelables;
+package li.barter.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

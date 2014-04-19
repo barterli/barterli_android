@@ -49,7 +49,7 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.parcelables.Hangout;
+import li.barter.models.Hangout;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
