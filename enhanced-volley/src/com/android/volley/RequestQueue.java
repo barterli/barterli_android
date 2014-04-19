@@ -29,74 +29,75 @@ import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A request dispatch queue with a thread pool of dispatchers.
- *
- * Calling {@link #add(Request)} will enqueue the given Request for dispatch,
- * resolving from either cache or network on a worker thread, and then delivering
- * a parsed response on the main thread.
+ * A request dispatch queue with a thread pool of dispatchers. Calling
+ * {@link #add(Request)} will enqueue the given Request for dispatch, resolving
+ * from either cache or network on a worker thread, and then delivering a parsed
+ * response on the main thread.
  */
 @SuppressWarnings("rawtypes")
 public class RequestQueue {
 
-    /** Used for generating monotonically-increasing sequence numbers for requests. */
-    private AtomicInteger mSequenceGenerator = new AtomicInteger();
+    /**
+     * Used for generating monotonically-increasing sequence numbers for
+     * requests.
+     */
+    private AtomicInteger                        mSequenceGenerator               = new AtomicInteger();
 
     /**
-     * Staging area for requests that already have a duplicate request in flight.
-     *
+     * Staging area for requests that already have a duplicate request in
+     * flight.
      * <ul>
-     *     <li>containsKey(cacheKey) indicates that there is a request in flight for the given cache
-     *          key.</li>
-     *     <li>get(cacheKey) returns waiting requests for the given cache key. The in flight request
-     *          is <em>not</em> contained in that list. Is null if no requests are staged.</li>
+     * <li>containsKey(cacheKey) indicates that there is a request in flight for
+     * the given cache key.</li>
+     * <li>get(cacheKey) returns waiting requests for the given cache key. The
+     * in flight request is <em>not</em> contained in that list. Is null if no
+     * requests are staged.</li>
      * </ul>
      */
-    private final Map<String, Queue<Request>> mWaitingRequests =
-            new HashMap<String, Queue<Request>>();
+    private final Map<String, Queue<Request>>    mWaitingRequests                 = new HashMap<String, Queue<Request>>();
 
     /**
-     * The set of all requests currently being processed by this RequestQueue. A Request
-     * will be in this set if it is waiting in any queue or currently being processed by
-     * any dispatcher.
+     * The set of all requests currently being processed by this RequestQueue. A
+     * Request will be in this set if it is waiting in any queue or currently
+     * being processed by any dispatcher.
      */
-    private final Set<Request> mCurrentRequests = new HashSet<Request>();
+    private final Set<Request>                   mCurrentRequests                 = new HashSet<Request>();
 
     /** The cache triage queue. */
-    private final PriorityBlockingQueue<Request> mCacheQueue =
-        new PriorityBlockingQueue<Request>();
+    private final PriorityBlockingQueue<Request> mCacheQueue                      = new PriorityBlockingQueue<Request>();
 
     /** The queue of requests that are actually going out to the network. */
-    private final PriorityBlockingQueue<Request> mNetworkQueue =
-        new PriorityBlockingQueue<Request>();
+    private final PriorityBlockingQueue<Request> mNetworkQueue                    = new PriorityBlockingQueue<Request>();
 
     /** Number of network request dispatcher threads to start. */
-    private static final int DEFAULT_NETWORK_THREAD_POOL_SIZE = 4;
+    private static final int                     DEFAULT_NETWORK_THREAD_POOL_SIZE = 4;
 
     /** Cache interface for retrieving and storing respones. */
-    private final Cache mCache;
+    private final Cache                          mCache;
 
     /** Network interface for performing requests. */
-    private final Network mNetwork;
+    private final Network                        mNetwork;
 
     /** Response delivery mechanism. */
-    private final ResponseDelivery mDelivery;
+    private final ResponseDelivery               mDelivery;
 
     /** The network dispatchers. */
-    private NetworkDispatcher[] mDispatchers;
+    private NetworkDispatcher[]                  mDispatchers;
 
     /** The cache dispatcher. */
-    private CacheDispatcher mCacheDispatcher;
+    private CacheDispatcher                      mCacheDispatcher;
 
     /**
-     * Creates the worker pool. Processing will not begin until {@link #start()} is called.
-     *
+     * Creates the worker pool. Processing will not begin until {@link #start()}
+     * is called.
+     * 
      * @param cache A Cache to use for persisting responses to disk
      * @param network A Network interface for performing HTTP requests
      * @param threadPoolSize Number of network dispatcher threads to create
-     * @param delivery A ResponseDelivery interface for posting responses and errors
+     * @param delivery A ResponseDelivery interface for posting responses and
+     *            errors
      */
-    public RequestQueue(Cache cache, Network network, int threadPoolSize,
-            ResponseDelivery delivery) {
+    public RequestQueue(Cache cache, Network network, int threadPoolSize, ResponseDelivery delivery) {
         mCache = cache;
         mNetwork = network;
         mDispatchers = new NetworkDispatcher[threadPoolSize];
@@ -104,20 +105,22 @@ public class RequestQueue {
     }
 
     /**
-     * Creates the worker pool. Processing will not begin until {@link #start()} is called.
-     *
+     * Creates the worker pool. Processing will not begin until {@link #start()}
+     * is called.
+     * 
      * @param cache A Cache to use for persisting responses to disk
      * @param network A Network interface for performing HTTP requests
      * @param threadPoolSize Number of network dispatcher threads to create
      */
     public RequestQueue(Cache cache, Network network, int threadPoolSize) {
-        this(cache, network, threadPoolSize,
-                new ExecutorDelivery(new Handler(Looper.getMainLooper())));
+        this(cache, network, threadPoolSize, new ExecutorDelivery(new Handler(Looper
+                        .getMainLooper())));
     }
 
     /**
-     * Creates the worker pool. Processing will not begin until {@link #start()} is called.
-     *
+     * Creates the worker pool. Processing will not begin until {@link #start()}
+     * is called.
+     * 
      * @param cache A Cache to use for persisting responses to disk
      * @param network A Network interface for performing HTTP requests
      */
@@ -129,15 +132,14 @@ public class RequestQueue {
      * Starts the dispatchers in this queue.
      */
     public void start() {
-        stop();  // Make sure any currently running dispatchers are stopped.
+        stop(); // Make sure any currently running dispatchers are stopped.
         // Create the cache dispatcher and start it.
         mCacheDispatcher = new CacheDispatcher(mCacheQueue, mNetworkQueue, mCache, mDelivery);
         mCacheDispatcher.start();
 
         // Create network dispatchers (and corresponding threads) up to the pool size.
         for (int i = 0; i < mDispatchers.length; i++) {
-            NetworkDispatcher networkDispatcher = new NetworkDispatcher(mNetworkQueue, mNetwork,
-                    mCache, mDelivery);
+            NetworkDispatcher networkDispatcher = new NetworkDispatcher(mNetworkQueue, mNetwork, mCache, mDelivery);
             mDispatchers[i] = networkDispatcher;
             networkDispatcher.start();
         }
@@ -181,6 +183,7 @@ public class RequestQueue {
 
     /**
      * Cancels all requests in this queue for which the given filter applies.
+     * 
      * @param filter The filtering function to use
      */
     public void cancelAll(RequestFilter filter) {
@@ -194,13 +197,14 @@ public class RequestQueue {
     }
 
     /**
-     * Cancels all requests in this queue with the given tag. Tag must be non-null
-     * and equality is by identity.
+     * Cancels all requests in this queue with the given tag. Tag must be
+     * non-null and equality is by identity.
      */
     public void cancelAll(final Object tag) {
         if (tag == null) {
             throw new IllegalArgumentException("Cannot cancelAll with a null tag");
         }
+        VolleyLog.v("Cancel Requests for Tag %s", tag.toString());
         cancelAll(new RequestFilter() {
             @Override
             public boolean apply(Request<?> request) {
@@ -211,6 +215,7 @@ public class RequestQueue {
 
     /**
      * Adds a Request to the dispatch queue.
+     * 
      * @param request The request to service
      * @return The passed-in request
      */
@@ -256,11 +261,12 @@ public class RequestQueue {
     }
 
     /**
-     * Called from {@link Request#finish(String)}, indicating that processing of the given request
-     * has finished.
-     *
-     * <p>Releases waiting requests for <code>request.getCacheKey()</code> if
-     *      <code>request.shouldCache()</code>.</p>
+     * Called from {@link Request#finish(String)}, indicating that processing of
+     * the given request has finished.
+     * <p>
+     * Releases waiting requests for <code>request.getCacheKey()</code> if
+     * <code>request.shouldCache()</code>.
+     * </p>
      */
     void finish(Request request) {
         // Remove from the set of requests currently being processed.
@@ -271,11 +277,12 @@ public class RequestQueue {
         if (request.shouldCache()) {
             synchronized (mWaitingRequests) {
                 String cacheKey = request.getCacheKey();
-                Queue<Request> waitingRequests = mWaitingRequests.remove(cacheKey);
+                Queue<Request> waitingRequests = mWaitingRequests
+                                .remove(cacheKey);
                 if (waitingRequests != null) {
                     if (VolleyLog.sDebug) {
-                        VolleyLog.v("Releasing %d waiting requests for cacheKey=%s.",
-                                waitingRequests.size(), cacheKey);
+                        VolleyLog.v("Releasing %d waiting requests for cacheKey=%s.", waitingRequests
+                                        .size(), cacheKey);
                     }
                     // Process all queued up requests. They won't be considered as in flight, but
                     // that's not a problem as the cache has been primed by 'request'.

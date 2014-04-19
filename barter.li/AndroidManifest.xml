@@ -59,66 +59,48 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
+        <!-- Meta data for Facebook SDK -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/app_id" />
+
+        <!-- Activity declarations -->
         <activity
-            android:name="li.barter.BooksAroundMeActivity"
+            android:name="li.barter.activities.HomeActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".BooksAroundMeActivity" >
+            android:launchMode="singleTop" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.support.PARENT_ACTICITY"
-                android:value=".BooksAroundMeActivity" />
         </activity>
         <activity
-            android:name="li.barter.ScanIsbnActivity"
+            android:name="li.barter.activities.ScanIsbnActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".BooksAroundMeActivity"
+            android:parentActivityName="li.barter.activities.HomeActivity"
             android:screenOrientation="landscape" >
             <meta-data
-                android:name="android.support.PARENT_ACTICITY"
-                android:value=".BooksAroundMeActivity" />
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".HomeActivity" />
         </activity>
-        <activity
-            android:name="li.barter.AddOrEditBookActivity"
-            android:label="@string/app_name"
-            android:parentActivityName=".BooksAroundMeActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
-            <meta-data
-                android:name="android.support.PARENT_ACTICITY"
-                android:value=".BooksAroundMeActivity" />
-        </activity>
-        <activity
-            android:name="li.barter.TakeLatLongActivity"
-            android:label="@string/app_name" >
-        </activity>
-        <activity
-            android:name="li.barter.LoginActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" >
+        <activity android:name="com.facebook.LoginActivity" />
+
+        <!-- Broadcast Receivers -->
+        <receiver
+            android:name="li.barter.http.NetworkChangeReceiver"
+            android:exported="true"
+            android:label="@string/receiver_network" >
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="barterLi"
-                    android:scheme="oauth" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
-        </activity>
+        </receiver>
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/app_id" />
-
-        <activity
-            android:name="com.facebook.LoginActivity"
-            android:label="@string/app_name" >
-        </activity>
+        <!-- Services -->
+        <service
+            android:name="li.barter.chat.ChatService"
+            android:exported="false"
+            android:label="@string/service_chat" />
     </application>
 
 </manifest>

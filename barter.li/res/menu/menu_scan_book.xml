@@ -20,8 +20,9 @@
     <group android:id="@+id/group_hide_on_drawer_open" >
         <item
             android:id="@+id/action_add_manually"
+            android:icon="@drawable/ic_action_new"
             android:orderInCategory="1"
-            android:showAsAction="never"
+            android:showAsAction="ifRoom"
             android:title="@string/add_manually"/>
     </group>
 

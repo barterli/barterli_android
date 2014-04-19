@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.widgets;
 
 import android.content.Context;
@@ -28,31 +29,31 @@ import li.barter.R;
  */
 public class TypefacedCheckBox extends CheckBox {
 
-	public TypefacedCheckBox(Context context, AttributeSet attrs) {
+    public TypefacedCheckBox(final Context context, final AttributeSet attrs) {
 
-		super(context, attrs);
+        super(context, attrs);
 
-		if (attrs != null) {
-			// Get Custom Attribute Name and value
-			TypedArray styledAttrs = context.obtainStyledAttributes(attrs,
-					R.styleable.TypefacedCheckBox);
-			int typefaceCode = styledAttrs.getInt(
-					R.styleable.TypefacedCheckBox_fontStyle, -1);
-			styledAttrs.recycle();
+        if (attrs != null) {
+            // Get Custom Attribute Name and value
+            final TypedArray styledAttrs = context
+                            .obtainStyledAttributes(attrs, R.styleable.TypefacedCheckBox);
+            final int typefaceCode = styledAttrs
+                            .getInt(R.styleable.TypefacedCheckBox_fontStyle, -1);
+            styledAttrs.recycle();
 
-			// Typeface.createFromAsset doesn't work in the layout editor.
-			// Skipping...
-			if (isInEditMode()) {
-				return;
-			}
+            // Typeface.createFromAsset doesn't work in the layout editor.
+            // Skipping...
+            if (isInEditMode()) {
+                return;
+            }
 
-			Typeface typeface = TypefaceCache.get(context.getAssets(),
-					typefaceCode);
-			setTypeface(typeface);
-		}
-	}
+            final Typeface typeface = TypefaceCache
+                            .get(context.getAssets(), typefaceCode);
+            setTypeface(typeface);
+        }
+    }
 
-	public TypefacedCheckBox(Context context) {
-		super(context);
-	}
+    public TypefacedCheckBox(final Context context) {
+        super(context);
+    }
 }

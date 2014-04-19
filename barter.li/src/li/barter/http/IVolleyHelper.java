@@ -13,18 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.http;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 
 /**
  * @author Vinay S Shenoy Interface to hold the methods to represent the volley
- *         helpers
+ *         helpers. Putting in a separate interface to use when Unit Testing
  */
 public interface IVolleyHelper {
 
-	public RequestQueue getRequestQueue();
+    /**
+     * Gets an instance of the Application's {@link RequestQueue}. Which should
+     * only be 1 per application
+     * 
+     * @return The Application's {@link RequestQueue}
+     */
+    public RequestQueue getRequestQueue();
 
-	public ImageLoader getImageLoader();
+    /* *//**
+     * Gets an instance of the Application's {@link ImageLoader}
+     * 
+     * @return the Application's {@link ImageLoader}
+     */
+    /*
+     * public ImageLoader getImageLoader();
+     */
 }

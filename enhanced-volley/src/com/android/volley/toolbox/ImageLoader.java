@@ -126,12 +126,6 @@ public class ImageLoader {
     public static ImageListener getImageListener(final ImageView view,
             final int defaultImageResId, final int errorImageResId) {
         return new ImageListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (errorImageResId != 0) {
-                    view.setImageResource(errorImageResId);
-                }
-            }
 
             @Override
             public void onResponse(ImageContainer response, boolean isImmediate) {
@@ -139,6 +133,13 @@ public class ImageLoader {
                     view.setImageBitmap(response.getBitmap());
                 } else if (defaultImageResId != 0) {
                     view.setImageResource(defaultImageResId);
+                }
+            }
+            
+            @Override
+            public void onErrorResponse(VolleyError error, Request<?> request) {
+                if (errorImageResId != 0) {
+                    view.setImageResource(errorImageResId);
                 }
             }
         };
@@ -157,12 +158,6 @@ public class ImageLoader {
     public static ImageListener getImageListener(final AnimateImageView view,
                                                  final int defaultImageResId, final int errorImageResId) {
         return new ImageListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (errorImageResId != 0) {
-                    view.setImageResource(errorImageResId, false);
-                }
-            }
 
             @Override
             public void onResponse(ImageContainer response, boolean isImmediate) {
@@ -173,6 +168,14 @@ public class ImageLoader {
                     view.setImageResource(defaultImageResId, false);
                 }
             }
+
+			@Override
+			public void onErrorResponse(VolleyError error, Request<?> request) {
+				if (errorImageResId != 0) {
+                    view.setImageResource(errorImageResId, false);
+                }
+				
+			}
         };
     }
 
@@ -266,13 +269,13 @@ public class ImageLoader {
         Request<?> newRequest =
             new ImageRequest(requestUrl, mResources, new Listener<Bitmap>() {
                 @Override
-                public void onResponse(Bitmap response) {
+                public void onResponse(Bitmap response, Request<Bitmap> request) {
                     onGetImageSuccess(cacheKey, response);
                 }
             }, maxWidth, maxHeight,
             Config.RGB_565, new ErrorListener() {
                 @Override
-                public void onErrorResponse(VolleyError error) {
+                public void onErrorResponse(VolleyError error, Request<?> request) {
                     onGetImageError(cacheKey, error);
                 }
             });
@@ -509,7 +512,7 @@ public class ImageLoader {
                                 container.mBitmap = bir.mResponseBitmap;
                                 container.mListener.onResponse(container, false);
                             } else {
-                                container.mListener.onErrorResponse(bir.getError());
+                                container.mListener.onErrorResponse(bir.getError(), bir.mRequest);
                             }
                         }
                     }

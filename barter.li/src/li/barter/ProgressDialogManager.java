@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 
 public class ProgressDialogManager {
-	ProgressDialog pDialog;
+    ProgressDialog pDialog;
 
-	public void showProgresDialog(Context context, String message) {
-		pDialog = new ProgressDialog(context);
-		pDialog.setMessage(message);
-		pDialog.setIndeterminate(false);
-		pDialog.setCancelable(false);
-		pDialog.show();
-	}
+    public void showProgresDialog(final Context context, final String message) {
+        pDialog = new ProgressDialog(context);
+        pDialog.setMessage(message);
+        pDialog.setIndeterminate(false);
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
 
-	public void dismissProgresDialog() {
-		pDialog.dismiss();
-	}
+    public void dismissProgresDialog() {
+        pDialog.dismiss();
+    }
 }
