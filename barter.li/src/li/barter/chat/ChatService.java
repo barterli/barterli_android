@@ -285,7 +285,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             };
 
             mHandler.postDelayed(mConnectRunnable, mCurrentConnectMultiplier++
-                            * CONNECT_BACKOFF_INTERVAL);
+                            * CONNECT_BACKOFF_INTERVAL * 1000);
 
         }
 
