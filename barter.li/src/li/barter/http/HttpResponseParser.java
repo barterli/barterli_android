@@ -32,8 +32,8 @@ import li.barter.data.TableLocations;
 import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.models.Hangout;
 import li.barter.models.Team;
-import li.barter.parcelables.Hangout;
 import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
 
