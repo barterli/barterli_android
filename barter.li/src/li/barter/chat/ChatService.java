@@ -51,6 +51,7 @@ import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.HomeActivity;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
+import li.barter.chat.AbstractRabbitMQConnector.OnDisconnectCallback;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -100,7 +101,7 @@ import li.barter.utils.Utils;
  * @author Vinay S Shenoy
  */
 public class ChatService extends Service implements OnReceiveMessageHandler,
-                AsyncDbQueryCallback, IHttpCallbacks {
+                AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 
     private static final String    TAG                      = "ChatService";
     private static final String    OUTPUT_TIME_FORMAT       = "dd MMM, h:m a";
@@ -179,6 +180,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
                         .getChatPort(), VIRTUAL_HOST, EXCHANGE, ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
+        mMessageConsumer.setOnDisconnectCallback(this);
         mDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, OUTPUT_TIME_FORMAT);
         mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
         mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
@@ -299,7 +301,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     @Override
     public void onDestroy() {
         if (mMessageConsumer.isRunning()) {
-            mMessageConsumer.dispose();
+            mMessageConsumer.dispose(true);
             mMessageConsumer = null;
         }
         mVolleyCallbacks.cancelAll(TAG);
@@ -493,7 +495,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 try {
                     mMessageConsumer.addBinding(params[3]);
                 } catch (final IOException e) {
-                    mMessageConsumer.dispose();
+                    mMessageConsumer.dispose(false);
                 }
             }
             return null;
@@ -797,6 +799,13 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
         mNotificationManager.cancel(MESSAGE_NOTIFICATION_ID);
         mUnreadMessageCount = 0;
+    }
+
+    @Override
+    public void onDisconnect(boolean manual) {
+        if(!manual) {
+            connectChatService();
+        }
     }
 
 }

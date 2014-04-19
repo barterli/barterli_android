@@ -38,6 +38,8 @@ public abstract class AbstractRabbitMQConnector {
     protected final int          mPort;
     protected final ExchangeType mExchangeType;
 
+    private OnDisconnectCallback mOnDisconnectCallback;
+
     public enum ExchangeType {
 
         DIRECT("direct"),
@@ -64,7 +66,14 @@ public abstract class AbstractRabbitMQConnector {
         mExchangeType = exchangeType;
     }
 
-    public void dispose() {
+    /**
+     * Disconnect from the broker
+     * 
+     * @param manual <code>true</code> if the disconnection is manual(logout),
+     *            <code>false</code> if it happened through an error/loss of
+     *            network etc
+     */
+    public void dispose(boolean manual) {
         mRunning = false;
 
         try {
@@ -76,8 +85,21 @@ public abstract class AbstractRabbitMQConnector {
             }
         } catch (final IOException e) {
             e.printStackTrace();
+        } finally {
+            
+            if(mOnDisconnectCallback != null) {
+                mOnDisconnectCallback.onDisconnect(manual);
+            }
         }
 
+    }
+
+    public void setOnDisconnectCallback(OnDisconnectCallback callback) {
+        mOnDisconnectCallback = callback;
+    }
+
+    public OnDisconnectCallback getOnDisconnectCallback() {
+        return mOnDisconnectCallback;
     }
 
     public boolean isRunning() {
@@ -135,5 +157,22 @@ public abstract class AbstractRabbitMQConnector {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Callback interface for when the Chat consumer gets disconnected
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static interface OnDisconnectCallback {
+
+        /**
+         * Callback method to be triggered when the connector disconnects
+         * 
+         * @param manual <code>true</code> if the chat was manually
+         *            disconnected(user logout), <code>false</code> if it
+         *            happened due to an error/loss of network
+         */
+        public void onDisconnect(boolean manual);
     }
 }
