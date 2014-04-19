@@ -510,9 +510,32 @@ public class HttpResponseParser {
      * @param response
      * @return
      */
-    private ResponseInfo parseGetBookInfoResponse(final String response) {
-        // TODO Parse get book info response
-        return new ResponseInfo();
+    private ResponseInfo parseGetBookInfoResponse(final String response)
+                    throws JSONException {
+        final ResponseInfo responseInfo = new ResponseInfo();
+
+        final JSONObject bookInfoObject = new JSONObject(response);
+
+        final Bundle responseBundle = new Bundle(3);
+        responseBundle.putString(HttpConstants.TITLE, JsonUtils
+                        .readString(bookInfoObject, HttpConstants.TITLE, false, false));
+        responseBundle.putString(HttpConstants.DESCRIPTION, JsonUtils
+                        .readString(bookInfoObject, HttpConstants.DESCRIPTION, false, false));
+
+        final JSONObject authorsObject = JsonUtils
+                        .readJSONObject(bookInfoObject, HttpConstants.AUTHORS, false, false);
+        if (authorsObject != null) {
+            final JSONObject authorObject = JsonUtils
+                            .readJSONObject(authorsObject, HttpConstants.AUTHOR, false, false);
+
+            if (authorObject != null) {
+                responseBundle.putString(HttpConstants.AUTHOR, JsonUtils
+                                .readString(authorObject, HttpConstants.NAME, false, false));
+            }
+        }
+
+        responseInfo.responseBundle = responseBundle;
+        return responseInfo;
     }
 
     /**

@@ -34,22 +34,16 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
 
     private static final String TAG = "ChatRabbitMQConnector";
 
+    // The Queue name for this consumer
+    private String              mQueue;
+    private QueueingConsumer    mSubscription;
+
+    // last message to post back
+    private byte[]              mLastMessage;
+
     public ChatRabbitMQConnector(final String server, final int port, final String virtualHost, final String exchange, final ExchangeType exchangeType) {
         super(server, port, virtualHost, exchange, exchangeType);
     }
-
-    // The Queue name for this consumer
-    private String           mQueue;
-    private QueueingConsumer mSubscription;
-
-    // last message to post back
-    private byte[]           mLastMessage;
-
-    // An interface to be implemented by an object that is interested in
-    // messages(listener)
-    public interface OnReceiveMessageHandler {
-        public void onReceiveMessage(byte[] message);
-    };
 
     // A reference to the listener, we can only have one at a time(for now)
     private OnReceiveMessageHandler mOnReceiveMessageHandler;
@@ -186,15 +180,36 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                         ie.printStackTrace();
                     } catch (final ShutdownSignalException e) {
                         e.printStackTrace();
-                        setIsRunning(false);
+                        shutdownHappened();
+
                     } catch (final ConsumerCancelledException e) {
                         e.printStackTrace();
                     }
                 }
             }
+
         };
         thread.start();
 
     }
+
+    /**
+     * Called when an unexpected shutdown occured when consuming for messages(loss of network, etc)
+     */
+    private void shutdownHappened() {
+        setIsRunning(false);
+        
+        final OnDisconnectCallback callback = getOnDisconnectCallback();
+        if(callback != null) {
+            callback.onDisconnect(false);
+        }
+
+    }
+
+    // An interface to be implemented by an object that is interested in
+    // messages(listener)
+    public interface OnReceiveMessageHandler {
+        public void onReceiveMessage(byte[] message);
+    };
 
 }

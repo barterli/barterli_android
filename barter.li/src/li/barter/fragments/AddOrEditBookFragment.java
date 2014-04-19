@@ -69,7 +69,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private EditText            mTitleEditText;
     private EditText            mAuthorEditText;
     private EditText            mDescriptionEditText;
-    private EditText            mPublicationYearEditText;
     private CheckBox            mBarterCheckBox;
     private CheckBox            mReadCheckBox;
     private CheckBox            mSellCheckBox;
@@ -153,8 +152,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
         mDescriptionEditText = (EditText) view
                         .findViewById(R.id.edit_text_description);
-        mPublicationYearEditText = (EditText) view
-                        .findViewById(R.id.edit_text_publication_year);
 
         initBarterTypeCheckBoxes(view);
 
@@ -211,7 +208,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         final String title = args.getString(Keys.BOOK_TITLE);
         final String author = args.getString(Keys.AUTHOR);
         final String description = args.getString(Keys.DESCRIPTION);
-        final String publicationYear = args.getString(Keys.PUBLICATION_YEAR);
         final List<String> barterTypes = args
                         .getStringArrayList(Keys.BARTER_TYPES);
 
@@ -219,7 +215,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mTitleEditText.setText(title);
         mAuthorEditText.setText(author);
         mDescriptionEditText.setText(description);
-        mPublicationYearEditText.setText(publicationYear);
 
         setCheckBoxesForBarterTypes(barterTypes);
 
@@ -233,15 +228,15 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     /**
      * Fetches the book info from server based on the ISBN number
      * 
-     * @param bookId The ISBN Id of the book to get info for
+     * @param bookIsbn The ISBN Id of the book to get info for
      */
-    private void getBookInfoFromServer(final String bookId) {
+    private void getBookInfoFromServer(final String bookIsbn) {
 
         final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.BOOK_INFO, null, mVolleyCallbacks);
         final Map<String, String> params = new HashMap<String, String>();
         request.setRequestId(RequestId.GET_BOOK_INFO);
-        params.put(HttpConstants.Q, bookId);
+        params.put(HttpConstants.Q, bookIsbn);
         request.setParams(params);
         addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
     }
@@ -294,8 +289,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 bookJson.put(HttpConstants.ISBN_10, mIsbnEditText.getText()
                                 .toString());
             }
-            bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYearEditText
-                            .getText().toString());
             bookJson.put(HttpConstants.TAG_NAMES, getBarterTagsArray());
             if (locationObject != null) {
                 bookJson.put(HttpConstants.LOCATION, locationObject);
@@ -431,7 +424,13 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     final ResponseInfo response) {
 
         if (requestId == RequestId.GET_BOOK_INFO) {
-            // TODO Read book info from bundle
+
+            mTitleEditText.setText(response.responseBundle
+                            .getString(HttpConstants.TITLE));
+            mDescriptionEditText.setText(response.responseBundle
+                            .getString(HttpConstants.DESCRIPTION));
+            mAuthorEditText.setText(response.responseBundle
+                            .getString(HttpConstants.AUTHOR));
         } else if (requestId == RequestId.CREATE_BOOK) {
             Logger.v(TAG, "Created Book Id %s", response.responseBundle
                             .getString(HttpConstants.ID_BOOK));
@@ -455,6 +454,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     final String errorMessage, final Bundle errorResponseBundle) {
         if (requestId == RequestId.GET_BOOK_INFO) {
             showCrouton(R.string.unable_to_fetch_book_info, AlertStyle.ERROR);
+        } else if (requestId == RequestId.GET_BOOK_INFO) {
+            showCrouton(R.string.unable_to_create_book, AlertStyle.ERROR);
         }
     }
 
@@ -520,12 +521,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
 
     private boolean isNumeric(final String str) {
-        try {
-            final double d = Double.parseDouble(str);
-        } catch (final NumberFormatException nfe) {
-            return false;
-        }
-        return true;
+        return str.matches("\\d+");
     }
 
 }

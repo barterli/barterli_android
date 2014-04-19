@@ -51,6 +51,7 @@ import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.HomeActivity;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
+import li.barter.chat.AbstractRabbitMQConnector.OnDisconnectCallback;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -71,6 +72,7 @@ import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.ChatType;
+import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
@@ -99,28 +101,38 @@ import li.barter.utils.Utils;
  * @author Vinay S Shenoy
  */
 public class ChatService extends Service implements OnReceiveMessageHandler,
-                AsyncDbQueryCallback, IHttpCallbacks {
+                AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 
-    private static final String    TAG                     = "ChatService";
-    private static final String    OUTPUT_TIME_FORMAT      = "dd MMM, h:m a";
-    private static final String    QUEUE_NAME_FORMAT       = "%squeue";
-    private static final String    VIRTUAL_HOST            = "/";
-    private static final String    EXCHANGE                = "node.barterli";
-    private static final String    USERNAME                = "barterli";
-    private static final String    PASSWORD                = "barter";
+    private static final String    TAG                      = "ChatService";
+    private static final String    OUTPUT_TIME_FORMAT       = "dd MMM, h:m a";
+    private static final String    QUEUE_NAME_FORMAT        = "%squeue";
+    private static final String    VIRTUAL_HOST             = "/";
+    private static final String    EXCHANGE                 = "node.barterli";
+    private static final String    USERNAME                 = "barterli";
+    private static final String    PASSWORD                 = "barter";
+    /**
+     * Minimum time interval(in seconds) to wait between subsequent connect
+     * attempts
+     */
+    private static final int       CONNECT_BACKOFF_INTERVAL = 5;
+
+    /**
+     * Maximum multiplier for the connect interval
+     */
+    private static final int       MAX_CONNECT_MULTIPLIER   = 180;
 
     /**
      * Notification Id for notifications related to messages
      */
-    private static final int       MESSAGE_NOTIFICATION_ID = 1;
+    private static final int       MESSAGE_NOTIFICATION_ID  = 1;
 
-    private final IBinder          mChatServiceBinder      = new ChatServiceBinder();
+    private final IBinder          mChatServiceBinder       = new ChatServiceBinder();
 
-    private final String           mChatSelection          = DatabaseColumns.CHAT_ID
-                                                                           + SQLConstants.EQUALS_ARG;
+    private final String           mChatSelection           = DatabaseColumns.CHAT_ID
+                                                                            + SQLConstants.EQUALS_ARG;
 
-    private final String           mUserSelection          = DatabaseColumns.USER_ID
-                                                                           + SQLConstants.EQUALS_ARG;
+    private final String           mUserSelection           = DatabaseColumns.USER_ID
+                                                                            + SQLConstants.EQUALS_ARG;
 
     /** {@link ChatRabbitMQConnector} instance for listening to messages */
     private ChatRabbitMQConnector  mMessageConsumer;
@@ -133,6 +145,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     private String                 mQueueName;
 
+    /**
+     * Current multiplier for connecting to chat. Can vary between 0 to
+     * {@link #MAX_CONNECT_MULTIPLIER}
+     */
+    private int                    mCurrentConnectMultiplier;
     /**
      * Task to connect to Rabbit MQ Chat server
      */
@@ -152,6 +169,10 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private ArrayDeque<String>     mMessageQueue;
 
+    private Handler                mHandler;
+
+    private Runnable               mConnectRunnable;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -159,12 +180,15 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
                         .getChatPort(), VIRTUAL_HOST, EXCHANGE, ExchangeType.DIRECT);
         mMessageConsumer.setOnReceiveMessageHandler(this);
+        mMessageConsumer.setOnDisconnectCallback(this);
         mDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, OUTPUT_TIME_FORMAT);
         mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
         mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
         mNotificationBuilder = new Builder(this);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mUnreadMessageCount = 0;
+        mCurrentConnectMultiplier = 0;
+        mHandler = new Handler();
 
         //testNotifications();
     }
@@ -201,33 +225,70 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     public int onStartCommand(final Intent intent, final int flags,
                     final int startId) {
 
+        mCurrentConnectMultiplier = 0;
+        connectChatService();
+        return START_STICKY;
+    }
+
+    /**
+     * Connects to the Chat Service
+     */
+    private void connectChatService() {
+
+        //If there already is a pending connect task, remove it since we have a newer one
+        if (mConnectRunnable != null) {
+            mHandler.removeCallbacks(mConnectRunnable);
+        }
         if (isLoggedIn() && !mMessageConsumer.isRunning()) {
 
-            mQueueName = generateQueueNameFromUserId(UserInfo.INSTANCE.getId());
-            if (mConnectTask == null) {
-                mConnectTask = new ConnectToChatAsyncTask();
-                mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
-                                .getId());
-            } else {
-                final Status connectingStatus = mConnectTask.getStatus();
+            mConnectRunnable = new Runnable() {
 
-                if (connectingStatus != Status.RUNNING) {
+                @Override
+                public void run() {
 
-                    // We are not already attempting to connect, let's try connecting
-                    if (connectingStatus == Status.PENDING) {
-                        //Cancel a pending task
-                        mConnectTask.cancel(false);
+                    if (!isLoggedIn()
+                                    || !DeviceInfo.INSTANCE
+                                                    .isNetworkConnected()) {
+
+                        //If there is no internet connection or we are not logged in, we need not attempt to connect
+                        mConnectRunnable = null;
+                        return;
                     }
 
-                    mConnectTask = new ConnectToChatAsyncTask();
-                    //TODO Use actual user id here
-                    mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
+                    mQueueName = generateQueueNameFromUserId(UserInfo.INSTANCE
                                     .getId());
+                    if (mConnectTask == null) {
+                        mConnectTask = new ConnectToChatAsyncTask();
+                        mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
+                                        .getId());
+                    } else {
+                        final Status connectingStatus = mConnectTask
+                                        .getStatus();
+
+                        if (connectingStatus != Status.RUNNING) {
+
+                            // We are not already attempting to connect, let's try connecting
+                            if (connectingStatus == Status.PENDING) {
+                                //Cancel a pending task
+                                mConnectTask.cancel(false);
+                            }
+
+                            mConnectTask = new ConnectToChatAsyncTask();
+                            mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
+                                            .getId());
+                        }
+                    }
+                    mConnectRunnable = null;
+
                 }
-            }
+
+            };
+
+            mHandler.postDelayed(mConnectRunnable, mCurrentConnectMultiplier++
+                            * CONNECT_BACKOFF_INTERVAL * 1000);
 
         }
-        return START_STICKY;
+
     }
 
     /**
@@ -240,7 +301,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     @Override
     public void onDestroy() {
         if (mMessageConsumer.isRunning()) {
-            mMessageConsumer.dispose();
+            mMessageConsumer.dispose(true);
             mMessageConsumer = null;
         }
         mVolleyCallbacks.cancelAll(TAG);
@@ -434,10 +495,20 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 try {
                     mMessageConsumer.addBinding(params[3]);
                 } catch (final IOException e) {
-                    mMessageConsumer.dispose();
+                    mMessageConsumer.dispose(false);
                 }
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (!isConnectedToChat()) {
+                /* If it's not connected, try connecting again */
+                connectChatService();
+            } else {
+                mCurrentConnectMultiplier = 0;
+            }
         }
     }
 
@@ -728,6 +799,13 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
         mNotificationManager.cancel(MESSAGE_NOTIFICATION_ID);
         mUnreadMessageCount = 0;
+    }
+
+    @Override
+    public void onDisconnect(boolean manual) {
+        if(!manual) {
+            connectChatService();
+        }
     }
 
 }
