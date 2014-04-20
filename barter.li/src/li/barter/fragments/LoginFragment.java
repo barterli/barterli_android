@@ -47,6 +47,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
 import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.HomeActivity;
@@ -59,6 +60,7 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
@@ -360,9 +362,13 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             } else {
                 final String tag = getTag();
                 if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+                    
+                    final Bundle args = new Bundle(1);
+                    args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+                    
                     loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                     .instantiate(getActivity(), ProfileFragment.class
-                                                    .getName(), null), FragmentTags.PROFILE, true, FragmentTags.BOOKS_AROUND_ME);
+                                                    .getName(), args), FragmentTags.PROFILE_FROM_LOGIN, true, FragmentTags.BS_PROFILE);
 
                 } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
                     onUpNavigate();

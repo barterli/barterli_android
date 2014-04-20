@@ -178,11 +178,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case android.R.id.home: {
-            	
-            	/*
-            	 * This function is called twice in order to prevent login fragment again to appear
-            	 */
-                onUpNavigate();
+
                 onUpNavigate();
                 return true;
             }
@@ -190,13 +186,22 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
             case R.id.action_edit_profile: {
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), EditProfileFragment.class
-                                                .getName(), null), FragmentTags.EDIT_PROFILE, true, FragmentTags.BS_PROFILE);
+                                                .getName(), null), FragmentTags.EDIT_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
                 return true;
             }
 
             default: {
                 return super.onOptionsItemSelected(item);
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getTag().equals(FragmentTags.PROFILE_FROM_LOGIN)) {
+            onUpNavigate();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -333,7 +338,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                             .instantiate(getActivity(), BookDetailFragment.class
-                                            .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_PROFILE, true, FragmentTags.BS_PROFILE);
+                                            .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
         }
     }
 
