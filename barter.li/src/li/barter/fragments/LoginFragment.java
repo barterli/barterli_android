@@ -16,6 +16,7 @@
 
 package li.barter.fragments;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import com.android.volley.Request.Method;
@@ -24,6 +25,14 @@ import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.Settings;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.plus.Plus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -152,6 +161,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
             case R.id.button_google_login: {
                 // TODO GoogleLoggerin
+            	
+            	
                 break;
             }
 
@@ -341,7 +352,6 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
 
 
-
 	@Override
 	public void call(Session session, SessionState state, Exception exception) {
 		// TODO session returns the user_token
@@ -351,5 +361,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 		}
 		
 	}
+
+
 
 }

@@ -36,8 +36,7 @@ public class AppConstants {
 
     public static final String  FACEBOOK                       = "facebook";
     public static final String  FBPERMISSIONS[]                = new String[] {
-            "email", "user_location"
-                                                               };
+            "email"  };
     public static final String  GOOGLE                         = "google";
     public static final String  MANUAL                         = "manual";
 

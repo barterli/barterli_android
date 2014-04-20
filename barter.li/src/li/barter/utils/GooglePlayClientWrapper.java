@@ -30,208 +30,215 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-
 import li.barter.activities.AbstractBarterLiActivity;
 
 /**
  * @author Vinay S Shenoy Class to wrap the Google Play Connection code
  */
 public class GooglePlayClientWrapper implements ConnectionCallbacks,
-                OnConnectionFailedListener {
+OnConnectionFailedListener {
 
-    private static final String            TAG              = "GooglePlayClientWrapper";
+	private static final String            TAG              = "GooglePlayClientWrapper";
 
-    // Update frequency in milliseconds
-    private static final int               UPDATE_INTERVAL  = 15 * 60 * 1000;
+	// Update frequency in milliseconds
+	private static final int               UPDATE_INTERVAL  = 15 * 60 * 1000;
 
-    // A fast frequency ceiling in milliseconds
-    private static final long              FASTEST_INTERVAL = 5 * 60 * 1000;
+	// A fast frequency ceiling in milliseconds
+	private static final long              FASTEST_INTERVAL = 5 * 60 * 1000;
 
-    private final LocationClient           mLocationClient;
+	private final LocationClient           mLocationClient;
 
-    private final AbstractBarterLiActivity mActivity;
+	private final AbstractBarterLiActivity mActivity;
 
-    private final LocationListener         mLocationListener;
+	private final LocationListener         mLocationListener;
 
-    private ConnectionResult               mConnectionResult;
+	private ConnectionResult               mConnectionResult;
 
-    private final LocationRequest          mLocationRequest;
+	/* A flag indicating that a PendingIntent is in progress and prevents
+	 * us from starting further intents.
+	 */
 
-    public GooglePlayClientWrapper(final AbstractBarterLiActivity activity, final LocationListener locationListener) {
-        mActivity = activity;
-        mLocationClient = new LocationClient(mActivity, this, this);
-        mLocationListener = locationListener;
-        mLocationRequest = LocationRequest
-                        .create()
-                        .setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
-                        .setInterval(UPDATE_INTERVAL)
-                        .setFastestInterval(FASTEST_INTERVAL);
-    }
+	private final LocationRequest          mLocationRequest;
 
-    /*
-     * Define a request code to send to Google Play services This code is
-     * returned in Activity.onActivityResult
-     */
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-    // Define a DialogFragment that displays the error dialog
-    public static class ErrorDialogFragment extends DialogFragment {
-        // Global field to contain the error dialog
-        private Dialog mDialog;
+	public GooglePlayClientWrapper(final AbstractBarterLiActivity activity, final LocationListener locationListener) {
+		mActivity = activity;
+		mLocationClient = new LocationClient(mActivity, this, this);
+		mLocationListener = locationListener;
+		mLocationRequest = LocationRequest
+				.create()
+				.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+				.setInterval(UPDATE_INTERVAL)
+				.setFastestInterval(FASTEST_INTERVAL);
+	}
 
-        // Default constructor. Sets the dialog field to null
-        public ErrorDialogFragment() {
-            super();
-            mDialog = null;
-        }
+	/*
+	 * Define a request code to send to Google Play services This code is
+	 * returned in Activity.onActivityResult
+	 */
+	private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
 
-        // Set the dialog to display
-        public void setDialog(final Dialog dialog) {
-            mDialog = dialog;
-        }
+	// Define a DialogFragment that displays the error dialog
+	public static class ErrorDialogFragment extends DialogFragment {
+		// Global field to contain the error dialog
+		private Dialog mDialog;
 
-        // Return a Dialog to the DialogFragment.
-        @Override
-        public Dialog onCreateDialog(final Bundle savedInstanceState) {
-            return mDialog;
-        }
-    }
+		// Default constructor. Sets the dialog field to null
+		public ErrorDialogFragment() {
+			super();
+			mDialog = null;
+		}
 
-    public void onStart() {
-        if (servicesConnected()) {
-            mLocationClient.connect();
-        }
-    }
+		// Set the dialog to display
+		public void setDialog(final Dialog dialog) {
+			mDialog = dialog;
+		}
 
-    public void onStop() {
+		// Return a Dialog to the DialogFragment.
+		@Override
+		public Dialog onCreateDialog(final Bundle savedInstanceState) {
+			return mDialog;
+		}
+	}
 
-        if (mLocationClient.isConnected()) {
-            mLocationClient.removeLocationUpdates(mLocationListener);
-            mLocationClient.disconnect();
-        }
+	public void onStart() {
+		if (servicesConnected()) {
+			mLocationClient.connect();
+		}
+	}
 
-    }
+	public void onStop() {
 
-    /*
-     * Handle results returned to the FragmentActivity by Google Play services
-     */
-    public void handleActivityResult(final int requestCode,
-                    final int resultCode, final Intent data) {
-        // Decide what to do based on the original request code
-        switch (requestCode) {
+		if (mLocationClient.isConnected()) {
+			mLocationClient.removeLocationUpdates(mLocationListener);
+			mLocationClient.disconnect();
+		}
 
-            case CONNECTION_FAILURE_RESOLUTION_REQUEST:
-                /*
-                 * If the result code is Activity.RESULT_OK, try to connect
-                 * again
-                 */
-                switch (resultCode) {
-                    case Activity.RESULT_OK:
-                        /*
-                         * Try the request again
-                         */
-                        break;
-                }
-        }
-    }
+	}
 
-    private boolean servicesConnected() {
-        // Check that Google Play services is available
-        final int resultCode = GooglePlayServicesUtil
-                        .isGooglePlayServicesAvailable(mActivity);
-        // If Google Play services is available
-        if (ConnectionResult.SUCCESS == resultCode) {
-            // In debug mode, log the status
-            Logger.d("Location Updates", "Google Play services is available.");
-            // Continue
-            return true;
-            // Google Play services was not available for some reason
-        } else {
+	/*
+	 * Handle results returned to the FragmentActivity by Google Play services
+	 */
+	public void handleActivityResult(final int requestCode,
+			final int resultCode, final Intent data) {
+		// Decide what to do based on the original request code
+		switch (requestCode) {
 
-            if (mConnectionResult != null) {
-                // Get the error code
-                final int errorCode = mConnectionResult.getErrorCode();
-                // Get the error dialog from Google Play services
-                final Dialog errorDialog = GooglePlayServicesUtil
-                                .getErrorDialog(errorCode, mActivity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                // If Google Play services can provide an error dialog
-                if (errorDialog != null) {
-                    // Create a new DialogFragment for the error dialog
-                    final ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-                    // Set the dialog in the DialogFragment
-                    errorFragment.setDialog(errorDialog);
-                    // Show the error dialog in the DialogFragment
-                    errorFragment.show(mActivity.getSupportFragmentManager(), "Location Updates");
-                }
-            }
+		case CONNECTION_FAILURE_RESOLUTION_REQUEST:
+			/*
+			 * If the result code is Activity.RESULT_OK, try to connect
+			 * again
+			 */
+			switch (resultCode) {
+			case Activity.RESULT_OK:
+				/*
+				 * Try the request again
+				 */
+				break;
 
-            return false;
-        }
-    }
+			}
+			
+		}
+	}
 
-    public boolean willHandleActivityResult(final int requestCode,
-                    final int resultCode, final Intent data) {
-        return requestCode == CONNECTION_FAILURE_RESOLUTION_REQUEST;
-    }
+	private boolean servicesConnected() {
+		// Check that Google Play services is available
+		final int resultCode = GooglePlayServicesUtil
+				.isGooglePlayServicesAvailable(mActivity);
+		// If Google Play services is available
+		if (ConnectionResult.SUCCESS == resultCode) {
+			// In debug mode, log the status
+			Logger.d("Location Updates", "Google Play services is available.");
+			// Continue
+			return true;
+			// Google Play services was not available for some reason
+		} else {
 
-    /*
-     * Called by Location Services when the request to connect the client
-     * finishes successfully. At this point, you can request the current
-     * location or start periodic updates
-     */
-    @Override
-    public void onConnected(final Bundle dataBundle) {
-        // Display the connection status
-        mLocationClient.requestLocationUpdates(mLocationRequest, mLocationListener);
-    }
+			if (mConnectionResult != null) {
+				// Get the error code
+				final int errorCode = mConnectionResult.getErrorCode();
+				// Get the error dialog from Google Play services
+				final Dialog errorDialog = GooglePlayServicesUtil
+						.getErrorDialog(errorCode, mActivity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+				// If Google Play services can provide an error dialog
+				if (errorDialog != null) {
+					// Create a new DialogFragment for the error dialog
+					final ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+					// Set the dialog in the DialogFragment
+					errorFragment.setDialog(errorDialog);
+					// Show the error dialog in the DialogFragment
+					errorFragment.show(mActivity.getSupportFragmentManager(), "Location Updates");
+				}
+			}
 
-    @Override
-    public void onDisconnected() {
-        // Display the connection status
-    }
+			return false;
+		}
+	}
 
-    /*
-     * Called by Location Services if the attempt to Location Services fails.
-     */
-    @Override
-    public void onConnectionFailed(final ConnectionResult connectionResult) {
-        mConnectionResult = connectionResult;
-        /*
-         * Google Play services can resolve some errors it detects. If the error
-         * has a resolution, try sending an Intent to start a Google Play
-         * services activity that can resolve error.
-         */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(mActivity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-                /*
-                 * Thrown if Google Play services canceled the original
-                 * PendingIntent
-                 */
-            } catch (final IntentSender.SendIntentException e) {
-                //Logger the error
-                e.printStackTrace();
-            }
-        } else {
-            /*
-             * If no resolution is available, display a dialog to the user with
-             * the error.
-             */
-            // showErrorDialog(connectionResult.getErrorCode());
+	public boolean willHandleActivityResult(final int requestCode,
+			final int resultCode, final Intent data) {
+		return requestCode == CONNECTION_FAILURE_RESOLUTION_REQUEST;
+	}
 
-            final Dialog errorDialog = GooglePlayServicesUtil
-                            .getErrorDialog(connectionResult.getErrorCode(), mActivity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
-            // If Google Play services can provide an error dialog
-            if (errorDialog != null) {
-                // Create a new DialogFragment for the error dialog
-                final ErrorDialogFragment errorFragment = new ErrorDialogFragment();
-                // Set the dialog in the DialogFragment
-                errorFragment.setDialog(errorDialog);
-                // Show the error dialog in the DialogFragment
-                errorFragment.show(mActivity.getSupportFragmentManager(), "Location Updates");
-            }
-        }
-    }
+	/*
+	 * Called by Location Services when the request to connect the client
+	 * finishes successfully. At this point, you can request the current
+	 * location or start periodic updates
+	 */
+	@Override
+	public void onConnected(final Bundle dataBundle) {
+		// Display the connection status
+		mLocationClient.requestLocationUpdates(mLocationRequest, mLocationListener);
+		
+	}
+
+	@Override
+	public void onDisconnected() {
+		// Display the connection status
+	}
+
+	/*
+	 * Called by Location Services if the attempt to Location Services fails.
+	 */
+	@Override
+	public void onConnectionFailed(final ConnectionResult connectionResult) {
+		mConnectionResult = connectionResult;
+		/*
+		 * Google Play services can resolve some errors it detects. If the error
+		 * has a resolution, try sending an Intent to start a Google Play
+		 * services activity that can resolve error.
+		 */
+		if (connectionResult.hasResolution()) {
+			try {
+				// Start an Activity that tries to resolve the error
+				connectionResult.startResolutionForResult(mActivity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+				/*
+				 * Thrown if Google Play services canceled the original
+				 * PendingIntent
+				 */
+			} catch (final IntentSender.SendIntentException e) {
+				//Logger the error
+				e.printStackTrace();
+			}
+		} else {
+			/*
+			 * If no resolution is available, display a dialog to the user with
+			 * the error.
+			 */
+			// showErrorDialog(connectionResult.getErrorCode());
+
+			final Dialog errorDialog = GooglePlayServicesUtil
+					.getErrorDialog(connectionResult.getErrorCode(), mActivity, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+			// If Google Play services can provide an error dialog
+			if (errorDialog != null) {
+				// Create a new DialogFragment for the error dialog
+				final ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+				// Set the dialog in the DialogFragment
+				errorFragment.setDialog(errorDialog);
+				// Show the error dialog in the DialogFragment
+				errorFragment.show(mActivity.getSupportFragmentManager(), "Location Updates");
+			}
+		}
+	}
 
 }
