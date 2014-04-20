@@ -17,6 +17,7 @@ package li.barter.fragments;
 
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import com.squareup.picasso.Picasso;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -133,6 +134,21 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                                 .getString(getActivity(), R.string.pref_last_name);
             }
 
+            // for loading profile image
+            
+            String mProfileImageUrl="";
+            if (SharedPreferenceHelper
+                    .contains(getActivity(), R.string.pref_profile_image)) {
+        mProfileImageUrl = SharedPreferenceHelper
+                        .getString(getActivity(), R.string.pref_profile_image);
+        
+    }
+      	 Picasso.with(getActivity())
+          .load(mProfileImageUrl)
+          .fit().error(R.drawable.pic_avatar)
+          .into(mProfileImageView);
+      	 
+      	 
             String mFullName = String.format(Locale.US, mFirstName + " "
                             + mLastName);
             if (TextUtils.isEmpty(mFullName)) {

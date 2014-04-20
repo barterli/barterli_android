@@ -252,6 +252,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 }
             }
             mChatDetailAdapter.swapCursor(cursor);
+            
             mChatListView.smoothScrollToPosition(mChatDetailAdapter.getCount() - 1);
         } else if (id == Loaders.USER_DETAILS) {
             if (cursor.moveToFirst()) {
