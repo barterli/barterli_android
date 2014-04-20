@@ -22,13 +22,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-
 import li.barter.R;
+import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatsAdapter;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -59,6 +60,7 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
+        setHasOptionsMenu(true);
         final View view = inflater
                         .inflate(R.layout.fragment_chats, container, false);
         mChatsListView = (ListView) view.findViewById(R.id.list_chats);
@@ -134,5 +136,27 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
                                             .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
         }
     }
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
 
+            case android.R.id.home: {
+            	int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
+            	if (backStackEntryCount == 0) {
+            		 ((HomeActivity)getActivity()).loadBooksAroundMeFragment();
+            	    return true;
+            	}
+
+            else
+            {
+                	 onUpNavigate();
+                	 return true;
+            }   
+            }
+
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
+    }
 }
