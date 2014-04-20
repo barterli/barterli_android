@@ -47,6 +47,8 @@ public class ChatRequest extends BlRequest {
     public ChatRequest(final int method, final String url, final String requestBody, final VolleyCallbacks volleyCallbacks, final ChatAcknowledge acknowledge) {
         super(method, url, requestBody, volleyCallbacks);
         mAcknowledge = acknowledge;
+        //Don't retry chat requests
+        getRetryPolicy().setMaxRetries(0);
     }
 
     /**

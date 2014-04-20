@@ -27,7 +27,7 @@ public class DefaultRetryPolicy implements RetryPolicy {
     private int mCurrentRetryCount;
 
     /** The maximum number of attempts. */
-    private final int mMaxNumRetries;
+    private int mMaxNumRetries;
 
     /** The backoff multiplier for for the policy. */
     private final float mBackoffMultiplier;
@@ -94,5 +94,10 @@ public class DefaultRetryPolicy implements RetryPolicy {
      */
     protected boolean hasAttemptRemaining() {
         return mCurrentRetryCount <= mMaxNumRetries;
+    }
+
+    @Override
+    public void setMaxRetries(int maxRetries) {
+        mMaxNumRetries = maxRetries;
     }
 }
