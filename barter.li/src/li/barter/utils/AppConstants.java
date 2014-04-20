@@ -35,11 +35,12 @@ public class AppConstants {
     public static final boolean DEBUG                          = true;
 
     public static final String  FACEBOOK                       = "facebook";
-    public static final String 	FBPERMISSIONS[] 			   =  new String[]{"email", "user_location"};
-    public static final String  GOOGLE	                       = "google";
+    public static final String  FBPERMISSIONS[]                = new String[] {
+            "email", "user_location"
+                                                               };
+    public static final String  GOOGLE                         = "google";
     public static final String  MANUAL                         = "manual";
-    
-    
+
     public static final String  TIMESTAMP_FORMAT               = "yyyy-MM-dd'T'HH:mm:ssZ";
     public static final String  CHAT_ID_FORMAT                 = "%s#%s";
     public static final String  BARTER_TYPE_SEPARATOR          = ",";
@@ -285,7 +286,8 @@ public class AppConstants {
         public static final String MY_BOOK_FROM_PROFILE                            = "my_book_from_profile";
         public static final String MY_BOOK_FROM_ADD_OR_EDIT                        = "my_book_from_add_or_edit";
         public static final String BOOK_FROM_BOOKS_AROUND_ME                       = "book_from_books_around_me";
-        public static final String PROFILE                                         = "profile";
+        public static final String PROFILE_FROM_NAV_DRAWER                         = "profile_from_nav_drawer";
+        public static final String PROFILE_FROM_LOGIN                              = "profile_from_login";
         public static final String EDIT_PROFILE                                    = "edit_profile";
         public static final String CHATS                                           = "chats";
         public static final String CHAT_DETAILS                                    = "chat_details";
@@ -296,9 +298,10 @@ public class AppConstants {
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
         public static final String BS_ADD_BOOK                                     = "to_add_book";
         public static final String BS_PREFERRED_LOCATION                           = "to_preferred_location";
-        public static final String BS_PROFILE                                      = "to_edit_profile";
+        public static final String BS_EDIT_PROFILE                                 = "to_edit_profile";
         public static final String BS_CHATS                                        = "to_chats";
         public static final String BS_SINGLE_BOOK                                  = "to_edit_book";
+        public static final String BS_PROFILE                                      = "to_profile";
     }
 
     /**

@@ -239,7 +239,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             case R.id.button_edit_current_location: {
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), SelectPreferredLocationFragment.class
-                                                .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true, FragmentTags.BS_PROFILE);
+                                                .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
 
                 break;
             }
