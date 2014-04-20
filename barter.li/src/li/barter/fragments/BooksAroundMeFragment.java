@@ -355,6 +355,10 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                 loadAddOrEditBookFragment(null);
                 return true;
             }
+            case R.id.send_email: {
+                Utils.emailDatabase(getActivity());
+                return true;
+            }
 
             default: {
                 return super.onOptionsItemSelected(item);

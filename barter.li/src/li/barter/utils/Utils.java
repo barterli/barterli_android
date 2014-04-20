@@ -21,15 +21,30 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.LatLng;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.channels.AsynchronousCloseException;
+import java.nio.channels.ClosedByInterruptException;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.NonReadableChannelException;
+import java.nio.channels.NonWritableChannelException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -236,6 +251,122 @@ public class Utils {
         digest.reset();
         final byte[] data = digest.digest(string.getBytes());
         return String.format("%0" + (data.length * 2) + "X", new BigInteger(1, data));
+    }
+
+    public static void emailDatabase(Context context) {
+
+        File databaseExt = new File(Environment.getExternalStorageDirectory(), "barterli.sqlite");
+
+        if (copyFile(new File("/data/data/li.barter/databases/barterli.sqlite"), databaseExt)) {
+            sendEmail(context, databaseExt);
+        }
+
+    }
+
+    public static boolean copyFile(File src, File dst) {
+        boolean returnValue = true;
+
+        FileChannel inChannel = null, outChannel = null;
+
+        try {
+
+            inChannel = new FileInputStream(src).getChannel();
+            outChannel = new FileOutputStream(dst).getChannel();
+
+        } catch (FileNotFoundException fnfe) {
+
+            Logger.d(TAG, "inChannel/outChannel FileNotFoundException");
+            fnfe.printStackTrace();
+            return false;
+        }
+
+        try {
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+
+        } catch (IllegalArgumentException iae) {
+
+            Logger.d(TAG, "TransferTo IllegalArgumentException");
+            iae.printStackTrace();
+            returnValue = false;
+
+        } catch (NonReadableChannelException nrce) {
+
+            Logger.d(TAG, "TransferTo NonReadableChannelException");
+            nrce.printStackTrace();
+            returnValue = false;
+
+        } catch (NonWritableChannelException nwce) {
+
+            Logger.d(TAG, "TransferTo NonWritableChannelException");
+            nwce.printStackTrace();
+            returnValue = false;
+
+        } catch (ClosedByInterruptException cie) {
+
+            Logger.d(TAG, "TransferTo ClosedByInterruptException");
+            cie.printStackTrace();
+            returnValue = false;
+
+        } catch (AsynchronousCloseException ace) {
+
+            Logger.d(TAG, "TransferTo AsynchronousCloseException");
+            ace.printStackTrace();
+            returnValue = false;
+
+        } catch (ClosedChannelException cce) {
+
+            Logger.d(TAG, "TransferTo ClosedChannelException");
+            cce.printStackTrace();
+            returnValue = false;
+
+        } catch (IOException ioe) {
+
+            Logger.d(TAG, "TransferTo IOException");
+            ioe.printStackTrace();
+            returnValue = false;
+
+        } finally {
+
+            if (inChannel != null)
+
+                try {
+
+                    inChannel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            if (outChannel != null)
+                try {
+                    outChannel.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+        }
+
+        return returnValue;
+    }
+
+    private static void sendEmail(Context context, File attachment) {
+
+        if (Environment.getExternalStorageState()
+                        .equals(Environment.MEDIA_MOUNTED)) {
+            Uri path = Uri.fromFile(attachment);
+            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("application/octet-stream");
+            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "barter.li database");
+            String to[] = {
+                "vinaysshenoy@gmail.com"
+            };
+            intent.putExtra(Intent.EXTRA_EMAIL, to);
+            intent.putExtra(Intent.EXTRA_TEXT, "Database");
+            intent.putExtra(Intent.EXTRA_STREAM, path);
+            context.startActivity(Intent.createChooser(intent, "Send mail..."));
+        } else {
+            Logger.e(TAG, "Not mounted");
+        }
+
     }
 
 }
