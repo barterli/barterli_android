@@ -16,6 +16,7 @@
 
 package li.barter.fragments;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import com.android.volley.Request.Method;
@@ -24,6 +25,14 @@ import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.Settings;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+import com.google.android.gms.plus.Plus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +49,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import li.barter.BarterLiApplication;
 import li.barter.R;
+import li.barter.activities.HomeActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
@@ -55,7 +65,7 @@ import li.barter.utils.SharedPreferenceHelper;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class LoginFragment extends AbstractBarterLiFragment implements
-                OnClickListener, StatusCallback {
+                OnClickListener, StatusCallback, ConnectionCallbacks, OnConnectionFailedListener {
 
     private static final String TAG                = "LoginFragment";
 
@@ -68,6 +78,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     private Button            		  mSubmitButton;
     private EditText          		  mEmailEditText;
     private EditText          		  mPasswordEditText;
+    private GoogleApiClient           mGoogleApiClient;
    
 
     @Override
@@ -150,6 +161,45 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
             case R.id.button_google_login: {
                 // TODO GoogleLoggerin
+            	
+            	
+            	Bundle appActivities = new Bundle();
+        		appActivities.putString(GoogleAuthUtil.KEY_REQUEST_VISIBLE_ACTIVITIES,
+        		          "<app-activity1> <app-activity2>");
+        		String scopes = "oauth2:server:client_id:685603964337.apps.googleusercontent.com:api_scope:<scope1> <scope2>";
+        		String code = null;
+        			
+        		try {
+        		  code = GoogleAuthUtil.getToken(
+        		      getActivity(),                                              // Context context
+        		      Plus.AccountApi.getAccountName(mGoogleApiClient),  // String accountName
+        		      scopes,                                            // String scope
+        		      appActivities                                      // Bundle bundle
+        				  );
+        	      Logger.i(TAG, code, "debug oath google");
+
+
+        		} catch (IOException transientEx) {
+        		  // network or server error, the call is expected to succeed if you try again later.
+        		  // Don't attempt to call again immediately - the request is likely to
+        		  // fail, you'll hit quotas or back-off.
+        		  return;
+        		} catch (UserRecoverableAuthException e) {
+        		  // Requesting an authorization code will always throw
+        		  // UserRecoverableAuthException on the first call to GoogleAuthUtil.getToken
+        		  // because the user must consent to offline access to their data.  After
+        		  // consent is granted control is returned to your activity in onActivityResult
+        		  // and the second call to GoogleAuthUtil.getToken will succeed.
+
+        			return;
+        		} catch (GoogleAuthException authEx) {
+        		  // Failure. The call is not expected to ever succeed so it should not be
+        		  // retried.
+        		  return;
+        		} catch (Exception e) {
+        		  throw new RuntimeException(e);
+        		}
+            	
                 break;
             }
 
@@ -334,7 +384,26 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
 
-
+@Override
+public void onStart() {
+	// TODO Auto-generated method stub
+	super.onStart();
+	mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+	.addConnectionCallbacks(this)
+	.addOnConnectionFailedListener(this)
+	.addApi(Plus.API, null)
+	.addScope(Plus.SCOPE_PLUS_LOGIN)
+	.build();
+	mGoogleApiClient.connect();
+}
+@Override
+public void onStop() {
+	// TODO Auto-generated method stub
+	super.onStop();
+	if (mGoogleApiClient.isConnected()) {
+		mGoogleApiClient.disconnect();
+	}
+}
 
 	@Override
 	public void call(Session session, SessionState state, Exception exception) {
@@ -343,6 +412,30 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 		{
 		loginprovider(session.getAccessToken(), AppConstants.FACEBOOK);
 		}
+		
+	}
+
+
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onConnected(Bundle arg0) {
+		// TODO Auto-generated method stub
+		if(mGoogleApiClient.isConnected()||mGoogleApiClient.isConnecting())
+		{
+			Logger.d(TAG, "google connect", "GOOGLE");
+		}
+	}
+
+
+	@Override
+	public void onConnectionSuspended(int arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 

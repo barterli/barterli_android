@@ -36,6 +36,7 @@ import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.GooglePlayClientWrapper;
+import li.barter.utils.GooglePlusClientWrapper;
 
 /**
  * @author Vinay S Shenoy Main Activity for holding the Navigation Drawer and

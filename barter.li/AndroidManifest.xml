@@ -41,6 +41,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <application
         android:name="li.barter.BarterLiApplication"
@@ -52,7 +54,7 @@
         <!-- Meta data for Google Maps API -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="@string/google_maps_v2_api_key" />
+            android:value="AIzaSyB7qmzzX4G4ZF--1hfTSU6YQrDcAmIzHXI" />
 
         <!-- Meta data for Google Play Services -->
         <meta-data
