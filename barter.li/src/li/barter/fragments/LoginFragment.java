@@ -16,23 +16,12 @@
 
 package li.barter.fragments;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.android.volley.Request.Method;
 import com.facebook.LoggingBehavior;
 import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.Settings;
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.plus.Plus;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,8 +37,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.Arrays;
+
 import li.barter.BarterLiApplication;
 import li.barter.R;
+import li.barter.activities.HomeActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
@@ -73,13 +65,12 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     /**
      * Minimum length of the entered password
      */
-    private final int          		  mMinPasswordLength = 8;
-    private Button        		 	  mFacebookLoginButton;
-    private Button            		  mGoogleLoginButton;
-    private Button            		  mSubmitButton;
-    private EditText          		  mEmailEditText;
-    private EditText          		  mPasswordEditText;
-   
+    private final int           mMinPasswordLength = 8;
+    private Button              mFacebookLoginButton;
+    private Button              mGoogleLoginButton;
+    private Button              mSubmitButton;
+    private EditText            mEmailEditText;
+    private EditText            mPasswordEditText;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -96,20 +87,23 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         mPasswordEditText = (EditText) view
                         .findViewById(R.id.edit_text_password);
 
-        
         Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
-        
+
         Session session = Session.getActiveSession();
         if (session == null) {
             if (savedInstanceState != null) {
-                session = Session.restoreSession(getActivity(), null, this, savedInstanceState);
+                session = Session
+                                .restoreSession(getActivity(), null, this, savedInstanceState);
             }
             if (session == null) {
                 session = new Session(getActivity());
             }
             Session.setActiveSession(session);
             if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
-            	session.openForRead(new Session.OpenRequest(this).setPermissions(Arrays.asList(AppConstants.FBPERMISSIONS)).setCallback(this));
+                session.openForRead(new Session.OpenRequest(this)
+                                .setPermissions(Arrays
+                                                .asList(AppConstants.FBPERMISSIONS))
+                                .setCallback(this));
             }
         }
         mFacebookLoginButton.setOnClickListener(this);
@@ -118,16 +112,13 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         setActionBarDrawerToggleEnabled(false);
         return view;
     }
-    
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Session session = Session.getActiveSession();
         Session.saveSession(session, outState);
     }
-    
-    
 
     @Override
     protected Object getVolleyTag() {
@@ -140,7 +131,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         Session.getActiveSession()
                         .onActivityResult(getActivity(), requestCode, resultCode, data);
-        
+
     }
 
     @Override
@@ -149,20 +140,20 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         switch (v.getId()) {
 
             case R.id.button_facebook_login: {
-                // TODO FacebookLoggerin
-            	  Session session = Session.getActiveSession();
-                  if (!session.isOpened() && !session.isClosed()) {
-                	  session.openForRead(new Session.OpenRequest(this).setPermissions(Arrays.asList(AppConstants.FBPERMISSIONS)).setCallback(this));
-                  } else {
-                      Session.openActiveSession(getActivity(), this, true, this);
-                  }
+                Session session = Session.getActiveSession();
+                if (!session.isOpened() && !session.isClosed()) {
+                    session.openForRead(new Session.OpenRequest(this)
+                                    .setPermissions(Arrays
+                                                    .asList(AppConstants.FBPERMISSIONS))
+                                    .setCallback(this));
+                } else {
+                    Session.openActiveSession(getActivity(), this, true, this);
+                }
                 break;
             }
 
             case R.id.button_google_login: {
-                // TODO GoogleLoggerin
-            	
-            	
+                ((HomeActivity) getActivity()).getPlusManager().login();
                 break;
             }
 
@@ -200,19 +191,19 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         }
 
     }
-    
+
     /**
      * Call the login Api
      * 
-     * @param oath token we get from providers
-     * @param facebook or google in our case
+     * @param token oath token we get from providers
+     * @param provider facebook or google in our case
      */
-    private void loginprovider(final String token, final String provider) {
+    private void loginWithProvider(final String token, final String provider) {
 
         final JSONObject requestObject = new JSONObject();
 
         try {
-            requestObject.put(HttpConstants.PROVIDER, AppConstants.FACEBOOK);
+            requestObject.put(HttpConstants.PROVIDER, provider);
             requestObject.put(HttpConstants.ACCESS_TOKEN, token);
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.CREATE_USER, requestObject.toString(), mVolleyCallbacks);
@@ -323,10 +314,10 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             } else {
                 final String tag = getTag();
                 if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
-                    
+
                     final Bundle args = new Bundle(1);
                     args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-                    
+
                     loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                     .instantiate(getActivity(), ProfileFragment.class
                                                     .getName(), args), FragmentTags.PROFILE_FROM_LOGIN, true, FragmentTags.BS_PROFILE);
@@ -350,18 +341,43 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         }
     }
 
+    @Override
+    public void call(Session session, SessionState state, Exception exception) {
+        // TODO session returns the user_token
+        if (!session.getAccessToken().equals("")) {
+            loginWithProvider(session.getAccessToken(), AppConstants.FACEBOOK);
+        }
 
+    }
 
-	@Override
-	public void call(Session session, SessionState state, Exception exception) {
-		// TODO session returns the user_token
-		if(!session.getAccessToken().equals(""))
-		{
-		loginprovider(session.getAccessToken(), AppConstants.FACEBOOK);
-		}
-		
-	}
+    /**
+     * Method called when google login completes
+     */
+    public void onGoogleLogin() {
 
+        final String googleAccessToken = ((HomeActivity) getActivity()).getPlusManager().getAccessToken();
+        Logger.v(TAG, "Google Access Token: %s", googleAccessToken);
+        
+        if(!TextUtils.isEmpty(googleAccessToken)) {
+            loginWithProvider(googleAccessToken, AppConstants.GOOGLE);
+        }
+    }
 
+    /**
+     * Method called when there is an error while google login
+     * 
+     * @param error The {@link Exception} that occured
+     */
+    public void onGoogleLoginError(Exception error) {
+
+        showCrouton(R.string.error_unable_to_login, AlertStyle.ERROR);
+    }
+
+    /**
+     * Method called when google logout happens
+     */
+    public void onGoogleLogout() {
+
+    }
 
 }
