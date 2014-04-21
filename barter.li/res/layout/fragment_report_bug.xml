@@ -21,15 +21,30 @@
     android:background="@color/transparent"
     android:orientation="vertical" >
 
-    <li.barter.widgets.TypefacedTextView
-        android:id="@+id/label_report_bug"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_large"
-        android:text="@string/text_report_bug"
-        android:textColor="@color/dark_gray"
-        android:textSize="@dimen/text_large"
-        app:fontStyle="alegreya_regular" />
+      <RadioGroup
+            android:id="@+id/radio_enlist_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/label_collaborate"
+            android:layout_margin="@dimen/margin_minimum"
+            android:orientation="horizontal" >
+  <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_reportbug"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Report Bug"
+                app:fontStyle="alegreya_regular" />
+        
+
+            <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_suggestfeature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Suggest Feature"
+                app:fontStyle="alegreya_regular" />
+
+           
+        </RadioGroup>
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/text_bug_description"
@@ -61,7 +76,7 @@
         android:layout_margin="@dimen/margin_medium"
         android:gravity="center"
         android:textStyle="italic"
-        android:text="@string/no_personal_info_bug"
+        android:text="@string/no_personal_info_bug_and_suggest"
         android:textColor="@color/red"
         android:textSize="@dimen/text_medium" />
 

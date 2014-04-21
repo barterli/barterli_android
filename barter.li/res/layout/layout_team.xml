@@ -7,46 +7,44 @@
 
     <ImageView
         android:id="@+id/team_image"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
+      android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="6dip"
-        android:contentDescription="TODO" />
-
-    <TextView
-        android:id="@+id/team_name"
-        android:layout_width="fill_parent"
-        android:layout_height="26dip"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_toRightOf="@id/team_image"
-        android:ellipsize="marquee"
-        android:singleLine="true"
-        android:textSize="12sp" />
+       android:src="@drawable/ic_launcher" />
 
     <TextView
         android:id="@+id/team_email"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/team_name"
+        android:layout_above="@+id/team_name"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
         android:layout_toRightOf="@id/team_image"
         android:gravity="center_vertical"
         android:textSize="16sp" />
-    
+
+    <TextView
+        android:id="@+id/team_name"
+        android:layout_width="wrap_content"
+        android:layout_height="26dip"
+        android:layout_alignLeft="@+id/team_email"
+        android:layout_alignTop="@+id/team_image"
+        android:layout_marginLeft="47dp"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text="test name"
+        android:textSize="12sp" />
+
     <TextView
         android:id="@+id/team_desc"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/team_email"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_toRightOf="@id/team_image"
-        android:gravity="center_vertical"
+        android:layout_alignLeft="@+id/team_name"
+        android:layout_below="@+id/team_name"
+        android:text="test description"
         android:textSize="16sp" />
 
 </RelativeLayout>

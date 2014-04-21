@@ -29,7 +29,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-
+import android.widget.RadioButton;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.BlRequest;
@@ -52,6 +52,9 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
     private static final String TAG = "ReportBugFragment";
     private EditText            mReportedBugTextView;
     private Button              mReportBugButton;
+    private RadioButton         mReportBugSelect;
+    private RadioButton         mReportSuggestionSelect;
+    
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -61,6 +64,10 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
         final View view = inflater.inflate(R.layout.fragment_report_bug, null);
         mReportedBugTextView = (EditText) view
                         .findViewById(R.id.text_bug_description);
+        mReportBugSelect= (RadioButton) view
+                .findViewById(R.id.radio_reportbug);
+        mReportSuggestionSelect= (RadioButton) view
+                .findViewById(R.id.radio_suggestfeature);
         mReportBugButton = (Button) view.findViewById(R.id.button_report_bug);
         mReportBugButton.setOnClickListener(this);
         return view;
@@ -70,16 +77,19 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.button_report_bug: {
-                final String ReportedBugTitle = getResources()
-                                .getString(R.string.text_bug_title);
-                final String mReportedBugText = mReportedBugTextView.getText()
-                                .toString();
+               
+                
+                if(mReportBugSelect.isChecked())
+                {
+                	 final String ReportedBugTitle = getResources()
+                             .getString(R.string.text_bug_title);
+             final String mReportedBugText = mReportedBugTextView.getText()
+                             .toString();
 
-                if (TextUtils.isEmpty(mReportedBugText)) {
-                    showCrouton("Please Enter a Valid Text", AlertStyle.ERROR);
-                    return;
-                }
-
+             if (TextUtils.isEmpty(mReportedBugText)) {
+                 showCrouton("Please Enter a Valid Text", AlertStyle.ERROR);
+                 return;
+             }
                 //Make a NetWork request Here
                 final JSONObject requestObject = new JSONObject();
 
@@ -96,6 +106,39 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
                     Logger.e(TAG, e, "Error building report bug json");
                 }
 
+            
+            }
+            else if(mReportSuggestionSelect.isChecked())
+            {
+            	  final String mSuggestedFeatureTitle = getResources()
+                          .getString(R.string.text_suggest_feature_title);
+          final String mSuggestedFeatureText = mReportedBugTextView
+                          .getText().toString();
+          if (TextUtils.isEmpty(mSuggestedFeatureText)) {
+              showCrouton("Please Enter a Valid Text", AlertStyle.ERROR);
+              return;
+          }
+            	  //Make a NetWork request Here
+                final JSONObject requestObject = new JSONObject();
+
+                try {
+                    requestObject.put(HttpConstants.BUG_TITLE, mSuggestedFeatureTitle);
+                    requestObject.put(HttpConstants.BUG_BODY, mSuggestedFeatureText);
+                    requestObject.put(HttpConstants.BUG_LABEL, HttpConstants.LABEL_FOR_FEATURE);
+                    final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                                    + ApiEndpoints.REPORT_BUG, requestObject.toString(), mVolleyCallbacks);
+                    request.setRequestId(RequestId.SUGGEST_FEATURE);
+                    addRequestToQueue(request, true, 0);
+                } catch (final JSONException e) {
+                    // Should never happen
+                    Logger.e(TAG, e, "Error building create suggest feature json");
+                }
+
+            }
+            else
+            {
+            	 showCrouton("Please Select Atleast One Option", AlertStyle.ERROR);
+            }
             }
         }
     }
@@ -115,6 +158,21 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
                             .getString(HttpConstants.STATUS);
             if (mStatus.equals(HttpConstants.SUCCESS)) {
                 String mMessage = "Thanks for reporting bug. ";
+                if (!isLoggedIn()) {
+                    mMessage += "Make the most by registering and adding books.";
+                }
+                showCrouton(mMessage, AlertStyle.INFO);
+                mReportedBugTextView.setText("");
+            } else {
+                showCrouton("Something went Wrong.", AlertStyle.ERROR);
+            }
+
+        }
+        if (requestId == RequestId.SUGGEST_FEATURE) {
+            final String mStatus = response.responseBundle
+                            .getString(HttpConstants.STATUS);
+            if (mStatus.equals(HttpConstants.SUCCESS)) {
+                String mMessage = "Thanks for your invaluable feedback. ";
                 if (!isLoggedIn()) {
                     mMessage += "Make the most by registering and adding books.";
                 }
