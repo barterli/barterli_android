@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -43,6 +44,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
@@ -670,11 +672,16 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
 
     @Override
     public void onDrawerClosed(final View drawerView) {
+    	
+    	//it makes the keyboard hide when drawer closed
+    	InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+  		      Context.INPUT_METHOD_SERVICE);
+  		imm.hideSoftInputFromWindow(mBooksAroundMeAutoCompleteTextView.getWindowToken(), 0);
     }
 
     @Override
     public void onDrawerOpened(final View drawerView) {
-
+    
         if (drawerView == mBooksDrawerView) {
             final int searchRadius = Math.round(Utils
                             .getShortestRadiusFromCenter(mMapView) / 1000);
