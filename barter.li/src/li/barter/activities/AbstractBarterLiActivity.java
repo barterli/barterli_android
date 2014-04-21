@@ -334,13 +334,30 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //About us
             case 6: {
-                final Bundle showWebViewArgs = new Bundle();
-                showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
-                                .getString(R.string.url_me));
+            	
+//                final Bundle showWebViewArgs = new Bundle();
+//                showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
+//                                .getString(R.string.url_me));
+//                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+//                                .instantiate(this, ShowWebViewFragment.class
+//                                                .getName(), showWebViewArgs), FragmentTags.SHOW_WEBVIEW, true, null);
+//                break;
+            	
+                if ((masterFragment != null)
+                        && (masterFragment instanceof TeamFragment)) {
+            return null;
+        }
+
+        runnable = new Runnable() {
+            @Override
+            public void run() {
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(this, ShowWebViewFragment.class
-                                                .getName(), showWebViewArgs), FragmentTags.SHOW_WEBVIEW, true, null);
-                break;
+                                .instantiate(AbstractBarterLiActivity.this, TeamFragment.class
+                                                .getName(), null), FragmentTags.TEAM, true, null);
+            }
+        };
+
+        break;
             }
 
             //Tribute

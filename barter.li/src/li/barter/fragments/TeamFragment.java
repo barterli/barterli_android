@@ -23,7 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-
+import android.widget.TextView;
 import li.barter.R;
 import li.barter.adapters.TeamAdapter;
 import li.barter.http.BlRequest;
@@ -48,6 +48,8 @@ public class TeamFragment extends AbstractBarterLiFragment {
      * List that displays the Oss Licenses
      */
     private ListView            mListView;
+    
+    private TextView			mAboutBarterli;
     private Team[]              mTeams;
 
     /**
@@ -61,6 +63,10 @@ public class TeamFragment extends AbstractBarterLiFragment {
         init(container);
         mListView = (ListView) inflater
                         .inflate(R.layout.fragment_team, container, false);
+       
+        
+        ViewGroup header = (ViewGroup)inflater.inflate(R.layout.layout_teamlistheader, mListView, false);
+        mListView.addHeaderView(header, null, false);
         setActionBarDrawerToggleEnabled(false);
         // Make a call to server
         try {
