@@ -20,15 +20,18 @@ import com.facebook.AppEventsLogger;
 import com.google.android.gms.location.LocationListener;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
 import li.barter.fragments.ChatDetailsFragment;
 import li.barter.fragments.ChatsFragment;
+import li.barter.fragments.LoginFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
@@ -36,6 +39,8 @@ import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.GooglePlayClientWrapper;
+import li.barter.utils.GooglePlusManager;
+import li.barter.utils.GooglePlusManager.GooglePlusAuthCallback;
 
 /**
  * @author Vinay S Shenoy Main Activity for holding the Navigation Drawer and
@@ -43,7 +48,7 @@ import li.barter.utils.GooglePlayClientWrapper;
  *         clicked
  */
 public class HomeActivity extends AbstractBarterLiActivity implements
-                LocationListener {
+                LocationListener, GooglePlusAuthCallback {
 
     private static final String     TAG = "HomeActivity";
 
@@ -52,6 +57,11 @@ public class HomeActivity extends AbstractBarterLiActivity implements
      */
     private GooglePlayClientWrapper mGooglePlayClientWrapper;
 
+    /**
+     * Helper class for connectiong to GooglePlus for login
+     */
+    private GooglePlusManager       mGooglePlusManager;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +69,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
+        mGooglePlusManager = new GooglePlusManager(this, this);
         if (savedInstanceState == null) {
 
             final String action = getIntent().getAction();
@@ -82,12 +93,14 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     protected void onStart() {
         super.onStart();
         mGooglePlayClientWrapper.onStart();
+        mGooglePlusManager.onActivityStarted();
     }
+
     @Override
     protected void onResume() {
-    	super.onResume();
-    	
-    	// Call the 'activateApp' method to log an app event for use in analytics and advertising reporting.  Do so in
+        super.onResume();
+
+        // Call the 'activateApp' method to log an app event for use in analytics and advertising reporting.  Do so in
         // the onResume methods of the primary Activities that an app may be launched into.
         AppEventsLogger.activateApp(this);
     }
@@ -95,6 +108,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onStop() {
         mGooglePlayClientWrapper.onStop();
+        mGooglePlusManager.onActivityStopped();
         super.onStop();
     }
 
@@ -107,8 +121,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
             ((BooksAroundMeFragment) fragment).updateLocation(location);
         }
     }
-    
-   
+
     /**
      * Loads the {@link ChatsFragment} into the fragment container
      */
@@ -168,6 +181,54 @@ public class HomeActivity extends AbstractBarterLiActivity implements
                     final IBlRequestContract request, final int errorCode,
                     final String errorMessage, final Bundle errorResponseBundle) {
 
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode,
+                    final Intent data) {
+
+        if ((requestCode == GooglePlusManager.CONNECTION_UPDATE_ERROR)
+                        && (resultCode == RESULT_OK)) {
+            mGooglePlusManager.onActivityResult();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    /**
+     * Gets a reference to the Google Plus Manager
+     */
+    public GooglePlusManager getPlusManager() {
+
+        return mGooglePlusManager;
+    }
+
+    @Override
+    public void onLogin() {
+
+        final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
+
+        if (fragment != null && fragment instanceof LoginFragment) {
+            ((LoginFragment) fragment).onGoogleLogin();
+        }
+    }
+
+    @Override
+    public void onLoginError(Exception error) {
+        final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
+
+        if (fragment != null && fragment instanceof LoginFragment) {
+            ((LoginFragment) fragment).onGoogleLoginError(error);
+        }
+    }
+
+    @Override
+    public void onLogout() {
+        final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
+
+        if (fragment != null && fragment instanceof LoginFragment) {
+            ((LoginFragment) fragment).onGoogleLogout();
+        }
     }
 
 }
