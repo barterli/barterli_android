@@ -54,9 +54,10 @@ public class AppConstants {
      * scrolls DEFAULT_LOAD_BEFORE_COUNT : This is to be subtracted value from
      * the List Count so as to prevent loading lag on scrolling fast
      */
-    public static final int     DEFAULT_PERPAGE_LIMIT          = 10;
-    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL = 10;
-    public static final int     DEFAULT_LOAD_BEFORE_COUNT      = 1;
+    public static final int     DEFAULT_PERPAGE_LIMIT         		 	= 10;
+    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL 			= 10;
+    public static final int     DEFAULT_LOAD_BEFORE_COUNT      			= 1;
+    public static final int     DEFAULT_PERPAGE_LIMIT_FOR_SEARCH		= 20;
 
     // Default Book Image url we getting from the server when there is no image
     public static final String  DEFAULT_BOOKIMAGE_URL          = "1_default.png";
@@ -256,6 +257,7 @@ public class AppConstants {
         public static final String URL_TO_LOAD                = "url_to_load";
         public static final String LOCATION                   = "location";
         public static final String SEARCH_RADIUS              = "search_radius";
+        public static final String SEARCH              		  = "search";
         public static final String LAST_FETCHED_LOCATION      = "last_fetched_location";
         public static final String LAST_FETCHED_SEARCH_RADIUS = "last_fetched_search_radius";
         public static final String FIRST_LOAD                 = "first_load";
@@ -329,6 +331,7 @@ public class AppConstants {
         public static final int ALL_CHATS    = 203;
         public static final int CHAT_DETAILS = 204;
         public static final int USER_DETAILS = 205;
+        public static final int SEARCH_BOOKS_FROM_EDITTEXT = 206;
     }
 
     /**
@@ -356,6 +359,7 @@ public class AppConstants {
 
         //301-400 for delete queries
         public static final int DELETE_BOOKS_SEARCH_RESULTS          = 301;
+        public static final int DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT          = 302;
     }
 
     /**

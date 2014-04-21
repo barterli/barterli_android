@@ -35,6 +35,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,8 +49,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.GridView;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.ScanIsbnActivity;
@@ -86,7 +90,7 @@ import li.barter.widgets.FullWidthDrawerLayout;
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
 LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
-                OnItemClickListener, OnScrollListener {
+                OnItemClickListener, OnScrollListener,TextWatcher {
 
     private static final String           TAG            = "BooksAroundMeFragment";
 
@@ -172,6 +176,11 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
      * are close by
      */
     private Location                      mLastFetchedLocation;
+    
+    /**
+     * This string holds the search bar text for books
+     */
+    private String 						  mBookName;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -203,6 +212,8 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                         .findViewById(R.id.layout_books_container);
         mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
                         .findViewById(R.id.auto_complete_books_around_me);
+      
+      mBooksAroundMeAutoCompleteTextView.addTextChangedListener(this);
         mBooksAroundMeGridView = (GridView) contentView
                         .findViewById(R.id.grid_books_around_me);
 
@@ -336,6 +347,45 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         }
 
     }
+    
+    /**
+     * Method to fetch books around me from the server centered at a location,
+     * and in a search radius and the search field
+     * 
+     * @param center The {@link Location} representing the center
+     * @param radius The radius(in kilometers) to search in
+     * @param bookname The book name to search for
+     */
+    private void fetchBooksAroundMeForSearch(final Location center, final int radius,String bookname) {
+
+        if (center != null) {
+
+            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.SEARCH, null, mVolleyCallbacks);
+            request.setRequestId(RequestId.SEARCH_BOOKS);
+
+            final Map<String, String> params = new HashMap<String, String>(2);
+            params.put(HttpConstants.LATITUDE, String.valueOf(center
+                            .getLatitude()));
+            params.put(HttpConstants.LONGITUDE, String.valueOf(center
+                            .getLongitude()));
+            params.put(HttpConstants.SEARCH, bookname);
+                params.put(HttpConstants.PERLIMIT, String
+                                .valueOf(AppConstants.DEFAULT_PERPAGE_LIMIT_FOR_SEARCH));
+            
+            request.addExtra(Keys.LOCATION, center);
+            request.addExtra(Keys.SEARCH_RADIUS, radius);
+         
+
+            if (radius >= 1) {
+                params.put(HttpConstants.RADIUS, String.valueOf(radius));
+            }
+            request.setParams(params);
+            addRequestToQueue(request, true, 0);
+        }
+
+    }
+    
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
@@ -551,12 +601,16 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                             .get(Keys.LOCATION);
             mPrevSearchRadius = (Integer) request.getExtras()
                             .get(Keys.SEARCH_RADIUS);
-
+       
+        
+        
             /*
              * Do nothing because the loader will take care of reloading the
              * data
              */
         }
+        
+       
     }
 
     @Override
@@ -564,6 +618,9 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                     final IBlRequestContract request, final int errorCode,
                     final String errorMessage, final Bundle errorResponseBundle) {
         if (requestId == RequestId.SEARCH_BOOKS) {
+            showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
+        }
+        if (requestId == RequestId.SEARCH_BOOKS_FROM_EDITTEXT) {
             showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
         }
     }
@@ -587,7 +644,6 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
 
             {
                 mBooksAroundMeAdapter.swapCursor(cursor);
-
             }
             if (!mDrawerOpenedAutomatically) {
                 // Open drawer automatically on map loaded if first launch
@@ -720,6 +776,18 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
             fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION), args
                             .getInt(Keys.SEARCH_RADIUS));
         }
+        if (token == QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT) {
+
+            assert (cookie != null);
+
+            final Bundle args = (Bundle) cookie;
+            fetchBooksAroundMeForSearch((Location) args.getParcelable(Keys.LOCATION), args
+                            .getInt(Keys.SEARCH_RADIUS),mBookName);
+        }
+        
+        
+       
+		
 
     }
 
@@ -734,5 +802,34 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         // TODO Auto-generated method stub
 
     }
+
+	@Override
+	public void beforeTextChanged(CharSequence s, int start, int count,
+			int after) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	//Implemented for search bar..
+	@Override
+	public void onTextChanged(CharSequence s, int start, int before, int count) {
+		
+		
+		
+		final Bundle cookie = new Bundle(2);
+        cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
+        cookie.putInt(Keys.SEARCH_RADIUS, mPrevSearchRadius);
+        //   Delete the current search results before parsing the old ones
+        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT, cookie, TableSearchBooks.NAME, null, null, true, BooksAroundMeFragment.this);
+		 
+        mBookName=mBooksAroundMeAutoCompleteTextView.getText().toString();
+		
+	}
+
+	@Override
+	public void afterTextChanged(Editable s) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

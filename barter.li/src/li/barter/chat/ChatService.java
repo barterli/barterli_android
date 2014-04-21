@@ -337,7 +337,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             requestObject.put(HttpConstants.RECEIVER_ID, toUserId);
 
             requestObject.put(HttpConstants.MESSAGE, message);
-            final ChatRequest request = new ChatRequest(Method.POST, HttpConstants.getApiBaseUrl()
+            final ChatRequest request = new ChatRequest(Method.POST, HttpConstants.getChangedChatUrl()
                             + ApiEndpoints.AMPQ_EVENT_MACHINE, requestObject.toString(), mVolleyCallbacks, acknowledge);
             request.setRequestId(RequestId.AMPQ);
             request.setTag(TAG);
