@@ -194,7 +194,7 @@
                     android:layout_weight="0.5"
                     android:checked="false"
                     android:enabled="false"
-                    android:text="@string/wishlist"
+                    android:text="@string/lend"
                     app:fontStyle="alegreya_regular" />
             </LinearLayout>
 

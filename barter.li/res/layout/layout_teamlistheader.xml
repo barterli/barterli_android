@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/barterli_team_icon" />
+
+ <li.barter.widgets.TypefacedTextView
+     android:id="@+id/about_barterli"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:layout_alignParentLeft="true"
+     android:layout_below="@+id/imageView1"
+     android:layout_marginTop="18dp"
+     android:gravity="center_horizontal"
+     android:text="@string/about_barterli"
+       android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="alegreya_regular"
+     />
+
+</RelativeLayout>

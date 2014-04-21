@@ -75,7 +75,7 @@
     <string name="error_unable_to_set_preferred_location">Unable to set preferred location for user.</string>
     <string name="error_not_connected_to_chat_service">Not connected to chat service.</string>
     <string name="error_unable_to_send_chat">Not able to send chat message</string>
-    <string name="no_personal_info_bug">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this bug report will be available publicly.</string>
+    <string name="no_personal_info_bug_and_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this bug report or feature suggestion will be available publicly.</string>
     <string name="no_personal_info_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this feature suggestion will be available publicly.</string>
 
     <!-- Barter Type Options -->
@@ -83,7 +83,7 @@
     <string name="barter">Barter</string>
     <string name="sell">Sell</string>
     <string name="read">Read</string>
-    <string name="wishlist">Wishlist</string>
+    <string name="lend">Lend</string>
     <string name="keep_private">Keep Private</string>
     <string name="submit">Submit</string>
     <string name="chat_with_owner">Chat with owner</string>
@@ -100,24 +100,22 @@
     <string-array name="nav_drawer_titles">
         <item>My Profile</item>
         <item>Chats</item>
-        <item>Suggest Feature</item>
-        <item>Report Bug</item>
-        <item>Collaborate with barter.li</item>
+        <item>Report</item>
+        <item>join us @ barter.li</item>
         <item>Open Source</item>
         <item>About us</item>
         <item>Tribute</item>
-        <item>Team</item>
+       
     </string-array>
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile, update your info, view your saved books.</item>
         <item>Your ongoing chats</item>
-        <item>Got an idea? Let us Know.</item>
-        <item>Got a bug? Tell us about it.</item>
+        <item>Report a bug/suggestion</item>
         <item>Let us work together.</item>
         <item>No open source licences were violated in the making of this app.</item>
         <item>What is barter.li? Who\'s behind it?</item>
         <item>The inspiration for barter.li.</item>
-        <item>The team behind barter.li.</item>
+        
     </string-array>
     <string-array name="months">
         <item>January</item>
@@ -186,5 +184,6 @@
         <item>ListViewAnimations, A library to easily add animations to List Items. Licensed under the Apache v2.0 License.\nhttps://github.com/nhaarman/ListViewAnimations</item>
         <item>Crouton, Context sensitive notifications for Android. Licensed under the Apache v2.0 License.\nhttps://github.com/keyboardsurfer/Crouton</item>
     </string-array>
+    <string name="about_barterli">barter.li is an open source, community driven, not-for-profit project which aims to enable sharing of a billion books across the globe.</string>
 
 </resources>
