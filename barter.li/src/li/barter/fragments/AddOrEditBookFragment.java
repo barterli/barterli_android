@@ -232,7 +232,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void getBookInfoFromServer(final String bookIsbn) {
 
-        final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.BOOK_INFO, null, mVolleyCallbacks);
         final Map<String, String> params = new HashMap<String, String>();
         request.setRequestId(RequestId.GET_BOOK_INFO);
