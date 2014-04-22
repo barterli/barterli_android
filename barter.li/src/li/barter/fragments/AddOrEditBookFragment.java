@@ -58,13 +58,13 @@ import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
+import li.barter.widgets.autocomplete.INetworkSuggestCallbacks;
 import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView;
-import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView.NetworkSuggestCallbacks;
-import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView.Suggestion;
+import li.barter.widgets.autocomplete.Suggestion;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-                OnClickListener, AsyncDbQueryCallback, NetworkSuggestCallbacks {
+                OnClickListener, AsyncDbQueryCallback, INetworkSuggestCallbacks {
 
     private static final String           TAG = "AddOrEditBookFragment";
 

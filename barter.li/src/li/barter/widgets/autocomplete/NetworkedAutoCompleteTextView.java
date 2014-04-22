@@ -36,45 +36,60 @@ import li.barter.widgets.TypefacedAutoCompleteTextView;
 public class NetworkedAutoCompleteTextView extends
                 TypefacedAutoCompleteTextView {
 
-    private static final String     TAG = "NetworkedAutoCompleteTextView";
+    private static final String       TAG = "NetworkedAutoCompleteTextView";
 
     /**
      * The threshold of the search query length at which the network search
      * should be performed
      */
-    private int                     mSuggestCountThreshold;
+    private int                       mSuggestCountThreshold;
 
     /**
      * The amount of time(in milliseconds) to wait after the user has typed to
      * actually trigger the network search
      */
-    private int                     mSuggestWaitThreshold;
+    private int                       mSuggestWaitThreshold;
 
     /**
      * The current suggestions used for displaying the dropdowns
      */
-    private List<Suggestion>        mSuggestions;
+    private List<Suggestion>          mSuggestions;
 
     /**
      * Holds a reference to the last search sequence. Used for optimizing
      * network calls
      */
-    private String                  mLastSearchSequence;
+    private String                    mLastSearchSequence;
 
     /**
      * Handler for posting callbacks for perfoming the search request
      */
-    private Handler                 mHandler;
+    private Handler                   mHandler;
 
     /**
      * Runnable for perfoming search requests
      */
-    private Runnable                mPerformSearchRunnable;
+    private Runnable                  mPerformSearchRunnable;
 
     /**
      * Callbacks for perfomiong search requests
      */
-    private NetworkSuggestCallbacks mNetworkSuggestCallbacks;
+    private INetworkSuggestCallbacks  mNetworkSuggestCallbacks;
+
+    /**
+     * TextWatcher reference for performing network requests
+     */
+    private SuggestNetworkTextWatcher mSuggestNetworkTextWatcher;
+
+    /**
+     * Whether the network suggestions are enabled or not
+     */
+    private boolean                   mSuggestionsEnabled;
+
+    /**
+     * Suggestions adapter for providing suggestions
+     */
+    private SuggestionsAdapter        mSuggestionsAdapter;
 
     /**
      * @param context
@@ -94,8 +109,22 @@ public class NetworkedAutoCompleteTextView extends
     }
 
     private void init() {
-        addTextChangedListener(new SuggestNetworkTextWatcher());
+        mSuggestNetworkTextWatcher = new SuggestNetworkTextWatcher();
+        addTextChangedListener(mSuggestNetworkTextWatcher);
         mHandler = new Handler();
+        mSuggestionsAdapter = new SuggestionsAdapter(null);
+        setAdapter(mSuggestionsAdapter);
+    }
+
+    /**
+     * Enable/Disable the network suggestions
+     * 
+     * @param enabled <code>true</code> to enable network suggestions,
+     *            <code>false</code> to disable them
+     */
+    public void setNetworkSuggestionsEnabled(boolean enabled) {
+
+        mSuggestionsEnabled = enabled;
     }
 
     public int getSuggestCountThreshold() {
@@ -114,11 +143,11 @@ public class NetworkedAutoCompleteTextView extends
         mSuggestWaitThreshold = suggestWaitThreshold;
     }
 
-    public NetworkSuggestCallbacks getNetworkSuggestCallbacks() {
+    public INetworkSuggestCallbacks getNetworkSuggestCallbacks() {
         return mNetworkSuggestCallbacks;
     }
 
-    public void setNetworkSuggestCallbacks(NetworkSuggestCallbacks callbacks) {
+    public void setNetworkSuggestCallbacks(INetworkSuggestCallbacks callbacks) {
         mNetworkSuggestCallbacks = callbacks;
     }
 
@@ -143,63 +172,7 @@ public class NetworkedAutoCompleteTextView extends
         }
 
         mSuggestions.addAll(Arrays.asList(suggestions));
-    }
-
-    /**
-     * Interface to provide helper methods for connecting to Volley
-     * 
-     * @author Vinay S Shenoy
-     */
-    public static interface NetworkSuggestCallbacks {
-
-        /**
-         * Perform a network query. Once the query returns, use
-         * {@link NetworkedAutoCompleteTextView#onSuggestionsFetched(String, Suggestion[], boolean)}
-         * to update the suggestions
-         * 
-         * @param textView The TextView that performed the search query
-         * @param query The query text
-         */
-        public void performNetworkQuery(NetworkedAutoCompleteTextView textView,
-                        String query);
-
-        /**
-         * The callback method when a suggestion is tapped
-         * 
-         * @param textView The TextView that performed the search query
-         * @param suggestion The {@link Suggestion} that was tapped
-         */
-        public void onSuggestionClicked(NetworkedAutoCompleteTextView textView,
-                        Suggestion suggestion);
-    }
-
-    /**
-     * Class representing a suggestion
-     * 
-     * @author Vinay S Shenoy
-     */
-    public static class Suggestion {
-
-        /**
-         * The suggestion id. Used for selecting the suggestion when an item
-         * from the drop down is tapped
-         */
-        public final String id;
-
-        /**
-         * The name of the suggestion. Used for displaying the title label
-         */
-        public final String name;
-
-        /**
-         * @param id The suggestion id
-         * @param name The suggestion name
-         */
-        public Suggestion(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
+        mSuggestionsAdapter.setSuggestionsMaster(mSuggestions);
     }
 
     /**
@@ -217,23 +190,24 @@ public class NetworkedAutoCompleteTextView extends
         @Override
         public void onTextChanged(CharSequence s, int start, int before,
                         int count) {
-            
-            final String newSearchSequence = s.toString();
-            if (!TextUtils.isEmpty(mLastSearchSequence)
-                            && newSearchSequence
-                                            .startsWith(mLastSearchSequence)) {
 
-                //Don't fetch new search results if the new search sequence starts with the older search sequence
-                return;
-            }
+            if (mSuggestionsEnabled) {
 
-            if (newSearchSequence.length() >= mSuggestCountThreshold) {
-                if (mPerformSearchRunnable != null) {
-                    mHandler.removeCallbacks(mPerformSearchRunnable);
+                final String newSearchSequence = s.toString();
+                if (!TextUtils.isEmpty(mLastSearchSequence)
+                                && newSearchSequence
+                                                .startsWith(mLastSearchSequence)) {
+
+                    //Don't fetch new search results if the new search sequence starts with the older search sequence
+                    return;
                 }
 
-                mPerformSearchRunnable = makeSearchRunnable(newSearchSequence);
-                mHandler.postDelayed(mPerformSearchRunnable, mSuggestWaitThreshold);
+                if (newSearchSequence.length() >= mSuggestCountThreshold) {
+                    removeAnyCallbacks();
+                    mPerformSearchRunnable = makeSearchRunnable(newSearchSequence);
+                    mHandler.postDelayed(mPerformSearchRunnable, mSuggestWaitThreshold);
+                }
+
             }
 
         }
@@ -243,6 +217,21 @@ public class NetworkedAutoCompleteTextView extends
 
         }
 
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        removeAnyCallbacks();
+    }
+
+    /**
+     * Removes any pending callbacks(if any) from the handler
+     */
+    private void removeAnyCallbacks() {
+        if (mPerformSearchRunnable != null) {
+            mHandler.removeCallbacks(mPerformSearchRunnable);
+        }
     }
 
     /**
