@@ -51,7 +51,7 @@ public class HttpConstants {
         public final String mUrl;
         public final String mChatUrl;
         public final int    mChatPort;
-        public final String mChatLink=":3000/api/v1";
+        public final String mChatLink = ":3000/api/v1";
 
         Server(final String url, final int apiVersion, final String chatUrl, final int chatPort) {
             mUrl = url + apiVersion;
@@ -69,9 +69,9 @@ public class HttpConstants {
     public static String getChatUrl() {
         return SERVER.mChatUrl;
     }
-    
+
     public static String getChangedChatUrl() {
-        return "http://"+SERVER.mChatUrl+SERVER.mChatLink;
+        return "http://" + SERVER.mChatUrl + SERVER.mChatLink;
     }
 
     public static int getChatPort() {
@@ -120,6 +120,7 @@ public class HttpConstants {
         public static final int TRIBUTE                     = 116;
         public static final int TEAM                        = 117;
         public static final int SEARCH_BOOKS_FROM_EDITTEXT  = 118;
+        public static final int BOOK_SUGGESTIONS            = 119;
     }
 
     public static final String ID                          = "id";
@@ -135,7 +136,7 @@ public class HttpConstants {
     public static final String PUBLICATION_YEAR            = "publication_year";
     public static final String PUBLICATION_MONTH           = "publication_month";
     public static final String IMAGE_URL                   = "image_url";
-    public static final String EXT_IMAGE_URL 			   = "ext_image_url";
+    public static final String EXT_IMAGE_URL               = "ext_image_url";
     public static final String SEARCH                      = "search";
     public static final String LATITUDE                    = "latitude";
     public static final String LONGITUDE                   = "longitude";

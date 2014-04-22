@@ -32,20 +32,21 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG                          = true;
+    public static final boolean DEBUG                            = true;
 
-    public static final String  FACEBOOK                       = "facebook";
-    public static final String  FBPERMISSIONS[]                = new String[] {
-            "email"  };
-    public static final String  GOOGLE                         = "google";
-    public static final String  MANUAL                         = "manual";
+    public static final String  FACEBOOK                         = "facebook";
+    public static final String  FBPERMISSIONS[]                  = new String[] {
+                                                                     "email"
+                                                                 };
+    public static final String  GOOGLE                           = "google";
+    public static final String  MANUAL                           = "manual";
 
-    public static final String  TIMESTAMP_FORMAT               = "yyyy-MM-dd'T'HH:mm:ssZ";
-    public static final String  CHAT_ID_FORMAT                 = "%s#%s";
-    public static final String  BARTER_TYPE_SEPARATOR          = ",";
+    public static final String  TIMESTAMP_FORMAT                 = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String  CHAT_ID_FORMAT                   = "%s#%s";
+    public static final String  BARTER_TYPE_SEPARATOR            = ",";
 
-    public static final String  ACTION_SHOW_ALL_CHATS          = "li.barter.ACTION_SHOW_ALL_CHATS";
-    public static final String  ACTION_SHOW_CHAT_DETAIL        = "li.barter.ACTION_SHOW_CHAT_DETAIL";
+    public static final String  ACTION_SHOW_ALL_CHATS            = "li.barter.ACTION_SHOW_ALL_CHATS";
+    public static final String  ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
 
     /*
      * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :
@@ -54,13 +55,13 @@ public class AppConstants {
      * scrolls DEFAULT_LOAD_BEFORE_COUNT : This is to be subtracted value from
      * the List Count so as to prevent loading lag on scrolling fast
      */
-    public static final int     DEFAULT_PERPAGE_LIMIT         		 	= 10;
-    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL 			= 10;
-    public static final int     DEFAULT_LOAD_BEFORE_COUNT      			= 1;
-    public static final int     DEFAULT_PERPAGE_LIMIT_FOR_SEARCH		= 20;
+    public static final int     DEFAULT_PERPAGE_LIMIT            = 10;
+    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL   = 10;
+    public static final int     DEFAULT_LOAD_BEFORE_COUNT        = 1;
+    public static final int     DEFAULT_PERPAGE_LIMIT_FOR_SEARCH = 20;
 
     // Default Book Image url we getting from the server when there is no image
-    public static final String  DEFAULT_BOOKIMAGE_URL          = "1_default.png";
+    public static final String  DEFAULT_BOOKIMAGE_URL            = "1_default.png";
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -257,12 +258,13 @@ public class AppConstants {
         public static final String URL_TO_LOAD                = "url_to_load";
         public static final String LOCATION                   = "location";
         public static final String SEARCH_RADIUS              = "search_radius";
-        public static final String SEARCH              		  = "search";
+        public static final String SEARCH                     = "search";
         public static final String LAST_FETCHED_LOCATION      = "last_fetched_location";
         public static final String LAST_FETCHED_SEARCH_RADIUS = "last_fetched_search_radius";
         public static final String FIRST_LOAD                 = "first_load";
         public static final String EDIT_MODE                  = "edit_mode";
         public static final String LAST_FETCHED_PAGENUMBER    = "last_fetched_pagenumber";
+        public static final String BOOK_SUGGESTIONS           = "book_suggestions";
 
     }
 
@@ -326,11 +328,11 @@ public class AppConstants {
      */
     public static interface Loaders {
 
-        public static final int SEARCH_BOOKS = 201;
-        public static final int GET_MY_BOOKS = 202;
-        public static final int ALL_CHATS    = 203;
-        public static final int CHAT_DETAILS = 204;
-        public static final int USER_DETAILS = 205;
+        public static final int SEARCH_BOOKS               = 201;
+        public static final int GET_MY_BOOKS               = 202;
+        public static final int ALL_CHATS                  = 203;
+        public static final int CHAT_DETAILS               = 204;
+        public static final int USER_DETAILS               = 205;
         public static final int SEARCH_BOOKS_FROM_EDITTEXT = 206;
     }
 
@@ -342,24 +344,24 @@ public class AppConstants {
     public static interface QueryTokens {
 
         // 1-100 for load queries
-        public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK  = 1;
-        public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 2;
-        public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 3;
-        public static final int LOAD_BOOK_DETAIL_CURRENT_USER        = 4;
-        public static final int LOAD_BOOK_DETAIL_OTHER_USER          = 5;
+        public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK       = 1;
+        public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE      = 2;
+        public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE      = 3;
+        public static final int LOAD_BOOK_DETAIL_CURRENT_USER             = 4;
+        public static final int LOAD_BOOK_DETAIL_OTHER_USER               = 5;
 
         // 101-200 for insert queries
-        public static final int INSERT_CHAT_MESSAGE                  = 101;
-        public static final int INSERT_CHAT                          = 102;
-        public static final int INSERT_USER_FOR_CHAT                 = 103;
+        public static final int INSERT_CHAT_MESSAGE                       = 101;
+        public static final int INSERT_CHAT                               = 102;
+        public static final int INSERT_USER_FOR_CHAT                      = 103;
 
         // 201-300 for update queries
-        public static final int UPDATE_CHAT                          = 201;
-        public static final int UPDATE_USER_FOR_CHAT                 = 202;
+        public static final int UPDATE_CHAT                               = 201;
+        public static final int UPDATE_USER_FOR_CHAT                      = 202;
 
         //301-400 for delete queries
-        public static final int DELETE_BOOKS_SEARCH_RESULTS          = 301;
-        public static final int DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT          = 302;
+        public static final int DELETE_BOOKS_SEARCH_RESULTS               = 301;
+        public static final int DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT = 302;
     }
 
     /**

@@ -30,6 +30,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Binder;
@@ -159,6 +162,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     private NotificationManager    mNotificationManager;
 
+    private Uri                    mNotificationSoundUri;
+
     /**
      * Holds the number of unread received messages
      */
@@ -173,6 +178,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     private Runnable               mConnectRunnable;
 
+    /**
+     * Id of the user with whom the user is currently chatting.
+     */
+    private String                 mCurrentChattingUserId;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -186,6 +196,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
         mNotificationBuilder = new Builder(this);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationSoundUri = RingtoneManager
+                        .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         mUnreadMessageCount = 0;
         mCurrentConnectMultiplier = 0;
         mHandler = new Handler();
@@ -195,13 +207,26 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     private void testNotifications() {
         showChatReceivedNotification("Some crap1", "jsdjksncjdn", "Vinay S Shenoy", "I WANTZ THAT BOOKZ!!!");
-        new Handler().postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
                 showChatReceivedNotification("Some crap2", "janckjdnc", "Some random idiot", "FUUUUUUUUUUU....");
             }
         }, 5000);
+    }
+
+    /**
+     * Sets the id of the user the current chat is being done with. Set this to
+     * the user id when the chat detail screen opens, and clear it when the
+     * screen is paused. It is used to hide notifications when the chat message
+     * received is from the user currently being chatted with
+     * 
+     * @param currentChattingUserId The id of the current user being chatted
+     *            with
+     */
+    public void setCurrentChattingUserId(final String currentChattingUserId) {
+        mCurrentChattingUserId = currentChattingUserId;
     }
 
     /**
@@ -427,6 +452,15 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 parseAndStoreChatUserInfo(receiverId, receiverObject);
             } else {
                 final String senderName = parseAndStoreChatUserInfo(senderId, senderObject);
+                if (mCurrentChattingUserId != null
+                                && mCurrentChattingUserId.equals(senderId)) {
+
+                    /*
+                     * Don't show notification if the user is currently chatting
+                     * with this same user
+                     */
+                    return;
+                }
                 showChatReceivedNotification(chatId, senderId, senderName, messageText);
             }
 
@@ -780,6 +814,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             resultIntent.setAction(AppConstants.ACTION_SHOW_ALL_CHATS);
         }
 
+        mNotificationBuilder.setSound(mNotificationSoundUri);
         final TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
         taskStackBuilder.addNextIntent(resultIntent);
         final PendingIntent pendingIntent = taskStackBuilder
@@ -803,7 +838,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     @Override
     public void onDisconnect(boolean manual) {
-        if(!manual) {
+        if (!manual) {
             connectChatService();
         }
     }

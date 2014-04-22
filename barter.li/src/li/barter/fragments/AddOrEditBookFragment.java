@@ -17,6 +17,7 @@
 package li.barter.fragments;
 
 import com.android.volley.Request.Method;
+import com.google.android.gms.internal.fe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +52,7 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.models.BookSuggestion;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -58,13 +60,13 @@ import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
+import li.barter.widgets.autocomplete.INetworkSuggestCallbacks;
 import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView;
-import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView.NetworkSuggestCallbacks;
-import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView.Suggestion;
+import li.barter.widgets.autocomplete.Suggestion;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-                OnClickListener, AsyncDbQueryCallback, NetworkSuggestCallbacks {
+                OnClickListener, AsyncDbQueryCallback, INetworkSuggestCallbacks {
 
     private static final String           TAG = "AddOrEditBookFragment";
 
@@ -444,37 +446,76 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     final IBlRequestContract request,
                     final ResponseInfo response) {
 
-        if (requestId == RequestId.GET_BOOK_INFO) {
+        switch (requestId) {
+            case RequestId.GET_BOOK_INFO: {
+                mTitleEditText.setText(response.responseBundle
+                                .getString(HttpConstants.TITLE));
+                mDescriptionEditText.setText(response.responseBundle
+                                .getString(HttpConstants.DESCRIPTION));
+                mAuthorEditText.setText(response.responseBundle
+                                .getString(HttpConstants.AUTHOR));
+                mPublicationYear = response.responseBundle
+                                .getString(HttpConstants.PUBLICATION_YEAR);
 
-            mTitleEditText.setText(response.responseBundle
-                            .getString(HttpConstants.TITLE));
-            mDescriptionEditText.setText(response.responseBundle
-                            .getString(HttpConstants.DESCRIPTION));
-            mAuthorEditText.setText(response.responseBundle
-                            .getString(HttpConstants.AUTHOR));
-            mPublicationYear = response.responseBundle
-                            .getString(HttpConstants.PUBLICATION_YEAR);
+                mImage_Url = response.responseBundle
+                                .getString(HttpConstants.IMAGE_URL);
 
-            mImage_Url = response.responseBundle
-                            .getString(HttpConstants.IMAGE_URL);
+                Logger.d(TAG, "image url %s", mImage_Url);
+                break;
+            }
 
-            Logger.d(TAG, "image url %s", mImage_Url);
-        } else if (requestId == RequestId.CREATE_BOOK) {
-            Logger.v(TAG, "Created Book Id %s", response.responseBundle
-                            .getString(HttpConstants.ID_BOOK));
+            case RequestId.CREATE_BOOK: {
+                Logger.v(TAG, "Created Book Id %s", response.responseBundle
+                                .getString(HttpConstants.ID_BOOK));
 
-            final String bookId = response.responseBundle
-                            .getString(HttpConstants.ID_BOOK);
+                final String bookId = response.responseBundle
+                                .getString(HttpConstants.ID_BOOK);
 
-            final Bundle showBooksArgs = new Bundle(6);
-            showBooksArgs.putString(Keys.BOOK_ID, bookId);
-            showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-            showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
-            loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), BookDetailFragment.class
-                                            .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
+                final Bundle showBooksArgs = new Bundle(6);
+                showBooksArgs.putString(Keys.BOOK_ID, bookId);
+                showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+                showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), BookDetailFragment.class
+                                                .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
+                break;
+            }
+
+            case RequestId.BOOK_SUGGESTIONS: {
+
+                //TODO Read book suggestions and update autocomplete text
+                final BookSuggestion[] fetchedSuggestions = (BookSuggestion[]) response.responseBundle
+                                .getParcelableArray(Keys.BOOK_SUGGESTIONS);
+                final Suggestion[] suggestions = makeSuggestionArrayFromBookSuggestions(fetchedSuggestions);
+                mTitleEditText.onSuggestionsFetched((String) request
+                                .getExtras().get(Keys.SEARCH), suggestions, true);
+                break;
+            }
         }
 
+    }
+
+    /**
+     * Converts the fetched {@link BookSuggestion} objects to an array of
+     * {@link Suggestion} objects
+     * 
+     * @param fetchedSuggestions The array of {@link BookSuggestion}s fetched
+     * @return An array of {@link Suggestion} objects
+     */
+    private Suggestion[] makeSuggestionArrayFromBookSuggestions(
+                    BookSuggestion[] fetchedSuggestions) {
+
+        if (fetchedSuggestions == null || fetchedSuggestions.length == 0) {
+            return null;
+        }
+
+        final Suggestion[] suggestions = new Suggestion[fetchedSuggestions.length];
+        BookSuggestion bookSuggestion = null;
+        for (int i = 0; i < fetchedSuggestions.length; i++) {
+            bookSuggestion = fetchedSuggestions[i];
+            suggestions[i] = new Suggestion(bookSuggestion.id, bookSuggestion.name);
+        }
+        return suggestions;
     }
 
     @Override
@@ -559,6 +600,17 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "Perform network query %s", query);
+
+            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.BOOK_SUGGESTIONS, null, mVolleyCallbacks);
+            request.setRequestId(RequestId.BOOK_SUGGESTIONS);
+
+            final Map<String, String> params = new HashMap<String, String>(1);
+            //TODO params.put(key, value);
+            request.setParams(params);
+            request.setTag(getVolleyTag());
+            request.addExtra(Keys.SEARCH, query);
+            mVolleyCallbacks.queue(request);
         }
     }
 
