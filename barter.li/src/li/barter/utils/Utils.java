@@ -30,7 +30,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 
 import java.io.File;

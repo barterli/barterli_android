@@ -299,7 +299,7 @@ public class PhotoUtils {
     }
     
     private static Bitmap compressManageAspect(int height, int width, Bitmap originalImage){
-        Bitmap compressedBitmap = Bitmap.createBitmap((int)width, (int)height, Config.ARGB_8888);
+        Bitmap compressedBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
         float originalWidth = originalImage.getWidth(), originalHeight = originalImage.getHeight();
         Canvas canvas = new Canvas(compressedBitmap);
         float scale = width/originalWidth;

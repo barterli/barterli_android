@@ -249,7 +249,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                                 + ", "
                                 + cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.ADDRESS));
-
+                
                 mPreferredLocationTextView.setText(mPrefAddressName);
             }
 
