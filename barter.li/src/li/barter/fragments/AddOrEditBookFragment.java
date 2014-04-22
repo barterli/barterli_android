@@ -95,6 +95,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
+        
+        setActionBarTitle(R.string.editbook_title);
         final View view = inflater
                         .inflate(R.layout.fragment_add_or_edit_book, container, false);
         initViews(view);

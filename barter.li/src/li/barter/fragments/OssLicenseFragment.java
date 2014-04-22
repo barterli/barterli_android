@@ -50,6 +50,7 @@ public class OssLicenseFragment extends AbstractBarterLiFragment {
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
+        setActionBarTitle(R.string.Opensource_fragment_title);
         mListView = (ListView) inflater
                         .inflate(R.layout.fragment_oss_licenses, container, false);
         mLicensesAdapter = new OssLicensesAdapter(getActivity(), R.array.oss_titles);

@@ -57,6 +57,7 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         setActionBarDrawerToggleEnabled(false);
+        setActionBarTitle(R.string.Collaborate_fragment_title);
         final View view = inflater
                         .inflate(R.layout.fragment_collaborate_with_us, null);
         mAboutMeTextView = (EditText) view.findViewById(R.id.text_about_me);
