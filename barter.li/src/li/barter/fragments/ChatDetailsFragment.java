@@ -185,6 +185,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onDetach() {
         if (mBoundToChatService) {
+            mChatService.setCurrentChattingUserId(null);
             getActivity().unbindService(this);
         }
         super.onDetach();
@@ -217,6 +218,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
         mBoundToChatService = true;
         mChatService = ((ChatServiceBinder) service).getService();
+        mChatService.setCurrentChattingUserId(mWithUserId);
     }
 
     @Override
