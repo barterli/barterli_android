@@ -266,23 +266,23 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 break;
             }
 
-//            //Suggest Feature
-//            case 2: {
-//                if ((masterFragment != null)
-//                                && (masterFragment instanceof SuggestFeatureFragment)) {
-//                    return null;
-//                }
-//
-//                runnable = new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-//                                        .instantiate(AbstractBarterLiActivity.this, SuggestFeatureFragment.class
-//                                                        .getName(), null), FragmentTags.SUGGEST_FEATURE, true, null);
-//                    }
-//                };
-//                break;
-//            }
+            //            //Suggest Feature
+            //            case 2: {
+            //                if ((masterFragment != null)
+            //                                && (masterFragment instanceof SuggestFeatureFragment)) {
+            //                    return null;
+            //                }
+            //
+            //                runnable = new Runnable() {
+            //                    @Override
+            //                    public void run() {
+            //                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+            //                                        .instantiate(AbstractBarterLiActivity.this, SuggestFeatureFragment.class
+            //                                                        .getName(), null), FragmentTags.SUGGEST_FEATURE, true, null);
+            //                    }
+            //                };
+            //                break;
+            //            }
 
             //Report Bug
             case 2: {
@@ -334,30 +334,30 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //About us
             case 5: {
-            	
-//                final Bundle showWebViewArgs = new Bundle();
-//                showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
-//                                .getString(R.string.url_me));
-//                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-//                                .instantiate(this, ShowWebViewFragment.class
-//                                                .getName(), showWebViewArgs), FragmentTags.SHOW_WEBVIEW, true, null);
-//                break;
-            	
+
+                //                final Bundle showWebViewArgs = new Bundle();
+                //                showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
+                //                                .getString(R.string.url_me));
+                //                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                //                                .instantiate(this, ShowWebViewFragment.class
+                //                                                .getName(), showWebViewArgs), FragmentTags.SHOW_WEBVIEW, true, null);
+                //                break;
+
                 if ((masterFragment != null)
-                        && (masterFragment instanceof TeamFragment)) {
-            return null;
-        }
+                                && (masterFragment instanceof TeamFragment)) {
+                    return null;
+                }
 
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(AbstractBarterLiActivity.this, TeamFragment.class
-                                                .getName(), null), FragmentTags.TEAM, true, null);
-            }
-        };
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                        .instantiate(AbstractBarterLiActivity.this, TeamFragment.class
+                                                        .getName(), null), FragmentTags.TEAM, true, null);
+                    }
+                };
 
-        break;
+                break;
             }
 
             //Tribute
@@ -660,7 +660,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
         if (mNavListView == null) {
             throw new IllegalArgumentException("Drawer content not found. Check the layout/resource id being sent");
         }
-        
+
         mHasNavigationDrawer = true;
 
         if (attachToActionBar) {
@@ -671,8 +671,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                     super.onDrawerOpened(drawerView);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     invalidateOptionsMenu();
-                  
-                    
+
                 }
 
                 @Override
@@ -680,7 +679,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                     super.onDrawerClosed(drawerView);
                     mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     invalidateOptionsMenu();
-                 
+
                 }
 
             };
