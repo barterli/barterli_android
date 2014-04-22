@@ -30,6 +30,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Binder;
@@ -159,6 +162,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     private NotificationManager    mNotificationManager;
 
+    private Uri                    mNotificationSoundUri;
+
     /**
      * Holds the number of unread received messages
      */
@@ -186,6 +191,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
         mNotificationBuilder = new Builder(this);
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         mUnreadMessageCount = 0;
         mCurrentConnectMultiplier = 0;
         mHandler = new Handler();
@@ -195,7 +201,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     private void testNotifications() {
         showChatReceivedNotification("Some crap1", "jsdjksncjdn", "Vinay S Shenoy", "I WANTZ THAT BOOKZ!!!");
-        new Handler().postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
 
             @Override
             public void run() {
@@ -780,6 +786,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             resultIntent.setAction(AppConstants.ACTION_SHOW_ALL_CHATS);
         }
 
+        mNotificationBuilder.setSound(mNotificationSoundUri);
         final TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
         taskStackBuilder.addNextIntent(resultIntent);
         final PendingIntent pendingIntent = taskStackBuilder
@@ -803,7 +810,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     @Override
     public void onDisconnect(boolean manual) {
-        if(!manual) {
+        if (!manual) {
             connectChatService();
         }
     }
