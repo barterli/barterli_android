@@ -17,6 +17,7 @@
 package li.barter.fragments;
 
 import com.android.volley.Request.Method;
+import com.google.android.gms.internal.fe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +52,7 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.models.BookSuggestion;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -480,10 +482,38 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             case RequestId.BOOK_SUGGESTIONS: {
 
                 //TODO Read book suggestions and update autocomplete text
+                final BookSuggestion[] fetchedSuggestions = (BookSuggestion[]) response.responseBundle
+                                .getParcelableArray(Keys.BOOK_SUGGESTIONS);
+                final Suggestion[] suggestions = makeSuggestionArrayFromBookSuggestions(fetchedSuggestions);
+                mTitleEditText.onSuggestionsFetched((String) request
+                                .getExtras().get(Keys.SEARCH), suggestions, true);
                 break;
             }
         }
 
+    }
+
+    /**
+     * Converts the fetched {@link BookSuggestion} objects to an array of
+     * {@link Suggestion} objects
+     * 
+     * @param fetchedSuggestions The array of {@link BookSuggestion}s fetched
+     * @return An array of {@link Suggestion} objects
+     */
+    private Suggestion[] makeSuggestionArrayFromBookSuggestions(
+                    BookSuggestion[] fetchedSuggestions) {
+
+        if (fetchedSuggestions == null || fetchedSuggestions.length == 0) {
+            return null;
+        }
+
+        final Suggestion[] suggestions = new Suggestion[fetchedSuggestions.length];
+        BookSuggestion bookSuggestion = null;
+        for (int i = 0; i < fetchedSuggestions.length; i++) {
+            bookSuggestion = fetchedSuggestions[i];
+            suggestions[i] = new Suggestion(bookSuggestion.id, bookSuggestion.name);
+        }
+        return suggestions;
     }
 
     @Override
