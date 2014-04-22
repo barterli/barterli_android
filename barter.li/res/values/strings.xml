@@ -31,7 +31,9 @@
       <string name="Tribute_fragment_title">Tribute</string>
     
     
-    
+    <!-- crouton info strings -->
+    <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>
+    <string name="crouton_prefferedlocation_message">Please Select Your Book Exchange Point Where You Would Like To Deal</string>
     
 
     <!-- menu strings -->

@@ -227,6 +227,40 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
             showCrouton(getString(messageResId), style);
         }
     }
+    
+    /**
+     * Display an alert, with a string message infinitely
+     * 
+     * @param messageResId The message to display
+     * @param style The {@link AlertStyle} of message to display
+     */
+    public void showInfiniteCrouton(final int messageResId, final AlertStyle style) {
+        if (mIsAttached) {
+        	showInfiniteCrouton(getString(messageResId), style);
+        }
+    }
+    
+    
+    public void cancelAllCroutons()
+    {
+    	  if (mIsAttached) {
+              ((AbstractBarterLiActivity) getActivity())
+                              .cancelAllCroutons();
+          }
+    }
+    /**
+     * Display an alert, with a string message infinitely
+     * 
+     * @param message The message to display
+     * @param style The {@link AlertStyle} of message to display
+     */
+    public void showInfiniteCrouton(final String message, final AlertStyle style) {
+        if (mIsAttached) {
+            ((AbstractBarterLiActivity) getActivity())
+                            .showInfiniteCrouton(message, style);
+        }
+    }
+
 
     /**
      * Whether this Fragment is currently attached to an Activity

@@ -28,7 +28,6 @@ import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnim
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -674,6 +673,8 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
     public void onDrawerClosed(final View drawerView) {
     	
     	//it makes the keyboard hide when drawer closed
+    	
+    	showInfiniteCrouton(R.string.crouton_map_message, AlertStyle.INFO);
     	InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
   		      Context.INPUT_METHOD_SERVICE);
   		imm.hideSoftInputFromWindow(mBooksAroundMeAutoCompleteTextView.getWindowToken(), 0);
@@ -683,6 +684,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
     public void onDrawerOpened(final View drawerView) {
     
         if (drawerView == mBooksDrawerView) {
+        	cancelAllCroutons();
             final int searchRadius = Math.round(Utils
                             .getShortestRadiusFromCenter(mMapView) / 1000);
             final Location center = Utils.getCenterLocationOfMap(getMap());

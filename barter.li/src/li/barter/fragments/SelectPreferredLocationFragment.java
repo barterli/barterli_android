@@ -118,7 +118,7 @@ OnMarkerDragListener,OnMarkerClickListener {
 				.inflate(R.layout.fragment_select_location, container, false);
 
 
-		showCrouton("Please Select Your Book Exchange Point Where You Would Like To Deal", AlertStyle.INFO);
+		showInfiniteCrouton(R.string.crouton_prefferedlocation_message, AlertStyle.INFO);
 
 
 		mMarkerHangoutMap = new HashMap<Marker, Hangout>();
@@ -214,6 +214,7 @@ OnMarkerDragListener,OnMarkerClickListener {
 	@Override
 	public void onPause() {
 		super.onPause();
+		cancelAllCroutons();
 		mMapView.onPause();
 	}
 
@@ -274,7 +275,7 @@ OnMarkerDragListener,OnMarkerClickListener {
 			 SharedPreferenceHelper
 			 .set(getActivity(), R.string.pref_location, response.responseBundle
 					 .getString(HttpConstants.ID_LOCATION));
-			 // onUpNavigate();
+			  onUpNavigate();
 		 }
 	 }
 

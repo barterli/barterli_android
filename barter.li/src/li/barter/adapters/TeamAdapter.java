@@ -27,7 +27,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import li.barter.R;
 import li.barter.models.Team;
-import li.barter.utils.Logger;
 
 /**
  * Adapter for displaying OSS Licenses

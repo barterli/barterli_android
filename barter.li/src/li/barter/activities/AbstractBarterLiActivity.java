@@ -20,7 +20,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
-
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -63,8 +62,6 @@ import li.barter.fragments.LoginFragment;
 import li.barter.fragments.OssLicenseFragment;
 import li.barter.fragments.ProfileFragment;
 import li.barter.fragments.ReportBugFragment;
-import li.barter.fragments.ShowWebViewFragment;
-import li.barter.fragments.SuggestFeatureFragment;
 import li.barter.fragments.TeamFragment;
 import li.barter.fragments.TributeFragment;
 import li.barter.http.IBlRequestContract;
@@ -575,6 +572,35 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      */
     public void showCrouton(final int messageResId, final AlertStyle style) {
         showCrouton(getString(messageResId), style);
+    }
+    
+    /**
+     * Display an alert, with a string message with infinite time
+     * 
+     * @param message The message to display
+     * @param style The {@link AlertStyle} of message to display
+     */
+    public void showInfiniteCrouton(final String message, final AlertStyle style) {
+        Crouton.make(this, getCroutonViewForStyle(this, message, style)).setConfiguration(new de.keyboardsurfer.android.widget.crouton.Configuration.Builder().
+	    		setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE).build()).show();
+
+    }
+
+    /**
+     * Display an alert, with a string message with infinite time
+     * 
+     * @param messageResId The message to display
+     * @param style The {@link AlertStyle} of message to display
+     */
+    public void showInfiniteCrouton(final int messageResId, final AlertStyle style) {
+    	showInfiniteCrouton(getString(messageResId), style);
+    }
+    /**
+     * Cancels all queued {@link Crouton}s. If there is a {@link Crouton}
+     * displayed currently, it will be the last one displayed.
+     */
+    public  void cancelAllCroutons() {
+        Crouton.cancelAllCroutons();
     }
 
     /**
