@@ -93,7 +93,7 @@ public class TeamAdapter extends BaseAdapter {
                         .getDescription());
        
        
-        Picasso.with(mContext).load("http://"+teamMember.getImageUrl()).fit()
+        Picasso.with(mContext).load(teamMember.getImageUrl()).fit()
                         .error(R.drawable.pic_avatar)
                         .into(((ImageView) view.getTag(R.id.team_image)));
         
