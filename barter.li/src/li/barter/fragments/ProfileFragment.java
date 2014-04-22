@@ -101,6 +101,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         final View view = inflater
                         .inflate(R.layout.fragment_profile_show, null);
 
+        setActionBarTitle(R.string.profilepage_title);
+        
         mProfileNameTextView = (TextView) view
                         .findViewById(R.id.text_profile_name);
         mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
@@ -143,8 +145,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                         .getString(getActivity(), R.string.pref_profile_image);
         
     }
+            
+            //append "?type=large" for getting large clear image for the profile
       	 Picasso.with(getActivity())
-          .load(mProfileImageUrl)
+          .load(mProfileImageUrl+"?type=large")
           .fit().error(R.drawable.pic_avatar)
           .into(mProfileImageView);
       	 

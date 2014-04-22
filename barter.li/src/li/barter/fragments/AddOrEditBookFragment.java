@@ -80,6 +80,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private boolean             mHasFetchedDetails;
     private boolean             mEditMode;
     private String              mBookId;
+    private String              mImage_Url;
+    private String              mPublicationYear;
 
     /**
      * On resume, if <code>true</code> and the user has logged in, immediately
@@ -208,6 +210,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         final String title = args.getString(Keys.BOOK_TITLE);
         final String author = args.getString(Keys.AUTHOR);
         final String description = args.getString(Keys.DESCRIPTION);
+       
         final List<String> barterTypes = args
                         .getStringArrayList(Keys.BARTER_TYPES);
 
@@ -215,7 +218,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mTitleEditText.setText(title);
         mAuthorEditText.setText(author);
         mDescriptionEditText.setText(description);
-
+       
         setCheckBoxesForBarterTypes(barterTypes);
 
     }
@@ -282,6 +285,11 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                             .toString());
             bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
                             .getText().toString());
+            
+            
+            bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYear);
+//            bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
+//                    .getText().toString());
             if (mIsbnEditText.getText().toString().length() == 13) {
                 bookJson.put(HttpConstants.ISBN_13, mIsbnEditText.getText()
                                 .toString());
@@ -290,6 +298,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                                 .toString());
             }
             bookJson.put(HttpConstants.TAG_NAMES, getBarterTagsArray());
+            bookJson.put(HttpConstants.EXT_IMAGE_URL, mImage_Url);
+            
             if (locationObject != null) {
                 bookJson.put(HttpConstants.LOCATION, locationObject);
             }
@@ -431,13 +441,23 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                             .getString(HttpConstants.DESCRIPTION));
             mAuthorEditText.setText(response.responseBundle
                             .getString(HttpConstants.AUTHOR));
+            mPublicationYear=response.responseBundle
+                    .getString(HttpConstants.PUBLICATION_YEAR);
+            
+            mImage_Url=response.responseBundle
+                    .getString(HttpConstants.IMAGE_URL);
+            
+            Logger.d(TAG, "image url %s", mImage_Url);
         } else if (requestId == RequestId.CREATE_BOOK) {
             Logger.v(TAG, "Created Book Id %s", response.responseBundle
                             .getString(HttpConstants.ID_BOOK));
 
             final String bookId = response.responseBundle
                             .getString(HttpConstants.ID_BOOK);
-            final Bundle showBooksArgs = new Bundle(3);
+            
+          
+            
+            final Bundle showBooksArgs = new Bundle(6);
             showBooksArgs.putString(Keys.BOOK_ID, bookId);
             showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
             showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());

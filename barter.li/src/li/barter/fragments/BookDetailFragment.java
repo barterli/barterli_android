@@ -16,9 +16,13 @@
 
 package li.barter.fragments;
 
+
+import com.squareup.picasso.Picasso;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,8 +34,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import li.barter.R;
 import li.barter.chat.ChatService;
 import li.barter.data.DBInterface;
@@ -43,6 +47,7 @@ import li.barter.data.TableSearchBooks;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
+import li.barter.utils.Logger;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -59,6 +64,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private TextView            mTitleTextView;
     private TextView            mAuthorTextView;
     private TextView            mDescriptionTextView;
+    private ImageView		    mBookImageView;
     private TextView            mPublicationDateTextView;
     private CheckBox            mBarterCheckBox;
     private CheckBox            mReadCheckBox;
@@ -143,6 +149,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mIsbnTextView = (TextView) view.findViewById(R.id.text_isbn);
         mTitleTextView = (TextView) view.findViewById(R.id.text_title);
         mAuthorTextView = (TextView) view.findViewById(R.id.text_author);
+        mBookImageView = (ImageView) view.findViewById(R.id.book_avatar);
         mDescriptionTextView = (TextView) view
                         .findViewById(R.id.text_description);
         mPublicationDateTextView = (TextView) view
@@ -283,11 +290,21 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                                 .getColumnIndex(DatabaseColumns.TITLE)));
                 mAuthorTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.AUTHOR)));
-                mDescriptionTextView.setText(cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.DESCRIPTION)));
+                mDescriptionTextView.setText(Html.fromHtml(cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.DESCRIPTION))));
                 mPublicationDateTextView
                                 .setText(cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR)));
+                
+                Logger.d(TAG, cursor.getString(cursor
+                        .getColumnIndex(DatabaseColumns.IMAGE_URL)), "book image");
+                
+               // Picasso.with(getActivity()).setDebugging(true);
+                Picasso.with(getActivity())
+                .load(cursor.getString(cursor
+                        .getColumnIndex(DatabaseColumns.IMAGE_URL)))
+                .fit()
+                .into(mBookImageView);
 
                 final String barterType = cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.BARTER_TYPE));

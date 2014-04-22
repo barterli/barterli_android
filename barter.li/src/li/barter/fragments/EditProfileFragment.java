@@ -158,7 +158,7 @@ OnClickListener, AsyncDbQueryCallback {
 
 				}
 				Picasso.with(getActivity())
-				.load(mProfileImageUrl)
+				.load(mProfileImageUrl+"?type=large")
 				.fit().error(R.drawable.pic_avatar)
 				.into(mProfileImageView);
 

@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,8 +62,8 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.TITLE)));
         ((TextView) view.getTag(R.id.text_book_desc))
-                        .setText(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.DESCRIPTION)));
+                        .setText(Html.fromHtml(cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.DESCRIPTION))));
 
         ((TextView) view.getTag(R.id.text_book_location))
                         .setText(String.format(mLocationFormat, cursor.getString(cursor

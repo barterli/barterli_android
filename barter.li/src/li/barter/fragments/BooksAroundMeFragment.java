@@ -208,7 +208,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         mMapView.onCreate(savedInstanceState);
         mDrawerLayout = (FullWidthDrawerLayout) contentView
                         .findViewById(R.id.drawer_layout);
-        mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+        
 
         mBooksDrawerView = contentView
                         .findViewById(R.id.layout_books_container);
@@ -827,9 +827,10 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
         cookie.putInt(Keys.SEARCH_RADIUS, mPrevSearchRadius);
         //   Delete the current search results before parsing the old ones
-        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT, cookie, TableSearchBooks.NAME, null, null, true, BooksAroundMeFragment.this);
-		 
         mBookName=mBooksAroundMeAutoCompleteTextView.getText().toString();
+       
+        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT, cookie, TableSearchBooks.NAME, null, null, true, BooksAroundMeFragment.this);
+        
 		
 	}
 
