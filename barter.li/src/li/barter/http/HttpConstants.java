@@ -135,6 +135,7 @@ public class HttpConstants {
     public static final String PUBLICATION_YEAR            = "publication_year";
     public static final String PUBLICATION_MONTH           = "publication_month";
     public static final String IMAGE_URL                   = "image_url";
+    public static final String EXT_IMAGE_URL 			   = "ext_image_url";
     public static final String SEARCH                      = "search";
     public static final String LATITUDE                    = "latitude";
     public static final String LONGITUDE                   = "longitude";

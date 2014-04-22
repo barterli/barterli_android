@@ -25,7 +25,7 @@
         android:id="@+id/frame_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent" />
+        android:background="@color/global_bg" />
 
     <ListView
         android:id="@+id/list_nav_drawer"
@@ -33,6 +33,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@color/global_bg"
-        android:cacheColorHint="@color/transparent" />
+        android:cacheColorHint="@color/global_bg" />
 
 </android.support.v4.widget.DrawerLayout>

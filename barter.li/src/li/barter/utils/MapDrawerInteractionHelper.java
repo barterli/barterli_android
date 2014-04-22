@@ -276,9 +276,9 @@ public class MapDrawerInteractionHelper implements DrawerListener,
         if (drawerView == mDrawerView) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mDrawerView.setBackground(mTransparentColorDrawable);
+               // mDrawerView.setBackground(mTransparentColorDrawable);
             } else {
-                mDrawerView.setBackgroundDrawable(mTransparentColorDrawable);
+               // mDrawerView.setBackgroundDrawable(mTransparentColorDrawable);
             }
         }
 
@@ -482,9 +482,9 @@ public class MapDrawerInteractionHelper implements DrawerListener,
         transitionDrawable.setCrossFadeEnabled(true);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            mDrawerView.setBackground(transitionDrawable);
+          //  mDrawerView.setBackground(transitionDrawable);
         } else {
-            mDrawerView.setBackgroundDrawable(transitionDrawable);
+          //  mDrawerView.setBackgroundDrawable(transitionDrawable);
         }
 
         transitionDrawable.startTransition(TRANSITION_DURATION);

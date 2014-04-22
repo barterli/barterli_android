@@ -27,17 +27,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <com.android.volley.toolbox.NetworkImageView
-            android:id="@+id/book_avatar"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
-
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/book_avatar"
             android:layout_marginTop="@dimen/activity_margin"
             android:textColor="@color/black"
             android:textSize="@dimen/text_large"
@@ -232,6 +226,14 @@
                 android:text="@string/chat_with_owner"
                 app:fontStyle="alegreya_bold" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/book_avatar"
+           android:layout_width="@dimen/book_image_width"
+        android:layout_height="@dimen/book_height"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
 
 </ScrollView>

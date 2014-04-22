@@ -89,7 +89,7 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 
         
 
-		getActionBar().setTitle("Scan Barcode On Book");
+        setActionBarTitle(R.string.scanactivity_title);
 
         mDecoderActivityHandler = null;
         mHasSurface = false;
