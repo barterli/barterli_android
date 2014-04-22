@@ -58,28 +58,31 @@ import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
+import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView;
+import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView.NetworkSuggestCallbacks;
+import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView.Suggestion;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-                OnClickListener, AsyncDbQueryCallback {
+                OnClickListener, AsyncDbQueryCallback, NetworkSuggestCallbacks {
 
-    private static final String TAG = "AddOrEditBookFragment";
+    private static final String           TAG = "AddOrEditBookFragment";
 
-    private EditText            mIsbnEditText;
-    private EditText            mTitleEditText;
-    private EditText            mAuthorEditText;
-    private EditText            mDescriptionEditText;
-    private CheckBox            mBarterCheckBox;
-    private CheckBox            mReadCheckBox;
-    private CheckBox            mSellCheckBox;
-    private CheckBox            mWishlistCheckBox;
-    private CheckBox            mGiveAwayCheckBox;
-    private CheckBox            mKeepPrivateCheckBox;
-    private CheckBox[]          mBarterTypeCheckBoxes;
-    private String              mIsbnNumber;
-    private boolean             mHasFetchedDetails;
-    private boolean             mEditMode;
-    private String              mBookId;
+    private EditText                      mIsbnEditText;
+    private NetworkedAutoCompleteTextView mTitleEditText;
+    private EditText                      mAuthorEditText;
+    private EditText                      mDescriptionEditText;
+    private CheckBox                      mBarterCheckBox;
+    private CheckBox                      mReadCheckBox;
+    private CheckBox                      mSellCheckBox;
+    private CheckBox                      mWishlistCheckBox;
+    private CheckBox                      mGiveAwayCheckBox;
+    private CheckBox                      mKeepPrivateCheckBox;
+    private CheckBox[]                    mBarterTypeCheckBoxes;
+    private String                        mIsbnNumber;
+    private boolean                       mHasFetchedDetails;
+    private boolean                       mEditMode;
+    private String                        mBookId;
 
     /**
      * On resume, if <code>true</code> and the user has logged in, immediately
@@ -87,7 +90,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      * the case where tries to add a book without logging in and we move to the
      * login flow
      */
-    private boolean             mShouldSubmitOnResume;
+    private boolean                       mShouldSubmitOnResume;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -148,8 +151,15 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void initViews(final View view) {
         mIsbnEditText = (EditText) view.findViewById(R.id.edit_text_isbn);
-        mTitleEditText = (EditText) view.findViewById(R.id.edit_text_title);
+
+        mTitleEditText = (NetworkedAutoCompleteTextView) view
+                        .findViewById(R.id.edit_text_title);
+        mTitleEditText.setNetworkSuggestCallbacks(this);
+        mTitleEditText.setSuggestCountThreshold(3);
+        mTitleEditText.setSuggestWaitThreshold(400);
+
         mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
+
         mDescriptionEditText = (EditText) view
                         .findViewById(R.id.edit_text_description);
 
@@ -522,6 +532,21 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
     private boolean isNumeric(final String str) {
         return str.matches("\\d+");
+    }
+
+    @Override
+    public void performNetworkQuery(NetworkedAutoCompleteTextView textView,
+                    String query) {
+
+        if (textView.getId() == R.id.edit_text_title) {
+            Logger.v(TAG, "Perform network query %s", query);
+        }
+    }
+
+    @Override
+    public void onSuggestionClicked(NetworkedAutoCompleteTextView textView,
+                    Suggestion suggestion) {
+
     }
 
 }
