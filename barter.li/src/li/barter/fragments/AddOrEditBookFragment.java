@@ -442,35 +442,46 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     final IBlRequestContract request,
                     final ResponseInfo response) {
 
-        if (requestId == RequestId.GET_BOOK_INFO) {
+        switch (requestId) {
+            case RequestId.GET_BOOK_INFO: {
+                mTitleEditText.setText(response.responseBundle
+                                .getString(HttpConstants.TITLE));
+                mDescriptionEditText.setText(response.responseBundle
+                                .getString(HttpConstants.DESCRIPTION));
+                mAuthorEditText.setText(response.responseBundle
+                                .getString(HttpConstants.AUTHOR));
+                mPublicationYear = response.responseBundle
+                                .getString(HttpConstants.PUBLICATION_YEAR);
 
-            mTitleEditText.setText(response.responseBundle
-                            .getString(HttpConstants.TITLE));
-            mDescriptionEditText.setText(response.responseBundle
-                            .getString(HttpConstants.DESCRIPTION));
-            mAuthorEditText.setText(response.responseBundle
-                            .getString(HttpConstants.AUTHOR));
-            mPublicationYear = response.responseBundle
-                            .getString(HttpConstants.PUBLICATION_YEAR);
+                mImage_Url = response.responseBundle
+                                .getString(HttpConstants.IMAGE_URL);
 
-            mImage_Url = response.responseBundle
-                            .getString(HttpConstants.IMAGE_URL);
+                Logger.d(TAG, "image url %s", mImage_Url);
+                break;
+            }
 
-            Logger.d(TAG, "image url %s", mImage_Url);
-        } else if (requestId == RequestId.CREATE_BOOK) {
-            Logger.v(TAG, "Created Book Id %s", response.responseBundle
-                            .getString(HttpConstants.ID_BOOK));
+            case RequestId.CREATE_BOOK: {
+                Logger.v(TAG, "Created Book Id %s", response.responseBundle
+                                .getString(HttpConstants.ID_BOOK));
 
-            final String bookId = response.responseBundle
-                            .getString(HttpConstants.ID_BOOK);
+                final String bookId = response.responseBundle
+                                .getString(HttpConstants.ID_BOOK);
 
-            final Bundle showBooksArgs = new Bundle(6);
-            showBooksArgs.putString(Keys.BOOK_ID, bookId);
-            showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-            showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
-            loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), BookDetailFragment.class
-                                            .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
+                final Bundle showBooksArgs = new Bundle(6);
+                showBooksArgs.putString(Keys.BOOK_ID, bookId);
+                showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+                showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), BookDetailFragment.class
+                                                .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
+                break;
+            }
+
+            case RequestId.BOOK_SUGGESTIONS: {
+
+                //TODO Read book suggestions and update autocomplete text
+                break;
+            }
         }
 
     }
@@ -557,6 +568,17 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "Perform network query %s", query);
+
+            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.BOOK_SUGGESTIONS, null, mVolleyCallbacks);
+            request.setRequestId(RequestId.BOOK_SUGGESTIONS);
+
+            final Map<String, String> params = new HashMap<String, String>(1);
+            //TODO params.put(key, value);
+            request.setParams(params);
+            request.setTag(getVolleyTag());
+            request.addExtra(Keys.SEARCH, query);
+            mVolleyCallbacks.queue(request);
         }
     }
 
