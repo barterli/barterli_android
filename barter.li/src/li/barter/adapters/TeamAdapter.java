@@ -97,7 +97,7 @@ public class TeamAdapter extends BaseAdapter {
                         .error(R.drawable.pic_avatar)
                         .into(((ImageView) view.getTag(R.id.team_image)));
         
-        Logger.d(TAG, teamMember.getImageUrl(), "my team");
+       
       
         
         

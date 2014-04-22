@@ -512,15 +512,27 @@ public class HttpResponseParser {
      */
     private ResponseInfo parseGetBookInfoResponse(final String response)
                     throws JSONException {
+    	
+    	 Logger.d(TAG, "Request Id Test \nResponse %s",  response);
         final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject bookInfoObject = new JSONObject(response);
 
-        final Bundle responseBundle = new Bundle(3);
+        final Bundle responseBundle = new Bundle(6);
         responseBundle.putString(HttpConstants.TITLE, JsonUtils
                         .readString(bookInfoObject, HttpConstants.TITLE, false, false));
         responseBundle.putString(HttpConstants.DESCRIPTION, JsonUtils
                         .readString(bookInfoObject, HttpConstants.DESCRIPTION, false, false));
+        
+        responseBundle.putString(HttpConstants.PUBLICATION_YEAR, JsonUtils
+                .readString(bookInfoObject, HttpConstants.PUBLICATION_YEAR, false, false));
+        
+        responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
+                .readString(bookInfoObject, HttpConstants.IMAGE_URL, false, false));
+        
+        responseBundle.putString(HttpConstants.ISBN_13, JsonUtils
+                .readString(bookInfoObject, HttpConstants.ISBN_13, false, false));
+        
 
         final JSONObject authorsObject = JsonUtils
                         .readJSONObject(bookInfoObject, HttpConstants.AUTHORS, false, false);

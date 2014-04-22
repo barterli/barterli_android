@@ -20,6 +20,7 @@
     <string name="receiver_network">Network Change Receiver</string>
     <string name="action_settings">Settings</string>
     <string name="service_chat">Chat Service</string>
+    <string name="scanactivity_title">Scan Barcode On Book</string>
 
     <!-- menu strings -->
     <string name="signup">Sign Up</string>
@@ -101,7 +102,7 @@
         <item>My Profile</item>
         <item>Chats</item>
         <item>Report</item>
-        <item>join us @ barter.li</item>
+        <item>Collaborate</item>
         <item>Open Source</item>
         <item>About us</item>
         <item>Tribute</item>
@@ -140,12 +141,13 @@
     <string name="button_edit_preferred_location">Edit Preferred Location</string>
     <string name="text_default_current_location">Set your preferred Location</string>
     <string name="label_about_me">About Me</string>
-    <string name="label_current_location">Preferred Location</string>
+    <string name="label_current_location">Preferred Cafe For Book Exchange</string>
     <string name="text_edit_profile">Edit</string>
     <string name="text_save_profile">Save</string>
     <string name="hint_first_name">First Name</string>
     <string name="hint_last_name">Last Name</string>
     <string name="label_my_books">My Books</string>
+     <string name="profilepage_title">My Profile</string>
 
     <!-- Strings/URLs related to ShowWebViewFragment -->
     <string name="url_google">http://www.google.com</string>
