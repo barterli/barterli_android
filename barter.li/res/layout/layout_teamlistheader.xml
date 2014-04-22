@@ -9,6 +9,7 @@
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:src="@drawable/barterli_team_icon" />
@@ -20,11 +21,27 @@
      android:layout_alignParentLeft="true"
      android:layout_below="@+id/imageView1"
      android:layout_marginTop="18dp"
+     android:layout_marginBottom="18dp"
      android:gravity="center_horizontal"
      android:text="@string/about_barterli"
        android:textColor="@color/black"
         android:textSize="@dimen/text_medium"
         app:fontStyle="alegreya_regular"
+     />
+ 
+  <li.barter.widgets.TypefacedTextView
+     android:id="@+id/team_heading"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:layout_alignParentLeft="true"
+     android:layout_below="@+id/about_barterli"
+     android:layout_marginTop="18dp"
+     android:layout_marginBottom="18dp"
+     android:gravity="center_horizontal"
+     android:text="@string/team_heading"
+       android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="alegreya_bold"
      />
 
 </RelativeLayout>

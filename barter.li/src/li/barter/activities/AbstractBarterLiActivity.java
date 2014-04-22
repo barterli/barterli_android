@@ -534,10 +534,11 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * 
      * @param title The title to set for the Action Bar
      */
+    
     public final void setActionBarTitle(final String title) {
 
         final SpannableString s = new SpannableString(title);
-        s.setSpan(new TypefacedSpan(this, TypefaceCache.ALEGREYA_BLACK_ITALIC), 0, s
+        s.setSpan(new TypefacedSpan(this, TypefaceCache.ALEGREYA_BOLD), 0, s
                         .length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance

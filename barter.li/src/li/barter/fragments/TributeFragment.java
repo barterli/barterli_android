@@ -52,6 +52,7 @@ public class TributeFragment extends AbstractBarterLiFragment {
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         setHasOptionsMenu(true);
+        setActionBarTitle(R.string.Tribute_fragment_title);
         final View view = inflater.inflate(R.layout.fragment_tribute, null);
 
         mTributeTextView = (TextView) view.findViewById(R.id.tribute_text);

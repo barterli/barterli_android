@@ -61,6 +61,7 @@ public class TeamFragment extends AbstractBarterLiFragment {
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, final Bundle savedInstanceState) {
 		init(container);
+		 setActionBarTitle(R.string.Aboutus_fragment_title);
 		mListView = (ListView) inflater
 				.inflate(R.layout.fragment_team, container, false);
 

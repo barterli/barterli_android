@@ -18,9 +18,21 @@
 
     <string name="app_name">barter.li</string>
     <string name="receiver_network">Network Change Receiver</string>
+    <string name="team_heading">Team Members</string>
     <string name="action_settings">Settings</string>
     <string name="service_chat">Chat Service</string>
     <string name="scanactivity_title">Scan Barcode On Book</string>
+    <string name="editbook_title">Add Book</string>
+     <string name="chat_fragment_title">Chats</string>
+     <string name="Report_fragment_title">Chats</string>
+     <string name="Collaborate_fragment_title">Collaborate</string>
+     <string name="Opensource_fragment_title">Open Source</string>
+     <string name="Aboutus_fragment_title">About us</string>
+      <string name="Tribute_fragment_title">Tribute</string>
+    
+    
+    
+    
 
     <!-- menu strings -->
     <string name="signup">Sign Up</string>

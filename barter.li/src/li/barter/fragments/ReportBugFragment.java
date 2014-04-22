@@ -61,6 +61,7 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         setActionBarDrawerToggleEnabled(false);
+        setActionBarTitle(R.string.Report_fragment_title);
         final View view = inflater.inflate(R.layout.fragment_report_bug, null);
         mReportedBugTextView = (EditText) view
                         .findViewById(R.id.text_bug_description);

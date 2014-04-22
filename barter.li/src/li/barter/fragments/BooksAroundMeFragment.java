@@ -203,7 +203,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         if (savedInstanceState == null) {
             MapsInitializer.initialize(getActivity());
         }
-
+        setActionBarTitle(R.string.app_name);
         mMapView = (MapView) contentView.findViewById(R.id.map_books_around_me);
         mMapView.onCreate(savedInstanceState);
         mDrawerLayout = (FullWidthDrawerLayout) contentView
