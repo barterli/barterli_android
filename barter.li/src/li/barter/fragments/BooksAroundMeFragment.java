@@ -164,6 +164,12 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
      * Flag to stop onScroll method to call when fragment loads
      */
     private boolean                       mUserScrolled   = false;
+    
+    /**
+     * Flag to load books on scroll
+     */
+    private boolean                       mLoadBookFlag   = true;
+    
 
     /**
      * Holds the value of the previous search radius to prevent querying for
@@ -214,7 +220,8 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
                         .findViewById(R.id.auto_complete_books_around_me);
       
-      mBooksAroundMeAutoCompleteTextView.addTextChangedListener(this);
+      
+
         mBooksAroundMeGridView = (GridView) contentView
                         .findViewById(R.id.grid_books_around_me);
 
@@ -222,6 +229,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         mMapDrawerBlurHelper.init(this);
 
         mBooksAroundMeGridView.setOnScrollListener(this);
+       
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
@@ -268,19 +276,22 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         boolean loadMore = /* maybe add a padding */
         firstVisibleItem + visibleItemCount >= totalItemCount
                         - AppConstants.DEFAULT_LOAD_BEFORE_COUNT;
+        
+        
         Logger.d(TAG, "visible count: %d", visibleItemCount);
 
-        if (loadMore && mUserScrolled) {
+        if (loadMore && mUserScrolled&&mLoadBookFlag) {
             mPageCount++;
             loadMore = false;
             mUserScrolled = false;
+            mLoadBookFlag=false;
             fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils
                             .getShortestRadiusFromCenter(mMapView) / 1000));
-
+           
         }
 
     }
-
+    
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -506,6 +517,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
     public void onPause() {
         super.onPause();
         saveLastFetchedInfoToPref();
+        mBooksAroundMeAutoCompleteTextView.removeTextChangedListener(this);
         mMapView.onPause();
         mMapDrawerBlurHelper.onPause();
     }
@@ -533,6 +545,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
     public void onResume() {
         super.onResume();
         readLastFetchedInfoFromPref();
+        mBooksAroundMeAutoCompleteTextView.addTextChangedListener(this);
         mMapView.onResume();
         mMapDrawerBlurHelper.onResume();
         final Location latestLocation = DeviceInfo.INSTANCE.getLatestLocation();
@@ -642,6 +655,8 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
+            
+            mLoadBookFlag=true;
 
             {
                 mBooksAroundMeAdapter.swapCursor(cursor);
@@ -830,7 +845,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         cookie.putInt(Keys.SEARCH_RADIUS, mPrevSearchRadius);
         //   Delete the current search results before parsing the old ones
         mBookName=mBooksAroundMeAutoCompleteTextView.getText().toString();
-       
+        
         DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT, cookie, TableSearchBooks.NAME, null, null, true, BooksAroundMeFragment.this);
         
 		

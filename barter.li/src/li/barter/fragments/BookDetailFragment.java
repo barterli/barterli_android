@@ -74,6 +74,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private CheckBox            mKeepPrivateCheckBox;
     private CheckBox[]          mBarterTypeCheckBoxes;
     private Button              mChatWithOwnerButton;
+    private Button              mOwnerProfileButton;
 
     private String              mBookId;
     private String              mUserId;
@@ -156,6 +157,10 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.text_publication_date);
         mChatWithOwnerButton = (Button) view.findViewById(R.id.button_chat);
         mChatWithOwnerButton.setOnClickListener(this);
+        
+        mOwnerProfileButton = (Button) view.findViewById(R.id.button_profile);
+        mOwnerProfileButton.setOnClickListener(this);
+        
         initBarterTypeCheckBoxes(view);
 
     }
@@ -356,10 +361,31 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), ChatDetailsFragment.class
                                                 .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
-            } else {
-                // Show Login Fragment
+            } 
+            else
+            {
+            	 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                         .instantiate(getActivity(), LoginFragment.class
+                                         .getName(), null), FragmentTags.LOGIN_TO_CHAT, true, null);
             }
         }
+        
+        else if (v.getId() == R.id.button_profile) {
+
+           
+                final Bundle args = new Bundle(1);
+                
+                args.putString(Keys.USER_ID, mUserId);
+               
+
+                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), OtherProfileFragment.class
+                                                .getName(), args), FragmentTags.OTHER_USER_PROFILE, true, null);
+          
+        }else {
+                // Show Login Fragment
+            }
+        
     }
 
 }
