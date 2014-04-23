@@ -24,13 +24,13 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.text.TextUtils;
-
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableLocations;
 import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
+import li.barter.data.TableUserBooks;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.models.Hangout;
 import li.barter.models.Team;
@@ -114,6 +114,10 @@ public class HttpResponseParser {
             case RequestId.TEAM: {
                 return parseTeamResponse(response);
             }
+            
+            case RequestId.GET_USER_PROFILE: {
+                return parseUserProfileResponse(response);
+            }
 
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
@@ -151,6 +155,65 @@ public class HttpResponseParser {
                         .readString(tributeObject, HttpConstants.TRIBUTE_IMAGE_URL, false, false));
         responseBundle.putString(HttpConstants.TRIBUTE_TEXT, JsonUtils
                         .readString(tributeObject, HttpConstants.TRIBUTE_TEXT, false, false));
+        responseInfo.responseBundle = responseBundle;
+        return responseInfo;
+    }
+    
+    
+    /**
+     * Parse the response for Tribute
+     * 
+     * @param response The response from server
+     * @return
+     */
+    private ResponseInfo parseUserProfileResponse(final String response)
+                    throws JSONException {
+    	
+    	 Logger.d(TAG, "Request \nResponse %s", response);
+    	final ResponseInfo responseInfo = new ResponseInfo();
+
+        final JSONObject responseObject = new JSONObject(response);
+
+        final JSONObject userObject = JsonUtils
+                        .readJSONObject(responseObject, HttpConstants.USER_PROFILE, true, true);
+
+        final Bundle responseBundle = new Bundle();
+        responseBundle.putString(HttpConstants.ID_USER, JsonUtils
+                        .readString(userObject, HttpConstants.ID_USER, true, true));
+        responseBundle.putString(HttpConstants.DESCRIPTION, JsonUtils
+                        .readString(userObject, HttpConstants.DESCRIPTION, false, false));
+        responseBundle.putString(HttpConstants.FIRST_NAME, JsonUtils
+                        .readString(userObject, HttpConstants.FIRST_NAME, false, false));
+        responseBundle.putString(HttpConstants.LAST_NAME, JsonUtils
+                        .readString(userObject, HttpConstants.LAST_NAME, false, false));
+        responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
+                        .readString(userObject, HttpConstants.IMAGE_URL, false, false));
+
+        final JSONArray booksArray = JsonUtils
+                        .readJSONArray(userObject, HttpConstants.BOOKS, true, true);
+
+        JSONObject bookObject = null;
+        final ContentValues values = new ContentValues();
+      
+        final String[] args = new String[1];
+        DBInterface.delete(TableUserBooks.NAME, null, null, true);
+        for (int i = 0; i < booksArray.length(); i++) {
+            bookObject = JsonUtils.readJSONObject(booksArray, i, true, true);
+            args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
+
+            //First try to delete the table if a book already exists
+            
+
+                // Unable to update, insert the item
+                DBInterface.insert(TableUserBooks.NAME, null, values, true);
+            
+        }
+
+        final JSONObject locationObject = JsonUtils
+                        .readJSONObject(userObject, HttpConstants.LOCATION, false, false);
+        
+        responseBundle.putString(HttpConstants.ADDRESS, JsonUtils
+                .readString(locationObject, HttpConstants.ADDRESS, false, false));
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
     }

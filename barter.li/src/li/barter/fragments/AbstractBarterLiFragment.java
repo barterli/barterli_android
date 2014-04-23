@@ -170,6 +170,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
+    
     /**
      * Add a request on the network queue
      * 

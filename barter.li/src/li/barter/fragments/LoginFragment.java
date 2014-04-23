@@ -325,6 +325,10 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
                     onUpNavigate();
                 }
+                else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
+                    onUpNavigate();
+                }
+                
             }
 
         }

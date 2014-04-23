@@ -111,6 +111,8 @@
                     android:checked="false"
                     android:text="@string/sell"
                     app:fontStyle="alegreya_regular" />
+                
+               
 
                 <li.barter.widgets.TypefacedCheckBox
                     android:id="@+id/checkbox_wishlist"
@@ -121,7 +123,14 @@
                     android:text="@string/lend"
                     app:fontStyle="alegreya_regular" />
             </LinearLayout>
-
+ 			<li.barter.widgets.TypefacedEditText 
+                    android:id="@+id/edit_sell_price"
+                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fontStyle="alegreya_regular"
+              		android:visibility="gone"      
+                    android:hint="@string/set_sell_hint"
+                    />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

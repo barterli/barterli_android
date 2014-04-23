@@ -91,7 +91,7 @@ public class HttpConstants {
         public static final String SEARCH                  = "/search.json";
         public static final String AMPQ_EVENT_MACHINE      = "/ampq.json";
         public static final String AMPQ_START_STOP         = "/ampq1.json";
-
+        public static final String USERPROFILE             = "/user_profile.json";
         public static final String UPDATE_USER_INFO        = "/user_update.json";
         public static final String GET_USER_INFO           = "/current_user_profile";
         public static final String REPORT_BUG              = "/feedback";
@@ -130,6 +130,7 @@ public class HttpConstants {
     public static final String T                           = "t";
     public static final String TITLE                       = "title";
     public static final String DESCRIPTION                 = "description";
+    public static final String VALUE            	       = "value";
     public static final String AUTHORS                     = "authors";
     public static final String AUTHOR                      = "author";
     public static final String NAME                        = "name";
@@ -152,6 +153,7 @@ public class HttpConstants {
     public static final String ERROR_CODE                  = "error_code";
     public static final String ERROR_MESSAGE               = "error_message";
     public static final String USER                        = "user";
+    public static final String USER_PROFILE                = "user_profile";
     public static final String FIRST_NAME                  = "first_name";
     public static final String LAST_NAME                   = "last_name";
     public static final String COUNTRY                     = "country";

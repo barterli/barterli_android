@@ -227,6 +227,14 @@
                 android:layout_marginTop="@dimen/activity_margin"
                 android:text="@string/chat_with_owner"
                 app:fontStyle="alegreya_bold" />
+            
+            <li.barter.widgets.TypefacedButton
+                android:id="@+id/button_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_margin"
+                android:text="@string/owner_profile"
+                app:fontStyle="alegreya_bold" />
         </LinearLayout>
 
         <ImageView

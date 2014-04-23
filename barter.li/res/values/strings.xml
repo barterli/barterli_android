@@ -24,7 +24,7 @@
     <string name="scanactivity_title">Scan Barcode On Book</string>
     <string name="editbook_title">Add Book</string>
      <string name="chat_fragment_title">Chats</string>
-     <string name="Report_fragment_title">Chats</string>
+     <string name="Report_fragment_title">Report</string>
      <string name="Collaborate_fragment_title">Collaborate</string>
      <string name="Opensource_fragment_title">Open Source</string>
      <string name="Aboutus_fragment_title">About us</string>
@@ -64,6 +64,9 @@
     <string name="scan_barcode_button_label">Scan ISBN BarCode</string>
     <string name="add_new_book_label">Manual Entry</string>
     <string name="search_for_books">Search for books</string>
+    <string name="set_sell_hint">Set Price (eg $10)</string>
+    <string name="set_lend_hint">Set Lend Price (eg $10)</string>
+    
 
     <!-- Strings for EditBookDetailsActivity -->
     <string name="isbn_label">ISBN Number</string>
@@ -102,6 +105,8 @@
     <string name="keep_private">Keep Private</string>
     <string name="submit">Submit</string>
     <string name="chat_with_owner">Chat with owner</string>
+    <string name="owner_profile">Owner Profile</string>
+    
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>
     <string name="email_label">Email Id</string>

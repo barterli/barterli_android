@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,9 +31,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
 import java.util.HashMap;
@@ -66,7 +70,7 @@ import li.barter.widgets.autocomplete.Suggestion;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-                OnClickListener, AsyncDbQueryCallback, INetworkSuggestCallbacks {
+                OnClickListener, AsyncDbQueryCallback, INetworkSuggestCallbacks,OnCheckedChangeListener {
 
     private static final String           TAG = "AddOrEditBookFragment";
 
@@ -74,6 +78,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private NetworkedAutoCompleteTextView mTitleEditText;
     private EditText                      mAuthorEditText;
     private EditText                      mDescriptionEditText;
+    private EditText                      mSellPriceEditText;
     private CheckBox                      mBarterCheckBox;
     private CheckBox                      mReadCheckBox;
     private CheckBox                      mSellCheckBox;
@@ -168,7 +173,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         mDescriptionEditText = (EditText) view
                         .findViewById(R.id.edit_text_description);
-
+        
+        mSellPriceEditText = (EditText) view
+                .findViewById(R.id.edit_sell_price);
+        
         initBarterTypeCheckBoxes(view);
 
     }
@@ -198,6 +206,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mGiveAwayCheckBox.setTag(R.string.tag_barter_type, BarterType.FREE);
         mKeepPrivateCheckBox
                         .setTag(R.string.tag_barter_type, BarterType.PRIVATE);
+        
+        
+        mSellCheckBox.setOnCheckedChangeListener(this);
 
         mBarterTypeCheckBoxes = new CheckBox[6];
         mBarterTypeCheckBoxes[0] = mBarterCheckBox;
@@ -299,6 +310,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                             .toString());
             bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
                             .getText().toString());
+            if(!mSellPriceEditText.getText().toString().equals(""))
+            {
+            	bookJson.put(HttpConstants.VALUE, mSellPriceEditText.getText().toString());	
+            }
 
             bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYear);
             //            bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
@@ -350,11 +365,11 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         super.onResume();
         if (mShouldSubmitOnResume && isLoggedIn()) {
 
-            if (mEditMode) {
+        //    if (mEditMode) {
                 //TODO Edit book
-            } else {
+          //  } else {
                 createBookOnServer(null);
-            }
+           // }
         }
     }
 
@@ -376,7 +391,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if ((v.getId() == R.id.button_submit) && isInputValid()) {
 
             if (!isLoggedIn()) {
-
+            	
                 mShouldSubmitOnResume = true;
                 final Bundle loginArgs = new Bundle(1);
                 loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_ADD_BOOK);
@@ -619,5 +634,18 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     Suggestion suggestion) {
 
     }
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if(isChecked)
+		{
+			mSellPriceEditText.setVisibility(View.VISIBLE);
+		}
+		else
+		{
+			mSellPriceEditText.setVisibility(View.GONE);
+		}
+		
+	}
 
 }
