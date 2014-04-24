@@ -109,7 +109,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     private static final String    OUTPUT_TIME_FORMAT       = "dd MMM, h:m a";
     private static final String    QUEUE_NAME_FORMAT        = "%squeue";
     private static final String    VIRTUAL_HOST             = "/";
-    private static final String    EXCHANGE                 = "node.barterli";
+    private static final String    EXCHANGE_NAME_FORMAT     = "%sexchange";
     private static final String    USERNAME                 = "barterli";
     private static final String    PASSWORD                 = "barter";
     /**
@@ -191,10 +191,6 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     public void onCreate() {
         super.onCreate();
         mMessageQueue = new ArrayDeque<String>();
-        mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
-                        .getChatPort(), VIRTUAL_HOST, EXCHANGE, ExchangeType.DIRECT);
-        mMessageConsumer.setOnReceiveMessageHandler(this);
-        mMessageConsumer.setOnDisconnectCallback(this);
         mDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, OUTPUT_TIME_FORMAT);
         mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
         mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
@@ -255,6 +251,15 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     final int startId) {
 
         mCurrentConnectMultiplier = 0;
+        if (mMessageConsumer == null && isLoggedIn()) {
+            mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
+                            .getChatPort(), VIRTUAL_HOST, String
+                            .format(Locale.US, EXCHANGE_NAME_FORMAT, UserInfo.INSTANCE
+                                            .getId()), ExchangeType.FANOUT);
+
+            mMessageConsumer.setOnReceiveMessageHandler(this);
+            mMessageConsumer.setOnDisconnectCallback(this);
+        }
         connectChatService();
         return START_STICKY;
     }
@@ -531,8 +536,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     /**
      * Asynchronously connect to Chat Server TODO: Move the connect async task
      * to the Rabbit MQ Connector The execute() call requires 4 string params -
-     * The username, password, queue name and routing key in the same order. All
-     * parameters should be passed. Send an EMPTY STRING if not required
+     * The username, password, queue name in the same order. All parameters
+     * should be passed. Send an EMPTY STRING if not required
      * 
      * @author Vinay S Shenoy
      */
@@ -543,20 +548,12 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
             //Validation
             assert (params != null);
-            assert (params.length == 4);
+            assert (params.length == 3);
             assert (params[0] != null);
             assert (params[1] != null);
             assert (params[2] != null);
-            assert (params[3] != null);
-            Logger.v(TAG, "Username %s, Password %s, Queue %s, Routing Key %s", params[0], params[1], params[2], params[3]);
-            if (mMessageConsumer
-                            .connectToRabbitMQ(params[0], params[1], params[2], false, false, true, null)) {
-                try {
-                    mMessageConsumer.addBinding(params[3]);
-                } catch (final IOException e) {
-                    mMessageConsumer.dispose(false);
-                }
-            }
+            Logger.v(TAG, "Username %s, Password %s, Queue %s", params[0], params[1], params[2]);
+            mMessageConsumer.connectToRabbitMQ(params[0], params[1], params[2], false, false, true, null);
             return null;
         }
 
