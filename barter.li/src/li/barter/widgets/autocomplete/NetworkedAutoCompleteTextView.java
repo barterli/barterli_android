@@ -19,7 +19,6 @@ package li.barter.widgets.autocomplete;
 import android.content.Context;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import li.barter.utils.Logger;
 import li.barter.widgets.TypefacedAutoCompleteTextView;
 
 /**
@@ -114,6 +114,7 @@ public class NetworkedAutoCompleteTextView extends
         mHandler = new Handler();
         mSuggestionsAdapter = new SuggestionsAdapter(null);
         setAdapter(mSuggestionsAdapter);
+        mSuggestionsEnabled = true;
     }
 
     /**
@@ -173,6 +174,7 @@ public class NetworkedAutoCompleteTextView extends
 
         mSuggestions.addAll(Arrays.asList(suggestions));
         mSuggestionsAdapter.setSuggestionsMaster(mSuggestions);
+        performFiltering(query, 0);
     }
 
     /**
@@ -194,16 +196,15 @@ public class NetworkedAutoCompleteTextView extends
             if (mSuggestionsEnabled) {
 
                 final String newSearchSequence = s.toString();
-                if (!TextUtils.isEmpty(mLastSearchSequence)
-                                && newSearchSequence
-                                                .startsWith(mLastSearchSequence)) {
-
-                    //Don't fetch new search results if the new search sequence starts with the older search sequence
-                    return;
-                }
-
+                /*
+                 * if (!TextUtils.isEmpty(mLastSearchSequence) &&
+                 * newSearchSequence .startsWith(mLastSearchSequence)) { //Don't
+                 * fetch new search results if the new search sequence starts
+                 * with the older search sequence return; }
+                 */
+                removeAnyCallbacks();
                 if (newSearchSequence.length() >= mSuggestCountThreshold) {
-                    removeAnyCallbacks();
+
                     mPerformSearchRunnable = makeSearchRunnable(newSearchSequence);
                     mHandler.postDelayed(mPerformSearchRunnable, mSuggestWaitThreshold);
                 }

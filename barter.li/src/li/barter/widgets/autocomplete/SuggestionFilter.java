@@ -54,8 +54,11 @@ public class SuggestionFilter extends Filter {
 
                 for (Suggestion eachSuggestion : suggestions) {
 
-                    if (eachSuggestion.name.regionMatches(true, 0, constraint
-                                    .toString(), 0, constraint.length())) {
+                    /*if (eachSuggestion.name.contains(constraint)) {
+                        filtered.add(eachSuggestion);
+                    }*/
+                    
+                    if (eachSuggestion.name.toLowerCase().contains(constraint.toString().toLowerCase())) {
                         filtered.add(eachSuggestion);
                     }
                 }

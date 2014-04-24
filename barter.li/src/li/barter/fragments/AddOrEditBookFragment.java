@@ -17,13 +17,11 @@
 package li.barter.fragments;
 
 import com.android.volley.Request.Method;
-import com.google.android.gms.internal.fe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,7 +29,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -56,7 +53,6 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.models.BookSuggestion;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -70,7 +66,8 @@ import li.barter.widgets.autocomplete.Suggestion;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-                OnClickListener, AsyncDbQueryCallback, INetworkSuggestCallbacks,OnCheckedChangeListener {
+                OnClickListener, AsyncDbQueryCallback,
+                INetworkSuggestCallbacks, OnCheckedChangeListener {
 
     private static final String           TAG = "AddOrEditBookFragment";
 
@@ -105,7 +102,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
-        
+
         setActionBarTitle(R.string.editbook_title);
         final View view = inflater
                         .inflate(R.layout.fragment_add_or_edit_book, container, false);
@@ -173,10 +170,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         mDescriptionEditText = (EditText) view
                         .findViewById(R.id.edit_text_description);
-        
-        mSellPriceEditText = (EditText) view
-                .findViewById(R.id.edit_sell_price);
-        
+
+        mSellPriceEditText = (EditText) view.findViewById(R.id.edit_sell_price);
+
         initBarterTypeCheckBoxes(view);
 
     }
@@ -206,8 +202,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mGiveAwayCheckBox.setTag(R.string.tag_barter_type, BarterType.FREE);
         mKeepPrivateCheckBox
                         .setTag(R.string.tag_barter_type, BarterType.PRIVATE);
-        
-        
+
         mSellCheckBox.setOnCheckedChangeListener(this);
 
         mBarterTypeCheckBoxes = new CheckBox[6];
@@ -310,9 +305,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                             .toString());
             bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
                             .getText().toString());
-            if(!mSellPriceEditText.getText().toString().equals(""))
-            {
-            	bookJson.put(HttpConstants.VALUE, mSellPriceEditText.getText().toString());	
+            if (!mSellPriceEditText.getText().toString().equals("")) {
+                bookJson.put(HttpConstants.VALUE, mSellPriceEditText.getText()
+                                .toString());
             }
 
             bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYear);
@@ -365,11 +360,11 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         super.onResume();
         if (mShouldSubmitOnResume && isLoggedIn()) {
 
-        //    if (mEditMode) {
-                //TODO Edit book
-          //  } else {
-                createBookOnServer(null);
-           // }
+            //    if (mEditMode) {
+            //TODO Edit book
+            //  } else {
+            createBookOnServer(null);
+            // }
         }
     }
 
@@ -391,7 +386,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if ((v.getId() == R.id.button_submit) && isInputValid()) {
 
             if (!isLoggedIn()) {
-            	
+
                 mShouldSubmitOnResume = true;
                 final Bundle loginArgs = new Bundle(1);
                 loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_ADD_BOOK);
@@ -498,12 +493,14 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             case RequestId.BOOK_SUGGESTIONS: {
 
-                //TODO Read book suggestions and update autocomplete text
-                final BookSuggestion[] fetchedSuggestions = (BookSuggestion[]) response.responseBundle
-                                .getParcelableArray(Keys.BOOK_SUGGESTIONS);
-                final Suggestion[] suggestions = makeSuggestionArrayFromBookSuggestions(fetchedSuggestions);
-                mTitleEditText.onSuggestionsFetched((String) request
-                                .getExtras().get(Keys.SEARCH), suggestions, true);
+                final String[] fetchedSuggestions = response.responseBundle
+                                .getStringArray(HttpConstants.BOOKS);
+
+                if (fetchedSuggestions != null && fetchedSuggestions.length > 0) {
+                    final Suggestion[] suggestions = makeSuggestionArrayFromBookSuggestions(fetchedSuggestions);
+                    mTitleEditText.onSuggestionsFetched((String) request
+                                    .getExtras().get(Keys.SEARCH), suggestions, true);
+                }
                 break;
             }
         }
@@ -511,24 +508,19 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Converts the fetched {@link BookSuggestion} objects to an array of
-     * {@link Suggestion} objects
+     * Converts the fetched objects to an array of {@link Suggestion} objects
      * 
-     * @param fetchedSuggestions The array of {@link BookSuggestion}s fetched
+     * @param fetchedSuggestions The array of book suggestions fetched
      * @return An array of {@link Suggestion} objects
      */
     private Suggestion[] makeSuggestionArrayFromBookSuggestions(
-                    BookSuggestion[] fetchedSuggestions) {
-
-        if (fetchedSuggestions == null || fetchedSuggestions.length == 0) {
-            return null;
-        }
+                    String[] fetchedSuggestions) {
 
         final Suggestion[] suggestions = new Suggestion[fetchedSuggestions.length];
-        BookSuggestion bookSuggestion = null;
+        String bookSuggestion = null;
         for (int i = 0; i < fetchedSuggestions.length; i++) {
             bookSuggestion = fetchedSuggestions[i];
-            suggestions[i] = new Suggestion(bookSuggestion.id, bookSuggestion.name);
+            suggestions[i] = new Suggestion(null, bookSuggestion);
         }
         return suggestions;
     }
@@ -621,7 +613,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             request.setRequestId(RequestId.BOOK_SUGGESTIONS);
 
             final Map<String, String> params = new HashMap<String, String>(1);
-            //TODO params.put(key, value);
+            params.put(HttpConstants.Q, query);
             request.setParams(params);
             request.setTag(getVolleyTag());
             request.addExtra(Keys.SEARCH, query);
@@ -633,19 +625,20 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     public void onSuggestionClicked(NetworkedAutoCompleteTextView textView,
                     Suggestion suggestion) {
 
+        if (textView.getId() == R.id.edit_text_title) {
+            Logger.v(TAG, "On Suggestion Clicked %s", suggestion);
+            //TODO Call book info API
+        }
     }
 
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		if(isChecked)
-		{
-			mSellPriceEditText.setVisibility(View.VISIBLE);
-		}
-		else
-		{
-			mSellPriceEditText.setVisibility(View.GONE);
-		}
-		
-	}
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            mSellPriceEditText.setVisibility(View.VISIBLE);
+        } else {
+            mSellPriceEditText.setVisibility(View.GONE);
+        }
+
+    }
 
 }

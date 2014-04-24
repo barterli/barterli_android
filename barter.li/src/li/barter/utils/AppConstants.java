@@ -264,7 +264,6 @@ public class AppConstants {
         public static final String FIRST_LOAD                 = "first_load";
         public static final String EDIT_MODE                  = "edit_mode";
         public static final String LAST_FETCHED_PAGENUMBER    = "last_fetched_pagenumber";
-        public static final String BOOK_SUGGESTIONS           = "book_suggestions";
 
     }
 
