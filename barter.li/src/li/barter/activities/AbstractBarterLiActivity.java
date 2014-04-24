@@ -739,7 +739,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 @Override
                 public void onDrawerOpened(final View drawerView) {
                     super.onDrawerOpened(drawerView);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                  //  mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     invalidateOptionsMenu();
 
                 }
@@ -747,7 +747,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 @Override
                 public void onDrawerClosed(final View drawerView) {
                     super.onDrawerClosed(drawerView);
-                    mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                 //   mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     invalidateOptionsMenu();
 
                 }
@@ -758,7 +758,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             getActionBar().setDisplayHomeAsUpEnabled(true);
             mIsActionBarNavDrawerToggleEnabled = true;
         }
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+       // mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mDrawerLayout.setScrimColor(getResources()
                         .getColor(R.color.overlay_black_40p));
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
