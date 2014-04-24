@@ -282,7 +282,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
             if (backStackEntryCount < 3) {
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), EditProfileFragment.class
-                                                .getName(), null), FragmentTags.EDIT_PROFILE, false, null);
+                                                .getName(), null), FragmentTags.EDIT_PROFILE, true, null);
             } else {
                 onUpNavigate();
             }
