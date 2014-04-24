@@ -78,6 +78,7 @@ public class AppConstants {
         private String mId;
         private String mProfilePicture;
         private String mAuthHeader;
+        private String mDeviceId;
 
         private UserInfo() {
             reset();
@@ -139,6 +140,14 @@ public class AppConstants {
                 mProfilePicture = profilePicture;
             }
 
+        }
+
+        public void setDeviceId(String deviceId) {
+            mDeviceId = deviceId;
+        }
+
+        public String getDeviceId() {
+            return mDeviceId;
         }
 
         public String getAuthHeader() {

@@ -299,8 +299,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                         return;
                     }
 
-                    mQueueName = generateQueueNameFromUserId(UserInfo.INSTANCE
-                                    .getId());
+                    mQueueName = UserInfo.INSTANCE.getDeviceId();/*generateQueueNameFromUserId(UserInfo.INSTANCE
+                                    .getId());*/
                     if (mConnectTask == null) {
                         mConnectTask = new ConnectToChatAsyncTask();
                         mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE

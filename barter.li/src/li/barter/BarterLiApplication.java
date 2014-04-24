@@ -23,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Settings.Secure;
 import android.view.ViewConfiguration;
 
 import java.lang.reflect.Field;
@@ -73,6 +74,8 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         VolleyLog.sDebug = AppConstants.DEBUG;
         mRequestQueue = Volley.newRequestQueue(this);
         // Picasso.with(this).setDebugging(true);
+        UserInfo.INSTANCE.setDeviceId(Secure.getString(this
+                        .getContentResolver(), Secure.ANDROID_ID));
         readUserInfoFromSharedPref();
         Utils.setupNetworkInfo(this);
         if (DeviceInfo.INSTANCE.isNetworkConnected()) {
