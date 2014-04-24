@@ -16,9 +16,14 @@
 
 package li.barter.fragments;
 
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -34,13 +39,13 @@ import li.barter.R;
 import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatsAdapter;
 import li.barter.chat.ChatService;
+import li.barter.chat.ChatService.ChatServiceBinder;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.ViewChatsWithMessagesAndUsers;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
@@ -52,13 +57,17 @@ import li.barter.utils.AppConstants.Loaders;
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ChatsFragment extends AbstractBarterLiFragment implements
-                LoaderCallbacks<Cursor>, OnItemClickListener {
+                LoaderCallbacks<Cursor>, OnItemClickListener, ServiceConnection {
 
     private static final String TAG = "ChatsFragment";
 
     private ChatsAdapter        mChatsAdapter;
 
     private ListView            mChatsListView;
+
+    private ChatService         mChatService;
+
+    private boolean             mBoundToChatService;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -72,15 +81,30 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
         mChatsAdapter = new ChatsAdapter(getActivity(), null);
         mChatsListView.setAdapter(mChatsAdapter);
         mChatsListView.setOnItemClickListener(this);
-
-        if(savedInstanceState != null) {
-            final Intent clearNotificationsIntent = new Intent(getActivity(), ChatService.class);
-            clearNotificationsIntent.setAction(AppConstants.ACTION_CLEAR_NOTIFICATIONS);
-            getActivity().startService(clearNotificationsIntent);
-        }
         setActionBarDrawerToggleEnabled(false);
         getLoaderManager().restartLoader(Loaders.ALL_CHATS, null, this);
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mBoundToChatService) {
+            mChatService.setNotificationsEnabled(true);
+            getActivity().unbindService(this);
+        }
+    }
+
+    public void onResume() {
+        super.onResume();
+        //Bind to chat service
+        final Intent chatServiceBindIntent = new Intent(getActivity(), ChatService.class);
+        getActivity().bindService(chatServiceBindIntent, this, Context.BIND_AUTO_CREATE);
+    };
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
     @Override
@@ -146,27 +170,43 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
                                             .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
 
             case android.R.id.home: {
-            	int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
-            	if (backStackEntryCount == 0) {
-            		 ((HomeActivity)getActivity()).loadBooksAroundMeFragment();
-            	    return true;
-            	}
+                int backStackEntryCount = getFragmentManager()
+                                .getBackStackEntryCount();
+                if (backStackEntryCount == 0) {
+                    ((HomeActivity) getActivity()).loadBooksAroundMeFragment();
+                    return true;
+                }
 
-            else
-            {
-                	 onUpNavigate();
-                	 return true;
-            }   
+                else {
+                    onUpNavigate();
+                    return true;
+                }
             }
 
             default: {
                 return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    @Override
+    public void onServiceConnected(final ComponentName name,
+                    final IBinder service) {
+
+        mBoundToChatService = true;
+        mChatService = ((ChatServiceBinder) service).getService();
+        mChatService.clearChatNotifications();
+        mChatService.setNotificationsEnabled(false);
+    }
+
+    @Override
+    public void onServiceDisconnected(final ComponentName name) {
+        mBoundToChatService = false;
     }
 }
