@@ -23,19 +23,17 @@
     <string name="service_chat">Chat Service</string>
     <string name="scanactivity_title">Scan Barcode On Book</string>
     <string name="editbook_title">Add Book</string>
-     <string name="chat_fragment_title">Chats</string>
-     <string name="Report_fragment_title">Report</string>
-     <string name="Collaborate_fragment_title">Collaborate</string>
-     <string name="Opensource_fragment_title">Open Source</string>
-     <string name="Aboutus_fragment_title">About us</string>
-      <string name="Tribute_fragment_title">Tribute</string>
-      <string name="Book_Detail_fragment_title">Book Detail</string>
-    
-    
+    <string name="chat_fragment_title">Chats</string>
+    <string name="Report_fragment_title">Report</string>
+    <string name="Collaborate_fragment_title">Collaborate</string>
+    <string name="Opensource_fragment_title">Open Source</string>
+    <string name="Aboutus_fragment_title">About us</string>
+    <string name="Tribute_fragment_title">Tribute</string>
+    <string name="Book_Detail_fragment_title">Book Detail</string>
+
     <!-- crouton info strings -->
     <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>
     <string name="crouton_prefferedlocation_message">Please Select Your Book Exchange Point Where You Would Like To Deal</string>
-    
 
     <!-- menu strings -->
     <string name="signup">Sign Up</string>
@@ -67,7 +65,6 @@
     <string name="search_for_books">Search for books</string>
     <string name="set_sell_hint">Set Price (eg $10)</string>
     <string name="set_lend_hint">Set Lend Price (eg $10)</string>
-    
 
     <!-- Strings for EditBookDetailsActivity -->
     <string name="isbn_label">ISBN Number</string>
@@ -107,7 +104,6 @@
     <string name="submit">Submit</string>
     <string name="chat_with_owner">Chat with owner</string>
     <string name="owner_profile">Owner Profile</string>
-    
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>
     <string name="email_label">Email Id</string>
@@ -126,7 +122,7 @@
         <item>Open Source</item>
         <item>About us</item>
         <item>Tribute</item>
-       
+        <item>Logout</item>
     </string-array>
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile, update your info, view your saved books.</item>
@@ -136,7 +132,7 @@
         <item>No open source licences were violated in the making of this app.</item>
         <item>What is barter.li? Who\'s behind it?</item>
         <item>The inspiration for barter.li.</item>
-        
+        <item>Clear any user info from this device.</item>
     </string-array>
     <string-array name="months">
         <item>January</item>
@@ -167,7 +163,7 @@
     <string name="hint_first_name">First Name</string>
     <string name="hint_last_name">Last Name</string>
     <string name="label_my_books">My Books</string>
-     <string name="profilepage_title">My Profile</string>
+    <string name="profilepage_title">My Profile</string>
 
     <!-- Strings/URLs related to ShowWebViewFragment -->
     <string name="url_google">http://www.google.com</string>
@@ -206,6 +202,7 @@
         <item>ListViewAnimations, A library to easily add animations to List Items. Licensed under the Apache v2.0 License.\nhttps://github.com/nhaarman/ListViewAnimations</item>
         <item>Crouton, Context sensitive notifications for Android. Licensed under the Apache v2.0 License.\nhttps://github.com/keyboardsurfer/Crouton</item>
     </string-array>
+
     <string name="about_barterli">barter.li is an open source, community driven, not-for-profit project which aims to enable sharing of a billion books across the globe.</string>
 
 </resources>

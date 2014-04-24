@@ -47,6 +47,7 @@ public class AppConstants {
 
     public static final String  ACTION_SHOW_ALL_CHATS            = "li.barter.ACTION_SHOW_ALL_CHATS";
     public static final String  ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
+    public static final String  ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
 
     /*
      * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :
@@ -364,6 +365,9 @@ public class AppConstants {
         //301-400 for delete queries
         public static final int DELETE_BOOKS_SEARCH_RESULTS               = 301;
         public static final int DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT = 302;
+        public static final int DELETE_CHAT_MESSAGES                      = 303;
+        public static final int DELETE_CHATS                              = 304;
+        public static final int DELETE_MY_BOOKS                           = 305;
     }
 
     /**

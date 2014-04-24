@@ -256,17 +256,21 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     public int onStartCommand(final Intent intent, final int flags,
                     final int startId) {
 
-        mCurrentConnectMultiplier = 0;
-        if (mMessageConsumer == null && isLoggedIn()) {
-            mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
-                            .getChatPort(), VIRTUAL_HOST, String
-                            .format(Locale.US, EXCHANGE_NAME_FORMAT, UserInfo.INSTANCE
-                                            .getId()), ExchangeType.FANOUT);
+        final String action = intent.getAction();
 
-            mMessageConsumer.setOnReceiveMessageHandler(this);
-            mMessageConsumer.setOnDisconnectCallback(this);
+        if (action != null
+                        && action.equals(AppConstants.ACTION_DISCONNECT_CHAT)) {
+
+            if (isConnectedToChat()) {
+                mMessageConsumer.dispose(true);
+                mMessageConsumer = null;
+            }
+        } else {
+            mCurrentConnectMultiplier = 0;
+            initMessageConsumer();
+            connectChatService();
         }
-        connectChatService();
+
         return START_STICKY;
     }
 
@@ -341,7 +345,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     @Override
     public void onDestroy() {
-        if (mMessageConsumer.isRunning()) {
+        if (isConnectedToChat()) {
             mMessageConsumer.dispose(true);
             mMessageConsumer = null;
         }
@@ -354,7 +358,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     public boolean isConnectedToChat() {
 
-        return mMessageConsumer.isRunning();
+        return mMessageConsumer != null && mMessageConsumer.isRunning();
     }
 
     /**
@@ -866,6 +870,22 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         if (!manual) {
             connectChatService();
         }
+    }
+
+    /**
+     * Creates a new consumer
+     */
+    private void initMessageConsumer() {
+        if (mMessageConsumer == null && isLoggedIn()) {
+            mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
+                            .getChatPort(), VIRTUAL_HOST, String
+                            .format(Locale.US, EXCHANGE_NAME_FORMAT, UserInfo.INSTANCE
+                                            .getId()), ExchangeType.FANOUT);
+
+            mMessageConsumer.setOnReceiveMessageHandler(ChatService.this);
+            mMessageConsumer.setOnDisconnectCallback(ChatService.this);
+        }
+
     }
 
 }

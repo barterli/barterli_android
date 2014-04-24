@@ -25,6 +25,7 @@ import android.os.Handler;
 import java.io.IOException;
 import java.util.Map;
 
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 
 /**
@@ -80,7 +81,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                 Logger.d(TAG, "Connected");
                 mQueue = declareQueue(queueName, durable, exclusive, autoDelete, args);
                 mSubscription = new QueueingConsumer(mChannel);
-                mChannel.basicConsume(mQueue, false, mSubscription);
+                mChannel.basicConsume(mQueue, false, UserInfo.INSTANCE.getId(), mSubscription);
                 if (mExchangeType == ExchangeType.FANOUT) {
                     addBinding("");// fanout has default binding
                 }

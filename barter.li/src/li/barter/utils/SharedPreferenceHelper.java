@@ -349,4 +349,26 @@ public class SharedPreferenceHelper {
         editor.commit();
     }
 
+    /**
+     * Removes the given keys from the Shared Preferences
+     * 
+     * @param context
+     * @param keys The keys to removed
+     */
+    public static void removeKeys(final Context context, final int... keys) {
+
+        assert (keys != null);
+        assert (keys.length > 0);
+        final SharedPreferences preferences = PreferenceManager
+                        .getDefaultSharedPreferences(context);
+        final SharedPreferences.Editor editor = preferences.edit();
+
+        for (int aKey : keys) {
+
+            editor.remove(context.getString(aKey));
+        }
+
+        editor.commit();
+    }
+
 }

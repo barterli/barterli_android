@@ -24,7 +24,9 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,6 +57,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
 import li.barter.adapters.HomeNavDrawerAdapter;
+import li.barter.chat.ChatService;
+import li.barter.data.DBInterface;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.TableChatMessages;
+import li.barter.data.TableChats;
+import li.barter.data.TableMyBooks;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.ChatsFragment;
 import li.barter.fragments.CollaborateFragment;
@@ -70,9 +78,13 @@ import li.barter.http.IVolleyHelper;
 import li.barter.http.ResponseInfo;
 import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
+import li.barter.utils.AppConstants;
+import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
@@ -81,7 +93,7 @@ import li.barter.widgets.TypefacedSpan;
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
  */
 public abstract class AbstractBarterLiActivity extends FragmentActivity
-                implements IHttpCallbacks {
+                implements IHttpCallbacks, AsyncDbQueryCallback {
 
     private static final String TAG                     = "BaseBarterLiActivity";
 
@@ -264,24 +276,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 break;
             }
 
-            //            //Suggest Feature
-            //            case 2: {
-            //                if ((masterFragment != null)
-            //                                && (masterFragment instanceof SuggestFeatureFragment)) {
-            //                    return null;
-            //                }
-            //
-            //                runnable = new Runnable() {
-            //                    @Override
-            //                    public void run() {
-            //                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-            //                                        .instantiate(AbstractBarterLiActivity.this, SuggestFeatureFragment.class
-            //                                                        .getName(), null), FragmentTags.SUGGEST_FEATURE, true, null);
-            //                    }
-            //                };
-            //                break;
-            //            }
-
             //Report Bug
             case 2: {
                 if ((masterFragment != null)
@@ -332,14 +326,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //About us
             case 5: {
-
-                //                final Bundle showWebViewArgs = new Bundle();
-                //                showWebViewArgs.putString(Keys.URL_TO_LOAD, getResources()
-                //                                .getString(R.string.url_me));
-                //                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                //                                .instantiate(this, ShowWebViewFragment.class
-                //                                                .getName(), showWebViewArgs), FragmentTags.SHOW_WEBVIEW, true, null);
-                //                break;
 
                 if ((masterFragment != null)
                                 && (masterFragment instanceof TeamFragment)) {
@@ -397,6 +383,18 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 break;
             }
 
+            //Logout
+            case 8: {
+
+                runnable = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        logout();
+                    }
+                };
+            }
+
             default: {
                 runnable = null;
             }
@@ -404,6 +402,65 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
         return runnable;
     };
+
+    /**
+     * Disconnects the chat service, clears any local data
+     */
+    protected void logout() {
+
+        if (isLoggedIn()) {
+            UserInfo.INSTANCE.reset();
+            DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, null, TableChats.NAME, null, null, true, this);
+            DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, null, TableChatMessages.NAME, null, null, true, this);
+            DBInterface.deleteAsync(QueryTokens.DELETE_MY_BOOKS, null, TableMyBooks.NAME, null, null, true, this);
+            SharedPreferenceHelper
+                            .removeKeys(this, R.string.pref_auth_token, R.string.pref_email, R.string.pref_description, R.string.pref_location, R.string.pref_first_name, R.string.pref_last_name, R.string.pref_user_id, R.string.pref_profile_image);
+            final Intent disconnectChatIntent = new Intent(this, ChatService.class);
+            disconnectChatIntent.setAction(AppConstants.ACTION_DISCONNECT_CHAT);
+            startService(disconnectChatIntent);
+            getSupportFragmentManager()
+                            .popBackStack(FragmentTags.BS_BOOKS_AROUND_ME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+    }
+
+    @Override
+    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+
+    }
+
+    @Override
+    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+
+        switch (token) {
+            case QueryTokens.DELETE_CHAT_MESSAGES: {
+                Logger.v(TAG, "Deleted %d messages", deleteCount);
+                break;
+            }
+
+            case QueryTokens.DELETE_CHATS: {
+                Logger.v(TAG, "Deleted %d chats", deleteCount);
+                break;
+            }
+
+            case QueryTokens.DELETE_MY_BOOKS: {
+                Logger.v(TAG, "Deleted %d books", deleteCount);
+                break;
+            }
+
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+
+    }
+
+    @Override
+    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+
+    }
 
     /**
      * Add a request on the network queue
