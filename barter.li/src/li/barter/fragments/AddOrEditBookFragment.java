@@ -459,6 +459,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         switch (requestId) {
             case RequestId.GET_BOOK_INFO: {
+                
                 mTitleEditText.setText(response.responseBundle
                                 .getString(HttpConstants.TITLE));
                 mDescriptionEditText.setText(response.responseBundle

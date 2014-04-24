@@ -606,7 +606,7 @@ public class HttpResponseParser {
                                 .readString(authorObject, HttpConstants.NAME, false, false));
             }
         }
-
+        
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
     }
