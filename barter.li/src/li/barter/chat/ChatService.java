@@ -182,6 +182,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private String                 mCurrentChattingUserId;
 
+    /**
+     * Whether chat notifications are enabled or not
+     */
+    private boolean                mNotificationsEnabled;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -200,7 +205,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mUnreadMessageCount = 0;
         mCurrentConnectMultiplier = 0;
         mHandler = new Handler();
-
+        mNotificationsEnabled = true;
         //testNotifications();
     }
 
@@ -308,9 +313,10 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
             };
 
-            mHandler.postDelayed(mConnectRunnable, mCurrentConnectMultiplier++
+            mHandler.postDelayed(mConnectRunnable, mCurrentConnectMultiplier
                             * CONNECT_BACKOFF_INTERVAL * 1000);
-
+            mCurrentConnectMultiplier = (++mCurrentConnectMultiplier > MAX_CONNECT_MULTIPLIER) ? MAX_CONNECT_MULTIPLIER
+                            : mCurrentConnectMultiplier;
         }
 
     }
@@ -371,6 +377,26 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             //Should never happen
         }
 
+    }
+
+    /**
+     * Cancels any notifications being displayed. Call this if the relevant
+     * screen is opened within the app
+     */
+    public void clearChatNotifications() {
+
+        mNotificationManager.cancel(MESSAGE_NOTIFICATION_ID);
+        mUnreadMessageCount = 0;
+    }
+
+    /**
+     * Set notifications enabled
+     * 
+     * @param enabled <code>true</code> to enable notifications,
+     *            <code>false</code> to disable them
+     */
+    public void setNotificationsEnabled(boolean enabled) {
+        mNotificationsEnabled = enabled;
     }
 
     /**
@@ -795,44 +821,39 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     final String withUserId, final String senderName,
                     final String messageText) {
 
-        mUnreadMessageCount++;
-        final Intent resultIntent = new Intent(this, HomeActivity.class);
-        if (mUnreadMessageCount == 1) {
-            mNotificationBuilder.setSmallIcon(R.drawable.ic_launcher)
-                            .setContentTitle(senderName)
-                            .setContentText(messageText).setAutoCancel(true);
-            resultIntent.setAction(AppConstants.ACTION_SHOW_CHAT_DETAIL);
-            resultIntent.putExtra(Keys.CHAT_ID, chatId);
-            resultIntent.putExtra(Keys.USER_ID, withUserId);
+        if (mNotificationsEnabled) {
+            mUnreadMessageCount++;
+            final Intent resultIntent = new Intent(this, HomeActivity.class);
+            if (mUnreadMessageCount == 1) {
+                mNotificationBuilder.setSmallIcon(R.drawable.ic_launcher)
+                                .setContentTitle(senderName)
+                                .setContentText(messageText)
+                                .setAutoCancel(true);
+                resultIntent.setAction(AppConstants.ACTION_SHOW_CHAT_DETAIL);
+                resultIntent.putExtra(Keys.CHAT_ID, chatId);
+                resultIntent.putExtra(Keys.USER_ID, withUserId);
 
-        } else {
-            mNotificationBuilder
-                            .setSmallIcon(R.drawable.ic_launcher)
-                            .setContentTitle(getString(R.string.new_messages, mUnreadMessageCount))
-                            .setContentText(messageText).setAutoCancel(true);
-            resultIntent.setAction(AppConstants.ACTION_SHOW_ALL_CHATS);
+            } else {
+                mNotificationBuilder
+                                .setSmallIcon(R.drawable.ic_launcher)
+                                .setContentTitle(getString(R.string.new_messages, mUnreadMessageCount))
+                                .setContentText(messageText)
+                                .setAutoCancel(true);
+                resultIntent.setAction(AppConstants.ACTION_SHOW_ALL_CHATS);
+            }
+
+            mNotificationBuilder.setSound(mNotificationSoundUri);
+            final TaskStackBuilder taskStackBuilder = TaskStackBuilder
+                            .create(this);
+            taskStackBuilder.addNextIntent(resultIntent);
+            final PendingIntent pendingIntent = taskStackBuilder
+                            .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            mNotificationBuilder.setContentIntent(pendingIntent);
+            mNotificationManager
+                            .notify(MESSAGE_NOTIFICATION_ID, mNotificationBuilder
+                                            .build());
         }
 
-        mNotificationBuilder.setSound(mNotificationSoundUri);
-        final TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
-        taskStackBuilder.addNextIntent(resultIntent);
-        final PendingIntent pendingIntent = taskStackBuilder
-                        .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mNotificationBuilder.setContentIntent(pendingIntent);
-        mNotificationManager
-                        .notify(MESSAGE_NOTIFICATION_ID, mNotificationBuilder
-                                        .build());
-
-    }
-
-    /**
-     * Cancels any notifications being displayed. Call this if the relevant
-     * screen is opened within the app
-     */
-    private void cancelMessageReceivedNotification() {
-
-        mNotificationManager.cancel(MESSAGE_NOTIFICATION_ID);
-        mUnreadMessageCount = 0;
     }
 
     @Override

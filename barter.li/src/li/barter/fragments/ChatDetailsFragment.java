@@ -16,7 +16,6 @@
 
 package li.barter.fragments;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -144,7 +143,9 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case android.R.id.home: {
+                
                 final int backStackEntryCount = getFragmentManager()
+
                                 .getBackStackEntryCount();
                 if (backStackEntryCount == 0) {
                     ((HomeActivity) getActivity()).loadBooksAroundMeFragment();
@@ -163,31 +164,21 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onPause() {
-        mAcknowledge.mChatDetailsFragment = null;
         super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        mAcknowledge.mChatDetailsFragment = this;
-        super.onResume();
-    }
-
-    @Override
-    public void onAttach(final Activity activity) {
-        super.onAttach(activity);
-        //Bind to chat service
-        final Intent chatServiceBindIntent = new Intent(activity, ChatService.class);
-        activity.bindService(chatServiceBindIntent, this, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void onDetach() {
+        mAcknowledge.mChatDetailsFragment = null;
         if (mBoundToChatService) {
             mChatService.setCurrentChattingUserId(null);
             getActivity().unbindService(this);
         }
-        super.onDetach();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAcknowledge.mChatDetailsFragment = this;
+        //Bind to chat service
+        final Intent chatServiceBindIntent = new Intent(getActivity(), ChatService.class);
+        getActivity().bindService(chatServiceBindIntent, this, Context.BIND_AUTO_CREATE);
     }
 
     @Override
