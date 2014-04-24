@@ -31,7 +31,22 @@ import java.util.Locale;
 public class JsonUtils {
 
     /** Tag used to print logs for debugging. */
-    private static final String TAG                      = "JsonUtils";
+    private static final String TAG = "JsonUtils";
+
+    /**
+     * Enum to indicate the type of field
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static enum FieldType {
+        INT,
+        STRING,
+        DOUBLE,
+        LONG,
+        OBJECT,
+        ARRAY,
+        BOOL
+    }
 
     /**
      * String format for formatting exception of null value in Json Objects
@@ -42,6 +57,50 @@ public class JsonUtils {
      * String format for formatting exception of null value in Json Arrays
      */
     private static final String NULL_VALUE_FORMAT_ARRAY  = "Value is null for index %d when index is specified as not null";
+
+    /**
+     * String format for formatting exceptions for get type
+     */
+    private static final String UNKNOWN_TYPE             = "Unknown type %s";
+
+    /**
+     * Gets the field type for a particular key
+     * 
+     * @param jsonObject The {@link JSONObject} to check the key
+     * @param key The key to check
+     * @return what kind of type the field is, represented as a
+     *         {@link FieldType} object
+     * @throws JSONException If the key is not present, or the value is
+     *             <code>null</code>
+     */
+    public static FieldType getTypeForKey(JSONObject jsonObject, String key)
+                    throws JSONException {
+
+        if (jsonObject.isNull(key)) {
+            throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_OBJECT, key));
+        }
+
+        final Object object = jsonObject.get(key);
+
+        if (object instanceof Long) {
+            return FieldType.LONG;
+        } else if (object instanceof Integer) {
+            return FieldType.INT;
+        } else if (object instanceof Boolean) {
+            return FieldType.BOOL;
+        } else if (object instanceof String) {
+            return FieldType.STRING;
+        } else if (object instanceof Double) {
+            return FieldType.DOUBLE;
+        } else if (object instanceof JSONObject) {
+            return FieldType.OBJECT;
+        } else if (object instanceof JSONArray) {
+            return FieldType.ARRAY;
+        }
+
+        throw new JSONException(String.format(Locale.US, UNKNOWN_TYPE, object
+                        .getClass().getName()));
+    }
 
     /**
      * Reads the string value from the Json Object for specified tag.

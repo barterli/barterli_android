@@ -30,6 +30,7 @@ import java.util.Map;
 
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
 
 /**
  * Class to encapsulate Volley Listeners
@@ -38,6 +39,8 @@ import li.barter.utils.AppConstants.UserInfo;
  */
 public class VolleyCallbacks implements Listener<ResponseInfo>, ErrorListener {
 
+    private static final String TAG = "VolleyCallbacks";
+    
     private final RequestQueue   mRequestQueue;
     private final IHttpCallbacks mHttpCallbacks;
 
@@ -74,6 +77,7 @@ public class VolleyCallbacks implements Listener<ResponseInfo>, ErrorListener {
             }
 
             default: {
+                Logger.e(TAG, error, "Other error %s", error.getMessage());
                 mHttpCallbacks.onOtherError(blRequestContract.getRequestId(), blRequestContract, error.errorCode);
             }
         }

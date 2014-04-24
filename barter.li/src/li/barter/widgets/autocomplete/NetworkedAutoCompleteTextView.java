@@ -21,6 +21,10 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +37,7 @@ import li.barter.widgets.TypefacedAutoCompleteTextView;
  *         when typing from internet
  */
 public class NetworkedAutoCompleteTextView extends
-                TypefacedAutoCompleteTextView {
+                TypefacedAutoCompleteTextView implements OnItemClickListener {
 
     private static final String       TAG = "NetworkedAutoCompleteTextView";
 
@@ -110,6 +114,7 @@ public class NetworkedAutoCompleteTextView extends
     private void init() {
         mSuggestNetworkTextWatcher = new SuggestNetworkTextWatcher();
         addTextChangedListener(mSuggestNetworkTextWatcher);
+        setOnItemClickListener(this);
         mHandler = new Handler();
         mSuggestionsAdapter = new SuggestionsAdapter(null);
         setAdapter(mSuggestionsAdapter);
@@ -252,5 +257,17 @@ public class NetworkedAutoCompleteTextView extends
                 }
             }
         };
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+        final Suggestion suggestion = (Suggestion) mSuggestionsAdapter
+                        .getItem(position);
+
+        if (mNetworkSuggestCallbacks != null) {
+            mNetworkSuggestCallbacks.onSuggestionClicked(this, suggestion);
+        }
+
     }
 }
