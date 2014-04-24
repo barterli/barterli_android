@@ -251,8 +251,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     final int startId) {
 
         final String action = intent.getAction();
-        
-        if(action != null && action.equals(AppConstants.ACTION_CLEAR_NOTIFICATIONS)) {
+
+        if (action != null
+                        && action.equals(AppConstants.ACTION_CLEAR_NOTIFICATIONS)) {
             cancelMessageReceivedNotification();
         }
         mCurrentConnectMultiplier = 0;
@@ -314,9 +315,10 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
             };
 
-            mHandler.postDelayed(mConnectRunnable, mCurrentConnectMultiplier++
+            mHandler.postDelayed(mConnectRunnable, mCurrentConnectMultiplier
                             * CONNECT_BACKOFF_INTERVAL * 1000);
-
+            mCurrentConnectMultiplier = (++mCurrentConnectMultiplier > MAX_CONNECT_MULTIPLIER) ? MAX_CONNECT_MULTIPLIER
+                            : mCurrentConnectMultiplier;
         }
 
     }
