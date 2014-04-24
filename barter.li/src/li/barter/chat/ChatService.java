@@ -187,6 +187,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private boolean                mNotificationsEnabled;
 
+    /**
+     * Whether any message is being currently processed
+     */
+    private boolean                mIsProcessingMessage;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -202,6 +207,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mCurrentConnectMultiplier = 0;
         mHandler = new Handler();
         mNotificationsEnabled = true;
+        mIsProcessingMessage = false;
         //testNotifications();
     }
 
@@ -417,14 +423,13 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     @Override
     public void onReceiveMessage(final byte[] message) {
 
-        //TODO Break this method out for readability
         String text = "";
         try {
             text = new String(message, HTTP.UTF_8);
             Logger.d(TAG, "Received:" + text);
 
             mMessageQueue.add(text);
-            if (mMessageQueue.size() == 1) {
+            if (!mIsProcessingMessage) {
                 //If there aren't any messages in the queue, process the message immediately
                 queueNextMessageForProcessing();
             }
@@ -617,6 +622,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 assert (cookie != null);
                 assert (cookie instanceof ContentValues);
                 //Chat was successfully created
+                mIsProcessingMessage = false;
                 queueNextMessageForProcessing();
                 break;
             }
@@ -649,6 +655,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 DBInterface.insertAsync(QueryTokens.INSERT_CHAT, cookie, TableChats.NAME, null, (ContentValues) cookie, true, this);
             } else {
                 Logger.v(TAG, "Chat Updated!");
+                mIsProcessingMessage = false;
                 queueNextMessageForProcessing();
             }
         } else if (token == QueryTokens.UPDATE_USER_FOR_CHAT) {
@@ -670,6 +677,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     private void queueNextMessageForProcessing() {
 
         if ((mMessageQueue != null) && (mMessageQueue.peek() != null)) {
+            mIsProcessingMessage = true;
             processChatMessage(mMessageQueue.poll());
         }
     }
