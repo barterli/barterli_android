@@ -33,6 +33,7 @@ import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.data.TableUserBooks;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.JsonUtils.FieldType;
 import li.barter.models.Hangout;
 import li.barter.models.Team;
 import li.barter.utils.AppConstants;
@@ -630,13 +631,31 @@ public class HttpResponseParser {
 
         final JSONObject authorsObject = JsonUtils
                         .readJSONObject(bookInfoObject, HttpConstants.AUTHORS, false, false);
-        if (authorsObject != null) {
-            final JSONObject authorObject = JsonUtils
-                            .readJSONObject(authorsObject, HttpConstants.AUTHOR, false, false);
 
-            if (authorObject != null) {
+        if (authorsObject != null) {
+            final FieldType type = JsonUtils
+                            .getTypeForKey(authorsObject, HttpConstants.AUTHOR);
+
+            if (type == FieldType.OBJECT) {
+                final JSONObject authorObject = JsonUtils
+                                .readJSONObject(authorsObject, HttpConstants.AUTHOR, true, true);
                 responseBundle.putString(HttpConstants.AUTHOR, JsonUtils
-                                .readString(authorObject, HttpConstants.NAME, false, false));
+                                .readString(authorObject, HttpConstants.NAME, true, true));
+            } else if (type == FieldType.ARRAY) {
+                final JSONArray authorsArray = JsonUtils
+                                .readJSONArray(authorsObject, HttpConstants.AUTHOR, true, true);
+                final String[] authorNames = new String[authorsArray.length()];
+
+                for (int i = 0; i < authorsArray.length(); i++) {
+                    authorNames[i] = JsonUtils
+                                    .readString(JsonUtils
+                                                    .readJSONObject(authorsArray, i, true, true), HttpConstants.NAME, true, true);
+                }
+
+                if (authorNames.length > 0) {
+                    responseBundle.putString(HttpConstants.AUTHOR, TextUtils
+                                    .join(", ", authorNames));
+                }
             }
         }
 
