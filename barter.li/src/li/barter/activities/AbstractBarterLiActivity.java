@@ -20,6 +20,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
+
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
@@ -531,7 +532,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * 
      * @param title The title to set for the Action Bar
      */
-    
+
     public final void setActionBarTitle(final String title) {
 
         final SpannableString s = new SpannableString(title);
@@ -573,7 +574,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     public void showCrouton(final int messageResId, final AlertStyle style) {
         showCrouton(getString(messageResId), style);
     }
-    
+
     /**
      * Display an alert, with a string message with infinite time
      * 
@@ -581,8 +582,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * @param style The {@link AlertStyle} of message to display
      */
     public void showInfiniteCrouton(final String message, final AlertStyle style) {
-        Crouton.make(this, getCroutonViewForStyle(this, message, style)).setConfiguration(new de.keyboardsurfer.android.widget.crouton.Configuration.Builder().
-	    		setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE).build()).show();
+        Crouton.make(this, getCroutonViewForStyle(this, message, style))
+                        .setConfiguration(new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
+                                        .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
+                                        .build()).show();
 
     }
 
@@ -592,14 +595,16 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * @param messageResId The message to display
      * @param style The {@link AlertStyle} of message to display
      */
-    public void showInfiniteCrouton(final int messageResId, final AlertStyle style) {
-    	showInfiniteCrouton(getString(messageResId), style);
+    public void showInfiniteCrouton(final int messageResId,
+                    final AlertStyle style) {
+        showInfiniteCrouton(getString(messageResId), style);
     }
+
     /**
      * Cancels all queued {@link Crouton}s. If there is a {@link Crouton}
      * displayed currently, it will be the last one displayed.
      */
-    public  void cancelAllCroutons() {
+    public void cancelAllCroutons() {
         Crouton.cancelAllCroutons();
     }
 

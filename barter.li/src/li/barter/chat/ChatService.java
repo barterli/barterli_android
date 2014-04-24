@@ -30,7 +30,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -478,7 +477,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 parseAndStoreChatUserInfo(receiverId, receiverObject);
             } else {
                 final String senderName = parseAndStoreChatUserInfo(senderId, senderObject);
-                if (mCurrentChattingUserId != null
+                if ((mCurrentChattingUserId != null)
                                 && mCurrentChattingUserId.equals(senderId)) {
 
                     /*
@@ -562,7 +561,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         }
 
         @Override
-        protected void onPostExecute(Void result) {
+        protected void onPostExecute(final Void result) {
             if (!isConnectedToChat()) {
                 /* If it's not connected, try connecting again */
                 connectChatService();
@@ -673,7 +672,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private void queueNextMessageForProcessing() {
 
-        if (mMessageQueue != null && mMessageQueue.peek() != null) {
+        if ((mMessageQueue != null) && (mMessageQueue.peek() != null)) {
             processChatMessage(mMessageQueue.poll());
         }
     }
@@ -858,7 +857,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     @Override
-    public void onDisconnect(boolean manual) {
+    public void onDisconnect(final boolean manual) {
         if (!manual) {
             connectChatService();
         }

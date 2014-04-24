@@ -73,7 +73,7 @@ public abstract class AbstractRabbitMQConnector {
      *            <code>false</code> if it happened through an error/loss of
      *            network etc
      */
-    public void dispose(boolean manual) {
+    public void dispose(final boolean manual) {
         mRunning = false;
 
         try {
@@ -86,15 +86,15 @@ public abstract class AbstractRabbitMQConnector {
         } catch (final IOException e) {
             e.printStackTrace();
         } finally {
-            
-            if(mOnDisconnectCallback != null) {
+
+            if (mOnDisconnectCallback != null) {
                 mOnDisconnectCallback.onDisconnect(manual);
             }
         }
 
     }
 
-    public void setOnDisconnectCallback(OnDisconnectCallback callback) {
+    public void setOnDisconnectCallback(final OnDisconnectCallback callback) {
         mOnDisconnectCallback = callback;
     }
 

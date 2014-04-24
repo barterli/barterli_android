@@ -140,8 +140,8 @@ public class PhotoUtils {
         bm = BitmapFactory.decodeFile(tempPath, btmapOptions);
 
         if (shouldCompress) {
-           //bm = Bitmap.createScaledBitmap(bm, 125, 125, true);
-           bm = compressManageAspect(200, 200, bm);
+            //bm = Bitmap.createScaledBitmap(bm, 125, 125, true);
+            bm = compressManageAspect(200, 200, bm);
         }
 
         //return bm;        
@@ -297,17 +297,20 @@ public class PhotoUtils {
 
         return null;
     }
-    
-    private static Bitmap compressManageAspect(int height, int width, Bitmap originalImage){
-        Bitmap compressedBitmap = Bitmap.createBitmap(width, height, Config.ARGB_8888);
-        float originalWidth = originalImage.getWidth(), originalHeight = originalImage.getHeight();
-        Canvas canvas = new Canvas(compressedBitmap);
-        float scale = width/originalWidth;
-        float xTranslation = 0.0f, yTranslation = (height - originalHeight * scale)/2.0f;
-        Matrix transformation = new Matrix();
+
+    private static Bitmap compressManageAspect(final int height,
+                    final int width, final Bitmap originalImage) {
+        final Bitmap compressedBitmap = Bitmap
+                        .createBitmap(width, height, Config.ARGB_8888);
+        final float originalWidth = originalImage.getWidth(), originalHeight = originalImage
+                        .getHeight();
+        final Canvas canvas = new Canvas(compressedBitmap);
+        final float scale = width / originalWidth;
+        final float xTranslation = 0.0f, yTranslation = (height - (originalHeight * scale)) / 2.0f;
+        final Matrix transformation = new Matrix();
         transformation.postTranslate(xTranslation, yTranslation);
         transformation.preScale(scale, scale);
-        Paint paint = new Paint();
+        final Paint paint = new Paint();
         paint.setFilterBitmap(true);
         canvas.drawBitmap(originalImage, transformation, paint);
         return compressedBitmap;

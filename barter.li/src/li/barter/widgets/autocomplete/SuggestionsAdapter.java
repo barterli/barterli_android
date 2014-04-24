@@ -38,24 +38,24 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
     /**
      * The master list of suggestions from which other suggestions are fetched
      */
-    private List<Suggestion> mSuggestionsMaster;
+    private List<Suggestion>       mSuggestionsMaster;
 
     /**
      * The list of suggestions that are actually displayed
      */
-    private List<Suggestion> mVisibleSuggestions;
+    private List<Suggestion>       mVisibleSuggestions;
 
     /**
      * The filter for this adapter
      */
-    private SuggestionFilter mSuggestionsFilter;
+    private final SuggestionFilter mSuggestionsFilter;
 
     /**
      * Construct a suggestions adapter with an initial data set
      * 
      * @param suggestions The initial master set of {@link Suggestion} objects
      */
-    public SuggestionsAdapter(List<Suggestion> suggestions) {
+    public SuggestionsAdapter(final List<Suggestion> suggestions) {
 
         mSuggestionsMaster = suggestions;
         mSuggestionsFilter = new SuggestionFilter(this);
@@ -67,17 +67,18 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(final int position) {
         return mVisibleSuggestions.get(position);
     }
 
     @Override
-    public long getItemId(int position) {
+    public long getItemId(final int position) {
         return position;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView,
+                    final ViewGroup parent) {
 
         View view = convertView;
 
@@ -112,7 +113,7 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
      * 
      * @param suggestions The list of suggestions
      */
-    public void setSuggestions(List<Suggestion> suggestions) {
+    public void setSuggestions(final List<Suggestion> suggestions) {
         mVisibleSuggestions = suggestions;
         notifyDataSetChanged();
     }
@@ -122,7 +123,7 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
      * 
      * @param suggestions The list of suggestions
      */
-    public void setSuggestionsMaster(List<Suggestion> suggestions) {
+    public void setSuggestionsMaster(final List<Suggestion> suggestions) {
         mSuggestionsMaster = suggestions;
         mVisibleSuggestions = null;
         //TODO Force a filter

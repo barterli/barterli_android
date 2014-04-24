@@ -208,16 +208,16 @@ public class HomeActivity extends AbstractBarterLiActivity implements
 
         final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
 
-        if (fragment != null && fragment instanceof LoginFragment) {
+        if ((fragment != null) && (fragment instanceof LoginFragment)) {
             ((LoginFragment) fragment).onGoogleLogin();
         }
     }
 
     @Override
-    public void onLoginError(Exception error) {
+    public void onLoginError(final Exception error) {
         final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
 
-        if (fragment != null && fragment instanceof LoginFragment) {
+        if ((fragment != null) && (fragment instanceof LoginFragment)) {
             ((LoginFragment) fragment).onGoogleLoginError(error);
         }
     }
@@ -226,7 +226,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     public void onLogout() {
         final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
 
-        if (fragment != null && fragment instanceof LoginFragment) {
+        if ((fragment != null) && (fragment instanceof LoginFragment)) {
             ((LoginFragment) fragment).onGoogleLogout();
         }
     }

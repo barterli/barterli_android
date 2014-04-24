@@ -28,32 +28,32 @@ import java.io.IOException;
 public class GooglePlusManager implements ConnectionCallbacks,
                 OnConnectionFailedListener {
 
-    private static final String    TAG                     = "GooglePlusManager";
+    private static final String          TAG                     = "GooglePlusManager";
 
-    public static final int       CONNECTION_UPDATE_ERROR = 500;
+    public static final int              CONNECTION_UPDATE_ERROR = 500;
 
     /** {@link PlusClient} instance for connecting to Google+ */
-    private final PlusClient       mPlusClient;
+    private final PlusClient             mPlusClient;
 
     /** {@link ConnectionResult} for Google+ login */
-    private ConnectionResult       mConnectionResult;
+    private ConnectionResult             mConnectionResult;
 
-    private final Activity         mActivity;
+    private final Activity               mActivity;
 
-    private String                 mAccessToken;
+    private String                       mAccessToken;
 
-    private boolean                mResolveOnFail;
+    private boolean                      mResolveOnFail;
 
-    private boolean                mClickedToLogin;
+    private boolean                      mClickedToLogin;
 
-    private GooglePlusAuthCallback mGooglePlusAuthCallback;
+    private final GooglePlusAuthCallback mGooglePlusAuthCallback;
 
-    private final String[]         mScopes                 = new String[] {
+    private final String[]               mScopes                 = new String[] {
             Scopes.PLUS_LOGIN, Scopes.PROFILE,
 
             "https://www.googleapis.com/auth/userinfo.email",
             "https://www.googleapis.com/auth/userinfo.profile"
-                                                           };
+                                                                 };
 
     /**
      * @param activity Activity in which this is used

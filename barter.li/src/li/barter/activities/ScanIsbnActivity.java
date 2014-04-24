@@ -87,8 +87,6 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        
-
         setActionBarTitle(R.string.scanactivity_title);
 
         mDecoderActivityHandler = null;

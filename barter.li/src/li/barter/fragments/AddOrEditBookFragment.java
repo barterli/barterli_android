@@ -17,13 +17,11 @@
 package li.barter.fragments;
 
 import com.android.volley.Request.Method;
-import com.google.android.gms.internal.fe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,7 +29,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -70,7 +67,8 @@ import li.barter.widgets.autocomplete.Suggestion;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-                OnClickListener, AsyncDbQueryCallback, INetworkSuggestCallbacks,OnCheckedChangeListener {
+                OnClickListener, AsyncDbQueryCallback,
+                INetworkSuggestCallbacks, OnCheckedChangeListener {
 
     private static final String           TAG = "AddOrEditBookFragment";
 
@@ -105,7 +103,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
-        
+
         setActionBarTitle(R.string.editbook_title);
         final View view = inflater
                         .inflate(R.layout.fragment_add_or_edit_book, container, false);
@@ -173,10 +171,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         mDescriptionEditText = (EditText) view
                         .findViewById(R.id.edit_text_description);
-        
-        mSellPriceEditText = (EditText) view
-                .findViewById(R.id.edit_sell_price);
-        
+
+        mSellPriceEditText = (EditText) view.findViewById(R.id.edit_sell_price);
+
         initBarterTypeCheckBoxes(view);
 
     }
@@ -206,8 +203,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mGiveAwayCheckBox.setTag(R.string.tag_barter_type, BarterType.FREE);
         mKeepPrivateCheckBox
                         .setTag(R.string.tag_barter_type, BarterType.PRIVATE);
-        
-        
+
         mSellCheckBox.setOnCheckedChangeListener(this);
 
         mBarterTypeCheckBoxes = new CheckBox[6];
@@ -310,9 +306,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                             .toString());
             bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
                             .getText().toString());
-            if(!mSellPriceEditText.getText().toString().equals(""))
-            {
-            	bookJson.put(HttpConstants.VALUE, mSellPriceEditText.getText().toString());	
+            if (!mSellPriceEditText.getText().toString().equals("")) {
+                bookJson.put(HttpConstants.VALUE, mSellPriceEditText.getText()
+                                .toString());
             }
 
             bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYear);
@@ -365,11 +361,11 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         super.onResume();
         if (mShouldSubmitOnResume && isLoggedIn()) {
 
-        //    if (mEditMode) {
-                //TODO Edit book
-          //  } else {
-                createBookOnServer(null);
-           // }
+            //    if (mEditMode) {
+            //TODO Edit book
+            //  } else {
+            createBookOnServer(null);
+            // }
         }
     }
 
@@ -391,7 +387,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if ((v.getId() == R.id.button_submit) && isInputValid()) {
 
             if (!isLoggedIn()) {
-            	
+
                 mShouldSubmitOnResume = true;
                 final Bundle loginArgs = new Bundle(1);
                 loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_ADD_BOOK);
@@ -518,9 +514,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      * @return An array of {@link Suggestion} objects
      */
     private Suggestion[] makeSuggestionArrayFromBookSuggestions(
-                    BookSuggestion[] fetchedSuggestions) {
+                    final BookSuggestion[] fetchedSuggestions) {
 
-        if (fetchedSuggestions == null || fetchedSuggestions.length == 0) {
+        if ((fetchedSuggestions == null) || (fetchedSuggestions.length == 0)) {
             return null;
         }
 
@@ -610,8 +606,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void performNetworkQuery(NetworkedAutoCompleteTextView textView,
-                    String query) {
+    public void performNetworkQuery(
+                    final NetworkedAutoCompleteTextView textView,
+                    final String query) {
 
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "Perform network query %s", query);
@@ -630,22 +627,21 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuggestionClicked(NetworkedAutoCompleteTextView textView,
-                    Suggestion suggestion) {
+    public void onSuggestionClicked(
+                    final NetworkedAutoCompleteTextView textView,
+                    final Suggestion suggestion) {
 
     }
 
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		if(isChecked)
-		{
-			mSellPriceEditText.setVisibility(View.VISIBLE);
-		}
-		else
-		{
-			mSellPriceEditText.setVisibility(View.GONE);
-		}
-		
-	}
+    @Override
+    public void onCheckedChanged(final CompoundButton buttonView,
+                    final boolean isChecked) {
+        if (isChecked) {
+            mSellPriceEditText.setVisibility(View.VISIBLE);
+        } else {
+            mSellPriceEditText.setVisibility(View.GONE);
+        }
+
+    }
 
 }

@@ -170,7 +170,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
-    
     /**
      * Add a request on the network queue
      * 
@@ -228,27 +227,26 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
             showCrouton(getString(messageResId), style);
         }
     }
-    
+
     /**
      * Display an alert, with a string message infinitely
      * 
      * @param messageResId The message to display
      * @param style The {@link AlertStyle} of message to display
      */
-    public void showInfiniteCrouton(final int messageResId, final AlertStyle style) {
+    public void showInfiniteCrouton(final int messageResId,
+                    final AlertStyle style) {
         if (mIsAttached) {
-        	showInfiniteCrouton(getString(messageResId), style);
+            showInfiniteCrouton(getString(messageResId), style);
         }
     }
-    
-    
-    public void cancelAllCroutons()
-    {
-    	  if (mIsAttached) {
-              ((AbstractBarterLiActivity) getActivity())
-                              .cancelAllCroutons();
-          }
+
+    public void cancelAllCroutons() {
+        if (mIsAttached) {
+            ((AbstractBarterLiActivity) getActivity()).cancelAllCroutons();
+        }
     }
+
     /**
      * Display an alert, with a string message infinitely
      * 
@@ -261,7 +259,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
                             .showInfiniteCrouton(message, style);
         }
     }
-
 
     /**
      * Whether this Fragment is currently attached to an Activity

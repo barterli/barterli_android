@@ -41,8 +41,8 @@ import java.util.Arrays;
 
 import li.barter.BarterLiApplication;
 import li.barter.R;
-import li.barter.activities.HomeActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.activities.HomeActivity;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -114,9 +114,9 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-        Session session = Session.getActiveSession();
+        final Session session = Session.getActiveSession();
         Session.saveSession(session, outState);
     }
 
@@ -140,7 +140,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         switch (v.getId()) {
 
             case R.id.button_facebook_login: {
-                Session session = Session.getActiveSession();
+                final Session session = Session.getActiveSession();
                 if (!session.isOpened() && !session.isClosed()) {
                     session.openForRead(new Session.OpenRequest(this)
                                     .setPermissions(Arrays
@@ -324,11 +324,10 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
                 } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
                     onUpNavigate();
-                }
-                else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
+                } else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
                     onUpNavigate();
                 }
-                
+
             }
 
         }
@@ -346,7 +345,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void call(Session session, SessionState state, Exception exception) {
+    public void call(final Session session, final SessionState state,
+                    final Exception exception) {
         // TODO session returns the user_token
         if (!session.getAccessToken().equals("")) {
             loginWithProvider(session.getAccessToken(), AppConstants.FACEBOOK);
@@ -359,10 +359,11 @@ public class LoginFragment extends AbstractBarterLiFragment implements
      */
     public void onGoogleLogin() {
 
-        final String googleAccessToken = ((HomeActivity) getActivity()).getPlusManager().getAccessToken();
+        final String googleAccessToken = ((HomeActivity) getActivity())
+                        .getPlusManager().getAccessToken();
         Logger.v(TAG, "Google Access Token: %s", googleAccessToken);
-        
-        if(!TextUtils.isEmpty(googleAccessToken)) {
+
+        if (!TextUtils.isEmpty(googleAccessToken)) {
             loginWithProvider(googleAccessToken, AppConstants.GOOGLE);
         }
     }
@@ -372,7 +373,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
      * 
      * @param error The {@link Exception} that occured
      */
-    public void onGoogleLoginError(Exception error) {
+    public void onGoogleLoginError(final Exception error) {
 
         showCrouton(R.string.error_unable_to_login, AlertStyle.ERROR);
     }

@@ -176,7 +176,8 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case android.R.id.home: {
-                int backStackEntryCount = getFragmentManager()
+                
+                final int backStackEntryCount = getFragmentManager()
                                 .getBackStackEntryCount();
                 if (backStackEntryCount == 0) {
                     ((HomeActivity) getActivity()).loadBooksAroundMeFragment();

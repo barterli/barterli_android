@@ -44,7 +44,7 @@ public class BookSuggestion implements Parcelable {
         address = source.readString();
         latitude = source.readDouble();
         longitude = source.readDouble();
-        
+
     }
 
     @Override
