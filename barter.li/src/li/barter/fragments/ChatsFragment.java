@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
 import li.barter.R;
 import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatsAdapter;
@@ -137,22 +138,23 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
                                             .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
 
             case android.R.id.home: {
-            	int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
-            	if (backStackEntryCount == 0) {
-            		 ((HomeActivity)getActivity()).loadBooksAroundMeFragment();
-            	    return true;
-            	}
+                final int backStackEntryCount = getFragmentManager()
+                                .getBackStackEntryCount();
+                if (backStackEntryCount == 0) {
+                    ((HomeActivity) getActivity()).loadBooksAroundMeFragment();
+                    return true;
+                }
 
-            else
-            {
-                	 onUpNavigate();
-                	 return true;
-            }   
+                else {
+                    onUpNavigate();
+                    return true;
+                }
             }
 
             default: {

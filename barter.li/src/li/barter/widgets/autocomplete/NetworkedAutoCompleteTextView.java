@@ -94,7 +94,7 @@ public class NetworkedAutoCompleteTextView extends
     /**
      * @param context
      */
-    public NetworkedAutoCompleteTextView(Context context) {
+    public NetworkedAutoCompleteTextView(final Context context) {
         super(context);
         init();
     }
@@ -103,7 +103,7 @@ public class NetworkedAutoCompleteTextView extends
      * @param context
      * @param attrs
      */
-    public NetworkedAutoCompleteTextView(Context context, AttributeSet attrs) {
+    public NetworkedAutoCompleteTextView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
@@ -122,7 +122,7 @@ public class NetworkedAutoCompleteTextView extends
      * @param enabled <code>true</code> to enable network suggestions,
      *            <code>false</code> to disable them
      */
-    public void setNetworkSuggestionsEnabled(boolean enabled) {
+    public void setNetworkSuggestionsEnabled(final boolean enabled) {
 
         mSuggestionsEnabled = enabled;
     }
@@ -131,7 +131,7 @@ public class NetworkedAutoCompleteTextView extends
         return mSuggestCountThreshold;
     }
 
-    public void setSuggestCountThreshold(int suggestCountThreshold) {
+    public void setSuggestCountThreshold(final int suggestCountThreshold) {
         mSuggestCountThreshold = suggestCountThreshold;
     }
 
@@ -139,7 +139,7 @@ public class NetworkedAutoCompleteTextView extends
         return mSuggestWaitThreshold;
     }
 
-    public void setSuggestWaitThreshold(int suggestWaitThreshold) {
+    public void setSuggestWaitThreshold(final int suggestWaitThreshold) {
         mSuggestWaitThreshold = suggestWaitThreshold;
     }
 
@@ -147,7 +147,8 @@ public class NetworkedAutoCompleteTextView extends
         return mNetworkSuggestCallbacks;
     }
 
-    public void setNetworkSuggestCallbacks(INetworkSuggestCallbacks callbacks) {
+    public void setNetworkSuggestCallbacks(
+                    final INetworkSuggestCallbacks callbacks) {
         mNetworkSuggestCallbacks = callbacks;
     }
 
@@ -159,8 +160,8 @@ public class NetworkedAutoCompleteTextView extends
      * @param append <code>false</code> to add the new suggestions to the
      *            TextView, <code>true</code> to replace the suggestion
      */
-    public void onSuggestionsFetched(String query, Suggestion[] suggestions,
-                    boolean replace) {
+    public void onSuggestionsFetched(final String query,
+                    final Suggestion[] suggestions, final boolean replace) {
 
         mLastSearchSequence = query;
         if (mSuggestions == null) {
@@ -183,13 +184,13 @@ public class NetworkedAutoCompleteTextView extends
     private class SuggestNetworkTextWatcher implements TextWatcher {
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                        int after) {
+        public void beforeTextChanged(final CharSequence s, final int start,
+                        final int count, final int after) {
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before,
-                        int count) {
+        public void onTextChanged(final CharSequence s, final int start,
+                        final int before, final int count) {
 
             if (mSuggestionsEnabled) {
 
@@ -213,7 +214,7 @@ public class NetworkedAutoCompleteTextView extends
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
+        public void afterTextChanged(final Editable s) {
 
         }
 

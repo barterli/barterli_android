@@ -19,6 +19,7 @@ package li.barter;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -71,7 +72,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         overrideHardwareMenuButton();
         VolleyLog.sDebug = AppConstants.DEBUG;
         mRequestQueue = Volley.newRequestQueue(this);
-       // Picasso.with(this).setDebugging(true);
+        // Picasso.with(this).setDebugging(true);
         readUserInfoFromSharedPref();
         Utils.setupNetworkInfo(this);
         if (DeviceInfo.INSTANCE.isNetworkConnected()) {

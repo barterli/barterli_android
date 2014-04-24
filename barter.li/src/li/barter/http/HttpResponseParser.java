@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.text.TextUtils;
+
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -114,7 +115,7 @@ public class HttpResponseParser {
             case RequestId.TEAM: {
                 return parseTeamResponse(response);
             }
-            
+
             case RequestId.GET_USER_PROFILE: {
                 return parseUserProfileResponse(response);
             }
@@ -158,8 +159,7 @@ public class HttpResponseParser {
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
     }
-    
-    
+
     /**
      * Parse the response for Tribute
      * 
@@ -168,9 +168,9 @@ public class HttpResponseParser {
      */
     private ResponseInfo parseUserProfileResponse(final String response)
                     throws JSONException {
-    	
-    	 Logger.d(TAG, "Request \nResponse %s", response);
-    	final ResponseInfo responseInfo = new ResponseInfo();
+
+        Logger.d(TAG, "Request \nResponse %s", response);
+        final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
 
@@ -194,7 +194,7 @@ public class HttpResponseParser {
 
         JSONObject bookObject = null;
         final ContentValues values = new ContentValues();
-      
+
         final String[] args = new String[1];
         DBInterface.delete(TableUserBooks.NAME, null, null, true);
         for (int i = 0; i < booksArray.length(); i++) {
@@ -202,18 +202,17 @@ public class HttpResponseParser {
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
 
             //First try to delete the table if a book already exists
-            
 
-                // Unable to update, insert the item
-                DBInterface.insert(TableUserBooks.NAME, null, values, true);
-            
+            // Unable to update, insert the item
+            DBInterface.insert(TableUserBooks.NAME, null, values, true);
+
         }
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(userObject, HttpConstants.LOCATION, false, false);
-        
+
         responseBundle.putString(HttpConstants.ADDRESS, JsonUtils
-                .readString(locationObject, HttpConstants.ADDRESS, false, false));
+                        .readString(locationObject, HttpConstants.ADDRESS, false, false));
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
     }
@@ -575,8 +574,8 @@ public class HttpResponseParser {
      */
     private ResponseInfo parseGetBookInfoResponse(final String response)
                     throws JSONException {
-    	
-    	 Logger.d(TAG, "Request Id Test \nResponse %s",  response);
+
+        Logger.d(TAG, "Request Id Test \nResponse %s", response);
         final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject bookInfoObject = new JSONObject(response);
@@ -586,16 +585,15 @@ public class HttpResponseParser {
                         .readString(bookInfoObject, HttpConstants.TITLE, false, false));
         responseBundle.putString(HttpConstants.DESCRIPTION, JsonUtils
                         .readString(bookInfoObject, HttpConstants.DESCRIPTION, false, false));
-        
+
         responseBundle.putString(HttpConstants.PUBLICATION_YEAR, JsonUtils
-                .readString(bookInfoObject, HttpConstants.PUBLICATION_YEAR, false, false));
-        
+                        .readString(bookInfoObject, HttpConstants.PUBLICATION_YEAR, false, false));
+
         responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
-                .readString(bookInfoObject, HttpConstants.IMAGE_URL, false, false));
-        
+                        .readString(bookInfoObject, HttpConstants.IMAGE_URL, false, false));
+
         responseBundle.putString(HttpConstants.ISBN_13, JsonUtils
-                .readString(bookInfoObject, HttpConstants.ISBN_13, false, false));
-        
+                        .readString(bookInfoObject, HttpConstants.ISBN_13, false, false));
 
         final JSONObject authorsObject = JsonUtils
                         .readJSONObject(bookInfoObject, HttpConstants.AUTHORS, false, false);

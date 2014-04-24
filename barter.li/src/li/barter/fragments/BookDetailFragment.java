@@ -16,7 +16,6 @@
 
 package li.barter.fragments;
 
-
 import com.squareup.picasso.Picasso;
 
 import android.database.Cursor;
@@ -36,6 +35,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import li.barter.R;
 import li.barter.chat.ChatService;
 import li.barter.data.DBInterface;
@@ -47,12 +47,12 @@ import li.barter.data.TableSearchBooks;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
-import li.barter.utils.Logger;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class BookDetailFragment extends AbstractBarterLiFragment implements
@@ -64,7 +64,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private TextView            mTitleTextView;
     private TextView            mAuthorTextView;
     private TextView            mDescriptionTextView;
-    private ImageView		    mBookImageView;
+    private ImageView           mBookImageView;
     private TextView            mPublicationDateTextView;
     private CheckBox            mBarterCheckBox;
     private CheckBox            mReadCheckBox;
@@ -79,12 +79,14 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private String              mBookId;
     private String              mUserId;
     private boolean             mOwnedByUser;
+    private boolean             mCameFromOtherProfile;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         setHasOptionsMenu(true);
+        setActionBarTitle(R.string.Book_Detail_fragment_title);
         final View view = inflater
                         .inflate(R.layout.fragment_book_detail, container, false);
         initViews(view);
@@ -97,7 +99,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         if (extras != null) {
             mBookId = extras.getString(Keys.BOOK_ID);
             mUserId = extras.getString(Keys.USER_ID);
-
+            mCameFromOtherProfile = extras.getBoolean(Keys.OTHER_PROFILE_FLAG);
             if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
                 mOwnedByUser = true;
             } else {
@@ -120,6 +122,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         if (mOwnedByUser) {
             mChatWithOwnerButton.setEnabled(false);
             mChatWithOwnerButton.setVisibility(View.GONE);
+            
+        }
+        
+        if(mCameFromOtherProfile)
+        {
+            mOwnerProfileButton.setVisibility(View.GONE);
         }
     }
 
@@ -157,10 +165,10 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.text_publication_date);
         mChatWithOwnerButton = (Button) view.findViewById(R.id.button_chat);
         mChatWithOwnerButton.setOnClickListener(this);
-        
+
         mOwnerProfileButton = (Button) view.findViewById(R.id.button_profile);
         mOwnerProfileButton.setOnClickListener(this);
-        
+
         initBarterTypeCheckBoxes(view);
 
     }
@@ -295,21 +303,21 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                                 .getColumnIndex(DatabaseColumns.TITLE)));
                 mAuthorTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.AUTHOR)));
-                mDescriptionTextView.setText(Html.fromHtml(cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.DESCRIPTION))));
+                mDescriptionTextView
+                                .setText(Html.fromHtml(cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.DESCRIPTION))));
                 mPublicationDateTextView
                                 .setText(cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR)));
-                
+
                 Logger.d(TAG, cursor.getString(cursor
-                        .getColumnIndex(DatabaseColumns.IMAGE_URL)), "book image");
-                
-               // Picasso.with(getActivity()).setDebugging(true);
+                                .getColumnIndex(DatabaseColumns.IMAGE_URL)), "book image");
+
+                // Picasso.with(getActivity()).setDebugging(true);
                 Picasso.with(getActivity())
-                .load(cursor.getString(cursor
-                        .getColumnIndex(DatabaseColumns.IMAGE_URL)))
-                .fit()
-                .into(mBookImageView);
+                                .load(cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.IMAGE_URL)))
+                                .fit().into(mBookImageView);
 
                 final String barterType = cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.BARTER_TYPE));
@@ -361,31 +369,27 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), ChatDetailsFragment.class
                                                 .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
-            } 
-            else
-            {
-            	 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                         .instantiate(getActivity(), LoginFragment.class
-                                         .getName(), null), FragmentTags.LOGIN_TO_CHAT, true, null);
+            } else {
+                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), LoginFragment.class
+                                                .getName(), null), FragmentTags.LOGIN_TO_CHAT, true, null);
             }
         }
-        
+
         else if (v.getId() == R.id.button_profile) {
 
-           
-                final Bundle args = new Bundle(1);
-                
-                args.putString(Keys.USER_ID, mUserId);
-               
+            final Bundle args = new Bundle(1);
 
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), OtherProfileFragment.class
-                                                .getName(), args), FragmentTags.OTHER_USER_PROFILE, true, null);
-          
-        }else {
-                // Show Login Fragment
-            }
-        
+            args.putString(Keys.USER_ID, mUserId);
+
+            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                            .instantiate(getActivity(), OtherProfileFragment.class
+                                            .getName(), args), FragmentTags.OTHER_USER_PROFILE, true, null);
+
+        } else {
+            // Show Login Fragment
+        }
+
     }
 
 }

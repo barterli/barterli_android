@@ -279,8 +279,6 @@ public final class Crouton {
     public static Crouton make(final Activity activity, final View customView) {
         return new Crouton(activity, customView);
     }
-    
-    
 
     /**
      * Creates a {@link Crouton} with provided text-resource and style for a
@@ -344,15 +342,14 @@ public final class Crouton {
                     final CharSequence text, final Style style) {
         makeText(activity, text, style).show();
     }
-    
+
     public static void showInfiniteText(final Activity activity,
-            final CharSequence text, final Style style) {
-    	 makeText(activity, text, style).
-    	    setConfiguration(new Configuration.Builder().
-    	    		setDuration(Configuration.DURATION_INFINITE).build()).show();
-}
-    
-   
+                    final CharSequence text, final Style style) {
+        makeText(activity, text, style)
+                        .setConfiguration(new Configuration.Builder()
+                                        .setDuration(Configuration.DURATION_INFINITE)
+                                        .build()).show();
+    }
 
     /**
      * Creates a {@link Crouton} with provided text and style for a given

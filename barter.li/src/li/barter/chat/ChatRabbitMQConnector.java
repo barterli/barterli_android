@@ -194,13 +194,14 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
     }
 
     /**
-     * Called when an unexpected shutdown occured when consuming for messages(loss of network, etc)
+     * Called when an unexpected shutdown occured when consuming for
+     * messages(loss of network, etc)
      */
     private void shutdownHappened() {
         setIsRunning(false);
-        
+
         final OnDisconnectCallback callback = getOnDisconnectCallback();
-        if(callback != null) {
+        if (callback != null) {
             callback.onDisconnect(false);
         }
 

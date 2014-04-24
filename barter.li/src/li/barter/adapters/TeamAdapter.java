@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import li.barter.R;
 import li.barter.models.Team;
 
@@ -46,16 +47,14 @@ public class TeamAdapter extends BaseAdapter {
      * A reference to the {@link LayoutInflater} to inflating layouts
      */
     private final LayoutInflater mLayoutInflater;
-    
-    private final Context mContext;
-    
-    
+
+    private final Context        mContext;
 
     public TeamAdapter(final Context context, final Team[] mTeams) {
 
         mTeamMembers = mTeams;
         mLayoutInflater = LayoutInflater.from(context);
-        mContext=context;
+        mContext = context;
     }
 
     @Override
@@ -84,22 +83,17 @@ public class TeamAdapter extends BaseAdapter {
             view.setTag(R.id.team_desc, view.findViewById(R.id.team_desc));
             view.setTag(R.id.team_name, view.findViewById(R.id.team_name));
             view.setTag(R.id.team_image, view.findViewById(R.id.team_image));
-            
+
         }
         final Team teamMember = getItem(position);
         ((TextView) view.getTag(R.id.team_name)).setText(teamMember.getName());
         ((TextView) view.getTag(R.id.team_desc)).setText(teamMember
                         .getDescription());
-       
-       
+
         Picasso.with(mContext).load(teamMember.getImageUrl()).fit()
                         .error(R.drawable.pic_avatar)
                         .into(((ImageView) view.getTag(R.id.team_image)));
-        
-       
-      
-        
-        
+
         return view;
     }
 

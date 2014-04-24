@@ -35,6 +35,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.HomeActivity;
@@ -143,16 +144,15 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case android.R.id.home: {
-            	int backStackEntryCount = getFragmentManager().getBackStackEntryCount();
-            	if (backStackEntryCount == 0) {
-            		 ((HomeActivity)getActivity()).loadBooksAroundMeFragment();
-            	}
-            	else
-            	{
-                	 onUpNavigate();
-            	}
-                	 return true;
-                
+                final int backStackEntryCount = getFragmentManager()
+                                .getBackStackEntryCount();
+                if (backStackEntryCount == 0) {
+                    ((HomeActivity) getActivity()).loadBooksAroundMeFragment();
+                } else {
+                    onUpNavigate();
+                }
+                return true;
+
             }
 
             default: {
@@ -160,6 +160,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
             }
         }
     }
+
     @Override
     public void onPause() {
         mAcknowledge.mChatDetailsFragment = null;
@@ -258,7 +259,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 }
             }
             mChatDetailAdapter.swapCursor(cursor);
-            
+
             mChatListView.smoothScrollToPosition(mChatDetailAdapter.getCount() - 1);
         } else if (id == Loaders.USER_DETAILS) {
             if (cursor.moveToFirst()) {

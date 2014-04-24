@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import li.barter.R;
 import li.barter.adapters.TeamAdapter;
 import li.barter.http.BlRequest;
@@ -42,81 +43,81 @@ import li.barter.utils.Logger;
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class TeamFragment extends AbstractBarterLiFragment {
 
-	private static final String TAG = "TeamFragment";
+    private static final String TAG = "TeamFragment";
 
-	/**
-	 * List that displays the Oss Licenses
-	 */
-	private ListView            mListView;
+    /**
+     * List that displays the Oss Licenses
+     */
+    private ListView            mListView;
 
-	private TextView			mAboutBarterli;
-	private Team[]              mTeams;
+    private TextView            mAboutBarterli;
+    private Team[]              mTeams;
 
-	/**
-	 * Adapter for displaying Team members
-	 */
-	private TeamAdapter         mTeamAdapter;
+    /**
+     * Adapter for displaying Team members
+     */
+    private TeamAdapter         mTeamAdapter;
 
-	@Override
-	public View onCreateView(final LayoutInflater inflater,
-			final ViewGroup container, final Bundle savedInstanceState) {
-		init(container);
-		 setActionBarTitle(R.string.Aboutus_fragment_title);
-		mListView = (ListView) inflater
-				.inflate(R.layout.fragment_team, container, false);
+    @Override
+    public View onCreateView(final LayoutInflater inflater,
+                    final ViewGroup container, final Bundle savedInstanceState) {
+        init(container);
+        setActionBarTitle(R.string.Aboutus_fragment_title);
+        mListView = (ListView) inflater
+                        .inflate(R.layout.fragment_team, container, false);
 
+        final ViewGroup header = (ViewGroup) inflater
+                        .inflate(R.layout.layout_teamlistheader, mListView, false);
+        mListView.addHeaderView(header, null, false);
+        setActionBarDrawerToggleEnabled(false);
+        // Make a call to server
+        try {
 
-		ViewGroup header = (ViewGroup)inflater.inflate(R.layout.layout_teamlistheader, mListView, false);
-		mListView.addHeaderView(header, null, false);
-		setActionBarDrawerToggleEnabled(false);
-		// Make a call to server
-		try {
+            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.TEAM, null, mVolleyCallbacks);
+            request.setRequestId(RequestId.TEAM);
+            addRequestToQueue(request, true, 0);
+        } catch (final Exception e) {
+            // Should never happen
+            Logger.e(TAG, e, "Error building report bug json");
+        }
+        return mListView;
+    }
 
-			final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-					+ ApiEndpoints.TEAM, null, mVolleyCallbacks);
-			request.setRequestId(RequestId.TEAM);
-			addRequestToQueue(request, true, 0);
-		} catch (final Exception e) {
-			// Should never happen
-			Logger.e(TAG, e, "Error building report bug json");
-		}
-		return mListView;
-	}
+    @Override
+    protected Object getVolleyTag() {
+        return TAG;
+    }
 
-	@Override
-	protected Object getVolleyTag() {
-		return TAG;
-	}
+    @Override
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
-	@Override
-	public void onSuccess(final int requestId,
-			final IBlRequestContract request,
-			final ResponseInfo response) {
+        if (requestId == RequestId.TEAM) {
+            try {
+                Logger.v(TAG, response.responseBundle.toString());
+                mTeams = (Team[]) response.responseBundle
+                                .getParcelableArray(HttpConstants.TEAM);
+                Logger.v(TAG, response.responseBundle
+                                .getParcelableArray(HttpConstants.TEAM)
+                                .toString());
+                mTeamAdapter = new TeamAdapter(getActivity(), mTeams);
+                mListView.setAdapter(mTeamAdapter);
 
-		if (requestId == RequestId.TEAM) {
-			try {
-				Logger.v(TAG, response.responseBundle.toString());
-				mTeams = (Team[]) response.responseBundle
-						.getParcelableArray(HttpConstants.TEAM);
-				Logger.v(TAG, response.responseBundle
-						.getParcelableArray(HttpConstants.TEAM)
-						.toString());
-				mTeamAdapter = new TeamAdapter(getActivity(), mTeams);
-				mListView.setAdapter(mTeamAdapter);
+            } catch (final Exception e) {
+                // Should never happen
+                Logger.e(TAG, e, "Error parsing json response");
+            }
+        }
 
-			} catch (final Exception e) {
-				// Should never happen
-				Logger.e(TAG, e, "Error parsing json response");
-			}
-		}
+    }
 
-	}
+    @Override
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
 
-	@Override
-	public void onBadRequestError(final int requestId,
-			final IBlRequestContract request, final int errorCode,
-			final String errorMessage, final Bundle errorResponseBundle) {
-
-	}
+    }
 
 }

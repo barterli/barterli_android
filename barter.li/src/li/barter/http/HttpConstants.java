@@ -130,7 +130,7 @@ public class HttpConstants {
     public static final String T                           = "t";
     public static final String TITLE                       = "title";
     public static final String DESCRIPTION                 = "description";
-    public static final String VALUE            	       = "value";
+    public static final String VALUE                       = "value";
     public static final String AUTHORS                     = "authors";
     public static final String AUTHOR                      = "author";
     public static final String NAME                        = "name";

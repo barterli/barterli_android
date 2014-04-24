@@ -29,6 +29,7 @@
      <string name="Opensource_fragment_title">Open Source</string>
      <string name="Aboutus_fragment_title">About us</string>
       <string name="Tribute_fragment_title">Tribute</string>
+      <string name="Book_Detail_fragment_title">Book Detail</string>
     
     
     <!-- crouton info strings -->
