@@ -104,6 +104,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container);
         setHasOptionsMenu(true);
+        setActionBarTitle(R.string.app_name);
         final View view = inflater
                         .inflate(R.layout.fragment_chat_details, container, false);
         mChatListView = (ListView) view.findViewById(R.id.list_chats);

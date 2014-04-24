@@ -51,6 +51,7 @@ import java.io.File;
 import java.util.Locale;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -187,10 +188,15 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                                 .toString();
                 final String mLastName = mLastNameTextView.getText().toString();
                 final String mAboutMe = mAboutMeTextView.getText().toString();
-
+                if(mFirstName.equals(""))
+                {
+                 showCrouton("Please Enter First Name", AlertStyle.ERROR);   
+                }
+                else
+                {
                 saveProfileInfoToServer(mFirstName, mLastName, mAboutMe, mWasProfileImageChanged, mAvatarfile
                                 .getAbsolutePath());
-
+                }
                 return true;
             }
 

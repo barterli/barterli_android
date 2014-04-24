@@ -165,14 +165,14 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mTitleEditText.setNetworkSuggestCallbacks(this);
         mTitleEditText.setSuggestCountThreshold(3);
         mTitleEditText.setSuggestWaitThreshold(400);
-
+       // mTitleEditText.addTextChangedListener(watcher);
         mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
-
+        
         mDescriptionEditText = (EditText) view
                         .findViewById(R.id.edit_text_description);
-
+        
         mSellPriceEditText = (EditText) view.findViewById(R.id.edit_sell_price);
-
+        
         initBarterTypeCheckBoxes(view);
 
     }

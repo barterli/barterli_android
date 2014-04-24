@@ -756,6 +756,11 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                     final int position, final long id) {
         if (parent.getId() == R.id.grid_books_around_me) {
 
+            final InputMethodManager imm = (InputMethodManager) getActivity()
+                            .getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mBooksAroundMeAutoCompleteTextView
+                            .getWindowToken(), 0);
+            
             final Cursor cursor = (Cursor) mBooksAroundMeAdapter
                             .getItem(position);
 
