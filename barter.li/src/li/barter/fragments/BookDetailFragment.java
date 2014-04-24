@@ -124,10 +124,10 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             mChatWithOwnerButton.setVisibility(View.GONE);
             mOwnerProfileButton.setVisibility(View.GONE);
             
+
         }
-        
-        if(mCameFromOtherProfile)
-        {
+
+        if (mCameFromOtherProfile) {
             mOwnerProfileButton.setVisibility(View.GONE);
         }
     }

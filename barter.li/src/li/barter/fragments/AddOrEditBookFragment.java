@@ -53,7 +53,6 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.models.BookSuggestion;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -250,17 +249,17 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Fetches the book info from server based on the ISBN number
+     * Fetches the book info from server based on the ISBN number or book title
      * 
-     * @param bookIsbn The ISBN Id of the book to get info for
+     * @param bookInfo The ISBN/Book title of the book to get info for
      */
-    private void getBookInfoFromServer(final String bookIsbn) {
+    private void getBookInfoFromServer(final String bookInfo) {
 
         final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.BOOK_INFO, null, mVolleyCallbacks);
         final Map<String, String> params = new HashMap<String, String>();
         request.setRequestId(RequestId.GET_BOOK_INFO);
-        params.put(HttpConstants.Q, bookIsbn);
+        params.put(HttpConstants.Q, bookInfo);
         request.setParams(params);
         addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
     }
@@ -459,9 +458,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         switch (requestId) {
             case RequestId.GET_BOOK_INFO: {
-                
+                mTitleEditText.setNetworkSuggestionsEnabled(false);
                 mTitleEditText.setText(response.responseBundle
                                 .getString(HttpConstants.TITLE));
+                
                 mDescriptionEditText.setText(response.responseBundle
                                 .getString(HttpConstants.DESCRIPTION));
                 mAuthorEditText.setText(response.responseBundle
@@ -495,12 +495,15 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             case RequestId.BOOK_SUGGESTIONS: {
 
-                //TODO Read book suggestions and update autocomplete text
-                final BookSuggestion[] fetchedSuggestions = (BookSuggestion[]) response.responseBundle
-                                .getParcelableArray(Keys.BOOK_SUGGESTIONS);
-                final Suggestion[] suggestions = makeSuggestionArrayFromBookSuggestions(fetchedSuggestions);
-                mTitleEditText.onSuggestionsFetched((String) request
-                                .getExtras().get(Keys.SEARCH), suggestions, true);
+                final String[] fetchedSuggestions = response.responseBundle
+                                .getStringArray(HttpConstants.BOOKS);
+
+                if ((fetchedSuggestions != null)
+                                && (fetchedSuggestions.length > 0)) {
+                    final Suggestion[] suggestions = makeSuggestionArrayFromBookSuggestions(fetchedSuggestions);
+                    mTitleEditText.onSuggestionsFetched((String) request
+                                    .getExtras().get(Keys.SEARCH), suggestions, true);
+                }
                 break;
             }
         }
@@ -508,24 +511,23 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Converts the fetched {@link BookSuggestion} objects to an array of
-     * {@link Suggestion} objects
+     * Converts the fetched objects to an array of {@link Suggestion} objects
      * 
-     * @param fetchedSuggestions The array of {@link BookSuggestion}s fetched
+     * @param fetchedSuggestions The array of book suggestions fetched
      * @return An array of {@link Suggestion} objects
      */
     private Suggestion[] makeSuggestionArrayFromBookSuggestions(
-                    final BookSuggestion[] fetchedSuggestions) {
+                    final String[] fetchedSuggestions) {
 
         if ((fetchedSuggestions == null) || (fetchedSuggestions.length == 0)) {
             return null;
         }
 
         final Suggestion[] suggestions = new Suggestion[fetchedSuggestions.length];
-        BookSuggestion bookSuggestion = null;
+        String bookSuggestion = null;
         for (int i = 0; i < fetchedSuggestions.length; i++) {
             bookSuggestion = fetchedSuggestions[i];
-            suggestions[i] = new Suggestion(bookSuggestion.id, bookSuggestion.name);
+            suggestions[i] = new Suggestion(null, bookSuggestion);
         }
         return suggestions;
     }
@@ -619,11 +621,11 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             request.setRequestId(RequestId.BOOK_SUGGESTIONS);
 
             final Map<String, String> params = new HashMap<String, String>(1);
-            //TODO params.put(key, value);
+            params.put(HttpConstants.Q, query);
             request.setParams(params);
             request.setTag(getVolleyTag());
             request.addExtra(Keys.SEARCH, query);
-            mVolleyCallbacks.queue(request);
+            addRequestToQueue(request, false, 0);
         }
     }
 
@@ -632,6 +634,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     final NetworkedAutoCompleteTextView textView,
                     final Suggestion suggestion) {
 
+        if (textView.getId() == R.id.edit_text_title) {
+            Logger.v(TAG, "On Suggestion Clicked %s", suggestion);
+            getBookInfoFromServer(suggestion.name);
+        }
     }
 
     @Override

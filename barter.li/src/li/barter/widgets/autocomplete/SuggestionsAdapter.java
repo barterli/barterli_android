@@ -126,7 +126,6 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
     public void setSuggestionsMaster(final List<Suggestion> suggestions) {
         mSuggestionsMaster = suggestions;
         mVisibleSuggestions = null;
-        //TODO Force a filter
         notifyDataSetChanged();
     }
 

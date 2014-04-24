@@ -19,9 +19,12 @@ package li.barter.widgets.autocomplete;
 import android.content.Context;
 import android.os.Handler;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +37,7 @@ import li.barter.widgets.TypefacedAutoCompleteTextView;
  *         when typing from internet
  */
 public class NetworkedAutoCompleteTextView extends
-                TypefacedAutoCompleteTextView {
+                TypefacedAutoCompleteTextView implements OnItemClickListener {
 
     private static final String       TAG = "NetworkedAutoCompleteTextView";
 
@@ -111,9 +114,11 @@ public class NetworkedAutoCompleteTextView extends
     private void init() {
         mSuggestNetworkTextWatcher = new SuggestNetworkTextWatcher();
         addTextChangedListener(mSuggestNetworkTextWatcher);
+        setOnItemClickListener(this);
         mHandler = new Handler();
         mSuggestionsAdapter = new SuggestionsAdapter(null);
         setAdapter(mSuggestionsAdapter);
+        mSuggestionsEnabled = true;
     }
 
     /**
@@ -174,6 +179,7 @@ public class NetworkedAutoCompleteTextView extends
 
         mSuggestions.addAll(Arrays.asList(suggestions));
         mSuggestionsAdapter.setSuggestionsMaster(mSuggestions);
+        performFiltering(query, 0);
     }
 
     /**
@@ -195,16 +201,15 @@ public class NetworkedAutoCompleteTextView extends
             if (mSuggestionsEnabled) {
 
                 final String newSearchSequence = s.toString();
-                if (!TextUtils.isEmpty(mLastSearchSequence)
-                                && newSearchSequence
-                                                .startsWith(mLastSearchSequence)) {
-
-                    //Don't fetch new search results if the new search sequence starts with the older search sequence
-                    return;
-                }
-
+                /*
+                 * if (!TextUtils.isEmpty(mLastSearchSequence) &&
+                 * newSearchSequence .startsWith(mLastSearchSequence)) { //Don't
+                 * fetch new search results if the new search sequence starts
+                 * with the older search sequence return; }
+                 */
+                removeAnyCallbacks();
                 if (newSearchSequence.length() >= mSuggestCountThreshold) {
-                    removeAnyCallbacks();
+
                     mPerformSearchRunnable = makeSearchRunnable(newSearchSequence);
                     mHandler.postDelayed(mPerformSearchRunnable, mSuggestWaitThreshold);
                 }
@@ -252,5 +257,17 @@ public class NetworkedAutoCompleteTextView extends
                 }
             }
         };
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+        final Suggestion suggestion = (Suggestion) mSuggestionsAdapter
+                        .getItem(position);
+
+        if (mNetworkSuggestCallbacks != null) {
+            mNetworkSuggestCallbacks.onSuggestionClicked(this, suggestion);
+        }
+
     }
 }

@@ -62,8 +62,8 @@ import li.barter.utils.Logger;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class OtherProfileFragment extends AbstractBarterLiFragment implements
-AsyncDbQueryCallback, LoaderCallbacks<Cursor>,
-OnItemClickListener {
+                AsyncDbQueryCallback, LoaderCallbacks<Cursor>,
+                OnItemClickListener {
 
     private static final String           TAG = "OtherProfileFragment";
 
@@ -104,7 +104,6 @@ OnItemClickListener {
 
         }
 
-
         mProfileNameTextView = (TextView) view
                         .findViewById(R.id.text_profile_name);
         mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
@@ -114,30 +113,29 @@ OnItemClickListener {
                         .findViewById(R.id.image_profile_pic);
         mBooksAroundMeGridView = (GridView) view
                         .findViewById(R.id.grid_my_books);
-        
-        
-      
+
         if (savedInstanceState == null) {
             getUserDetails(mUserId);
             loadMyBooks();
         } else {
             loadMyBooks();
             getUserDetails(mUserId);
-            mProfileNameTextView.setText(savedInstanceState.getString(HttpConstants.FIRST_NAME));
-            mAboutMeTextView.setText(savedInstanceState.getString(HttpConstants.DESCRIPTION));
-            mPreferredLocationTextView.setText(savedInstanceState.getString(HttpConstants.ADDRESS));
-
+            mProfileNameTextView.setText(savedInstanceState
+                            .getString(HttpConstants.FIRST_NAME));
+            mAboutMeTextView.setText(savedInstanceState
+                            .getString(HttpConstants.DESCRIPTION));
+            mPreferredLocationTextView.setText(savedInstanceState
+                            .getString(HttpConstants.ADDRESS));
 
         }
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
         mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
         mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
-        
+
         mBooksAroundMeGridView.setOnItemClickListener(this);
 
         setActionBarDrawerToggleEnabled(false);
-
 
         return view;
     }
@@ -146,11 +144,14 @@ OnItemClickListener {
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putString(HttpConstants.FIRST_NAME, mProfileNameTextView.getText().toString());
-        outState.putString(HttpConstants.IMAGE_URL, mProfileImageView.getTag().toString());
-        outState.putString(HttpConstants.DESCRIPTION, mAboutMeTextView.getText().toString());
-        outState.putString(HttpConstants.ADDRESS, mPreferredLocationTextView.getText().toString());
-        
+        outState.putString(HttpConstants.FIRST_NAME, mProfileNameTextView
+                        .getText().toString());
+        outState.putString(HttpConstants.IMAGE_URL, mProfileImageView.getTag()
+                        .toString());
+        outState.putString(HttpConstants.DESCRIPTION, mAboutMeTextView
+                        .getText().toString());
+        outState.putString(HttpConstants.ADDRESS, mPreferredLocationTextView
+                        .getText().toString());
 
     }
 
@@ -211,11 +212,9 @@ OnItemClickListener {
             setActionBarTitle(userInfo.getString(HttpConstants.FIRST_NAME));
             mProfileNameTextView.setText(userInfo
                             .getString(HttpConstants.FIRST_NAME));
-            mImageUrl=userInfo.getString(HttpConstants.IMAGE_URL);
+            mImageUrl = userInfo.getString(HttpConstants.IMAGE_URL);
             mProfileImageView.setTag(mImageUrl);
-            Picasso.with(getActivity())
-            .load(mImageUrl
-                            + "?type=large").fit()
+            Picasso.with(getActivity()).load(mImageUrl + "?type=large").fit()
                             .error(R.drawable.pic_avatar)
                             .into(mProfileImageView);
 
