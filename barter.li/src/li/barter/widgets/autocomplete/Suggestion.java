@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package li.barter.widgets.autocomplete;
 
 /**
@@ -23,8 +24,8 @@ package li.barter.widgets.autocomplete;
 public class Suggestion {
 
     /**
-     * The suggestion id. Used for selecting the suggestion when an item
-     * from the drop down is tapped
+     * The suggestion id. Used for selecting the suggestion when an item from
+     * the drop down is tapped
      */
     public final String id;
 
@@ -37,7 +38,7 @@ public class Suggestion {
      * @param id The suggestion id
      * @param name The suggestion name
      */
-    public Suggestion(String id, String name) {
+    public Suggestion(final String id, final String name) {
         this.id = id;
         this.name = name;
     }

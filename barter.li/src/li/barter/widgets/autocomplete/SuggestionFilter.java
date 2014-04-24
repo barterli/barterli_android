@@ -26,18 +26,18 @@ import java.util.List;
  */
 public class SuggestionFilter extends Filter {
 
-    private SuggestionsAdapter mSuggestionsAdapter;
+    private final SuggestionsAdapter mSuggestionsAdapter;
 
     /**
      * @param suggestionsAdapter A reference to the {@link SuggestionsAdapter}
      *            this filter will be filtering
      */
-    public SuggestionFilter(SuggestionsAdapter suggestionsAdapter) {
+    public SuggestionFilter(final SuggestionsAdapter suggestionsAdapter) {
         mSuggestionsAdapter = suggestionsAdapter;
     }
 
     @Override
-    protected FilterResults performFiltering(CharSequence constraint) {
+    protected FilterResults performFiltering(final CharSequence constraint) {
 
         final FilterResults results = new FilterResults();
         final List<Suggestion> suggestions = mSuggestionsAdapter
@@ -52,7 +52,7 @@ public class SuggestionFilter extends Filter {
             } else {
                 final ArrayList<Suggestion> filtered = new ArrayList<Suggestion>(results.count);
 
-                for (Suggestion eachSuggestion : suggestions) {
+                for (final Suggestion eachSuggestion : suggestions) {
 
                     /*if (eachSuggestion.name.contains(constraint)) {
                         filtered.add(eachSuggestion);
@@ -72,9 +72,10 @@ public class SuggestionFilter extends Filter {
     }
 
     @Override
-    protected void publishResults(CharSequence constraint, FilterResults results) {
+    protected void publishResults(final CharSequence constraint,
+                    final FilterResults results) {
 
-        if (results != null && results.count > 0) {
+        if ((results != null) && (results.count > 0)) {
             mSuggestionsAdapter
                             .setSuggestions((List<Suggestion>) results.values);
         } else {

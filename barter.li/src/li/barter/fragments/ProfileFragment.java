@@ -102,7 +102,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                         .inflate(R.layout.fragment_profile_show, null);
 
         setActionBarTitle(R.string.profilepage_title);
-        
+
         mProfileNameTextView = (TextView) view
                         .findViewById(R.id.text_profile_name);
         mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
@@ -137,22 +137,20 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
             }
 
             // for loading profile image
-            
-            String mProfileImageUrl="";
+
+            String mProfileImageUrl = "";
             if (SharedPreferenceHelper
-                    .contains(getActivity(), R.string.pref_profile_image)) {
-        mProfileImageUrl = SharedPreferenceHelper
-                        .getString(getActivity(), R.string.pref_profile_image);
-        
-    }
-            
+                            .contains(getActivity(), R.string.pref_profile_image)) {
+                mProfileImageUrl = SharedPreferenceHelper
+                                .getString(getActivity(), R.string.pref_profile_image);
+
+            }
+
             //append "?type=large" for getting large clear image for the profile
-      	 Picasso.with(getActivity())
-          .load(mProfileImageUrl+"?type=large")
-          .fit().error(R.drawable.pic_avatar)
-          .into(mProfileImageView);
-      	 
-      	 
+            Picasso.with(getActivity()).load(mProfileImageUrl + "?type=large")
+                            .fit().error(R.drawable.pic_avatar)
+                            .into(mProfileImageView);
+
             String mFullName = String.format(Locale.US, mFirstName + " "
                             + mLastName);
             if (TextUtils.isEmpty(mFullName)) {
@@ -249,7 +247,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                                 + ", "
                                 + cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.ADDRESS));
-                
+
                 mPreferredLocationTextView.setText(mPrefAddressName);
             }
 

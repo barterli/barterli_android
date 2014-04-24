@@ -64,7 +64,7 @@ public class ChatDetailAdapter extends CursorAdapter {
         buildMapForCursor(cursor);
     }
 
-    public void setChatUserProfilePic(String profileImage) {
+    public void setChatUserProfilePic(final String profileImage) {
         mChatUserProfilePic = profileImage;
         notifyDataSetChanged();
     }

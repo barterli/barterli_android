@@ -516,6 +516,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private Suggestion[] makeSuggestionArrayFromBookSuggestions(
                     String[] fetchedSuggestions) {
 
+        if ((fetchedSuggestions == null) || (fetchedSuggestions.length == 0)) {
+            return null;
+        }
+
         final Suggestion[] suggestions = new Suggestion[fetchedSuggestions.length];
         String bookSuggestion = null;
         for (int i = 0; i < fetchedSuggestions.length; i++) {
@@ -602,8 +606,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void performNetworkQuery(NetworkedAutoCompleteTextView textView,
-                    String query) {
+    public void performNetworkQuery(
+                    final NetworkedAutoCompleteTextView textView,
+                    final String query) {
 
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "Perform network query %s", query);
@@ -622,8 +627,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSuggestionClicked(NetworkedAutoCompleteTextView textView,
-                    Suggestion suggestion) {
+    public void onSuggestionClicked(
+                    final NetworkedAutoCompleteTextView textView,
+                    final Suggestion suggestion) {
 
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "On Suggestion Clicked %s", suggestion);
@@ -632,7 +638,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onCheckedChanged(final CompoundButton buttonView,
+                    final boolean isChecked) {
         if (isChecked) {
             mSellPriceEditText.setVisibility(View.VISIBLE);
         } else {

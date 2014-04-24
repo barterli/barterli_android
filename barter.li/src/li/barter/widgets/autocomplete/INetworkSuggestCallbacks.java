@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package li.barter.widgets.autocomplete;
 
+package li.barter.widgets.autocomplete;
 
 /**
  * Interface to provide helper methods for connecting to Volley

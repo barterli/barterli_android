@@ -252,9 +252,9 @@ public class Utils {
         return String.format("%0" + (data.length * 2) + "X", new BigInteger(1, data));
     }
 
-    public static void emailDatabase(Context context) {
+    public static void emailDatabase(final Context context) {
 
-        File databaseExt = new File(Environment.getExternalStorageDirectory(), "barterli.sqlite");
+        final File databaseExt = new File(Environment.getExternalStorageDirectory(), "barterli.sqlite");
 
         if (copyFile(new File("/data/data/li.barter/databases/barterli.sqlite"), databaseExt)) {
             sendEmail(context, databaseExt);
@@ -262,7 +262,7 @@ public class Utils {
 
     }
 
-    public static boolean copyFile(File src, File dst) {
+    public static boolean copyFile(final File src, final File dst) {
         boolean returnValue = true;
 
         FileChannel inChannel = null, outChannel = null;
@@ -272,7 +272,7 @@ public class Utils {
             inChannel = new FileInputStream(src).getChannel();
             outChannel = new FileOutputStream(dst).getChannel();
 
-        } catch (FileNotFoundException fnfe) {
+        } catch (final FileNotFoundException fnfe) {
 
             Logger.d(TAG, "inChannel/outChannel FileNotFoundException");
             fnfe.printStackTrace();
@@ -282,43 +282,43 @@ public class Utils {
         try {
             inChannel.transferTo(0, inChannel.size(), outChannel);
 
-        } catch (IllegalArgumentException iae) {
+        } catch (final IllegalArgumentException iae) {
 
             Logger.d(TAG, "TransferTo IllegalArgumentException");
             iae.printStackTrace();
             returnValue = false;
 
-        } catch (NonReadableChannelException nrce) {
+        } catch (final NonReadableChannelException nrce) {
 
             Logger.d(TAG, "TransferTo NonReadableChannelException");
             nrce.printStackTrace();
             returnValue = false;
 
-        } catch (NonWritableChannelException nwce) {
+        } catch (final NonWritableChannelException nwce) {
 
             Logger.d(TAG, "TransferTo NonWritableChannelException");
             nwce.printStackTrace();
             returnValue = false;
 
-        } catch (ClosedByInterruptException cie) {
+        } catch (final ClosedByInterruptException cie) {
 
             Logger.d(TAG, "TransferTo ClosedByInterruptException");
             cie.printStackTrace();
             returnValue = false;
 
-        } catch (AsynchronousCloseException ace) {
+        } catch (final AsynchronousCloseException ace) {
 
             Logger.d(TAG, "TransferTo AsynchronousCloseException");
             ace.printStackTrace();
             returnValue = false;
 
-        } catch (ClosedChannelException cce) {
+        } catch (final ClosedChannelException cce) {
 
             Logger.d(TAG, "TransferTo ClosedChannelException");
             cce.printStackTrace();
             returnValue = false;
 
-        } catch (IOException ioe) {
+        } catch (final IOException ioe) {
 
             Logger.d(TAG, "TransferTo IOException");
             ioe.printStackTrace();
@@ -326,36 +326,37 @@ public class Utils {
 
         } finally {
 
-            if (inChannel != null)
-
+            if (inChannel != null) {
                 try {
 
                     inChannel.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     e.printStackTrace();
                 }
+            }
 
-            if (outChannel != null)
+            if (outChannel != null) {
                 try {
                     outChannel.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     e.printStackTrace();
                 }
+            }
 
         }
 
         return returnValue;
     }
 
-    private static void sendEmail(Context context, File attachment) {
+    private static void sendEmail(final Context context, final File attachment) {
 
         if (Environment.getExternalStorageState()
                         .equals(Environment.MEDIA_MOUNTED)) {
-            Uri path = Uri.fromFile(attachment);
-            Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+            final Uri path = Uri.fromFile(attachment);
+            final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
             intent.setType("application/octet-stream");
             intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "barter.li database");
-            String to[] = {
+            final String to[] = {
                 "vinaysshenoy@gmail.com"
             };
             intent.putExtra(Intent.EXTRA_EMAIL, to);
