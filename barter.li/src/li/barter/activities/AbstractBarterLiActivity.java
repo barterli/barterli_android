@@ -363,28 +363,9 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
                 break;
             }
-            //Tribute
-            case 7: {
-
-                if ((masterFragment != null)
-                                && (masterFragment instanceof TeamFragment)) {
-                    return null;
-                }
-
-                runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                        .instantiate(AbstractBarterLiActivity.this, TeamFragment.class
-                                                        .getName(), null), FragmentTags.TEAM, true, null);
-                    }
-                };
-
-                break;
-            }
 
             //Logout
-            case 8: {
+            case 7: {
 
                 runnable = new Runnable() {
 
@@ -393,6 +374,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                         logout();
                     }
                 };
+                break;
             }
 
             default: {

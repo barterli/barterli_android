@@ -28,6 +28,7 @@
         android:layout_alignParentLeft="true"
         android:layout_marginRight="@dimen/margin_medium"
         android:contentDescription="@string/app_name"
+        android:padding="@dimen/width_item_border"
         android:scaleType="centerCrop" />
 
     <li.barter.widgets.TypefacedTextView

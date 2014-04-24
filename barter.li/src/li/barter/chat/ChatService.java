@@ -256,7 +256,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     public int onStartCommand(final Intent intent, final int flags,
                     final int startId) {
 
-        final String action = intent.getAction();
+        final String action = intent != null ? intent.getAction() : null;
 
         if (action != null
                         && action.equals(AppConstants.ACTION_DISCONNECT_CHAT)) {
