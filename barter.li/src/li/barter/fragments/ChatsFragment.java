@@ -16,7 +16,6 @@
 
 package li.barter.fragments;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -95,6 +94,7 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
         }
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         //Bind to chat service
@@ -176,7 +176,7 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case android.R.id.home: {
-                
+
                 final int backStackEntryCount = getFragmentManager()
                                 .getBackStackEntryCount();
                 if (backStackEntryCount == 0) {

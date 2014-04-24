@@ -36,8 +36,8 @@ public class AppConstants {
 
     public static final String  FACEBOOK                         = "facebook";
     public static final String  FBPERMISSIONS[]                  = new String[] {
-        "email"
-    };
+                                                                     "email"
+                                                                 };
     public static final String  GOOGLE                           = "google";
     public static final String  MANUAL                           = "manual";
 
@@ -255,7 +255,7 @@ public class AppConstants {
         public static final String BOOK_ID                    = "book_id";
         public static final String CHAT_ID                    = "chat_id";
         public static final String USER_ID                    = "user_id";
-        public static final String OTHER_PROFILE_FLAG           = "other_profileflag";
+        public static final String OTHER_PROFILE_FLAG         = "other_profileflag";
         public static final String URL_TO_LOAD                = "url_to_load";
         public static final String LOCATION                   = "location";
         public static final String SEARCH_RADIUS              = "search_radius";

@@ -395,7 +395,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * @param enabled <code>true</code> to enable notifications,
      *            <code>false</code> to disable them
      */
-    public void setNotificationsEnabled(boolean enabled) {
+    public void setNotificationsEnabled(final boolean enabled) {
         mNotificationsEnabled = enabled;
     }
 

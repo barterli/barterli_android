@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import li.barter.utils.Logger;
 import li.barter.widgets.TypefacedAutoCompleteTextView;
 
 /**

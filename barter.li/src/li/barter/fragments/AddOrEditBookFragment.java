@@ -496,7 +496,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 final String[] fetchedSuggestions = response.responseBundle
                                 .getStringArray(HttpConstants.BOOKS);
 
-                if (fetchedSuggestions != null && fetchedSuggestions.length > 0) {
+                if ((fetchedSuggestions != null)
+                                && (fetchedSuggestions.length > 0)) {
                     final Suggestion[] suggestions = makeSuggestionArrayFromBookSuggestions(fetchedSuggestions);
                     mTitleEditText.onSuggestionsFetched((String) request
                                     .getExtras().get(Keys.SEARCH), suggestions, true);
@@ -514,7 +515,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      * @return An array of {@link Suggestion} objects
      */
     private Suggestion[] makeSuggestionArrayFromBookSuggestions(
-                    String[] fetchedSuggestions) {
+                    final String[] fetchedSuggestions) {
 
         if ((fetchedSuggestions == null) || (fetchedSuggestions.length == 0)) {
             return null;

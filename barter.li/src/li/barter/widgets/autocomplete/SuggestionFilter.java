@@ -54,11 +54,13 @@ public class SuggestionFilter extends Filter {
 
                 for (final Suggestion eachSuggestion : suggestions) {
 
-                    /*if (eachSuggestion.name.contains(constraint)) {
-                        filtered.add(eachSuggestion);
-                    }*/
-                    
-                    if (eachSuggestion.name.toLowerCase().contains(constraint.toString().toLowerCase())) {
+                    /*
+                     * if (eachSuggestion.name.contains(constraint)) {
+                     * filtered.add(eachSuggestion); }
+                     */
+
+                    if (eachSuggestion.name.toLowerCase().contains(constraint
+                                    .toString().toLowerCase())) {
                         filtered.add(eachSuggestion);
                     }
                 }

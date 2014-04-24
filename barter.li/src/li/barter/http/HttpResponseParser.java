@@ -138,7 +138,7 @@ public class HttpResponseParser {
      * @return
      */
 
-    private ResponseInfo parseBookSuggestionsResponse(String response)
+    private ResponseInfo parseBookSuggestionsResponse(final String response)
                     throws JSONException {
 
         final ResponseInfo responseInfo = new ResponseInfo();
