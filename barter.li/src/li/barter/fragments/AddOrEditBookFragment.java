@@ -249,17 +249,17 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Fetches the book info from server based on the ISBN number
+     * Fetches the book info from server based on the ISBN number or book title
      * 
-     * @param bookIsbn The ISBN Id of the book to get info for
+     * @param bookInfo The ISBN/Book title of the book to get info for
      */
-    private void getBookInfoFromServer(final String bookIsbn) {
+    private void getBookInfoFromServer(final String bookInfo) {
 
         final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.BOOK_INFO, null, mVolleyCallbacks);
         final Map<String, String> params = new HashMap<String, String>();
         request.setRequestId(RequestId.GET_BOOK_INFO);
-        params.put(HttpConstants.Q, bookIsbn);
+        params.put(HttpConstants.Q, bookInfo);
         request.setParams(params);
         addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
     }
@@ -458,8 +458,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         switch (requestId) {
             case RequestId.GET_BOOK_INFO: {
+                mTitleEditText.setNetworkSuggestionsEnabled(false);
                 mTitleEditText.setText(response.responseBundle
                                 .getString(HttpConstants.TITLE));
+                mTitleEditText.setNetworkSuggestionsEnabled(true);
                 mDescriptionEditText.setText(response.responseBundle
                                 .getString(HttpConstants.DESCRIPTION));
                 mAuthorEditText.setText(response.responseBundle
@@ -623,7 +625,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             request.setParams(params);
             request.setTag(getVolleyTag());
             request.addExtra(Keys.SEARCH, query);
-            mVolleyCallbacks.queue(request);
+            addRequestToQueue(request, false, 0);
         }
     }
 
@@ -634,7 +636,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "On Suggestion Clicked %s", suggestion);
-            //TODO Call book info API
+            getBookInfoFromServer(suggestion.name);
         }
     }
 
