@@ -47,6 +47,7 @@ public class AppConstants {
 
     public static final String  ACTION_SHOW_ALL_CHATS            = "li.barter.ACTION_SHOW_ALL_CHATS";
     public static final String  ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
+    public static final String  ACTION_CLEAR_NOTIFICATIONS       = "li.barter.ACTION_CLEAR_NOTIFICATIONS";
 
     /*
      * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :

@@ -250,6 +250,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     public int onStartCommand(final Intent intent, final int flags,
                     final int startId) {
 
+        final String action = intent.getAction();
+        
+        if(action != null && action.equals(AppConstants.ACTION_CLEAR_NOTIFICATIONS)) {
+            cancelMessageReceivedNotification();
+        }
         mCurrentConnectMultiplier = 0;
         connectChatService();
         return START_STICKY;

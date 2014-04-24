@@ -16,6 +16,7 @@
 
 package li.barter.fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -28,15 +29,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+
 import li.barter.R;
 import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatsAdapter;
+import li.barter.chat.ChatService;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.ViewChatsWithMessagesAndUsers;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
@@ -69,6 +73,11 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
         mChatsListView.setAdapter(mChatsAdapter);
         mChatsListView.setOnItemClickListener(this);
 
+        if(savedInstanceState != null) {
+            final Intent clearNotificationsIntent = new Intent(getActivity(), ChatService.class);
+            clearNotificationsIntent.setAction(AppConstants.ACTION_CLEAR_NOTIFICATIONS);
+            getActivity().startService(clearNotificationsIntent);
+        }
         setActionBarDrawerToggleEnabled(false);
         getLoaderManager().restartLoader(Loaders.ALL_CHATS, null, this);
         return view;
