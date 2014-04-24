@@ -122,6 +122,8 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         if (mOwnedByUser) {
             mChatWithOwnerButton.setEnabled(false);
             mChatWithOwnerButton.setVisibility(View.GONE);
+            mOwnerProfileButton.setVisibility(View.GONE);
+            
 
         }
 

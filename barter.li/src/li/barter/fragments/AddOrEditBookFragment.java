@@ -461,7 +461,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 mTitleEditText.setNetworkSuggestionsEnabled(false);
                 mTitleEditText.setText(response.responseBundle
                                 .getString(HttpConstants.TITLE));
-                mTitleEditText.setNetworkSuggestionsEnabled(true);
+                
                 mDescriptionEditText.setText(response.responseBundle
                                 .getString(HttpConstants.DESCRIPTION));
                 mAuthorEditText.setText(response.responseBundle
