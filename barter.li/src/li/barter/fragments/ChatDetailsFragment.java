@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -51,6 +52,7 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.Logger;
 
 /**
  * Activity for displaying Chat Messages
@@ -61,7 +63,7 @@ import li.barter.utils.AppConstants.Loaders;
 public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener {
 
-    private static final String     TAG            = "ChatFragment";
+    private static final String     TAG            = "ChatDetailsFragment";
 
     private ChatDetailAdapter       mChatDetailAdapter;
 
@@ -75,7 +77,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
     private boolean                 mBoundToChatService;
 
-    private boolean                 mFirstLoad;
+    private boolean                 mFirstMessage;
 
     private final String            mChatSelection = DatabaseColumns.CHAT_ID
                                                                    + SQLConstants.EQUALS_ARG;
@@ -107,6 +109,11 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         setActionBarTitle(R.string.app_name);
         final View view = inflater
                         .inflate(R.layout.fragment_chat_details, container, false);
+        /*
+         * getActivity().getWindow()
+         * .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
+         * | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+         */
         mChatListView = (ListView) view.findViewById(R.id.list_chats);
         mChatDetailAdapter = new ChatDetailAdapter(getActivity(), null);
         mChatListView.setAdapter(mChatDetailAdapter);
@@ -126,9 +133,9 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         mAcknowledge = new ConcreteChatAcknowledge();
 
         if (savedInstanceState == null) {
-            mFirstLoad = false;
+            mFirstMessage = true;
         } else {
-            mFirstLoad = savedInstanceState.getBoolean(Keys.FIRST_LOAD);
+            mFirstMessage = savedInstanceState.getBoolean(Keys.FIRST_MESSAGE);
         }
         return view;
     }
@@ -136,7 +143,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(Keys.FIRST_LOAD, mFirstLoad);
+        outState.putBoolean(Keys.FIRST_MESSAGE, mFirstMessage);
     }
 
     @Override
@@ -239,9 +246,9 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         final int id = loader.getId();
         if (id == Loaders.CHAT_DETAILS) {
 
-            if (!mFirstLoad && (cursor.getCount() == 0)) {
+            if (mFirstMessage && (cursor.getCount() == 0)) {
                 //First chat message, autofill the edit text with the message
-                mFirstLoad = true;
+                mFirstMessage = false;
                 final String bookTitle = getArguments()
                                 .getString(Keys.BOOK_TITLE);
 
@@ -250,9 +257,33 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                                     .setText(getString(R.string.chat_opened_from, bookTitle));
                 }
             }
-            mChatDetailAdapter.swapCursor(cursor);
 
-            mChatListView.smoothScrollToPosition(mChatDetailAdapter.getCount() - 1);
+            if (mChatDetailAdapter.getCount() == 0 && cursor.getCount() > 0) {
+                //Initial load. Swap cursor AND set position to last
+                mChatDetailAdapter.swapCursor(cursor);
+                mChatListView.setSelection(mChatDetailAdapter.getCount() - 1);
+            } else {
+                mChatDetailAdapter.swapCursor(cursor);
+                if (mChatDetailAdapter.getCount() > 0) {
+
+                    final int lastAdapterPosition = mChatDetailAdapter
+                                    .getCount() - 1;
+
+                    Logger.v(TAG, "Last Adapter Position %d and Last visible position %d", lastAdapterPosition, mChatListView
+                                    .getLastVisiblePosition());
+                    /*
+                     * Smooth scroll only if there's already some data AND the
+                     * last visible position is the last item in the adapter,
+                     * i.e, don't scroll if a new message arrives while the user
+                     * has scrolled down to view earlier messages
+                     */
+                    if (lastAdapterPosition - 1 == mChatListView
+                                    .getLastVisiblePosition()) {
+                        mChatListView.smoothScrollToPosition(lastAdapterPosition);
+                    }
+                }
+            }
+
         } else if (id == Loaders.USER_DETAILS) {
             if (cursor.moveToFirst()) {
                 final String profilePic = cursor

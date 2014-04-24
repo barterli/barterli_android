@@ -272,7 +272,7 @@ public class AppConstants {
         public static final String SEARCH                     = "search";
         public static final String LAST_FETCHED_LOCATION      = "last_fetched_location";
         public static final String LAST_FETCHED_SEARCH_RADIUS = "last_fetched_search_radius";
-        public static final String FIRST_LOAD                 = "first_load";
+        public static final String FIRST_MESSAGE              = "first_message";
         public static final String EDIT_MODE                  = "edit_mode";
         public static final String LAST_FETCHED_PAGENUMBER    = "last_fetched_pagenumber";
 
