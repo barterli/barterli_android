@@ -93,12 +93,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                 OnItemClickListener, OnScrollListener, TextWatcher {
 
-    private static final String           TAG            = "BooksAroundMeFragment";
+    private static final String           TAG                     = "BooksAroundMeFragment";
 
     /**
      * Zoom level for the map when the location is retrieved
      */
-    private static final float            MAP_ZOOM_LEVEL = 15;
+    private static final float            MAP_ZOOM_LEVEL          = 15;
 
     /**
      * {@link MapView} used to display the Map
@@ -158,17 +158,22 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
      * Default page count value which is incremented on scrolling
      * {@link GridView}
      */
-    private int                           mPageCount     = 1;
+    private int                           mPageCount              = 1;
 
     /**
      * Flag to stop onScroll method to call when fragment loads
      */
-    private boolean                       mUserScrolled  = false;
+    private boolean                       mUserScrolled           = false;
+
+    /**
+     * Flag to Display Crouton Message on empty book search result
+     */
+    private boolean                       mEmptySearchCroutonFlag = true;
 
     /**
      * Flag to load books on scroll
      */
-    private boolean                       mLoadBookFlag  = true;
+    private boolean                       mLoadBookFlag           = true;
 
     /**
      * Holds the value of the previous search radius to prevent querying for
@@ -279,6 +284,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
             mPageCount++;
             loadMore = false;
             mUserScrolled = false;
+            mEmptySearchCroutonFlag = false;
             mLoadBookFlag = false;
             fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils
                             .getShortestRadiusFromCenter(mMapView) / 1000));
@@ -610,9 +616,16 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
             mPrevSearchRadius = (Integer) request.getExtras()
                             .get(Keys.SEARCH_RADIUS);
 
-            if (response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)) {
+            if (response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)
+                            && mEmptySearchCroutonFlag) {
 
                 showCrouton("No Books Added In This Area", AlertStyle.ERROR);
+            } else if (response.responseBundle
+                            .getBoolean(Keys.NO_BOOKS_FLAG_KEY)
+                            && !mEmptySearchCroutonFlag) {
+
+                showCrouton("No More Books Added In This Area", AlertStyle.ERROR);
+
             }
 
             /*
@@ -684,7 +697,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
     public void onDrawerClosed(final View drawerView) {
 
         //it makes the keyboard hide when drawer closed
-
+        mEmptySearchCroutonFlag = true;
         showInfiniteCrouton(R.string.crouton_map_message, AlertStyle.INFO);
         final InputMethodManager imm = (InputMethodManager) getActivity()
                         .getSystemService(Context.INPUT_METHOD_SERVICE);
