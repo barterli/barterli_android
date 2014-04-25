@@ -18,7 +18,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/book_height"
-    android:background="@drawable/item_bg_main"
+    android:background="@drawable/selector_item_bg"
     android:paddingRight="@dimen/activity_margin" >
 
     <ImageView
@@ -28,7 +28,6 @@
         android:layout_alignParentLeft="true"
         android:layout_marginRight="@dimen/margin_medium"
         android:contentDescription="@string/app_name"
-        android:padding="@dimen/width_item_border"
         android:scaleType="centerCrop" />
 
     <li.barter.widgets.TypefacedTextView
