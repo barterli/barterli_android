@@ -32,6 +32,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -72,7 +73,7 @@ public class OtherProfileFragment extends AbstractBarterLiFragment implements
     private TextView                      mPreferredLocationTextView;
     private ImageView                     mProfileImageView;
     private String                        mImageUrl;
-    private GridView                      mBooksAroundMeGridView;
+    private ListView                      mBooksAroundMeListView;
 
     /**
      * {@link BooksAroundMeAdapter} instance for the Books
@@ -87,13 +88,17 @@ public class OtherProfileFragment extends AbstractBarterLiFragment implements
 
     private String                        mUserId;
 
+    private View                          mProfileDetails;
+
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
-        final View view = inflater
-                        .inflate(R.layout.fragment_profile_header, null);
+        final View view = inflater.inflate(R.layout.fragment_my_profile, null);
+
+        mBooksAroundMeListView = (ListView) view
+                        .findViewById(R.id.list_my_books);
 
         setActionBarTitle(R.string.profilepage_title);
 
@@ -103,16 +108,16 @@ public class OtherProfileFragment extends AbstractBarterLiFragment implements
             mUserId = extras.getString(Keys.USER_ID);
 
         }
-
-        mProfileNameTextView = (TextView) view
+        mProfileDetails = inflater
+                        .inflate(R.layout.fragment_profile_header, null);
+        mProfileNameTextView = (TextView) mProfileDetails
                         .findViewById(R.id.text_profile_name);
-        mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
-        mPreferredLocationTextView = (TextView) view
+        mAboutMeTextView = (TextView) mProfileDetails
+                        .findViewById(R.id.text_about_me);
+        mPreferredLocationTextView = (TextView) mProfileDetails
                         .findViewById(R.id.text_current_location);
-        mProfileImageView = (ImageView) view
+        mProfileImageView = (ImageView) mProfileDetails
                         .findViewById(R.id.image_profile_pic);
-        mBooksAroundMeGridView = (GridView) view
-                        .findViewById(R.id.grid_my_books);
 
         if (savedInstanceState == null) {
             getUserDetails(mUserId);
@@ -128,12 +133,14 @@ public class OtherProfileFragment extends AbstractBarterLiFragment implements
                             .getString(HttpConstants.ADDRESS));
 
         }
+
+        mBooksAroundMeListView.addHeaderView(mProfileDetails, null, false);
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
-        mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
-        mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
+        mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeListView);
+        mBooksAroundMeListView.setAdapter(mBooksAroundMeAdapter);
 
-        mBooksAroundMeGridView.setOnItemClickListener(this);
+        mBooksAroundMeListView.setOnItemClickListener(this);
 
         setActionBarDrawerToggleEnabled(false);
 
@@ -146,8 +153,12 @@ public class OtherProfileFragment extends AbstractBarterLiFragment implements
 
         outState.putString(HttpConstants.FIRST_NAME, mProfileNameTextView
                         .getText().toString());
-        outState.putString(HttpConstants.IMAGE_URL, mProfileImageView.getTag()
-                        .toString());
+
+        if (mProfileImageView.getTag() != null) {
+            outState.putString(HttpConstants.IMAGE_URL, mProfileImageView
+                            .getTag().toString());
+        }
+
         outState.putString(HttpConstants.DESCRIPTION, mAboutMeTextView
                         .getText().toString());
         outState.putString(HttpConstants.ADDRESS, mPreferredLocationTextView
@@ -286,6 +297,8 @@ public class OtherProfileFragment extends AbstractBarterLiFragment implements
     public void onLoaderReset(final Loader<Cursor> loader) {
         if (loader.getId() == Loaders.GET_MY_BOOKS) {
             mBooksAroundMeAdapter.swapCursor(null);
+            mBooksAroundMeListView.setAdapter(null);
+            mBooksAroundMeListView.removeHeaderView(mProfileDetails);
         }
     }
 
@@ -293,9 +306,14 @@ public class OtherProfileFragment extends AbstractBarterLiFragment implements
     public void onItemClick(final AdapterView<?> parent, final View view,
                     final int position, final long id) {
 
-        if (parent.getId() == R.id.grid_my_books) {
+        if (parent.getId() == R.id.list_my_books) {
+            /*
+             * Subtract from position to account for header
+             */
             final Cursor cursor = (Cursor) mBooksAroundMeAdapter
-                            .getItem(position);
+                            .getItem(position
+                                            - mBooksAroundMeListView
+                                                            .getHeaderViewsCount());
 
             final String bookId = cursor.getString(cursor
                             .getColumnIndex(DatabaseColumns.BOOK_ID));
