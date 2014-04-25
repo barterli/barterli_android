@@ -417,11 +417,11 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             } else {
 
                 final Bundle loginArgs = new Bundle(1);
-                loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOK_DETAIL);
+                loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
 
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), LoginFragment.class
-                                                .getName(), loginArgs), FragmentTags.LOGIN_TO_CHAT, true, null);
+                                                .getName(), loginArgs), FragmentTags.LOGIN_TO_CHAT, true, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
 
             }
         }
