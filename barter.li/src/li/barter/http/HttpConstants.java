@@ -33,7 +33,7 @@ public class HttpConstants {
     private enum Server {
 
         LOCAL(
-                        "http://192.168.0.102:3000/api/v",
+                        "http://192.168.1.138:3000/api/v",
                         API_VERSION,
                         "192.168.1.138",
                         5672),
@@ -60,7 +60,7 @@ public class HttpConstants {
         }
     }
 
-    private static Server SERVER = Server.DEV;
+    private static Server SERVER = Server.LOCAL;
 
     public static String getApiBaseUrl() {
         return SERVER.mUrl;
