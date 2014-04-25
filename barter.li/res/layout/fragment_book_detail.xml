@@ -88,12 +88,34 @@
             android:layout_marginTop="@dimen/margin_xx_small"
             android:textSize="@dimen/text_small"
             app:fontStyle="alegreya_regular" />
+        
+         <li.barter.widgets.TypefacedTextView
+            android:id="@+id/label_suggested_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_publication_date"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:text="@string/suggested_price_label"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:textSize="@dimen/text_medium"
+            app:fontStyle="alegreya_regular" />
+
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/text_suggested_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/label_suggested_price"
+            android:layout_marginTop="@dimen/margin_xx_small"
+            android:textSize="@dimen/text_small"
+            android:visibility="gone"
+            app:fontStyle="alegreya_regular" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/label_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/text_publication_date"
+            android:layout_below="@id/text_suggested_price"
             android:layout_marginTop="@dimen/activity_margin"
             android:text="@string/description_label"
             android:textColor="@color/black"
@@ -243,7 +265,7 @@
         android:layout_height="@dimen/book_height"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" />
-
+		
     </RelativeLayout>
 
 </ScrollView>

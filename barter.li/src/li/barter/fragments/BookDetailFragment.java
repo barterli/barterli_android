@@ -64,6 +64,8 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private TextView            mTitleTextView;
     private TextView            mAuthorTextView;
     private TextView            mDescriptionTextView;
+    private TextView            mSuggestedPriceLabelTextView;
+    private TextView            mSuggestedPriceTextView;
     private ImageView           mBookImageView;
     private TextView            mPublicationDateTextView;
     private CheckBox            mBarterCheckBox;
@@ -162,6 +164,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mBookImageView = (ImageView) view.findViewById(R.id.book_avatar);
         mDescriptionTextView = (TextView) view
                         .findViewById(R.id.text_description);
+        
+        mSuggestedPriceTextView = (TextView) view
+                        .findViewById(R.id.text_suggested_price);
+        mSuggestedPriceLabelTextView = (TextView) view
+                        .findViewById(R.id.label_suggested_price);
+        
         mPublicationDateTextView = (TextView) view
                         .findViewById(R.id.text_publication_date);
         mChatWithOwnerButton = (Button) view.findViewById(R.id.button_chat);
@@ -307,6 +315,25 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 mDescriptionTextView
                                 .setText(Html.fromHtml(cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.DESCRIPTION))));
+                
+               
+                
+                try {
+                    if(!cursor.getString(cursor
+                                    .getColumnIndex(DatabaseColumns.VALUE)).equals(null)) {
+                        
+                        mSuggestedPriceLabelTextView.setVisibility(View.VISIBLE);
+                        mSuggestedPriceTextView.setVisibility(View.VISIBLE);
+                        mSuggestedPriceTextView.setText(cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.VALUE)));
+                    } 
+                } catch (Exception e) {
+                    // handle value = null exception
+                }
+              
+                
+                    
+               
                 mPublicationDateTextView
                                 .setText(cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR)));

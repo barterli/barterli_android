@@ -545,6 +545,8 @@ public class HttpResponseParser {
                         .readString(bookObject, HttpConstants.PUBLICATION_YEAR, false, false));
         values.put(DatabaseColumns.PUBLICATION_MONTH, JsonUtils
                         .readString(bookObject, HttpConstants.PUBLICATION_MONTH, false, false));
+        values.put(DatabaseColumns.VALUE, JsonUtils
+                        .readString(bookObject, HttpConstants.VALUE, false, false));
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(bookObject, HttpConstants.LOCATION, false, false);
@@ -628,6 +630,10 @@ public class HttpResponseParser {
 
         responseBundle.putString(HttpConstants.ISBN_13, JsonUtils
                         .readString(bookInfoObject, HttpConstants.ISBN_13, false, false));
+        
+        responseBundle.putString(HttpConstants.VALUE, JsonUtils
+                        .readString(bookInfoObject, HttpConstants.VALUE, false, true));
+        
 
         final JSONObject authorsObject = JsonUtils
                         .readJSONObject(bookInfoObject, HttpConstants.AUTHORS, false, false);

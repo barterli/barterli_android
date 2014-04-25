@@ -382,7 +382,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 updateUserProfileRequest
                                 .addFile(HttpConstants.PROFILE_PIC, profilePicPath);
             }
-
+            
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
             addRequestToQueue(updateUserProfileRequest, true, 0);
 
