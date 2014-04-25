@@ -23,7 +23,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import li.barter.utils.Logger;
 
@@ -48,7 +48,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     private static BarterLiSQLiteOpenHelper       sSQLiteOpenHelper;
 
     /** Array of loader entries to hold for notifying changes */
-    private final ArrayList<SQLiteLoaderObserver> mActiveLoaders;
+    private final CopyOnWriteArrayList<SQLiteLoaderObserver> mActiveLoaders;
 
     /**
      * Gets a reference to the SQLIte Open Helper for the app, creating it if
@@ -84,7 +84,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     private BarterLiSQLiteOpenHelper(final Context context, final String name, final CursorFactory factory, final int version) {
         //Private so you need to use the getInstance() method
         super(context, name, factory, version);
-        mActiveLoaders = new ArrayList<SQLiteLoaderObserver>();
+        mActiveLoaders = new CopyOnWriteArrayList<SQLiteLoaderObserver>();
     }
 
     @Override
