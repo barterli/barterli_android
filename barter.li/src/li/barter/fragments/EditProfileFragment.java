@@ -415,7 +415,10 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
             UserInfo.INSTANCE.setProfilePicture(userInfo
                             .getString(HttpConstants.IMAGE_URL));
-            onUpNavigate();
+            
+            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                            .instantiate(getActivity(), ProfileFragment.class
+                                            .getName(), null), FragmentTags.PROFILE_FROM_LOGIN, true, null);
         }
 
     }

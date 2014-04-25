@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -274,7 +275,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                             .set(getActivity(), R.string.pref_location, response.responseBundle
                                             .getString(HttpConstants.ID_LOCATION));
             
-            onUpNavigate();
+            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                            .instantiate(getActivity(), EditProfileFragment.class
+                                            .getName(), null), FragmentTags.EDIT_PROFILE, true, null);
             
         }
     }
