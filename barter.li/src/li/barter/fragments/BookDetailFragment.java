@@ -44,9 +44,12 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
+import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants;
+import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -125,7 +128,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             mChatWithOwnerButton.setEnabled(false);
             mChatWithOwnerButton.setVisibility(View.GONE);
             mOwnerProfileButton.setVisibility(View.GONE);
-            
 
         }
 
@@ -164,12 +166,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mBookImageView = (ImageView) view.findViewById(R.id.book_avatar);
         mDescriptionTextView = (TextView) view
                         .findViewById(R.id.text_description);
-        
+
         mSuggestedPriceTextView = (TextView) view
                         .findViewById(R.id.text_suggested_price);
         mSuggestedPriceLabelTextView = (TextView) view
                         .findViewById(R.id.label_suggested_price);
-        
+
         mPublicationDateTextView = (TextView) view
                         .findViewById(R.id.text_publication_date);
         mChatWithOwnerButton = (Button) view.findViewById(R.id.button_chat);
@@ -270,6 +272,28 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     public void onSuccess(final int requestId,
                     final IBlRequestContract request,
                     final ResponseInfo response) {
+
+        /*
+         * This will happen in the case where the user has newly signed in using
+         * email/passowrd and doesn't have a first name added yet. The request
+         * is placed into the queue from
+         * AbstractBarterLiFragment#onDialogClick()
+         */
+        if (requestId == RequestId.SAVE_USER_PROFILE) {
+
+            final Bundle userInfo = response.responseBundle;
+            UserInfo.INSTANCE.setFirstName(userInfo
+                            .getString(HttpConstants.FIRST_NAME));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_first_name, userInfo
+                                            .getString(HttpConstants.FIRST_NAME));
+            SharedPreferenceHelper
+                            .set(getActivity(), R.string.pref_last_name, userInfo
+                                            .getString(HttpConstants.LAST_NAME));
+            
+            loadChatFragment();
+
+        }
     }
 
     @Override
@@ -315,25 +339,22 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 mDescriptionTextView
                                 .setText(Html.fromHtml(cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.DESCRIPTION))));
-                
-               
-                
+
                 try {
-                    if(!cursor.getString(cursor
-                                    .getColumnIndex(DatabaseColumns.VALUE)).equals(null)) {
-                        
-                        mSuggestedPriceLabelTextView.setVisibility(View.VISIBLE);
+                    if (!cursor.getString(cursor.getColumnIndex(DatabaseColumns.VALUE))
+                                    .equals(null)) {
+
+                        mSuggestedPriceLabelTextView
+                                        .setVisibility(View.VISIBLE);
                         mSuggestedPriceTextView.setVisibility(View.VISIBLE);
-                        mSuggestedPriceTextView.setText(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.VALUE)));
-                    } 
+                        mSuggestedPriceTextView
+                                        .setText(cursor.getString(cursor
+                                                        .getColumnIndex(DatabaseColumns.VALUE)));
+                    }
                 } catch (Exception e) {
                     // handle value = null exception
                 }
-              
-                
-                    
-               
+
                 mPublicationDateTextView
                                 .setText(cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR)));
@@ -386,21 +407,19 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         if (v.getId() == R.id.button_chat) {
 
             if (isLoggedIn()) {
-                final Bundle args = new Bundle(3);
-                args.putString(Keys.CHAT_ID, ChatService
-                                .generateChatId(mUserId, UserInfo.INSTANCE
-                                                .getId()));
-                args.putString(Keys.USER_ID, mUserId);
-                args.putString(Keys.BOOK_TITLE, mTitleTextView.getText()
-                                .toString());
 
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), ChatDetailsFragment.class
-                                                .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
+                if (hasFirstName()) {
+                    loadChatFragment();
+                } else {
+                    showAddFirstNameDialog();
+                }
+
             } else {
+
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), LoginFragment.class
                                                 .getName(), null), FragmentTags.LOGIN_TO_CHAT, true, null);
+
             }
         }
 
@@ -417,6 +436,22 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         } else {
             // Show Login Fragment
         }
+
+    }
+
+    /**
+     * Loads the Chat Fragment to chat with the book owner
+     */
+    private void loadChatFragment() {
+        final Bundle args = new Bundle(3);
+        args.putString(Keys.CHAT_ID, ChatService
+                        .generateChatId(mUserId, UserInfo.INSTANCE.getId()));
+        args.putString(Keys.USER_ID, mUserId);
+        args.putString(Keys.BOOK_TITLE, mTitleTextView.getText().toString());
+
+        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                        .instantiate(getActivity(), ChatDetailsFragment.class
+                                        .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
 
     }
 
