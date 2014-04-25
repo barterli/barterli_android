@@ -30,6 +30,8 @@
     <string name="Aboutus_fragment_title">About us</string>
     <string name="Tribute_fragment_title">Tribute</string>
     <string name="Book_Detail_fragment_title">Book Detail</string>
+    <string name="update_info">Update Info</string>
+    <string name="cancel">Cancel</string>
 
     <!-- crouton info strings -->
     <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>
@@ -96,6 +98,7 @@
     <string name="error_unable_to_send_chat">Not able to send chat message</string>
     <string name="no_personal_info_bug_and_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this bug report or feature suggestion will be available publicly.</string>
     <string name="no_personal_info_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this feature suggestion will be available publicly.</string>
+    <string name="error_required">Required</string>
 
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>
@@ -168,7 +171,7 @@
     <string name="text_edit_profile">Edit</string>
     <string name="text_save_profile">Save</string>
     <string name="hint_first_name">First Name</string>
-    <string name="hint_last_name">Last Name</string>
+    <string name="hint_last_name">Last Name(optional)</string>
     <string name="label_my_books">My Books</string>
     <string name="profilepage_title">My Profile</string>
 

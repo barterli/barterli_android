@@ -55,7 +55,7 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
         setActionBarDrawerToggleEnabled(false);
         setActionBarTitle(R.string.Collaborate_fragment_title);
         final View view = inflater

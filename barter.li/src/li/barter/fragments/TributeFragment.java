@@ -50,7 +50,7 @@ public class TributeFragment extends AbstractBarterLiFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
         setHasOptionsMenu(true);
         setActionBarTitle(R.string.Tribute_fragment_title);
         setActionBarDrawerToggleEnabled(false);

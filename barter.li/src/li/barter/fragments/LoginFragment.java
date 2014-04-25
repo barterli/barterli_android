@@ -75,7 +75,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
         final View view = inflater.inflate(R.layout.fragment_login, null);
 
         mFacebookLoginButton = (Button) view
@@ -271,6 +271,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             UserInfo.INSTANCE.setId(userInfo.getString(HttpConstants.ID_USER));
             UserInfo.INSTANCE.setProfilePicture(userInfo
                             .getString(HttpConstants.IMAGE_URL));
+            UserInfo.INSTANCE.setFirstName(userInfo
+                            .getString(HttpConstants.FIRST_NAME));
 
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_auth_token, userInfo

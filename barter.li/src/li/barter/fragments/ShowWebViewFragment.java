@@ -46,7 +46,7 @@ public class ShowWebViewFragment extends AbstractBarterLiFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
         //setHasOptionsMenu(true);
         setActionBarDrawerToggleEnabled(false);
         final View view = inflater

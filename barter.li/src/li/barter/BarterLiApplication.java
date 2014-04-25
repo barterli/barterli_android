@@ -98,6 +98,8 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
                         .getString(this, R.string.pref_email));
         UserInfo.INSTANCE.setProfilePicture(SharedPreferenceHelper
                         .getString(this, R.string.pref_profile_image));
+        UserInfo.INSTANCE.setFirstName(SharedPreferenceHelper
+                        .getString(this, R.string.pref_first_name));
     }
 
     /**

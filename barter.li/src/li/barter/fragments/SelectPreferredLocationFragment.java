@@ -112,7 +112,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
 
         final View contentView = inflater
                         .inflate(R.layout.fragment_select_location, container, false);
@@ -273,12 +273,12 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_location, response.responseBundle
                                             .getString(HttpConstants.ID_LOCATION));
-            
+
             onUpNavigate();
-            
+
         }
     }
-    
+
     @Override
     public void onBadRequestError(final int requestId,
                     final IBlRequestContract request, final int errorCode,
@@ -314,7 +314,8 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
                 marker = map.addMarker(new MarkerOptions()
                                 .position(new LatLng(aHangout.latitude, aHangout.longitude))
-                                .title(String.format(mMarkerTitleFormat, aHangout.name, aHangout.address)));
+                                .title(String.format(mMarkerTitleFormat, aHangout.name, aHangout.address))
+                                .snippet(getString(R.string.tap_to_set_preferred_location)));
 
                 mMarkerHangoutMap.put(marker, aHangout);
 
@@ -413,19 +414,11 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        // TODO Auto-generated method stub
 
         if (marker.equals(mCustomMarker)) {
             final LatLng markerPosition = marker.getPosition();
             Logger.v(TAG, "Custom Marker Clicked - Latitude %f Longitude %f", markerPosition.latitude, markerPosition.longitude);
             //TODO Reverse geocode the marker position to get the location info
-        } else {
-
-            final Hangout selectedHangout = mMarkerHangoutMap.get(marker);
-            Logger.v(TAG, "Marker Clicked: %s, %s", selectedHangout.name, selectedHangout.address);
-            setUserPreferredLocation(selectedHangout.name, selectedHangout.address, selectedHangout.latitude, selectedHangout.longitude);
-            showCrouton("Book Exchange Point Is Set Now. \nIf You Want To Change Please Select Another Point", AlertStyle.INFO);
-
         }
 
         return false;

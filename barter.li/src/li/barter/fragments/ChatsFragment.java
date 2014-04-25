@@ -71,7 +71,7 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
         setHasOptionsMenu(true);
         setActionBarTitle(R.string.chat_fragment_title);
         final View view = inflater
