@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -106,7 +107,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
         setHasOptionsMenu(true);
         final View view = inflater
                         .inflate(R.layout.fragment_profile_edit, null);
@@ -193,14 +194,15 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
             case R.id.action_profile_save: {
 
-                final String mFirstName = mFirstNameTextView.getText()
-                                .toString();
-                final String mLastName = mLastNameTextView.getText().toString();
-                final String mAboutMe = mAboutMeTextView.getText().toString();
-                if (mFirstName.equals("")) {
-                    showCrouton("Please Enter First Name", AlertStyle.ERROR);
-                } else {
-                    saveProfileInfoToServer(mFirstName, mLastName, mAboutMe, mWasProfileImageChanged, mAvatarfile
+                if (isInputValid()) {
+                    final String firstName = mFirstNameTextView.getText()
+                                    .toString();
+                    final String lastName = mLastNameTextView.getText()
+                                    .toString();
+                    final String aboutMe = mAboutMeTextView.getText()
+                                    .toString();
+
+                    saveProfileInfoToServer(firstName, lastName, aboutMe, mWasProfileImageChanged, mAvatarfile
                                     .getAbsolutePath());
                 }
                 return true;
@@ -210,6 +212,26 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    /**
+     * Used to validate input before sending to server. Also sets the error
+     * messages on the respective fields.
+     * 
+     * @return <code>true</code> if input is valid, <code>false</code> otherwise
+     */
+    private boolean isInputValid() {
+
+        boolean isValid = false;
+
+        final String firstName = mFirstNameTextView.getText().toString();
+
+        isValid = !TextUtils.isEmpty(firstName);
+
+        if (!isValid) {
+            mFirstNameTextView.setError(getString(R.string.error_required));
+        }
+        return isValid;
     }
 
     /**
@@ -382,7 +404,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 updateUserProfileRequest
                                 .addFile(HttpConstants.PROFILE_PIC, profilePicPath);
             }
-            
+
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
             addRequestToQueue(updateUserProfileRequest, true, 0);
 
@@ -399,22 +421,23 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         if (requestId == RequestId.SAVE_USER_PROFILE) {
             final Bundle userInfo = response.responseBundle;
+            
+            final String firstName = userInfo.getString(HttpConstants.FIRST_NAME);
 
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_description, userInfo
                                             .getString(HttpConstants.DESCRIPTION));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_first_name, userInfo
-                                            .getString(HttpConstants.FIRST_NAME));
+                            .set(getActivity(), R.string.pref_first_name, firstName);
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_last_name, userInfo
                                             .getString(HttpConstants.LAST_NAME));
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_profile_image, userInfo
                                             .getString(HttpConstants.IMAGE_URL));
+            
+            UserInfo.INSTANCE.setFirstName(firstName);
 
-            UserInfo.INSTANCE.setProfilePicture(userInfo
-                            .getString(HttpConstants.IMAGE_URL));
             onUpNavigate();
         }
 

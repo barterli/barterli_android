@@ -56,7 +56,7 @@ public class SuggestFeatureFragment extends AbstractBarterLiFragment implements
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
         setActionBarDrawerToggleEnabled(false);
         final View view = inflater
                         .inflate(R.layout.fragment_suggest_feature, null);

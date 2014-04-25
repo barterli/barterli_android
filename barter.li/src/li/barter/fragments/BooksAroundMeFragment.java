@@ -191,7 +191,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
         setHasOptionsMenu(true);
 
         final View contentView = inflater

@@ -18,10 +18,15 @@ package li.barter.fragments;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Request.Method;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -36,11 +41,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.fragments.dialogs.AddUserInfoDialogFragment;
+import li.barter.http.BlMultiPartRequest;
+import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.ResponseInfo;
 import li.barter.http.VolleyCallbacks;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.TypefaceCache;
@@ -54,24 +65,29 @@ import li.barter.widgets.TypefaceCache;
 public abstract class AbstractBarterLiFragment extends Fragment implements
                 IHttpCallbacks {
 
-    private static final String TAG = "BaseBarterLiFragment";
+    private static final String       TAG = "BaseBarterLiFragment";
 
     /**
      * Flag that indicates that this fragment is attached to an Activity
      */
-    private boolean             mIsAttached;
+    private boolean                   mIsAttached;
 
     /**
      * Stores the id for the container view
      */
-    protected int               mContainerViewId;
+    protected int                     mContainerViewId;
 
     /**
      * {@link VolleyCallbacks} for encapsulating the Volley response flow
      */
-    protected VolleyCallbacks   mVolleyCallbacks;
+    protected VolleyCallbacks         mVolleyCallbacks;
 
-    private AtomicInteger       mRequestCounter;
+    private AtomicInteger             mRequestCounter;
+
+    /**
+     * {@link AddUserInfoDialogFragment} for
+     */
+    private AddUserInfoDialogFragment mAddUserInfoDialogFragment;
 
     @Override
     public void onAttach(final Activity activity) {
@@ -87,9 +103,16 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      * Call this method in the onCreateView() of any subclasses
      * 
      * @param container The container passed into onCreateView()
+     * @param savedInstanceState The Instance state bundle passed into the
+     *            onCreateView() method
      */
-    protected void init(final ViewGroup container) {
+    protected void init(final ViewGroup container,
+                    final Bundle savedInstanceState) {
         mContainerViewId = container.getId();
+        if (savedInstanceState != null) {
+            mAddUserInfoDialogFragment = (AddUserInfoDialogFragment) getFragmentManager()
+                            .findFragmentByTag(FragmentTags.DIALOG_ADD_NAME);
+        }
     }
 
     protected void setActionBarDrawerToggleEnabled(final boolean enabled) {
@@ -301,6 +324,24 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     }
 
     /**
+     * Does the user have a first name
+     */
+    protected boolean hasFirstName() {
+        return !TextUtils.isEmpty(UserInfo.INSTANCE.getFirstName());
+    }
+
+    /**
+     * Show the dialog for the user to add his name, in case it's not already
+     * added
+     */
+    protected void showAddFirstNameDialog() {
+
+        mAddUserInfoDialogFragment = new AddUserInfoDialogFragment();
+        mAddUserInfoDialogFragment
+                        .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.update_info, R.string.submit, R.string.cancel, 0, getFragmentManager(), true, FragmentTags.DIALOG_ADD_NAME);
+    }
+
+    /**
      * Pops the fragment from the backstack, checking to see if the bundle args
      * have {@linkplain Keys#UP_NAVIGATION_TAG} which gives the name of the
      * backstack tag to pop to. This is mainly for providing Up navigation
@@ -370,6 +411,12 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      *         <code>false</code> otherwise
      */
     public boolean willHandleDialog(DialogInterface dialog) {
+
+        if (mAddUserInfoDialogFragment != null
+                        && mAddUserInfoDialogFragment.getDialog()
+                                        .equals(dialog)) {
+            return true;
+        }
         return false;
     }
 
@@ -383,6 +430,54 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      */
     public void onDialogClick(DialogInterface dialog, int which) {
 
+        if (mAddUserInfoDialogFragment != null
+                        && mAddUserInfoDialogFragment.getDialog()
+                                        .equals(dialog)) {
+
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                final String firstName = mAddUserInfoDialogFragment
+                                .getFirstName();
+                final String lastName = mAddUserInfoDialogFragment
+                                .getLastName();
+
+                if (!TextUtils.isEmpty(firstName)) {
+                    updateUserInfo(firstName, lastName);
+                }
+            }
+        }
+    }
+
+    /**
+     * Updates the user info with just the first name and last name
+     * 
+     * @param firstName The user's first name
+     * @param lastName The user's last name
+     */
+    private void updateUserInfo(String firstName, String lastName) {
+
+        final String url = HttpConstants.getApiBaseUrl()
+                        + ApiEndpoints.UPDATE_USER_INFO;
+
+        final JSONObject mUserProfileObject = new JSONObject();
+        final JSONObject mUserProfileMasterObject = new JSONObject();
+        try {
+            mUserProfileObject.put(HttpConstants.FIRST_NAME, firstName);
+            mUserProfileObject.put(HttpConstants.LAST_NAME, lastName);
+            mUserProfileMasterObject
+                            .put(HttpConstants.USER, mUserProfileObject);
+
+            final BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
+
+            updateUserProfileRequest
+                            .addMultipartParam(HttpConstants.USER, "application/json", mUserProfileMasterObject
+                                            .toString());
+
+            updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
+            addRequestToQueue(updateUserProfileRequest, true, 0);
+
+        } catch (final JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

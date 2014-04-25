@@ -101,7 +101,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
 
         setActionBarTitle(R.string.editbook_title);
         final View view = inflater
@@ -165,14 +165,14 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mTitleEditText.setNetworkSuggestCallbacks(this);
         mTitleEditText.setSuggestCountThreshold(3);
         mTitleEditText.setSuggestWaitThreshold(400);
-       // mTitleEditText.addTextChangedListener(watcher);
+        // mTitleEditText.addTextChangedListener(watcher);
         mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
-        
+
         mDescriptionEditText = (EditText) view
                         .findViewById(R.id.edit_text_description);
-        
+
         mSellPriceEditText = (EditText) view.findViewById(R.id.edit_sell_price);
-        
+
         initBarterTypeCheckBoxes(view);
 
     }
@@ -400,7 +400,12 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 if (mEditMode) {
                     //TODO Update book
                 } else {
-                    createBookOnServer(null);
+
+                    if (hasFirstName()) {
+                        createBookOnServer(null);
+                    } else {
+                        showAddFirstNameDialog();
+                    }
                 }
             }
         }
@@ -461,7 +466,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 mTitleEditText.setNetworkSuggestionsEnabled(false);
                 mTitleEditText.setText(response.responseBundle
                                 .getString(HttpConstants.TITLE));
-                
+
                 mDescriptionEditText.setText(response.responseBundle
                                 .getString(HttpConstants.DESCRIPTION));
                 mAuthorEditText.setText(response.responseBundle
@@ -504,6 +509,24 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     mTitleEditText.onSuggestionsFetched((String) request
                                     .getExtras().get(Keys.SEARCH), suggestions, true);
                 }
+                break;
+            }
+
+            /*
+             * This will happen in the case where the user has newly signed in
+             * using email/passowrd and doesn't have a first name added yet. The
+             * request is placed into the queue from
+             * AbstractBarterLiFragment#onDialogClick()
+             */
+            case RequestId.SAVE_USER_PROFILE: {
+
+                final Bundle userInfo = response.responseBundle;
+                UserInfo.INSTANCE.setFirstName(userInfo
+                                .getString(HttpConstants.FIRST_NAME));
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_first_name, userInfo
+                                                .getString(HttpConstants.FIRST_NAME));
+                createBookOnServer(null);
                 break;
             }
         }

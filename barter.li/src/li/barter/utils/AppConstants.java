@@ -79,6 +79,7 @@ public class AppConstants {
         private String mProfilePicture;
         private String mAuthHeader;
         private String mDeviceId;
+        private String mFirstName;
 
         private UserInfo() {
             reset();
@@ -90,6 +91,7 @@ public class AppConstants {
             mEmail = "";
             mId = "";
             mProfilePicture = "";
+            mFirstName = "";
         }
 
         public String getAuthToken() {
@@ -159,6 +161,14 @@ public class AppConstants {
                                 .format(Locale.US, HttpConstants.HEADER_AUTHORIZATION_FORMAT, mAuthToken, mEmail);
             }
             return mAuthHeader;
+        }
+
+        public void setFirstName(final String firstName) {
+            mFirstName = firstName;
+        }
+
+        public String getFirstName() {
+            return mFirstName;
         }
 
     }
@@ -320,6 +330,7 @@ public class AppConstants {
 
         /* Tags for Dialog fragments */
         public static final String DIALOG_TAKE_PICTURE                             = "dialog_take_picture";
+        public static final String DIALOG_ADD_NAME                                 = "dialog_add_name";
     }
 
     /**

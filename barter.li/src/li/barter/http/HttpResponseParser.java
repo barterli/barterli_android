@@ -632,7 +632,7 @@ public class HttpResponseParser {
                         .readString(bookInfoObject, HttpConstants.ISBN_13, false, false));
         
         responseBundle.putString(HttpConstants.VALUE, JsonUtils
-                        .readString(bookInfoObject, HttpConstants.VALUE, false, true));
+                        .readString(bookInfoObject, HttpConstants.VALUE, false, false));
         
 
         final JSONObject authorsObject = JsonUtils

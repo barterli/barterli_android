@@ -90,7 +90,7 @@ public class OtherProfileFragment extends AbstractBarterLiFragment implements
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
         setHasOptionsMenu(true);
         final View view = inflater
                         .inflate(R.layout.fragment_profile_show, null);

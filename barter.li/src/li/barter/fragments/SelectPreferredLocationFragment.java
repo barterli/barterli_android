@@ -112,7 +112,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
-        init(container);
+        init(container, savedInstanceState);
 
         final View contentView = inflater
                         .inflate(R.layout.fragment_select_location, container, false);
