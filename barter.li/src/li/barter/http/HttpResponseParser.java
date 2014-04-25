@@ -38,6 +38,7 @@ import li.barter.models.Hangout;
 import li.barter.models.Team;
 import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
+import li.barter.utils.AppConstants.Keys;
 
 /**
  * Class that reads an API response and parses it and stores it in the database
@@ -385,18 +386,23 @@ public class HttpResponseParser {
         final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
+        
         final JSONArray searchResults = JsonUtils
                         .readJSONArray(responseObject, HttpConstants.SEARCH, true, true);
-
+        
         JSONObject bookObject = null;
         final ContentValues values = new ContentValues();
         final String selection = DatabaseColumns.BOOK_ID
                         + SQLConstants.EQUALS_ARG;
         final String[] args = new String[1];
+        
+
         for (int i = 0; i < searchResults.length(); i++) {
             bookObject = JsonUtils
                             .readJSONObject(searchResults, i, false, false);
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
+            
+            
 
             //First try to update the table if a book already exists
             if (DBInterface.update(TableSearchBooks.NAME, values, selection, args, true) == 0) {
@@ -405,6 +411,14 @@ public class HttpResponseParser {
                 DBInterface.insert(TableSearchBooks.NAME, null, values, true);
             }
         }
+        final Bundle responseBundle = new Bundle();
+        if(searchResults.isNull(0))  {
+        responseBundle.putBoolean(Keys.NO_BOOKS_FLAG_KEY,true);
+        }
+        else  {
+        responseBundle.putBoolean(Keys.NO_BOOKS_FLAG_KEY,false);   
+        }
+        responseInfo.responseBundle = responseBundle;
         return responseInfo;
     }
 

@@ -197,15 +197,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             case android.R.id.home: {
 
-                if(getTag().equals(FragmentTags.PROFILE_FROM_LOGIN)) {
-                    loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                    .instantiate(getActivity(), BooksAroundMeFragment.class
-                                                    .getName(), null), FragmentTags.BOOKS_AROUND_ME, true, null);
-                }
-                else {
-                    onUpNavigate(); 
-                }
-                
+                onUpNavigate();
                 return true;
             }
 
@@ -225,9 +217,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     @Override
     public void onBackPressed() {
         if (getTag().equals(FragmentTags.PROFILE_FROM_LOGIN)) {
-            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), BooksAroundMeFragment.class
-                                            .getName(), null), FragmentTags.BOOKS_AROUND_ME, true, null);
+            onUpNavigate();
         } else {
             super.onBackPressed();
         }
