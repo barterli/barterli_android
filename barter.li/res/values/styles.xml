@@ -39,6 +39,7 @@
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_apptheme</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_apptheme</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Apptheme</item>
+        <item name="android:indeterminateProgressStyle">@style/ProgressBar.Apptheme</item>
         <item name="android:titleTextStyle">@style/ActionBarStyle.TitleTextStyle</item>
         <item name="android:displayOptions">none</item>
     </style>
@@ -75,8 +76,15 @@
         <item name="android:dropDownSelector">@drawable/selectable_background_apptheme</item>
     </style>
 
-    <style name="ProgressBar.Apptheme" parent="@android:style/Widget.Holo.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/progress_horizontal_apptheme</item>
+    <style name="ProgressBar.Apptheme" parent="@android:style/Widget.Holo.ProgressBar.Small">
+
+        <!-- <item name="android:progressDrawable">@drawable/progress_horizontal_apptheme</item> -->
+
+        <!-- <item name="android:indeterminateDrawable">@drawable/apptheme_progress_indeterminate_horizontal_holo_light</item> -->
+        <item name="android:minHeight">@dimen/ab_ip_size</item>
+        <item name="android:maxHeight">@dimen/ab_ip_size</item>
+        <item name="android:minWidth">@dimen/ab_ip_size</item>
+        <item name="android:maxWidth">@dimen/ab_ip_size</item>
     </style>
 
     <style name="ActionButton.CloseMode.Apptheme" parent="@android:style/Widget.Holo.ActionButton.CloseMode">
