@@ -29,7 +29,7 @@ public class ProgressDialogManager {
         pDialog.setCancelable(false);
         pDialog.show();
     }
-
+    
     public void dismissProgresDialog() {
         pDialog.dismiss();
     }

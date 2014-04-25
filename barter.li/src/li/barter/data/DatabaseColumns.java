@@ -28,6 +28,7 @@ public interface DatabaseColumns {
     public static final String ISBN_13           = "isbn_13";
     public static final String DESCRIPTION       = "description";
     public static final String TITLE             = "title";
+    public static final String VALUE             = "value";
     public static final String AUTHOR            = "author";
     public static final String BARTER_TYPE       = "barter_type";
     public static final String USER_ID           = "user_id";
