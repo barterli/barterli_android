@@ -56,6 +56,8 @@
     <string name="enter_message">Enter your message</string>
     <string name="new_messages">%d new messages!</string>
     <string name="chat_opened_from" formatted="false">This chat was opened from %s.</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="complete_action_using">Complete action using</string>
 
     <!-- Strings for AddBookActivity -->
     <string name="search_hint">Search by Title|Author|ISBN</string>
@@ -123,6 +125,10 @@
         <item>About us</item>
         <item>Tribute</item>
         <item>Logout</item>
+    </string-array>
+    <string-array name="take_photo_choices">
+        <item>Capture from Camera</item>
+        <item>Add from Gallery</item>
     </string-array>
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile, update your info, view your saved books.</item>

@@ -308,8 +308,8 @@ public class AppConstants {
         public static final String OTHER_USER_PROFILE                              = "other_user_profile";
         public static final String TRIBUTE                                         = "Tribute";
         public static final String TEAM                                            = "Team";
-        /* Tags for fragment backstack popping and providing up navigation */
 
+        /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
         public static final String BS_ADD_BOOK                                     = "to_add_book";
         public static final String BS_PREFERRED_LOCATION                           = "to_preferred_location";
@@ -317,6 +317,9 @@ public class AppConstants {
         public static final String BS_CHATS                                        = "to_chats";
         public static final String BS_SINGLE_BOOK                                  = "to_edit_book";
         public static final String BS_PROFILE                                      = "to_profile";
+
+        /* Tags for Dialog fragments */
+        public static final String DIALOG_TAKE_PICTURE                             = "dialog_take_picture";
     }
 
     /**

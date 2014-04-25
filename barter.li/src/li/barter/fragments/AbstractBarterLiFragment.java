@@ -22,6 +22,7 @@ import com.android.volley.RequestQueue;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -359,6 +360,29 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     public void onOtherError(final int requestId,
                     final IBlRequestContract request, final int errorCode) {
         //TODO Show generic network error message
+    }
+
+    /**
+     * Whether this fragment will handle the particular dialog click or not
+     * 
+     * @param dialog The dialog that was interacted with
+     * @return <code>true</code> If the fragment will handle it,
+     *         <code>false</code> otherwise
+     */
+    public boolean willHandleDialog(DialogInterface dialog) {
+        return false;
+    }
+
+    /**
+     * Handle the click for the dialog. The fragment will receive this call,
+     * only if {@link #willHandleDialog(DialogInterface)} returns
+     * <code>true</code>
+     * 
+     * @param dialog The dialog that was interacted with
+     * @param which The button that was clicked
+     */
+    public void onDialogClick(DialogInterface dialog, int which) {
+
     }
 
 }

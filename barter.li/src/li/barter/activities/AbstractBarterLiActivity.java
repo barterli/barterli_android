@@ -23,8 +23,10 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
@@ -93,7 +95,7 @@ import li.barter.widgets.TypefacedSpan;
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
  */
 public abstract class AbstractBarterLiActivity extends FragmentActivity
-                implements IHttpCallbacks, AsyncDbQueryCallback {
+                implements IHttpCallbacks, AsyncDbQueryCallback, OnClickListener {
 
     private static final String TAG                     = "BaseBarterLiActivity";
 
@@ -947,6 +949,18 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
         ((TextView) croutonText.findViewById(R.id.text_message))
                         .setText(message);
         return croutonText;
+    }
+    
+    @Override
+    public void onClick(DialogInterface dialog, int which) {
+
+        final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
+        
+        if(fragment != null && fragment.isVisible()) {
+            if(fragment.willHandleDialog(dialog)) {
+                fragment.onDialogClick(dialog, which);
+            }
+        }
     }
 
 }

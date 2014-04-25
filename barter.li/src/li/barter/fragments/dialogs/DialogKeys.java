@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.fragments.dialogs;
 
 /**
@@ -54,5 +55,10 @@ public interface DialogKeys {
 
     /** Key identifying the message params for formatting the message string */
     public static final String MESSAGE_PARAMS    = "message_params";
+
+    /**
+     * Keys for the items resource IDs for choices
+     */
+    public static final String ITEMS_ID          = "items_id";
 
 }
