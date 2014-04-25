@@ -35,7 +35,6 @@ import org.json.JSONObject;
 
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
-import li.barter.activities.HomeActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
@@ -276,21 +274,11 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                             .set(getActivity(), R.string.pref_location, response.responseBundle
                                             .getString(HttpConstants.ID_LOCATION));
             
-            final int backStackEntryCount = getFragmentManager()
-
-                            .getBackStackEntryCount();
-            if (backStackEntryCount < 3) {
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), EditProfileFragment.class
-                                                .getName(), null), FragmentTags.EDIT_PROFILE, true, null);
-            } else {
-                onUpNavigate();
-            }
-            
+            onUpNavigate();
             
         }
     }
-
+    
     @Override
     public void onBadRequestError(final int requestId,
                     final IBlRequestContract request, final int errorCode,
