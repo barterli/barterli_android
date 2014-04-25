@@ -257,7 +257,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 args.putBoolean(Keys.EDIT_MODE, true);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), AddOrEditBookFragment.class
-                                                .getName(), args), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_SINGLE_BOOK);
+                                                .getName(), args), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_EDIT_BOOK);
 
                 return true;
             }
@@ -290,7 +290,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_last_name, userInfo
                                             .getString(HttpConstants.LAST_NAME));
-            
+
             loadChatFragment();
 
         }
@@ -416,9 +416,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
             } else {
 
+                final Bundle loginArgs = new Bundle(1);
+                loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOK_DETAIL);
+
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), LoginFragment.class
-                                                .getName(), null), FragmentTags.LOGIN_TO_CHAT, true, null);
+                                                .getName(), loginArgs), FragmentTags.LOGIN_TO_CHAT, true, null);
 
             }
         }

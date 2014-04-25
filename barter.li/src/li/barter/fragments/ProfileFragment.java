@@ -41,6 +41,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.security.spec.MGF1ParameterSpec;
 import java.util.Locale;
 
 import li.barter.R;
@@ -98,20 +99,20 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
-        final View view = inflater
-                        .inflate(R.layout.fragment_profile_show, null);
+        mBooksAroundMeGridView = (GridView) inflater
+                        .inflate(R.layout.fragment_my_profile, container, false);
 
         setActionBarTitle(R.string.profilepage_title);
+        
+        final View profileDetails = inflater.inflate(R.layout.fragment_profile_header, container, false);
 
-        mProfileNameTextView = (TextView) view
+        mProfileNameTextView = (TextView) profileDetails
                         .findViewById(R.id.text_profile_name);
-        mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
-        mPreferredLocationTextView = (TextView) view
+        mAboutMeTextView = (TextView) profileDetails.findViewById(R.id.text_about_me);
+        mPreferredLocationTextView = (TextView) profileDetails
                         .findViewById(R.id.text_current_location);
-        mProfileImageView = (ImageView) view
+        mProfileImageView = (ImageView) profileDetails
                         .findViewById(R.id.image_profile_pic);
-        mBooksAroundMeGridView = (GridView) view
-                        .findViewById(R.id.grid_my_books);
 
         final File mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
         if (mAvatarfile.exists()) {
@@ -183,7 +184,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         setActionBarDrawerToggleEnabled(false);
         loadMyBooks();
-        return view;
+        return mBooksAroundMeGridView;
     }
 
     @Override

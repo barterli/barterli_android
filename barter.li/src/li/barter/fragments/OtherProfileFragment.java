@@ -93,7 +93,7 @@ public class OtherProfileFragment extends AbstractBarterLiFragment implements
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
         final View view = inflater
-                        .inflate(R.layout.fragment_profile_show, null);
+                        .inflate(R.layout.fragment_profile_header, null);
 
         setActionBarTitle(R.string.profilepage_title);
 

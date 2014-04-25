@@ -326,8 +326,9 @@ public class AppConstants {
         public static final String BS_PREFERRED_LOCATION                           = "to_preferred_location";
         public static final String BS_EDIT_PROFILE                                 = "to_edit_profile";
         public static final String BS_CHATS                                        = "to_chats";
-        public static final String BS_SINGLE_BOOK                                  = "to_edit_book";
+        public static final String BS_EDIT_BOOK                                    = "to_edit_book";
         public static final String BS_PROFILE                                      = "to_profile";
+        public static final String BS_BOOK_DETAIL                                  = "to_book_detail";
 
         /* Tags for Dialog fragments */
         public static final String DIALOG_TAKE_PICTURE                             = "dialog_take_picture";

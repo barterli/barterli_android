@@ -106,24 +106,8 @@
         android:singleLine="true"
         android:text="@string/label_my_books"
         android:textColor="@color/black"
-        android:textStyle="bold"
         android:textSize="@dimen/text_medium"
+        android:textStyle="bold"
         app:fontStyle="alegreya_regular" />
-
-    <GridView
-        android:id="@+id/grid_my_books"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/label_my_books"
-        android:layout_marginLeft="@dimen/activity_margin"
-        android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginTop="@dimen/margin_minimum"
-        android:background="@color/transparent"
-        android:horizontalSpacing="@dimen/bookGridHorizontalSpacing"
-        android:numColumns="@integer/grid_col_count"
-        android:overScrollMode="never"
-        android:paddingBottom="@dimen/bookGridVerticalSpacing"
-        android:scrollbars="none"
-        android:verticalSpacing="@dimen/bookGridVerticalSpacing" />
 
 </RelativeLayout>
