@@ -91,7 +91,7 @@ import li.barter.widgets.FullWidthDrawerLayout;
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
 LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
-                OnItemClickListener, OnScrollListener, TextWatcher {
+OnItemClickListener, OnScrollListener, TextWatcher {
 
     private static final String           TAG            = "BooksAroundMeFragment";
 
@@ -169,6 +169,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
      * Flag to load books on scroll
      */
     private boolean                       mLoadBookFlag  = true;
+
 
     /**
      * Holds the value of the previous search radius to prevent querying for
@@ -260,6 +261,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         // userScrolled is set to true in order to prevent auto scrolling on page load
         if ((scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
                         || (scrollState == OnScrollListener.SCROLL_STATE_FLING)) {
+            cancelAllCroutons();
             mUserScrolled = true;
         }
     }
@@ -270,19 +272,19 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
 
         //TODO
         boolean loadMore = /* maybe add a padding */
-        (firstVisibleItem + visibleItemCount) >= (totalItemCount - AppConstants.DEFAULT_LOAD_BEFORE_COUNT);
+                        (firstVisibleItem + visibleItemCount) >= (totalItemCount - AppConstants.DEFAULT_LOAD_BEFORE_COUNT);
 
-        Logger.d(TAG, "visible count: %d", visibleItemCount);
+                        Logger.d(TAG, "visible count: %d", visibleItemCount);
 
-        if (loadMore && mUserScrolled && mLoadBookFlag) {
-            mPageCount++;
-            loadMore = false;
-            mUserScrolled = false;
-            mLoadBookFlag = false;
-            fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils
-                            .getShortestRadiusFromCenter(mMapView) / 1000));
+                        if (loadMore && mUserScrolled && mLoadBookFlag) {
+                            mPageCount++;
+                            loadMore = false;
+                            mUserScrolled = false;
+                            mLoadBookFlag = false;
+                            fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils
+                                            .getShortestRadiusFromCenter(mMapView) / 1000));
 
-        }
+                        }
 
     }
 
@@ -523,13 +525,13 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
 
         if ((mPrevSearchRadius > 0) && (mLastFetchedLocation != null)) {
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_search_radius, mPrevSearchRadius);
+            .set(getActivity(), R.string.pref_last_search_radius, mPrevSearchRadius);
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_fetched_latitude, mLastFetchedLocation
-                                            .getLatitude());
+            .set(getActivity(), R.string.pref_last_fetched_latitude, mLastFetchedLocation
+                            .getLatitude());
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_fetched_longitude, mLastFetchedLocation
-                                            .getLongitude());
+            .set(getActivity(), R.string.pref_last_fetched_longitude, mLastFetchedLocation
+                            .getLongitude());
 
         }
     }
@@ -559,11 +561,11 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                             .getInt(getActivity(), R.string.pref_last_search_radius);
             mLastFetchedLocation = new Location(LocationManager.PASSIVE_PROVIDER);
             mLastFetchedLocation
-                            .setLatitude(SharedPreferenceHelper
-                                            .getDouble(getActivity(), R.string.pref_last_fetched_latitude));
+            .setLatitude(SharedPreferenceHelper
+                            .getDouble(getActivity(), R.string.pref_last_fetched_latitude));
             mLastFetchedLocation
-                            .setLongitude(SharedPreferenceHelper
-                                            .getDouble(getActivity(), R.string.pref_last_fetched_longitude));
+            .setLongitude(SharedPreferenceHelper
+                            .getDouble(getActivity(), R.string.pref_last_fetched_longitude));
         }
 
     }
@@ -609,6 +611,13 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
             mPrevSearchRadius = (Integer) request.getExtras()
                             .get(Keys.SEARCH_RADIUS);
 
+
+            if(response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)) {
+
+                showCrouton("No Books Added In This Area", AlertStyle.ERROR);
+            }
+            
+            
             /*
              * Do nothing because the loader will take care of reloading the
              * data
@@ -645,6 +654,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
+
 
             mLoadBookFlag = true;
 
@@ -760,7 +770,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                             .getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(mBooksAroundMeAutoCompleteTextView
                             .getWindowToken(), 0);
-            
+
             final Cursor cursor = (Cursor) mBooksAroundMeAdapter
                             .getItem(position);
 
