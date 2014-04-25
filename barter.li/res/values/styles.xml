@@ -76,7 +76,7 @@
         <item name="android:dropDownSelector">@drawable/selectable_background_apptheme</item>
     </style>
 
-    <style name="ProgressBar.Apptheme" parent="@android:style/Widget.Holo.ProgressBar.Small">
+    <style name="ProgressBar.Apptheme" parent="@android:style/Widget.Holo.ProgressBar">
 
         <!-- <item name="android:progressDrawable">@drawable/progress_horizontal_apptheme</item> -->
 
