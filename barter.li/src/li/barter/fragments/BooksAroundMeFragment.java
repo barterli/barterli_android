@@ -164,6 +164,11 @@ OnItemClickListener, OnScrollListener, TextWatcher {
      * Flag to stop onScroll method to call when fragment loads
      */
     private boolean                       mUserScrolled  = false;
+    
+    /**
+     * Flag to Display Crouton Message on empty book search result
+     */
+    private boolean                       mEmptySearchCroutonFlag  = true;
 
     /**
      * Flag to load books on scroll
@@ -280,6 +285,7 @@ OnItemClickListener, OnScrollListener, TextWatcher {
                             mPageCount++;
                             loadMore = false;
                             mUserScrolled = false;
+                            mEmptySearchCroutonFlag=false;
                             mLoadBookFlag = false;
                             fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils
                                             .getShortestRadiusFromCenter(mMapView) / 1000));
@@ -612,9 +618,14 @@ OnItemClickListener, OnScrollListener, TextWatcher {
                             .get(Keys.SEARCH_RADIUS);
 
 
-            if(response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)) {
+            if(response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)&&mEmptySearchCroutonFlag) {
 
                 showCrouton("No Books Added In This Area", AlertStyle.ERROR);
+            }
+            else if(response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)&&!mEmptySearchCroutonFlag)  {
+                
+                showCrouton("No More Books Added In This Area", AlertStyle.ERROR);
+                
             }
             
             
@@ -655,7 +666,7 @@ OnItemClickListener, OnScrollListener, TextWatcher {
 
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
 
-
+            
             mLoadBookFlag = true;
 
             {
@@ -688,7 +699,7 @@ OnItemClickListener, OnScrollListener, TextWatcher {
     public void onDrawerClosed(final View drawerView) {
 
         //it makes the keyboard hide when drawer closed
-
+        mEmptySearchCroutonFlag=true;
         showInfiniteCrouton(R.string.crouton_map_message, AlertStyle.INFO);
         final InputMethodManager imm = (InputMethodManager) getActivity()
                         .getSystemService(Context.INPUT_METHOD_SERVICE);
