@@ -234,14 +234,16 @@ public class HttpResponseParser {
         DBInterface.delete(TableUserBooks.NAME, null, null, true);
         for (int i = 0; i < booksArray.length(); i++) {
             bookObject = JsonUtils.readJSONObject(booksArray, i, true, true);
-            args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
+            args[0] = readBookDetailsIntoContentValues(bookObject, values, true, false);
 
             //First try to delete the table if a book already exists
 
             // Unable to update, insert the item
-            DBInterface.insert(TableUserBooks.NAME, null, values, true);
+            DBInterface.insert(TableUserBooks.NAME, null, values, false);
 
         }
+        
+        DBInterface.notifyChange(TableUserBooks.NAME);
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(userObject, HttpConstants.LOCATION, false, false);
@@ -321,22 +323,23 @@ public class HttpResponseParser {
         final String[] args = new String[1];
         for (int i = 0; i < booksArray.length(); i++) {
             bookObject = JsonUtils.readJSONObject(booksArray, i, true, true);
-            args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
+            args[0] = readBookDetailsIntoContentValues(bookObject, values, true, false);
 
             //First try to update the table if a book already exists
-            if (DBInterface.update(TableMyBooks.NAME, values, selection, args, true) == 0) {
+            if (DBInterface.update(TableMyBooks.NAME, values, selection, args, false) == 0) {
 
                 // Unable to update, insert the item
-                DBInterface.insert(TableMyBooks.NAME, null, values, true);
+                DBInterface.insert(TableMyBooks.NAME, null, values, false);
             }
         }
+        DBInterface.notifyChange(TableMyBooks.NAME);
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(userObject, HttpConstants.LOCATION, false, false);
 
         String locationId = null;
         if (locationObject != null) {
-            locationId = parseAndStoreLocation(locationObject);
+            locationId = parseAndStoreLocation(locationObject, false);
         }
 
         responseBundle.putString(HttpConstants.LOCATION, locationId); //Would like to use location id, but server just sends id for location
@@ -349,11 +352,13 @@ public class HttpResponseParser {
      * location id
      * 
      * @param locationObject The Location object
+     * @param autoNotify <code>true</code> to automatically notify any connected
+     *            loaders
      * @return The id of the parsed location
      * @throws JSONException If the Json is invalid
      */
-    private String parseAndStoreLocation(final JSONObject locationObject)
-                    throws JSONException {
+    private String parseAndStoreLocation(final JSONObject locationObject,
+                    boolean autoNotify) throws JSONException {
 
         final ContentValues values = new ContentValues();
         final String locationId = readLocationDetailsIntoContentValues(locationObject, values, true);
@@ -364,7 +369,7 @@ public class HttpResponseParser {
         };
 
         //Update the locations table if the location already exists
-        if (DBInterface.update(TableLocations.NAME, values, selection, args, true) == 0) {
+        if (DBInterface.update(TableLocations.NAME, values, selection, args, autoNotify) == 0) {
 
             //Location was not present, insert into locations table
             DBInterface.insert(TableLocations.NAME, null, values, true);
@@ -386,37 +391,34 @@ public class HttpResponseParser {
         final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
-        
+
         final JSONArray searchResults = JsonUtils
                         .readJSONArray(responseObject, HttpConstants.SEARCH, true, true);
-        
+
         JSONObject bookObject = null;
         final ContentValues values = new ContentValues();
         final String selection = DatabaseColumns.BOOK_ID
                         + SQLConstants.EQUALS_ARG;
         final String[] args = new String[1];
-        
 
         for (int i = 0; i < searchResults.length(); i++) {
             bookObject = JsonUtils
                             .readJSONObject(searchResults, i, false, false);
-            args[0] = readBookDetailsIntoContentValues(bookObject, values, true);
-            
-            
+            args[0] = readBookDetailsIntoContentValues(bookObject, values, true, false);
 
             //First try to update the table if a book already exists
-            if (DBInterface.update(TableSearchBooks.NAME, values, selection, args, true) == 0) {
+            if (DBInterface.update(TableSearchBooks.NAME, values, selection, args, false) == 0) {
 
                 // Unable to update, insert the item
-                DBInterface.insert(TableSearchBooks.NAME, null, values, true);
+                DBInterface.insert(TableSearchBooks.NAME, null, values, false);
             }
         }
+        DBInterface.notifyChange(TableSearchBooks.NAME);
         final Bundle responseBundle = new Bundle();
-        if(searchResults.isNull(0))  {
-        responseBundle.putBoolean(Keys.NO_BOOKS_FLAG_KEY,true);
-        }
-        else  {
-        responseBundle.putBoolean(Keys.NO_BOOKS_FLAG_KEY,false);   
+        if (searchResults.isNull(0)) {
+            responseBundle.putBoolean(Keys.NO_BOOKS_FLAG_KEY, true);
+        } else {
+            responseBundle.putBoolean(Keys.NO_BOOKS_FLAG_KEY, false);
         }
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
@@ -468,7 +470,7 @@ public class HttpResponseParser {
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(responseObject, HttpConstants.LOCATION, true, true);
 
-        final String locationId = parseAndStoreLocation(locationObject);
+        final String locationId = parseAndStoreLocation(locationObject, true);
         final Bundle responseBundle = new Bundle(1);
         responseBundle.putString(HttpConstants.ID_LOCATION, locationId);
         responseInfo.responseBundle = responseBundle;
@@ -526,12 +528,15 @@ public class HttpResponseParser {
      * @param bookObject The Json representation of a book search result
      * @param values The values instance to read into
      * @param clearBeforeAdd Whether the values should be emptied before adding
+     * @param autoNotify <code>true</code> to automatically notify any connected
+     *            loaders
      * @return The book Id that was parsed
      * @throws JSONException If the Json is invalid
      */
     private String readBookDetailsIntoContentValues(
                     final JSONObject bookObject, final ContentValues values,
-                    final boolean clearBeforeAdd) throws JSONException {
+                    final boolean clearBeforeAdd, final boolean autoNotify)
+                    throws JSONException {
 
         if (clearBeforeAdd) {
             values.clear();
@@ -566,7 +571,7 @@ public class HttpResponseParser {
                         .readJSONObject(bookObject, HttpConstants.LOCATION, false, false);
 
         if (locationObject != null) {
-            values.put(DatabaseColumns.LOCATION_ID, parseAndStoreLocation(locationObject));
+            values.put(DatabaseColumns.LOCATION_ID, parseAndStoreLocation(locationObject, autoNotify));
         }
 
         final JSONArray tagsArray = JsonUtils
@@ -644,10 +649,9 @@ public class HttpResponseParser {
 
         responseBundle.putString(HttpConstants.ISBN_13, JsonUtils
                         .readString(bookInfoObject, HttpConstants.ISBN_13, false, false));
-        
+
         responseBundle.putString(HttpConstants.VALUE, JsonUtils
                         .readString(bookInfoObject, HttpConstants.VALUE, false, false));
-        
 
         final JSONObject authorsObject = JsonUtils
                         .readJSONObject(bookInfoObject, HttpConstants.AUTHORS, false, false);
@@ -678,7 +682,7 @@ public class HttpResponseParser {
                 }
             }
         }
-        
+
         responseInfo.responseBundle = responseBundle;
         return responseInfo;
     }
@@ -697,7 +701,7 @@ public class HttpResponseParser {
                         .readJSONObject(responseObject, HttpConstants.BOOK, true, true);
 
         final ContentValues values = new ContentValues();
-        final String bookId = readBookDetailsIntoContentValues(bookObject, values, true);
+        final String bookId = readBookDetailsIntoContentValues(bookObject, values, true, false);
 
         if (DBInterface.insert(TableMyBooks.NAME, null, values, true) >= 0) {
 
