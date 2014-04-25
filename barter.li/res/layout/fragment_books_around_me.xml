@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_margin"
-            android:background="@drawable/item_bg_main"
+            android:background="@drawable/bg_main_item"
             android:hint="@string/search_for_books"
             android:padding="@dimen/margin_x_small"
             android:textSize="@dimen/text_medium"
