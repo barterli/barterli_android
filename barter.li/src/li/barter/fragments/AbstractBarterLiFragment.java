@@ -54,6 +54,7 @@ import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
 import li.barter.widgets.TypefaceCache;
 
 /**

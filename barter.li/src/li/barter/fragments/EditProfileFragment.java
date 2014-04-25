@@ -437,6 +437,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                                             .getString(HttpConstants.IMAGE_URL));
             
             UserInfo.INSTANCE.setFirstName(firstName);
+            UserInfo.INSTANCE.setProfilePicture(userInfo
+                            .getString(HttpConstants.IMAGE_URL));
 
             onUpNavigate();
         }
