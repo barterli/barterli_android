@@ -150,8 +150,10 @@ public class LoadMoreHelper implements OnScrollListener {
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-        // TODO Auto-generated method stub
 
+        if (mExternalOnScrollListener != null) {
+            mExternalOnScrollListener.onScrollStateChanged(view, scrollState);
+        }
     }
 
     @Override
@@ -159,6 +161,10 @@ public class LoadMoreHelper implements OnScrollListener {
                     int visibleItemCount, int totalItemCount) {
         // TODO Auto-generated method stub
 
+        if (mExternalOnScrollListener != null) {
+            mExternalOnScrollListener
+                            .onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+        }
     }
 
     /**
