@@ -406,6 +406,11 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
+            
+            case R.id.action_refresh_books: {
+                fetchBooksOnLocationUpdate();
+                return true;
+            }
 
             case R.id.action_scan_book: {
                 startActivityForResult(new Intent(getActivity(), ScanIsbnActivity.class), RequestCodes.SCAN_ISBN);
