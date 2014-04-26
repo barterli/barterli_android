@@ -48,6 +48,7 @@
     <string name="profile">Profile</string>
     <string name="library">My Books</string>
     <string name="scan_book">Scan Book</string>
+    <string name="refresh">Refresh</string>
     <string name="add_book">Add Book</string>
     <string name="add_manually">Add Book Manually</string>
     <string name="no_network_connection">No network connection!</string>

@@ -19,20 +19,26 @@
     <!-- Group to hide action items when navigation drawer is opened -->
     <group android:id="@+id/group_hide_on_drawer_open" >
         <item
+            android:id="@+id/action_refresh_books"
+            android:icon="@drawable/ic_action_refresh"
+            android:orderInCategory="1"
+            android:showAsAction="ifRoom"
+            android:title="@string/refresh"/>
+        <item
             android:id="@+id/action_scan_book"
             android:icon="@drawable/ic_action_barcode"
-            android:orderInCategory="1"
+            android:orderInCategory="2"
             android:showAsAction="ifRoom"
             android:title="@string/scan_book"/>
         <item
             android:id="@+id/action_add_book"
             android:icon="@drawable/ic_action_new"
-            android:orderInCategory="2"
+            android:orderInCategory="3"
             android:showAsAction="ifRoom"
             android:title="@string/add_book"/>
         <item
             android:id="@+id/send_email"
-            android:orderInCategory="3"
+            android:orderInCategory="4"
             android:showAsAction="never"
             android:title="Report Crash"/>
     </group>
