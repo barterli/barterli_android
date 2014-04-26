@@ -155,10 +155,9 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
     private MapDrawerInteractionHelper    mMapDrawerBlurHelper;
 
     /**
-     * Default page count value which is incremented on scrolling
-     * {@link GridView}
+     * Current page used for load more
      */
-    private int                           mPageCount              = 1;
+    private int                           mCurPage;
 
     /**
      * Flag to stop onScroll method to call when fragment loads
@@ -240,6 +239,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         if (savedInstanceState == null) {
             mDrawerOpenedAutomatically = false;
             mMapAlreadyMovedOnce = false;
+            mCurPage = 0;
 
         } else {
             mDrawerOpenedAutomatically = savedInstanceState
@@ -250,8 +250,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                             .getParcelable(Keys.LAST_FETCHED_LOCATION);
             mPrevSearchRadius = savedInstanceState
                             .getInt(Keys.LAST_FETCHED_SEARCH_RADIUS);
-            mPageCount = savedInstanceState
-                            .getInt(Keys.LAST_FETCHED_PAGENUMBER);
+            mCurPage = savedInstanceState.getInt(Keys.CUR_PAGE);
         }
 
         loadBookSearchResults();
@@ -281,7 +280,6 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         Logger.d(TAG, "visible count: %d", visibleItemCount);
 
         if (loadMore && mUserScrolled && mLoadBookFlag) {
-            mPageCount++;
             loadMore = false;
             mUserScrolled = false;
             mEmptySearchCroutonFlag = false;
@@ -300,7 +298,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         outState.putBoolean(Keys.MAP_MOVED_ONCE, mMapAlreadyMovedOnce);
         outState.putParcelable(Keys.LAST_FETCHED_LOCATION, mLastFetchedLocation);
         outState.putInt(Keys.LAST_FETCHED_SEARCH_RADIUS, mPrevSearchRadius);
-        outState.putInt(Keys.LAST_FETCHED_PAGENUMBER, mPageCount);
+        outState.putInt(Keys.CUR_PAGE, mCurPage);
 
         if (mMapView != null) {
             mMapView.onSaveInstanceState(outState);
@@ -341,8 +339,9 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
                             .getLatitude()));
             params.put(HttpConstants.LONGITUDE, String.valueOf(center
                             .getLongitude()));
-            params.put(HttpConstants.PAGE, String.valueOf(mPageCount));
-            if (mPageCount == 1) {
+            final int pageToFetch = mCurPage + 1;
+            params.put(HttpConstants.PAGE, String.valueOf(pageToFetch));
+            if (pageToFetch == 1) {
                 params.put(HttpConstants.PERLIMIT, String
                                 .valueOf(AppConstants.DEFAULT_PERPAGE_LIMIT));
             } else {
@@ -616,16 +615,19 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
             mPrevSearchRadius = (Integer) request.getExtras()
                             .get(Keys.SEARCH_RADIUS);
 
+            mCurPage++;
+
             if (response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)
                             && mEmptySearchCroutonFlag) {
 
                 showCrouton("No Books Added In This Area", AlertStyle.ERROR);
+                mCurPage--;
             } else if (response.responseBundle
                             .getBoolean(Keys.NO_BOOKS_FLAG_KEY)
                             && !mEmptySearchCroutonFlag) {
 
                 showCrouton("No More Books Added In This Area", AlertStyle.ERROR);
-
+                mCurPage--;
             }
 
             /*
@@ -812,7 +814,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
 
             assert (cookie != null);
 
-            mPageCount = 1;
+            mCurPage = 0;
             final Bundle args = (Bundle) cookie;
             fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION), args
                             .getInt(Keys.SEARCH_RADIUS));
