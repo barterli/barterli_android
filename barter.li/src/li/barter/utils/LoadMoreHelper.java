@@ -22,12 +22,18 @@ import android.widget.AbsListView.OnScrollListener;
 /**
  * Helper class to detect whenever an {@link AbsListView} has to given a Load
  * More implementation. This class will be set as the {@link OnScrollListener}
- * for the list, so if yu need to capture the scroll events, you can provide
+ * for the list, so if you need to capture the scroll events, you can provide
  * your own {@link OnScrollListener} through the relevant methods
  * 
  * @author Vinay S Shenoy
  */
 public class LoadMoreHelper implements OnScrollListener {
+
+    private enum ScrollDirection {
+        UP,
+        DOWN,
+        SAME
+    }
 
     private static final String TAG                 = "LoadMoreHelper";
 
@@ -59,6 +65,16 @@ public class LoadMoreHelper implements OnScrollListener {
      * Callbacks for trigereing the load events
      */
     private LoadMoreCallbacks   mLoadMoreCallbacks;
+
+    /**
+     * Current scrolling direction
+     */
+    private ScrollDirection     mCurScrollingDirection;
+
+    /**
+     * Holds the last first visible item. Used to calculate the scroll direction
+     */
+    private int                 mPrevFirstVisibleItem;
 
     /**
      * Constructor which takes a reference to the list to provide load more
@@ -151,6 +167,8 @@ public class LoadMoreHelper implements OnScrollListener {
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
+        mCurScrollingDirection = null;
+
         if (mExternalOnScrollListener != null) {
             mExternalOnScrollListener.onScrollStateChanged(view, scrollState);
         }
@@ -159,8 +177,42 @@ public class LoadMoreHelper implements OnScrollListener {
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem,
                     int visibleItemCount, int totalItemCount) {
-        // TODO Auto-generated method stub
 
+        if (mCurScrollingDirection == null) { //User has just started a scrolling motion
+            /*
+             * Doesn't matter what we set as, the actual setting will happen in
+             * the next call to this method
+             */
+            mCurScrollingDirection = ScrollDirection.SAME;
+            mPrevFirstVisibleItem = firstVisibleItem;
+        } else {
+            if (firstVisibleItem > mPrevFirstVisibleItem) {
+                //User is scrolling up
+                mCurScrollingDirection = ScrollDirection.UP;
+            } else if (firstVisibleItem < mPrevFirstVisibleItem) {
+                //User is scrolling down
+                mCurScrollingDirection = ScrollDirection.DOWN;
+            } else {
+                mCurScrollingDirection = ScrollDirection.SAME;
+            }
+            mPrevFirstVisibleItem = firstVisibleItem;
+        }
+
+        if (mIsLoadMoreEnabled && mCurScrollingDirection == ScrollDirection.UP) {
+            //We only need to paginate if user scrolling near the end of the list
+
+            if (!mLoadMoreCallbacks.isLoading()
+                            && !mLoadMoreCallbacks.hasLoadedAllItems()) {
+                //Only trigger a load more if a load operation is NOT happening AND all the items have not been loaded
+                final int lastAdapterPosition = totalItemCount - 1;
+                final int lastVisiblePosition = firstVisibleItem
+                                + visibleItemCount - 1;
+                if (lastVisiblePosition >= (lastAdapterPosition - mLoadMoreOffset)) {
+                    Logger.v(TAG, "Load More!!!");
+                }
+
+            }
+        }
         if (mExternalOnScrollListener != null) {
             mExternalOnScrollListener
                             .onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);

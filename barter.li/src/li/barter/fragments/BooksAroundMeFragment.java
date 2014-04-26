@@ -78,6 +78,8 @@ import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
+import li.barter.utils.LoadMoreHelper;
+import li.barter.utils.LoadMoreHelper.LoadMoreCallbacks;
 import li.barter.utils.Logger;
 import li.barter.utils.MapDrawerInteractionHelper;
 import li.barter.utils.SharedPreferenceHelper;
@@ -89,9 +91,9 @@ import li.barter.widgets.FullWidthDrawerLayout;
  *         a Map that the user can use to easily switch locations
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
-
-LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
-                OnItemClickListener, OnScrollListener, TextWatcher {
+                LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
+                OnItemClickListener, OnScrollListener, TextWatcher,
+                LoadMoreCallbacks {
 
     private static final String           TAG                     = "BooksAroundMeFragment";
 
@@ -192,6 +194,11 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
      */
     private String                        mBookName;
 
+    /**
+     * {@link LoadMoreHelper} to take care of triggering the load more events
+     */
+    private LoadMoreHelper                mLoadMoreHelper;
+
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
@@ -228,7 +235,8 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
         mMapDrawerBlurHelper = new MapDrawerInteractionHelper(getActivity(), mDrawerLayout, mBooksDrawerView, mMapView);
         mMapDrawerBlurHelper.init(this);
 
-        mBooksAroundMeGridView.setOnScrollListener(this);
+        mLoadMoreHelper = new LoadMoreHelper(mBooksAroundMeGridView, this, null);
+        // mBooksAroundMeGridView.setOnScrollListener(this);
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
@@ -406,7 +414,7 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
-            
+
             case R.id.action_refresh_books: {
                 fetchBooksOnLocationUpdate();
                 return true;
@@ -875,6 +883,20 @@ LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
     public void afterTextChanged(final Editable s) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void onLoadMore() {
+    }
+
+    @Override
+    public boolean isLoading() {
+        return false;
+    }
+
+    @Override
+    public boolean hasLoadedAllItems() {
+        return false;
     }
 
 }
