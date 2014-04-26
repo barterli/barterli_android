@@ -285,7 +285,7 @@ public class AppConstants {
         public static final String FIRST_MESSAGE              = "first_message";
         public static final String EDIT_MODE                  = "edit_mode";
         public static final String NO_BOOKS_FLAG_KEY          = "no_books_flag_key";
-        public static final String LAST_FETCHED_PAGENUMBER    = "last_fetched_pagenumber";
+        public static final String CUR_PAGE                   = "cur_page";
 
     }
 
