@@ -44,8 +44,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
@@ -92,8 +90,7 @@ import li.barter.widgets.FullWidthDrawerLayout;
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, DrawerListener, AsyncDbQueryCallback,
-                OnItemClickListener, OnScrollListener, TextWatcher,
-                LoadMoreCallbacks {
+                OnItemClickListener, TextWatcher, LoadMoreCallbacks {
 
     private static final String           TAG                     = "BooksAroundMeFragment";
 
@@ -162,19 +159,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private int                           mCurPage;
 
     /**
-     * Flag to stop onScroll method to call when fragment loads
-     */
-    private boolean                       mUserScrolled           = false;
-
-    /**
      * Flag to Display Crouton Message on empty book search result
      */
     private boolean                       mEmptySearchCroutonFlag = true;
-
-    /**
-     * Flag to load books on scroll
-     */
-    private boolean                       mLoadBookFlag           = true;
 
     /**
      * Holds the value of the previous search radius to prevent querying for
@@ -198,6 +185,16 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * {@link LoadMoreHelper} to take care of triggering the load more events
      */
     private LoadMoreHelper                mLoadMoreHelper;
+
+    /**
+     * Flag to indicate whether a load operation is in progress
+     */
+    private boolean                       mIsLoading;
+
+    /**
+     * Flag to indicate whether all items have been fetched
+     */
+    private boolean                       mHasLoadedAllItems;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -259,44 +256,13 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mPrevSearchRadius = savedInstanceState
                             .getInt(Keys.LAST_FETCHED_SEARCH_RADIUS);
             mCurPage = savedInstanceState.getInt(Keys.CUR_PAGE);
+            mHasLoadedAllItems = savedInstanceState
+                            .getBoolean(Keys.HAS_LOADED_ALL_ITEMS);
         }
 
         loadBookSearchResults();
         setActionBarDrawerToggleEnabled(true);
         return contentView;
-    }
-
-    @Override
-    public void onScrollStateChanged(final AbsListView view,
-                    final int scrollState) {
-        // userScrolled is set to true in order to prevent auto scrolling on page load
-        if ((scrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
-                        || (scrollState == OnScrollListener.SCROLL_STATE_FLING)) {
-            cancelAllCroutons();
-            mUserScrolled = true;
-        }
-    }
-
-    @Override
-    public void onScroll(final AbsListView view, final int firstVisibleItem,
-                    final int visibleItemCount, final int totalItemCount) {
-
-        //TODO
-        boolean loadMore = /* maybe add a padding */
-        (firstVisibleItem + visibleItemCount) >= (totalItemCount - AppConstants.DEFAULT_LOAD_BEFORE_COUNT);
-
-        Logger.d(TAG, "visible count: %d", visibleItemCount);
-
-        if (loadMore && mUserScrolled && mLoadBookFlag) {
-            loadMore = false;
-            mUserScrolled = false;
-            mEmptySearchCroutonFlag = false;
-            mLoadBookFlag = false;
-            fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils
-                            .getShortestRadiusFromCenter(mMapView) / 1000));
-
-        }
-
     }
 
     @Override
@@ -307,6 +273,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         outState.putParcelable(Keys.LAST_FETCHED_LOCATION, mLastFetchedLocation);
         outState.putInt(Keys.LAST_FETCHED_SEARCH_RADIUS, mPrevSearchRadius);
         outState.putInt(Keys.CUR_PAGE, mCurPage);
+        outState.putBoolean(Keys.HAS_LOADED_ALL_ITEMS, mHasLoadedAllItems);
 
         if (mMapView != null) {
             mMapView.onSaveInstanceState(outState);
@@ -338,6 +305,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (center != null) {
 
+            mIsLoading = true;
             final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.SEARCH, null, mVolleyCallbacks);
             request.setRequestId(RequestId.SEARCH_BOOKS);
@@ -630,17 +598,13 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             mCurPage++;
 
-            if (response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)
-                            && mEmptySearchCroutonFlag) {
+            if (response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)) {
 
-                showCrouton("No Books Added In This Area", AlertStyle.ERROR);
+                mHasLoadedAllItems = true;
                 mCurPage--;
-            } else if (response.responseBundle
-                            .getBoolean(Keys.NO_BOOKS_FLAG_KEY)
-                            && !mEmptySearchCroutonFlag) {
 
-                showCrouton("No More Books Added In This Area", AlertStyle.ERROR);
-                mCurPage--;
+                showCrouton(mEmptySearchCroutonFlag ? R.string.no_books_found
+                                : R.string.no_more_books_found, AlertStyle.INFO);
             }
 
             /*
@@ -648,7 +612,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
              * data
              */
         }
+    }
 
+    @Override
+    public void onPostExecute(IBlRequestContract request) {
+        super.onPostExecute(request);
+        if (request.getRequestId() == RequestId.SEARCH_BOOKS) {
+            mIsLoading = false;
+        }
     }
 
     @Override
@@ -679,8 +650,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-
-            mLoadBookFlag = true;
 
             {
                 mBooksAroundMeAdapter.swapCursor(cursor);
@@ -828,6 +797,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             assert (cookie != null);
 
             mCurPage = 0;
+            mHasLoadedAllItems = false;
             final Bundle args = (Bundle) cookie;
             fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION), args
                             .getInt(Keys.SEARCH_RADIUS));
@@ -887,16 +857,18 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onLoadMore() {
+        mEmptySearchCroutonFlag = false;
+        fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils.getShortestRadiusFromCenter(mMapView) / 1000));
     }
 
     @Override
     public boolean isLoading() {
-        return false;
+        return mIsLoading;
     }
 
     @Override
     public boolean hasLoadedAllItems() {
-        return false;
+        return mHasLoadedAllItems;
     }
 
 }

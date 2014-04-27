@@ -208,7 +208,7 @@ public class LoadMoreHelper implements OnScrollListener {
                 final int lastVisiblePosition = firstVisibleItem
                                 + visibleItemCount - 1;
                 if (lastVisiblePosition >= (lastAdapterPosition - mLoadMoreOffset)) {
-                    Logger.v(TAG, "Load More!!!");
+                    mLoadMoreCallbacks.onLoadMore();
                 }
 
             }

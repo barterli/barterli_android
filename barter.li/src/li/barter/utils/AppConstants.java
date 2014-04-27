@@ -286,6 +286,7 @@ public class AppConstants {
         public static final String EDIT_MODE                  = "edit_mode";
         public static final String NO_BOOKS_FLAG_KEY          = "no_books_flag_key";
         public static final String CUR_PAGE                   = "cur_page";
+        public static final String HAS_LOADED_ALL_ITEMS       = "has_loaded_all_items";
 
     }
 

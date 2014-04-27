@@ -61,6 +61,8 @@
     <string name="chat_opened_from" formatted="false">This chat was opened from %s.</string>
     <string name="take_picture">Take Picture</string>
     <string name="complete_action_using">Complete action using</string>
+    <string name="no_books_found">No books were found in this area.</string>
+    <string name="no_more_books_found">No more books were found.</string>
 
     <!-- Strings for AddBookActivity -->
     <string name="search_hint">Search by Title|Author|ISBN</string>
