@@ -693,7 +693,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     /**
-     * Generates as chat ID which will be unique for a given sernder/receiver
+     * Generates as chat ID which will be unique for a given sender/receiver
      * pair
      * 
      * @param receiverId The receiver of the chat

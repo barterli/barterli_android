@@ -121,6 +121,7 @@ public class HttpConstants {
         public static final int TEAM                        = 117;
         public static final int SEARCH_BOOKS_FROM_EDITTEXT  = 118;
         public static final int BOOK_SUGGESTIONS            = 119;
+        public static final int UPDATE_BOOK                 = 120;
     }
 
     public static final String ID                          = "id";

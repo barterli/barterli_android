@@ -23,6 +23,7 @@ package li.barter.data;
  */
 public interface DatabaseColumns {
 
+    public static final String ID                = "id";
     public static final String BOOK_ID           = "book_id";
     public static final String ISBN_10           = "isbn_10";
     public static final String ISBN_13           = "isbn_13";

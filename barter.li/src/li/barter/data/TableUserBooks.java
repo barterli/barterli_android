@@ -41,6 +41,7 @@ public class TableUserBooks {
                         .join(SQLConstants.COMMA, new String[] {
                                 String.format(Locale.US, SQLConstants.DATA_INTEGER_PK, BaseColumns._ID),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_ID, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ID, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ISBN_10, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ISBN_13, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TITLE, ""),

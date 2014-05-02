@@ -83,6 +83,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
     private String              mBookId;
     private String              mUserId;
+    private String              mId;
     private boolean             mOwnedByUser;
     private boolean             mCameFromOtherProfile;
 
@@ -104,6 +105,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         if (extras != null) {
             mBookId = extras.getString(Keys.BOOK_ID);
             mUserId = extras.getString(Keys.USER_ID);
+            mId     = extras.getString(Keys.ID);
             mCameFromOtherProfile = extras.getBoolean(Keys.OTHER_PROFILE_FLAG);
             if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
                 mOwnedByUser = true;
@@ -254,6 +256,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             case R.id.action_edit_profile: {
                 final Bundle args = new Bundle(2);
                 args.putString(Keys.BOOK_ID, mBookId);
+                args.putString(Keys.ID, mId);
                 args.putBoolean(Keys.EDIT_MODE, true);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), AddOrEditBookFragment.class

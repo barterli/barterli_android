@@ -384,7 +384,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case R.id.action_refresh_books: {
-                fetchBooksOnLocationUpdate();
+                mEmptySearchCroutonFlag = false;
+                fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils.getShortestRadiusFromCenter(mMapView) / 1000));
                 return true;
             }
 
@@ -766,7 +767,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             final Cursor cursor = (Cursor) mBooksAroundMeAdapter
                             .getItem(position);
+            
+            
+            final String    idBook = cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.ID));
 
+            
+            Logger.d(TAG, "ID:"+idBook);
+            
             final String bookId = cursor.getString(cursor
                             .getColumnIndex(DatabaseColumns.BOOK_ID));
             final String userId = cursor.getString(cursor
@@ -774,8 +782,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             final Bundle showBooksArgs = new Bundle();
             showBooksArgs.putString(Keys.BOOK_ID, bookId);
+            showBooksArgs.putString(Keys.ID, idBook);
             showBooksArgs.putString(Keys.USER_ID, userId);
-
+            
             loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                             .instantiate(getActivity(), BookDetailFragment.class
                                             .getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, FragmentTags.BS_BOOK_DETAIL);

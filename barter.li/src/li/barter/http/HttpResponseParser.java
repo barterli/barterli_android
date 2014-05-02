@@ -125,6 +125,10 @@ public class HttpResponseParser {
             case RequestId.BOOK_SUGGESTIONS: {
                 return parseBookSuggestionsResponse(response);
             }
+            
+            case RequestId.UPDATE_BOOK: {
+                return parseUpdateBookResponse(response);
+            }
 
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
@@ -544,8 +548,12 @@ public class HttpResponseParser {
 
         final String bookId = JsonUtils
                         .readString(bookObject, HttpConstants.ID_BOOK, true, true);
-
+        
+        final int id = JsonUtils
+                        .readInt(bookObject, HttpConstants.ID, true, true);
+        Logger.d(TAG, "ID : "+ id);
         values.put(DatabaseColumns.BOOK_ID, bookId);
+        values.put(DatabaseColumns.ID, id+"");
         values.put(DatabaseColumns.ISBN_10, JsonUtils
                         .readString(bookObject, HttpConstants.ISBN_10, false, false));
         values.put(DatabaseColumns.ISBN_13, JsonUtils
@@ -702,18 +710,63 @@ public class HttpResponseParser {
 
         final ContentValues values = new ContentValues();
         final String bookId = readBookDetailsIntoContentValues(bookObject, values, true, false);
+       
 
-        if (DBInterface.insert(TableMyBooks.NAME, null, values, true) >= 0) {
+                // Unable to update, insert the item
+                if (DBInterface.insert(TableMyBooks.NAME, null, values, true) >= 0) {
 
-            final Bundle responseBundle = new Bundle(1);
-            responseBundle.putString(HttpConstants.ID_BOOK, bookId);
-            responseInfo.responseBundle = responseBundle;
-        } else {
-            responseInfo.success = false;
-        }
+                    final Bundle responseBundle = new Bundle(1);
+                    responseBundle.putString(HttpConstants.ID_BOOK, bookId);
+                    responseInfo.responseBundle = responseBundle;
+                } else {
+                    responseInfo.success = false;
+                }
+           
+        
         return responseInfo;
     }
 
+    
+    private ResponseInfo parseUpdateBookResponse(final String response)
+                    throws JSONException {
+        final ResponseInfo responseInfo = new ResponseInfo();
+
+        final JSONObject responseObject = new JSONObject(response);
+        final JSONObject bookObject = JsonUtils
+                        .readJSONObject(responseObject, HttpConstants.BOOK, true, true);
+
+        final ContentValues values = new ContentValues();
+        final String bookId = readBookDetailsIntoContentValues(bookObject, values, true, false);
+        final String selection = DatabaseColumns.BOOK_ID
+                        + SQLConstants.EQUALS_ARG;
+        final String[] args = new String[1];
+        args[0]=bookId;
+            //First try to update the table if a book already exists
+            if (DBInterface.update(TableMyBooks.NAME, values, selection, args, false) == 0) {
+
+                // Unable to update, insert the item
+                if (DBInterface.insert(TableMyBooks.NAME, null, values, true) >= 0) {
+
+                    final Bundle responseBundle = new Bundle(1);
+                    responseBundle.putString(HttpConstants.ID_BOOK, bookId);
+                    responseInfo.responseBundle = responseBundle;
+                } else {
+                    responseInfo.success = false;
+                }
+            }
+            else
+            {
+                final Bundle responseBundle = new Bundle(1);
+                responseBundle.putString(HttpConstants.ID_BOOK, bookId);
+                responseInfo.responseBundle = responseBundle;
+            }
+        
+        
+        
+        
+        return responseInfo;
+    }
+    
     /**
      * Method for parsing report bug response
      * 

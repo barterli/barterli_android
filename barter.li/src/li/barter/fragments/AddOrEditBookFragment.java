@@ -17,6 +17,7 @@
 package li.barter.fragments;
 
 import com.android.volley.Request.Method;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +26,8 @@ import org.json.JSONObject;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +50,7 @@ import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableLocations;
+import li.barter.data.TableMyBooks;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -58,6 +62,7 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.widgets.autocomplete.INetworkSuggestCallbacks;
@@ -87,6 +92,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private boolean                       mHasFetchedDetails;
     private boolean                       mEditMode;
     private String                        mBookId;
+    private String                           mId;
     private String                        mImage_Url;
     private String                        mPublicationYear;
 
@@ -122,7 +128,17 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             if (mEditMode) {
                 mBookId = extras.getString(Keys.BOOK_ID);
+                mId     = extras.getString(Keys.ID);
+                Logger.d(TAG, "Book Id: "+mId);
+                
                 //TODO Load book details from DB
+                
+                //Reached here by editing current user's book
+                DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableMyBooks.NAME, null, DatabaseColumns.BOOK_ID
+                                + SQLConstants.EQUALS_ARG, new String[] {
+                    mBookId
+                }, null, null, null, null, this);
+               
             } else {
                 mIsbnNumber = extras.getString(Keys.ISBN);
                 Logger.d(TAG, "Book Isbn:" + mIsbnNumber);
@@ -336,6 +352,59 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Updates the book to the server
+     * 
+     * @param locationObject The location at which to create the book, if
+     *            <code>null</code>, uses the user's preferred location
+     */
+    private void UpdateBookOnServer(final JSONObject locationObject) {
+
+
+        try {
+
+            final JSONObject requestObject = new JSONObject();
+            final JSONObject bookJson = new JSONObject();
+            bookJson.put(HttpConstants.TITLE, mTitleEditText.getText()
+                            .toString());
+            bookJson.put(HttpConstants.AUTHOR, mAuthorEditText.getText()
+                            .toString());
+            
+            
+            bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
+                            .getText().toString());
+            if (!mSellPriceEditText.getText().toString().equals("")) {
+                bookJson.put(HttpConstants.VALUE, mSellPriceEditText.getText()
+                                .toString());
+            }
+
+            bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYear);
+            //            bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
+            //                    .getText().toString());
+            if (mIsbnEditText.getText().toString().length() == 13) {
+                bookJson.put(HttpConstants.ISBN_13, mIsbnEditText.getText()
+                                .toString());
+            } else if (mIsbnEditText.getText().toString().length() == 10) {
+                bookJson.put(HttpConstants.ISBN_10, mIsbnEditText.getText()
+                                .toString());
+            }
+            bookJson.put(HttpConstants.TAG_NAMES, getBarterTagsArray());
+            bookJson.put(HttpConstants.EXT_IMAGE_URL, mImage_Url);
+
+            if (locationObject != null) {
+                bookJson.put(HttpConstants.LOCATION, locationObject);
+            }
+            requestObject.put(HttpConstants.BOOK, bookJson);
+            requestObject.put(HttpConstants.ID ,mId);
+            final BlRequest createBookRequest = new BlRequest(Method.PUT, HttpConstants.getApiBaseUrl()
+                            + ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
+            createBookRequest.setRequestId(RequestId.UPDATE_BOOK);
+            addRequestToQueue(createBookRequest, true, 0);
+        } catch (final JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Build the tags array for books
@@ -398,7 +467,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             } else {
 
                 if (mEditMode) {
-                    //TODO Update book
+                    
+                    UpdateBookOnServer(null);
                 } else {
 
                     if (hasFirstName()) {
@@ -510,6 +580,30 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                                     .getExtras().get(Keys.SEARCH), suggestions, true);
                 }
                 break;
+                
+            }
+            
+            case RequestId.UPDATE_BOOK: {
+                Logger.v(TAG, "Updated Book Id %s", response.responseBundle
+                                .getString(HttpConstants.ID_BOOK));
+
+                final String bookId = response.responseBundle
+                                .getString(HttpConstants.ID_BOOK);
+
+                final Bundle showBooksArgs = new Bundle(6);
+                showBooksArgs.putString(Keys.BOOK_ID, bookId);
+                showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+                showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                for(int i = 0; i < fm.getBackStackEntryCount(); i++) {    
+                    fm.popBackStack();
+                }
+                
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), BooksAroundMeFragment.class
+                                                .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
+                break;
+                
             }
 
             /*
@@ -615,12 +709,83 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             }
 
         }
+        
+        else if(token==QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER)
+        {
+            if (cursor.moveToFirst()) {
+                mIsbnEditText.setText(cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.ISBN_10)));
+                mTitleEditText.setText(cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.TITLE)));
+                mAuthorEditText.setText(cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.AUTHOR)));
+                mDescriptionEditText
+                                .setText(Html.fromHtml(cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.DESCRIPTION))));
+                
+                mPublicationYear=cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR));
+                
+                mImage_Url=cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.IMAGE_URL));
+
+
+                try {
+                    if (!cursor.getString(cursor.getColumnIndex(DatabaseColumns.VALUE))
+                                    .equals(null)) {
+
+                        mSellPriceEditText.setVisibility(View.VISIBLE);
+                        mSellPriceEditText
+                                        .setText(cursor.getString(cursor
+                                                        .getColumnIndex(DatabaseColumns.VALUE)));
+                    }
+                } catch (Exception e) {
+                    // handle value = null exception
+                }
+
+                
+
+               
+
+                final String barterType = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.BARTER_TYPE));
+
+                if (!TextUtils.isEmpty(barterType)) {
+                    setBarterCheckboxes(barterType);
+                }
+            }
+
+            cursor.close();
+        }
+    }
+    
+    
+    /**
+     * Checks the supported barter type of the book and updates the checkboxes
+     * 
+     * @param barterType The barter types supported by the book
+     */
+    private void setBarterCheckboxes(final String barterType) {
+
+        final String[] barterTypes = barterType
+                        .split(AppConstants.BARTER_TYPE_SEPARATOR);
+
+        for (final String token : barterTypes) {
+
+            for (final CheckBox eachCheckBox : mBarterTypeCheckBoxes) {
+
+                if (eachCheckBox.getTag(R.string.tag_barter_type).equals(token)) {
+                    eachCheckBox.setChecked(true);
+                }
+            }
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
         DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK);
+        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER);
     }
 
     /**
