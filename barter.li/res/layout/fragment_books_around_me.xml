@@ -46,7 +46,10 @@
             android:padding="@dimen/margin_x_small"
             android:textSize="@dimen/text_medium"
             app:fontStyle="alegreya_regular" />
-
+<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+    android:id="@+id/ptr_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
         <GridView
             android:id="@+id/grid_books_around_me"
             android:layout_width="match_parent"
@@ -61,6 +64,7 @@
             android:paddingBottom="@dimen/bookGridVerticalSpacing"
             android:scrollbars="none"
             android:verticalSpacing="@dimen/bookGridVerticalSpacing" />
+        </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
     </LinearLayout>
 
 </li.barter.widgets.FullWidthDrawerLayout>

@@ -25,6 +25,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
+
+
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -195,6 +197,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * Flag to indicate whether all items have been fetched
      */
     private boolean                       mHasLoadedAllItems;
+    
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -220,7 +223,31 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mMapView.onCreate(savedInstanceState);
         mDrawerLayout = (FullWidthDrawerLayout) contentView
                         .findViewById(R.id.drawer_layout);
-
+        
+        
+        //TODO Pull TO Refresh Code Left
+        
+//     // Now find the PullToRefreshLayout to setup
+//        mPullToRefreshLayout = (PullToRefreshLayout) contentView.findViewById(R.id.ptr_layout);
+//
+//        
+//     // Now setup the PullToRefreshLayout
+//        ActionBarPullToRefresh.from(getActivity())
+//                // Mark All Children as pullable
+//                .allChildrenArePullable()
+//                // Set a OnRefreshListener
+//                .listener(new OnRefreshListener() {
+//                    
+//                    @Override
+//                    public void onRefreshStarted(View view) {
+//                        // TODO Auto-generated method stub
+//                        mEmptySearchCroutonFlag = false;
+//                        fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils.getShortestRadiusFromCenter(mMapView) / 1000));
+//                    }
+//                })
+//                // Finally commit the setup to our PullToRefreshLayout
+//                .setup(mPullToRefreshLayout);
+        
         mBooksDrawerView = contentView
                         .findViewById(R.id.layout_books_container);
         mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
@@ -385,7 +412,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             case R.id.action_refresh_books: {
                 mEmptySearchCroutonFlag = false;
-                fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils.getShortestRadiusFromCenter(mMapView) / 1000));
+                fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), AppConstants.DEFAULT_SEARCH_RADIUS);
                 return true;
             }
 
@@ -398,10 +425,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 loadAddOrEditBookFragment(null);
                 return true;
             }
-            case R.id.send_email: {
+         /*   case R.id.send_email: {
                 Utils.emailDatabase(getActivity());
                 return true;
-            }
+            }*/
 
             default: {
                 return super.onOptionsItemSelected(item);
@@ -808,8 +835,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mCurPage = 0;
             mHasLoadedAllItems = false;
             final Bundle args = (Bundle) cookie;
-            fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION), args
-                            .getInt(Keys.SEARCH_RADIUS));
+            fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION), AppConstants.DEFAULT_SEARCH_RADIUS);
         }
         if (token == QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT) {
 
@@ -867,7 +893,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLoadMore() {
         mEmptySearchCroutonFlag = false;
-        fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils.getShortestRadiusFromCenter(mMapView) / 1000));
+        fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), AppConstants.DEFAULT_SEARCH_RADIUS);
     }
 
     @Override

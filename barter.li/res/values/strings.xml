@@ -23,6 +23,7 @@
     <string name="service_chat">Chat Service</string>
     <string name="scanactivity_title">Scan Barcode On Book</string>
     <string name="editbook_title">Add Book</string>
+     <string name="editbook_title2">Edit Book</string>
     <string name="chat_fragment_title">Chats</string>
     <string name="Report_fragment_title">Report</string>
     <string name="Collaborate_fragment_title">Collaborate</string>

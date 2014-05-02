@@ -130,7 +130,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 mBookId = extras.getString(Keys.BOOK_ID);
                 mId     = extras.getString(Keys.ID);
                 Logger.d(TAG, "Book Id: "+mId);
-                
+                setActionBarTitle(R.string.editbook_title2);
                 //TODO Load book details from DB
                 
                 //Reached here by editing current user's book

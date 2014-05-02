@@ -60,6 +60,8 @@ public class AppConstants {
     public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL   = 10;
     public static final int     DEFAULT_LOAD_BEFORE_COUNT        = 1;
     public static final int     DEFAULT_PERPAGE_LIMIT_FOR_SEARCH = 20;
+    
+    public static final int     DEFAULT_SEARCH_RADIUS            = 25;
 
     // Default Book Image url we getting from the server when there is no image
     public static final String  DEFAULT_BOOKIMAGE_URL            = "1_default.png";
