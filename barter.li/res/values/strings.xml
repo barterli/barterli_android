@@ -139,14 +139,14 @@
         <item>Add from Gallery</item>
     </string-array>
     <string-array name="nav_drawer_descriptions">
-        <item>Check out your profile, update your info, view your saved books.</item>
+        <item>Check out your profile</item>
         <item>Your ongoing chats</item>
         <item>Report a bug/suggestion</item>
-        <item>Let us work together.</item>
-        <item>No open source licences were violated in the making of this app.</item>
+        <item>Let us work together</item>
+        <item>No open source licences were violated in the making of this app</item>
         <item>What is barter.li? Who\'s behind it?</item>
-        <item>The inspiration for barter.li.</item>
-        <item>Clear any user info from this device.</item>
+        <item>The inspiration for barter.li</item>
+        <item>Clear any user info from this device</item>
     </string-array>
     <string-array name="months">
         <item>January</item>

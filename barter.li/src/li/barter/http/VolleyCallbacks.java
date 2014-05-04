@@ -39,8 +39,8 @@ import li.barter.utils.Logger;
  */
 public class VolleyCallbacks implements Listener<ResponseInfo>, ErrorListener {
 
-    private static final String TAG = "VolleyCallbacks";
-    
+    private static final String  TAG = "VolleyCallbacks";
+
     private final RequestQueue   mRequestQueue;
     private final IHttpCallbacks mHttpCallbacks;
 

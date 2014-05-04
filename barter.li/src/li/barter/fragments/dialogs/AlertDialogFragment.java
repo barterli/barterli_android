@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
+
 package li.barter.fragments.dialogs;
 
 import android.app.Activity;
@@ -75,13 +76,18 @@ public class AlertDialogFragment extends DialogFragment {
         if (savedInstanceState != null) {
             mTitleId = savedInstanceState.getInt(DialogKeys.TITLE_ID);
             mMessageId = savedInstanceState.getInt(DialogKeys.MESSAGE_ID);
-            mNegativeLabelId = savedInstanceState.getInt(DialogKeys.NEGATIVE_LABEL_ID);
-            mNeutralLabelId = savedInstanceState.getInt(DialogKeys.NEUTRAL_LABEL_ID);
-            mPositiveLabelId = savedInstanceState.getInt(DialogKeys.POSITIVE_LABEL_ID);
-            isCancellable = savedInstanceState.getBoolean(DialogKeys.CANCELLABLE);
+            mNegativeLabelId = savedInstanceState
+                            .getInt(DialogKeys.NEGATIVE_LABEL_ID);
+            mNeutralLabelId = savedInstanceState
+                            .getInt(DialogKeys.NEUTRAL_LABEL_ID);
+            mPositiveLabelId = savedInstanceState
+                            .getInt(DialogKeys.POSITIVE_LABEL_ID);
+            isCancellable = savedInstanceState
+                            .getBoolean(DialogKeys.CANCELLABLE);
             mIconId = savedInstanceState.getInt(DialogKeys.ICON_ID);
             mTheme = savedInstanceState.getInt(DialogKeys.THEME);
-            mMessageParams = savedInstanceState.getStringArray(DialogKeys.MESSAGE_PARAMS);
+            mMessageParams = savedInstanceState
+                            .getStringArray(DialogKeys.MESSAGE_PARAMS);
         }
 
         final Builder builder = new Builder(getActivity(), mTheme);
@@ -98,8 +104,9 @@ public class AlertDialogFragment extends DialogFragment {
 
         if (mMessageId != 0) {
 
-            if (mMessageParams != null && mMessageParams.length > 0) {
-                builder.setMessage(getActivity().getString(mMessageId, (Object[]) mMessageParams));
+            if ((mMessageParams != null) && (mMessageParams.length > 0)) {
+                builder.setMessage(getActivity()
+                                .getString(mMessageId, (Object[]) mMessageParams));
             } else {
                 builder.setMessage(mMessageId);
             }
@@ -163,9 +170,11 @@ public class AlertDialogFragment extends DialogFragment {
         super.onSaveInstanceState(outState);
     }
 
-    public void show(final int theme, final int iconId, final int titleId, final int messageId, final int positiveLabelId, final int negativeLabelId,
-            final int neutralLabelId, final FragmentManager manager, final boolean cancellable, final String fragmentTag,
-            final String... messageParams) {
+    public void show(final int theme, final int iconId, final int titleId,
+                    final int messageId, final int positiveLabelId,
+                    final int negativeLabelId, final int neutralLabelId,
+                    final FragmentManager manager, final boolean cancellable,
+                    final String fragmentTag, final String... messageParams) {
 
         mTheme = theme;
         mIconId = iconId;
@@ -180,7 +189,7 @@ public class AlertDialogFragment extends DialogFragment {
         try {
             super.show(manager, fragmentTag);
         } catch (final IllegalStateException e) {
-                Logger.e(TAG, e, "Exception");
+            Logger.e(TAG, e, "Exception");
         }
 
     }

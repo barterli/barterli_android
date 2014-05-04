@@ -363,7 +363,7 @@ public class SharedPreferenceHelper {
                         .getDefaultSharedPreferences(context);
         final SharedPreferences.Editor editor = preferences.edit();
 
-        for (int aKey : keys) {
+        for (final int aKey : keys) {
 
             editor.remove(context.getString(aKey));
         }

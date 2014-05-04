@@ -20,10 +20,20 @@ import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.text.TextUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
@@ -37,8 +47,8 @@ import li.barter.http.JsonUtils.FieldType;
 import li.barter.models.Hangout;
 import li.barter.models.Team;
 import li.barter.utils.AppConstants;
-import li.barter.utils.Logger;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.Logger;
 
 /**
  * Class that reads an API response and parses it and stores it in the database
@@ -124,9 +134,14 @@ public class HttpResponseParser {
 
             case RequestId.BOOK_SUGGESTIONS: {
                 return parseBookSuggestionsResponse(response);
+                //return xmlParse(response);
+            }
+
+            case RequestId.UPDATE_BOOK: {
+                return parseUpdateBookResponse(response);
             }
             
-            case RequestId.UPDATE_BOOK: {
+            case RequestId.DELETE_BOOK: {
                 return parseUpdateBookResponse(response);
             }
 
@@ -136,7 +151,97 @@ public class HttpResponseParser {
             }
         }
     }
+    
+    private ResponseInfo parseXML(XmlPullParser parser) throws XmlPullParserException,IOException
+    {
+        ArrayList<Books> books = null;
+        int eventType = parser.getEventType();
+        Books currentBook = null;
 
+        while (eventType != XmlPullParser.END_DOCUMENT){
+            String best_book = null;
+            switch (eventType){
+                case XmlPullParser.START_DOCUMENT:
+                    break;
+                    
+//                    <best_book type="Book">
+//                    <id type="integer">1123588</id>
+//                    <title>North to the Rails</title>
+//                    <author>
+//                        <id type="integer">858</id>
+//                        <name>Louis L'Amour</name>
+//                    </author>
+//                    <image_url>http://d.gr-assets.com/books/1320542366m/1123588.jpg</image_url>
+//                    <small_image_url>http://d.gr-assets.com/books/1320542366s/1123588.jpg</small_image_url>
+//                </best_book>
+//            </work>
+            
+                case XmlPullParser.START_TAG:
+                    best_book = parser.getName();
+                    if (best_book == "best_book"){
+                        currentBook = new Books();
+                    }
+                    break;
+                case XmlPullParser.END_TAG:
+                    best_book = parser.getName();
+                    if (best_book.equalsIgnoreCase("best_book") && currentBook != null){
+                        books.add(currentBook);
+                    } 
+            }
+            eventType = parser.next();
+        }
+
+       return parseBookSuggestionsResponse2(books);
+    }
+
+    private ResponseInfo parseBookSuggestionsResponse2(ArrayList<Books> bookssuggestionresponse)
+    {
+        String content = "";
+        Iterator<Books> it = bookssuggestionresponse.iterator();
+        
+        while(it.hasNext())
+        {
+            Books currbook  = it.next();
+            content = content + "::" +  currbook.name ;
+                   
+        
+    }
+        String[] suggestions=content.split("::");
+        
+      final ResponseInfo responseInfo = new ResponseInfo();
+
+
+    final Bundle responseBundle = new Bundle(1);
+    responseBundle.putStringArray(HttpConstants.BOOKS, suggestions);
+    responseInfo.responseBundle = responseBundle;
+    return responseInfo;
+    }
+    
+    private ResponseInfo xmlParse(final String response)
+    {
+        
+        XmlPullParserFactory pullParserFactory;
+        try {
+            pullParserFactory = XmlPullParserFactory.newInstance();
+            XmlPullParser parser = pullParserFactory.newPullParser();
+            
+            InputStream in_s = new ByteArrayInputStream(response.getBytes("ISO-8859-1"));
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in_s, null);
+
+            return parseXML(parser);
+        } catch (XmlPullParserException e) {
+
+            e.printStackTrace();
+        }
+        
+       catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     /**
      * Parse the response for book suggestions
      * 
@@ -147,7 +252,11 @@ public class HttpResponseParser {
     private ResponseInfo parseBookSuggestionsResponse(final String response)
                     throws JSONException {
 
-        final ResponseInfo responseInfo = new ResponseInfo();
+        Logger.d(TAG, response);
+ 
+
+
+          final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
 
@@ -246,7 +355,7 @@ public class HttpResponseParser {
             DBInterface.insert(TableUserBooks.NAME, null, values, false);
 
         }
-        
+
         DBInterface.notifyChange(TableUserBooks.NAME);
 
         final JSONObject locationObject = JsonUtils
@@ -362,7 +471,7 @@ public class HttpResponseParser {
      * @throws JSONException If the Json is invalid
      */
     private String parseAndStoreLocation(final JSONObject locationObject,
-                    boolean autoNotify) throws JSONException {
+                    final boolean autoNotify) throws JSONException {
 
         final ContentValues values = new ContentValues();
         final String locationId = readLocationDetailsIntoContentValues(locationObject, values, true);
@@ -548,12 +657,12 @@ public class HttpResponseParser {
 
         final String bookId = JsonUtils
                         .readString(bookObject, HttpConstants.ID_BOOK, true, true);
-        
+
         final int id = JsonUtils
                         .readInt(bookObject, HttpConstants.ID, true, true);
-        Logger.d(TAG, "ID : "+ id);
+        Logger.d(TAG, "ID : " + id);
         values.put(DatabaseColumns.BOOK_ID, bookId);
-        values.put(DatabaseColumns.ID, id+"");
+        values.put(DatabaseColumns.ID, id + "");
         values.put(DatabaseColumns.ISBN_10, JsonUtils
                         .readString(bookObject, HttpConstants.ISBN_10, false, false));
         values.put(DatabaseColumns.ISBN_13, JsonUtils
@@ -710,63 +819,26 @@ public class HttpResponseParser {
 
         final ContentValues values = new ContentValues();
         final String bookId = readBookDetailsIntoContentValues(bookObject, values, true, false);
-       
 
-                // Unable to update, insert the item
-                if (DBInterface.insert(TableMyBooks.NAME, null, values, true) >= 0) {
+        // Unable to update, insert the item
+        if (DBInterface.insert(TableMyBooks.NAME, null, values, true) >= 0) {
 
-                    final Bundle responseBundle = new Bundle(1);
-                    responseBundle.putString(HttpConstants.ID_BOOK, bookId);
-                    responseInfo.responseBundle = responseBundle;
-                } else {
-                    responseInfo.success = false;
-                }
-           
-        
+            final Bundle responseBundle = new Bundle(1);
+            responseBundle.putString(HttpConstants.ID_BOOK, bookId);
+            responseInfo.responseBundle = responseBundle;
+        } else {
+            responseInfo.success = false;
+        }
+
         return responseInfo;
     }
 
-    
     private ResponseInfo parseUpdateBookResponse(final String response)
                     throws JSONException {
         final ResponseInfo responseInfo = new ResponseInfo();
-
-        final JSONObject responseObject = new JSONObject(response);
-        final JSONObject bookObject = JsonUtils
-                        .readJSONObject(responseObject, HttpConstants.BOOK, true, true);
-
-        final ContentValues values = new ContentValues();
-        final String bookId = readBookDetailsIntoContentValues(bookObject, values, true, false);
-        final String selection = DatabaseColumns.BOOK_ID
-                        + SQLConstants.EQUALS_ARG;
-        final String[] args = new String[1];
-        args[0]=bookId;
-            //First try to update the table if a book already exists
-            if (DBInterface.update(TableMyBooks.NAME, values, selection, args, false) == 0) {
-
-                // Unable to update, insert the item
-                if (DBInterface.insert(TableMyBooks.NAME, null, values, true) >= 0) {
-
-                    final Bundle responseBundle = new Bundle(1);
-                    responseBundle.putString(HttpConstants.ID_BOOK, bookId);
-                    responseInfo.responseBundle = responseBundle;
-                } else {
-                    responseInfo.success = false;
-                }
-            }
-            else
-            {
-                final Bundle responseBundle = new Bundle(1);
-                responseBundle.putString(HttpConstants.ID_BOOK, bookId);
-                responseInfo.responseBundle = responseBundle;
-            }
-        
-        
-        
-        
         return responseInfo;
     }
-    
+
     /**
      * Method for parsing report bug response
      * 
@@ -828,5 +900,12 @@ public class HttpResponseParser {
         return error;
 
     }
+
+}
+class Books
+{
+
+    public String name;
+    
 
 }

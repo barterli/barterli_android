@@ -35,17 +35,17 @@ import li.barter.utils.Logger;
  */
 class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
-    private static final String                   TAG        = "BarterLiSQLiteOpenHelper";
+    private static final String                              TAG        = "BarterLiSQLiteOpenHelper";
 
     /** Lock for synchronized methods */
-    private static final Object                   LOCK       = new Object();
+    private static final Object                              LOCK       = new Object();
 
     /** Database file name and version */
-    private static final String                   DB_NAME    = "barterli.sqlite";
-    private static final int                      DB_VERSION = 1;
+    private static final String                              DB_NAME    = "barterli.sqlite";
+    private static final int                                 DB_VERSION = 1;
 
     /** SQLite Open Helper instance */
-    private static BarterLiSQLiteOpenHelper       sSQLiteOpenHelper;
+    private static BarterLiSQLiteOpenHelper                  sSQLiteOpenHelper;
 
     /** Array of loader entries to hold for notifying changes */
     private final CopyOnWriteArrayList<SQLiteLoaderObserver> mActiveLoaders;

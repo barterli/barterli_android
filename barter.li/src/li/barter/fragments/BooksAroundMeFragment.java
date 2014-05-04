@@ -25,8 +25,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
-
-
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -197,7 +195,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * Flag to indicate whether all items have been fetched
      */
     private boolean                       mHasLoadedAllItems;
-    
+
+    /**
+     * TODO
+     */
+
+    private final boolean                 mReload                 = false;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -223,31 +226,30 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mMapView.onCreate(savedInstanceState);
         mDrawerLayout = (FullWidthDrawerLayout) contentView
                         .findViewById(R.id.drawer_layout);
-        
-        
+
         //TODO Pull TO Refresh Code Left
-        
-//     // Now find the PullToRefreshLayout to setup
-//        mPullToRefreshLayout = (PullToRefreshLayout) contentView.findViewById(R.id.ptr_layout);
-//
-//        
-//     // Now setup the PullToRefreshLayout
-//        ActionBarPullToRefresh.from(getActivity())
-//                // Mark All Children as pullable
-//                .allChildrenArePullable()
-//                // Set a OnRefreshListener
-//                .listener(new OnRefreshListener() {
-//                    
-//                    @Override
-//                    public void onRefreshStarted(View view) {
-//                        // TODO Auto-generated method stub
-//                        mEmptySearchCroutonFlag = false;
-//                        fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils.getShortestRadiusFromCenter(mMapView) / 1000));
-//                    }
-//                })
-//                // Finally commit the setup to our PullToRefreshLayout
-//                .setup(mPullToRefreshLayout);
-        
+
+        //     // Now find the PullToRefreshLayout to setup
+        //        mPullToRefreshLayout = (PullToRefreshLayout) contentView.findViewById(R.id.ptr_layout);
+        //
+        //        
+        //     // Now setup the PullToRefreshLayout
+        //        ActionBarPullToRefresh.from(getActivity())
+        //                // Mark All Children as pullable
+        //                .allChildrenArePullable()
+        //                // Set a OnRefreshListener
+        //                .listener(new OnRefreshListener() {
+        //                    
+        //                    @Override
+        //                    public void onRefreshStarted(View view) {
+        //                        // TODO Auto-generated method stub
+        //                        mEmptySearchCroutonFlag = false;
+        //                        fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), (int) (Utils.getShortestRadiusFromCenter(mMapView) / 1000));
+        //                    }
+        //                })
+        //                // Finally commit the setup to our PullToRefreshLayout
+        //                .setup(mPullToRefreshLayout);
+
         mBooksDrawerView = contentView
                         .findViewById(R.id.layout_books_container);
         mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
@@ -425,10 +427,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 loadAddOrEditBookFragment(null);
                 return true;
             }
-         /*   case R.id.send_email: {
-                Utils.emailDatabase(getActivity());
-                return true;
-            }*/
+            /*
+             * case R.id.send_email: { Utils.emailDatabase(getActivity());
+             * return true; }
+             */
 
             default: {
                 return super.onOptionsItemSelected(item);
@@ -643,7 +645,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onPostExecute(IBlRequestContract request) {
+    public void onPostExecute(final IBlRequestContract request) {
         super.onPostExecute(request);
         if (request.getRequestId() == RequestId.SEARCH_BOOKS) {
             mIsLoading = false;
@@ -794,14 +796,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             final Cursor cursor = (Cursor) mBooksAroundMeAdapter
                             .getItem(position);
-            
-            
-            final String    idBook = cursor.getString(cursor
+
+            final String idBook = cursor.getString(cursor
                             .getColumnIndex(DatabaseColumns.ID));
 
-            
-            Logger.d(TAG, "ID:"+idBook);
-            
+            Logger.d(TAG, "ID:" + idBook);
+
             final String bookId = cursor.getString(cursor
                             .getColumnIndex(DatabaseColumns.BOOK_ID));
             final String userId = cursor.getString(cursor
@@ -811,7 +811,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             showBooksArgs.putString(Keys.BOOK_ID, bookId);
             showBooksArgs.putString(Keys.ID, idBook);
             showBooksArgs.putString(Keys.USER_ID, userId);
-            
+
             loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                             .instantiate(getActivity(), BookDetailFragment.class
                                             .getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, FragmentTags.BS_BOOK_DETAIL);

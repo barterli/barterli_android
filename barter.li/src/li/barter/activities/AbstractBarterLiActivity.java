@@ -24,9 +24,8 @@ import de.keyboardsurfer.android.widget.crouton.Crouton;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
@@ -81,13 +80,13 @@ import li.barter.http.ResponseInfo;
 import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
-import li.barter.utils.Logger;
-import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
 
@@ -95,7 +94,8 @@ import li.barter.widgets.TypefacedSpan;
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
  */
 public abstract class AbstractBarterLiActivity extends FragmentActivity
-                implements IHttpCallbacks, AsyncDbQueryCallback, OnClickListener {
+                implements IHttpCallbacks, AsyncDbQueryCallback,
+                OnClickListener {
 
     private static final String TAG                     = "BaseBarterLiActivity";
 
@@ -408,12 +408,14 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     }
 
     @Override
-    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+    public void onInsertComplete(final int token, final Object cookie,
+                    final long insertRowId) {
 
     }
 
     @Override
-    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+    public void onDeleteComplete(final int token, final Object cookie,
+                    final int deleteCount) {
 
         switch (token) {
             case QueryTokens.DELETE_CHAT_MESSAGES: {
@@ -437,12 +439,14 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     }
 
     @Override
-    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+    public void onQueryComplete(final int token, final Object cookie,
+                    final Cursor cursor) {
 
     }
 
     @Override
-    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+    public void onUpdateComplete(final int token, final Object cookie,
+                    final int updateCount) {
 
     }
 
@@ -741,7 +745,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 @Override
                 public void onDrawerOpened(final View drawerView) {
                     super.onDrawerOpened(drawerView);
-                  //  mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                    //  mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     invalidateOptionsMenu();
 
                 }
@@ -749,7 +753,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 @Override
                 public void onDrawerClosed(final View drawerView) {
                     super.onDrawerClosed(drawerView);
-                 //   mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    //   mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                     invalidateOptionsMenu();
 
                 }
@@ -760,7 +764,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             getActionBar().setDisplayHomeAsUpEnabled(true);
             mIsActionBarNavDrawerToggleEnabled = true;
         }
-       // mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        // mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mDrawerLayout.setScrimColor(getResources()
                         .getColor(R.color.overlay_black_40p));
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
@@ -950,14 +954,14 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                         .setText(message);
         return croutonText;
     }
-    
+
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(final DialogInterface dialog, final int which) {
 
         final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
-        
-        if(fragment != null && fragment.isVisible()) {
-            if(fragment.willHandleDialog(dialog)) {
+
+        if ((fragment != null) && fragment.isVisible()) {
+            if (fragment.willHandleDialog(dialog)) {
                 fragment.onDialogClick(dialog, which);
             }
         }

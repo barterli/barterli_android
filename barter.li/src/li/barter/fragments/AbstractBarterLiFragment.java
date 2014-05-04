@@ -17,13 +17,13 @@
 package li.barter.fragments;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,17 +44,16 @@ import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.fragments.dialogs.AddUserInfoDialogFragment;
 import li.barter.http.BlMultiPartRequest;
 import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.ResponseInfo;
 import li.barter.http.VolleyCallbacks;
-import li.barter.http.HttpConstants.ApiEndpoints;
-import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
-import li.barter.utils.Logger;
 import li.barter.widgets.TypefaceCache;
 
 /**
@@ -411,9 +410,9 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      * @return <code>true</code> If the fragment will handle it,
      *         <code>false</code> otherwise
      */
-    public boolean willHandleDialog(DialogInterface dialog) {
+    public boolean willHandleDialog(final DialogInterface dialog) {
 
-        if (mAddUserInfoDialogFragment != null
+        if ((mAddUserInfoDialogFragment != null)
                         && mAddUserInfoDialogFragment.getDialog()
                                         .equals(dialog)) {
             return true;
@@ -429,9 +428,9 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      * @param dialog The dialog that was interacted with
      * @param which The button that was clicked
      */
-    public void onDialogClick(DialogInterface dialog, int which) {
+    public void onDialogClick(final DialogInterface dialog, final int which) {
 
-        if (mAddUserInfoDialogFragment != null
+        if ((mAddUserInfoDialogFragment != null)
                         && mAddUserInfoDialogFragment.getDialog()
                                         .equals(dialog)) {
 
@@ -454,7 +453,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      * @param firstName The user's first name
      * @param lastName The user's last name
      */
-    private void updateUserInfo(String firstName, String lastName) {
+    private void updateUserInfo(final String firstName, final String lastName) {
 
         final String url = HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.UPDATE_USER_INFO;

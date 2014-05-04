@@ -93,17 +93,17 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
      */
     private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
 
-    private View mProfileDetails;
+    private View                          mProfileDetails;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
-        final View view = inflater
-                        .inflate(R.layout.fragment_my_profile, null);
-        
-        mBooksAroundMeListView = (ListView) view.findViewById(R.id.list_my_books);
+        final View view = inflater.inflate(R.layout.fragment_my_profile, null);
+
+        mBooksAroundMeListView = (ListView) view
+                        .findViewById(R.id.list_my_books);
 
         setActionBarTitle(R.string.profilepage_title);
 
@@ -342,7 +342,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
         if (loader.getId() == Loaders.GET_MY_BOOKS) {
-            
+
             mBooksAroundMeAdapter.swapCursor(null);
             mBooksAroundMeListView.setAdapter(null);
             mBooksAroundMeListView.removeHeaderView(mProfileDetails);
@@ -365,10 +365,9 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             final String bookId = cursor.getString(cursor
                             .getColumnIndex(DatabaseColumns.BOOK_ID));
-            
-            final String    idBook = cursor.getString(cursor
-                            .getColumnIndex(DatabaseColumns.ID));
 
+            final String idBook = cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.ID));
 
             final Bundle showBooksArgs = new Bundle();
             showBooksArgs.putString(Keys.BOOK_ID, bookId);

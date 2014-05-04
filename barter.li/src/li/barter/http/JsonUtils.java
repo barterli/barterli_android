@@ -73,8 +73,8 @@ public class JsonUtils {
      * @throws JSONException If the key is not present, or the value is
      *             <code>null</code>
      */
-    public static FieldType getTypeForKey(JSONObject jsonObject, String key)
-                    throws JSONException {
+    public static FieldType getTypeForKey(final JSONObject jsonObject,
+                    final String key) throws JSONException {
 
         if (jsonObject.isNull(key)) {
             throw new JSONException(String.format(Locale.US, NULL_VALUE_FORMAT_OBJECT, key));

@@ -44,7 +44,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -52,7 +51,6 @@ import java.io.File;
 import java.util.Locale;
 
 import li.barter.R;
-import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -421,8 +419,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         if (requestId == RequestId.SAVE_USER_PROFILE) {
             final Bundle userInfo = response.responseBundle;
-            
-            final String firstName = userInfo.getString(HttpConstants.FIRST_NAME);
+
+            final String firstName = userInfo
+                            .getString(HttpConstants.FIRST_NAME);
 
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_description, userInfo
@@ -435,7 +434,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_profile_image, userInfo
                                             .getString(HttpConstants.IMAGE_URL));
-            
+
             UserInfo.INSTANCE.setFirstName(firstName);
             UserInfo.INSTANCE.setProfilePicture(userInfo
                             .getString(HttpConstants.IMAGE_URL));
@@ -475,9 +474,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public boolean willHandleDialog(DialogInterface dialog) {
+    public boolean willHandleDialog(final DialogInterface dialog) {
 
-        if (mChoosePictureDialogFragment != null
+        if ((mChoosePictureDialogFragment != null)
                         && mChoosePictureDialogFragment.getDialog()
                                         .equals(dialog)) {
             return true;
@@ -486,9 +485,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onDialogClick(DialogInterface dialog, int which) {
+    public void onDialogClick(final DialogInterface dialog, final int which) {
 
-        if (mChoosePictureDialogFragment != null
+        if ((mChoosePictureDialogFragment != null)
                         && mChoosePictureDialogFragment.getDialog()
                                         .equals(dialog)) {
 

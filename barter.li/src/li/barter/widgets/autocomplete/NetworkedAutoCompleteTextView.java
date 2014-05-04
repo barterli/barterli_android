@@ -24,7 +24,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -260,8 +259,8 @@ public class NetworkedAutoCompleteTextView extends
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position,
-                    long id) {
+    public void onItemClick(final AdapterView<?> parent, final View view,
+                    final int position, final long id) {
         final Suggestion suggestion = (Suggestion) mSuggestionsAdapter
                         .getItem(position);
 

@@ -28,13 +28,13 @@
             android:id="@+id/action_scan_book"
             android:icon="@drawable/ic_action_barcode"
             android:orderInCategory="2"
-            android:showAsAction="ifRoom"
+            android:showAsAction="collapseActionView"
             android:title="@string/scan_book"/>
         <item
             android:id="@+id/action_add_book"
             android:icon="@drawable/ic_action_new"
             android:orderInCategory="3"
-            android:showAsAction="ifRoom"
+            android:showAsAction="collapseActionView"
             android:title="@string/add_book"/>
         <!-- <item
             android:id="@+id/send_email"

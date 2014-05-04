@@ -157,6 +157,16 @@
         </LinearLayout>
 
         <li.barter.widgets.TypefacedButton
+            android:id="@+id/button_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:text="Delete"
+            
+            android:visibility="gone"
+            app:fontStyle="alegreya_bold" />
+        
+        <li.barter.widgets.TypefacedButton
             android:id="@+id/button_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

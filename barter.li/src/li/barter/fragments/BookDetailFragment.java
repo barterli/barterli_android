@@ -45,17 +45,17 @@ import li.barter.data.SQLConstants;
 import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants;
-import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class BookDetailFragment extends AbstractBarterLiFragment implements
@@ -105,7 +105,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         if (extras != null) {
             mBookId = extras.getString(Keys.BOOK_ID);
             mUserId = extras.getString(Keys.USER_ID);
-            mId     = extras.getString(Keys.ID);
+            mId = extras.getString(Keys.ID);
             mCameFromOtherProfile = extras.getBoolean(Keys.OTHER_PROFILE_FLAG);
             if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
                 mOwnedByUser = true;
@@ -354,7 +354,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                                         .setText(cursor.getString(cursor
                                                         .getColumnIndex(DatabaseColumns.VALUE)));
                     }
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     // handle value = null exception
                 }
 

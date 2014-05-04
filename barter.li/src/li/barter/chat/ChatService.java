@@ -42,7 +42,6 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -258,7 +257,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
         final String action = intent != null ? intent.getAction() : null;
 
-        if (action != null
+        if ((action != null)
                         && action.equals(AppConstants.ACTION_DISCONNECT_CHAT)) {
 
             if (isConnectedToChat()) {
@@ -299,8 +298,15 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                         return;
                     }
 
-                    mQueueName = UserInfo.INSTANCE.getDeviceId();/*generateQueueNameFromUserId(UserInfo.INSTANCE
-                                    .getId());*/
+                    
+                    String string = UserInfo.INSTANCE.getEmail();
+                    String[] parts = string.split("@");
+                    mQueueName = UserInfo.INSTANCE.getDeviceId()+parts[0];/*
+                                                                  * generateQueueNameFromUserId
+                                                                  * (UserInfo.
+                                                                  * INSTANCE
+                                                                  * .getId());
+                                                                  */
                     if (mConnectTask == null) {
                         mConnectTask = new ConnectToChatAsyncTask();
                         mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
@@ -358,7 +364,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     public boolean isConnectedToChat() {
 
-        return mMessageConsumer != null && mMessageConsumer.isRunning();
+        return (mMessageConsumer != null) && mMessageConsumer.isRunning();
     }
 
     /**
@@ -562,7 +568,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             assert (params[1] != null);
             assert (params[2] != null);
             Logger.v(TAG, "Username %s, Password %s, Queue %s", params[0], params[1], params[2]);
-            mMessageConsumer.connectToRabbitMQ(params[0], params[1], params[2], false, false, true, null);
+            mMessageConsumer.connectToRabbitMQ(params[0], params[1], params[2], false, false, false, null);
             return null;
         }
 
@@ -876,7 +882,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * Creates a new consumer
      */
     private void initMessageConsumer() {
-        if (mMessageConsumer == null && isLoggedIn()) {
+        if ((mMessageConsumer == null) && isLoggedIn()) {
             mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
                             .getChatPort(), VIRTUAL_HOST, String
                             .format(Locale.US, EXCHANGE_NAME_FORMAT, UserInfo.INSTANCE

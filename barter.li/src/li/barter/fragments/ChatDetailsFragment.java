@@ -31,7 +31,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -258,7 +257,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 }
             }
 
-            if (mChatDetailAdapter.getCount() == 0 && cursor.getCount() > 0) {
+            if ((mChatDetailAdapter.getCount() == 0) && (cursor.getCount() > 0)) {
                 //Initial load. Swap cursor AND set position to last
                 mChatDetailAdapter.swapCursor(cursor);
                 mChatListView.setSelection(mChatDetailAdapter.getCount() - 1);
@@ -277,7 +276,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                      * i.e, don't scroll if a new message arrives while the user
                      * has scrolled down to view earlier messages
                      */
-                    if (lastAdapterPosition - 1 == mChatListView
+                    if ((lastAdapterPosition - 1) == mChatListView
                                     .getLastVisiblePosition()) {
                         mChatListView.smoothScrollToPosition(lastAdapterPosition);
                     }

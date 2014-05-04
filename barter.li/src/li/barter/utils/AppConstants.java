@@ -49,6 +49,8 @@ public class AppConstants {
     public static final String  ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
     public static final String  ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
 
+    public static final String  GOODREADS_KEY                    = "htKqVH2ohrKcaqifrGqoQ";
+    public static final String  JSON                             = "json";
     /*
      * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :
      * Default Book count value loaded when app starts
@@ -60,7 +62,7 @@ public class AppConstants {
     public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL   = 10;
     public static final int     DEFAULT_LOAD_BEFORE_COUNT        = 1;
     public static final int     DEFAULT_PERPAGE_LIMIT_FOR_SEARCH = 20;
-    
+
     public static final int     DEFAULT_SEARCH_RADIUS            = 25;
 
     // Default Book Image url we getting from the server when there is no image
@@ -146,7 +148,7 @@ public class AppConstants {
 
         }
 
-        public void setDeviceId(String deviceId) {
+        public void setDeviceId(final String deviceId) {
             mDeviceId = deviceId;
         }
 
@@ -290,6 +292,7 @@ public class AppConstants {
         public static final String NO_BOOKS_FLAG_KEY          = "no_books_flag_key";
         public static final String CUR_PAGE                   = "cur_page";
         public static final String HAS_LOADED_ALL_ITEMS       = "has_loaded_all_items";
+        public static final String RELOAD                     = "reload";
 
     }
 

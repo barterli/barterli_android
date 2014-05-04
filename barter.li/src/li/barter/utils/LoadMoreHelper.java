@@ -88,7 +88,7 @@ public class LoadMoreHelper implements OnScrollListener {
      * @param externalOnScrollListener The {@link OnScrollListener} to move up
      *            the scroll events
      */
-    public LoadMoreHelper(AbsListView absListView, LoadMoreCallbacks loadMoreCallbacks, OnScrollListener externalOnScrollListener) {
+    public LoadMoreHelper(final AbsListView absListView, final LoadMoreCallbacks loadMoreCallbacks, final OnScrollListener externalOnScrollListener) {
         mAbsListView = absListView;
         mLoadMoreCallbacks = loadMoreCallbacks;
         mExternalOnScrollListener = externalOnScrollListener;
@@ -115,7 +115,7 @@ public class LoadMoreHelper implements OnScrollListener {
     /**
      * Sets the {@link LoadMoreCallbacks} to receive the load more events
      */
-    public void setLoadMoreCallbacks(LoadMoreCallbacks callbacks) {
+    public void setLoadMoreCallbacks(final LoadMoreCallbacks callbacks) {
         mLoadMoreCallbacks = callbacks;
     }
 
@@ -130,7 +130,7 @@ public class LoadMoreHelper implements OnScrollListener {
      * Sets an external {@link OnScrollListener} to receive the scroll events
      */
     public void setExternalOnScrollListener(
-                    OnScrollListener externalOnScrollListener) {
+                    final OnScrollListener externalOnScrollListener) {
         mExternalOnScrollListener = externalOnScrollListener;
     }
 
@@ -144,7 +144,7 @@ public class LoadMoreHelper implements OnScrollListener {
     /**
      * Used to enable or disable the load more functionality
      */
-    public void setLoadMoreEnabled(boolean enabled) {
+    public void setLoadMoreEnabled(final boolean enabled) {
         mIsLoadMoreEnabled = enabled;
     }
 
@@ -160,12 +160,13 @@ public class LoadMoreHelper implements OnScrollListener {
      * Sets the load more offset. This is the position from the bottom at which
      * the load more event is triggered
      */
-    public void setLoadMoreOffset(int loadMoreOffset) {
+    public void setLoadMoreOffset(final int loadMoreOffset) {
         mLoadMoreOffset = loadMoreOffset;
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    public void onScrollStateChanged(final AbsListView view,
+                    final int scrollState) {
 
         mCurScrollingDirection = null;
 
@@ -175,8 +176,8 @@ public class LoadMoreHelper implements OnScrollListener {
     }
 
     @Override
-    public void onScroll(AbsListView view, int firstVisibleItem,
-                    int visibleItemCount, int totalItemCount) {
+    public void onScroll(final AbsListView view, final int firstVisibleItem,
+                    final int visibleItemCount, final int totalItemCount) {
 
         if (mCurScrollingDirection == null) { //User has just started a scrolling motion
             /*
@@ -198,15 +199,15 @@ public class LoadMoreHelper implements OnScrollListener {
             mPrevFirstVisibleItem = firstVisibleItem;
         }
 
-        if (mIsLoadMoreEnabled && mCurScrollingDirection == ScrollDirection.UP) {
+        if (mIsLoadMoreEnabled
+                        && (mCurScrollingDirection == ScrollDirection.UP)) {
             //We only need to paginate if user scrolling near the end of the list
 
             if (!mLoadMoreCallbacks.isLoading()
                             && !mLoadMoreCallbacks.hasLoadedAllItems()) {
                 //Only trigger a load more if a load operation is NOT happening AND all the items have not been loaded
                 final int lastAdapterPosition = totalItemCount - 1;
-                final int lastVisiblePosition = firstVisibleItem
-                                + visibleItemCount - 1;
+                final int lastVisiblePosition = (firstVisibleItem + visibleItemCount) - 1;
                 if (lastVisiblePosition >= (lastAdapterPosition - mLoadMoreOffset)) {
                     mLoadMoreCallbacks.onLoadMore();
                 }

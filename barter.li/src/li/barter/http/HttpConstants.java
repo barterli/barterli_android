@@ -37,11 +37,8 @@ public class HttpConstants {
                         API_VERSION,
                         "107.170.10.25",
                         5672),
-        DEV(
-                        "http://162.243.198.171/api/v",
-                        API_VERSION,
-                        "107.170.10.25",
-                        5672),
+
+        DEV("http://162.243.198.171/api/v", API_VERSION, "107.170.10.25", 5672),
         PRODUCTION(
                         "http://107.170.10.25/api/v",
                         API_VERSION,
@@ -51,7 +48,9 @@ public class HttpConstants {
         public final String mUrl;
         public final String mChatUrl;
         public final int    mChatPort;
-        public final String mChatLink = ":3000/api/v1";
+        public final String mChatLink     = ":3000/api/v1";
+
+        public final String mGoodReadsApi = "http://www.goodreads.com";
 
         Server(final String url, final int apiVersion, final String chatUrl, final int chatPort) {
             mUrl = url + apiVersion;
@@ -68,6 +67,10 @@ public class HttpConstants {
 
     public static String getChatUrl() {
         return SERVER.mChatUrl;
+    }
+
+    public static String getGoogleReadsUrl() {
+        return SERVER.mGoodReadsApi;
     }
 
     public static String getChangedChatUrl() {
@@ -98,6 +101,8 @@ public class HttpConstants {
         public static final String COLLABORATE_REQUEST     = "/register";
         public static final String TRIBUTE                 = "/tribute.json";
         public static final String TEAM                    = "/team.json";
+        public static final String GOODREADS_SUGGESSTIONS  = "/search.xml";
+
     }
 
     /**
@@ -122,9 +127,13 @@ public class HttpConstants {
         public static final int SEARCH_BOOKS_FROM_EDITTEXT  = 118;
         public static final int BOOK_SUGGESTIONS            = 119;
         public static final int UPDATE_BOOK                 = 120;
+        public static final int DELETE_BOOK                 = 121;
+        
     }
 
     public static final String ID                          = "id";
+    public static final String FORMAT                      = "format";
+    public static final String KEY                         = "key";
     public static final String ISBN_10                     = "isbn_10";
     public static final String ISBN_13                     = "isbn_13";
     public static final String Q                           = "q";
