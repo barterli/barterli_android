@@ -401,6 +401,8 @@ public class AppConstants {
         public static final int DELETE_CHAT_MESSAGES                      = 303;
         public static final int DELETE_CHATS                              = 304;
         public static final int DELETE_MY_BOOKS                           = 305;
+        public static final int DELETE_MY_BOOK                            = 306;
+        
     }
 
     /**

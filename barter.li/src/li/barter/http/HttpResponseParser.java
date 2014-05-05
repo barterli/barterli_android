@@ -349,9 +349,6 @@ public class HttpResponseParser {
             bookObject = JsonUtils.readJSONObject(booksArray, i, true, true);
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true, false);
 
-            //First try to delete the table if a book already exists
-
-            // Unable to update, insert the item
             DBInterface.insert(TableUserBooks.NAME, null, values, false);
 
         }

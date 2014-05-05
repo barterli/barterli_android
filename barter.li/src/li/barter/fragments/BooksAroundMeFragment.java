@@ -413,11 +413,15 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case R.id.action_refresh_books: {
+                
+                final Bundle cookie = new Bundle(2);
+                cookie.putParcelable(Keys.LOCATION, Utils.getCenterLocationOfMap(getMap()));
+                cookie.putInt(Keys.SEARCH_RADIUS, 25);
                 mEmptySearchCroutonFlag = false;
-                fetchBooksAroundMe(Utils.getCenterLocationOfMap(getMap()), AppConstants.DEFAULT_SEARCH_RADIUS);
+                DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
                 return true;
             }
-
+            
             case R.id.action_scan_book: {
                 startActivityForResult(new Intent(getActivity(), ScanIsbnActivity.class), RequestCodes.SCAN_ISBN);
                 return true;
