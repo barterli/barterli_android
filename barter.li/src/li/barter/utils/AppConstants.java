@@ -49,7 +49,6 @@ public class AppConstants {
     public static final String  ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
     public static final String  ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
 
-    public static final String  GOODREADS_KEY                    = "htKqVH2ohrKcaqifrGqoQ";
     public static final String  JSON                             = "json";
     /*
      * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :
@@ -341,6 +340,7 @@ public class AppConstants {
         /* Tags for Dialog fragments */
         public static final String DIALOG_TAKE_PICTURE                             = "dialog_take_picture";
         public static final String DIALOG_ADD_NAME                                 = "dialog_add_name";
+        public static final String DIALOG_ADD_BOOK                                 = "dialog_add_book";
     }
 
     /**
@@ -402,7 +402,7 @@ public class AppConstants {
         public static final int DELETE_CHATS                              = 304;
         public static final int DELETE_MY_BOOKS                           = 305;
         public static final int DELETE_MY_BOOK                            = 306;
-        
+
     }
 
     /**

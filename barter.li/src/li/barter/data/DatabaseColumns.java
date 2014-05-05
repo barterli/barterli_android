@@ -54,5 +54,6 @@ public interface DatabaseColumns {
     public static final String CHAT_TYPE         = "chat_type";
     public static final String LAST_MESSAGE_ID   = "last_message_id";
     public static final String UNREAD_COUNT      = "unread_count";
+    public static final String OWNER             = "book_owner";
 
 }

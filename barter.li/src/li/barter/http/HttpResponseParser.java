@@ -31,7 +31,6 @@ import android.text.TextUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -140,7 +139,7 @@ public class HttpResponseParser {
             case RequestId.UPDATE_BOOK: {
                 return parseUpdateBookResponse(response);
             }
-            
+
             case RequestId.DELETE_BOOK: {
                 return parseUpdateBookResponse(response);
             }
@@ -151,97 +150,94 @@ public class HttpResponseParser {
             }
         }
     }
-    
-    private ResponseInfo parseXML(XmlPullParser parser) throws XmlPullParserException,IOException
-    {
-        ArrayList<Books> books = null;
+
+    private ResponseInfo parseXML(final XmlPullParser parser)
+                    throws XmlPullParserException, IOException {
+        final ArrayList<Books> books = null;
         int eventType = parser.getEventType();
         Books currentBook = null;
 
-        while (eventType != XmlPullParser.END_DOCUMENT){
+        while (eventType != XmlPullParser.END_DOCUMENT) {
             String best_book = null;
-            switch (eventType){
+            switch (eventType) {
                 case XmlPullParser.START_DOCUMENT:
                     break;
-                    
-//                    <best_book type="Book">
-//                    <id type="integer">1123588</id>
-//                    <title>North to the Rails</title>
-//                    <author>
-//                        <id type="integer">858</id>
-//                        <name>Louis L'Amour</name>
-//                    </author>
-//                    <image_url>http://d.gr-assets.com/books/1320542366m/1123588.jpg</image_url>
-//                    <small_image_url>http://d.gr-assets.com/books/1320542366s/1123588.jpg</small_image_url>
-//                </best_book>
-//            </work>
-            
+
+                //                    <best_book type="Book">
+                //                    <id type="integer">1123588</id>
+                //                    <title>North to the Rails</title>
+                //                    <author>
+                //                        <id type="integer">858</id>
+                //                        <name>Louis L'Amour</name>
+                //                    </author>
+                //                    <image_url>http://d.gr-assets.com/books/1320542366m/1123588.jpg</image_url>
+                //                    <small_image_url>http://d.gr-assets.com/books/1320542366s/1123588.jpg</small_image_url>
+                //                </best_book>
+                //            </work>
+
                 case XmlPullParser.START_TAG:
                     best_book = parser.getName();
-                    if (best_book == "best_book"){
+                    if (best_book == "best_book") {
                         currentBook = new Books();
                     }
                     break;
                 case XmlPullParser.END_TAG:
                     best_book = parser.getName();
-                    if (best_book.equalsIgnoreCase("best_book") && currentBook != null){
+                    if (best_book.equalsIgnoreCase("best_book")
+                                    && (currentBook != null)) {
                         books.add(currentBook);
-                    } 
+                    }
             }
             eventType = parser.next();
         }
 
-       return parseBookSuggestionsResponse2(books);
+        return parseBookSuggestionsResponse2(books);
     }
 
-    private ResponseInfo parseBookSuggestionsResponse2(ArrayList<Books> bookssuggestionresponse)
-    {
+    private ResponseInfo parseBookSuggestionsResponse2(
+                    final ArrayList<Books> bookssuggestionresponse) {
         String content = "";
-        Iterator<Books> it = bookssuggestionresponse.iterator();
-        
-        while(it.hasNext())
-        {
-            Books currbook  = it.next();
-            content = content + "::" +  currbook.name ;
-                   
-        
-    }
-        String[] suggestions=content.split("::");
-        
-      final ResponseInfo responseInfo = new ResponseInfo();
+        final Iterator<Books> it = bookssuggestionresponse.iterator();
 
+        while (it.hasNext()) {
+            final Books currbook = it.next();
+            content = content + "::" + currbook.name;
 
-    final Bundle responseBundle = new Bundle(1);
-    responseBundle.putStringArray(HttpConstants.BOOKS, suggestions);
-    responseInfo.responseBundle = responseBundle;
-    return responseInfo;
+        }
+        final String[] suggestions = content.split("::");
+
+        final ResponseInfo responseInfo = new ResponseInfo();
+
+        final Bundle responseBundle = new Bundle(1);
+        responseBundle.putStringArray(HttpConstants.BOOKS, suggestions);
+        responseInfo.responseBundle = responseBundle;
+        return responseInfo;
     }
-    
-    private ResponseInfo xmlParse(final String response)
-    {
-        
+
+    private ResponseInfo xmlParse(final String response) {
+
         XmlPullParserFactory pullParserFactory;
         try {
             pullParserFactory = XmlPullParserFactory.newInstance();
-            XmlPullParser parser = pullParserFactory.newPullParser();
-            
-            InputStream in_s = new ByteArrayInputStream(response.getBytes("ISO-8859-1"));
+            final XmlPullParser parser = pullParserFactory.newPullParser();
+
+            final InputStream in_s = new ByteArrayInputStream(response.getBytes("ISO-8859-1"));
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in_s, null);
 
             return parseXML(parser);
-        } catch (XmlPullParserException e) {
+        } catch (final XmlPullParserException e) {
 
             e.printStackTrace();
         }
-        
-       catch (IOException e) {
+
+        catch (final IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
     }
-    
+
     /**
      * Parse the response for book suggestions
      * 
@@ -253,10 +249,8 @@ public class HttpResponseParser {
                     throws JSONException {
 
         Logger.d(TAG, response);
- 
 
-
-          final ResponseInfo responseInfo = new ResponseInfo();
+        final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
 
@@ -680,6 +674,8 @@ public class HttpResponseParser {
                         .readString(bookObject, HttpConstants.PUBLICATION_MONTH, false, false));
         values.put(DatabaseColumns.VALUE, JsonUtils
                         .readString(bookObject, HttpConstants.VALUE, false, false));
+        values.put(DatabaseColumns.OWNER, JsonUtils
+                        .readString(bookObject, HttpConstants.OWNER_NAME, false, false));
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(bookObject, HttpConstants.LOCATION, false, false);
@@ -899,10 +895,9 @@ public class HttpResponseParser {
     }
 
 }
-class Books
-{
+
+class Books {
 
     public String name;
-    
 
 }

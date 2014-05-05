@@ -298,15 +298,21 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                         return;
                     }
 
-                    
-                    String string = UserInfo.INSTANCE.getEmail();
-                    String[] parts = string.split("@");
-                    mQueueName = UserInfo.INSTANCE.getDeviceId()+parts[0];/*
-                                                                  * generateQueueNameFromUserId
-                                                                  * (UserInfo.
-                                                                  * INSTANCE
-                                                                  * .getId());
-                                                                  */
+                    final String string = UserInfo.INSTANCE.getEmail();
+                    final String[] parts = string.split("@");
+                    mQueueName = UserInfo.INSTANCE.getDeviceId() + parts[0];/*
+                                                                             * generateQueueNameFromUserId
+                                                                             * (
+                                                                             * UserInfo
+                                                                             * .
+                                                                             * INSTANCE
+                                                                             * .
+                                                                             * getId
+                                                                             * (
+                                                                             * )
+                                                                             * )
+                                                                             * ;
+                                                                             */
                     if (mConnectTask == null) {
                         mConnectTask = new ConnectToChatAsyncTask();
                         mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
@@ -568,7 +574,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             assert (params[1] != null);
             assert (params[2] != null);
             Logger.v(TAG, "Username %s, Password %s, Queue %s", params[0], params[1], params[2]);
-            mMessageConsumer.connectToRabbitMQ(params[0], params[1], params[2], false, false, false, null);
+            mMessageConsumer.connectToRabbitMQ(params[0], params[1], params[2], true, false, false, null);
             return null;
         }
 

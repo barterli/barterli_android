@@ -25,7 +25,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
@@ -62,6 +64,7 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.TableSearchBooks;
 import li.barter.data.ViewSearchBooksWithLocations;
+import li.barter.fragments.dialogs.SingleChoiceDialogFragment;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -202,6 +205,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     private final boolean                 mReload                 = false;
 
+    /**
+     * Reference to the Dialog Fragment for selecting the book add options
+     */
+    private SingleChoiceDialogFragment    mAddBookDialogFragment;
+
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
@@ -288,6 +296,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mHasLoadedAllItems = savedInstanceState
                             .getBoolean(Keys.HAS_LOADED_ALL_ITEMS);
         }
+        mAddBookDialogFragment = (SingleChoiceDialogFragment) getFragmentManager()
+                        .findFragmentByTag(FragmentTags.DIALOG_ADD_BOOK);
 
         loadBookSearchResults();
         setActionBarDrawerToggleEnabled(true);
@@ -413,22 +423,20 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case R.id.action_refresh_books: {
-                
+
                 final Bundle cookie = new Bundle(2);
-                cookie.putParcelable(Keys.LOCATION, Utils.getCenterLocationOfMap(getMap()));
+                cookie.putParcelable(Keys.LOCATION, Utils
+                                .getCenterLocationOfMap(getMap()));
                 cookie.putInt(Keys.SEARCH_RADIUS, 25);
                 mEmptySearchCroutonFlag = false;
                 DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
                 return true;
             }
-            
-            case R.id.action_scan_book: {
-                startActivityForResult(new Intent(getActivity(), ScanIsbnActivity.class), RequestCodes.SCAN_ISBN);
-                return true;
-            }
 
             case R.id.action_add_book: {
-                loadAddOrEditBookFragment(null);
+
+                showAddBookOptions();
+
                 return true;
             }
             /*
@@ -440,6 +448,17 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    /**
+     * Method to handle click on profile image
+     */
+    private void showAddBookOptions() {
+
+        mAddBookDialogFragment = new SingleChoiceDialogFragment();
+        mAddBookDialogFragment
+                        .show(AlertDialog.THEME_HOLO_LIGHT, R.array.add_book_choices, 0, R.string.add_book_dialog_head, getFragmentManager(), true, FragmentTags.DIALOG_ADD_BOOK);
+
     }
 
     @Override
@@ -908,6 +927,33 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public boolean hasLoadedAllItems() {
         return mHasLoadedAllItems;
+    }
+
+    @Override
+    public boolean willHandleDialog(final DialogInterface dialog) {
+
+        if ((mAddBookDialogFragment != null)
+                        && mAddBookDialogFragment.getDialog().equals(dialog)) {
+            return true;
+        }
+        return super.willHandleDialog(dialog);
+    }
+
+    @Override
+    public void onDialogClick(final DialogInterface dialog, final int which) {
+
+        if ((mAddBookDialogFragment != null)
+                        && mAddBookDialogFragment.getDialog().equals(dialog)) {
+
+            if (which == 0) { // scan book
+                startActivityForResult(new Intent(getActivity(), ScanIsbnActivity.class), RequestCodes.SCAN_ISBN);
+
+            } else if (which == 1) { // add book manually
+                loadAddOrEditBookFragment(null);
+            }
+        } else {
+            super.onDialogClick(dialog, which);
+        }
     }
 
 }

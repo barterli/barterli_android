@@ -51,6 +51,8 @@ public class ViewSearchBooksWithLocations {
                                 DatabaseColumns.TITLE,
                                 DatabaseColumns.IMAGE_URL,
                                 DatabaseColumns.DESCRIPTION,
+                                DatabaseColumns.AUTHOR,
+                                DatabaseColumns.OWNER,
                                 String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_SEARCH_BOOKS, DatabaseColumns.LOCATION_ID),
                                 DatabaseColumns.NAME, DatabaseColumns.ADDRESS
 
@@ -61,6 +63,7 @@ public class ViewSearchBooksWithLocations {
                         .join(",", new String[] {
                                 String.format(Locale.US, SQLConstants.TABLE_ALIAS, TableSearchBooks.NAME, ALIAS_SEARCH_BOOKS),
                                 String.format(Locale.US, SQLConstants.TABLE_ALIAS, TableLocations.NAME, ALIAS_LOCATIONS)
+
                         });
         Logger.d(TAG, "From Def: %s", fromDef);
 

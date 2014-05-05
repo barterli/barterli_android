@@ -154,7 +154,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             //append "?type=large" for getting large clear image for the profile
             Picasso.with(getActivity()).load(mProfileImageUrl + "?type=large")
-                            .fit().error(R.drawable.pic_avatar)
+                            .centerCrop().fit().error(R.drawable.pic_avatar)
                             .into(mProfileImageView);
 
             String mFullName = String.format(Locale.US, mFirstName + " "

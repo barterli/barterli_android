@@ -50,6 +50,8 @@ public class ViewUserBooksWithLocations {
                                 DatabaseColumns.TITLE,
                                 DatabaseColumns.IMAGE_URL,
                                 DatabaseColumns.DESCRIPTION,
+                                DatabaseColumns.AUTHOR,
+                                DatabaseColumns.OWNER,
                                 String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_MY_BOOKS, DatabaseColumns.LOCATION_ID),
                                 DatabaseColumns.NAME, DatabaseColumns.ADDRESS
 

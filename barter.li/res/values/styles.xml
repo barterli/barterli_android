@@ -50,7 +50,7 @@
     </style>
 
     <style name="ActionBar.OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
-        <item name="android:src">@drawable/action_bar_add_book</item>
+        <item name="android:src">@drawable/ic_action_overflow</item>
     </style>
 
     <style name="ActionBarStyle.TitleTextStyle" parent="@android:style/TextAppearance">

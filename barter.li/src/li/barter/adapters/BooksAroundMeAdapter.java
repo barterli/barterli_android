@@ -61,15 +61,26 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         ((TextView) view.getTag(R.id.text_book_name))
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.TITLE)));
-        ((TextView) view.getTag(R.id.text_book_desc))
+        ((TextView) view.getTag(R.id.text_book_author))
                         .setText(Html.fromHtml(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.DESCRIPTION))));
+                                        .getColumnIndex(DatabaseColumns.AUTHOR))));
 
-        ((TextView) view.getTag(R.id.text_book_location))
-                        .setText(String.format(mLocationFormat, cursor.getString(cursor
+        ((TextView) view.getTag(R.id.text_book_owner))
+                        .setText("@"
+                                        + Html.fromHtml(cursor.getString(cursor
+                                                        .getColumnIndex(DatabaseColumns.OWNER))));
+
+        //it is to replace first char of location i.e '@' by '#'
+        String location = String
+                        .format(mLocationFormat, cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.NAME)), cursor
                                         .getString(cursor
-                                                        .getColumnIndex(DatabaseColumns.ADDRESS))));
+                                                        .getColumnIndex(DatabaseColumns.ADDRESS)));
+        final char[] locationchars = location.toCharArray();
+        locationchars[0] = '#';
+        location = String.valueOf(locationchars);
+        ((TextView) view.getTag(R.id.text_book_location)).setText(location);
+
         if (cursor.getString(cursor.getColumnIndex(DatabaseColumns.IMAGE_URL))
                         .contains(AppConstants.DEFAULT_BOOKIMAGE_URL)) {
             ((ImageView) view.getTag(R.id.image_book))
@@ -91,7 +102,10 @@ public class BooksAroundMeAdapter extends CursorAdapter {
 
         view.setTag(R.id.image_book, view.findViewById(R.id.image_book));
         view.setTag(R.id.text_book_name, view.findViewById(R.id.text_book_name));
-        view.setTag(R.id.text_book_desc, view.findViewById(R.id.text_book_desc));
+        view.setTag(R.id.text_book_author, view
+                        .findViewById(R.id.text_book_author));
+        view.setTag(R.id.text_book_owner, view
+                        .findViewById(R.id.text_book_owner));
         view.setTag(R.id.text_book_location, view
                         .findViewById(R.id.text_book_location));
 

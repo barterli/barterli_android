@@ -61,6 +61,8 @@
     <string name="new_messages">%d new messages!</string>
     <string name="chat_opened_from" formatted="false">This chat was opened from %s.</string>
     <string name="take_picture">Take Picture</string>
+    
+    <string name="add_book_dialog_head">Add Book</string>
     <string name="complete_action_using">Complete action using</string>
     <string name="no_books_found">No books were found in this area.</string>
     <string name="no_more_books_found">No more books were found.</string>
@@ -138,6 +140,12 @@
         <item>Capture from Camera</item>
         <item>Add from Gallery</item>
     </string-array>
+    
+    <string-array name="add_book_choices">
+        <item>Scan  Barcode</item>
+        <item>Add Manually</item>
+    </string-array>
+    
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile</item>
         <item>Your ongoing chats</item>

@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/text_book_name"
-        android:layout_below="@id/text_book_name"
+        android:layout_below="@+id/text_book_author"
         android:layout_marginRight="@dimen/activity_margin"
         android:layout_marginTop="@dimen/margin_xxx_small"
         android:ellipsize="end"
@@ -56,27 +56,46 @@
         android:singleLine="true"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_micro"
-        app:fontStyle="alegreya_italic" />
+        app:fontStyle="alegreya_italic"
+        android:text="location" />
 
     <li.barter.widgets.TypefacedTextView
-        android:id="@+id/text_book_desc"
+        android:id="@+id/text_book_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/text_book_name"
-        android:layout_below="@id/text_book_location"
+        android:layout_below="@id/text_book_name"
         android:layout_marginRight="@dimen/activity_margin"
         android:layout_marginTop="@dimen/margin_xx_small"
         android:ellipsize="end"
         android:gravity="left"
-        android:maxLines="3"
+        android:maxLines="1"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="alegreya_regular"
+        android:text="author" />
 
     <View
         android:id="@+id/view_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/selector_main_item_overlay" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_book_owner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+         android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginTop="@dimen/margin_xx_small"
+        android:layout_marginBottom="@dimen/margin_x_small"
+        android:layout_alignBottom="@+id/view_overlay"
+        android:layout_alignRight="@+id/view_overlay"
+        android:ellipsize="end"
+        android:gravity="right"
+        android:maxLines="1"
+        android:text="test"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_small"
+        app:fontStyle="alegreya_regular" />
 
 </RelativeLayout>

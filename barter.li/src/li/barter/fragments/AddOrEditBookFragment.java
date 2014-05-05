@@ -25,7 +25,6 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -54,10 +53,8 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableLocations;
 import li.barter.data.TableMyBooks;
-import li.barter.data.TableSearchBooks;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
-import li.barter.http.JsonUtils;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
@@ -76,8 +73,8 @@ import li.barter.widgets.autocomplete.Suggestion;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
-OnClickListener, AsyncDbQueryCallback,
-INetworkSuggestCallbacks, OnCheckedChangeListener {
+                OnClickListener, AsyncDbQueryCallback,
+                INetworkSuggestCallbacks, OnCheckedChangeListener {
 
     private static final String           TAG = "AddOrEditBookFragment";
 
@@ -119,11 +116,11 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
                         .inflate(R.layout.fragment_add_or_edit_book, container, false);
         initViews(view);
         view.findViewById(R.id.button_submit).setOnClickListener(this);
-        mdelete=(Button)view.findViewById(R.id.button_delete);
+        mdelete = (Button) view.findViewById(R.id.button_delete);
         mdelete.setOnClickListener(this);
         getActivity().getWindow()
-        .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                        | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                        .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                                        | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         final Bundle extras = getArguments();
 
         // If extras are null, it means that user has to decided to add the
@@ -143,7 +140,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
                 mdelete.setVisibility(View.VISIBLE);
                 DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableMyBooks.NAME, null, DatabaseColumns.BOOK_ID
                                 + SQLConstants.EQUALS_ARG, new String[] {
-                                mBookId
+                    mBookId
                 }, null, null, null, null, this);
 
             } else {
@@ -224,7 +221,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
         mWishlistCheckBox.setTag(R.string.tag_barter_type, BarterType.RENT);
         mGiveAwayCheckBox.setTag(R.string.tag_barter_type, BarterType.FREE);
         mKeepPrivateCheckBox
-        .setTag(R.string.tag_barter_type, BarterType.PRIVATE);
+                        .setTag(R.string.tag_barter_type, BarterType.PRIVATE);
 
         mSellCheckBox.setOnCheckedChangeListener(this);
 
@@ -405,7 +402,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
             final BlRequest updateBookRequest = new BlRequest(Method.PUT, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
             updateBookRequest.setRequestId(RequestId.UPDATE_BOOK);
-            addRequestToQueue(updateBookRequest , true, 0);
+            addRequestToQueue(updateBookRequest, true, 0);
         } catch (final JSONException e) {
             e.printStackTrace();
         }
@@ -423,11 +420,12 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
         params.put(HttpConstants.ID, mId);
 
         final BlRequest deleteBookRequest = new BlRequest(Method.DELETE, HttpConstants.getApiBaseUrl()
-                        + "/books/"+mId, null, mVolleyCallbacks);
+                        + "/books/" + mId, null, mVolleyCallbacks);
         // deleteBookRequest.setParams(params);
         deleteBookRequest.setRequestId(RequestId.DELETE_BOOK);
         addRequestToQueue(deleteBookRequest, true, 0);
     }
+
     /**
      * Build the tags array for books
      * 
@@ -466,8 +464,8 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
         DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
                         + SQLConstants.EQUALS_ARG, new String[] {
-                        SharedPreferenceHelper
-                        .getString(getActivity(), R.string.pref_location)
+            SharedPreferenceHelper
+                            .getString(getActivity(), R.string.pref_location)
         }, null, null, null, null, this);
     }
 
@@ -503,41 +501,44 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
         }
 
         if ((v.getId() == R.id.button_delete) && isInputValid()) {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                            getActivity());
+            final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
             // set title
             alertDialogBuilder.setTitle("Confirm");
 
             // set dialog message
             alertDialogBuilder
-            .setMessage("Are you sure you want to delete this book!")
-            .setCancelable(false)
-            .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog,int id) {
+                            .setMessage("Are you sure you want to delete this book!")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(
+                                                final DialogInterface dialog,
+                                                final int id) {
 
-                    if (mEditMode) {
+                                    if (mEditMode) {
 
-                        DeleteBookOnServer(null);
-                        dialog.dismiss();
-                    } 
-                }
-            })
-            .setNegativeButton("No",new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog,int id) {
-                    // if this button is clicked, just close
-                    // the dialog box and do nothing
-                    dialog.cancel();
-                }
-            });
+                                        DeleteBookOnServer(null);
+                                        dialog.dismiss();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(
+                                                final DialogInterface dialog,
+                                                final int id) {
+                                    // if this button is clicked, just close
+                                    // the dialog box and do nothing
+                                    dialog.cancel();
+                                }
+                            });
 
             // create alert dialog
-            AlertDialog alertDialog = alertDialogBuilder.create();
+            final AlertDialog alertDialog = alertDialogBuilder.create();
 
             // show it
             alertDialog.show();
-
-
 
         }
     }
@@ -671,22 +672,16 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
             case RequestId.DELETE_BOOK: {
 
-
-
-
-
                 final String selection = DatabaseColumns.ID
                                 + SQLConstants.EQUALS_ARG;
                 final String[] args = new String[1];
 
-                args[0] =mId;
+                args[0] = mId;
                 DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK, null, TableMyBooks.NAME, selection, args, true, this);
-
 
                 break;
 
             }
-
 
             /*
              * This will happen in the case where the user has newly signed in
@@ -700,11 +695,11 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
                 UserInfo.INSTANCE.setFirstName(userInfo
                                 .getString(HttpConstants.FIRST_NAME));
                 SharedPreferenceHelper
-                .set(getActivity(), R.string.pref_first_name, userInfo
-                                .getString(HttpConstants.FIRST_NAME));
+                                .set(getActivity(), R.string.pref_first_name, userInfo
+                                                .getString(HttpConstants.FIRST_NAME));
                 SharedPreferenceHelper
-                .set(getActivity(), R.string.pref_last_name, userInfo
-                                .getString(HttpConstants.LAST_NAME));
+                                .set(getActivity(), R.string.pref_last_name, userInfo
+                                                .getString(HttpConstants.LAST_NAME));
                 createBookOnServer(null);
                 break;
             }
@@ -768,8 +763,6 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
         }
 
-
-
     }
 
     @Override
@@ -816,8 +809,8 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
                 mAuthorEditText.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.AUTHOR)));
                 mDescriptionEditText
-                .setText(Html.fromHtml(cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.DESCRIPTION))));
+                                .setText(Html.fromHtml(cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.DESCRIPTION))));
 
                 mPublicationYear = cursor
                                 .getString(cursor
@@ -832,8 +825,8 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
                         mSellPriceEditText.setVisibility(View.VISIBLE);
                         mSellPriceEditText
-                        .setText(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.VALUE)));
+                                        .setText(cursor.getString(cursor
+                                                        .getColumnIndex(DatabaseColumns.VALUE)));
                     }
                 } catch (final Exception e) {
                     // handle value = null exception
@@ -908,7 +901,6 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
             final Map<String, String> params = new HashMap<String, String>(2);
             params.put(HttpConstants.Q, query);
-            //            params.put(HttpConstants.KEY, AppConstants.GOODREADS_KEY);
             request.setParams(params);
             request.setTag(getVolleyTag());
             request.addExtra(Keys.SEARCH, query);

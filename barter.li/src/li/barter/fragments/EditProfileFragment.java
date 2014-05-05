@@ -164,7 +164,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         }
         Picasso.with(getActivity()).load(mProfileImageUrl + "?type=large")
-                        .fit().error(R.drawable.pic_avatar)
+                        .centerCrop().fit().error(R.drawable.pic_avatar)
                         .into(mProfileImageView);
 
         setActionBarDrawerToggleEnabled(false);
