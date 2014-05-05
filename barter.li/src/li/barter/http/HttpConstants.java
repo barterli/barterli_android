@@ -207,5 +207,7 @@ public class HttpConstants {
     public static final String BOOKS                       = "books";
     public static final String PAGE                        = "page";
     public static final String PERLIMIT                    = "per";
+    public static final String RESULTS                     = "results";
+    public static final String WORK                        = "work";
 
 }

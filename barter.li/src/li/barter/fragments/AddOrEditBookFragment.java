@@ -98,6 +98,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private String                        mImage_Url;
     private String                        mPublicationYear;
     private Button                        mdelete;
+    private String                        mGoodReadsApiKey;
     /**
      * On resume, if <code>true</code> and the user has logged in, immediately
      * perform the request to add the book to server. This is to handle where
@@ -168,6 +169,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         }
 
+        mGoodReadsApiKey = getString(R.string.goodreads_api_key);
         setActionBarDrawerToggleEnabled(false);
         return view;
     }
@@ -499,6 +501,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 }
             }
         }
+
 
         if ((v.getId() == R.id.button_delete) && isInputValid()) {
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
@@ -891,16 +894,23 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "Perform network query %s", query);
 
-            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.BOOK_SUGGESTIONS, null, mVolleyCallbacks);
+            /*
+             * final BlRequest request = new BlRequest(Method.GET,
+             * HttpConstants.getApiBaseUrl() + ApiEndpoints.BOOK_SUGGESTIONS,
+             * null, mVolleyCallbacks);
+             * request.setRequestId(RequestId.BOOK_SUGGESTIONS);
+             */
+
+            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleReadsUrl()
+                            + ApiEndpoints.GOODREADS_SUGGESSTIONS, null, mVolleyCallbacks);
             request.setRequestId(RequestId.BOOK_SUGGESTIONS);
 
-            //            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleReadsUrl()
-            //                            + ApiEndpoints.GOODREADS_SUGGESSTIONS, null, mVolleyCallbacks);
-            //            request.setRequestId(RequestId.BOOK_SUGGESTIONS);
 
-            final Map<String, String> params = new HashMap<String, String>(2);
+            final Map<String, String> params = new HashMap<String, String>(1);
             params.put(HttpConstants.Q, query);
+
+            //            params.put(HttpConstants.FORMAT, AppConstants.JSON);
+            params.put(HttpConstants.KEY, mGoodReadsApiKey);
             request.setParams(params);
             request.setTag(getVolleyTag());
             request.addExtra(Keys.SEARCH, query);

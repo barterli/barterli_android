@@ -81,7 +81,8 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                 mQueue = declareQueue(queueName, durable, exclusive, autoDelete, args);
                 mSubscription = new QueueingConsumer(mChannel);
                 mChannel.basicConsume(mQueue, false, mSubscription);
-                if (mExchangeType == ExchangeType.FANOUT) {
+                mChannel.basicQos(1);
+                if (mExchangeType == ExchangeType.FANOUT) { 
                     addBinding("");// fanout has default binding
                 }
             } catch (final IOException e) {
