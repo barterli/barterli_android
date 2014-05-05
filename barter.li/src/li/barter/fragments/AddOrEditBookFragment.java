@@ -114,7 +114,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                         .inflate(R.layout.fragment_add_or_edit_book, container, false);
         initViews(view);
         view.findViewById(R.id.button_submit).setOnClickListener(this);
-        mdelete=(Button)view.findViewById(R.id.button_delete);
+        mdelete = (Button) view.findViewById(R.id.button_delete);
         mdelete.setOnClickListener(this);
         getActivity().getWindow()
                         .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
@@ -400,7 +400,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             final BlRequest updateBookRequest = new BlRequest(Method.PUT, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
             updateBookRequest.setRequestId(RequestId.UPDATE_BOOK);
-            addRequestToQueue(updateBookRequest , true, 0);
+            addRequestToQueue(updateBookRequest, true, 0);
         } catch (final JSONException e) {
             e.printStackTrace();
         }
@@ -414,15 +414,16 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void DeleteBookOnServer(final JSONObject locationObject) {
 
-                        final Map<String, String> params = new HashMap<String, String>();
-                        params.put(HttpConstants.ID, mId);
-                        
-                    final BlRequest deleteBookRequest = new BlRequest(Method.DELETE, HttpConstants.getApiBaseUrl()
-                                    + "/books/"+mId, null, mVolleyCallbacks);
-                   // deleteBookRequest.setParams(params);
-                    deleteBookRequest.setRequestId(RequestId.DELETE_BOOK);
-                    addRequestToQueue(deleteBookRequest, true, 0);
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put(HttpConstants.ID, mId);
+
+        final BlRequest deleteBookRequest = new BlRequest(Method.DELETE, HttpConstants.getApiBaseUrl()
+                        + "/books/" + mId, null, mVolleyCallbacks);
+        // deleteBookRequest.setParams(params);
+        deleteBookRequest.setRequestId(RequestId.DELETE_BOOK);
+        addRequestToQueue(deleteBookRequest, true, 0);
     }
+
     /**
      * Build the tags array for books
      * 
@@ -496,15 +497,13 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 }
             }
         }
-        
+
         if ((v.getId() == R.id.button_delete) && isInputValid()) {
 
-         
+            if (mEditMode) {
 
-                if (mEditMode) {
-
-                    DeleteBookOnServer(null);
-                } 
+                DeleteBookOnServer(null);
+            }
         }
     }
 
@@ -636,9 +635,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             }
 
             case RequestId.DELETE_BOOK: {
-              
 
-              
                 final FragmentManager fm = getActivity()
                                 .getSupportFragmentManager();
                 for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
@@ -846,18 +843,21 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "Perform network query %s", query);
 
-            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.BOOK_SUGGESTIONS, null, mVolleyCallbacks);
-            request.setRequestId(RequestId.BOOK_SUGGESTIONS);
-            
-//            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleReadsUrl()
-//                            + ApiEndpoints.GOODREADS_SUGGESSTIONS, null, mVolleyCallbacks);
-//            request.setRequestId(RequestId.BOOK_SUGGESTIONS);
+            /*
+             * final BlRequest request = new BlRequest(Method.GET,
+             * HttpConstants.getApiBaseUrl() + ApiEndpoints.BOOK_SUGGESTIONS,
+             * null, mVolleyCallbacks);
+             * request.setRequestId(RequestId.BOOK_SUGGESTIONS);
+             */
 
-            final Map<String, String> params = new HashMap<String, String>(2);
+            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleReadsUrl()
+                            + ApiEndpoints.GOODREADS_SUGGESSTIONS, null, mVolleyCallbacks);
+            request.setRequestId(RequestId.BOOK_SUGGESTIONS);
+
+            final Map<String, String> params = new HashMap<String, String>(1);
             params.put(HttpConstants.Q, query);
-//            params.put(HttpConstants.FORMAT, AppConstants.JSON);
-//            params.put(HttpConstants.KEY, AppConstants.GOODREADS_KEY);
+            //            params.put(HttpConstants.FORMAT, AppConstants.JSON);
+            params.put(HttpConstants.KEY, AppConstants.GOODREADS_KEY);
             request.setParams(params);
             request.setTag(getVolleyTag());
             request.addExtra(Keys.SEARCH, query);

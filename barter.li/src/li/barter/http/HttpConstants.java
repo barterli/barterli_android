@@ -128,7 +128,7 @@ public class HttpConstants {
         public static final int BOOK_SUGGESTIONS            = 119;
         public static final int UPDATE_BOOK                 = 120;
         public static final int DELETE_BOOK                 = 121;
-        
+
     }
 
     public static final String ID                          = "id";
@@ -206,5 +206,7 @@ public class HttpConstants {
     public static final String BOOKS                       = "books";
     public static final String PAGE                        = "page";
     public static final String PERLIMIT                    = "per";
+    public static final String RESULTS                     = "results";
+    public static final String WORK                        = "work";
 
 }

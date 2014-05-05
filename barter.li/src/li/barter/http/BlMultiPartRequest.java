@@ -26,7 +26,9 @@ import com.android.volley.toolbox.MultiPartRequest;
 
 import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -79,6 +81,10 @@ public class BlMultiPartRequest extends MultiPartRequest<ResponseInfo>
         } catch (final JSONException e) {
             return Response.error(new ParseError(e));
         } catch (final UnsupportedEncodingException e) {
+            return Response.error(new ParseError(e));
+        } catch (XmlPullParserException e) {
+            return Response.error(new ParseError(e));
+        } catch(IOException e) {
             return Response.error(new ParseError(e));
         }
     }
