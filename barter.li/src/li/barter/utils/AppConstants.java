@@ -49,7 +49,6 @@ public class AppConstants {
     public static final String  ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
     public static final String  ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
 
-    public static final String  GOODREADS_KEY                    = "htKqVH2ohrKcaqifrGqoQ";
     public static final String  JSON                             = "json";
     /*
      * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :

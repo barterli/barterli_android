@@ -96,6 +96,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private String                        mImage_Url;
     private String                        mPublicationYear;
     private Button                        mdelete;
+    private String                        mGoodReadsApiKey;
     /**
      * On resume, if <code>true</code> and the user has logged in, immediately
      * perform the request to add the book to server. This is to handle where
@@ -166,6 +167,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         }
 
+        mGoodReadsApiKey = getString(R.string.goodreads_api_key);
         setActionBarDrawerToggleEnabled(false);
         return view;
     }
@@ -857,7 +859,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             final Map<String, String> params = new HashMap<String, String>(1);
             params.put(HttpConstants.Q, query);
             //            params.put(HttpConstants.FORMAT, AppConstants.JSON);
-            params.put(HttpConstants.KEY, AppConstants.GOODREADS_KEY);
+            params.put(HttpConstants.KEY, mGoodReadsApiKey);
             request.setParams(params);
             request.setTag(getVolleyTag());
             request.addExtra(Keys.SEARCH, query);
