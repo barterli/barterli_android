@@ -22,8 +22,12 @@ import com.rabbitmq.client.ConnectionFactory;
 
 import org.apache.http.protocol.HTTP;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
+import li.barter.utils.Logger;
 
 /**
  * Base class for objects that connect to a RabbitMQ Broker
@@ -79,11 +83,15 @@ public abstract class AbstractRabbitMQConnector {
         try {
             if (mConnection != null) {
                 mConnection.close();
+                Logger.d(TAG, "connection is closed");
             }
             if (mChannel != null) {
+                
+                Logger.d(TAG, "channel is aborted");
                 mChannel.abort();
             }
         } catch (final IOException e) {
+            Logger.d(TAG, "connection is closed");
             e.printStackTrace();
         } finally {
 

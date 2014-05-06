@@ -67,8 +67,7 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                                                         .getColumnIndex(DatabaseColumns.AUTHOR))));
 
         ((TextView) view.getTag(R.id.text_book_owner))
-                        .setText("@"
-                                        + Html.fromHtml(cursor.getString(cursor
+                        .setText("@" + Html.fromHtml(cursor.getString(cursor
                                                         .getColumnIndex(DatabaseColumns.OWNER))));
 
         ((TextView) view.getTag(R.id.text_book_description))

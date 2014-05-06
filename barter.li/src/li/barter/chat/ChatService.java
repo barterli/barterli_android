@@ -261,6 +261,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                         && action.equals(AppConstants.ACTION_DISCONNECT_CHAT)) {
 
             if (isConnectedToChat()) {
+                
                 mMessageConsumer.dispose(true);
                 mMessageConsumer = null;
             }

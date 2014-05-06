@@ -35,10 +35,13 @@ public class HttpConstants {
         LOCAL(
                         "http://192.168.1.138:3000/api/v",
                         API_VERSION,
-                        "107.170.10.25",
+                        "192.168.1.138",
                         5672),
 
-        DEV("http://162.243.198.171/api/v", API_VERSION, "107.170.10.25", 5672),
+        DEV("http://162.243.198.171/api/v", 
+                        API_VERSION, "162.243.198.171",
+                        5672),
+        
         PRODUCTION(
                         "http://107.170.10.25/api/v",
                         API_VERSION,
