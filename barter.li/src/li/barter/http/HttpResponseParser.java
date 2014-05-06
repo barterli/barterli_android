@@ -16,8 +16,6 @@
 
 package li.barter.http;
 
-import com.google.android.gms.internal.ev;
-
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -170,7 +168,6 @@ public class HttpResponseParser {
 
         Logger.d(TAG, response);
 
-
         final ResponseInfo responseInfo = new ResponseInfo();
         final Bundle responseBundle = new Bundle(1);
         final XmlPullParser xmlParser = getPullParserInstance(false, false);
@@ -184,7 +181,7 @@ public class HttpResponseParser {
             if (eventType == XmlPullParser.START_TAG) {
                 name = xmlParser.getName();
 
-                if (name != null && name.equals(HttpConstants.RESULTS)) {
+                if ((name != null) && name.equals(HttpConstants.RESULTS)) {
                     responseBundle.putStringArray(HttpConstants.BOOKS, parseBookSuggestionItems(xmlParser));
 
                 }
@@ -203,7 +200,7 @@ public class HttpResponseParser {
      * @throws IOException
      * @throws XmlPullParserException
      */
-    private String[] parseBookSuggestionItems(XmlPullParser xmlParser)
+    private String[] parseBookSuggestionItems(final XmlPullParser xmlParser)
                     throws XmlPullParserException, IOException {
 
         final ArrayList<String> suggestionTitles = new ArrayList<String>();
@@ -227,7 +224,7 @@ public class HttpResponseParser {
             else if (eventType == XmlPullParser.START_TAG) {
                 name = xmlParser.getName();
 
-                if (name != null && name.equals(HttpConstants.TITLE)) {
+                if ((name != null) && name.equals(HttpConstants.TITLE)) {
                     parsingBook = true;
                 }
             } else if (eventType == XmlPullParser.TEXT) {
@@ -891,4 +888,3 @@ public class HttpResponseParser {
     }
 
 }
-

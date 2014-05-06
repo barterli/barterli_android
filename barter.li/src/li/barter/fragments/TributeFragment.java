@@ -15,7 +15,6 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request.Method;
 import com.squareup.picasso.Picasso;
 
 import android.os.Bundle;
@@ -26,9 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import li.barter.R;
-import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
-import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
@@ -58,19 +55,21 @@ public class TributeFragment extends AbstractBarterLiFragment {
 
         mTributeTextView = (TextView) view.findViewById(R.id.tribute_text);
         mTributeImageView = (ImageView) view.findViewById(R.id.tribute_image);
-        mTributeTextView.setText("");
+
+        // Tribute image and text we are not loading from the server for the alpha version
 
         // Make a call to server
-        try {
 
-            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.TRIBUTE, null, mVolleyCallbacks);
-            request.setRequestId(RequestId.TRIBUTE);
-            addRequestToQueue(request, true, 0);
-        } catch (final Exception e) {
-            // Should never happen
-            Logger.e(TAG, e, "Error building report bug json");
-        }
+        //        try {
+        //
+        //            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+        //                            + ApiEndpoints.TRIBUTE, null, mVolleyCallbacks);
+        //            request.setRequestId(RequestId.TRIBUTE);
+        //            addRequestToQueue(request, true, 0);
+        //        } catch (final Exception e) {
+        //            // Should never happen
+        //            Logger.e(TAG, e, "Error building report bug json");
+        //        }
 
         return view;
     }

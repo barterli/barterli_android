@@ -62,13 +62,18 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.TITLE)));
         ((TextView) view.getTag(R.id.text_book_author))
-                        .setText(Html.fromHtml(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.AUTHOR))));
+                        .setText("- "
+                                        + Html.fromHtml(cursor.getString(cursor
+                                                        .getColumnIndex(DatabaseColumns.AUTHOR))));
 
         ((TextView) view.getTag(R.id.text_book_owner))
                         .setText("@"
                                         + Html.fromHtml(cursor.getString(cursor
                                                         .getColumnIndex(DatabaseColumns.OWNER))));
+
+        ((TextView) view.getTag(R.id.text_book_description))
+                        .setText(Html.fromHtml(cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.DESCRIPTION))));
 
         //it is to replace first char of location i.e '@' by '#'
         String location = String
@@ -108,6 +113,8 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                         .findViewById(R.id.text_book_owner));
         view.setTag(R.id.text_book_location, view
                         .findViewById(R.id.text_book_location));
+        view.setTag(R.id.text_book_description, view
+                        .findViewById(R.id.text_book_description));
 
         return view;
     }

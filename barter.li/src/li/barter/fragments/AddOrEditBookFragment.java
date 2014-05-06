@@ -502,7 +502,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             }
         }
 
-
         if ((v.getId() == R.id.button_delete) && isInputValid()) {
             final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
@@ -904,7 +903,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleReadsUrl()
                             + ApiEndpoints.GOODREADS_SUGGESSTIONS, null, mVolleyCallbacks);
             request.setRequestId(RequestId.BOOK_SUGGESTIONS);
-
 
             final Map<String, String> params = new HashMap<String, String>(1);
             params.put(HttpConstants.Q, query);

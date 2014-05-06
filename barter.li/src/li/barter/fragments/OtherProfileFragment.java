@@ -225,7 +225,7 @@ public class OtherProfileFragment extends AbstractBarterLiFragment implements
             mImageUrl = userInfo.getString(HttpConstants.IMAGE_URL);
             mProfileImageView.setTag(mImageUrl);
             Picasso.with(getActivity()).load(mImageUrl + "?type=large").fit()
-                            .error(R.drawable.pic_avatar)
+                            .centerCrop().error(R.drawable.pic_avatar)
                             .into(mProfileImageView);
 
             mAboutMeTextView.setText(userInfo

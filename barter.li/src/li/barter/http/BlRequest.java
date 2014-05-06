@@ -83,9 +83,9 @@ public class BlRequest extends JsonRequest<ResponseInfo> implements
             return Response.error(new ParseError(e));
         } catch (final UnsupportedEncodingException e) {
             return Response.error(new ParseError(e));
-        } catch (XmlPullParserException e) {
+        } catch (final XmlPullParserException e) {
             return Response.error(new ParseError(e));
-        } catch(IOException e) {
+        } catch (final IOException e) {
             return Response.error(new ParseError(e));
         }
     }

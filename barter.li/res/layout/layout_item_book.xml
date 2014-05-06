@@ -39,25 +39,10 @@
         android:ellipsize="end"
         android:gravity="left"
         android:maxLines="1"
+        android:text="test book name"
         android:textColor="@color/black"
         android:textSize="@dimen/text_large"
         app:fontStyle="alegreya_regular" />
-
-    <li.barter.widgets.TypefacedTextView
-        android:id="@+id/text_book_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/text_book_name"
-        android:layout_below="@+id/text_book_author"
-        android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginTop="@dimen/margin_xxx_small"
-        android:ellipsize="end"
-        android:gravity="left"
-        android:singleLine="true"
-        android:textColor="@color/dark_gray"
-        android:textSize="@dimen/text_micro"
-        app:fontStyle="alegreya_italic"
-        android:text="location" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_author"
@@ -66,7 +51,6 @@
         android:layout_alignLeft="@id/text_book_name"
         android:layout_below="@id/text_book_name"
         android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginTop="@dimen/margin_xx_small"
         android:ellipsize="end"
         android:gravity="left"
         android:maxLines="1"
@@ -74,6 +58,24 @@
         android:textSize="@dimen/text_small"
         app:fontStyle="alegreya_regular"
         android:text="author" />
+    
+      <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_book_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/text_book_name"
+        android:layout_above="@+id/text_book_location"
+        android:layout_marginRight="@dimen/margin_x_small"
+        android:layout_marginBottom="@dimen/margin_xx_small"
+        android:ellipsize="end"
+        android:gravity="left|center_vertical"
+        android:layout_centerVertical="true"
+        android:maxLines="1"
+        android:visibility="invisible"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_micro"
+        app:fontStyle="alegreya_italic"
+        android:text="Description" />
 
     <View
         android:id="@+id/view_overlay"
@@ -86,16 +88,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
          android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginTop="@dimen/margin_xx_small"
-        android:layout_marginBottom="@dimen/margin_x_small"
+        android:layout_marginTop="@dimen/margin_xxx_small"
+        android:layout_marginBottom="@dimen/margin_xx_small"
         android:layout_alignBottom="@+id/view_overlay"
         android:layout_alignRight="@+id/view_overlay"
         android:ellipsize="end"
-        android:gravity="right"
+        android:layout_alignLeft="@id/text_book_name"
         android:maxLines="1"
         android:text="test"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="alegreya_italic" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_book_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/text_book_owner"
+        android:layout_toRightOf="@+id/image_book"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:singleLine="true"
+        android:text="location"
+        android:textColor="@color/apptheme_color"
+        android:textSize="@dimen/text_small"
+        app:fontStyle="alegreya_italic" />
 
 </RelativeLayout>

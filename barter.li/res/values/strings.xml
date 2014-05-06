@@ -129,7 +129,7 @@
     <string-array name="nav_drawer_titles">
         <item>My Profile</item>
         <item>Chats</item>
-        <item>Report</item>
+        <item>Report a Crash</item>
         <item>Collaborate</item>
         <item>Open Source</item>
         <item>About us</item>
@@ -146,15 +146,17 @@
         <item>Add Manually</item>
     </string-array>
     
+    <string name="tribute_message">A tribute to Aaron Swartz for inspiring us with his passion</string>
+    
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile</item>
         <item>Your ongoing chats</item>
-        <item>Report a bug/suggestion</item>
+        <item>or a suggestion</item>
         <item>Let us work together</item>
-        <item>No open source licences were violated in the making of this app</item>
-        <item>What is barter.li? Who\'s behind it?</item>
+        <item>Our aim is 100% attribution</item>
+        <item>What and Who is barter.li?</item>
         <item>The inspiration for barter.li</item>
-        <item>Clear any user info from this device</item>
+        <item></item>
     </string-array>
     <string-array name="months">
         <item>January</item>
@@ -178,7 +180,7 @@
     <string name="text_profile_description">Short information about you.</string>
     <string name="button_edit_preferred_location">Edit Preferred Location</string>
     <string name="text_default_current_location">Set your preferred Location</string>
-    <string name="label_about_me">About Me</string>
+    <string name="label_about_me">Something About Me</string>
     <string name="label_current_location">Preferred Cafe For Book Exchange</string>
     <string name="text_edit_profile">Edit</string>
     <string name="text_save_profile">Save</string>

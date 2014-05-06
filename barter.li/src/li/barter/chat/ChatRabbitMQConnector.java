@@ -80,9 +80,9 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                 Logger.d(TAG, "Connected");
                 mQueue = declareQueue(queueName, durable, exclusive, autoDelete, args);
                 mSubscription = new QueueingConsumer(mChannel);
-                mChannel.basicConsume(mQueue, false, mSubscription);
-                mChannel.basicQos(1);
-                if (mExchangeType == ExchangeType.FANOUT) { 
+                mChannel.basicConsume(mQueue, true, mSubscription);
+                //mChannel.basicQos(1);
+                if (mExchangeType == ExchangeType.FANOUT) {
                     addBinding("");// fanout has default binding
                 }
             } catch (final IOException e) {
@@ -171,12 +171,15 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                         delivery = mSubscription.nextDelivery();
                         mLastMessage = delivery.getBody();
                         mHandler.post(mReturnMessage);
-                        try {
-                            mChannel.basicAck(delivery.getEnvelope()
-                                            .getDeliveryTag(), false);
-                        } catch (final IOException e) {
-                            Logger.e(TAG, e, "Unable to ack message");
-                        }
+                        
+                        
+                        
+                        //                        try {
+                        //                            mChannel.basicAck(delivery.getEnvelope()
+                        //                                            .getDeliveryTag(), false);
+                        //                        } catch (final IOException e) {
+                        //                            Logger.e(TAG, e, "Unable to ack message");
+                        //                        }
                     } catch (final InterruptedException ie) {
                         ie.printStackTrace();
                     } catch (final ShutdownSignalException e) {
