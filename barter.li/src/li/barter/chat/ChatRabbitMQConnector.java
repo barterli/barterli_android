@@ -20,9 +20,11 @@ import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 
+import android.os.CountDownTimer;
 import android.os.Handler;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import li.barter.utils.Logger;
@@ -30,7 +32,7 @@ import li.barter.utils.Logger;
 /**
  * Consumes messages from a RabbitMQ broker
  */
-public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
+public class ChatRabbitMQConnector extends AbstractRabbitMQConnector{
 
     private static final String TAG = "ChatRabbitMQConnector";
 
@@ -49,15 +51,17 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
     private OnReceiveMessageHandler mOnReceiveMessageHandler;
 
     private final Handler           mHandler       = new Handler();
+    
 
     // Create runnable for posting back to main thread
-    private final Runnable          mReturnMessage = new Runnable() {
-                                                       @Override
-                                                       public void run() {
-                                                           mOnReceiveMessageHandler
-                                                                           .onReceiveMessage(mLastMessage);
-                                                       }
-                                                   };
+//    private final Runnable          mReturnMessage = new Runnable() {
+//                                                       @Override
+//                                                       public void run() {
+//                                                           
+//                                                           mOnReceiveMessageHandler
+//                                                                           .onReceiveMessage(mLastMessage);
+//                                                       }
+//                                                   };
 
     private final Runnable          mConsumeRunner = new Runnable() {
                                                        @Override
@@ -81,6 +85,7 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                 mQueue = declareQueue(queueName, durable, exclusive, autoDelete, args);
                 mSubscription = new QueueingConsumer(mChannel);
                 mChannel.basicConsume(mQueue, true, mSubscription);
+                
                 //mChannel.basicQos(1);
                 if (mExchangeType == ExchangeType.FANOUT) {
                     addBinding("");// fanout has default binding
@@ -166,20 +171,43 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
             @Override
             public void run() {
                 while (isRunning()) {
+                    
+                    
                     QueueingConsumer.Delivery delivery;
                     try {
+                        
+                        
+                       
                         delivery = mSubscription.nextDelivery();
-                        mLastMessage = delivery.getBody();
-                        mHandler.post(mReturnMessage);
+                        
+                        final byte[] lastMessage;
+                       // mLastMessage = delivery.getBody();
+                        lastMessage= delivery.getBody();
+                        String message=new String(lastMessage, "UTF-8");
                         
                         
+                       
                         
-                        //                        try {
-                        //                            mChannel.basicAck(delivery.getEnvelope()
-                        //                                            .getDeliveryTag(), false);
-                        //                        } catch (final IOException e) {
-                        //                            Logger.e(TAG, e, "Unable to ack message");
-                        //                        }
+                        Logger.d(TAG, "message"+message);
+                        
+                        
+                        mHandler.post( new Runnable() {
+                            @Override
+                            public void run() {
+                                
+                                mOnReceiveMessageHandler
+                                                .onReceiveMessage(lastMessage);
+                            }
+                        });
+                     
+                        
+                        
+//                                                try {
+//                                                    mChannel.basicAck(delivery.getEnvelope()
+//                                                                    .getDeliveryTag(), false);
+//                                                } catch (final IOException e) {
+//                                                    Logger.e(TAG, e, "Unable to ack message");
+//                                                }
                     } catch (final InterruptedException ie) {
                         ie.printStackTrace();
                     } catch (final ShutdownSignalException e) {
@@ -187,6 +215,9 @@ public class ChatRabbitMQConnector extends AbstractRabbitMQConnector {
                         shutdownHappened();
 
                     } catch (final ConsumerCancelledException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }

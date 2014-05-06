@@ -27,6 +27,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
 
 /**
@@ -135,6 +136,7 @@ public abstract class AbstractRabbitMQConnector {
             connectionFactory.setPassword(password);
             connectionFactory.setVirtualHost(mVirtualHost);
             connectionFactory.setPort(mPort);
+            connectionFactory.setRequestedHeartbeat(AppConstants.HEART_BEAT_INTERVAL);
             mConnection = connectionFactory.newConnection();
             mChannel = mConnection.createChannel();
             mChannel.exchangeDeclare(mExchange, mExchangeType.key);

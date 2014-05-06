@@ -50,6 +50,13 @@ public class AppConstants {
     public static final String  ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
 
     public static final String  JSON                             = "json";
+    
+    
+    /*
+     * heartbeat interval for rabbitmq chat
+     */
+    public static final int  HEART_BEAT_INTERVAL                 = 20;
+    
     /*
      * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :
      * Default Book count value loaded when app starts
