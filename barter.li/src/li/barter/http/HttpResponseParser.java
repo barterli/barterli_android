@@ -188,6 +188,7 @@ public class HttpResponseParser {
                 if ((name != null) && name.equals(HttpConstants.BOOK)) {
 
                     responseInfo.responseBundle = parseGoodreadsBookInfo(xmlParser);
+                    break;
 
                 }
             }
@@ -267,6 +268,8 @@ public class HttpResponseParser {
                         }
 
                     }
+                    
+                    break;
                 }
             }
         }
