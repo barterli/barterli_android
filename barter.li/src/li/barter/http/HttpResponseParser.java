@@ -254,10 +254,10 @@ public class HttpResponseParser {
                                     bundle.putString(HttpConstants.AUTHOR, TextUtils
                                                     .join(", ", authorsList));
                                 }
-                            }
 
-                            authorsList.clear();
-                            break;
+                                authorsList.clear();
+                                break;
+                            }
 
                         } else if (authorEventType == XmlPullParser.START_TAG) {
                             name = xmlParser.getName();
@@ -268,7 +268,7 @@ public class HttpResponseParser {
                         }
 
                     }
-                    
+
                     break;
                 }
             }
