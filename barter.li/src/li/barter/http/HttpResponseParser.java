@@ -254,7 +254,7 @@ public class HttpResponseParser {
                                                     .join(", ", authorsList));
                                 }
                             }
-                            
+
                             authorsList.clear();
                             break;
 
@@ -368,7 +368,19 @@ public class HttpResponseParser {
                         } else if (bookEventType == XmlPullParser.START_TAG) {
                             bookEventName = xmlParser.getName();
 
-                            if (bookEventName.equals(HttpConstants.ID)) {
+                            if (bookEventName.equals(HttpConstants.AUTHOR)) {
+
+                                while (true) {
+                                    //Skip parsing the author ID since it has the same key as the book id
+                                    bookEventType = xmlParser.next();
+
+                                    if (bookEventType == XmlPullParser.END_TAG
+                                                    && xmlParser.getName()
+                                                                    .equals(HttpConstants.AUTHOR)) {
+                                        break;
+                                    }
+                                }
+                            } else if (bookEventName.equals(HttpConstants.ID)) {
                                 suggestion.id = xmlParser.nextText();
                             } else if (bookEventName
                                             .equals(HttpConstants.TITLE)) {
