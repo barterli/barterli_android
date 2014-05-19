@@ -147,5 +147,7 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
         mVisibleSuggestions = null;
         notifyDataSetChanged();
     }
+    
+    
 
 }
