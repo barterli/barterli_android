@@ -322,6 +322,7 @@ public class AppConstants {
         public static final String SUGGEST_FEATURE                                 = "suggest_feature";
         public static final String COLLABORATE                                     = "collaborate";
         public static final String MY_BOOK_FROM_PROFILE                            = "my_book_from_profile";
+        public static final String USER_BOOK_FROM_PROFILE                          = "user_book_from_profile";
         public static final String MY_BOOK_FROM_ADD_OR_EDIT                        = "my_book_from_add_or_edit";
         public static final String BOOK_FROM_BOOKS_AROUND_ME                       = "book_from_books_around_me";
         public static final String PROFILE_FROM_NAV_DRAWER                         = "profile_from_nav_drawer";

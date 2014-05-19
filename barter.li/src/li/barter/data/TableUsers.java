@@ -42,7 +42,8 @@ public class TableUsers {
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.FIRST_NAME, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LAST_NAME, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.PROFILE_PICTURE, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCATION_ID, "")
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LOCATION_ID, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.DESCRIPTION, "")
                         });
 
         Logger.d(TAG, "Column Def: %s", columnDef);

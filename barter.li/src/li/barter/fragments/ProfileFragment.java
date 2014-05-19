@@ -376,7 +376,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                             .instantiate(getActivity(), BookDetailFragment.class
-                                            .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
+                                            .getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
         }
     }
 

@@ -39,6 +39,7 @@ import li.barter.data.TableLocations;
 import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.data.TableUserBooks;
+import li.barter.data.TableUsers;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.JsonUtils.FieldType;
 import li.barter.models.Hangout;
@@ -329,18 +330,40 @@ public class HttpResponseParser {
 
         JSONObject bookObject = null;
         final ContentValues values = new ContentValues();
-
+        final String selection = DatabaseColumns.BOOK_ID
+                + SQLConstants.EQUALS_ARG;
         final String[] args = new String[1];
-        DBInterface.delete(TableUserBooks.NAME, null, null, true);
+       // DBInterface.delete(TableUserBooks.NAME, null, null, true);
         for (int i = 0; i < booksArray.length(); i++) {
             bookObject = JsonUtils.readJSONObject(booksArray, i, true, true);
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true, false);
 
-            DBInterface.insert(TableUserBooks.NAME, null, values, false);
+          //First try to update the table if a book already exists
+            if (DBInterface.update(TableUserBooks.NAME, values, selection, args, false) == 0) {
+
+                // Unable to update, insert the item
+                DBInterface.insert(TableUserBooks.NAME, null, values, false);
+            }
+            
+            final ContentValues userValues = new ContentValues();
+            final String selectionUser = DatabaseColumns.USER_ID
+                    + SQLConstants.EQUALS_ARG;
+            final String[] argsUser = new String[1];
+           // DBInterface.delete(TableUserBooks.NAME, null, null, true);
+            
+            argsUser[0] = readUserDetailsIntoContentValues(userObject, userValues, true, false);
+
+              //First try to update the table if a book already exists
+                if (DBInterface.update(TableUsers.NAME, userValues, selectionUser, argsUser, false) == 0) {
+
+                    // Unable to update, insert the item
+                    DBInterface.insert(TableUsers.NAME, null, userValues, false);
+                }
 
         }
 
         DBInterface.notifyChange(TableUserBooks.NAME);
+        DBInterface.notifyChange(TableUsers.NAME);
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(userObject, HttpConstants.LOCATION, false, false);
@@ -691,6 +714,55 @@ public class HttpResponseParser {
                             .join(AppConstants.BARTER_TYPE_SEPARATOR, tags));
         }
         return bookId;
+    }
+    
+
+    /**
+     * Reads the book details from the Book response json into a content values
+     * object
+     * 
+     * @param bookObject The Json representation of a book search result
+     * @param values The values instance to read into
+     * @param clearBeforeAdd Whether the values should be emptied before adding
+     * @param autoNotify <code>true</code> to automatically notify any connected
+     *            loaders
+     * @return The book Id that was parsed
+     * @throws JSONException If the Json is invalid
+     */
+    private String readUserDetailsIntoContentValues(
+                    final JSONObject bookObject, final ContentValues values,
+                    final boolean clearBeforeAdd, final boolean autoNotify)
+                    throws JSONException {
+
+        if (clearBeforeAdd) {
+            values.clear();
+        }
+
+        final String userId = JsonUtils
+                        .readString(bookObject, HttpConstants.ID_USER, true, true);
+
+       
+        values.put(DatabaseColumns.USER_ID, JsonUtils
+                        .readString(bookObject, HttpConstants.ID_USER, false, false));
+        values.put(DatabaseColumns.FIRST_NAME, JsonUtils
+                        .readString(bookObject, HttpConstants.FIRST_NAME, false, false));
+        values.put(DatabaseColumns.LAST_NAME, JsonUtils
+                        .readString(bookObject, HttpConstants.LAST_NAME, false, false));
+        values.put(DatabaseColumns.PROFILE_PICTURE, JsonUtils
+                        .readString(bookObject, HttpConstants.IMAGE_URL, false, false));
+        
+        values.put(DatabaseColumns.DESCRIPTION, JsonUtils
+                        .readString(bookObject, HttpConstants.DESCRIPTION, false, false));
+       
+        final JSONObject locationObject = JsonUtils
+                        .readJSONObject(bookObject, HttpConstants.LOCATION, false, false);
+
+        if (locationObject != null) {
+            values.put(DatabaseColumns.LOCATION_ID, parseAndStoreLocation(locationObject, autoNotify));
+        }
+
+        
+        return userId;
     }
 
     /**
