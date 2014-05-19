@@ -51,6 +51,11 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
     private final SuggestionFilter mSuggestionsFilter;
 
     /**
+     * Used to determine whether suggestions should be displayed or not
+     */
+    private boolean                mDisplaySuggestions;
+
+    /**
      * Construct a suggestions adapter with an initial data set
      * 
      * @param suggestions The initial master set of {@link Suggestion} objects
@@ -59,11 +64,24 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
 
         mSuggestionsMaster = suggestions;
         mSuggestionsFilter = new SuggestionFilter(this);
+        mDisplaySuggestions = true;
+    }
+
+    /**
+     * Enable/Disable suggestions
+     */
+    public void setDisplaySuggestionsEnabled(boolean enabled) {
+        mDisplaySuggestions = enabled;
     }
 
     @Override
     public int getCount() {
-        return mVisibleSuggestions == null ? 0 : mVisibleSuggestions.size();
+
+        if (mDisplaySuggestions) {
+            return mVisibleSuggestions == null ? 0 : mVisibleSuggestions.size();
+        } else {
+            return 0;
+        }
     }
 
     @Override
@@ -124,6 +142,7 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
      * @param suggestions The list of suggestions
      */
     public void setSuggestionsMaster(final List<Suggestion> suggestions) {
+        mDisplaySuggestions = true;
         mSuggestionsMaster = suggestions;
         mVisibleSuggestions = null;
         notifyDataSetChanged();

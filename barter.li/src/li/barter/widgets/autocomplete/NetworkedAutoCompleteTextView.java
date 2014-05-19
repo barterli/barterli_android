@@ -58,12 +58,6 @@ public class NetworkedAutoCompleteTextView extends
     private List<Suggestion>          mSuggestions;
 
     /**
-     * Holds a reference to the last search sequence. Used for optimizing
-     * network calls
-     */
-    private String                    mLastSearchSequence;
-
-    /**
      * Handler for posting callbacks for perfoming the search request
      */
     private Handler                   mHandler;
@@ -131,6 +125,42 @@ public class NetworkedAutoCompleteTextView extends
         mSuggestionsEnabled = enabled;
     }
 
+    /**
+     * Set the text, while disabling any suggestions
+     */
+    public void setTextWithFilter(CharSequence text, boolean filter) {
+
+        /*
+         * If filter is disabled, temporarily disable suggestions, set the text,
+         * and reenable suggestions. This will need to be set to true later on if the text changes.
+         */
+        if (!filter) {
+
+            mSuggestionsAdapter.setDisplaySuggestionsEnabled(false);
+            setNetworkSuggestionsEnabled(false);
+            setText(text);
+            setNetworkSuggestionsEnabled(true);
+        }
+    }
+
+    /**
+     * Set the text, while disabling any suggestions
+     */
+    public void setTextWithFilter(int resId, boolean filter) {
+
+        /*
+         * If filter is disabled, temporarily disable suggestions, set the text,
+         * and reenable suggestions. This will need to be set to true later on if the text changes.
+         */
+        if (!filter) {
+
+            mSuggestionsAdapter.setDisplaySuggestionsEnabled(false);
+            setNetworkSuggestionsEnabled(false);
+            setText(resId);
+            setNetworkSuggestionsEnabled(true);
+        }
+    }
+
     public int getSuggestCountThreshold() {
         return mSuggestCountThreshold;
     }
@@ -167,7 +197,6 @@ public class NetworkedAutoCompleteTextView extends
     public void onSuggestionsFetched(final String query,
                     final Suggestion[] suggestions, final boolean replace) {
 
-        mLastSearchSequence = query;
         if (mSuggestions == null) {
             mSuggestions = new ArrayList<Suggestion>();
         }
@@ -200,12 +229,6 @@ public class NetworkedAutoCompleteTextView extends
             if (mSuggestionsEnabled) {
 
                 final String newSearchSequence = s.toString();
-                /*
-                 * if (!TextUtils.isEmpty(mLastSearchSequence) &&
-                 * newSearchSequence .startsWith(mLastSearchSequence)) { //Don't
-                 * fetch new search results if the new search sequence starts
-                 * with the older search sequence return; }
-                 */
                 removeAnyCallbacks();
                 if (newSearchSequence.length() >= mSuggestCountThreshold) {
 

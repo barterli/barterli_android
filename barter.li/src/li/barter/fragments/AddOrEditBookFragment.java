@@ -257,7 +257,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                         .getStringArrayList(Keys.BARTER_TYPES);
 
         mIsbnEditText.setText(mIsbnNumber);
-        mTitleEditText.setText(title);
+        mTitleEditText.setTextWithFilter(title, false);
         mAuthorEditText.setText(author);
         mDescriptionEditText.setText(description);
 
@@ -597,9 +597,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         switch (requestId) {
             case RequestId.GET_BOOK_INFO: {
-                mTitleEditText.setNetworkSuggestionsEnabled(false);
-                mTitleEditText.setText(response.responseBundle
-                                .getString(HttpConstants.TITLE));
+                mTitleEditText.setTextWithFilter(response.responseBundle
+                                .getString(HttpConstants.TITLE), false);
 
                 mDescriptionEditText.setText(response.responseBundle
                                 .getString(HttpConstants.DESCRIPTION));
@@ -806,8 +805,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             if (cursor.moveToFirst()) {
                 mIsbnEditText.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.ISBN_10)));
-                mTitleEditText.setText(cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.TITLE)));
+                mTitleEditText.setTextWithFilter(cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.TITLE)), false);
                 mAuthorEditText.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.AUTHOR)));
                 mDescriptionEditText
