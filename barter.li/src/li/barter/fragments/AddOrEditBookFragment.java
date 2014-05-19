@@ -633,14 +633,13 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             case RequestId.BOOK_SUGGESTIONS: {
 
-                final String[] fetchedSuggestions = response.responseBundle
-                                .getStringArray(HttpConstants.BOOKS);
+                final Suggestion[] fetchedSuggestions = (Suggestion[]) response.responseBundle
+                                .getParcelableArray(HttpConstants.RESULTS);
 
                 if ((fetchedSuggestions != null)
                                 && (fetchedSuggestions.length > 0)) {
-                    final Suggestion[] suggestions = makeSuggestionArrayFromBookSuggestions(fetchedSuggestions);
                     mTitleEditText.onSuggestionsFetched((String) request
-                                    .getExtras().get(Keys.SEARCH), suggestions, true);
+                                    .getExtras().get(Keys.SEARCH), fetchedSuggestions, true);
                 }
                 break;
 
@@ -717,7 +716,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private Suggestion[] makeSuggestionArrayFromBookSuggestions(
                     final String[] fetchedSuggestions) {
 
-        if ((fetchedSuggestions == null) || (fetchedSuggestions.length == 0)) {
+        return null;
+        /*if ((fetchedSuggestions == null) || (fetchedSuggestions.length == 0)) {
             return null;
         }
 
@@ -727,7 +727,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             bookSuggestion = fetchedSuggestions[i];
             suggestions[i] = new Suggestion(null, bookSuggestion);
         }
-        return suggestions;
+        return suggestions;*/
     }
 
     @Override
@@ -891,13 +891,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "Perform network query %s", query);
-
-            /*
-             * final BlRequest request = new BlRequest(Method.GET,
-             * HttpConstants.getApiBaseUrl() + ApiEndpoints.BOOK_SUGGESTIONS,
-             * null, mVolleyCallbacks);
-             * request.setRequestId(RequestId.BOOK_SUGGESTIONS);
-             */
 
             final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleReadsUrl()
                             + ApiEndpoints.GOODREADS_SUGGESSTIONS, null, mVolleyCallbacks);

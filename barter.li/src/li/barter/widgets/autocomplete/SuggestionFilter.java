@@ -84,5 +84,10 @@ public class SuggestionFilter extends Filter {
             mSuggestionsAdapter.notifyDataSetInvalidated();
         }
     }
+    
+    @Override
+    public CharSequence convertResultToString(Object resultValue) {
+        return ((Suggestion) resultValue).name;
+    }
 
 }

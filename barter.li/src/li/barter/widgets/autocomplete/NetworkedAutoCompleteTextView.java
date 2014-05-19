@@ -109,7 +109,7 @@ public class NetworkedAutoCompleteTextView extends
         addTextChangedListener(mSuggestNetworkTextWatcher);
         setOnItemClickListener(this);
         mHandler = new Handler();
-        mSuggestionsAdapter = new SuggestionsAdapter(null);
+        mSuggestionsAdapter = new SuggestionsAdapter(getContext(), null);
         setAdapter(mSuggestionsAdapter);
         mSuggestionsEnabled = true;
     }

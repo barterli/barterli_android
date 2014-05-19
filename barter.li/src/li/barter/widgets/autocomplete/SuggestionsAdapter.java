@@ -16,12 +16,17 @@
 
 package li.barter.widgets.autocomplete;
 
+import com.squareup.picasso.Picasso;
+
+import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -34,6 +39,8 @@ import li.barter.R;
  * @author Vinay S Shenoy
  */
 public class SuggestionsAdapter extends BaseAdapter implements Filterable {
+
+    private Context                mContext;
 
     /**
      * The master list of suggestions from which other suggestions are fetched
@@ -58,10 +65,12 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
     /**
      * Construct a suggestions adapter with an initial data set
      * 
+     * @param context
      * @param suggestions The initial master set of {@link Suggestion} objects
      */
-    public SuggestionsAdapter(final List<Suggestion> suggestions) {
+    public SuggestionsAdapter(Context context, final List<Suggestion> suggestions) {
 
+        mContext = context;
         mSuggestionsMaster = suggestions;
         mSuggestionsFilter = new SuggestionFilter(this);
         mDisplaySuggestions = true;
@@ -107,10 +116,17 @@ public class SuggestionsAdapter extends BaseAdapter implements Filterable {
                             .inflate(R.layout.layout_book_suggestion_item, parent, false);
             view.setTag(R.id.text_book_title, view
                             .findViewById(R.id.text_book_title));
+            view.setTag(R.id.image_book, view.findViewById(R.id.image_book));
         }
 
-        ((TextView) view.getTag(R.id.text_book_title))
-                        .setText(mVisibleSuggestions.get(position).name);
+        Suggestion suggestion = mVisibleSuggestions.get(position);
+        ((TextView) view.getTag(R.id.text_book_title)).setText(suggestion.name);
+
+        if (!TextUtils.isEmpty(suggestion.imageUrl)) {
+            Picasso.with(mContext).load(suggestion.imageUrl).fit()
+                            .centerCrop()
+                            .into((ImageView) view.getTag(R.id.image_book));
+        }
         return view;
     }
 
