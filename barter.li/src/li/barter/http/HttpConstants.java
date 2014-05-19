@@ -38,10 +38,12 @@ public class HttpConstants {
                         "192.168.1.138",
                         5672),
 
-        DEV("http://162.243.198.171/api/v", 
-                        API_VERSION, "162.243.198.171",
+        DEV(
+                        "http://162.243.198.171/api/v",
+                        API_VERSION,
+                        "162.243.198.171",
                         5672),
-        
+
         PRODUCTION(
                         "http://107.170.10.25/api/v",
                         API_VERSION,
@@ -212,5 +214,7 @@ public class HttpConstants {
     public static final String PERLIMIT                    = "per";
     public static final String RESULTS                     = "results";
     public static final String WORK                        = "work";
+    public static final String BEST_BOOK                   = "best_book";
+    public static final String SMALL_IMAGE_URL             = "small_image_url";
 
 }

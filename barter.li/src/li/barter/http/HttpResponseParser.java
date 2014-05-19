@@ -46,6 +46,7 @@ import li.barter.models.Team;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.Logger;
+import li.barter.widgets.autocomplete.Suggestion;
 
 /**
  * Class that reads an API response and parses it and stores it in the database
@@ -87,7 +88,6 @@ public class HttpResponseParser {
             }
 
             case RequestId.SEARCH_BOOKS: {
-
                 return parseSearchBooksResponse(response);
             }
 
@@ -182,7 +182,10 @@ public class HttpResponseParser {
                 name = xmlParser.getName();
 
                 if ((name != null) && name.equals(HttpConstants.RESULTS)) {
-                    responseBundle.putStringArray(HttpConstants.BOOKS, parseBookSuggestionItems(xmlParser));
+
+                    final ArrayList<Suggestion> results = parseBookSuggestionItems(xmlParser);
+                    responseBundle.putParcelableArray(HttpConstants.RESULTS, results
+                                    .toArray(new Suggestion[results.size()]));
 
                 }
             }
@@ -196,19 +199,21 @@ public class HttpResponseParser {
      * 
      * @param xmlParser An {@link XmlPullParser} instance, forwarded to an event
      *            before the book items begin
-     * @return A string array, consisting of the books
+     * @return An array of {@link Suggestion} items
      * @throws IOException
      * @throws XmlPullParserException
      */
-    private String[] parseBookSuggestionItems(final XmlPullParser xmlParser)
+    private ArrayList<Suggestion> parseBookSuggestionItems(
+                    final XmlPullParser xmlParser)
                     throws XmlPullParserException, IOException {
 
-        final ArrayList<String> suggestionTitles = new ArrayList<String>();
-        int eventType;
+        final ArrayList<Suggestion> suggestions = new ArrayList<Suggestion>();
         String name;
-        boolean parsingBook;
-        for (;;) {
-            eventType = xmlParser.next();
+        int bookEventType;
+        String bookEventName;
+        Suggestion suggestion;
+        for (int eventType = xmlParser.next(); eventType != XmlPullParser.END_DOCUMENT; eventType = xmlParser
+                        .next()) {
 
             if (eventType == XmlPullParser.END_TAG) {
                 name = xmlParser.getName();
@@ -216,25 +221,59 @@ public class HttpResponseParser {
                 if (name.equals(HttpConstants.RESULTS)) {
                     //We have finished parsing sugesstions
                     break;
-                } else if (name.equals(HttpConstants.TITLE)) {
-                    parsingBook = false;
                 }
             }
 
             else if (eventType == XmlPullParser.START_TAG) {
+
                 name = xmlParser.getName();
 
-                if ((name != null) && name.equals(HttpConstants.TITLE)) {
-                    parsingBook = true;
-                }
-            } else if (eventType == XmlPullParser.TEXT) {
+                if (name.equals(HttpConstants.BEST_BOOK)) {
 
-                name = xmlParser.getText();
-                suggestionTitles.add(name);
+                    suggestion = new Suggestion();
+                    while (true) {
+                        bookEventType = xmlParser.next();
+
+                        if (bookEventType == XmlPullParser.END_TAG) {
+                            bookEventName = xmlParser.getName();
+
+                            if (bookEventName.equals(HttpConstants.BEST_BOOK)) {
+
+                                if (!TextUtils.isEmpty(suggestion.id)
+                                                && !TextUtils.isEmpty(suggestion.name)) {
+                                    suggestions.add(suggestion);
+                                }
+                                //We have parsed out one book suggestion
+                                break;
+                            }
+                        } else if (bookEventType == XmlPullParser.START_TAG) {
+                            bookEventName = xmlParser.getName();
+
+                            if (bookEventName.equals(HttpConstants.ID)) {
+                                suggestion.id = xmlParser.nextText();
+                            } else if (bookEventName
+                                            .equals(HttpConstants.TITLE)) {
+                                suggestion.name = xmlParser.nextText();
+                            } else if (bookEventName
+                                            .equals(HttpConstants.SMALL_IMAGE_URL)) {
+                                suggestion.imageUrl = xmlParser.nextText();
+                            }
+
+                        }
+                    }
+                    bookEventType = xmlParser.next();
+
+                    if (bookEventType == XmlPullParser.START_TAG) {
+                        bookEventName = xmlParser.getName();
+                        if (name.equals(HttpConstants.ID)) {
+
+                        }
+                    }
+                }
             }
 
         }
-        return suggestionTitles.toArray(new String[suggestionTitles.size()]);
+        return suggestions;
     }
 
     /**
