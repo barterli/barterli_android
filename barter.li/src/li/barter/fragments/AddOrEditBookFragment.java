@@ -615,7 +615,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     final ResponseInfo response) {
 
         switch (requestId) {
-            case RequestId.GET_BOOK_INFO: 
+            case RequestId.GET_BOOK_INFO:
             case RequestId.GOODREADS_SHOW_BOOK: {
                 mTitleEditText.setTextWithFilter(response.responseBundle
                                 .getString(HttpConstants.TITLE), false);
@@ -626,8 +626,15 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                                 .getString(HttpConstants.AUTHOR));
                 mPublicationYear = response.responseBundle
                                 .getString(HttpConstants.PUBLICATION_YEAR);
-                
-                //TODO Set ISBN text with preference for ISBN 13
+
+                if (response.responseBundle.containsKey(HttpConstants.ISBN_13)) {
+                    mIsbnEditText.setText(response.responseBundle
+                                    .getString(HttpConstants.ISBN_13));
+                } else if (response.responseBundle
+                                .containsKey(HttpConstants.ISBN_10)) {
+                    mIsbnEditText.setText(response.responseBundle
+                                    .getString(HttpConstants.ISBN_10));
+                }
 
                 mImage_Url = response.responseBundle
                                 .getString(HttpConstants.IMAGE_URL);

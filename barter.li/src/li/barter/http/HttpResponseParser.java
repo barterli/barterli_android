@@ -16,8 +16,6 @@
 
 package li.barter.http;
 
-import com.google.android.gms.drive.internal.n;
-
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,7 +31,6 @@ import android.text.TextUtils;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
