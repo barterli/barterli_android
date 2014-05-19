@@ -892,13 +892,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "Perform network query %s", query);
 
-            /*
-             * final BlRequest request = new BlRequest(Method.GET,
-             * HttpConstants.getApiBaseUrl() + ApiEndpoints.BOOK_SUGGESTIONS,
-             * null, mVolleyCallbacks);
-             * request.setRequestId(RequestId.BOOK_SUGGESTIONS);
-             */
-
             final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleReadsUrl()
                             + ApiEndpoints.GOODREADS_SUGGESSTIONS, null, mVolleyCallbacks);
             request.setRequestId(RequestId.BOOK_SUGGESTIONS);

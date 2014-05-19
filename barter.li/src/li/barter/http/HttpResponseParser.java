@@ -261,14 +261,6 @@ public class HttpResponseParser {
 
                         }
                     }
-                    bookEventType = xmlParser.next();
-
-                    if (bookEventType == XmlPullParser.START_TAG) {
-                        bookEventName = xmlParser.getName();
-                        if (name.equals(HttpConstants.ID)) {
-
-                        }
-                    }
                 }
             }
 

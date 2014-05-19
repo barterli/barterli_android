@@ -107,6 +107,7 @@ public class HttpConstants {
         public static final String TRIBUTE                 = "/tribute.json";
         public static final String TEAM                    = "/team.json";
         public static final String GOODREADS_SUGGESSTIONS  = "/search.xml";
+        public static final String GOODREADS_SHOW_BOOK     = "/book/show";
 
     }
 
@@ -216,5 +217,6 @@ public class HttpConstants {
     public static final String WORK                        = "work";
     public static final String BEST_BOOK                   = "best_book";
     public static final String SMALL_IMAGE_URL             = "small_image_url";
+    public static final String XML                         = "xml";
 
 }
