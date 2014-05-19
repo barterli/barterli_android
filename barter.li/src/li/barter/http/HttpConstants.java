@@ -134,6 +134,7 @@ public class HttpConstants {
         public static final int BOOK_SUGGESTIONS            = 119;
         public static final int UPDATE_BOOK                 = 120;
         public static final int DELETE_BOOK                 = 121;
+        public static final int GOODREADS_SHOW_BOOK         = 122;
 
     }
 
@@ -142,6 +143,8 @@ public class HttpConstants {
     public static final String KEY                         = "key";
     public static final String ISBN_10                     = "isbn_10";
     public static final String ISBN_13                     = "isbn_13";
+    public static final String ISBN                        = "isbn";
+    public static final String ISBN13                      = "isbn13";
     public static final String Q                           = "q";
     public static final String T                           = "t";
     public static final String TITLE                       = "title";

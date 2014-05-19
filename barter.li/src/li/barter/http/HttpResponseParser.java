@@ -16,6 +16,8 @@
 
 package li.barter.http;
 
+import com.google.android.gms.drive.internal.n;
+
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +33,7 @@ import android.text.TextUtils;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
@@ -148,11 +151,126 @@ public class HttpResponseParser {
                 return parseUpdateBookResponse(response);
             }
 
+            case RequestId.GOODREADS_SHOW_BOOK: {
+                return parseGoodreadsBookResponse(response);
+            }
+
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
                                 + requestId);
             }
         }
+    }
+
+    /**
+     * Parses the good reads API response for fetching a book
+     * 
+     * @param response
+     * @return
+     * @throws XmlPullParserException
+     * @throws IOException
+     */
+    private ResponseInfo parseGoodreadsBookResponse(String response)
+                    throws XmlPullParserException, IOException {
+
+        final ResponseInfo responseInfo = new ResponseInfo();
+        final XmlPullParser xmlParser = getPullParserInstance(false, false);
+        xmlParser.setInput(new StringReader(response));
+
+        for (int eventType = xmlParser.getEventType(); eventType != XmlPullParser.END_DOCUMENT; eventType = xmlParser
+                        .next()) {
+
+            String name = null;
+
+            if (eventType == XmlPullParser.START_TAG) {
+                name = xmlParser.getName();
+
+                if ((name != null) && name.equals(HttpConstants.BOOK)) {
+
+                    responseInfo.responseBundle = parseGoodreadsBookInfo(xmlParser);
+
+                }
+            }
+        }
+        return responseInfo;
+    }
+
+    /**
+     * Parse the response for goodreads book info
+     * 
+     * @param xmlParser An {@link XmlPullParser} instance, forwarded to an event
+     *            before the book item begins
+     * @return A {@link Bundle} containing the parsed info
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
+    private Bundle parseGoodreadsBookInfo(XmlPullParser xmlParser)
+                    throws XmlPullParserException, IOException {
+
+        final Bundle bundle = new Bundle(7);
+        String name;
+        int authorEventType;
+        final ArrayList<String> authorsList = new ArrayList<String>();
+        for (int eventType = xmlParser.next(); eventType != XmlPullParser.END_DOCUMENT; eventType = xmlParser
+                        .next()) {
+
+            if (eventType == XmlPullParser.START_TAG) {
+                name = xmlParser.getName();
+
+                if (name.equals(HttpConstants.TITLE)) {
+                    bundle.putString(HttpConstants.TITLE, xmlParser.nextText());
+                } else if (name.equals(HttpConstants.ISBN)) {
+                    bundle.putString(HttpConstants.ISBN_10, xmlParser
+                                    .nextText());
+                } else if (name.equals(HttpConstants.ISBN13)) {
+                    bundle.putString(HttpConstants.ISBN_13, xmlParser
+                                    .nextText());
+                } else if (name.equals(HttpConstants.DESCRIPTION)) {
+                    bundle.putString(HttpConstants.DESCRIPTION, xmlParser
+                                    .nextText());
+                } else if (name.equals(HttpConstants.PUBLICATION_YEAR)) {
+                    bundle.putString(HttpConstants.PUBLICATION_YEAR, xmlParser
+                                    .nextText());
+                } else if (name.equals(HttpConstants.AUTHORS)) {
+                    //We need to handle multiple authors here
+                    while (true) {
+                        authorEventType = xmlParser.next();
+
+                        if (authorEventType == XmlPullParser.END_DOCUMENT) {
+                            break;
+                        } else if (authorEventType == XmlPullParser.END_TAG) {
+                            name = xmlParser.getName();
+
+                            if (name.equals(HttpConstants.AUTHORS)) {
+                                //We have parsed out all authors
+
+                                if (authorsList.size() == 1) {
+                                    //There is only 1 author
+                                    bundle.putString(HttpConstants.AUTHOR, authorsList
+                                                    .get(0));
+                                } else if (authorsList.size() > 1) {
+                                    //Multiple authors
+                                    bundle.putString(HttpConstants.AUTHOR, TextUtils
+                                                    .join(", ", authorsList));
+                                }
+                            }
+                            
+                            authorsList.clear();
+                            break;
+
+                        } else if (authorEventType == XmlPullParser.START_TAG) {
+                            name = xmlParser.getName();
+
+                            if (name.equals(HttpConstants.NAME)) {
+                                authorsList.add(xmlParser.nextText());
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+        return bundle;
     }
 
     /**
@@ -165,7 +283,7 @@ public class HttpResponseParser {
      */
 
     private ResponseInfo parseBookSuggestionsResponse(final String response)
-                    throws JSONException, XmlPullParserException, IOException {
+                    throws XmlPullParserException, IOException {
 
         Logger.d(TAG, response);
 
@@ -362,34 +480,34 @@ public class HttpResponseParser {
         JSONObject bookObject = null;
         final ContentValues values = new ContentValues();
         final String selection = DatabaseColumns.BOOK_ID
-                + SQLConstants.EQUALS_ARG;
+                        + SQLConstants.EQUALS_ARG;
         final String[] args = new String[1];
-       // DBInterface.delete(TableUserBooks.NAME, null, null, true);
+        // DBInterface.delete(TableUserBooks.NAME, null, null, true);
         for (int i = 0; i < booksArray.length(); i++) {
             bookObject = JsonUtils.readJSONObject(booksArray, i, true, true);
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true, false);
 
-          //First try to update the table if a book already exists
+            //First try to update the table if a book already exists
             if (DBInterface.update(TableUserBooks.NAME, values, selection, args, false) == 0) {
 
                 // Unable to update, insert the item
                 DBInterface.insert(TableUserBooks.NAME, null, values, false);
             }
-            
+
             final ContentValues userValues = new ContentValues();
             final String selectionUser = DatabaseColumns.USER_ID
-                    + SQLConstants.EQUALS_ARG;
+                            + SQLConstants.EQUALS_ARG;
             final String[] argsUser = new String[1];
-           // DBInterface.delete(TableUserBooks.NAME, null, null, true);
-            
+            // DBInterface.delete(TableUserBooks.NAME, null, null, true);
+
             argsUser[0] = readUserDetailsIntoContentValues(userObject, userValues, true, false);
 
-              //First try to update the table if a book already exists
-                if (DBInterface.update(TableUsers.NAME, userValues, selectionUser, argsUser, false) == 0) {
+            //First try to update the table if a book already exists
+            if (DBInterface.update(TableUsers.NAME, userValues, selectionUser, argsUser, false) == 0) {
 
-                    // Unable to update, insert the item
-                    DBInterface.insert(TableUsers.NAME, null, userValues, false);
-                }
+                // Unable to update, insert the item
+                DBInterface.insert(TableUsers.NAME, null, userValues, false);
+            }
 
         }
 
@@ -746,7 +864,6 @@ public class HttpResponseParser {
         }
         return bookId;
     }
-    
 
     /**
      * Reads the book details from the Book response json into a content values
@@ -772,7 +889,6 @@ public class HttpResponseParser {
         final String userId = JsonUtils
                         .readString(bookObject, HttpConstants.ID_USER, true, true);
 
-       
         values.put(DatabaseColumns.USER_ID, JsonUtils
                         .readString(bookObject, HttpConstants.ID_USER, false, false));
         values.put(DatabaseColumns.FIRST_NAME, JsonUtils
@@ -781,10 +897,10 @@ public class HttpResponseParser {
                         .readString(bookObject, HttpConstants.LAST_NAME, false, false));
         values.put(DatabaseColumns.PROFILE_PICTURE, JsonUtils
                         .readString(bookObject, HttpConstants.IMAGE_URL, false, false));
-        
+
         values.put(DatabaseColumns.DESCRIPTION, JsonUtils
                         .readString(bookObject, HttpConstants.DESCRIPTION, false, false));
-       
+
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(bookObject, HttpConstants.LOCATION, false, false);
 
@@ -792,7 +908,6 @@ public class HttpResponseParser {
             values.put(DatabaseColumns.LOCATION_ID, parseAndStoreLocation(locationObject, autoNotify));
         }
 
-        
         return userId;
     }
 

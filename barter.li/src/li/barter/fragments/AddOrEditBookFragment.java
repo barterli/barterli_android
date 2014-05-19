@@ -273,15 +273,34 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     /**
      * Fetches the book info from server based on the ISBN number or book title
      * 
-     * @param bookInfo The ISBN/Book title of the book to get info for
+     * @param isbnNumber The ISBN Number of the book to get info for
      */
-    private void getBookInfoFromServer(final String bookInfo) {
+    private void getBookInfoFromServer(final String isbnNumber) {
 
         final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.BOOK_INFO, null, mVolleyCallbacks);
         final Map<String, String> params = new HashMap<String, String>();
         request.setRequestId(RequestId.GET_BOOK_INFO);
-        params.put(HttpConstants.Q, bookInfo);
+        params.put(HttpConstants.Q, isbnNumber);
+        request.setParams(params);
+        addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
+    }
+
+    /**
+     * Fetches the book info from server based on the Book ID. This is dependent
+     * on the service used to fetch the book info
+     * 
+     * @param bookId The unique ID of the book to get info for
+     */
+    private void getBookInfoById(final String bookId) {
+
+        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleReadsUrl()
+                        + ApiEndpoints.GOODREADS_SHOW_BOOK, null, mVolleyCallbacks);
+        final Map<String, String> params = new HashMap<String, String>();
+        request.setRequestId(RequestId.GOODREADS_SHOW_BOOK);
+        params.put(HttpConstants.FORMAT, HttpConstants.XML);
+        params.put(HttpConstants.KEY, mGoodReadsApiKey);
+        params.put(HttpConstants.ID, bookId);
         request.setParams(params);
         addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
     }
@@ -596,7 +615,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     final ResponseInfo response) {
 
         switch (requestId) {
-            case RequestId.GET_BOOK_INFO: {
+            case RequestId.GET_BOOK_INFO: 
+            case RequestId.GOODREADS_SHOW_BOOK: {
                 mTitleEditText.setTextWithFilter(response.responseBundle
                                 .getString(HttpConstants.TITLE), false);
 
@@ -606,6 +626,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                                 .getString(HttpConstants.AUTHOR));
                 mPublicationYear = response.responseBundle
                                 .getString(HttpConstants.PUBLICATION_YEAR);
+                
+                //TODO Set ISBN text with preference for ISBN 13
 
                 mImage_Url = response.responseBundle
                                 .getString(HttpConstants.IMAGE_URL);
@@ -705,29 +727,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             }
         }
 
-    }
-
-    /**
-     * Converts the fetched objects to an array of {@link Suggestion} objects
-     * 
-     * @param fetchedSuggestions The array of book suggestions fetched
-     * @return An array of {@link Suggestion} objects
-     */
-    private Suggestion[] makeSuggestionArrayFromBookSuggestions(
-                    final String[] fetchedSuggestions) {
-
-        return null;
-        /*if ((fetchedSuggestions == null) || (fetchedSuggestions.length == 0)) {
-            return null;
-        }
-
-        final Suggestion[] suggestions = new Suggestion[fetchedSuggestions.length];
-        String bookSuggestion = null;
-        for (int i = 0; i < fetchedSuggestions.length; i++) {
-            bookSuggestion = fetchedSuggestions[i];
-            suggestions[i] = new Suggestion(null, bookSuggestion);
-        }
-        return suggestions;*/
     }
 
     @Override
@@ -899,7 +898,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             final Map<String, String> params = new HashMap<String, String>(1);
             params.put(HttpConstants.Q, query);
 
-            //            params.put(HttpConstants.FORMAT, AppConstants.JSON);
             params.put(HttpConstants.KEY, mGoodReadsApiKey);
             request.setParams(params);
             request.setTag(getVolleyTag());
@@ -915,7 +913,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         if (textView.getId() == R.id.edit_text_title) {
             Logger.v(TAG, "On Suggestion Clicked %s", suggestion);
-            getBookInfoFromServer(suggestion.name);
+            getBookInfoById(suggestion.id);
         }
     }
 
