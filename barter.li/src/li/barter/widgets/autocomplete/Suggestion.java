@@ -16,36 +16,72 @@
 
 package li.barter.widgets.autocomplete;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Class representing a suggestion
  * 
  * @author Vinay S Shenoy
  */
-public class Suggestion {
+public class Suggestion implements Parcelable {
 
     /**
      * The suggestion id. Used for selecting the suggestion when an item from
      * the drop down is tapped
      */
-    public final String id;
+    public String id;
 
     /**
      * The name of the suggestion. Used for displaying the title label
      */
-    public final String name;
+    public String name;
 
     /**
-     * @param id The suggestion id
-     * @param name The suggestion name
+     * Any image URLs, if present, to display as a suggestion image
      */
-    public Suggestion(final String id, final String name) {
-        this.id = id;
-        this.name = name;
+    public String imageUrl;
+
+    public Suggestion() {
+    }
+
+    public Suggestion(Parcel source) {
+        id = source.readString();
+        name = source.readString();
+        imageUrl = source.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(imageUrl);
     }
 
     @Override
     public String toString() {
-        return name;
+        return String.format("Suggestion %s, %s, %s", id, name, imageUrl);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /* REQUIRED FOR PARCELLABLE. DO NOT MODIFY IN ANY WAY */
+    public static final Creator<Suggestion> CREATOR = new Creator<Suggestion>() {
+
+                                                        @Override
+                                                        public Suggestion createFromParcel(
+                                                                        Parcel source) {
+                                                            return new Suggestion(source);
+                                                        }
+
+                                                        @Override
+                                                        public Suggestion[] newArray(
+                                                                        int size) {
+                                                            return new Suggestion[size];
+                                                        }
+                                                    };
 
 }
