@@ -63,6 +63,14 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         ((TextView) view.getTag(R.id.text_book_name))
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.TITLE)));
+
+        /*
+         * TODO Why are we using Html.fromHtml here? It could cause a
+         * performance hit since the method will create a new Html parser every
+         * time bindView() is called. Which is very, very bad.
+         * 
+         * -Vinay
+         */
         ((TextView) view.getTag(R.id.text_book_author))
                         .setText("- "
                                         + Html.fromHtml(cursor.getString(cursor
