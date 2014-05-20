@@ -138,7 +138,9 @@ public class NetworkedAutoCompleteTextView extends
 
             mSuggestionsAdapter.setDisplaySuggestionsEnabled(false);
             setNetworkSuggestionsEnabled(false);
+            setAdapter(null);
             setText(text);
+            setAdapter(mSuggestionsAdapter);
             setNetworkSuggestionsEnabled(true);
         }
     }
@@ -156,7 +158,9 @@ public class NetworkedAutoCompleteTextView extends
 
             mSuggestionsAdapter.setDisplaySuggestionsEnabled(false);
             setNetworkSuggestionsEnabled(false);
+            setAdapter(null);
             setText(resId);
+            setAdapter(mSuggestionsAdapter);
             setNetworkSuggestionsEnabled(true);
         }
     }
