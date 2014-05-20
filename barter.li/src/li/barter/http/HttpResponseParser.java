@@ -139,7 +139,8 @@ public class HttpResponseParser {
 		}
 
 		case RequestId.BOOK_SUGGESTIONS: {
-			return parseBookSuggestionsResponse(response);
+			//return parseBookSuggestionsResponse(response);
+			return parseGoogleBookSuggestionsResponse(response);
 		}
 
 		case RequestId.UPDATE_BOOK: {
@@ -160,6 +161,53 @@ public class HttpResponseParser {
 		}
 		}
 	}
+	
+	
+	/**
+	 * @param parsing google book api response
+	 * @return
+	 */
+	private ResponseInfo parseGoogleBookSuggestionsResponse(final String response)
+			throws JSONException {
+
+		Logger.d(TAG, "Request Id Test \nResponse %s", response);
+		final ResponseInfo responseInfo = new ResponseInfo();
+		final Bundle responseBundle = new Bundle(1);
+		
+		final ArrayList<Suggestion> results = new ArrayList<Suggestion>();
+		 
+		Suggestion suggestion=new Suggestion();
+		 
+		final JSONObject bookInfoObject = new JSONObject(response);
+		final JSONArray searchResults = JsonUtils
+				.readJSONArray(bookInfoObject, HttpConstants.ITEMS, true, true);
+	   
+		for(int i=0;i<searchResults.length();i++)
+	   {
+		   String id,name,imageUrl;
+		   id=JsonUtils
+					.readString(bookInfoObject, HttpConstants.ID, false, false);
+		   
+		   JSONObject volumeInfo = JsonUtils
+					.readJSONObject(searchResults, i, false, false);
+		   name=JsonUtils
+			.readString(volumeInfo, HttpConstants.TITLE, false, false);
+		   
+		   imageUrl=JsonUtils
+					.readString(volumeInfo, HttpConstants.THUMBNAIL, false, false);
+		  suggestion.id=id;
+		  suggestion.name=name;
+		  suggestion.imageUrl=imageUrl;
+		  results.add(suggestion);
+		  
+		  
+	   }
+		responseBundle.putParcelableArray(HttpConstants.RESULTS, results
+				.toArray(new Suggestion[results.size()]));
+
+		return responseInfo;
+	}
+	
 
 	/**
 	 * Parses the good reads API response for fetching a book
