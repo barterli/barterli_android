@@ -82,6 +82,11 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                                             .getColumnIndex(DatabaseColumns.IMAGE_URL)))
                             .fit()
                             .into((ImageView) view.getTag(R.id.image_book));
+            Picasso.with(context)
+            .load(cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.IMAGE_URL)))
+            .fit()
+            .into((ImageView) view.getTag(R.id.image_user));
         }
     }
 
@@ -97,6 +102,7 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                         .findViewById(R.id.text_book_author));
         view.setTag(R.id.text_book_location, view
                         .findViewById(R.id.text_book_location));
+        view.setTag(R.id.image_user, view.findViewById(R.id.image_user));
 
         return view;
     }

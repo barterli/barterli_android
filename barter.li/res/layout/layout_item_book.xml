@@ -27,6 +27,14 @@
         android:layout_alignParentLeft="true"
         android:contentDescription="@string/app_name" />
 
+    <li.barter.widgets.CircleImageView
+        android:id="@+id/image_user"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/app_name" />
+
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_name"
         android:layout_width="match_parent"
