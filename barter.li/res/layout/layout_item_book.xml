@@ -35,6 +35,8 @@
         android:layout_alignParentTop="true"
         android:layout_margin="@dimen/margin_xx_small"
         android:contentDescription="@string/app_name"
+        app:borderColor="@color/white"
+        app:borderWidth="2dp"
         app:cornerRadius="@dimen/book_user_image_size" />
 
     <li.barter.widgets.TypefacedTextView

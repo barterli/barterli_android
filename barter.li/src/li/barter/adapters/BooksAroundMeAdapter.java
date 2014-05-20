@@ -79,11 +79,12 @@ public class BooksAroundMeAdapter extends CursorAdapter {
             ((ImageView) view.getTag(R.id.image_book))
                             .setImageResource(R.drawable.default_book_icon);
         } else {
-            /*
-             * Picasso.with(context) .load(cursor.getString(cursor
-             * .getColumnIndex(DatabaseColumns.IMAGE_URL))) .fit()
-             * .into((ImageView) view.getTag(R.id.image_book));
-             */
+
+            Picasso.with(context)
+                            .load(cursor.getString(cursor
+                                            .getColumnIndex(DatabaseColumns.IMAGE_URL)))
+                            .fit()
+                            .into((ImageView) view.getTag(R.id.image_book));
 
             final CircleImageView circleImageView = (CircleImageView) view
                             .getTag(R.id.image_user);

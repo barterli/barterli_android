@@ -27,6 +27,8 @@
         <attr name="cornerRadius" format="dimension" />
         <attr name="margin" format="dimension" />
         <attr name="useVignette" format="boolean" />
+        <attr name="borderWidth" format="dimension" />
+        <attr name="borderColor" format="color" />
     </declare-styleable>
     <declare-styleable name="TypefacedTextView">
         <attr name="fontStyle" />

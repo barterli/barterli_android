@@ -25,6 +25,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.ComposeShader;
 import android.graphics.Matrix;
@@ -52,6 +53,8 @@ public class CircleImageView extends ImageView {
 
     private static final int     DEFAULT_CORNER_RADIUS = 25;               //dips
     private static final int     DEFAULT_MARGIN        = 0;                //dips
+    private static final int     DEFAULT_BORDER_WIDTH  = 0;                //dips
+    private static final int     DEFAULT_BORDER_COLOR  = Color.BLACK;
     private static final boolean DEFAULT_USE_VIGNETTE  = false;
 
     private static final String  TAG                   = "CircleImageView";
@@ -59,6 +62,8 @@ public class CircleImageView extends ImageView {
     private CircleTarget         mCircleTarget;
     private int                  mCornerRadius;
     private int                  mMargin;
+    private int                  mBorderWidth;
+    private int                  mBorderColor;
     private boolean              mUseVignette;
 
     /**
@@ -98,6 +103,8 @@ public class CircleImageView extends ImageView {
         mCornerRadius = (int) (DEFAULT_CORNER_RADIUS * density + 0.5f);
         mMargin = (int) (DEFAULT_MARGIN * density + 0.5f);
         mUseVignette = DEFAULT_USE_VIGNETTE;
+        mBorderWidth = (int) (DEFAULT_BORDER_WIDTH * density + 0.5f);
+        mBorderColor = DEFAULT_BORDER_COLOR;
 
         if (attrs != null) {
             final TypedArray styledAttrs = context
@@ -108,6 +115,10 @@ public class CircleImageView extends ImageView {
                             .getDimension(R.styleable.CircleImageView_margin, mMargin);
             mUseVignette = styledAttrs
                             .getBoolean(R.styleable.CircleImageView_useVignette, mUseVignette);
+            mBorderWidth = (int) styledAttrs
+                            .getDimension(R.styleable.CircleImageView_borderWidth, mBorderWidth);
+            mBorderColor = styledAttrs
+                            .getColor(R.styleable.CircleImageView_borderColor, mBorderColor);
             styledAttrs.recycle();
         }
     }
@@ -123,16 +134,26 @@ public class CircleImageView extends ImageView {
 
         private final float   mCornerRadius;
         private final RectF   mRect = new RectF();
+
+        /* Rect used for drawing the actual inner image if a border has been set */
+        private RectF         mInnerRect;
         private BitmapShader  mBitmapShader;
         private final Paint   mPaint;
         private final int     mMargin;
+        private final int     mBorderWidth;
+        private final int     mBorderColor;
         private final boolean mUseVignette;
 
-        //TODO Add border for cropped image
-        StreamDrawable(Bitmap bitmap, float cornerRadius, int margin, boolean useVignette) {
+        StreamDrawable(Bitmap bitmap, float cornerRadius, int margin, boolean useVignette, int borderWidth, int borderColor) {
             mCornerRadius = cornerRadius;
             mUseVignette = useVignette;
             mBitmapShader = getShaderForBitmap(bitmap);
+            mBorderWidth = borderWidth;
+            mBorderColor = borderColor;
+
+            if (borderWidth > 0) {
+                mInnerRect = new RectF();
+            }
 
             mPaint = new Paint();
             mPaint.setAntiAlias(true);
@@ -163,6 +184,12 @@ public class CircleImageView extends ImageView {
             mRect.set(mMargin, mMargin, bounds.width() - mMargin, bounds
                             .height() - mMargin);
 
+            if (mBorderWidth > 0) {
+                mInnerRect.set(mRect.left + mBorderWidth, mRect.top
+                                + mBorderWidth, mRect.right - mBorderWidth, mRect.bottom
+                                - mBorderWidth);
+            }
+
             if (mUseVignette) {
                 RadialGradient vignette = new RadialGradient(mRect.centerX(), mRect
                                 .centerY() * 1.0f / 0.7f, mRect.centerX() * 1.3f, new int[] {
@@ -181,7 +208,19 @@ public class CircleImageView extends ImageView {
 
         @Override
         public void draw(Canvas canvas) {
-            canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
+
+            if (mBorderWidth > 0) {
+
+                Shader shader = mPaint.getShader();
+                mPaint.setShader(null);
+                mPaint.setColor(mBorderColor);
+                canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
+                mPaint.setShader(shader);
+                canvas.drawRoundRect(mInnerRect, mCornerRadius, mCornerRadius, mPaint);
+
+            } else {
+                canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
+            }
         }
 
         @Override
@@ -211,7 +250,7 @@ public class CircleImageView extends ImageView {
             ((StreamDrawable) content).updateBitmap(bm);
         } else {
             setImageDrawable(null);
-            setImageDrawable(new StreamDrawable(bm, mCornerRadius, mMargin, mUseVignette));
+            setImageDrawable(new StreamDrawable(bm, mCornerRadius, mMargin, mUseVignette, mBorderWidth, mBorderColor));
         }
     }
 
