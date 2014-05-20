@@ -56,6 +56,8 @@ import li.barter.widgets.autocomplete.Suggestion;
  */
 public class HttpResponseParser {
 
+
+
 	private static final String         TAG  = "HttpResponseParser";
 	private static final Object         LOCK = new Object();
 
@@ -148,11 +150,129 @@ public class HttpResponseParser {
 			return parseDeleteBookResponse(response);
 		}
 
+		case RequestId.GOODREADS_SHOW_BOOK: {
+			return parseGoodreadsBookResponse(response);
+		}
+
 		default: {
 			throw new IllegalArgumentException("Unknown request Id:"
 					+ requestId);
 		}
 		}
+	}
+
+	/**
+	 * Parses the good reads API response for fetching a book
+	 * 
+	 * @param response
+	 * @return
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
+	private ResponseInfo parseGoodreadsBookResponse(String response)
+			throws XmlPullParserException, IOException {
+
+		final ResponseInfo responseInfo = new ResponseInfo();
+		final XmlPullParser xmlParser = getPullParserInstance(false, false);
+		xmlParser.setInput(new StringReader(response));
+
+		for (int eventType = xmlParser.getEventType(); eventType != XmlPullParser.END_DOCUMENT; eventType = xmlParser
+				.next()) {
+
+			String name = null;
+
+			if (eventType == XmlPullParser.START_TAG) {
+				name = xmlParser.getName();
+
+				if ((name != null) && name.equals(HttpConstants.BOOK)) {
+
+					responseInfo.responseBundle = parseGoodreadsBookInfo(xmlParser);
+					break;
+
+				}
+			}
+		}
+		return responseInfo;
+	}
+
+	/**
+	 * Parse the response for goodreads book info
+	 * 
+	 * @param xmlParser An {@link XmlPullParser} instance, forwarded to an event
+	 *            before the book item begins
+	 * @return A {@link Bundle} containing the parsed info
+	 * @throws IOException
+	 * @throws XmlPullParserException
+	 */
+	private Bundle parseGoodreadsBookInfo(XmlPullParser xmlParser)
+			throws XmlPullParserException, IOException {
+
+		final Bundle bundle = new Bundle(7);
+		String name;
+		int authorEventType;
+		final ArrayList<String> authorsList = new ArrayList<String>();
+		for (int eventType = xmlParser.next(); eventType != XmlPullParser.END_DOCUMENT; eventType = xmlParser
+				.next()) {
+
+			if (eventType == XmlPullParser.START_TAG) {
+				name = xmlParser.getName();
+
+				if (name.equals(HttpConstants.TITLE)) {
+					bundle.putString(HttpConstants.TITLE, xmlParser.nextText());
+				} else if (name.equals(HttpConstants.ISBN)) {
+					bundle.putString(HttpConstants.ISBN_10, xmlParser
+							.nextText());
+				} else if (name.equals(HttpConstants.ISBN13)) {
+					bundle.putString(HttpConstants.ISBN_13, xmlParser
+							.nextText());
+				} else if (name.equals(HttpConstants.DESCRIPTION)) {
+					bundle.putString(HttpConstants.DESCRIPTION, xmlParser
+							.nextText());
+				} else if (name.equals(HttpConstants.PUBLICATION_YEAR)) {
+					bundle.putString(HttpConstants.PUBLICATION_YEAR, xmlParser
+							.nextText());
+				} else if (name.equals(HttpConstants.AUTHORS)) {
+					//We need to handle multiple authors here
+					while (true) {
+						authorEventType = xmlParser.next();
+
+						if (authorEventType == XmlPullParser.END_DOCUMENT) {
+							break;
+						} else if (authorEventType == XmlPullParser.END_TAG) {
+							name = xmlParser.getName();
+
+							if (name.equals(HttpConstants.AUTHORS)) {
+								//We have parsed out all authors
+
+								if (authorsList.size() == 1) {
+									//There is only 1 author
+									bundle.putString(HttpConstants.AUTHOR, authorsList
+											.get(0));
+								} else if (authorsList.size() > 1) {
+									//Multiple authors
+									bundle.putString(HttpConstants.AUTHOR, TextUtils
+											.join(", ", authorsList));
+								}
+
+								authorsList.clear();
+								break;
+							}
+
+						} else if (authorEventType == XmlPullParser.START_TAG) {
+							name = xmlParser.getName();
+
+							if (name.equals(HttpConstants.NAME)) {
+								authorsList.add(xmlParser.nextText());
+							}
+						}
+
+					}
+
+					break;
+				}
+			}
+		}
+		return bundle;
 	}
 
 	/**
@@ -165,7 +285,7 @@ public class HttpResponseParser {
 	 */
 
 	private ResponseInfo parseBookSuggestionsResponse(final String response)
-			throws JSONException, XmlPullParserException, IOException {
+			throws XmlPullParserException, IOException {
 
 		Logger.d(TAG, response);
 
@@ -250,7 +370,19 @@ public class HttpResponseParser {
 						} else if (bookEventType == XmlPullParser.START_TAG) {
 							bookEventName = xmlParser.getName();
 
-							if (bookEventName.equals(HttpConstants.ID)) {
+							if (bookEventName.equals(HttpConstants.AUTHOR)) {
+
+								while (true) {
+									//Skip parsing the author ID since it has the same key as the book id
+									bookEventType = xmlParser.next();
+
+									if (bookEventType == XmlPullParser.END_TAG
+											&& xmlParser.getName()
+											.equals(HttpConstants.AUTHOR)) {
+										break;
+									}
+								}
+							} else if (bookEventName.equals(HttpConstants.ID)) {
 								suggestion.id = xmlParser.nextText();
 							} else if (bookEventName
 									.equals(HttpConstants.TITLE)) {
@@ -747,7 +879,6 @@ public class HttpResponseParser {
 		return bookId;
 	}
 
-
 	/**
 	 * Reads the book details from the Book response json into a content values
 	 * object
@@ -772,7 +903,6 @@ public class HttpResponseParser {
 		final String userId = JsonUtils
 				.readString(bookObject, HttpConstants.ID_USER, true, true);
 
-
 		values.put(DatabaseColumns.USER_ID, JsonUtils
 				.readString(bookObject, HttpConstants.ID_USER, false, false));
 		values.put(DatabaseColumns.FIRST_NAME, JsonUtils
@@ -791,7 +921,6 @@ public class HttpResponseParser {
 		if (locationObject != null) {
 			values.put(DatabaseColumns.LOCATION_ID, parseAndStoreLocation(locationObject, autoNotify));
 		}
-
 
 		return userId;
 	}
@@ -925,17 +1054,14 @@ public class HttpResponseParser {
 	private ResponseInfo parseUpdateBookResponse(final String response)
 			throws JSONException {
 		final ResponseInfo responseInfo = new ResponseInfo();
-		//TODO
 		return responseInfo;
 	}
 
 	private ResponseInfo parseDeleteBookResponse(final String response)
 			throws JSONException {
 		final ResponseInfo responseInfo = new ResponseInfo();
-		//TODO
 		return responseInfo;
 	}
-
 
 	/**
 	 * Method for parsing report bug response
