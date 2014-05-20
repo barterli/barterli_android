@@ -66,24 +66,11 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                                         + Html.fromHtml(cursor.getString(cursor
                                                         .getColumnIndex(DatabaseColumns.AUTHOR))));
 
-        ((TextView) view.getTag(R.id.text_book_owner))
-                        .setText("@" + Html.fromHtml(cursor.getString(cursor
-                                                        .getColumnIndex(DatabaseColumns.OWNER))));
-
-        ((TextView) view.getTag(R.id.text_book_description))
-                        .setText(Html.fromHtml(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.DESCRIPTION))));
-
-        //it is to replace first char of location i.e '@' by '#'
-        String location = String
-                        .format(mLocationFormat, cursor.getString(cursor
+        ((TextView) view.getTag(R.id.text_book_location))
+                        .setText(String.format(mLocationFormat, cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.NAME)), cursor
                                         .getString(cursor
-                                                        .getColumnIndex(DatabaseColumns.ADDRESS)));
-        final char[] locationchars = location.toCharArray();
-        locationchars[0] = '#';
-        location = String.valueOf(locationchars);
-        ((TextView) view.getTag(R.id.text_book_location)).setText(location);
+                                                        .getColumnIndex(DatabaseColumns.ADDRESS))));
 
         if (cursor.getString(cursor.getColumnIndex(DatabaseColumns.IMAGE_URL))
                         .contains(AppConstants.DEFAULT_BOOKIMAGE_URL)) {
@@ -93,7 +80,7 @@ public class BooksAroundMeAdapter extends CursorAdapter {
             Picasso.with(context)
                             .load(cursor.getString(cursor
                                             .getColumnIndex(DatabaseColumns.IMAGE_URL)))
-                            .fit()
+                            .centerCrop().fit()
                             .into((ImageView) view.getTag(R.id.image_book));
         }
     }
@@ -108,12 +95,8 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         view.setTag(R.id.text_book_name, view.findViewById(R.id.text_book_name));
         view.setTag(R.id.text_book_author, view
                         .findViewById(R.id.text_book_author));
-        view.setTag(R.id.text_book_owner, view
-                        .findViewById(R.id.text_book_owner));
         view.setTag(R.id.text_book_location, view
                         .findViewById(R.id.text_book_location));
-        view.setTag(R.id.text_book_description, view
-                        .findViewById(R.id.text_book_description));
 
         return view;
     }

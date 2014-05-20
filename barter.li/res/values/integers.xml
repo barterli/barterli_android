@@ -15,8 +15,10 @@
   limitations under the License.
 -->
 <resources>
-    <integer name="grid_col_count">1</integer>
+
+    <integer name="grid_col_count">3</integer>
     <integer name="short_anim_time">132</integer>
     <integer name="medium_anim_time">264</integer>
     <integer name="long_anim_time">330</integer>
+
 </resources>

@@ -23,7 +23,7 @@
     <string name="service_chat">Chat Service</string>
     <string name="scanactivity_title">Scan Barcode On Book</string>
     <string name="editbook_title">Add Book</string>
-     <string name="editbook_title2">Edit Book</string>
+    <string name="editbook_title2">Edit Book</string>
     <string name="chat_fragment_title">Chats</string>
     <string name="Report_fragment_title">Report</string>
     <string name="Collaborate_fragment_title">Collaborate</string>
@@ -55,13 +55,12 @@
     <string name="no_network_connection">No network connection!</string>
     <string name="toggle_map">Toggle Map</string>
     <string name="tap_to_set_preferred_location">Tap to set me as your preferred location.</string>
-    <string name="location_format" formatted="false">\@%s, %s</string>
+    <string name="location_format" formatted="false">#%s, %s</string>
     <string name="send">Send</string>
     <string name="enter_message">Enter your message</string>
     <string name="new_messages">%d new messages!</string>
     <string name="chat_opened_from" formatted="false">This chat was opened from %s.</string>
     <string name="take_picture">Take Picture</string>
-    
     <string name="add_book_dialog_head">Add Book</string>
     <string name="complete_action_using">Complete action using</string>
     <string name="no_books_found">No books were found in this area.</string>
@@ -140,14 +139,13 @@
         <item>Capture from Camera</item>
         <item>Add from Gallery</item>
     </string-array>
-    
     <string-array name="add_book_choices">
         <item>Scan  Barcode</item>
         <item>Add Manually</item>
     </string-array>
-    
+
     <string name="tribute_message">A tribute to Aaron Swartz for inspiring us with his passion</string>
-    
+
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile</item>
         <item>Your ongoing chats</item>

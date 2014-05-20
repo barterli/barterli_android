@@ -15,5 +15,7 @@
   limitations under the License.
 -->
 <resources>
-    <integer name="grid_col_count">2</integer>
+
+    <integer name="grid_col_count">4</integer>
+
 </resources>
