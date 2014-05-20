@@ -22,8 +22,6 @@ import com.rabbitmq.client.ConnectionFactory;
 
 import org.apache.http.protocol.HTTP;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 

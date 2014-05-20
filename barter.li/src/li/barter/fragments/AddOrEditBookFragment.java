@@ -646,14 +646,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             }
 
             case RequestId.UPDATE_BOOK: {
-                Logger.v(TAG, "Updated Book Id %s", response.responseBundle
-                                .getString(HttpConstants.ID_BOOK));
-
-                final String bookId = response.responseBundle
-                                .getString(HttpConstants.ID_BOOK);
 
                 final Bundle showBooksArgs = new Bundle(6);
-                showBooksArgs.putString(Keys.BOOK_ID, bookId);
+                showBooksArgs.putString(Keys.BOOK_ID, mBookId);
                 showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
                 showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
                 showBooksArgs.putBoolean(Keys.RELOAD, true);

@@ -15,7 +15,6 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request.Method;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.squareup.picasso.Picasso;
@@ -34,9 +33,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import li.barter.R;
 import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.data.DBInterface;
@@ -44,13 +40,9 @@ import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
-import li.barter.data.TableUsers;
 import li.barter.data.ViewUserBooksWithLocations;
 import li.barter.data.ViewUsersWithLocations;
-import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
-import li.barter.http.HttpConstants.ApiEndpoints;
-import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
@@ -125,7 +117,7 @@ OnItemClickListener {
 		loadMyBooks();
 		if (savedInstanceState == null) {
 			Logger.d(TAG, "savedInstanceState is null");
-			getUserDetails(mUserId);
+			
 
 		} else {
 
@@ -175,20 +167,20 @@ OnItemClickListener {
 
 	}
 
-	private void getUserDetails(final String userid) {
-
-		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-				+ ApiEndpoints.USERPROFILE, null, mVolleyCallbacks);
-		request.setRequestId(RequestId.GET_USER_PROFILE);
-
-		final Map<String, String> params = new HashMap<String, String>(2);
-
-		params.put(HttpConstants.ID, String.valueOf(userid));
-		request.setParams(params);
-
-		addRequestToQueue(request, true, 0);
-
-	}
+//	private void getUserDetails(final String userid) {
+//
+//		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+//				+ ApiEndpoints.USERPROFILE, null, mVolleyCallbacks);
+//		request.setRequestId(RequestId.GET_USER_PROFILE);
+//
+//		final Map<String, String> params = new HashMap<String, String>(2);
+//
+//		params.put(HttpConstants.ID, String.valueOf(userid));
+//		request.setParams(params);
+//
+//		addRequestToQueue(request, true, 0);
+//
+//	}
 
 	@Override
 	public void onQueryComplete(final int token, final Object cookie,
@@ -226,24 +218,6 @@ OnItemClickListener {
 			final IBlRequestContract request,
 			final ResponseInfo response) {
 		// TODO Auto-generated method stub
-		if (requestId == RequestId.GET_USER_PROFILE) {
-
-			final Bundle userInfo = response.responseBundle;
-			setActionBarTitle(userInfo.getString(HttpConstants.FIRST_NAME));
-//			mProfileNameTextView.setText(userInfo
-//					.getString(HttpConstants.FIRST_NAME));
-//			mImageUrl = userInfo.getString(HttpConstants.IMAGE_URL);
-//			mProfileImageView.setTag(mImageUrl);
-//			Picasso.with(getActivity()).load(mImageUrl + "?type=large").fit()
-//			.centerCrop().error(R.drawable.pic_avatar)
-//			.into(mProfileImageView);
-//
-//			mAboutMeTextView.setText(userInfo
-//					.getString(HttpConstants.DESCRIPTION));
-//			mPreferredLocationTextView.setText(userInfo
-//					.getString(HttpConstants.ADDRESS));
-
-		}
 
 	}
 

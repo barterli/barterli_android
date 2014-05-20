@@ -20,7 +20,6 @@ import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.QueueingConsumer;
 import com.rabbitmq.client.ShutdownSignalException;
 
-import android.os.CountDownTimer;
 import android.os.Handler;
 
 import java.io.IOException;
