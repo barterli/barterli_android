@@ -31,6 +31,8 @@ import android.widget.TextView;
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
 import li.barter.utils.AppConstants;
+import li.barter.widgets.CircleImageView;
+import li.barter.widgets.CircleImageView.CircleTarget;
 
 /**
  * Adapter used to display information for books around me
@@ -77,16 +79,20 @@ public class BooksAroundMeAdapter extends CursorAdapter {
             ((ImageView) view.getTag(R.id.image_book))
                             .setImageResource(R.drawable.default_book_icon);
         } else {
+            /*
+             * Picasso.with(context) .load(cursor.getString(cursor
+             * .getColumnIndex(DatabaseColumns.IMAGE_URL))) .fit()
+             * .into((ImageView) view.getTag(R.id.image_book));
+             */
+
+            final CircleImageView circleImageView = (CircleImageView) view
+                            .getTag(R.id.image_user);
+
             Picasso.with(context)
                             .load(cursor.getString(cursor
                                             .getColumnIndex(DatabaseColumns.IMAGE_URL)))
-                            .fit()
-                            .into((ImageView) view.getTag(R.id.image_book));
-            Picasso.with(context)
-            .load(cursor.getString(cursor
-                            .getColumnIndex(DatabaseColumns.IMAGE_URL)))
-            .fit()
-            .into((ImageView) view.getTag(R.id.image_user));
+                            .resizeDimen(R.dimen.book_user_image_size, R.dimen.book_user_image_size)
+                            .into(circleImageView.getTarget());
         }
     }
 

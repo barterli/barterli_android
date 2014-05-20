@@ -16,6 +16,10 @@
 
 package li.barter.widgets;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso.LoadedFrom;
+import com.squareup.picasso.Target;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -30,7 +34,6 @@ import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
@@ -46,6 +49,8 @@ import li.barter.utils.Logger;
 public class CircleImageView extends ImageView {
 
     private static final String TAG = "CircleImageView";
+
+    private CircleTarget        mCircleTarget;
 
     /**
      * @param context
@@ -71,8 +76,17 @@ public class CircleImageView extends ImageView {
         super(context, attrs, defStyle);
     }
 
+    public CircleTarget getTarget() {
+        if (mCircleTarget == null) {
+            mCircleTarget = new CircleTarget(this);
+        }
+        return mCircleTarget;
+    }
+
     private class StreamDrawable extends Drawable {
-        private static final boolean USE_VIGNETTE = true;
+
+        //TODO Update to be configurable via attributes
+        private static final boolean USE_VIGNETTE = false;
 
         private final float          mCornerRadius;
         private final RectF          mRect        = new RectF();
@@ -80,6 +94,7 @@ public class CircleImageView extends ImageView {
         private final Paint          mPaint;
         private final int            mMargin;
 
+        //TODO Add border for cropped image
         StreamDrawable(Bitmap bitmap, float cornerRadius, int margin) {
             mCornerRadius = cornerRadius;
 
@@ -162,9 +177,67 @@ public class CircleImageView extends ImageView {
             ((StreamDrawable) content).updateBitmap(bm);
         } else {
             setImageDrawable(null);
-            //TODO Update corner radius and margin to be configurable
-            setImageDrawable(new StreamDrawable(bm, 25.0f, 10));
+            //TODO Update corner radius and margin to be configurable via attributes
+            setImageDrawable(new StreamDrawable(bm, 96.0f, 10));
         }
+    }
+
+    /**
+     * Custom {@link Target} implementation for loading images via
+     * {@link Picasso}
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static class CircleTarget implements Target {
+
+        private CircleImageView mCircleImageView;
+
+        public CircleTarget(CircleImageView circleImageView) {
+            if (circleImageView == null) {
+                throw new IllegalArgumentException("ImageView is null");
+            }
+
+            mCircleImageView = circleImageView;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+
+            if (o == null || !(o instanceof CircleTarget)) {
+                return false;
+            } else {
+                CircleImageView theirImageView = ((CircleTarget) o)
+                                .getImageView();
+                return mCircleImageView.equals(theirImageView);
+            }
+        }
+
+        public CircleImageView getImageView() {
+            return mCircleImageView;
+        }
+
+        @Override
+        public int hashCode() {
+            return 41 * mCircleImageView.hashCode();
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+            // TODO Use custom StreamDrawable instead
+
+        }
+
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, LoadedFrom from) {
+            mCircleImageView.setImageBitmap(bitmap);
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable prepareDrawable) {
+            // TODO what to do here?
+
+        }
+
     }
 
 }

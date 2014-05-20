@@ -29,8 +29,8 @@
 
     <li.barter.widgets.CircleImageView
         android:id="@+id/image_user"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/book_user_image_size"
+        android:layout_height="@dimen/book_user_image_size"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/app_name" />
