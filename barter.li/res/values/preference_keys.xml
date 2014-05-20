@@ -23,7 +23,6 @@
     <string name="pref_first_name">first_name</string>
     <string name="pref_last_name">last_name</string>
     <string name="pref_user_id">user_id</string>
-    <string name="pref_last_search_radius">pref_last_search_radius</string>
     <string name="pref_last_fetched_latitude">pref_last_search_latitude</string>
     <string name="pref_last_fetched_longitude">pref_last_fetched_longitude</string>
     <string name="pref_profile_image">pref_profile_image</string>
