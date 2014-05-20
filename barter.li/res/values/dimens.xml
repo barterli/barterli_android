@@ -31,8 +31,9 @@
     <dimen name="width_item_border">1dp</dimen>
     <dimen name="nav_drawer_width">240dp</dimen>
     <dimen name="book_height_for_detail">160dp</dimen>
-    <dimen name="book_height">180dp</dimen>
-    <dimen name="book_image_height">115dp</dimen>
+    <dimen name="book_height">185dp</dimen>
+    <dimen name="book_width">105dp</dimen>
+    <dimen name="book_image_height">128dp</dimen>
     <dimen name="book_image_width_for_detail">120dp</dimen>
     <dimen name="chats_item_height">90dp</dimen>
     <dimen name="chat_detail_image_size">50dp</dimen>

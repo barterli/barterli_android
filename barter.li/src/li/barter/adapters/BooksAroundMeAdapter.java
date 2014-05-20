@@ -80,7 +80,7 @@ public class BooksAroundMeAdapter extends CursorAdapter {
             Picasso.with(context)
                             .load(cursor.getString(cursor
                                             .getColumnIndex(DatabaseColumns.IMAGE_URL)))
-                            .centerCrop().fit()
+                            .fit()
                             .into((ImageView) view.getTag(R.id.image_book));
         }
     }

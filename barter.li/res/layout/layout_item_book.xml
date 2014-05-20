@@ -16,7 +16,7 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="@dimen/book_width"
     android:layout_height="@dimen/book_height"
     android:background="@drawable/bg_main_item" >
 
@@ -25,8 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/book_image_height"
         android:layout_alignParentLeft="true"
-        android:contentDescription="@string/app_name"
-        android:scaleType="centerCrop" />
+        android:contentDescription="@string/app_name" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_name"
