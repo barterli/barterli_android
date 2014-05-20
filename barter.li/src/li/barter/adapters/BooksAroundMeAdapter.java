@@ -22,6 +22,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,9 +68,7 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         /*
          * TODO Why are we using Html.fromHtml here? It could cause a
          * performance hit since the method will create a new Html parser every
-         * time bindView() is called. Which is very, very bad.
-         * 
-         * -Vinay
+         * time bindView() is called. Which is very, very bad. -Vinay
          */
         ((TextView) view.getTag(R.id.text_book_author))
                         .setText("- "
@@ -82,26 +81,33 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                                         .getString(cursor
                                                         .getColumnIndex(DatabaseColumns.ADDRESS))));
 
-        if (cursor.getString(cursor.getColumnIndex(DatabaseColumns.IMAGE_URL))
-                        .contains(AppConstants.DEFAULT_BOOKIMAGE_URL)) {
+        final String bookImageUrl = cursor.getString(cursor
+                        .getColumnIndex(DatabaseColumns.IMAGE_URL));
+
+        if (bookImageUrl == null
+                        || bookImageUrl.contains(AppConstants.DEFAULT_BOOKIMAGE_URL)) {
             ((ImageView) view.getTag(R.id.image_book))
                             .setImageResource(R.drawable.default_book_icon);
         } else {
 
-            Picasso.with(context)
-                            .load(cursor.getString(cursor
-                                            .getColumnIndex(DatabaseColumns.IMAGE_URL)))
-                            .fit()
+            Picasso.with(context).load(bookImageUrl).fit()
                             .into((ImageView) view.getTag(R.id.image_book));
 
+        }
+
+        final String ownerImageUrl = cursor.getString(cursor
+                        .getColumnIndex(DatabaseColumns.BOOK_OWNER_IMAGE_URL));
+
+        if (!TextUtils.isEmpty(ownerImageUrl)) {
             final CircleImageView circleImageView = (CircleImageView) view
                             .getTag(R.id.image_user);
 
             Picasso.with(context)
-                            .load(cursor.getString(cursor
-                                            .getColumnIndex(DatabaseColumns.IMAGE_URL)))
+                            .load(ownerImageUrl)
                             .resizeDimen(R.dimen.book_user_image_size, R.dimen.book_user_image_size)
                             .into(circleImageView.getTarget());
+        } else {
+            //TODO DIsplay default image for user
         }
     }
 

@@ -242,7 +242,6 @@ public class CircleImageView extends ImageView {
     @Override
     public void setImageBitmap(Bitmap bm) {
 
-        Logger.v(TAG, "Set Image Bitmap");
         final Drawable content = getDrawable();
 
         if (content instanceof StreamDrawable) {

@@ -52,7 +52,8 @@ public class ViewSearchBooksWithLocations {
                                 DatabaseColumns.IMAGE_URL,
                                 DatabaseColumns.DESCRIPTION,
                                 DatabaseColumns.AUTHOR,
-                                DatabaseColumns.OWNER,
+                                DatabaseColumns.BOOK_OWNER,
+                                DatabaseColumns.BOOK_OWNER_IMAGE_URL,
                                 String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_SEARCH_BOOKS, DatabaseColumns.LOCATION_ID),
                                 DatabaseColumns.NAME, DatabaseColumns.ADDRESS
 

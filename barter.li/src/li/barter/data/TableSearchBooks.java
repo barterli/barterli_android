@@ -54,7 +54,9 @@ public class TableSearchBooks {
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.PUBLICATION_YEAR, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.PUBLICATION_MONTH, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.VALUE, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.OWNER, "")
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_OWNER, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_OWNER_IMAGE_URL, "")
+                         
                         });
 
         Logger.d(TAG, "Column Def: %s", columnDef);

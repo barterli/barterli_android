@@ -156,6 +156,7 @@ public class HttpConstants {
     public static final String PUBLICATION_YEAR            = "publication_year";
     public static final String PUBLICATION_MONTH           = "publication_month";
     public static final String OWNER_NAME                  = "owner_name";
+    public static final String OWNER_IMAGE_URL             = "owner_image_url";
     public static final String IMAGE_URL                   = "image_url";
     public static final String EXT_IMAGE_URL               = "ext_image_url";
     public static final String SEARCH                      = "search";
