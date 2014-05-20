@@ -52,6 +52,7 @@ public class ViewMyBooksWithLocations {
                                 DatabaseColumns.DESCRIPTION,
                                 DatabaseColumns.AUTHOR,
                                 DatabaseColumns.BOOK_OWNER,
+                                DatabaseColumns.BOOK_OWNER_IMAGE_URL,
                                 String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_MY_BOOKS, DatabaseColumns.LOCATION_ID),
                                 DatabaseColumns.NAME, DatabaseColumns.ADDRESS
 

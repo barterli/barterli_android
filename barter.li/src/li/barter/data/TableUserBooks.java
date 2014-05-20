@@ -54,7 +54,8 @@ public class TableUserBooks {
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.PUBLICATION_YEAR, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.PUBLICATION_MONTH, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.VALUE, ""),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_OWNER, "")
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_OWNER, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_OWNER_IMAGE_URL, "")
 
                         });
 
