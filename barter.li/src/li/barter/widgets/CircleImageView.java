@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso.LoadedFrom;
 import com.squareup.picasso.Target;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -38,6 +39,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import li.barter.R;
 import li.barter.utils.Logger;
 
 /**
@@ -48,15 +50,23 @@ import li.barter.utils.Logger;
  */
 public class CircleImageView extends ImageView {
 
-    private static final String TAG = "CircleImageView";
+    private static final int     DEFAULT_CORNER_RADIUS = 25;               //dips
+    private static final int     DEFAULT_MARGIN        = 0;                //dips
+    private static final boolean DEFAULT_USE_VIGNETTE  = false;
 
-    private CircleTarget        mCircleTarget;
+    private static final String  TAG                   = "CircleImageView";
+
+    private CircleTarget         mCircleTarget;
+    private int                  mCornerRadius;
+    private int                  mMargin;
+    private boolean              mUseVignette;
 
     /**
      * @param context
      */
     public CircleImageView(Context context) {
         super(context);
+        init(context, null);
     }
 
     /**
@@ -65,6 +75,7 @@ public class CircleImageView extends ImageView {
      */
     public CircleImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context, attrs);
     }
 
     /**
@@ -74,6 +85,31 @@ public class CircleImageView extends ImageView {
      */
     public CircleImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init(context, attrs);
+    }
+
+    /**
+     * @param context
+     * @param attrs
+     */
+    private void init(Context context, AttributeSet attrs) {
+
+        final float density = context.getResources().getDisplayMetrics().density;
+        mCornerRadius = (int) (DEFAULT_CORNER_RADIUS * density + 0.5f);
+        mMargin = (int) (DEFAULT_MARGIN * density + 0.5f);
+        mUseVignette = DEFAULT_USE_VIGNETTE;
+
+        if (attrs != null) {
+            final TypedArray styledAttrs = context
+                            .obtainStyledAttributes(attrs, R.styleable.CircleImageView);
+            mCornerRadius = (int) styledAttrs
+                            .getDimension(R.styleable.CircleImageView_cornerRadius, mCornerRadius);
+            mMargin = (int) styledAttrs
+                            .getDimension(R.styleable.CircleImageView_margin, mMargin);
+            mUseVignette = styledAttrs
+                            .getBoolean(R.styleable.CircleImageView_useVignette, mUseVignette);
+            styledAttrs.recycle();
+        }
     }
 
     public CircleTarget getTarget() {
@@ -85,19 +121,17 @@ public class CircleImageView extends ImageView {
 
     private class StreamDrawable extends Drawable {
 
-        //TODO Update to be configurable via attributes
-        private static final boolean USE_VIGNETTE = false;
-
-        private final float          mCornerRadius;
-        private final RectF          mRect        = new RectF();
-        private BitmapShader         mBitmapShader;
-        private final Paint          mPaint;
-        private final int            mMargin;
+        private final float   mCornerRadius;
+        private final RectF   mRect = new RectF();
+        private BitmapShader  mBitmapShader;
+        private final Paint   mPaint;
+        private final int     mMargin;
+        private final boolean mUseVignette;
 
         //TODO Add border for cropped image
-        StreamDrawable(Bitmap bitmap, float cornerRadius, int margin) {
+        StreamDrawable(Bitmap bitmap, float cornerRadius, int margin, boolean useVignette) {
             mCornerRadius = cornerRadius;
-
+            mUseVignette = useVignette;
             mBitmapShader = getShaderForBitmap(bitmap);
 
             mPaint = new Paint();
@@ -129,7 +163,7 @@ public class CircleImageView extends ImageView {
             mRect.set(mMargin, mMargin, bounds.width() - mMargin, bounds
                             .height() - mMargin);
 
-            if (USE_VIGNETTE) {
+            if (mUseVignette) {
                 RadialGradient vignette = new RadialGradient(mRect.centerX(), mRect
                                 .centerY() * 1.0f / 0.7f, mRect.centerX() * 1.3f, new int[] {
                         0, 0, 0x7f000000
@@ -177,8 +211,7 @@ public class CircleImageView extends ImageView {
             ((StreamDrawable) content).updateBitmap(bm);
         } else {
             setImageDrawable(null);
-            //TODO Update corner radius and margin to be configurable via attributes
-            setImageDrawable(new StreamDrawable(bm, 96.0f, 10));
+            setImageDrawable(new StreamDrawable(bm, mCornerRadius, mMargin, mUseVignette));
         }
     }
 
