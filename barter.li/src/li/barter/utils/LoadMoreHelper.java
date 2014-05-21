@@ -48,7 +48,7 @@ public class LoadMoreHelper implements OnScrollListener {
      * Reference to the {@link AbsListView} which needs the Load More
      * implementation
      */
-    private final AbsListView   mAbsListView;
+    private AbsListView         mAbsListView;
 
     /**
      * Whether load more is enabled
@@ -77,22 +77,53 @@ public class LoadMoreHelper implements OnScrollListener {
     private int                 mPrevFirstVisibleItem;
 
     /**
-     * Constructor which takes a reference to the list to provide load more
-     * functionality, as well as an onScrollListener to provide the scroll
-     * events to
+     * Construct a {@link LoadMoreHelper} class with a {@link LoadMoreCallbacks}
+     * implementation
+     * 
+     * @param callbacks An implementation of {@linkplain LoadMoreCallbacks} to
+     *            trigger the load more events
+     */
+    private LoadMoreHelper(final LoadMoreCallbacks callbacks) {
+        mLoadMoreCallbacks = callbacks;
+    }
+
+    /**
+     * Initialize the {@link LoadMoreHelper} with the callbacks
+     * 
+     * @param loadMoreCallbacks An implementation of
+     *            {@linkplain LoadMoreCallbacks} to trigger the load more events
+     */
+    public static LoadMoreHelper init(LoadMoreCallbacks loadMoreCallbacks) {
+        return new LoadMoreHelper(loadMoreCallbacks);
+    }
+
+    /**
+     * Set an external {@link OnScrollListener} to receive the OnScroll events
+     * 
+     * @param onScrollListener The {@link OnScrollListener} to move up the
+     *            scroll events
+     */
+    public LoadMoreHelper withExternalOnScrollListener(
+                    OnScrollListener onScrollListener) {
+
+        if (mAbsListView != null) {
+            throw new IllegalArgumentException("Should set external on scroll listener before setting AbsListView");
+        }
+        mExternalOnScrollListener = onScrollListener;
+        return this;
+    }
+
+    /**
+     * Set the {@link AbsListView} reference to provide the load more callbacks
+     * on
      * 
      * @param absListView The {@link AbsListView} to provide load more
      *            functionality
-     * @param loadMoreCallbacks An implementation of
-     *            {@linkplain LoadMoreCallbacks} to trigger the load more events
-     * @param externalOnScrollListener The {@link OnScrollListener} to move up
-     *            the scroll events
      */
-    public LoadMoreHelper(final AbsListView absListView, final LoadMoreCallbacks loadMoreCallbacks, final OnScrollListener externalOnScrollListener) {
+    public LoadMoreHelper on(AbsListView absListView) {
         mAbsListView = absListView;
-        mLoadMoreCallbacks = loadMoreCallbacks;
-        mExternalOnScrollListener = externalOnScrollListener;
         init();
+        return this;
     }
 
     /**
