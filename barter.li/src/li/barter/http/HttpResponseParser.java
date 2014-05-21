@@ -87,7 +87,8 @@ public class HttpResponseParser {
 		}
 
 		case RequestId.GET_BOOK_INFO: {
-			return parseGetBookInfoResponse(response);
+			//return parseGetBookInfoResponse(response);
+			  return parseGoogleBooksBookInfo(response);
 		}
 
 		case RequestId.SEARCH_BOOKS: {
@@ -154,6 +155,10 @@ public class HttpResponseParser {
 		case RequestId.GOODREADS_SHOW_BOOK: {
 			return parseGoodreadsBookResponse(response);
 		}
+		
+		case RequestId.GOOGLEBOOKS_SHOW_BOOK: {
+			return parseGoogleBooksBookInfo(response);
+		}
 
 		default: {
 			throw new IllegalArgumentException("Unknown request Id:"
@@ -174,37 +179,44 @@ public class HttpResponseParser {
 		final ResponseInfo responseInfo = new ResponseInfo();
 		final Bundle responseBundle = new Bundle(1);
 		
-		final ArrayList<Suggestion> results = new ArrayList<Suggestion>();
-		 
-		Suggestion suggestion=new Suggestion();
-		 
 		final JSONObject bookInfoObject = new JSONObject(response);
 		final JSONArray searchResults = JsonUtils
 				.readJSONArray(bookInfoObject, HttpConstants.ITEMS, true, true);
-	   
+		Suggestion[] suggestion=new Suggestion[searchResults.length()];
 		for(int i=0;i<searchResults.length();i++)
 	   {
 		   String id,name,imageUrl;
+		   
+		   JSONObject bookInfo = JsonUtils
+					.readJSONObject(searchResults, i, false, false);
+		   
 		   id=JsonUtils
-					.readString(bookInfoObject, HttpConstants.ID, false, false);
+					.readString(bookInfo, HttpConstants.ID, false, false);
 		   
 		   JSONObject volumeInfo = JsonUtils
-					.readJSONObject(searchResults, i, false, false);
+					.readJSONObject(bookInfo, HttpConstants.VOLUMEINFO, false, false);
 		   name=JsonUtils
 			.readString(volumeInfo, HttpConstants.TITLE, false, false);
 		   
-		   imageUrl=JsonUtils
-					.readString(volumeInfo, HttpConstants.THUMBNAIL, false, false);
-		  suggestion.id=id;
-		  suggestion.name=name;
-		  suggestion.imageUrl=imageUrl;
-		  results.add(suggestion);
+		   try {
+			   JSONObject imageLinks = JsonUtils
+						.readJSONObject(volumeInfo, HttpConstants.IMAGELINKS, false, false);
+			   imageUrl=JsonUtils
+						.readString(imageLinks, HttpConstants.THUMBNAIL, false, false);
+		} catch (Exception e) {
+			imageUrl="";
+		}
+		   
 		  
+		   suggestion[i]=new Suggestion();
+		   suggestion[i].id=id;
+		   suggestion[i].name=name;
+		   suggestion[i].imageUrl=imageUrl;
+		
 		  
 	   }
-		responseBundle.putParcelableArray(HttpConstants.RESULTS, results
-				.toArray(new Suggestion[results.size()]));
-
+		responseBundle.putParcelableArray(HttpConstants.RESULTS, suggestion);
+		responseInfo.responseBundle=responseBundle;
 		return responseInfo;
 	}
 	
@@ -240,6 +252,102 @@ public class HttpResponseParser {
 				}
 			}
 		}
+		return responseInfo;
+	}
+	
+	/**
+	 * Parses the good reads API response for fetching a book
+	 * 
+	 * @param response
+	 * @return
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 */
+	private ResponseInfo parseGoogleBooksBookInfo(String response)
+			throws JSONException {
+
+		final ResponseInfo responseInfo = new ResponseInfo();
+		Logger.d(TAG, "Request Id Test \nResponse %s", response);
+		
+		final Bundle responseBundle = new Bundle(1);
+		
+		final JSONObject bookInfoObject = new JSONObject(response);
+		final JSONArray searchResults = JsonUtils
+				.readJSONArray(bookInfoObject, HttpConstants.ITEMS, true, true);
+		for(int i=0;i<searchResults.length();i++)
+	   {
+		   
+		   JSONObject bookInfo = JsonUtils
+					.readJSONObject(searchResults, i, false, false);
+		   
+		   
+		   JSONObject volumeInfo = JsonUtils
+					.readJSONObject(bookInfo, HttpConstants.VOLUMEINFO, false, false);
+		  responseBundle.putString(HttpConstants.TITLE, JsonUtils
+					.readString(volumeInfo, HttpConstants.TITLE, false, false));
+		  JSONArray authors = JsonUtils
+					.readJSONArray(volumeInfo, HttpConstants.AUTHORS, false, false);
+		ArrayList<String> authorName=new ArrayList<String>();
+		  if(authors.length()==1)
+		  {
+			  authorName.add(authors.get(0).toString());
+			 
+		  }
+		  else
+		  {
+			  for(int k=0;k<authors.length();k++)
+			  {
+				  
+				  authorName.add(authors.get(k).toString());
+				 
+						  
+					 
+			  }
+		  }
+		  String author=TextUtils
+			.join(", ", authorName);
+		  responseBundle.putString(HttpConstants.AUTHOR, author);
+		  
+		  responseBundle.putString(HttpConstants.PUBLICATION_YEAR, JsonUtils
+					.readString(volumeInfo, HttpConstants.PUBLISHED_DATE, false, false));
+  
+		  responseBundle.putString(HttpConstants.DESCRIPTION, JsonUtils
+					.readString(volumeInfo, HttpConstants.DESCRIPTION, false, false));
+
+		  JSONArray identifiers = JsonUtils
+					.readJSONArray(volumeInfo, HttpConstants.INDUSTRY_IDENTIFIERS, false, false);
+
+		  JSONObject[] types=new JSONObject[identifiers.length()];
+		  
+		  for(int k=0;k<identifiers.length();k++)
+		  {
+			types[k]=JsonUtils.readJSONObject(identifiers, k, false, false);
+			
+		  }
+		  
+		  responseBundle.putString(HttpConstants.ISBN_10, JsonUtils
+					.readString(types[0], HttpConstants.IDENTIFIER, false, false));
+		  
+		  if(types.length>1)
+		  {
+		  responseBundle.putString(HttpConstants.ISBN_13, JsonUtils
+					.readString(types[1], HttpConstants.IDENTIFIER, false, false));
+		  }
+		  
+		  JSONObject imageLinks = null ;
+		   
+		   try {
+			    imageLinks = JsonUtils
+						.readJSONObject(volumeInfo, HttpConstants.IMAGELINKS, false, false);
+			   responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
+						.readString(imageLinks, HttpConstants.THUMBNAIL, false, false));
+		} catch (Exception e) {
+			responseBundle.putString(HttpConstants.IMAGE_URL, "");
+		}
+		   
+		  
+	   }
+		responseInfo.responseBundle=responseBundle;
 		return responseInfo;
 	}
 

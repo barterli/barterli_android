@@ -460,10 +460,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      *            internet connection, 0 for a default error message
      */
     protected void addRequestToQueue(final Request<?> request,
-                    final boolean showErrorOnNoNetwork, final int errorMsgResId) {
+                    final boolean showErrorOnNoNetwork, final int errorMsgResId,boolean addHeader) {
         if (isConnectedToInternet()) {
             request.setTag(getVolleyTag());
-            mVolleyCallbacks.queue(request);
+            mVolleyCallbacks.queue(request,addHeader);
         } else if (showErrorOnNoNetwork) {
             showCrouton(errorMsgResId != 0 ? errorMsgResId
                             : R.string.no_network_connection, AlertStyle.ERROR);

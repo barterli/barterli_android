@@ -125,7 +125,7 @@ public class HttpConstants {
 		public static final String INTITLE		           = "intitle:";
 		public static final String INAUTHOR                = "inauthor:";
 		public static final String ISBN                    = "isbn:";
-		public static final String ID                    = "";
+		public static final String ID                      = "id:";
 		
 
 	}
@@ -154,6 +154,9 @@ public class HttpConstants {
 		public static final int UPDATE_BOOK                 = 120;
 		public static final int DELETE_BOOK                 = 121;
 		public static final int GOODREADS_SHOW_BOOK         = 122;
+		public static final int GOOGLEBOOKS_SHOW_BOOK       = 123;
+		
+		
 
 	}
 
@@ -174,6 +177,7 @@ public class HttpConstants {
 	public static final String AUTHOR                      = "author";
 	public static final String NAME                        = "name";
 	public static final String PUBLICATION_YEAR            = "publication_year";
+	public static final String PUBLISHED_DATE			   = "publishedDate";
 	public static final String PUBLICATION_MONTH           = "publication_month";
 	public static final String OWNER_NAME                  = "owner_name";
 	public static final String IMAGE_URL                   = "image_url";
@@ -243,6 +247,10 @@ public class HttpConstants {
 	public static final String XML                         = "xml";
 	public static final String ITEMS                       = "items";
 	public static final String VOLUMEINFO                  = "volumeInfo";
+	public static final String IMAGELINKS                  = "imageLinks";
 	public static final String THUMBNAIL				   = "thumbnail";
+	public static final String INDUSTRY_IDENTIFIERS		   = "industryIdentifiers";
+	public static final String TYPE						   = "type";
+	public static final String IDENTIFIER		           = "identifier";
 
 }

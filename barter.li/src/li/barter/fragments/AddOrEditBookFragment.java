@@ -118,6 +118,8 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		final View view = inflater
 				.inflate(R.layout.fragment_add_or_edit_book, container, false);
 		initViews(view);
+		mGoodReadsApiKey = getString(R.string.goodreads_api_key);
+		mGoogleBooksApiKey = getString(R.string.googlebooks_api_key);
 		view.findViewById(R.id.button_submit).setOnClickListener(this);
 		mdelete = (Button) view.findViewById(R.id.button_delete);
 		mdelete.setOnClickListener(this);
@@ -171,8 +173,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
 		}
 
-		mGoodReadsApiKey = getString(R.string.goodreads_api_key);
-		mGoogleBooksApiKey = getString(R.string.googlebooks_api_key);
+		
 		setActionBarDrawerToggleEnabled(false);
 		return view;
 	}
@@ -273,21 +274,43 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		return TAG;
 	}
 
+//	/**
+//	 * Fetches the book info from server based on the ISBN number or book title
+//	 * 
+//	 * @param isbnNumber The ISBN Number of the book to get info for
+//	 */
+//	private void getBookInfoFromServer(final String isbnNumber) {
+//
+//		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+//				+ ApiEndpoints.BOOK_INFO, null, mVolleyCallbacks);
+//		final Map<String, String> params = new HashMap<String, String>();
+//		request.setRequestId(RequestId.GET_BOOK_INFO);
+//		params.put(HttpConstants.Q, isbnNumber);
+//		request.setParams(params);
+//		addRequestToQueue(request, true, R.string.unable_to_fetch_book_info,true);
+//	}
+	
 	/**
 	 * Fetches the book info from server based on the ISBN number or book title
 	 * 
 	 * @param isbnNumber The ISBN Number of the book to get info for
 	 */
-	private void getBookInfoFromServer(final String isbnNumber) {
-
-		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-				+ ApiEndpoints.BOOK_INFO, null, mVolleyCallbacks);
-		final Map<String, String> params = new HashMap<String, String>();
+	private void getBookInfoFromServer(final String isbn) {
+		
+		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleBooksUrl()
+				+ ApiEndpoints.VOLUMES, null, mVolleyCallbacks);
 		request.setRequestId(RequestId.GET_BOOK_INFO);
-		params.put(HttpConstants.Q, isbnNumber);
+
+		final Map<String, String> params = new HashMap<String, String>(1);
+		params.put(HttpConstants.Q, GoogleBookSearchKey.ISBN+isbn);
+		
+		params.put(HttpConstants.KEY, mGoogleBooksApiKey);
 		request.setParams(params);
-		addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
+		
+		addRequestToQueue(request, true, R.string.unable_to_fetch_book_info,false);
+		
 	}
+
 
 	/**
 	 * Fetches the book info from server based on the Book ID. This is dependent
@@ -297,15 +320,29 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 	 */
 	private void getBookInfoById(final String bookId) {
 
-		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoodReadsUrl()
-				+ ApiEndpoints.GOODREADS_SHOW_BOOK, null, mVolleyCallbacks);
-		final Map<String, String> params = new HashMap<String, String>();
-		request.setRequestId(RequestId.GOODREADS_SHOW_BOOK);
-		params.put(HttpConstants.FORMAT, HttpConstants.XML);
-		params.put(HttpConstants.KEY, mGoodReadsApiKey);
-		params.put(HttpConstants.ID, bookId);
+//		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoodReadsUrl()
+//				+ ApiEndpoints.GOODREADS_SHOW_BOOK, null, mVolleyCallbacks);
+//		final Map<String, String> params = new HashMap<String, String>();
+//		request.setRequestId(RequestId.GOODREADS_SHOW_BOOK);
+//		params.put(HttpConstants.FORMAT, HttpConstants.XML);
+//		params.put(HttpConstants.KEY, mGoodReadsApiKey);
+//		params.put(HttpConstants.ID, bookId);
+//		request.setParams(params);
+//		addRequestToQueue(request, true, R.string.unable_to_fetch_book_info,true);
+		
+		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleBooksUrl()
+				+ ApiEndpoints.VOLUMES, null, mVolleyCallbacks);
+		request.setRequestId(RequestId.GOOGLEBOOKS_SHOW_BOOK);
+
+		final Map<String, String> params = new HashMap<String, String>(1);
+		params.put(HttpConstants.Q, GoogleBookSearchKey.ID+bookId);
+		
+		params.put(HttpConstants.KEY, mGoogleBooksApiKey);
 		request.setParams(params);
-		addRequestToQueue(request, true, R.string.unable_to_fetch_book_info);
+		request.setTag(getVolleyTag());
+		
+		addRequestToQueue(request, false, 0,false);
+		
 	}
 
 	/**
@@ -375,7 +412,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			final BlRequest createBookRequest = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
 					+ ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
 			createBookRequest.setRequestId(RequestId.CREATE_BOOK);
-			addRequestToQueue(createBookRequest, true, 0);
+			addRequestToQueue(createBookRequest, true, 0,true);
 		} catch (final JSONException e) {
 			e.printStackTrace();
 		}
@@ -426,7 +463,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			final BlRequest updateBookRequest = new BlRequest(Method.PUT, HttpConstants.getApiBaseUrl()
 					+ ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
 			updateBookRequest.setRequestId(RequestId.UPDATE_BOOK);
-			addRequestToQueue(updateBookRequest, true, 0);
+			addRequestToQueue(updateBookRequest, true, 0,true);
 		} catch (final JSONException e) {
 			e.printStackTrace();
 		}
@@ -447,7 +484,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 				+ "/books/" + mId, null, mVolleyCallbacks);
 		// deleteBookRequest.setParams(params);
 		deleteBookRequest.setRequestId(RequestId.DELETE_BOOK);
-		addRequestToQueue(deleteBookRequest, true, 0);
+		addRequestToQueue(deleteBookRequest, true, 0,true);
 	}
 
 	/**
@@ -619,6 +656,8 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
 		switch (requestId) {
 		case RequestId.GET_BOOK_INFO:
+			
+			
 		case RequestId.GOODREADS_SHOW_BOOK: {
 			mTitleEditText.setTextWithFilter(response.responseBundle
 					.getString(HttpConstants.TITLE), false);
@@ -646,6 +685,34 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			break;
 		}
 
+		case RequestId.GOOGLEBOOKS_SHOW_BOOK: {
+			mTitleEditText.setTextWithFilter(response.responseBundle
+					.getString(HttpConstants.TITLE), false);
+
+			mDescriptionEditText.setText(response.responseBundle
+					.getString(HttpConstants.DESCRIPTION));
+			mAuthorEditText.setText(response.responseBundle
+					.getString(HttpConstants.AUTHOR));
+			mPublicationYear = response.responseBundle
+					.getString(HttpConstants.PUBLICATION_YEAR);
+
+			if (response.responseBundle.containsKey(HttpConstants.ISBN_13)) {
+				mIsbnEditText.setText(response.responseBundle
+						.getString(HttpConstants.ISBN_13));
+			} else if (response.responseBundle
+					.containsKey(HttpConstants.ISBN_10)) {
+				mIsbnEditText.setText(response.responseBundle
+						.getString(HttpConstants.ISBN_10));
+			}
+
+			mImage_Url = response.responseBundle
+					.getString(HttpConstants.IMAGE_URL);
+
+			Logger.d(TAG, "image url %s", mImage_Url);
+			break;
+		}
+
+		
 		case RequestId.CREATE_BOOK: {
 			Logger.v(TAG, "Created Book Id %s", response.responseBundle
 					.getString(HttpConstants.ID_BOOK));
@@ -918,7 +985,8 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			params.put(HttpConstants.KEY, mGoogleBooksApiKey);
 			request.setParams(params);
 			request.setTag(getVolleyTag());
-			addRequestToQueue(request, false, 0);
+			
+			addRequestToQueue(request, false, 0,false);
 		}
 	}
 
