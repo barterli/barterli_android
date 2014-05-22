@@ -76,7 +76,7 @@ public class TeamFragment extends AbstractBarterLiFragment {
             final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.TEAM, null, mVolleyCallbacks);
             request.setRequestId(RequestId.TEAM);
-            addRequestToQueue(request, true, 0);
+            addRequestToQueue(request, true, 0,true);
         } catch (final Exception e) {
             // Should never happen
             Logger.e(TAG, e, "Error building report bug json");

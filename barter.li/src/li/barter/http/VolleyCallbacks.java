@@ -102,10 +102,13 @@ public class VolleyCallbacks implements Listener<ResponseInfo>, ErrorListener {
      *            MUST be a version of the application's custom request types
      *            and must implement {@link IBlRequestContract}
      */
-    public void queue(final Request<?> request) {
+    public void queue(final Request<?> request,boolean addHeader) {
 
         assert (request instanceof IBlRequestContract);
+        if(addHeader)
+        {
         addHeadersToRequest(request);
+        }
         mRequestQueue.add(request);
     }
 

@@ -399,7 +399,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                             + ApiEndpoints.AMPQ_EVENT_MACHINE, requestObject.toString(), mVolleyCallbacks, acknowledge);
             request.setRequestId(RequestId.AMPQ);
             request.setTag(TAG);
-            mVolleyCallbacks.queue(request);
+            mVolleyCallbacks.queue(request,true);
         } catch (final JSONException e) {
             e.printStackTrace();
             //Should never happen
@@ -854,6 +854,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 resultIntent.setAction(AppConstants.ACTION_SHOW_CHAT_DETAIL);
                 resultIntent.putExtra(Keys.CHAT_ID, chatId);
                 resultIntent.putExtra(Keys.USER_ID, withUserId);
+                
+                
 
             } else {
                 mNotificationBuilder

@@ -404,7 +404,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             }
 
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
-            addRequestToQueue(updateUserProfileRequest, true, 0);
+            addRequestToQueue(updateUserProfileRequest, true, 0,true);
 
         } catch (final JSONException e) {
             e.printStackTrace();

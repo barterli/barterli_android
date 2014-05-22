@@ -204,14 +204,14 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      *            internet connection, 0 for a default error message
      */
     protected void addRequestToQueue(final Request<?> request,
-                    final boolean showErrorOnNoNetwork, final int errorMsgResId) {
+                    final boolean showErrorOnNoNetwork, final int errorMsgResId,boolean addHeader) {
 
         if (mIsAttached) {
             request.setTag(getVolleyTag());
             if (isConnectedToInternet()) {
                 mRequestCounter.incrementAndGet();
                 getActivity().setProgressBarIndeterminateVisibility(true);
-                mVolleyCallbacks.queue(request);
+                mVolleyCallbacks.queue(request, addHeader);
             } else if (showErrorOnNoNetwork) {
                 showCrouton(errorMsgResId != 0 ? errorMsgResId
                                 : R.string.no_network_connection, AlertStyle.ERROR);
@@ -473,7 +473,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
                                             .toString());
 
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
-            addRequestToQueue(updateUserProfileRequest, true, 0);
+            addRequestToQueue(updateUserProfileRequest, true, 0,true);
 
         } catch (final JSONException e) {
             e.printStackTrace();

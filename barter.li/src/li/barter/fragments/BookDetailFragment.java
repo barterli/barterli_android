@@ -37,7 +37,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import li.barter.R;
@@ -57,7 +56,6 @@ import li.barter.http.BlRequest;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
-import li.barter.utils.AppConstants.BarterType;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
@@ -496,7 +494,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener {
 		  params.put(HttpConstants.ID, String.valueOf(userid));
 		  request.setParams(params);
 
-		  addRequestToQueue(request, true, 0);
+		  addRequestToQueue(request, true, 0,true);
 
 	  }
 

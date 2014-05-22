@@ -92,7 +92,7 @@ public class SuggestFeatureFragment extends AbstractBarterLiFragment implements
                     final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                                     + ApiEndpoints.REPORT_BUG, requestObject.toString(), mVolleyCallbacks);
                     request.setRequestId(RequestId.SUGGEST_FEATURE);
-                    addRequestToQueue(request, true, 0);
+                    addRequestToQueue(request, true, 0,true);
                 } catch (final JSONException e) {
                     // Should never happen
                     Logger.e(TAG, e, "Error building create suggest feature json");

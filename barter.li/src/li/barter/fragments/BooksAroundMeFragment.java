@@ -239,7 +239,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             request.addExtra(Keys.LOCATION, center);
 
             request.setParams(params);
-            addRequestToQueue(request, true, 0);
+            addRequestToQueue(request, true, 0,true);
         }
 
     }
@@ -276,7 +276,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 params.put(HttpConstants.RADIUS, String.valueOf(radius));
             }
             request.setParams(params);
-            addRequestToQueue(request, true, 0);
+            addRequestToQueue(request, true, 0,true);
         }
 
     }

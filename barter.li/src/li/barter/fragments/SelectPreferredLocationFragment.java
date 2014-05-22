@@ -171,7 +171,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         params.put(HttpConstants.METERS, String.valueOf(radius));
 
         request.setParams(params);
-        addRequestToQueue(request, true, 0);
+        addRequestToQueue(request, true, 0,true);
     }
 
     @Override
@@ -384,7 +384,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody.toString(), mVolleyCallbacks);
-            addRequestToQueue(request, true, 0);
+            addRequestToQueue(request, true, 0,true);
             request.setRequestId(RequestId.SET_USER_PREFERRED_LOCATION);
         } catch (final JSONException e) {
             e.printStackTrace();
