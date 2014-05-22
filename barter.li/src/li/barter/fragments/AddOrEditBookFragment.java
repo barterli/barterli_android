@@ -304,8 +304,11 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		final Map<String, String> params = new HashMap<String, String>(1);
 		params.put(HttpConstants.Q, GoogleBookSearchKey.ISBN+isbn);
 		
-		params.put(HttpConstants.KEY, mGoogleBooksApiKey);
+		final Map<String, String> headers = new HashMap<String, String>(1);
+		headers.put(HttpConstants.KEY, mGoogleBooksApiKey);
+		
 		request.setParams(params);
+		request.setHeaders(headers);
 		
 		addRequestToQueue(request, true, R.string.unable_to_fetch_book_info,false);
 		
