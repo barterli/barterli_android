@@ -43,6 +43,6 @@
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="regular" />
 
 </RelativeLayout>

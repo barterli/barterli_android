@@ -36,7 +36,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="@string/send"
-            app:fontStyle="alegreya_bold" />
+            app:fontStyle="bold" />
 
         <li.barter.widgets.TypefacedEditText
             android:id="@+id/edit_text_chat_message"
@@ -45,7 +45,8 @@
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@id/button_send"
             android:hint="@string/enter_message"
-            android:singleLine="false" />
+            android:singleLine="false"
+            app:fontStyle="regular" />
     </RelativeLayout>
 
     <ListView

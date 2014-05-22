@@ -52,7 +52,7 @@
         android:maxLines="1"
         android:textColor="@color/black"
         android:textSize="@dimen/text_micro"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="regular" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_author"
@@ -66,7 +66,7 @@
         android:maxLines="1"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_micro"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="condensed_regular" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_location"
@@ -79,7 +79,7 @@
         android:singleLine="true"
         android:textColor="@color/apptheme_color"
         android:textSize="@dimen/text_micro"
-        app:fontStyle="alegreya_italic" />
+        app:fontStyle="condensed_regular" />
 
     <View
         android:id="@+id/view_overlay"

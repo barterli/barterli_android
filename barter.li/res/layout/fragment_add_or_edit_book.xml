@@ -35,7 +35,7 @@
             android:hint="@string/title_label"
             android:inputType="textCapWords"
             android:singleLine="true"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedAutoCompleteTextView
             android:id="@+id/edit_text_author"
@@ -45,7 +45,7 @@
             android:hint="@string/author_label"
             android:inputType="textCapWords"
             android:singleLine="true"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedEditText
             android:id="@+id/edit_text_description"
@@ -54,7 +54,7 @@
             android:layout_marginTop="@dimen/activity_margin"
             android:hint="@string/description_label"
             android:inputType="textCapSentences|textAutoComplete|textMultiLine"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedEditText
             android:id="@+id/edit_text_isbn"
@@ -64,7 +64,7 @@
             android:hint="@string/isbn_label"
             android:inputType="number"
             android:singleLine="true"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <LinearLayout
             android:id="@+id/layout_barter_options"
@@ -85,7 +85,7 @@
                     android:layout_weight="0.5"
                     android:checked="true"
                     android:text="@string/barter"
-                    app:fontStyle="alegreya_regular" />
+                    app:fontStyle="condensed_regular" />
 
                 <li.barter.widgets.TypefacedCheckBox
                     android:id="@+id/checkbox_read"
@@ -94,7 +94,7 @@
                     android:layout_weight="0.5"
                     android:checked="false"
                     android:text="@string/read"
-                    app:fontStyle="alegreya_regular" />
+                    app:fontStyle="condensed_regular" />
             </LinearLayout>
 
             <LinearLayout
@@ -110,9 +110,7 @@
                     android:layout_weight="0.5"
                     android:checked="false"
                     android:text="@string/sell"
-                    app:fontStyle="alegreya_regular" />
-                
-               
+                    app:fontStyle="condensed_regular" />
 
                 <li.barter.widgets.TypefacedCheckBox
                     android:id="@+id/checkbox_wishlist"
@@ -121,16 +119,17 @@
                     android:layout_weight="0.5"
                     android:checked="false"
                     android:text="@string/lend"
-                    app:fontStyle="alegreya_regular" />
+                    app:fontStyle="condensed_regular" />
             </LinearLayout>
- 			<li.barter.widgets.TypefacedEditText 
-                    android:id="@+id/edit_sell_price"
-                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:fontStyle="alegreya_regular"
-              		android:visibility="gone"      
-                    android:hint="@string/set_sell_hint"
-                    />
+
+            <li.barter.widgets.TypefacedEditText
+                android:id="@+id/edit_sell_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/set_sell_hint"
+                android:visibility="gone"
+                app:fontStyle="condensed_regular" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -143,7 +142,7 @@
                     android:layout_weight="0.5"
                     android:checked="false"
                     android:text="@string/give_away"
-                    app:fontStyle="alegreya_regular" />
+                    app:fontStyle="condensed_regular" />
 
                 <li.barter.widgets.TypefacedCheckBox
                     android:id="@+id/checkbox_keep_private"
@@ -152,7 +151,7 @@
                     android:layout_weight="0.5"
                     android:checked="false"
                     android:text="@string/keep_private"
-                    app:fontStyle="alegreya_regular" />
+                    app:fontStyle="condensed_regular" />
             </LinearLayout>
         </LinearLayout>
 
@@ -161,18 +160,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_margin"
-            android:text="Delete"
-            
+            android:text="@string/delete"
             android:visibility="gone"
-            app:fontStyle="alegreya_bold" />
-        
+            app:fontStyle="bold" />
+
         <li.barter.widgets.TypefacedButton
             android:id="@+id/button_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_margin"
             android:text="@string/submit"
-            app:fontStyle="alegreya_bold" />
+            app:fontStyle="bold" />
     </LinearLayout>
 
 </ScrollView>

@@ -17,9 +17,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
-    android:background="@color/transparent" >
+    android:background="@color/transparent"
+    android:orientation="vertical" >
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/label_suggest_feature"
@@ -29,19 +29,19 @@
         android:text="@string/text_suggest_feature"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_large"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="condensed_regular" />
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/text_feature_description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
+        android:hint="@string/hint_suggest_feature"
+        android:inputType="textCapSentences"
         android:lines="6"
         android:singleLine="false"
-        android:hint="@string/hint_suggest_feature"
         android:textSize="@dimen/text_medium"
-        android:inputType="textCapSentences"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="regular" />
 
     <li.barter.widgets.TypefacedButton
         android:id="@+id/button_submit_feature"
@@ -50,18 +50,17 @@
         android:layout_margin="@dimen/margin_medium"
         android:text="@string/button_submit"
         android:textSize="@dimen/text_medium"
-        android:textStyle="bold"
-        app:fontStyle="alegreya_regular" />
-    
+        app:fontStyle="bold" />
+
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/label_personal_info_warning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:gravity="center"
-        android:textStyle="italic"
         android:text="@string/no_personal_info_suggest"
         android:textColor="@color/red"
-        android:textSize="@dimen/text_medium" />
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="italic" />
 
 </LinearLayout>

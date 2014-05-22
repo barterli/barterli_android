@@ -26,12 +26,13 @@ import java.util.Hashtable;
  */
 public class TypefaceCache {
 
-    private static final Hashtable<String, Typeface> CACHE                 = new Hashtable<String, Typeface>();
+    private static final Hashtable<String, Typeface> CACHE             = new Hashtable<String, Typeface>();
 
-    public static final String                       ALEGREYA_BLACK_ITALIC = "fonts/Alegreya-BlackItalic.otf";
-    public static final String                       ALEGREYA_BOLD         = "fonts/Alegreya-Bold.otf";
-    public static final String                       ALEGREYA_ITALIC       = "fonts/Alegreya-Italic.otf";
-    public static final String                       ALEGREYA_REGULAR      = "fonts/Alegreya-Regular.otf";
+    public static final String                       BOLD_ITALIC       = "fonts/Roboto-BoldItalic.ttf";
+    public static final String                       BOLD              = "fonts/Roboto-Bold.ttf";
+    public static final String                       ITALIC            = "fonts/Roboto-Italic.ttf";
+    public static final String                       REGULAR           = "fonts/Roboto-Regular.ttf";
+    public static final String                       CONDENSED_REGULAR = "fonts/RobotoCondensed-Regular.ttf";
 
     public static Typeface get(final AssetManager manager,
                     final int typefaceCode) {
@@ -55,14 +56,16 @@ public class TypefaceCache {
 
     private static int getCodeForTypefaceName(final String typefaceName) {
 
-        if (typefaceName.equals(ALEGREYA_BLACK_ITALIC)) {
+        if (typefaceName.equals(BOLD_ITALIC)) {
             return 0;
-        } else if (typefaceName.equals(ALEGREYA_BOLD)) {
+        } else if (typefaceName.equals(BOLD)) {
             return 1;
-        } else if (typefaceName.equals(ALEGREYA_ITALIC)) {
+        } else if (typefaceName.equals(ITALIC)) {
             return 2;
-        } else if (typefaceName.equals(ALEGREYA_REGULAR)) {
+        } else if (typefaceName.equals(REGULAR)) {
             return 3;
+        } else if (typefaceName.equals(CONDENSED_REGULAR)) {
+            return 4;
         } else {
             return 3;
         }
@@ -71,19 +74,22 @@ public class TypefaceCache {
     private static String getTypefaceName(final int typefaceCode) {
         switch (typefaceCode) {
             case 0:
-                return ALEGREYA_BLACK_ITALIC;
+                return BOLD_ITALIC;
 
             case 1:
-                return ALEGREYA_BOLD;
+                return BOLD;
 
             case 2:
-                return ALEGREYA_ITALIC;
+                return ITALIC;
 
             case 3:
-                return ALEGREYA_REGULAR;
+                return REGULAR;
+
+            case 4:
+                return CONDENSED_REGULAR;
 
             default:
-                return ALEGREYA_REGULAR;
+                return REGULAR;
         }
     }
 

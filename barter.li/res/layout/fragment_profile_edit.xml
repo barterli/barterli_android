@@ -38,7 +38,7 @@
         android:hint="@string/hint_first_name"
         android:singleLine="true"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="regular" />
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/text_last_name"
@@ -50,7 +50,7 @@
         android:hint="@string/hint_last_name"
         android:singleLine="true"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="regular" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/label_about_me"
@@ -62,7 +62,7 @@
         android:text="@string/label_about_me"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="condensed_regular" />
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/text_about_me"
@@ -78,7 +78,7 @@
         android:singleLine="false"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="regular" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/label_current_location"
@@ -92,7 +92,7 @@
         android:text="@string/label_current_location"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="condensed_regular" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_current_location"
@@ -106,7 +106,7 @@
         android:text="@string/text_default_current_location"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="regular" />
 
     <ImageView
         android:id="@+id/button_edit_current_location"

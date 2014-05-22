@@ -31,6 +31,6 @@
         android:layout_gravity="center"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="alegreya_bold" />
+        app:fontStyle="bold" />
 
 </FrameLayout>

@@ -38,6 +38,6 @@
         android:maxLines="2"
         android:textColor="@color/black"
         android:textSize="@dimen/text_small"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="condensed_regular" />
 
 </LinearLayout>

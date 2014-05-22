@@ -33,7 +33,7 @@
             android:text="@string/text_collaborate"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_large"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="condensed_regular" />
 
         <RadioGroup
             android:id="@+id/radio_enlist_options"
@@ -42,41 +42,41 @@
             android:layout_below="@id/label_collaborate"
             android:layout_margin="@dimen/margin_minimum"
             android:orientation="vertical" >
-  <li.barter.widgets.TypefacedRadioButton
+
+            <li.barter.widgets.TypefacedRadioButton
                 android:id="@+id/radio_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/campus_ambassador"
-                app:fontStyle="alegreya_regular" />
-        
+                app:fontStyle="condensed_regular" />
 
             <li.barter.widgets.TypefacedRadioButton
                 android:id="@+id/radio_designer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/designer"
-                app:fontStyle="alegreya_regular" />
+                app:fontStyle="condensed_regular" />
 
             <li.barter.widgets.TypefacedRadioButton
                 android:id="@+id/radio_developer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/developer"
-                app:fontStyle="alegreya_regular" />
+                app:fontStyle="condensed_regular" />
 
-              <li.barter.widgets.TypefacedRadioButton
+            <li.barter.widgets.TypefacedRadioButton
                 android:id="@+id/radio_sponsor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sponsor"
-                app:fontStyle="alegreya_regular" />
+                app:fontStyle="condensed_regular" />
 
             <li.barter.widgets.TypefacedRadioButton
                 android:id="@+id/radio_volunteer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/volunteer"
-                app:fontStyle="alegreya_regular" />
+                app:fontStyle="condensed_regular" />
         </RadioGroup>
 
         <li.barter.widgets.TypefacedEditText
@@ -86,11 +86,11 @@
             android:layout_below="@id/radio_enlist_options"
             android:layout_margin="@dimen/margin_medium"
             android:hint="@string/hint_about_me_description"
+            android:inputType="textCapSentences"
             android:lines="4"
             android:singleLine="false"
             android:textSize="@dimen/text_medium"
-            android:inputType="textCapSentences"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedButton
             android:id="@+id/button_submit_enlisting"
@@ -100,8 +100,7 @@
             android:layout_margin="@dimen/margin_medium"
             android:text="@string/button_submit"
             android:textSize="@dimen/text_medium"
-            android:textStyle="bold"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="bold" />
     </RelativeLayout>
 
 </ScrollView>

@@ -27,6 +27,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="6dip"
+        android:contentDescription="@string/app_name"
         android:src="@drawable/ic_launcher" />
 
     <TextView
@@ -48,10 +49,9 @@
         android:layout_alignLeft="@+id/team_name"
         android:layout_below="@+id/team_name"
         android:ellipsize="marquee"
-        android:text="Anshul"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="regular" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/team_name"
@@ -62,9 +62,8 @@
         android:layout_toRightOf="@+id/team_image"
         android:ellipsize="marquee"
         android:gravity="center_vertical"
-        android:text="Anshul"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="alegreya_bold" />
+        app:fontStyle="bold" />
 
 </RelativeLayout>

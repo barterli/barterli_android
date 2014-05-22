@@ -33,7 +33,7 @@
         android:hint="@string/search_for_books"
         android:padding="@dimen/margin_x_small"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="alegreya_regular" />
+        app:fontStyle="condensed_regular" />
 
     <GridView
         android:id="@+id/grid_books_around_me"

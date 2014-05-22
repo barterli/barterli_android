@@ -36,7 +36,7 @@
             android:background="@drawable/selector_facebook_login"
             android:text="@string/login_with_facebook"
             android:textColor="@color/white"
-            app:fontStyle="alegreya_bold" />
+            app:fontStyle="bold" />
 
         <li.barter.widgets.TypefacedButton
             android:id="@+id/button_google_login"
@@ -47,7 +47,7 @@
             android:background="@drawable/selector_google_login"
             android:text="@string/login_with_google"
             android:textColor="@color/white"
-            app:fontStyle="alegreya_bold" />
+            app:fontStyle="bold" />
 
         <View
             android:id="@+id/divider"
@@ -64,7 +64,7 @@
             android:hint="@string/email_label"
             android:inputType="textEmailAddress"
             android:singleLine="true"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedAutoCompleteTextView
             android:id="@+id/edit_text_password"
@@ -74,7 +74,7 @@
             android:hint="@string/password_label"
             android:inputType="textPassword"
             android:singleLine="true"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedButton
             android:id="@+id/button_submit"
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_margin"
             android:text="@string/submit"
-            app:fontStyle="alegreya_bold" />
+            app:fontStyle="bold" />
     </LinearLayout>
 
 </ScrollView>

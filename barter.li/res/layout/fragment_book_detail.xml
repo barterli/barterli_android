@@ -37,7 +37,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium"
             android:visibility="gone"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="condensed_regular" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_isbn"
@@ -47,7 +47,7 @@
             android:layout_marginTop="@dimen/margin_xx_small"
             android:textSize="@dimen/text_small"
             android:visibility="gone"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/label_publication_date"
@@ -58,7 +58,7 @@
             android:text="@string/publication_date_label"
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="condensed_regular" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_publication_date"
@@ -67,7 +67,7 @@
             android:layout_below="@id/label_publication_date"
             android:layout_marginTop="@dimen/margin_xx_small"
             android:textSize="@dimen/text_small"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/label_suggested_price"
@@ -79,7 +79,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium"
             android:visibility="gone"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="condensed_regular" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_suggested_price"
@@ -89,28 +89,28 @@
             android:layout_marginTop="@dimen/margin_xx_small"
             android:textSize="@dimen/text_small"
             android:visibility="gone"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedTextView
-            android:layout_marginTop="@dimen/margin_xx_small"
             android:id="@+id/label_barter_types"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/book_avatar"
+            android:layout_marginTop="@dimen/margin_xx_small"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="alegreya_regular" />
-        
+            app:fontStyle="condensed_regular" />
+
         <li.barter.widgets.TypefacedTextView
-            android:layout_marginTop="@dimen/margin_large"
             android:id="@+id/label_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/label_barter_types"
+            android:layout_marginTop="@dimen/margin_large"
             android:text="@string/description_label"
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="condensed_regular" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_description"
@@ -119,7 +119,7 @@
             android:layout_below="@id/label_description"
             android:layout_marginTop="@dimen/margin_xx_small"
             android:textSize="@dimen/text_small"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <LinearLayout
             android:id="@+id/layout_barter_options1"
@@ -133,7 +133,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_margin"
-                android:layout_weight="0.4" />
+                android:layout_weight="0.4"
+                app:fontStyle="regular" />
 
             <li.barter.widgets.TypefacedTextView
                 android:id="@+id/text_publication_year"
@@ -141,10 +142,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_margin"
                 android:layout_weight="0.6"
-                app:fontStyle="alegreya_regular" />
+                app:fontStyle="regular" />
         </LinearLayout>
-
-       
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_author"
@@ -157,7 +156,7 @@
             android:maxLines="1"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_title"
@@ -176,34 +175,36 @@
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium"
             android:textStyle="bold"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
 
         <ImageView
             android:id="@+id/ownerpic"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_alignBottom="@+id/book_avatar"
             android:layout_alignLeft="@+id/text_author"
             android:layout_below="@+id/label_owner_profile"
-            android:layout_alignBottom="@+id/book_avatar"
             android:layout_marginRight="@dimen/margin_x_small"
             android:layout_marginTop="@dimen/margin_x_small"
-             />
+            android:contentDescription="@string/app_name" />
 
         <ImageView
             android:id="@+id/chatwithowner"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignTop="@+id/ownerpic"
             android:layout_alignBottom="@+id/book_avatar"
+            android:layout_alignTop="@+id/ownerpic"
             android:layout_toRightOf="@+id/ownerpic"
+            android:contentDescription="@string/app_name"
             android:src="@drawable/chaticon" />
 
         <ImageView
             android:id="@+id/book_avatar"
             android:layout_width="@dimen/book_image_width_for_detail"
             android:layout_height="@dimen/book_height_for_detail"
+            android:layout_alignParentLeft="true"
             android:layout_marginRight="@dimen/margin_large"
-            android:layout_alignParentLeft="true" />
+            android:contentDescription="@string/app_name" />
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/label_owner_profile"
@@ -215,7 +216,7 @@
             android:text="@string/owner_profile"
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="alegreya_regular" />
+            app:fontStyle="regular" />
     </RelativeLayout>
 
 </ScrollView>

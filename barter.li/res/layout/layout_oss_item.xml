@@ -20,7 +20,6 @@
     android:layout_height="match_parent"
     android:autoLink="web"
     android:padding="@dimen/activity_margin"
-    android:textSize="@dimen/text_medium"
     android:textColor="@color/black"
-    app:fontStyle="alegreya_regular" />
-   
+    android:textSize="@dimen/text_medium"
+    app:fontStyle="regular" />

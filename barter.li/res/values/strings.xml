@@ -104,6 +104,7 @@
     <string name="no_personal_info_bug_and_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this bug report or feature suggestion will be available publicly.</string>
     <string name="no_personal_info_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this feature suggestion will be available publicly.</string>
     <string name="error_required">Required</string>
+    <string name="delete">Delete</string>
 
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>
@@ -114,7 +115,7 @@
     <string name="keep_private">Keep Private</string>
     <string name="submit">Submit</string>
     <string name="chat_with_owner">Chat with owner</string>
-    <string name="owner_profile">Owner Profile</string>
+    <string name="owner_profile">Book Owner</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>
     <string name="email_label">Email Id</string>
