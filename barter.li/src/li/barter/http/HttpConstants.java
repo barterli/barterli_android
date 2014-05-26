@@ -154,8 +154,7 @@ public class HttpConstants {
 		public static final int BOOK_SUGGESTIONS            = 119;
 		public static final int UPDATE_BOOK                 = 120;
 		public static final int DELETE_BOOK                 = 121;
-		public static final int GOODREADS_SHOW_BOOK         = 122;
-		public static final int GOOGLEBOOKS_SHOW_BOOK       = 123;
+		public static final int GOOGLEBOOKS_SHOW_BOOK       = 122;
 		
 		
 

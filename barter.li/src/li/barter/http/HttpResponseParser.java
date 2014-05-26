@@ -20,16 +20,13 @@ import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 
 import li.barter.data.DBInterface;
@@ -41,7 +38,6 @@ import li.barter.data.TableSearchBooks;
 import li.barter.data.TableUserBooks;
 import li.barter.data.TableUsers;
 import li.barter.http.HttpConstants.RequestId;
-import li.barter.http.JsonUtils.FieldType;
 import li.barter.models.Hangout;
 import li.barter.models.Team;
 import li.barter.utils.AppConstants;
@@ -57,9 +53,6 @@ import li.barter.widgets.autocomplete.Suggestion;
 public class HttpResponseParser {
 
 	private static final String         TAG  = "HttpResponseParser";
-	private static final Object         LOCK = new Object();
-
-	private static XmlPullParserFactory sPullParserFactory;
 
 	/**
 	 * Parses the string response(when the request was successful -
@@ -85,7 +78,6 @@ public class HttpResponseParser {
 		}
 
 		case RequestId.GET_BOOK_INFO: {
-			//return parseGetBookInfoResponse(response);
 			  return parseGoogleBooksBookInfo(response);
 		}
 
@@ -138,7 +130,6 @@ public class HttpResponseParser {
 		}
 
 		case RequestId.BOOK_SUGGESTIONS: {
-			//return parseBookSuggestionsResponse(response);
 			return parseGoogleBookSuggestionsResponse(response);
 		}
 
@@ -150,10 +141,6 @@ public class HttpResponseParser {
 			return parseDeleteBookResponse(response);
 		}
 
-		case RequestId.GOODREADS_SHOW_BOOK: {
-			return parseGoodreadsBookResponse(response);
-		}
-		
 		case RequestId.GOOGLEBOOKS_SHOW_BOOK: {
 			return parseGoogleBooksBookInfo(response);
 		}
@@ -173,13 +160,12 @@ public class HttpResponseParser {
 	private ResponseInfo parseGoogleBookSuggestionsResponse(final String response)
 			throws JSONException {
 
-		Logger.d(TAG, "Request Id Test \nResponse %s", response);
 		final ResponseInfo responseInfo = new ResponseInfo();
 		final Bundle responseBundle = new Bundle(1);
 		
 		final JSONObject bookInfoObject = new JSONObject(response);
 		final JSONArray searchResults = JsonUtils
-				.readJSONArray(bookInfoObject, HttpConstants.ITEMS, true, true);
+				.readJSONArray(bookInfoObject, HttpConstants.ITEMS, false, false);
 		Suggestion[] suggestion=new Suggestion[searchResults.length()];
 		for(int i=0;i<searchResults.length();i++)
 	   {
@@ -219,40 +205,6 @@ public class HttpResponseParser {
 	}
 	
 
-	/**
-	 * Parses the good reads API response for fetching a book
-	 * 
-	 * @param response
-	 * @return
-	 * @throws XmlPullParserException
-	 * @throws IOException
-	 */
-	private ResponseInfo parseGoodreadsBookResponse(String response)
-			throws XmlPullParserException, IOException {
-
-		final ResponseInfo responseInfo = new ResponseInfo();
-		final XmlPullParser xmlParser = getPullParserInstance(false, false);
-		xmlParser.setInput(new StringReader(response));
-
-		for (int eventType = xmlParser.getEventType(); eventType != XmlPullParser.END_DOCUMENT; eventType = xmlParser
-				.next()) {
-
-			String name = null;
-
-			if (eventType == XmlPullParser.START_TAG) {
-				name = xmlParser.getName();
-
-				if ((name != null) && name.equals(HttpConstants.BOOK)) {
-
-					responseInfo.responseBundle = parseGoodreadsBookInfo(xmlParser);
-					break;
-
-				}
-			}
-		}
-		return responseInfo;
-	}
-	
 	/**
 	 * Parses the good reads API response for fetching a book
 	 * 
@@ -350,237 +302,6 @@ public class HttpResponseParser {
 	}
 
 	/**
-	 * Parse the response for goodreads book info
-	 * 
-	 * @param xmlParser An {@link XmlPullParser} instance, forwarded to an event
-	 *            before the book item begins
-	 * @return A {@link Bundle} containing the parsed info
-	 * @throws IOException
-	 * @throws XmlPullParserException
-	 */
-	private Bundle parseGoodreadsBookInfo(XmlPullParser xmlParser)
-			throws XmlPullParserException, IOException {
-
-		final Bundle bundle = new Bundle(7);
-		String name;
-		int authorEventType;
-		final ArrayList<String> authorsList = new ArrayList<String>();
-		for (int eventType = xmlParser.next(); eventType != XmlPullParser.END_DOCUMENT; eventType = xmlParser
-				.next()) {
-
-			if (eventType == XmlPullParser.START_TAG) {
-				name = xmlParser.getName();
-
-				if (name.equals(HttpConstants.TITLE)) {
-					bundle.putString(HttpConstants.TITLE, xmlParser.nextText());
-				} else if (name.equals(HttpConstants.ISBN)) {
-					bundle.putString(HttpConstants.ISBN_10, xmlParser
-							.nextText());
-				} else if (name.equals(HttpConstants.ISBN13)) {
-					bundle.putString(HttpConstants.ISBN_13, xmlParser
-							.nextText());
-				} else if (name.equals(HttpConstants.DESCRIPTION)) {
-					bundle.putString(HttpConstants.DESCRIPTION, xmlParser
-							.nextText());
-				} else if (name.equals(HttpConstants.PUBLICATION_YEAR)) {
-					bundle.putString(HttpConstants.PUBLICATION_YEAR, xmlParser
-							.nextText());
-				} else if (name.equals(HttpConstants.AUTHORS)) {
-					//We need to handle multiple authors here
-					while (true) {
-						authorEventType = xmlParser.next();
-
-						if (authorEventType == XmlPullParser.END_DOCUMENT) {
-							break;
-						} else if (authorEventType == XmlPullParser.END_TAG) {
-							name = xmlParser.getName();
-
-							if (name.equals(HttpConstants.AUTHORS)) {
-								//We have parsed out all authors
-
-								if (authorsList.size() == 1) {
-									//There is only 1 author
-									bundle.putString(HttpConstants.AUTHOR, authorsList
-											.get(0));
-								} else if (authorsList.size() > 1) {
-									//Multiple authors
-									bundle.putString(HttpConstants.AUTHOR, TextUtils
-											.join(", ", authorsList));
-								}
-
-								authorsList.clear();
-								break;
-							}
-
-						} else if (authorEventType == XmlPullParser.START_TAG) {
-							name = xmlParser.getName();
-
-							if (name.equals(HttpConstants.NAME)) {
-								authorsList.add(xmlParser.nextText());
-							}
-						}
-
-					}
-
-					break;
-				}
-			}
-		}
-		return bundle;
-	}
-
-	/**
-	 * Parse the response for book suggestions
-	 * 
-	 * @param response
-	 * @return
-	 * @throws XmlPullParserException
-	 * @throws IOException
-	 */
-
-	private ResponseInfo parseBookSuggestionsResponse(final String response)
-			throws XmlPullParserException, IOException {
-
-		Logger.d(TAG, response);
-
-		final ResponseInfo responseInfo = new ResponseInfo();
-		final Bundle responseBundle = new Bundle(1);
-		final XmlPullParser xmlParser = getPullParserInstance(false, false);
-		xmlParser.setInput(new StringReader(response));
-
-		for (int eventType = xmlParser.getEventType(); eventType != XmlPullParser.END_DOCUMENT; eventType = xmlParser
-				.next()) {
-
-			String name = null;
-
-			if (eventType == XmlPullParser.START_TAG) {
-				name = xmlParser.getName();
-
-				if ((name != null) && name.equals(HttpConstants.RESULTS)) {
-
-					final ArrayList<Suggestion> results = parseBookSuggestionItems(xmlParser);
-					responseBundle.putParcelableArray(HttpConstants.RESULTS, results
-							.toArray(new Suggestion[results.size()]));
-
-				}
-			}
-		}
-		responseInfo.responseBundle = responseBundle;
-		return responseInfo;
-	}
-
-	/**
-	 * Parses the book suggestion items from the book suggestions
-	 * 
-	 * @param xmlParser An {@link XmlPullParser} instance, forwarded to an event
-	 *            before the book items begin
-	 * @return An array of {@link Suggestion} items
-	 * @throws IOException
-	 * @throws XmlPullParserException
-	 */
-	private ArrayList<Suggestion> parseBookSuggestionItems(
-			final XmlPullParser xmlParser)
-					throws XmlPullParserException, IOException {
-
-		final ArrayList<Suggestion> suggestions = new ArrayList<Suggestion>();
-		String name;
-		int bookEventType;
-		String bookEventName;
-		Suggestion suggestion;
-		for (int eventType = xmlParser.next(); eventType != XmlPullParser.END_DOCUMENT; eventType = xmlParser
-				.next()) {
-
-			if (eventType == XmlPullParser.END_TAG) {
-				name = xmlParser.getName();
-
-				if (name.equals(HttpConstants.RESULTS)) {
-					//We have finished parsing sugesstions
-					break;
-				}
-			}
-
-			else if (eventType == XmlPullParser.START_TAG) {
-
-				name = xmlParser.getName();
-
-				if (name.equals(HttpConstants.BEST_BOOK)) {
-
-					suggestion = new Suggestion();
-					while (true) {
-						bookEventType = xmlParser.next();
-
-						if (bookEventType == XmlPullParser.END_TAG) {
-							bookEventName = xmlParser.getName();
-
-							if (bookEventName.equals(HttpConstants.BEST_BOOK)) {
-
-								if (!TextUtils.isEmpty(suggestion.id)
-										&& !TextUtils.isEmpty(suggestion.name)) {
-									suggestions.add(suggestion);
-								}
-								//We have parsed out one book suggestion
-								break;
-							}
-						} else if (bookEventType == XmlPullParser.START_TAG) {
-							bookEventName = xmlParser.getName();
-
-							if (bookEventName.equals(HttpConstants.AUTHOR)) {
-
-								while (true) {
-									//Skip parsing the author ID since it has the same key as the book id
-									bookEventType = xmlParser.next();
-
-									if (bookEventType == XmlPullParser.END_TAG
-											&& xmlParser.getName()
-											.equals(HttpConstants.AUTHOR)) {
-										break;
-									}
-								}
-							} else if (bookEventName.equals(HttpConstants.ID)) {
-								suggestion.id = xmlParser.nextText();
-							} else if (bookEventName
-									.equals(HttpConstants.TITLE)) {
-								suggestion.name = xmlParser.nextText();
-							} else if (bookEventName
-									.equals(HttpConstants.SMALL_IMAGE_URL)) {
-								suggestion.imageUrl = xmlParser.nextText();
-							}
-
-						}
-					}
-				}
-			}
-
-		}
-		return suggestions;
-	}
-
-	/**
-	 * @return an instance of an {@link XmlPullParser}4
-	 * @param namespaceAware Whether the parser is namespace aware
-	 * @param validating Whether the parser is validating
-	 * @throws XmlPullParserException
-	 */
-	private static XmlPullParser getPullParserInstance(
-			final boolean namespaceAware, final boolean validating)
-					throws XmlPullParserException {
-
-		synchronized (LOCK) {
-
-			if (sPullParserFactory == null) {
-				synchronized (LOCK) {
-					sPullParserFactory = XmlPullParserFactory.newInstance();
-				}
-			}
-
-			sPullParserFactory.setNamespaceAware(namespaceAware);
-			sPullParserFactory.setValidating(validating);
-			return sPullParserFactory.newPullParser();
-		}
-
-	}
-
-	/**
 	 * Parse the response for Ampq
 	 * 
 	 * @param response The response from server
@@ -599,7 +320,6 @@ public class HttpResponseParser {
 	private ResponseInfo parseTributeResponse(final String response)
 			throws JSONException {
 		final ResponseInfo responseInfo = new ResponseInfo();
-		//return new ResponseInfo();
 
 		final JSONObject responseObject = new JSONObject(response);
 		final JSONObject tributeObject = JsonUtils
@@ -1112,70 +832,6 @@ public class HttpResponseParser {
 		values.put(DatabaseColumns.LONGITUDE, JsonUtils
 				.readDouble(locationObject, HttpConstants.LONGITUDE, true, true));
 		return locationId;
-	}
-
-	/**
-	 * @param response
-	 * @return
-	 */
-	private ResponseInfo parseGetBookInfoResponse(final String response)
-			throws JSONException {
-
-		Logger.d(TAG, "Request Id Test \nResponse %s", response);
-		final ResponseInfo responseInfo = new ResponseInfo();
-
-		final JSONObject bookInfoObject = new JSONObject(response);
-
-		final Bundle responseBundle = new Bundle(6);
-		responseBundle.putString(HttpConstants.TITLE, JsonUtils
-				.readString(bookInfoObject, HttpConstants.TITLE, false, false));
-		responseBundle.putString(HttpConstants.DESCRIPTION, JsonUtils
-				.readString(bookInfoObject, HttpConstants.DESCRIPTION, false, false));
-
-		responseBundle.putString(HttpConstants.PUBLICATION_YEAR, JsonUtils
-				.readString(bookInfoObject, HttpConstants.PUBLICATION_YEAR, false, false));
-
-		responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
-				.readString(bookInfoObject, HttpConstants.IMAGE_URL, false, false));
-
-		responseBundle.putString(HttpConstants.ISBN_13, JsonUtils
-				.readString(bookInfoObject, HttpConstants.ISBN_13, false, false));
-
-		responseBundle.putString(HttpConstants.VALUE, JsonUtils
-				.readString(bookInfoObject, HttpConstants.VALUE, false, false));
-
-		final JSONObject authorsObject = JsonUtils
-				.readJSONObject(bookInfoObject, HttpConstants.AUTHORS, false, false);
-
-		if (authorsObject != null) {
-			final FieldType type = JsonUtils
-					.getTypeForKey(authorsObject, HttpConstants.AUTHOR);
-
-			if (type == FieldType.OBJECT) {
-				final JSONObject authorObject = JsonUtils
-						.readJSONObject(authorsObject, HttpConstants.AUTHOR, true, true);
-				responseBundle.putString(HttpConstants.AUTHOR, JsonUtils
-						.readString(authorObject, HttpConstants.NAME, true, true));
-			} else if (type == FieldType.ARRAY) {
-				final JSONArray authorsArray = JsonUtils
-						.readJSONArray(authorsObject, HttpConstants.AUTHOR, true, true);
-				final String[] authorNames = new String[authorsArray.length()];
-
-				for (int i = 0; i < authorsArray.length(); i++) {
-					authorNames[i] = JsonUtils
-							.readString(JsonUtils
-									.readJSONObject(authorsArray, i, true, true), HttpConstants.NAME, true, true);
-				}
-
-				if (authorNames.length > 0) {
-					responseBundle.putString(HttpConstants.AUTHOR, TextUtils
-							.join(", ", authorNames));
-				}
-			}
-		}
-
-		responseInfo.responseBundle = responseBundle;
-		return responseInfo;
 	}
 
 	/**
