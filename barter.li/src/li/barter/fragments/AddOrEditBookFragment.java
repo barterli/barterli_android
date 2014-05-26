@@ -99,7 +99,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private String                        mImage_Url;
     private String                        mPublicationYear;
     private Button                        mdelete;
-    private String                        mGoodReadsApiKey;
     private String                        mGoogleBooksApiKey;
     /**
      * On resume, if <code>true</code> and the user has logged in, immediately
@@ -118,7 +117,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         final View view = inflater
                         .inflate(R.layout.fragment_add_or_edit_book, container, false);
         initViews(view);
-        mGoodReadsApiKey = getString(R.string.goodreads_api_key);
         mGoogleBooksApiKey = getString(R.string.google_maps_v2_api_key);
         view.findViewById(R.id.button_submit).setOnClickListener(this);
         mdelete = (Button) view.findViewById(R.id.button_delete);
