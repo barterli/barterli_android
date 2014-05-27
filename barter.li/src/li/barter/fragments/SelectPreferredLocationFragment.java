@@ -46,6 +46,7 @@ import java.util.Map;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.BlRequest;
+import li.barter.http.FoursquareCategoryBuilder;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
@@ -186,8 +187,20 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                         .getLatitude(), location.getLongitude()));
         params.put(HttpConstants.RADIUS, String.valueOf(radius));
 
-        //TODO Refactor this out to make it simpler to select location categories
-        params.put(HttpConstants.CATEGORY_ID, "4d4b7104d754a06370d81259,4d4b7105d754a06372d81259,4d4b7105d754a06374d81259,4d4b7105d754a06376d81259,4d4b7105d754a06377d81259,4d4b7105d754a06375d81259,4d4b7105d754a06378d81259,4d4b7105d754a06379d81259");
+        final String foursquareCategoryFilter = FoursquareCategoryBuilder
+                        .init()
+                        .with(FoursquareCategoryBuilder.ARTS_AND_ENTERTAINMENT)
+                        .with(FoursquareCategoryBuilder.COLLEGE_AND_UNIVERSITY)
+                        .with(FoursquareCategoryBuilder.FOOD)
+                        .with(FoursquareCategoryBuilder.NIGHTLIFE_SPOT)
+                        .with(FoursquareCategoryBuilder.OUTDOORS_AND_RECREATION)
+                        .with(FoursquareCategoryBuilder.PROFESSIONAL_AND_OTHER_PLACES)
+                        .with(FoursquareCategoryBuilder.SHOP_AND_SERVICE)
+                        .with(FoursquareCategoryBuilder.TRAVEL_AND_TRANSPORT)
+                        .build();
+        
+        Logger.v(TAG, "Foursquare Category Filter - %s", foursquareCategoryFilter);
+        params.put(HttpConstants.CATEGORY_ID, foursquareCategoryFilter);
         params.put(HttpConstants.INTENT, HttpConstants.BROWSE);
         params.put(HttpConstants.CLIENT_ID, mFoursquareClientId);
         params.put(HttpConstants.CLIENT_SECRET, mFoursquareClientSecret);
