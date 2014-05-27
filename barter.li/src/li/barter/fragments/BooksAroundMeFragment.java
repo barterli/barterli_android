@@ -115,6 +115,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * Current page used for load more
      */
     private int                           mCurPage;
+    
+    /**
+     * Searched Books Count
+     */
+    private int                           mBookCounter;
 
     /**
      * Flag to Display Crouton Message on empty book search result
@@ -506,7 +511,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-
+            mBookCounter=cursor.getCount();
             {
                 mBooksAroundMeAdapter.swapCursor(cursor);
             }
@@ -576,11 +581,17 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             showBooksArgs.putString(Keys.BOOK_ID, bookId);
             showBooksArgs.putString(Keys.ID, idBook);
             showBooksArgs.putString(Keys.USER_ID, userId);
-
+            showBooksArgs.putInt(Keys.BOOK_POSITION, position);
+            showBooksArgs.putInt(Keys.BOOK_COUNT, mBookCounter);
+//            loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+//                            .instantiate(getActivity(), BookDetailFragment.class
+//                                            .getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, FragmentTags.BS_BOOK_DETAIL);
+//       
             loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), BookDetailFragment.class
-                                            .getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, FragmentTags.BS_BOOK_DETAIL);
-        }
+                    .instantiate(getActivity(), BookDetailPagerFragment.class
+                                    .getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, FragmentTags.BS_BOOK_DETAIL);
+
+            }
     }
 
     @Override

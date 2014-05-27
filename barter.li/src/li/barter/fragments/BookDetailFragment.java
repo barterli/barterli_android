@@ -127,6 +127,23 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 	//private View                          mProfileDetails;
 
 
+	
+	 /**
+     * Create a new instance of CountingFragment, providing "num"
+     * as an argument.
+     */
+    public static BookDetailFragment newInstance(String userId,String bookId) {
+    	BookDetailFragment f = new BookDetailFragment();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putString(Keys.USER_ID, userId);
+        args.putString(Keys.BOOK_ID, bookId);
+        f.setArguments(args);
+       
+        return f;
+    }
+    
 	@Override
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, final Bundle savedInstanceState) {
@@ -169,6 +186,9 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 		if (extras != null) {
 			mBookId = extras.getString(Keys.BOOK_ID);
 			mUserId = extras.getString(Keys.USER_ID);
+			
+			Logger.d(TAG,mBookId+"  "+mUserId);
+			
 			mId = extras.getString(Keys.ID);
 			mCameFromOtherProfile = extras.getBoolean(Keys.OTHER_PROFILE_FLAG);
 			if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
@@ -180,7 +200,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 		updateViewForUser();
 
-
+		//8585548dfc518682  7f656a3f08cb08c4
 		loadBookDetails();
 		getUserDetails(mUserId);
 		loadMyBooks();
@@ -398,6 +418,8 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 		if ((token == QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER)
 				|| (token == QueryTokens.LOAD_BOOK_DETAIL_OTHER_USER)) {
+			
+			Logger.d(TAG,"query completed "+ cursor.getCount());
 			if (cursor.moveToFirst()) {
 				mIsbnTextView.setText(cursor.getString(cursor
 						.getColumnIndex(DatabaseColumns.ISBN_10)));
@@ -547,7 +569,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 		final Map<String, String> params = new HashMap<String, String>(2);
 
-		params.put(HttpConstants.ID, String.valueOf(userid));
+		params.put(HttpConstants.ID, String.valueOf(userid).trim());
 		request.setParams(params);
 
 		addRequestToQueue(request, true, 0,true);
@@ -619,6 +641,12 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 			}
 
 		}
+		if (loader.getId() == Loaders.GET_MY_BOOKS) {
+			Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
+			mBooksAroundMeAdapter.swapCursor(cursor);
+			loadUserDetails();
+		}
+		
 		if (loader.getId() == Loaders.GET_MY_BOOKS) {
 			Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
 			mBooksAroundMeAdapter.swapCursor(cursor);

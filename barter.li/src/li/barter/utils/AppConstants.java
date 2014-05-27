@@ -300,6 +300,9 @@ public class AppConstants {
         public static final String CUR_PAGE                   = "cur_page";
         public static final String HAS_LOADED_ALL_ITEMS       = "has_loaded_all_items";
         public static final String RELOAD                     = "reload";
+        public static final String BOOK_COUNT                 = "book_count";
+        public static final String BOOK_POSITION              = "book_position";
+        
 
     }
 
