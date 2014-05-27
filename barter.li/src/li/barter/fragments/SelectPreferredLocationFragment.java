@@ -52,7 +52,7 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.models.Hangout;
+import li.barter.models.Venue;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -97,9 +97,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     private MapView              mMapView;
 
     /**
-     * {@link Hangout}s used to place nearby marker locations on Map
+     * {@link Venue}s used to place nearby marker locations on Map
      */
-    private Hangout[]            mHangouts;
+    private Venue[]            mHangouts;
 
     /**
      * {@link Marker} that can be used to set a custom location
@@ -120,7 +120,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
      * A 1-to-1 mapping between the Map markers and the hangouts to resolve
      * which Hangout was selected when user tapped the marker info window
      */
-    private Map<Marker, Hangout> mMarkerHangoutMap;
+    private Map<Marker, Venue> mMarkerHangoutMap;
 
     private String               mFoursquareClientId;
 
@@ -138,7 +138,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         mFoursquareClientId = getString(R.string.foursquare_client_id);
         mFoursquareClientSecret = getString(R.string.foursquare_client_secret);
 
-        mMarkerHangoutMap = new HashMap<Marker, Hangout>();
+        mMarkerHangoutMap = new HashMap<Marker, Venue>();
         /*
          * The Google Maps V2 API states that when using MapView, we need to
          * forward the onCreate(Bundle) method to the MapView, but since we are
@@ -154,7 +154,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         moveMapToLocation(DeviceInfo.INSTANCE.getLatestLocation());
 
         if (savedInstanceState != null) {
-            mHangouts = (Hangout[]) savedInstanceState
+            mHangouts = (Venue[]) savedInstanceState
                             .getParcelableArray(Keys.LOCATIONS);
         }
 
@@ -301,7 +301,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                     final IBlRequestContract request,
                     final ResponseInfo response) {
         if (requestId == RequestId.FOURSQUARE_VENUES) {
-            mHangouts = (Hangout[]) response.responseBundle
+            mHangouts = (Venue[]) response.responseBundle
                             .getParcelableArray(HttpConstants.LOCATIONS);
             addMarkersToMap(mHangouts);
         } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
@@ -339,14 +339,14 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     /**
      * Parses the LatLng values from the Hangouts passed, adds Map markers
      */
-    private void addMarkersToMap(final Hangout[] hangouts) {
+    private void addMarkersToMap(final Venue[] hangouts) {
         final GoogleMap map = getMap();
         map.setOnMarkerClickListener(this);
         if (map != null) {
             mMarkerHangoutMap.clear();
 
             Marker marker = null;
-            for (final Hangout aHangout : hangouts) {
+            for (final Venue aHangout : hangouts) {
 
                 marker = map.addMarker(new MarkerOptions()
                                 .position(new LatLng(aHangout.latitude, aHangout.longitude))
@@ -393,7 +393,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
             //TODO Reverse geocode the marker position to get the location info
         } else {
 
-            final Hangout selectedHangout = mMarkerHangoutMap.get(marker);
+            final Venue selectedHangout = mMarkerHangoutMap.get(marker);
             Logger.v(TAG, "Marker Clicked: %s, %s", selectedHangout.name, selectedHangout.address);
             setUserPreferredLocation(selectedHangout.name, selectedHangout.address, selectedHangout.latitude, selectedHangout.longitude);
         }

@@ -252,5 +252,10 @@ public class HttpConstants {
     public static final String CLIENT_ID                   = "client_id";
     public static final String CLIENT_SECRET               = "client_secret";
     public static final String V                           = "v";
+    public static final String RESPONSE                    = "response";
+    public static final String VENUES                      = "venues";
+    public static final String LAT                         = "lat";
+    public static final String LNG                         = "lng";
+    public static final String DISTANCE                    = "distance";
 
 }
