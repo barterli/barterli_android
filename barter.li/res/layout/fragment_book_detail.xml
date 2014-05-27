@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   Copyright 2014, barter.li
   
@@ -14,209 +13,364 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    android:padding="@dimen/activity_margin" >
+    android:layout_height="match_parent" >
 
-    <RelativeLayout
-        android:id="@+id/layout_container"
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        sothree:dragView="@+id/name"
+        sothree:panelHeight="78dp"
+        sothree:paralaxOffset="100dp"
+        sothree:shadowHeight="4dp" >
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/label_isbn"
+        <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_author"
-            android:layout_marginTop="@dimen/activity_margin"
-            android:text="@string/isbn_label"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_medium"
-            android:visibility="gone"
-            app:fontStyle="condensed_regular" />
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:paddingTop="@dimen/activity_margin"
+            android:paddingRight="@dimen/activity_margin" 
+            android:paddingLeft="@dimen/activity_margin">
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/text_isbn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/label_isbn"
-            android:layout_marginTop="@dimen/margin_xx_small"
-            android:textSize="@dimen/text_small"
-            android:visibility="gone"
-            app:fontStyle="regular" />
+            <RelativeLayout
+                android:id="@+id/layout_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/label_publication_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_description"
-            android:layout_marginTop="@dimen/activity_margin"
-            android:text="@string/publication_date_label"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_medium"
-            app:fontStyle="condensed_regular" />
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/label_isbn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_author"
+                    android:layout_marginTop="@dimen/activity_margin"
+                    android:text="@string/isbn_label"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium"
+                    android:visibility="gone"
+                    app:fontStyle="condensed_regular" />
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/text_publication_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/label_publication_date"
-            android:layout_marginTop="@dimen/margin_xx_small"
-            android:textSize="@dimen/text_small"
-            app:fontStyle="regular" />
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/text_isbn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/label_isbn"
+                    android:layout_marginTop="@dimen/margin_xx_small"
+                    android:textSize="@dimen/text_small"
+                    android:visibility="gone"
+                    app:fontStyle="regular" />
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/label_suggested_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_publication_date"
-            android:layout_marginTop="@dimen/activity_margin"
-            android:text="@string/suggested_price_label"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_medium"
-            android:visibility="gone"
-            app:fontStyle="condensed_regular" />
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/label_publication_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_description"
+                    android:layout_marginTop="@dimen/activity_margin"
+                    android:text="@string/publication_date_label"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium"
+                    app:fontStyle="condensed_regular" />
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/text_suggested_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/label_suggested_price"
-            android:layout_marginTop="@dimen/margin_xx_small"
-            android:textSize="@dimen/text_small"
-            android:visibility="gone"
-            app:fontStyle="regular" />
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/text_publication_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/label_publication_date"
+                    android:layout_marginTop="@dimen/margin_xx_small"
+                    android:textSize="@dimen/text_small"
+                    app:fontStyle="regular" />
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/label_barter_types"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/book_avatar"
-            android:layout_marginTop="@dimen/margin_xx_small"
-            android:textColor="@color/dark_gray"
-            android:textSize="@dimen/text_medium"
-            app:fontStyle="condensed_regular" />
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/label_suggested_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_publication_date"
+                    android:layout_marginTop="@dimen/activity_margin"
+                    android:text="@string/suggested_price_label"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium"
+                    android:visibility="gone"
+                    app:fontStyle="condensed_regular" />
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/label_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/label_barter_types"
-            android:layout_marginTop="@dimen/margin_large"
-            android:text="@string/description_label"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_medium"
-            app:fontStyle="condensed_regular" />
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/text_suggested_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/label_suggested_price"
+                    android:layout_marginTop="@dimen/margin_xx_small"
+                    android:textSize="@dimen/text_small"
+                    android:visibility="gone"
+                    app:fontStyle="regular" />
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/text_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/label_description"
-            android:layout_marginTop="@dimen/margin_xx_small"
-            android:textSize="@dimen/text_small"
-            app:fontStyle="regular" />
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/label_barter_types"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/book_avatar"
+                    android:layout_marginTop="@dimen/margin_xx_small"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="@dimen/text_medium"
+                    app:fontStyle="condensed_regular" />
+
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/label_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/label_barter_types"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:text="@string/description_label"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium"
+                    app:fontStyle="condensed_regular" />
+
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/text_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/label_description"
+                    android:layout_marginTop="@dimen/margin_xx_small"
+                    android:textSize="@dimen/text_small"
+                    app:fontStyle="regular" />
+
+                <LinearLayout
+                    android:id="@+id/layout_barter_options1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/text_description"
+                    android:orientation="horizontal" >
+
+                    <li.barter.widgets.TypefacedTextView
+                        android:id="@+id/text_publication_month"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_margin"
+                        android:layout_weight="0.4"
+                        app:fontStyle="regular" />
+
+                    <li.barter.widgets.TypefacedTextView
+                        android:id="@+id/text_publication_year"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/activity_margin"
+                        android:layout_weight="0.6"
+                        app:fontStyle="regular" />
+                </LinearLayout>
+
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/text_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_title"
+                    android:layout_marginLeft="@dimen/margin_x_small"
+                    android:layout_toRightOf="@+id/book_avatar"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="@dimen/text_medium"
+                    app:fontStyle="regular" />
+
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/text_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginLeft="@dimen/margin_x_small"
+                    android:layout_toRightOf="@+id/book_avatar"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:maxLines="1"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium"
+                    android:textStyle="bold"
+                    app:fontStyle="regular" />
+
+                <ImageView
+                    android:id="@+id/book_avatar"
+                    android:layout_width="@dimen/book_image_width_for_detail"
+                    android:layout_height="@dimen/book_height_for_detail"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="@dimen/margin_large"
+                    android:contentDescription="@string/app_name" />
+            </RelativeLayout>
+        </ScrollView>
 
         <LinearLayout
-            android:id="@+id/layout_barter_options1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/text_description"
-            android:orientation="horizontal" >
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="false"
+             android:background="@color/white"
+            android:orientation="vertical" >
 
-            <li.barter.widgets.TypefacedTextView
-                android:id="@+id/text_publication_month"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_margin"
-                android:layout_weight="0.4"
-                app:fontStyle="regular" />
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                 android:layout_height="68dp"
+                
+                  >
 
-            <li.barter.widgets.TypefacedTextView
-                android:id="@+id/text_publication_year"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_margin"
-                android:layout_weight="0.6"
-                app:fontStyle="regular" />
+                <li.barter.widgets.CircleImageView
+                    android:id="@+id/image_user_circular"
+                    android:layout_width="@dimen/book_user_image_size_profile"
+                    android:layout_height="@dimen/book_user_image_size_profile"
+                    android:layout_marginLeft="@dimen/activity_margin"
+                     android:layout_marginRight="@dimen/activity_margin"
+                     android:layout_marginTop="@dimen/margin_xx_small"
+                    android:contentDescription="@string/app_name"
+                    android:gravity="center_vertical"
+                    app:borderColor="@color/white"
+                    app:borderWidth="2dp"
+                    app:cornerRadius="@dimen/book_user_image_size_profile" />
+
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/image_user_circular"
+                    android:gravity="center_vertical"
+                    android:text="@string/owner_profile"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium"
+                    app:fontStyle="regular" />
+
+                <ImageView
+                    android:id="@+id/chatwithowner"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="@dimen/activity_margin"
+                    android:contentDescription="@string/app_name"
+                    android:gravity="center_vertical"
+                    android:src="@drawable/chaticon" />
+            </RelativeLayout>
+
+           
+<RelativeLayout 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_margin"
+    android:background="@color/transparent" 
+   >
+
+    <ImageView
+        android:id="@+id/image_profile_pic"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_margin="@dimen/margin_minimum"
+        android:contentDescription="@string/image_profile_pic_description"
+        android:src="@drawable/pic_avatar" 
+        android:visibility="gone"/>
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/image_profile_pic"
+        android:layout_toRightOf="@id/image_profile_pic"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/text_default_profile_name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_large"
+        android:textStyle="bold"
+        app:fontStyle="regular" 
+        android:visibility="gone"/>
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/label_about_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/image_profile_pic"
+        android:layout_marginTop="@dimen/margin_xxx_small"
+        android:text="@string/label_about_me"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="condensed_regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_about_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/label_about_me"
+        android:layout_marginRight="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_xxx_small"
+        android:hint="@string/label_about_me"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/label_current_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/text_about_me"
+        android:layout_marginTop="@dimen/margin_minimum"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/label_current_location"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="condensed_regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_current_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/label_current_location"
+        android:layout_marginTop="@dimen/margin_xxx_small"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/text_default_current_location"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_small"
+        app:fontStyle="regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/label_my_books"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_below="@id/text_current_location"
+        android:layout_marginTop="@dimen/margin_minimum"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/label_my_books"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        android:textStyle="bold"
+        app:fontStyle="condensed_regular" />
+
+
+                <GridView
+                    android:id="@+id/list_my_books"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/transparent"
+                    android:cacheColorHint="@color/global_bg"
+                    android:horizontalSpacing="@dimen/bookGridHorizontalSpacing"
+                    android:numColumns="@integer/grid_col_count"
+                    android:overScrollMode="never"
+                    android:layout_below="@id/label_my_books"
+                    android:paddingBottom="@dimen/bookGridVerticalSpacing"
+                    android:scrollbars="none"
+                    android:verticalSpacing="@dimen/bookGridVerticalSpacing" />
+                </RelativeLayout>
         </LinearLayout>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/text_author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_title"
-            android:layout_marginLeft="@dimen/margin_x_small"
-            android:layout_toRightOf="@+id/book_avatar"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="@color/dark_gray"
-            android:textSize="@dimen/text_medium"
-            app:fontStyle="regular" />
-
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/text_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/margin_x_small"
-            android:layout_toRightOf="@+id/book_avatar"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_medium"
-            android:textStyle="bold"
-            app:fontStyle="regular" />
-
-        <ImageView
-            android:id="@+id/ownerpic"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignBottom="@+id/book_avatar"
-            android:layout_alignLeft="@+id/text_author"
-            android:layout_below="@+id/label_owner_profile"
-            android:layout_marginRight="@dimen/margin_x_small"
-            android:layout_marginTop="@dimen/margin_x_small"
-            android:contentDescription="@string/app_name" />
-
-        <ImageView
-            android:id="@+id/chatwithowner"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignBottom="@+id/book_avatar"
-            android:layout_alignTop="@+id/ownerpic"
-            android:layout_toRightOf="@+id/ownerpic"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/chaticon" />
-
-        <ImageView
-            android:id="@+id/book_avatar"
-            android:layout_width="@dimen/book_image_width_for_detail"
-            android:layout_height="@dimen/book_height_for_detail"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="@dimen/margin_large"
-            android:contentDescription="@string/app_name" />
-
-        <li.barter.widgets.TypefacedTextView
-            android:id="@+id/label_owner_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/ownerpic"
-            android:layout_below="@+id/text_author"
-            android:layout_marginTop="17dp"
-            android:text="@string/owner_profile"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_medium"
-            app:fontStyle="regular" />
-    </RelativeLayout>
-
-</ScrollView>
+</RelativeLayout>

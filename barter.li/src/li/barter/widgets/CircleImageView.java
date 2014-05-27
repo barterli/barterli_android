@@ -41,7 +41,6 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import li.barter.R;
-import li.barter.utils.Logger;
 
 /**
  * Custom ImageView to draw the content in a circular way. Works ONLY when

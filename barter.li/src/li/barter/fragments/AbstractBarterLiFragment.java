@@ -16,26 +16,6 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request;
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
-import android.view.MenuItem;
-import android.view.ViewGroup;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
@@ -55,6 +35,27 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.TypefaceCache;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.MenuItem;
+import android.view.ViewGroup;
+
+import com.android.volley.Request;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 /**
  * Base fragment class to encapsulate common functionality. Call the init()
@@ -314,6 +315,21 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      */
     public final void setActionBarTitle(final int titleResId) {
         setActionBarTitle(getString(titleResId));
+    }
+    
+    /**
+     * Sets the Action bar title, using the desired {@link Typeface} loaded from
+     * {@link TypefaceCache}
+     * 
+     * @param titleResId The title string resource Id to set for the Action Bar
+     */
+    public final int getActionBarHeight() {
+    	  int actionBarHeight = 0;
+	        TypedValue tv = new TypedValue();
+	        if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+	            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
+	        }
+    	  return actionBarHeight;
     }
 
     /**

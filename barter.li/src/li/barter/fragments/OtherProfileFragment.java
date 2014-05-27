@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +33,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import li.barter.R;
 import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.data.DBInterface;
@@ -310,6 +310,7 @@ OnItemClickListener {
 			mImageUrl = cursor.getString(cursor
                     .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
 			mProfileImageView.setTag(mImageUrl);
+			Logger.e(TAG, mImageUrl);
 			Picasso.with(getActivity()).load(mImageUrl + "?type=large").fit()
 			.centerCrop().error(R.drawable.pic_avatar)
 			.into(mProfileImageView);

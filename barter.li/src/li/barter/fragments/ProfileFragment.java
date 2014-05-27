@@ -81,6 +81,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     private final String                  mDefaultName = "Your Name";
 
     private ListView                      mBooksAroundMeListView;
+    
+    
 
     /**
      * {@link ProfileAdapter} instance for the Books
@@ -102,6 +104,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         setHasOptionsMenu(true);
         final View view = inflater.inflate(R.layout.fragment_my_profile, null);
 
+     
         mBooksAroundMeListView = (ListView) view
                         .findViewById(R.id.list_my_books);
 
@@ -379,5 +382,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                                             .getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
         }
     }
+    
+  
 
 }

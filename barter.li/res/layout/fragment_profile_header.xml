@@ -26,7 +26,8 @@
         android:layout_height="125dp"
         android:layout_margin="@dimen/margin_minimum"
         android:contentDescription="@string/image_profile_pic_description"
-        android:src="@drawable/pic_avatar" />
+        android:src="@drawable/pic_avatar" 
+        android:visibility="visible"/>
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_profile_name"
@@ -40,7 +41,8 @@
         android:textColor="@color/black"
         android:textSize="@dimen/text_large"
         android:textStyle="bold"
-        app:fontStyle="regular" />
+        app:fontStyle="regular" 
+        android:visibility="visible"/>
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/label_about_me"
