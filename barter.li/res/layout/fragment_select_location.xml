@@ -19,11 +19,19 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent" >
+    android:background="@color/transparent"
+    android:paddingBottom="@dimen/activity_margin"
+    android:paddingTop="@dimen/activity_margin" >
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/map_preferred_location"
+    <ListView
+        android:id="@+id/list_locations"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:cacheColorHint="@color/transparent"
+        android:divider="@color/transparent"
+        android:dividerHeight="@dimen/margin_xxx_small"
+        android:paddingLeft="@dimen/margin_xxx_small"
+        android:paddingRight="@dimen/margin_xxx_small" />
 
 </FrameLayout>
