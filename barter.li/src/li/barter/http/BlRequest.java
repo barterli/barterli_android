@@ -43,7 +43,7 @@ import li.barter.utils.Logger;
  */
 public class BlRequest extends JsonRequest<ResponseInfo> implements
                 IBlRequestContract {
-    
+
     private static final String TAG = "BlRequest";
 
     /**
@@ -108,7 +108,8 @@ public class BlRequest extends JsonRequest<ResponseInfo> implements
                 return new ParseError(e);
             }
         } else {
-            if(volleyError.networkResponse.data != null) {
+            if (volleyError.networkResponse != null
+                            && volleyError.networkResponse.data != null) {
                 try {
                     Logger.w(TAG, "Error message %s", new String(volleyError.networkResponse.data, HTTP.UTF_8));
                 } catch (UnsupportedEncodingException e) {

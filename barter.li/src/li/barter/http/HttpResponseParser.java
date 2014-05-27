@@ -93,7 +93,7 @@ public class HttpResponseParser {
 			return parseCreateUserResponse(response);
 		}
 
-		case RequestId.HANGOUTS: {
+		case RequestId.FOURSQUARE_VENUES: {
 			return parseHangoutsResponse(response);
 		}
 

@@ -40,6 +40,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import li.barter.R;
@@ -67,6 +68,17 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                 OnMarkerDragListener, OnMarkerClickListener {
 
     private static final String  TAG                      = "SelectPreferredLocationFragment";
+
+    /**
+     * Radius for searching locations
+     */
+    private static final int     SEARCH_RADIUS_IN_METERS  = 50000;
+
+    /**
+     * Foursquare Api versioning parameter. Visit
+     * https://developer.foursquare.com/overview/versioning for more info
+     */
+    private static final String  FOURSQUARE_API_VERSION   = "20140526";
 
     /**
      * Zoom level for the map when the location is retrieved
@@ -109,6 +121,10 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
      */
     private Map<Marker, Hangout> mMarkerHangoutMap;
 
+    private String               mFoursquareClientId;
+
+    private String               mFoursquareClientSecret;
+
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
@@ -118,6 +134,8 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                         .inflate(R.layout.fragment_select_location, container, false);
 
         showInfiniteCrouton(R.string.crouton_prefferedlocation_message, AlertStyle.INFO);
+        mFoursquareClientId = getString(R.string.foursquare_client_id);
+        mFoursquareClientSecret = getString(R.string.foursquare_client_secret);
 
         mMarkerHangoutMap = new HashMap<Marker, Hangout>();
         /*
@@ -140,7 +158,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         }
 
         if ((mHangouts == null) || (mHangouts.length == 0)) {
-            fetchHangoutsForLocation(DeviceInfo.INSTANCE.getLatestLocation(), 1000);
+            fetchVenuesForLocation(DeviceInfo.INSTANCE.getLatestLocation(), SEARCH_RADIUS_IN_METERS);
         } else {
             addMarkersToMap(mHangouts);
         }
@@ -155,23 +173,28 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
      * @param location The location to search for hangouts
      * @param radius Tghe search radius(in meters)
      */
-    private void fetchHangoutsForLocation(final Location location,
+    private void fetchVenuesForLocation(final Location location,
                     final int radius) {
 
-        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.HANGOUTS, null, mVolleyCallbacks);
-        request.setRequestId(RequestId.HANGOUTS);
+        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getFoursquareUrl()
+                        + ApiEndpoints.FOURSQUARE_VENUES, null, mVolleyCallbacks);
+        request.setRequestId(RequestId.FOURSQUARE_VENUES);
 
-        final Map<String, String> params = new HashMap<String, String>(3);
+        final Map<String, String> params = new HashMap<String, String>(7);
 
-        params.put(HttpConstants.LATITUDE, String.valueOf(location
-                        .getLatitude()));
-        params.put(HttpConstants.LONGITUDE, String.valueOf(location
-                        .getLongitude()));
-        params.put(HttpConstants.METERS, String.valueOf(radius));
+        params.put(HttpConstants.LL, String.format(Locale.US, "%f,%f", location
+                        .getLatitude(), location.getLongitude()));
+        params.put(HttpConstants.RADIUS, String.valueOf(radius));
+
+        //TODO Refactor this out to make it simpler to select location categories
+        params.put(HttpConstants.CATEGORY_ID, "4d4b7104d754a06370d81259,4d4b7105d754a06372d81259,4d4b7105d754a06374d81259,4d4b7105d754a06376d81259,4d4b7105d754a06377d81259,4d4b7105d754a06375d81259,4d4b7105d754a06378d81259,4d4b7105d754a06379d81259");
+        params.put(HttpConstants.INTENT, HttpConstants.BROWSE);
+        params.put(HttpConstants.CLIENT_ID, mFoursquareClientId);
+        params.put(HttpConstants.CLIENT_SECRET, mFoursquareClientSecret);
+        params.put(HttpConstants.V, FOURSQUARE_API_VERSION);
 
         request.setParams(params);
-        addRequestToQueue(request, true, 0,true);
+        addRequestToQueue(request, true, 0, false);
     }
 
     @Override
@@ -264,7 +287,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     public void onSuccess(final int requestId,
                     final IBlRequestContract request,
                     final ResponseInfo response) {
-        if (requestId == RequestId.HANGOUTS) {
+        if (requestId == RequestId.FOURSQUARE_VENUES) {
             mHangouts = (Hangout[]) response.responseBundle
                             .getParcelableArray(HttpConstants.LOCATIONS);
             addMarkersToMap(mHangouts);
@@ -283,7 +306,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     public void onBadRequestError(final int requestId,
                     final IBlRequestContract request, final int errorCode,
                     final String errorMessage, final Bundle errorResponseBundle) {
-        if (requestId == RequestId.HANGOUTS) {
+        if (requestId == RequestId.FOURSQUARE_VENUES) {
             showCrouton(R.string.unable_to_fetch_hangouts, AlertStyle.ERROR);
         } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
             showCrouton(R.string.error_unable_to_set_preferred_location, AlertStyle.ERROR);
@@ -384,7 +407,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody.toString(), mVolleyCallbacks);
-            addRequestToQueue(request, true, 0,true);
+            addRequestToQueue(request, true, 0, true);
             request.setRequestId(RequestId.SET_USER_PREFERRED_LOCATION);
         } catch (final JSONException e) {
             e.printStackTrace();
