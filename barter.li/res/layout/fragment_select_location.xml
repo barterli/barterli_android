@@ -20,8 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
-    android:paddingBottom="@dimen/activity_margin"
-    android:paddingTop="@dimen/activity_margin" >
+    android:padding="@dimen/activity_margin" >
 
     <ListView
         android:id="@+id/list_locations"
@@ -30,8 +29,6 @@
         android:background="@color/transparent"
         android:cacheColorHint="@color/transparent"
         android:divider="@color/transparent"
-        android:dividerHeight="@dimen/margin_xxx_small"
-        android:paddingLeft="@dimen/margin_xxx_small"
-        android:paddingRight="@dimen/margin_xxx_small" />
+        android:dividerHeight="@dimen/margin_x_small" />
 
 </FrameLayout>

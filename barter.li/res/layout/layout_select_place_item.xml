@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res/li.barter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/global_bg"
+    android:background="@drawable/bg_main_item"
     android:orientation="vertical"
     android:padding="@dimen/margin_x_small" >
 
@@ -36,5 +36,11 @@
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
         app:fontStyle="condensed_regular" />
+
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_main_item_overlay" />
 
 </LinearLayout>

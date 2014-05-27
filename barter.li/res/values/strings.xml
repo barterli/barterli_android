@@ -54,6 +54,7 @@
     <string name="add_manually">Add Book Manually</string>
     <string name="no_network_connection">No network connection!</string>
     <string name="location_format" formatted="false">#%s, %s</string>
+    <string name="meters_away">%d meters away</string>
     <string name="send">Send</string>
     <string name="enter_message">Enter your message</string>
     <string name="new_messages">%d new messages!</string>

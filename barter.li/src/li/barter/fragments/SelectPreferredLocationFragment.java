@@ -26,6 +26,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -33,6 +36,7 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.adapters.SelectLocationAdapter;
 import li.barter.http.BlRequest;
 import li.barter.http.FoursquareCategoryBuilder;
 import li.barter.http.HttpConstants;
@@ -52,29 +56,35 @@ import li.barter.utils.SharedPreferenceHelper;
  *         exchanging books
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
-public class SelectPreferredLocationFragment extends AbstractBarterLiFragment {
+public class SelectPreferredLocationFragment extends AbstractBarterLiFragment implements OnItemClickListener {
 
-    private static final String  TAG                      = "SelectPreferredLocationFragment";
+    private static final String   TAG                     = "SelectPreferredLocationFragment";
 
     /**
      * Radius for searching locations
      */
-    private static final int     SEARCH_RADIUS_IN_METERS  = 50000;
+    private static final int      SEARCH_RADIUS_IN_METERS = 50000;
 
     /**
      * Foursquare Api versioning parameter. Visit
      * https://developer.foursquare.com/overview/versioning for more info
      */
-    private static final String  FOURSQUARE_API_VERSION   = "20140526";
+    private static final String   FOURSQUARE_API_VERSION  = "20140526";
 
     /**
-     * {@link Venue}s used to place nearby marker locations on Map
+     * {@link Venue}s used to display nearby places
      */
-    private Venue[]            mHangouts;
+    private Venue[]               mVenues;
 
-    private String               mFoursquareClientId;
+    /**
+     * Adapter for displaying list of locations nearby for selecting as user's
+     * preferred location
+     */
+    private SelectLocationAdapter mSelectLocationAdapter;
 
-    private String               mFoursquareClientSecret;
+    private ListView              mVenueListView;
+    private String                mFoursquareClientId;
+    private String                mFoursquareClientSecret;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -84,19 +94,25 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment {
         final View contentView = inflater
                         .inflate(R.layout.fragment_select_location, container, false);
 
-        showInfiniteCrouton(R.string.crouton_prefferedlocation_message, AlertStyle.INFO);
+        mVenueListView = (ListView) contentView
+                        .findViewById(R.id.list_locations);
+        mSelectLocationAdapter = new SelectLocationAdapter(getActivity(), null);
+        mVenueListView.setAdapter(mSelectLocationAdapter);
+        mVenueListView.setOnItemClickListener(this);
+        
+        //showInfiniteCrouton(R.string.crouton_prefferedlocation_message, AlertStyle.INFO);
         mFoursquareClientId = getString(R.string.foursquare_client_id);
         mFoursquareClientSecret = getString(R.string.foursquare_client_secret);
-       
+
         if (savedInstanceState != null) {
-            mHangouts = (Venue[]) savedInstanceState
+            mVenues = (Venue[]) savedInstanceState
                             .getParcelableArray(Keys.LOCATIONS);
         }
 
-        if ((mHangouts == null) || (mHangouts.length == 0)) {
+        if ((mVenues == null) || (mVenues.length == 0)) {
             fetchVenuesForLocation(DeviceInfo.INSTANCE.getLatestLocation(), SEARCH_RADIUS_IN_METERS);
         } else {
-            //TODO Load Venues in List
+            mSelectLocationAdapter.setVenues(mVenues);
         }
         setActionBarDrawerToggleEnabled(false);
         return contentView;
@@ -133,7 +149,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment {
                         .with(FoursquareCategoryBuilder.SHOP_AND_SERVICE)
                         .with(FoursquareCategoryBuilder.TRAVEL_AND_TRANSPORT)
                         .build();
-        
+
         Logger.v(TAG, "Foursquare Category Filter - %s", foursquareCategoryFilter);
         params.put(HttpConstants.CATEGORY_ID, foursquareCategoryFilter);
         params.put(HttpConstants.INTENT, HttpConstants.BROWSE);
@@ -148,7 +164,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment {
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArray(Keys.LOCATIONS, mHangouts);
+        outState.putParcelableArray(Keys.LOCATIONS, mVenues);
     }
 
     @Override
@@ -167,8 +183,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment {
                     final IBlRequestContract request,
                     final ResponseInfo response) {
         if (requestId == RequestId.FOURSQUARE_VENUES) {
-            mHangouts = (Venue[]) response.responseBundle
+            mVenues = (Venue[]) response.responseBundle
                             .getParcelableArray(HttpConstants.LOCATIONS);
+            mSelectLocationAdapter.setVenues(mVenues);
         } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
 
             SharedPreferenceHelper
@@ -228,6 +245,17 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment {
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+
+        if(parent.getId() == R.id.list_locations) {
+            
+            final Venue venue = (Venue) mSelectLocationAdapter.getItem(position);
+            setUserPreferredLocation(venue.name, venue.address, venue.latitude, venue.longitude);
+        }
     }
 
 }
