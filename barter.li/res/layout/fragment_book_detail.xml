@@ -216,17 +216,16 @@
 
             <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_height="72dp" 
-                >
+                android:layout_height="72dp" >
 
                 <li.barter.widgets.CircleImageView
                     android:id="@+id/image_user_circular"
                     android:layout_width="@dimen/book_user_image_size_profile"
                     android:layout_height="@dimen/book_user_image_size_profile"
+                    android:layout_marginBottom="@dimen/margin_xx_small"
                     android:layout_marginLeft="@dimen/activity_margin"
                     android:layout_marginRight="@dimen/activity_margin"
                     android:layout_marginTop="@dimen/margin_xx_small"
-                    android:layout_marginBottom="@dimen/margin_xx_small"
                     android:contentDescription="@string/app_name"
                     android:gravity="center_vertical"
                     app:borderColor="@color/white"
@@ -243,8 +242,7 @@
                         android:id="@+id/name"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                         android:layout_weight="1"
-                         
+                        android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:text="@string/owner_profile"
                         android:textColor="@color/black"
@@ -255,13 +253,21 @@
                         android:id="@+id/chatwithowner"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                         android:layout_weight=".5"
                         android:layout_margin="@dimen/activity_margin"
+                        android:layout_weight=".5"
                         android:contentDescription="@string/app_name"
                         android:gravity="center_vertical|right"
                         android:src="@drawable/chaticon" />
                 </LinearLayout>
             </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/activity_margin"
+                android:layout_marginRight="@dimen/activity_margin"
+                android:background="@color/apptheme_color"
+                android:gravity="center" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
