@@ -24,32 +24,38 @@ import android.os.Parcelable;
  * 
  * @author Vinay S Shenoy
  */
-public class Hangout implements Parcelable {
+public class Venue implements Parcelable {
 
+    public String foursquareId;
     public String name;
     public String address;
     public double latitude;
     public double longitude;
+    public int distance;
 
     //Default constructor
-    public Hangout() {
+    public Venue() {
 
     }
 
     //Constructor to read from parcel
-    public Hangout(final Parcel source) {
+    public Venue(final Parcel source) {
+        foursquareId = source.readString();
         name = source.readString();
         address = source.readString();
         latitude = source.readDouble();
         longitude = source.readDouble();
+        distance = source.readInt();
     }
 
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
+        dest.writeString(foursquareId);
         dest.writeString(name);
         dest.writeString(address);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeInt(distance);
     }
 
     @Override
@@ -58,18 +64,18 @@ public class Hangout implements Parcelable {
     }
 
     /* REQUIRED FOR PARCELLABLE. DO NOT MODIFY IN ANY WAY */
-    public static final Creator<Hangout> CREATOR = new Creator<Hangout>() {
+    public static final Creator<Venue> CREATOR = new Creator<Venue>() {
 
                                                      @Override
-                                                     public Hangout createFromParcel(
+                                                     public Venue createFromParcel(
                                                                      final Parcel source) {
-                                                         return new Hangout(source);
+                                                         return new Venue(source);
                                                      }
 
                                                      @Override
-                                                     public Hangout[] newArray(
+                                                     public Venue[] newArray(
                                                                      final int size) {
-                                                         return new Hangout[size];
+                                                         return new Venue[size];
                                                      }
                                                  };
 

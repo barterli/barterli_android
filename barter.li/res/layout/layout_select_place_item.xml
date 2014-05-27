@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/li.barter"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main_item"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_x_small" >
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_place_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_place_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_small"
+        app:fontStyle="condensed_regular" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_distance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_small"
+        app:fontStyle="condensed_regular" />
+
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_main_item_overlay" />
+
+</LinearLayout>

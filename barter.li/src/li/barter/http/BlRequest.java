@@ -34,6 +34,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import li.barter.utils.Logger;
+
 /**
  * Request class for submitting requests to Volley
  * 
@@ -41,6 +43,8 @@ import java.util.Map;
  */
 public class BlRequest extends JsonRequest<ResponseInfo> implements
                 IBlRequestContract {
+
+    private static final String TAG = "BlRequest";
 
     /**
      * An identifier for the request that was made
@@ -104,6 +108,14 @@ public class BlRequest extends JsonRequest<ResponseInfo> implements
                 return new ParseError(e);
             }
         } else {
+            if (volleyError.networkResponse != null
+                            && volleyError.networkResponse.data != null) {
+                try {
+                    Logger.w(TAG, "Error message %s", new String(volleyError.networkResponse.data, HTTP.UTF_8));
+                } catch (UnsupportedEncodingException e) {
+                    //Not important since the error message is being printed for dev info only
+                }
+            }
             return super.parseNetworkError(volleyError);
         }
     }
