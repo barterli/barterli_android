@@ -48,17 +48,15 @@ public class AppConstants {
     public static final String  ACTION_SHOW_ALL_CHATS            = "li.barter.ACTION_SHOW_ALL_CHATS";
     public static final String  ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
     public static final String  ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
-    public static final String SAVED_STATE_ACTION_BAR_HIDDEN 	 = "saved_state_action_bar_hidden";
-
+    public static final String  SAVED_STATE_ACTION_BAR_HIDDEN    = "saved_state_action_bar_hidden";
 
     public static final String  JSON                             = "json";
-    
-    
+
     /*
      * heartbeat interval for rabbitmq chat
      */
-    public static final int  HEART_BEAT_INTERVAL                 = 20;
-    
+    public static final int     HEART_BEAT_INTERVAL              = 20;
+
     /*
      * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :
      * Default Book count value loaded when app starts
@@ -240,8 +238,8 @@ public class AppConstants {
         }
 
     }
-    
-     /**
+
+    /**
      * All the request codes used in the application will be placed here
      * 
      * @author Vinay S Shenoy
@@ -302,7 +300,6 @@ public class AppConstants {
         public static final String RELOAD                     = "reload";
         public static final String BOOK_COUNT                 = "book_count";
         public static final String BOOK_POSITION              = "book_position";
-        
 
     }
 
@@ -353,6 +350,7 @@ public class AppConstants {
         public static final String DIALOG_TAKE_PICTURE                             = "dialog_take_picture";
         public static final String DIALOG_ADD_NAME                                 = "dialog_add_name";
         public static final String DIALOG_ADD_BOOK                                 = "dialog_add_book";
+        public static final String DIALOG_ABOUT_LOCATION                           = "dialog_about_location";
     }
 
     /**

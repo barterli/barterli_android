@@ -105,7 +105,9 @@
     <string name="no_personal_info_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this feature suggestion will be available publicly.</string>
     <string name="error_required">Required</string>
     <string name="delete">Delete</string>
-
+    <string name="help_select_location">In order to protect your privacy, we don\'t reveal your location to anybody.\n\nInstead, please select a nearby venue from the list. This will be set as your preferred location for exchanging books. You can change this from your profile page anytime.</string>
+    <string name="about">About</string>
+    <string name="ok">OK</string>
     <!-- Barter Type Options -->
     <string name="give_away">Give Away</string>
     <string name="barter">Barter</string>

@@ -21,9 +21,13 @@ import com.android.volley.Request.Method;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -38,6 +42,7 @@ import java.util.Map;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.adapters.SelectLocationAdapter;
+import li.barter.fragments.dialogs.AlertDialogFragment;
 import li.barter.http.BlRequest;
 import li.barter.http.FoursquareCategoryBuilder;
 import li.barter.http.HttpConstants;
@@ -57,7 +62,8 @@ import li.barter.utils.SharedPreferenceHelper;
  *         exchanging books
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
-public class SelectPreferredLocationFragment extends AbstractBarterLiFragment implements OnItemClickListener {
+public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
+                implements OnItemClickListener {
 
     private static final String   TAG                     = "SelectPreferredLocationFragment";
 
@@ -91,7 +97,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment im
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
-
+        setHasOptionsMenu(true);
         final View contentView = inflater
                         .inflate(R.layout.fragment_select_location, container, false);
 
@@ -100,7 +106,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment im
         mSelectLocationAdapter = new SelectLocationAdapter(getActivity(), null, true);
         mVenueListView.setAdapter(mSelectLocationAdapter);
         mVenueListView.setOnItemClickListener(this);
-        
+
         //showInfiniteCrouton(R.string.crouton_prefferedlocation_message, AlertStyle.INFO);
         mFoursquareClientId = getString(R.string.foursquare_client_id);
         mFoursquareClientSecret = getString(R.string.foursquare_client_secret);
@@ -108,6 +114,10 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment im
         if (savedInstanceState != null) {
             mVenues = (Venue[]) savedInstanceState
                             .getParcelableArray(Keys.LOCATIONS);
+        } else {
+            
+            //TODO Show this only if the user has come here after sign in instead of editing the location
+            showAboutSelectLocationDialog();
         }
 
         if ((mVenues == null) || (mVenues.length == 0)) {
@@ -117,6 +127,30 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment im
         }
         setActionBarDrawerToggleEnabled(false);
         return contentView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_select_location, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.action_about_select_location) {
+            showAboutSelectLocationDialog();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
+    }
+
+    /**
+     * Display the Dialog for showing info about this screen
+     */
+    private void showAboutSelectLocationDialog() {
+        AlertDialogFragment fragment = new AlertDialogFragment();
+        fragment.show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.about, R.string.help_select_location, R.string.ok, 0, 0, getFragmentManager(), true, FragmentTags.DIALOG_ABOUT_LOCATION);
     }
 
     /**
@@ -252,9 +286,10 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment im
     public void onItemClick(AdapterView<?> parent, View view, int position,
                     long id) {
 
-        if(parent.getId() == R.id.list_locations) {
-            
-            final Venue venue = (Venue) mSelectLocationAdapter.getItem(position);
+        if (parent.getId() == R.id.list_locations) {
+
+            final Venue venue = (Venue) mSelectLocationAdapter
+                            .getItem(position);
             setUserPreferredLocation(venue.name, venue.address, venue.latitude, venue.longitude);
         }
     }
