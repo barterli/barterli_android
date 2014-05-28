@@ -161,9 +161,8 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 		/////////////////////////////////// TAB HOST CODE////////////////////////////////
 
 
-		mTabHost = (FragmentTabHost) view.findViewById(R.id.tabhost);
-		mTabHost.setup(getActivity(), getActivity().getSupportFragmentManager(), R.id.tabFrameLayout);
-
+        mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
+        mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
 		mTabHost.addTab(mTabHost.newTabSpec("aboutme").setIndicator("About Me"),
 				AboutMeFragment.class, getArguments());
