@@ -14,20 +14,27 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+<uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/grid_books_around_me"
+    android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/activity_margin"
-    android:layout_marginRight="@dimen/activity_margin"
-    android:background="@color/global_bg"
-    android:cacheColorHint="@color/global_bg"
-    android:horizontalSpacing="@dimen/bookGridHorizontalSpacing"
-    android:numColumns="@integer/grid_col_count"
-    android:overScrollMode="never"
-    android:paddingBottom="@dimen/bookGridVerticalSpacing"
-    android:paddingTop="@dimen/activity_margin"
-    android:scrollbars="none"
-    android:verticalSpacing="@dimen/bookGridVerticalSpacing" />
+    android:background="@color/global_bg" >
+
+    <GridView
+        android:id="@+id/grid_books_around_me"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:layout_marginRight="@dimen/activity_margin"
+        android:background="@color/transparent"
+        android:cacheColorHint="@color/transparent"
+        android:horizontalSpacing="@dimen/bookGridHorizontalSpacing"
+        android:numColumns="@integer/grid_col_count"
+        android:overScrollMode="never"
+        android:paddingBottom="@dimen/bookGridVerticalSpacing"
+        android:paddingTop="@dimen/activity_margin"
+        android:scrollbars="none"
+        android:verticalSpacing="@dimen/bookGridVerticalSpacing" />
+
+</uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

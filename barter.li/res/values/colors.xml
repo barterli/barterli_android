@@ -30,5 +30,6 @@
     <color name="crouton_alert">#FF99CC00</color>
     <color name="crouton_info">#FF33B5E5</color>
     <color name="red">#FF0000</color>
+    <color name="default_progress_bar_color">#FF33B5E5</color>
 
 </resources>
