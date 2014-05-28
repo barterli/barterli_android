@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
+ 
     <ListView
         android:id="@+id/list_my_books"
         android:layout_width="match_parent"
@@ -15,5 +15,5 @@
         android:paddingRight="@dimen/activity_margin"
         android:paddingTop="@dimen/activity_margin"
         android:scrollbars="vertical" />
-
+ 
 </FrameLayout>

@@ -25,6 +25,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -96,6 +97,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
 
     private View                          mProfileDetails;
+    
+ 
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -105,6 +108,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         final View view = inflater.inflate(R.layout.fragment_my_profile, null);
 
      
+		
+		
         mBooksAroundMeListView = (ListView) view
                         .findViewById(R.id.list_my_books);
 

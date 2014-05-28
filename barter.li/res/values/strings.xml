@@ -33,6 +33,8 @@
     <string name="Book_Detail_fragment_title">Book Detail</string>
     <string name="update_info">Update Info</string>
     <string name="cancel">Cancel</string>
+    <string name="aboutMe">About me</string>
+    <string name="myBooks">My Books</string>
 
     <!-- crouton info strings -->
     <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>
@@ -223,6 +225,8 @@
         <item>NineOldAndroids, A backport of the Android 3.0 Animation API. Licensed under the Apache v2.0 License.\nhttps://github.com/JakeWharton/NineOldAndroids/</item>
         <item>ListViewAnimations, A library to easily add animations to List Items. Licensed under the Apache v2.0 License.\nhttps://github.com/nhaarman/ListViewAnimations</item>
         <item>Crouton, Context sensitive notifications for Android. Licensed under the Apache v2.0 License.\nhttps://github.com/keyboardsurfer/Crouton</item>
+        <item>AndroidSlidingUpPanel, This library provides a simple way to add a draggable sliding up panel (popularized by Google Music, Google Maps and Rdio) to your Android application. Licensed under the Apache v2.0 License.\nhttps://github.com/umano/AndroidSlidingUpPanel</item>
+        
     </string-array>
 
     <string name="about_barterli">barter.li is an open source, community driven, not-for-profit project which aims to enable sharing of a billion books across the globe.</string>
