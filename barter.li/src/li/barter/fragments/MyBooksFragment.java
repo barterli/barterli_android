@@ -37,7 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
+import android.widget.GridView;
 
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
@@ -54,7 +54,7 @@ OnItemClickListener {
 	private static final String           TAG = "MyBooksFragment";
 
 	
-	private ListView                      mBooksAroundMeListView;
+	private GridView                      mBooksAroundMeGridView;
 
 	/**
 	 * {@link BooksAroundMeAdapter} instance for the Books
@@ -76,9 +76,9 @@ OnItemClickListener {
 			final ViewGroup container, final Bundle savedInstanceState) {
 		init(container, savedInstanceState);
 		setHasOptionsMenu(true);
-		final View view = inflater.inflate(R.layout.fragment_my_profile, null);
+		final View view = inflater.inflate(R.layout.fragment_profile_books, null);
 
-		mBooksAroundMeListView = (ListView) view
+		mBooksAroundMeGridView = (GridView) view
 				.findViewById(R.id.list_my_books);
 
 		setActionBarTitle(R.string.profilepage_title);
@@ -94,13 +94,13 @@ OnItemClickListener {
 		
 		loadMyBooks();
 		
-		mBooksAroundMeListView.addHeaderView(mProfileDetails, null, false);
+		
 		mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
 		mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
-		mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeListView);
-		mBooksAroundMeListView.setAdapter(mBooksAroundMeAdapter);
+		mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
+		mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
 
-		mBooksAroundMeListView.setOnItemClickListener(this);
+		mBooksAroundMeGridView.setOnItemClickListener(this);
 
 		setActionBarDrawerToggleEnabled(false);
 
@@ -181,8 +181,7 @@ OnItemClickListener {
 	public void onLoaderReset(final Loader<Cursor> loader) {
 		if (loader.getId() == Loaders.GET_MY_BOOKS) {
 			mBooksAroundMeAdapter.swapCursor(null);
-			mBooksAroundMeListView.setAdapter(null);
-			mBooksAroundMeListView.removeHeaderView(mProfileDetails);
+			mBooksAroundMeGridView.setAdapter(null);
 		}
 	}
 
@@ -191,25 +190,24 @@ OnItemClickListener {
 			final int position, final long id) {
 
 		if (parent.getId() == R.id.list_my_books) {
-			/*
-			 * Subtract from position to account for header
-			 */
 			final Cursor cursor = (Cursor) mBooksAroundMeAdapter
-					.getItem(position
-							- mBooksAroundMeListView
-							.getHeaderViewsCount());
-
-			final String bookId = cursor.getString(cursor
-					.getColumnIndex(DatabaseColumns.BOOK_ID));
-
-			final Bundle showBooksArgs = new Bundle();
-			showBooksArgs.putString(Keys.BOOK_ID, bookId);
-			showBooksArgs.putString(Keys.USER_ID, mUserId);
-			showBooksArgs.putBoolean(Keys.OTHER_PROFILE_FLAG, true);
-
-			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-					.instantiate(getActivity(), BookDetailFragment.class
-							.getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
+								.getItem(position);
+			
+			
+						final String bookId = cursor.getString(cursor
+								.getColumnIndex(DatabaseColumns.BOOK_ID));
+			
+						final String idBook = cursor.getString(cursor
+								.getColumnIndex(DatabaseColumns.ID));
+			
+						final Bundle showBooksArgs = new Bundle();
+						showBooksArgs.putString(Keys.BOOK_ID, bookId);
+						showBooksArgs.putString(Keys.ID, idBook);
+						showBooksArgs.putString(Keys.USER_ID, mUserId);
+			
+						loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+								.instantiate(getActivity(), BookDetailFragment.class
+										.getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
 		}
 	}
 

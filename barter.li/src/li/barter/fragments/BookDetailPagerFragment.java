@@ -158,7 +158,7 @@ public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
 	            	cursor.moveToNext();
 	               
 	            }
-	            mAdapter = new BookPageAdapter(getFragmentManager());
+	            mAdapter = new BookPageAdapter(getChildFragmentManager());
 	            
 	            mBookDetailPager.setAdapter(mAdapter);
 	            mBookDetailPager.setCurrentItem(mBookPosition);

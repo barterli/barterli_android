@@ -17,19 +17,16 @@ package li.barter.fragments;
 
 
 import li.barter.R;
-import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
-import li.barter.data.ViewUserBooksWithLocations;
 import li.barter.data.ViewUsersWithLocations;
 import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
-import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.Logger;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -38,10 +35,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 /**
  * @author Anshul Kamboj
@@ -53,22 +47,19 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 
 	private static final String           TAG = "AboutMeFragment";
 
-	private TextView                      mProfileNameTextView;
 	private TextView                      mAboutMeTextView;
 	private TextView                      mPreferredLocationTextView;
-	private ImageView                     mProfileImageView;
 	private String                        mImageUrl;
 	
 	private String                        mUserId;
 
-	private View                          mProfileDetails;
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, final Bundle savedInstanceState) {
 		init(container, savedInstanceState);
 		setHasOptionsMenu(true);
-		final View view = inflater.inflate(R.layout.fragment_my_profile, null);
+		final View view = inflater.inflate(R.layout.fragment_profile_aboutme, null);
 
 		
 
@@ -78,21 +69,17 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 
 		if (extras != null) {
 			mUserId = extras.getString(Keys.USER_ID);
+			Logger.d(TAG, mUserId);
 
 		}
 
 
-		mProfileDetails = inflater
-				.inflate(R.layout.fragment_profile_header, null);
-		mProfileNameTextView = (TextView) mProfileDetails
-				.findViewById(R.id.text_profile_name);
-		mAboutMeTextView = (TextView) mProfileDetails
+		
+		mAboutMeTextView = (TextView) view
 				.findViewById(R.id.text_about_me);
-		mPreferredLocationTextView = (TextView) mProfileDetails
+		mPreferredLocationTextView = (TextView) view
 				.findViewById(R.id.text_current_location);
-		mProfileImageView = (ImageView) mProfileDetails
-				.findViewById(R.id.image_profile_pic);
-		loadMyBooks();
+		loadUserDetails();
 		if (savedInstanceState == null) {
 			Logger.d(TAG, "savedInstanceState is null");
 			
@@ -100,16 +87,10 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 		} else {
 
 			Logger.d(TAG, "savedInstanceState is not null");
-			mProfileNameTextView.setText(savedInstanceState
-					.getString(HttpConstants.FIRST_NAME));
 			mAboutMeTextView.setText(savedInstanceState
 					.getString(HttpConstants.DESCRIPTION));
 			mPreferredLocationTextView.setText(savedInstanceState
 					.getString(HttpConstants.ADDRESS));
-			Picasso.with(getActivity()).load(savedInstanceState
-					.getString(HttpConstants.IMAGE_URL) + "?type=large").fit()
-					.centerCrop().error(R.drawable.pic_avatar)
-					.into(mProfileImageView);
 		}
 
 		setActionBarDrawerToggleEnabled(false);
@@ -122,14 +103,6 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 	public void onSaveInstanceState(final Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putString(HttpConstants.FIRST_NAME, mProfileNameTextView
-				.getText().toString());
-
-		if (mProfileImageView.getTag() != null) {
-			outState.putString(HttpConstants.IMAGE_URL, mProfileImageView
-					.getTag().toString());
-
-		}
 
 		outState.putString(HttpConstants.DESCRIPTION, mAboutMeTextView
 				.getText().toString());
@@ -142,27 +115,12 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 	@Override
 	public void onQueryComplete(final int token, final Object cookie,
 			final Cursor cursor) {
-		if (token == QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE) {
-
-			if (cursor.moveToFirst()) {
-				final String mPrefAddressName = cursor.getString(cursor
-						.getColumnIndex(DatabaseColumns.NAME))
-						+ ", "
-								+ cursor.getString(cursor
-										.getColumnIndex(DatabaseColumns.ADDRESS));
-
-				mPreferredLocationTextView.setText(mPrefAddressName);
-			}
-
-			cursor.close();
-
-		}
+	
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE);
 	}
 
 	@Override
@@ -207,17 +165,10 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 
 	}
 
-	/**
-	 * Fetches books owned by the current user
-	 */
 
-	private void loadMyBooks() {
-		getLoaderManager().restartLoader(Loaders.GET_MY_BOOKS, null, this);
-		loadUserDetails();
-	}
 
 	/**
-	 * Fetches books owned by the current user
+	 * Fetches userDetails
 	 */
 
 	private void loadUserDetails() {
@@ -226,15 +177,8 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 
 	@Override
 	public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
-		if (loaderId == Loaders.GET_MY_BOOKS) {
-			final String selection = DatabaseColumns.USER_ID
-					+ SQLConstants.EQUALS_ARG;
-			final String[] argsId = new String[1];
-			argsId[0]=mUserId;
-			return new SQLiteLoader(getActivity(), false, ViewUserBooksWithLocations.NAME, null, selection, argsId, null, null, null, null);
-		}
-
-		else if(loaderId == Loaders.USER_DETAILS)
+	
+		if(loaderId == Loaders.USER_DETAILS)
 		{
 			final String selection = DatabaseColumns.USER_ID
 					+ SQLConstants.EQUALS_ARG;
@@ -251,9 +195,7 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 
 	@Override
 	public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-		if (loader.getId() == Loaders.GET_MY_BOOKS) {
-			Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-		}
+		
 		if (loader.getId() == Loaders.USER_DETAILS) {
 			
 			Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
@@ -261,15 +203,9 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 			{
 			cursor.moveToFirst();
 			
-			mProfileNameTextView.setText(cursor.getString(cursor
-                    .getColumnIndex(DatabaseColumns.FIRST_NAME)));
+			
 			mImageUrl = cursor.getString(cursor
                     .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
-			mProfileImageView.setTag(mImageUrl);
-			Logger.e(TAG, mImageUrl);
-			Picasso.with(getActivity()).load(mImageUrl + "?type=large").fit()
-			.centerCrop().error(R.drawable.pic_avatar)
-			.into(mProfileImageView);
 
 			mAboutMeTextView.setText(cursor.getString(cursor
                     .getColumnIndex(DatabaseColumns.DESCRIPTION)));
@@ -284,8 +220,7 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 
 	@Override
 	public void onLoaderReset(final Loader<Cursor> loader) {
-		if (loader.getId() == Loaders.GET_MY_BOOKS) {
-		}
+		
 	}
 
 	

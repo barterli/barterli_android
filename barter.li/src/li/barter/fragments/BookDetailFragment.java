@@ -20,14 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
-import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.chat.ChatService;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
-import li.barter.data.TableLocations;
 import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.data.ViewUserBooksWithLocations;
@@ -65,13 +63,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
-import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.squareup.picasso.Picasso;
@@ -413,19 +408,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 	}
 
-	/**
-	 * Load the user's preferred location from DB Table and show it in the
-	 * profile page.
-	 */
-
-	private void loadPreferredLocation() {
-		DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
-				+ SQLConstants.EQUALS_ARG, new String[] {
-				SharedPreferenceHelper
-				.getString(getActivity(), R.string.pref_location)
-		}, null, null, null, null, this);
-	}
-
+	
 
 
 	@Override
@@ -492,19 +475,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 			cursor.close();
 		}
-		else if(token == QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE) {
-
-			if (cursor.moveToFirst()) {
-				final String mPrefAddressName = cursor.getString(cursor
-						.getColumnIndex(DatabaseColumns.NAME))
-						+ ", "
-						+ cursor.getString(cursor
-								.getColumnIndex(DatabaseColumns.ADDRESS));
-
-				//mPreferredLocationTextView.setText(mPrefAddressName);
-			}
-			cursor.close();
-		}
+		
 
 	}
 
@@ -569,7 +540,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 		loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
 				.instantiate(getActivity(), ChatDetailsFragment.class
-						.getName(), args), FragmentTags.CHAT_DETAILS, true, null);
+						.getName(), args), FragmentTags.CHAT_DETAILS, true, FragmentTags.CHATS);
 
 	}
 
