@@ -102,8 +102,8 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 	private boolean             mCameFromOtherProfile;
 	private ImageView			mChatLinkImageView;
 	private CircleImageView		mOwnerImageViewslide;
-	
-	
+
+
 
 	/**
 	 * {@link SlidingUpPanelLayout} This includes the profile of the owner
@@ -111,42 +111,42 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 	private SlidingUpPanelLayout		  mLayout;
 
-//	private TextView                      mAboutMeTextView;
-//	private TextView                      mPreferredLocationTextView;
-//	private ImageView                     mProfileImageView;
-//	private GridView                      mBooksAroundMeListView;
-//	/**
-//	 * {@link BooksAroundMeAdapter} instance for the Books
-//	 */
-//	private BooksAroundMeAdapter          mBooksAroundMeAdapter;
-//
-//	/**
-//	 * {@link AnimationAdapter} implementation to provide appearance animations
-//	 * for the book items as they are brought in
-//	 */
-//	private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
+	//	private TextView                      mAboutMeTextView;
+	//	private TextView                      mPreferredLocationTextView;
+	//	private ImageView                     mProfileImageView;
+	//	private GridView                      mBooksAroundMeListView;
+	//	/**
+	//	 * {@link BooksAroundMeAdapter} instance for the Books
+	//	 */
+	//	private BooksAroundMeAdapter          mBooksAroundMeAdapter;
+	//
+	//	/**
+	//	 * {@link AnimationAdapter} implementation to provide appearance animations
+	//	 * for the book items as they are brought in
+	//	 */
+	//	private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
 
 	//private View                          mProfileDetails;
 
 	private FragmentTabHost				  mTabHost;
 
-	
-	 /**
-     * Create a new instance of CountingFragment, providing "num"
-     * as an argument.
-     */
-    public static BookDetailFragment newInstance(String userId,String bookId) {
-    	BookDetailFragment f = new BookDetailFragment();
 
-        // Supply num input as an argument.
-        Bundle args = new Bundle();
-        args.putString(Keys.USER_ID, userId);
-        args.putString(Keys.BOOK_ID, bookId);
-        f.setArguments(args);
-       
-        return f;
-    }
-    
+	/**
+	 * Create a new instance of CountingFragment, providing "num"
+	 * as an argument.
+	 */
+	public static BookDetailFragment newInstance(String userId,String bookId) {
+		BookDetailFragment f = new BookDetailFragment();
+
+		// Supply num input as an argument.
+		Bundle args = new Bundle();
+		args.putString(Keys.USER_ID, userId);
+		args.putString(Keys.BOOK_ID, bookId);
+		f.setArguments(args);
+
+		return f;
+	}
+
 	@Override
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, final Bundle savedInstanceState) {
@@ -157,37 +157,37 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 		final View view = inflater
 				.inflate(R.layout.fragment_book_detail, container, false);
 		initViews(view);
-		
+
 		/////////////////////////////////// TAB HOST CODE////////////////////////////////
-		
-		
-		 mTabHost = (FragmentTabHost) view.findViewById(R.id.tabhost);
-	        mTabHost.setup(getActivity(), getActivity().getSupportFragmentManager(), R.id.tabFrameLayout);
 
 
-	        mTabHost.addTab(mTabHost.newTabSpec("aboutme").setIndicator("About Me"),
-	                AboutMeFragment.class, getArguments());
-	        
-	            mTabHost.addTab(mTabHost.newTabSpec("books").setIndicator("My Books"),
-	                MyBooksFragment.class, getArguments());
+		mTabHost = (FragmentTabHost) view.findViewById(R.id.tabhost);
+		mTabHost.setup(getActivity(), getActivity().getSupportFragmentManager(), R.id.tabFrameLayout);
 
-	    /////////////////////////////////////////////////////////////////////////////////
-//		mBooksAroundMeListView = (GridView) view
-//				.findViewById(R.id.list_my_books);
-//
-//		mAboutMeTextView = (TextView) view
-//				.findViewById(R.id.text_about_me);
-//		mPreferredLocationTextView = (TextView) view
-//				.findViewById(R.id.text_current_location);
-//		mProfileImageView = (ImageView) view
-//				.findViewById(R.id.image_profile_pic);
-//
-//		mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
-//		mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
-//		mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeListView);
-//		mBooksAroundMeListView.setAdapter(mSwingBottomInAnimationAdapter);
-//
-//		mBooksAroundMeListView.setOnItemClickListener(this);
+
+		mTabHost.addTab(mTabHost.newTabSpec("aboutme").setIndicator("About Me"),
+				AboutMeFragment.class, getArguments());
+
+		mTabHost.addTab(mTabHost.newTabSpec("books").setIndicator("My Books"),
+				MyBooksFragment.class, getArguments());
+
+		/////////////////////////////////////////////////////////////////////////////////
+		//		mBooksAroundMeListView = (GridView) view
+		//				.findViewById(R.id.list_my_books);
+		//
+		//		mAboutMeTextView = (TextView) view
+		//				.findViewById(R.id.text_about_me);
+		//		mPreferredLocationTextView = (TextView) view
+		//				.findViewById(R.id.text_current_location);
+		//		mProfileImageView = (ImageView) view
+		//				.findViewById(R.id.image_profile_pic);
+		//
+		//		mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
+		//		mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
+		//		mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeListView);
+		//		mBooksAroundMeListView.setAdapter(mSwingBottomInAnimationAdapter);
+		//
+		//		mBooksAroundMeListView.setOnItemClickListener(this);
 
 		setActionBarDrawerToggleEnabled(false);
 
@@ -204,9 +204,9 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 		if (extras != null) {
 			mBookId = extras.getString(Keys.BOOK_ID);
 			mUserId = extras.getString(Keys.USER_ID);
-			
+
 			Logger.d(TAG,mBookId+"  "+mUserId);
-			
+
 			mId = extras.getString(Keys.ID);
 			mCameFromOtherProfile = extras.getBoolean(Keys.OTHER_PROFILE_FLAG);
 			if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
@@ -435,7 +435,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 		if ((token == QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER)
 				|| (token == QueryTokens.LOAD_BOOK_DETAIL_OTHER_USER)) {
-			
+
 			Logger.d(TAG,"query completed "+ cursor.getCount());
 			if (cursor.moveToFirst()) {
 				mIsbnTextView.setText(cursor.getString(cursor
@@ -499,8 +499,8 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 				final String mPrefAddressName = cursor.getString(cursor
 						.getColumnIndex(DatabaseColumns.NAME))
 						+ ", "
-								+ cursor.getString(cursor
-										.getColumnIndex(DatabaseColumns.ADDRESS));
+						+ cursor.getString(cursor
+								.getColumnIndex(DatabaseColumns.ADDRESS));
 
 				//mPreferredLocationTextView.setText(mPrefAddressName);
 			}
@@ -637,23 +637,23 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 				mImageUrl = cursor.getString(cursor
 						.getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
-				
+
 				mOwnerNameSlide.setText(cursor.getString(cursor
 						.getColumnIndex(DatabaseColumns.FIRST_NAME))+" "+cursor.getString(cursor
 								.getColumnIndex(DatabaseColumns.LAST_NAME)));
-				
+
 				Picasso.with(getActivity())
 				.load(mImageUrl + "?type=large")
 				.resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile).centerCrop()
 				.into(mOwnerImageViewslide.getTarget());
 
-			
 
-//				mAboutMeTextView.setText(cursor.getString(cursor
-//						.getColumnIndex(DatabaseColumns.DESCRIPTION)));
-//				mPreferredLocationTextView.setText(cursor.getString(cursor
-//						.getColumnIndex(DatabaseColumns.NAME))+","+cursor.getString(cursor
-//								.getColumnIndex(DatabaseColumns.ADDRESS)));
+
+				//				mAboutMeTextView.setText(cursor.getString(cursor
+				//						.getColumnIndex(DatabaseColumns.DESCRIPTION)));
+				//				mPreferredLocationTextView.setText(cursor.getString(cursor
+				//						.getColumnIndex(DatabaseColumns.NAME))+","+cursor.getString(cursor
+				//								.getColumnIndex(DatabaseColumns.ADDRESS)));
 
 			}
 
@@ -663,7 +663,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 			//mBooksAroundMeAdapter.swapCursor(cursor);
 			loadUserDetails();
 		}
-		
+
 		if (loader.getId() == Loaders.GET_MY_BOOKS) {
 			Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
 			//mBooksAroundMeAdapter.swapCursor(cursor);
@@ -677,8 +677,8 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 		// TODO Auto-generated method stub
 		if (loader.getId() == Loaders.GET_MY_BOOKS) {
 
-//			mBooksAroundMeAdapter.swapCursor(null);
-//			mBooksAroundMeListView.setAdapter(null);
+			//			mBooksAroundMeAdapter.swapCursor(null);
+			//			mBooksAroundMeListView.setAdapter(null);
 
 		}
 	}
@@ -700,24 +700,24 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 			/*
 			 * Subtract from position to account for header
 			 */
-//			final Cursor cursor = (Cursor) mBooksAroundMeAdapter
-//					.getItem(position);
-//
-//
-//			final String bookId = cursor.getString(cursor
-//					.getColumnIndex(DatabaseColumns.BOOK_ID));
-//
-//			final String idBook = cursor.getString(cursor
-//					.getColumnIndex(DatabaseColumns.ID));
-//
-//			final Bundle showBooksArgs = new Bundle();
-//			showBooksArgs.putString(Keys.BOOK_ID, bookId);
-//			showBooksArgs.putString(Keys.ID, idBook);
-//			showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
-//
-//			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-//					.instantiate(getActivity(), BookDetailFragment.class
-//							.getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
+			//			final Cursor cursor = (Cursor) mBooksAroundMeAdapter
+			//					.getItem(position);
+			//
+			//
+			//			final String bookId = cursor.getString(cursor
+			//					.getColumnIndex(DatabaseColumns.BOOK_ID));
+			//
+			//			final String idBook = cursor.getString(cursor
+			//					.getColumnIndex(DatabaseColumns.ID));
+			//
+			//			final Bundle showBooksArgs = new Bundle();
+			//			showBooksArgs.putString(Keys.BOOK_ID, bookId);
+			//			showBooksArgs.putString(Keys.ID, idBook);
+			//			showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
+			//
+			//			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+			//					.instantiate(getActivity(), BookDetailFragment.class
+			//							.getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
 		}
 	}
 
