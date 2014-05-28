@@ -28,5 +28,6 @@
     android:numColumns="@integer/grid_col_count"
     android:overScrollMode="never"
     android:paddingBottom="@dimen/bookGridVerticalSpacing"
+    android:paddingTop="@dimen/activity_margin"
     android:scrollbars="none"
     android:verticalSpacing="@dimen/bookGridVerticalSpacing" />
