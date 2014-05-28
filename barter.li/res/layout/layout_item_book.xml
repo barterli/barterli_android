@@ -20,30 +20,17 @@
     android:layout_height="@dimen/book_height"
     android:background="@drawable/bg_main_item" >
 
-    <ImageView
-        android:id="@+id/image_book"
+    <include
+        android:id="@+id/image_book_and_user"
         android:layout_width="match_parent"
         android:layout_height="@dimen/book_image_height"
-        android:layout_alignParentLeft="true"
-        android:contentDescription="@string/app_name" />
-
-    <li.barter.widgets.CircleImageView
-        android:id="@+id/image_user"
-        android:layout_width="@dimen/book_user_image_size"
-        android:layout_height="@dimen/book_user_image_size"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/margin_xx_small"
-        android:contentDescription="@string/app_name"
-        app:borderColor="@color/white"
-        app:borderWidth="2dp"
-        app:cornerRadius="@dimen/book_user_image_size" />
+        layout="@layout/layout_book_and_user_image" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_book"
+        android:layout_below="@id/image_book_and_user"
         android:layout_marginLeft="@dimen/margin_xx_small"
         android:layout_marginRight="@dimen/activity_margin"
         android:layout_marginTop="@dimen/margin_xx_small"
