@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/dark_gray"
+        android:textColor="@color/apptheme_color"
         android:textSize="@dimen/text_small"
         app:fontStyle="condensed_regular" />
 
