@@ -23,8 +23,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.Arrays;
+
 import li.barter.R;
 import li.barter.models.Venue;
+import li.barter.models.VenueComparator;
 
 /**
  * Adapter for displaying a list of places to select a list of places from
@@ -34,24 +37,47 @@ import li.barter.models.Venue;
 public class SelectLocationAdapter extends BaseAdapter {
 
     /**
+     * Whether the venues should be sorted by distance
+     */
+    private boolean         mSortByDistance;
+
+    /**
      * Array of {@link Venue} objects, used as the data source for the adapter
      */
-    private Venue[] mVenues;
+    private Venue[]         mVenues;
+
+    /**
+     * Comparator for sorting venues by distance
+     */
+    private VenueComparator mVenueComparator;
 
     /**
      * A String which describes a formatted string with an integer argument for
      * formating the distance of the place from the user's location
      */
-    private String  mDistanceFormat;
+    private String          mDistanceFormat;
 
     /**
      * @param context
      * @param venues An Array of {@link Venue} objects to serve as the data
      *            source
+     * @param sortByDistance Whether the venues should be sorted by distance
      */
-    public SelectLocationAdapter(Context context, Venue[] venues) {
+    public SelectLocationAdapter(Context context, Venue[] venues, boolean sortByDistance) {
         mVenues = venues;
         mDistanceFormat = context.getString(R.string.meters_away);
+        mVenueComparator = new VenueComparator();
+        mSortByDistance = sortByDistance;
+        if (mSortByDistance && mVenues != null) {
+            sortVenues();
+        }
+    }
+
+    /**
+     * Sorts Venues by distance
+     */
+    private void sortVenues() {
+        Arrays.sort(mVenues, mVenueComparator);
     }
 
     @Override
@@ -99,6 +125,9 @@ public class SelectLocationAdapter extends BaseAdapter {
 
     public void setVenues(Venue[] venues) {
         mVenues = venues;
+        if (mSortByDistance && mVenues != null) {
+            sortVenues();
+        }
         notifyDataSetChanged();
     }
 }

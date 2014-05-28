@@ -30,6 +30,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -96,7 +97,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment im
 
         mVenueListView = (ListView) contentView
                         .findViewById(R.id.list_locations);
-        mSelectLocationAdapter = new SelectLocationAdapter(getActivity(), null);
+        mSelectLocationAdapter = new SelectLocationAdapter(getActivity(), null, true);
         mVenueListView.setAdapter(mSelectLocationAdapter);
         mVenueListView.setOnItemClickListener(this);
         
