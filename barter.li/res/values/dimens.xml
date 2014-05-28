@@ -39,7 +39,9 @@
     <dimen name="chat_detail_image_size">50dp</dimen>
     <dimen name="chat_detail_margin">40dp</dimen>
     <dimen name="ab_ip_size">32dp</dimen>
-    <dimen name="book_user_image_size">32dp</dimen>
+    <dimen name="book_user_image_size">26dp</dimen>
+    <dimen name="book_user_image_corner_radius">13dp</dimen>
+    <dimen name="book_user_image_border">1dp</dimen>
     <dimen name="book_user_image_size_profile">64dp</dimen>
     <!-- Text sizes -->
     <dimen name="text_micro">12sp</dimen>
