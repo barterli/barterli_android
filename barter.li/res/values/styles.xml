@@ -16,6 +16,16 @@
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="SmoothProgressBar" parent="android:Widget.Holo.ProgressBar.Horizontal">
+        <item name="spb_color">@color/spb_default_color</item>
+        <item name="spb_sections_count">@integer/spb_default_sections_count</item>
+        <item name="spb_speed">@string/spb_default_speed</item>
+        <item name="spb_stroke_width">@dimen/spb_default_stroke_width</item>
+        <item name="spb_stroke_separator_length">@dimen/spb_default_stroke_separator_length</item>
+        <item name="spb_reversed">@bool/spb_default_reversed</item>
+        <item name="spb_mirror_mode">@bool/spb_default_mirror_mode</item>
+    </style>
+
     <style name="ButtonAppTheme" parent="android:Widget.Holo.Light.Button">
         <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
         <item name="android:textSize">@dimen/text_big</item>
@@ -79,6 +89,7 @@
     <style name="ProgressBar.Apptheme" parent="@android:style/Widget.Holo.ProgressBar">
 
         <!-- <item name="android:progressDrawable">@drawable/progress_horizontal_apptheme</item> -->
+
 
         <!-- <item name="android:indeterminateDrawable">@drawable/apptheme_progress_indeterminate_horizontal_holo_light</item> -->
         <item name="android:minHeight">@dimen/ab_ip_size</item>

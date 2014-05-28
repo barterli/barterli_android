@@ -26,15 +26,9 @@
             android:showAsAction="ifRoom|collapseActionView"
             android:title="@string/search_for_books"/>
         <item
-            android:id="@+id/action_refresh_books"
-            android:icon="@drawable/ic_action_refresh"
-            android:orderInCategory="2"
-            android:showAsAction="ifRoom"
-            android:title="@string/refresh"/>
-        <item
             android:id="@+id/action_add_book"
             android:icon="@drawable/action_bar_add_book"
-            android:orderInCategory="3"
+            android:orderInCategory="2"
             android:showAsAction="ifRoom"
             android:title="@string/add_book"/>
     </group>

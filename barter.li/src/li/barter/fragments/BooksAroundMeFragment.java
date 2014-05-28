@@ -20,6 +20,10 @@ import com.android.volley.Request.Method;
 import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
 import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -82,8 +86,8 @@ import li.barter.utils.Utils;
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, AsyncDbQueryCallback,
-                OnItemClickListener, LoadMoreCallbacks,
-                NetworkCallbacks {
+                OnItemClickListener, LoadMoreCallbacks, NetworkCallbacks,
+                OnRefreshListener {
 
     private static final String           TAG                     = "BooksAroundMeFragment";
 
@@ -145,6 +149,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private SearchView                    mSearchView;
 
+    /**
+     * {@link PullToRefreshLayout} reference
+     */
+    private PullToRefreshLayout           mPullToRefreshLayout;
+
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
@@ -156,9 +165,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         setActionBarTitle(R.string.app_name);
 
+        mPullToRefreshLayout = (PullToRefreshLayout) contentView
+                        .findViewById(R.id.ptr_layout);
+
         mBooksAroundMeGridView = (GridView) contentView
                         .findViewById(R.id.grid_books_around_me);
 
+        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
+                        .listener(this).setup(mPullToRefreshLayout);
         LoadMoreHelper.init(this).on(mBooksAroundMeGridView);
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
@@ -290,19 +304,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
 
-            case R.id.action_refresh_books: {
-                mSearchView.setQuery(null, false);
-                final Bundle cookie = new Bundle(2);
-                cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
-                mEmptySearchCroutonFlag = false;
-                DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
-                return true;
-            }
-
             case R.id.action_add_book: {
-
                 showAddBookOptions();
-
                 return true;
             }
 
@@ -469,6 +472,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         super.onPostExecute(request);
         if (request.getRequestId() == RequestId.SEARCH_BOOKS) {
             mIsLoading = false;
+            mPullToRefreshLayout.setRefreshComplete();
         }
     }
 
@@ -668,6 +672,18 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         //   Delete the current search results before parsing the old ones
         DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT, cookie, TableSearchBooks.NAME, null, null, true, BooksAroundMeFragment.this);
 
+    }
+
+    @Override
+    public void onRefreshStarted(View view) {
+
+        if (view.getId() == R.id.grid_books_around_me) {
+            mSearchView.setQuery(null, false);
+            final Bundle cookie = new Bundle(2);
+            cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
+            mEmptySearchCroutonFlag = false;
+            DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
+        }
     }
 
 }

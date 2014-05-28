@@ -16,6 +16,6 @@
 -->
 <resources>
 
-    <integer name="grid_col_count">4</integer>
+    <integer name="grid_col_count">5</integer>
 
 </resources>
