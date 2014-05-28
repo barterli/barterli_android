@@ -15,39 +15,18 @@
   limitations under the License.
 -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<GridView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_books_container"
+    android:id="@+id/grid_books_around_me"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="end"
+    android:layout_marginLeft="@dimen/activity_margin"
+    android:layout_marginRight="@dimen/activity_margin"
     android:background="@color/global_bg"
-    android:orientation="vertical" >
-
-    <li.barter.widgets.TypefacedAutoCompleteTextView
-        android:id="@+id/auto_complete_books_around_me"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_margin"
-        android:background="@drawable/bg_main_item"
-        android:hint="@string/search_for_books"
-        android:padding="@dimen/margin_x_small"
-        android:textSize="@dimen/text_medium"
-        app:fontStyle="condensed_regular" />
-
-    <GridView
-        android:id="@+id/grid_books_around_me"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_margin"
-        android:layout_marginRight="@dimen/activity_margin"
-        android:background="@color/global_bg"
-        android:cacheColorHint="@color/global_bg"
-        android:horizontalSpacing="@dimen/bookGridHorizontalSpacing"
-        android:numColumns="@integer/grid_col_count"
-        android:overScrollMode="never"
-        android:paddingBottom="@dimen/bookGridVerticalSpacing"
-        android:scrollbars="none"
-        android:verticalSpacing="@dimen/bookGridVerticalSpacing" />
-
-</LinearLayout>
+    android:cacheColorHint="@color/global_bg"
+    android:horizontalSpacing="@dimen/bookGridHorizontalSpacing"
+    android:numColumns="@integer/grid_col_count"
+    android:overScrollMode="never"
+    android:paddingBottom="@dimen/bookGridVerticalSpacing"
+    android:scrollbars="none"
+    android:verticalSpacing="@dimen/bookGridVerticalSpacing" />

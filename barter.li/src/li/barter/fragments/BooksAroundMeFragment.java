@@ -90,16 +90,10 @@ import li.barter.utils.Utils;
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, AsyncDbQueryCallback,
-                OnItemClickListener, TextWatcher, LoadMoreCallbacks,
+                OnItemClickListener, LoadMoreCallbacks,
                 NetworkCallbacks {
 
     private static final String           TAG                     = "BooksAroundMeFragment";
-
-    /**
-     * TextView which will provide drop down suggestions as user searches for
-     * books
-     */
-    private AutoCompleteTextView          mBooksAroundMeAutoCompleteTextView;
 
     /**
      * Helper class for performing network search queries from Action Bar easily
@@ -169,8 +163,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                         .inflate(R.layout.fragment_books_around_me, container, false);
 
         setActionBarTitle(R.string.app_name);
-        mBooksAroundMeAutoCompleteTextView = (AutoCompleteTextView) contentView
-                        .findViewById(R.id.auto_complete_books_around_me);
 
         mBooksAroundMeGridView = (GridView) contentView
                         .findViewById(R.id.grid_books_around_me);
@@ -391,7 +383,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onPause() {
         super.onPause();
         saveLastFetchedInfoToPref();
-        mBooksAroundMeAutoCompleteTextView.removeTextChangedListener(this);
     }
 
     /**
@@ -415,7 +406,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onResume() {
         super.onResume();
         readLastFetchedInfoFromPref();
-        mBooksAroundMeAutoCompleteTextView.addTextChangedListener(this);
         final Location latestLocation = DeviceInfo.INSTANCE.getLatestLocation();
         if ((latestLocation.getLatitude() != 0.0)
                         && (latestLocation.getLongitude() != 0.0)) {
@@ -566,11 +556,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                     final int position, final long id) {
         if (parent.getId() == R.id.grid_books_around_me) {
 
-            final InputMethodManager imm = (InputMethodManager) getActivity()
-                            .getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(mBooksAroundMeAutoCompleteTextView
-                            .getWindowToken(), 0);
-
             final Cursor cursor = (Cursor) mBooksAroundMeAdapter
                             .getItem(position);
 
@@ -636,33 +621,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onQueryComplete(final int token, final Object cookie,
                     final Cursor cursor) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void beforeTextChanged(final CharSequence s, final int start,
-                    final int count, final int after) {
-        // TODO Auto-generated method stub
-
-    }
-
-    //Implemented for search bar..
-    @Override
-    public void onTextChanged(final CharSequence s, final int start,
-                    final int before, final int count) {
-
-        final Bundle cookie = new Bundle(2);
-        cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
-        cookie.putString(Keys.SEARCH, mBooksAroundMeAutoCompleteTextView
-                        .getText().toString());
-        //   Delete the current search results before parsing the old ones
-        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT, cookie, TableSearchBooks.NAME, null, null, true, BooksAroundMeFragment.this);
-
-    }
-
-    @Override
-    public void afterTextChanged(final Editable s) {
         // TODO Auto-generated method stub
 
     }
