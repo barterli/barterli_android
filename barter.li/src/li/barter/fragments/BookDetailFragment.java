@@ -138,11 +138,11 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
-        mTabHost.addTab(mTabHost.newTabSpec(getString(R.string.aboutMeSpec))
-                        .setIndicator(getString(R.string.aboutMe)), AboutMeFragment.class, getArguments());
+        mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.ABOUT_ME)
+                        .setIndicator(getString(R.string.about_me)), AboutMeFragment.class, getArguments());
 
-        mTabHost.addTab(mTabHost.newTabSpec(getString(R.string.myBooksSpec))
-                        .setIndicator(getString(R.string.myBooks)), MyBooksFragment.class, getArguments());
+        mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.MY_BOOKS)
+                        .setIndicator(getString(R.string.my_books)), MyBooksFragment.class, getArguments());
 
         /////////////////////////////////////////////////////////////////////////////////
 
@@ -234,7 +234,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mBookImageView = (ImageView) view.findViewById(R.id.book_avatar);
         mOwnerImageViewslide = (CircleImageView) view
                         .findViewById(R.id.image_user_circular);
-        mChatLinkImageView = (ImageView) view.findViewById(R.id.chatwithowner);
+        mChatLinkImageView = (ImageView) view.findViewById(R.id.chat_with_owner);
         mDescriptionTextView = (TextView) view
                         .findViewById(R.id.text_description);
 
@@ -445,7 +445,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onClick(final View v) {
-        if (v.getId() == R.id.chatwithowner) {
+        if (v.getId() == R.id.chat_with_owner) {
 
             if (isLoggedIn()) {
 
