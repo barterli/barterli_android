@@ -212,6 +212,7 @@ public class HttpConstants {
     public static final String HEADER_AUTHORIZATION        = "Authorization";
     public static final String MESSAGE                     = "message";
     public static final String TIME                        = "time";
+    public static final String SENT_AT                     = "sent_at";
     public static final String SENDER                      = "sender";
     public static final String RECEIVER                    = "receiver";
     public static final String PROFILE_IMAGE               = "profile_image";

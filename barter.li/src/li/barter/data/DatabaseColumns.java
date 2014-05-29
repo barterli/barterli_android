@@ -50,6 +50,7 @@ public interface DatabaseColumns {
     public static final String MESSAGE           = "message";
     public static final String TIMESTAMP_HUMAN   = "timestamp_human";
     public static final String TIMESTAMP_EPOCH   = "timestamp_epoch";
+    public static final String SENT_AT           = "sent_at";
     public static final String CHAT_ID           = "chat_id";
     public static final String CHAT_TYPE         = "chat_type";
     public static final String LAST_MESSAGE_ID   = "last_message_id";

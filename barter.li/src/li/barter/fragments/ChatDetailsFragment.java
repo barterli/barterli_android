@@ -16,6 +16,29 @@
 
 package li.barter.fragments;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.activities.HomeActivity;
+import li.barter.adapters.ChatDetailAdapter;
+import li.barter.chat.ChatAcknowledge;
+import li.barter.chat.ChatService;
+import li.barter.chat.ChatService.ChatServiceBinder;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
+import li.barter.data.SQLiteLoader;
+import li.barter.data.TableChatMessages;
+import li.barter.data.TableUsers;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.Logger;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -35,24 +58,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import li.barter.R;
-import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
-import li.barter.activities.HomeActivity;
-import li.barter.adapters.ChatDetailAdapter;
-import li.barter.chat.ChatAcknowledge;
-import li.barter.chat.ChatService;
-import li.barter.chat.ChatService.ChatServiceBinder;
-import li.barter.data.DatabaseColumns;
-import li.barter.data.SQLConstants;
-import li.barter.data.SQLiteLoader;
-import li.barter.data.TableChatMessages;
-import li.barter.data.TableUsers;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.ResponseInfo;
-import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.AppConstants.Loaders;
-import li.barter.utils.Logger;
-
 /**
  * Activity for displaying Chat Messages
  * 
@@ -60,7 +65,7 @@ import li.barter.utils.Logger;
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ChatDetailsFragment extends AbstractBarterLiFragment implements
-                ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener {
+                ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback {
 
     private static final String     TAG            = "ChatDetailsFragment";
 
@@ -310,12 +315,20 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
             if (!TextUtils.isEmpty(message)) {
                 if (mBoundToChatService && mChatService.isConnectedToChat()) {
-                    setActionEnabled(false);
-                    mChatService.sendMessageToUser(mWithUserId, message, mAcknowledge);
+                  
+        			SimpleDateFormat formatter = new SimpleDateFormat(AppConstants.TIMESTAMP_FORMAT, Locale.getDefault());
+                  final String sentAt = formatter.format(new Date());
+                    mChatService.sendMessageToUser(mWithUserId, message, mAcknowledge,sentAt);
+                   
+                    mSubmitChatEditText.setText(null);
                 } else {
                     showCrouton(R.string.error_not_connected_to_chat_service, AlertStyle.ERROR);
                 }
             }
+            
+            
+		
+
         }
     }
 
@@ -367,7 +380,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
         if (success) {
             //Clear the submit chat text since it was sent successfully
-            mSubmitChatEditText.setText(null);
+           //TODO
         } else {
             //Show error message
             showCrouton(R.string.error_unable_to_send_chat, AlertStyle.ERROR);
@@ -376,4 +389,28 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         setActionEnabled(true);
 
     }
+
+	@Override
+	public void onInsertComplete(int token, Object cookie, long insertRowId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onUpdateComplete(int token, Object cookie, int updateCount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+		// TODO Auto-generated method stub
+		
+	}
 }
