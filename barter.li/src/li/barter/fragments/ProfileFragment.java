@@ -107,9 +107,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 			}
 		}
 
+		
+		 
 		updateViewForUser();
 
-		
 		
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
@@ -138,6 +139,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 		}
         return view;
     }
+    
+    
     
     private void initViews(final View view) {
 		

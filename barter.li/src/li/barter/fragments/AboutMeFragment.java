@@ -63,7 +63,7 @@ AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
 
 		
 
-		setActionBarTitle(R.string.profilepage_title);
+		
 
 		final Bundle extras = getArguments();
 

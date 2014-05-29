@@ -258,7 +258,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,PanelSlideListene
 
 
 		mChatLinkImageView.setOnClickListener(this);
-
+		setActionBarTitle(R.string.Book_Detail_fragment_title);
 		// initBarterTypeCheckBoxes(view);
 
 	}
