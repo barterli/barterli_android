@@ -26,14 +26,14 @@ import li.barter.utils.Logger;
 
 /**
  * Table representation for search results for books
- * 
+ * @deprecated This class has been deprecated since the table is not in use anymore. All data is transfered to {@link TableUserBooks} as of DB version 2
  * @author Vinay S Shenoy
  */
 public class TableMyBooks {
 
     private static final String TAG  = "TableMyBooks";
 
-    public static final String  NAME = "MY_BOOKS";
+    static final String  NAME = "MY_BOOKS";
 
     public static void create(final SQLiteDatabase db) {
 
@@ -62,6 +62,7 @@ public class TableMyBooks {
         Logger.d(TAG, "Column Def: %s", columnDef);
         db.execSQL(String
                         .format(Locale.US, SQLConstants.CREATE_TABLE, NAME, columnDef));
+        throw new IllegalStateException("Deprecated Table is getting created " + NAME);
 
     }
 
@@ -69,18 +70,17 @@ public class TableMyBooks {
                     final int newVersion) {
 
       //Add any data migration code here. Default is to drop and rebuild the table
-        if (newVersion == 2) {
+        if (oldVersion == 1) {
+            
+            //TODO Copy all local data to Table User Books
 
-            String alterTableDef = String
-                            .format(Locale.US, SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String
-                                            .format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_OWNER_IMAGE_URL, ""));
-            Logger.d(TAG, "Alter Table Def: %s", alterTableDef);
-            db.execSQL(alterTableDef);
-        } else {
-
-            db.execSQL(String
-                            .format(Locale.US, SQLConstants.DROP_TABLE_IF_EXISTS, NAME));
-            create(db);
+            /*
+             * String alterTableDef = String .format(Locale.US,
+             * SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String
+             * .format(Locale.US, SQLConstants.DATA_TEXT,
+             * DatabaseColumns.BOOK_OWNER_IMAGE_URL, "")); Logger.d(TAG,
+             * "Alter Table Def: %s", alterTableDef); db.execSQL(alterTableDef);
+             */
         }
     }
 }

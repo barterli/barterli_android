@@ -93,7 +93,6 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         //Create tables
         TableSearchBooks.create(db);
         TableLocations.create(db);
-        TableMyBooks.create(db);
         TableUsers.create(db);
         TableChats.create(db);
         TableChatMessages.create(db);
@@ -101,7 +100,6 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
         //Create Views
         ViewSearchBooksWithLocations.create(db);
-        ViewMyBooksWithLocations.create(db);
         ViewChatsWithMessagesAndUsers.create(db);
         ViewUserBooksWithLocations.create(db);
         ViewUsersWithLocations.create(db);
@@ -114,7 +112,6 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         //Upgrade tables
         TableSearchBooks.upgrade(db, oldVersion, newVersion);
         TableLocations.upgrade(db, oldVersion, newVersion);
-        TableMyBooks.upgrade(db, oldVersion, newVersion);
         TableUsers.upgrade(db, oldVersion, newVersion);
         TableChats.upgrade(db, oldVersion, newVersion);
         TableChatMessages.upgrade(db, oldVersion, newVersion);
@@ -122,10 +119,17 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
         //Upgrade Views
         ViewSearchBooksWithLocations.upgrade(db, oldVersion, newVersion);
-        ViewMyBooksWithLocations.upgrade(db, oldVersion, newVersion);
         ViewChatsWithMessagesAndUsers.upgrade(db, oldVersion, newVersion);
         ViewUserBooksWithLocations.upgrade(db, oldVersion, newVersion);
         ViewUsersWithLocations.upgrade(db, oldVersion, newVersion);
+
+        /*
+         * Even though tables are deprecated, we need to ensure that data from
+         * Table My Books is moved to Table User Books and the older table and
+         * Views are dropped
+         */
+        TableMyBooks.upgrade(db, oldVersion, newVersion);
+        ViewMyBooksWithLocations.upgrade(db, oldVersion, newVersion);
     }
 
     /**
