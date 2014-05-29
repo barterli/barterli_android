@@ -60,7 +60,7 @@
                 app:fontStyle="regular" />
 
             <ImageView
-                android:id="@+id/chatwithowner"
+                android:id="@+id/chat_with_owner"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="@dimen/activity_margin"
@@ -105,4 +105,5 @@
                 android:layout_weight="1" />
         </LinearLayout>
     </android.support.v4.app.FragmentTabHost>
+
 </LinearLayout>
