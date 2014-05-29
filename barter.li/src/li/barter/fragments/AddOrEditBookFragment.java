@@ -51,8 +51,7 @@ import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
-import li.barter.data.TableLocations;
-import li.barter.data.TableMyBooks;
+import li.barter.data.TableUserBooks;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -77,7 +76,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 OnClickListener, AsyncDbQueryCallback,
                 INetworkSuggestCallbacks, OnCheckedChangeListener {
 
-    private static final String           TAG = "AddOrEditBookFragment";
+    private static final String           TAG            = "AddOrEditBookFragment";
 
     private EditText                      mIsbnEditText;
     private NetworkedAutoCompleteTextView mTitleEditText;
@@ -95,11 +94,14 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private boolean                       mHasFetchedDetails;
     private boolean                       mEditMode;
     private String                        mBookId;
-    private String                        mId;
+
     private String                        mImage_Url;
     private String                        mPublicationYear;
     private Button                        mdelete;
     private String                        mGoogleBooksApiKey;
+    private String                        mBookSelection = DatabaseColumns.BOOK_ID
+                                                                         + SQLConstants.EQUALS_ARG;
+
     /**
      * On resume, if <code>true</code> and the user has logged in, immediately
      * perform the request to add the book to server. This is to handle where
@@ -134,15 +136,11 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             if (mEditMode) {
                 mBookId = extras.getString(Keys.BOOK_ID);
-                mId = extras.getString(Keys.ID);
-                Logger.d(TAG, "Book Id: " + mId);
                 setActionBarTitle(R.string.editbook_title2);
-                //TODO Load book details from DB
 
                 //Reached here by editing current user's book
                 mdelete.setVisibility(View.VISIBLE);
-                DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableMyBooks.NAME, null, DatabaseColumns.BOOK_ID
-                                + SQLConstants.EQUALS_ARG, new String[] {
+                DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableUserBooks.NAME, null, mBookSelection, new String[] {
                     mBookId
                 }, null, null, null, null, this);
 
@@ -399,8 +397,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      * @param locationObject The location at which to create the book, if
      *            <code>null</code>, uses the user's preferred location
      */
-    private void UpdateBookOnServer(final JSONObject locationObject) {
-
+    private void updateBookOnServer(final JSONObject locationObject) {
         try {
 
             final JSONObject requestObject = new JSONObject();
@@ -434,7 +431,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 bookJson.put(HttpConstants.LOCATION, locationObject);
             }
             requestObject.put(HttpConstants.BOOK, bookJson);
-            requestObject.put(HttpConstants.ID, mId);
+            requestObject.put(HttpConstants.ID, mBookId);
             final BlRequest updateBookRequest = new BlRequest(Method.PUT, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
             updateBookRequest.setRequestId(RequestId.UPDATE_BOOK);
@@ -450,14 +447,14 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      * @param locationObject The location at which to create the book, if
      *            <code>null</code>, uses the user's preferred location
      */
-    private void DeleteBookOnServer(final JSONObject locationObject) {
+    private void deleteBookOnServer(final JSONObject locationObject) {
 
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put(HttpConstants.ID, mId);
-
+        /*
+         * TODO Investigate a better way to fix the hardcoding of Api endpoints.
+         * Do we need the ".json" suffix? That will help with this. Or pass the book id in params.
+         */
         final BlRequest deleteBookRequest = new BlRequest(Method.DELETE, HttpConstants.getApiBaseUrl()
-                        + "/books/" + mId, null, mVolleyCallbacks);
-        // deleteBookRequest.setParams(params);
+                        + "/books/" + mBookId, null, mVolleyCallbacks);
         deleteBookRequest.setRequestId(RequestId.DELETE_BOOK);
         addRequestToQueue(deleteBookRequest, true, 0, true);
     }
@@ -484,25 +481,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     public void onResume() {
         super.onResume();
         if (mShouldSubmitOnResume && isLoggedIn()) {
-
-            //    if (mEditMode) {
-            //TODO Edit book
-            //  } else {
             createBookOnServer(null);
-            // }
         }
-    }
-
-    /**
-     * Loads the user's preferred location from the DB
-     */
-    private void loadPreferredLocation() {
-
-        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
-                        + SQLConstants.EQUALS_ARG, new String[] {
-            SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_location)
-        }, null, null, null, null, this);
     }
 
     @Override
@@ -524,7 +504,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
                 if (mEditMode) {
 
-                    UpdateBookOnServer(null);
+                    updateBookOnServer(null);
                 } else {
 
                     if (hasFirstName()) {
@@ -554,7 +534,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
                                     if (mEditMode) {
 
-                                        DeleteBookOnServer(null);
+                                        deleteBookOnServer(null);
                                         dialog.dismiss();
                                     }
                                 }
@@ -630,8 +610,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     final ResponseInfo response) {
 
         switch (requestId) {
-            case RequestId.GET_BOOK_INFO:
-            {
+            case RequestId.GET_BOOK_INFO: {
                 mTitleEditText.setTextWithFilter(response.responseBundle
                                 .getString(HttpConstants.TITLE), false);
 
@@ -738,12 +717,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             case RequestId.DELETE_BOOK: {
 
-                final String selection = DatabaseColumns.ID
-                                + SQLConstants.EQUALS_ARG;
-                final String[] args = new String[1];
-
-                args[0] = mId;
-                DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK, null, TableMyBooks.NAME, selection, args, true, this);
+                DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK, null, TableUserBooks.NAME, mBookSelection, new String[] {
+                    mBookId
+                }, true, this);
 
                 break;
 
@@ -818,33 +794,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     @Override
     public void onQueryComplete(final int token, final Object cookie,
                     final Cursor cursor) {
-
-        if (token == QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK) {
-
-            try {
-                if (cursor.moveToFirst()) {
-                    final JSONObject locationObject = new JSONObject();
-                    locationObject.put(HttpConstants.NAME, cursor.getString(cursor
-                                    .getColumnIndex(DatabaseColumns.NAME)));
-                    locationObject.put(HttpConstants.ADDRESS, cursor.getString(cursor
-                                    .getColumnIndex(DatabaseColumns.ADDRESS)));
-                    locationObject.put(HttpConstants.LATITUDE, cursor.getDouble(cursor
-                                    .getColumnIndex(DatabaseColumns.LATITUDE)));
-                    locationObject.put(HttpConstants.LONGITUDE, cursor.getDouble(cursor
-                                    .getColumnIndex(DatabaseColumns.LONGITUDE)));
-
-                    // TODO Show location address
-                }
-
-            } catch (final JSONException e) {
-                Logger.e(TAG, e, "Unable to build location object");
-            } finally {
-                cursor.close();
-            }
-
-        }
-
-        else if (token == QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER) {
+        if (token == QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER) {
             if (cursor.moveToFirst()) {
                 mIsbnEditText.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.ISBN_10)));
@@ -863,17 +813,13 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 mImage_Url = cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.IMAGE_URL));
 
-                try {
-                    if (!cursor.getString(cursor.getColumnIndex(DatabaseColumns.VALUE))
-                                    .equals(null)) {
+                final String value = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.VALUE));
 
-                        mSellPriceEditText.setVisibility(View.VISIBLE);
-                        mSellPriceEditText
-                                        .setText(cursor.getString(cursor
-                                                        .getColumnIndex(DatabaseColumns.VALUE)));
-                    }
-                } catch (final Exception e) {
-                    // handle value = null exception
+                if (!TextUtils.isEmpty(value)) {
+
+                    mSellPriceEditText.setVisibility(View.VISIBLE);
+                    mSellPriceEditText.setText(value);
                 }
 
                 final String barterType = cursor.getString(cursor
@@ -912,7 +858,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     @Override
     public void onStop() {
         super.onStop();
-        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK);
         DBInterface.cancelAsyncQuery(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER);
     }
 

@@ -389,11 +389,10 @@ public class AppConstants {
     public static interface QueryTokens {
 
         // 1-100 for load queries
-        public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK       = 1;
-        public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE      = 2;
-        public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE      = 3;
-        public static final int LOAD_BOOK_DETAIL_CURRENT_USER             = 4;
-        public static final int LOAD_BOOK_DETAIL_OTHER_USER               = 5;
+        public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE      = 1;
+        public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE      = 2;
+        public static final int LOAD_BOOK_DETAIL_CURRENT_USER             = 3;
+        public static final int LOAD_BOOK_DETAIL_OTHER_USER               = 4;
 
         // 101-200 for insert queries
         public static final int INSERT_CHAT_MESSAGE                       = 101;

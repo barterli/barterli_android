@@ -105,6 +105,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         ViewUsersWithLocations.create(db);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onUpgrade(final SQLiteDatabase db, final int oldVersion,
                     final int newVersion) {

@@ -63,7 +63,6 @@ import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.TableChatMessages;
 import li.barter.data.TableChats;
-import li.barter.data.TableMyBooks;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.ChatsFragment;
 import li.barter.fragments.CollaborateFragment;
@@ -399,7 +398,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             UserInfo.INSTANCE.reset();
             DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, null, TableChats.NAME, null, null, true, this);
             DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, null, TableChatMessages.NAME, null, null, true, this);
-            DBInterface.deleteAsync(QueryTokens.DELETE_MY_BOOKS, null, TableMyBooks.NAME, null, null, true, this);
             SharedPreferenceHelper
                             .removeKeys(this, R.string.pref_auth_token, R.string.pref_email, R.string.pref_description, R.string.pref_location, R.string.pref_first_name, R.string.pref_last_name, R.string.pref_user_id, R.string.pref_profile_image);
             final Intent disconnectChatIntent = new Intent(this, ChatService.class);
