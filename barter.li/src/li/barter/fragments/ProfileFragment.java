@@ -335,5 +335,5 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public void onLoaderReset(final Loader<Cursor> loader) {
 
     }
-
+    
 }

@@ -99,7 +99,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private String                        mPublicationYear;
     private Button                        mdelete;
     private String                        mGoogleBooksApiKey;
-    private String                        mBookSelection = DatabaseColumns.BOOK_ID
+    private final String                        mBookSelection = DatabaseColumns.BOOK_ID
                                                                          + SQLConstants.EQUALS_ARG;
 
     /**

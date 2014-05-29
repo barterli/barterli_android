@@ -95,7 +95,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private boolean              mCameFromOtherProfile;
     private ImageView            mChatLinkImageView;
     private CircleImageView      mOwnerImageViewslide;
-    private String               mBookSelection = DatabaseColumns.BOOK_ID
+    private final String               mBookSelection = DatabaseColumns.BOOK_ID
                                                                 + SQLConstants.EQUALS_ARG;
 
     /**

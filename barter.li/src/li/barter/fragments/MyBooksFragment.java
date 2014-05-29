@@ -27,6 +27,7 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.Logger;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -48,167 +49,146 @@ import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnim
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class MyBooksFragment extends AbstractBarterLiFragment implements
- LoaderCallbacks<Cursor>,
-OnItemClickListener {
+                LoaderCallbacks<Cursor>, OnItemClickListener {
 
-	private static final String           TAG = "MyBooksFragment";
+    private static final String           TAG            = "MyBooksFragment";
 
-	
-	private GridView                      mBooksAroundMeGridView;
+    private GridView                      mBooksAroundMeGridView;
 
-	/**
-	 * {@link BooksAroundMeAdapter} instance for the Books
-	 */
-	private BooksAroundMeAdapter          mBooksAroundMeAdapter;
+    /**
+     * {@link BooksAroundMeAdapter} instance for the Books
+     */
+    private BooksAroundMeAdapter          mBooksAroundMeAdapter;
 
-	/**
-	 * {@link AnimationAdapter} implementation to provide appearance animations
-	 * for the book items as they are brought in
-	 */
-	private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
+    /**
+     * {@link AnimationAdapter} implementation to provide appearance animations
+     * for the book items as they are brought in
+     */
+    private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
 
-	private String                        mUserId;
+    private String                        mUserId;
 
-	private View                          mProfileDetails;
+    private final String                  mUserSelection = DatabaseColumns.USER_ID
+                                                                         + SQLConstants.EQUALS_ARG;
 
-	@Override
-	public View onCreateView(final LayoutInflater inflater,
-			final ViewGroup container, final Bundle savedInstanceState) {
-		init(container, savedInstanceState);
-		setHasOptionsMenu(true);
-		final View view = inflater.inflate(R.layout.fragment_profile_books, null);
+    @Override
+    public View onCreateView(final LayoutInflater inflater,
+                    final ViewGroup container, final Bundle savedInstanceState) {
+        init(container, savedInstanceState);
+        setHasOptionsMenu(true);
+        final View view = inflater
+                        .inflate(R.layout.fragment_profile_books, null);
 
-		mBooksAroundMeGridView = (GridView) view
-				.findViewById(R.id.list_my_books);
+        mBooksAroundMeGridView = (GridView) view
+                        .findViewById(R.id.list_my_books);
 
-		setActionBarTitle(R.string.profilepage_title);
+        setActionBarTitle(R.string.profilepage_title);
 
-		final Bundle extras = getArguments();
+        final Bundle extras = getArguments();
 
-		if (extras != null) {
-			mUserId = extras.getString(Keys.USER_ID);
+        if (extras != null) {
+            mUserId = extras.getString(Keys.USER_ID);
+        }
 
-		}
+        loadMyBooks();
 
+        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
+        mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
+        mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
+        mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
 
-		
-		loadMyBooks();
-		
-		
-		mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
-		mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
-		mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
-		mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
+        mBooksAroundMeGridView.setOnItemClickListener(this);
 
-		mBooksAroundMeGridView.setOnItemClickListener(this);
+        setActionBarDrawerToggleEnabled(false);
 
-		setActionBarDrawerToggleEnabled(false);
+        return view;
+    }
 
-		return view;
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 
+    @Override
+    protected Object getVolleyTag() {
+        return TAG;
+    }
 
-	
+    @Override
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
 
+    }
 
-	
+    @Override
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
 
-	@Override
-	public void onStop() {
-		super.onStop();
-	}
+    }
 
-	@Override
-	protected Object getVolleyTag() {
-		return TAG;
-	}
+    /**
+     * Fetches books owned by the current user
+     */
 
-	@Override
-	public void onSuccess(final int requestId,
-			final IBlRequestContract request,
-			final ResponseInfo response) {
-		// TODO Auto-generated method stub
+    private void loadMyBooks() {
+        getLoaderManager().restartLoader(Loaders.GET_MY_BOOKS, null, this);
+    }
 
-	}
+    @Override
+    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
+        if (loaderId == Loaders.GET_MY_BOOKS) {
+            return new SQLiteLoader(getActivity(), false, ViewUserBooksWithLocations.NAME, null, mUserSelection, new String[] {
+                mUserId
+            }, null, null, null, null);
+        }
 
-	@Override
-	public void onBadRequestError(final int requestId,
-			final IBlRequestContract request, final int errorCode,
-			final String errorMessage, final Bundle errorResponseBundle) {
-		// TODO Auto-generated method stub
+        else {
+            return null;
+        }
+    }
 
-	}
+    @Override
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
+        if (loader.getId() == Loaders.GET_MY_BOOKS) {
+            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
+            mBooksAroundMeAdapter.swapCursor(cursor);
+        }
 
+    }
 
+    @Override
+    public void onLoaderReset(final Loader<Cursor> loader) {
+        if (loader.getId() == Loaders.GET_MY_BOOKS) {
+            mBooksAroundMeAdapter.swapCursor(null);
+            mBooksAroundMeGridView.setAdapter(null);
+        }
+    }
 
-	/**
-	 * Fetches books owned by the current user
-	 */
+    @Override
+    public void onItemClick(final AdapterView<?> parent, final View view,
+                    final int position, final long id) {
 
-	private void loadMyBooks() {
-		getLoaderManager().restartLoader(Loaders.GET_MY_BOOKS, null, this);
-	}
+        if (parent.getId() == R.id.list_my_books) {
+            final Cursor cursor = (Cursor) mBooksAroundMeAdapter
+                            .getItem(position);
 
-	@Override
-	public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
-		if (loaderId == Loaders.GET_MY_BOOKS) {
-			final String selection = DatabaseColumns.USER_ID
-					+ SQLConstants.EQUALS_ARG;
-			final String[] argsId = new String[1];
-			argsId[0]=mUserId;
-			return new SQLiteLoader(getActivity(), false, ViewUserBooksWithLocations.NAME, null, selection, argsId, null, null, null, null);
-		}
+            final String bookId = cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.BOOK_ID));
 
-		
-		else {
+            final String idBook = cursor.getString(cursor
+                            .getColumnIndex(DatabaseColumns.ID));
 
+            final Bundle showBooksArgs = new Bundle();
+            showBooksArgs.putString(Keys.BOOK_ID, bookId);
+            showBooksArgs.putString(Keys.ID, idBook);
+            showBooksArgs.putString(Keys.USER_ID, mUserId);
 
-			return null;
-		}
-	}
-
-	@Override
-	public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-		if (loader.getId() == Loaders.GET_MY_BOOKS) {
-			Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-			mBooksAroundMeAdapter.swapCursor(cursor);
-		}
-		
-		
-	}
-
-	@Override
-	public void onLoaderReset(final Loader<Cursor> loader) {
-		if (loader.getId() == Loaders.GET_MY_BOOKS) {
-			mBooksAroundMeAdapter.swapCursor(null);
-			mBooksAroundMeGridView.setAdapter(null);
-		}
-	}
-
-	@Override
-	public void onItemClick(final AdapterView<?> parent, final View view,
-			final int position, final long id) {
-
-		if (parent.getId() == R.id.list_my_books) {
-			final Cursor cursor = (Cursor) mBooksAroundMeAdapter
-								.getItem(position);
-			
-			
-						final String bookId = cursor.getString(cursor
-								.getColumnIndex(DatabaseColumns.BOOK_ID));
-			
-						final String idBook = cursor.getString(cursor
-								.getColumnIndex(DatabaseColumns.ID));
-			
-						final Bundle showBooksArgs = new Bundle();
-						showBooksArgs.putString(Keys.BOOK_ID, bookId);
-						showBooksArgs.putString(Keys.ID, idBook);
-						showBooksArgs.putString(Keys.USER_ID, mUserId);
-			
-						loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-								.instantiate(getActivity(), BookDetailFragment.class
-										.getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
-		}
-	}
+            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                            .instantiate(getActivity(), BookDetailFragment.class
+                                            .getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
+        }
+    }
 
 }
