@@ -73,7 +73,7 @@ import com.squareup.picasso.Picasso;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class BookDetailFragment extends AbstractBarterLiFragment implements
-AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListener,PanelSlideListener {
+AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,PanelSlideListener {
 
 	private static final String TAG = "ShowSingleBookFragment";
 
@@ -105,23 +105,6 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 	 */
 
 	private SlidingUpPanelLayout		  mLayout;
-
-	//	private TextView                      mAboutMeTextView;
-	//	private TextView                      mPreferredLocationTextView;
-	//	private ImageView                     mProfileImageView;
-	//	private GridView                      mBooksAroundMeListView;
-	//	/**
-	//	 * {@link BooksAroundMeAdapter} instance for the Books
-	//	 */
-	//	private BooksAroundMeAdapter          mBooksAroundMeAdapter;
-	//
-	//	/**
-	//	 * {@link AnimationAdapter} implementation to provide appearance animations
-	//	 * for the book items as they are brought in
-	//	 */
-	//	private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
-
-	//private View                          mProfileDetails;
 
 	private FragmentTabHost				  mTabHost;
 
@@ -159,29 +142,13 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
-		mTabHost.addTab(mTabHost.newTabSpec("aboutme").setIndicator("About Me"),
+        mTabHost.addTab(mTabHost.newTabSpec(getString(R.string.aboutMeSpec)).setIndicator(getString(R.string.aboutMe)),
 				AboutMeFragment.class, getArguments());
 
-		mTabHost.addTab(mTabHost.newTabSpec("books").setIndicator("My Books"),
+		mTabHost.addTab(mTabHost.newTabSpec(getString(R.string.myBooksSpec)).setIndicator(getString(R.string.myBooks)),
 				MyBooksFragment.class, getArguments());
 
 		/////////////////////////////////////////////////////////////////////////////////
-		//		mBooksAroundMeListView = (GridView) view
-		//				.findViewById(R.id.list_my_books);
-		//
-		//		mAboutMeTextView = (TextView) view
-		//				.findViewById(R.id.text_about_me);
-		//		mPreferredLocationTextView = (TextView) view
-		//				.findViewById(R.id.text_current_location);
-		//		mProfileImageView = (ImageView) view
-		//				.findViewById(R.id.image_profile_pic);
-		//
-		//		mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
-		//		mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
-		//		mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeListView);
-		//		mBooksAroundMeListView.setAdapter(mSwingBottomInAnimationAdapter);
-		//
-		//		mBooksAroundMeListView.setOnItemClickListener(this);
 
 		setActionBarDrawerToggleEnabled(false);
 
@@ -617,14 +584,6 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 				.resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile).centerCrop()
 				.into(mOwnerImageViewslide.getTarget());
 
-
-
-				//				mAboutMeTextView.setText(cursor.getString(cursor
-				//						.getColumnIndex(DatabaseColumns.DESCRIPTION)));
-				//				mPreferredLocationTextView.setText(cursor.getString(cursor
-				//						.getColumnIndex(DatabaseColumns.NAME))+","+cursor.getString(cursor
-				//								.getColumnIndex(DatabaseColumns.ADDRESS)));
-
 			}
 
 		}
@@ -647,9 +606,6 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 		// TODO Auto-generated method stub
 		if (loader.getId() == Loaders.GET_MY_BOOKS) {
 
-			//			mBooksAroundMeAdapter.swapCursor(null);
-			//			mBooksAroundMeListView.setAdapter(null);
-
 		}
 	}
 
@@ -661,35 +617,6 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 		outState.putBoolean(AppConstants.SAVED_STATE_ACTION_BAR_HIDDEN, mLayout.isExpanded());
 	}
 
-	@Override
-	public void onItemClick(final AdapterView<?> parent, final View view,
-			final int position, final long id) {
-
-		if (parent.getId() == R.id.list_my_books) {
-
-			/*
-			 * Subtract from position to account for header
-			 */
-			//			final Cursor cursor = (Cursor) mBooksAroundMeAdapter
-			//					.getItem(position);
-			//
-			//
-			//			final String bookId = cursor.getString(cursor
-			//					.getColumnIndex(DatabaseColumns.BOOK_ID));
-			//
-			//			final String idBook = cursor.getString(cursor
-			//					.getColumnIndex(DatabaseColumns.ID));
-			//
-			//			final Bundle showBooksArgs = new Bundle();
-			//			showBooksArgs.putString(Keys.BOOK_ID, bookId);
-			//			showBooksArgs.putString(Keys.ID, idBook);
-			//			showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
-			//
-			//			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-			//					.instantiate(getActivity(), BookDetailFragment.class
-			//							.getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
-		}
-	}
 
 	@Override
 	public void onPanelSlide(View panel, float slideOffset) {

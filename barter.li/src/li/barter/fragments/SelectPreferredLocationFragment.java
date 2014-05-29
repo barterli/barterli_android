@@ -227,7 +227,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                                             .getString(HttpConstants.ID_LOCATION));
 
             onUpNavigate();
-
+            
         }
     }
 

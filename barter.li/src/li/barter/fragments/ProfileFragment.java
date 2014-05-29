@@ -24,7 +24,7 @@ import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
-import li.barter.data.ViewUsersWithLocations;
+import li.barter.data.TableUsers;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -101,6 +101,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 			mCameFromOtherProfile = extras.getBoolean(Keys.OTHER_PROFILE_FLAG);
 			if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
 				mOwnedByUser = true;
+				
 			} else {
 				mOwnedByUser = false;
 			}
@@ -112,15 +113,29 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 		
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
-
-		mTabHost.addTab(mTabHost.newTabSpec("aboutme").setIndicator("About Me"),
+		mTabHost.addTab(mTabHost.newTabSpec(getString(R.string.aboutMeSpec)).setIndicator(getString(R.string.aboutMe)),
 				AboutMeFragment.class, getArguments());
 
-		mTabHost.addTab(mTabHost.newTabSpec("books").setIndicator("My Books"),
+		mTabHost.addTab(mTabHost.newTabSpec(getString(R.string.myBooksSpec)).setIndicator(getString(R.string.myBooks)),
 				MyBooksFragment.class, getArguments());
         
+		
 		getUserDetails(mUserId);
+		if(mOwnedByUser)
+		{
+			mImageUrl = UserInfo.INSTANCE.getProfilePicture();
+
+			mOwnerNameSlide.setText(UserInfo.INSTANCE.getFirstName());
+
+			Picasso.with(getActivity())
+			.load(mImageUrl + "?type=large")
+			.resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile).centerCrop()
+			.into(mOwnerImageViewslide.getTarget());
+		}
+		else
+		{
 		loadUserDetails();
+		}
         return view;
     }
     
@@ -316,7 +331,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 					+ SQLConstants.EQUALS_ARG;
 			final String[] argsId = new String[1];
 			argsId[0]=mUserId;
-			return new SQLiteLoader(getActivity(), false, ViewUsersWithLocations.NAME, null, selection, argsId, null, null, null, null);
+			Logger.d(TAG,"load = "+ mUserId);
+			return new SQLiteLoader(getActivity(), false, TableUsers.NAME, null, selection, argsId, null, null, null, null);
 		}
 		else {
 

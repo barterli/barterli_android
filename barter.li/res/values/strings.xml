@@ -35,6 +35,8 @@
     <string name="cancel">Cancel</string>
     <string name="aboutMe">About me</string>
     <string name="myBooks">My Books</string>
+    <string name="aboutMeSpec">aboutme</string>
+    <string name="myBooksSpec">mybooks</string>
 
     <!-- crouton info strings -->
     <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>

@@ -205,7 +205,7 @@ OnItemClickListener {
 						showBooksArgs.putString(Keys.ID, idBook);
 						showBooksArgs.putString(Keys.USER_ID, mUserId);
 			
-						loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+						loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
 								.instantiate(getActivity(), BookDetailFragment.class
 										.getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
 		}
