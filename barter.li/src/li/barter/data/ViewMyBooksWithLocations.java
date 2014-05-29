@@ -27,6 +27,9 @@ import li.barter.utils.Logger;
 /**
  * View representation for my books, combined with their locations
  * 
+ * @deprecated This class has been deprecated since the table is not in use
+ *             anymore. All data is transfered to
+ *             {@link ViewUserBooksWithLocations} as of DB version 2
  * @author Vinay S Shenoy
  */
 public class ViewMyBooksWithLocations {
@@ -37,7 +40,8 @@ public class ViewMyBooksWithLocations {
     private static final String ALIAS_MY_BOOKS  = "A";
     private static final String ALIAS_LOCATIONS = "B";
 
-    public static final String  NAME            = "MY_BOOKS_WITH_LOCATIONS";
+    /* No longer public because this table is deprecared and should not be accessible outside*/
+    static final String         NAME            = "MY_BOOKS_WITH_LOCATIONS";
 
     public static void create(final SQLiteDatabase db) {
 
@@ -78,14 +82,16 @@ public class ViewMyBooksWithLocations {
         Logger.d(TAG, "Select Def: %s", selectDef);
         db.execSQL(String
                         .format(Locale.US, SQLConstants.CREATE_VIEW, NAME, selectDef));
+        throw new IllegalStateException("Deprecated View is getting created " + NAME);
 
     }
 
     public static void upgrade(final SQLiteDatabase db, final int oldVersion,
                     final int newVersion) {
 
-        db.execSQL(String
-                        .format(Locale.US, SQLConstants.DROP_VIEW_IF_EXISTS, NAME));
-        create(db);
+        if (oldVersion == 1) {
+            db.execSQL(String
+                            .format(Locale.US, SQLConstants.DROP_VIEW_IF_EXISTS, NAME));
+        }
     }
 }

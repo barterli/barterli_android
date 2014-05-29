@@ -22,18 +22,22 @@ import android.text.TextUtils;
 
 import java.util.Locale;
 
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 
 /**
  * Table representation for search results for books
  * 
+ * @deprecated This class has been deprecated since the table is not in use
+ *             anymore. All data is transfered to {@link TableUserBooks} as of
+ *             DB version 2
  * @author Vinay S Shenoy
  */
 public class TableMyBooks {
 
     private static final String TAG  = "TableMyBooks";
 
-    public static final String  NAME = "MY_BOOKS";
+    static final String         NAME = "MY_BOOKS";
 
     public static void create(final SQLiteDatabase db) {
 
@@ -62,25 +66,67 @@ public class TableMyBooks {
         Logger.d(TAG, "Column Def: %s", columnDef);
         db.execSQL(String
                         .format(Locale.US, SQLConstants.CREATE_TABLE, NAME, columnDef));
+        throw new IllegalStateException("Deprecated Table is getting created "
+                        + NAME);
 
     }
 
     public static void upgrade(final SQLiteDatabase db, final int oldVersion,
                     final int newVersion) {
 
-      //Add any data migration code here. Default is to drop and rebuild the table
-        if (newVersion == 2) {
+        //Add any data migration code here. Default is to drop and rebuild the table
+        if (oldVersion == 1) {
 
-            String alterTableDef = String
-                            .format(Locale.US, SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String
-                                            .format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_OWNER_IMAGE_URL, ""));
-            Logger.d(TAG, "Alter Table Def: %s", alterTableDef);
-            db.execSQL(alterTableDef);
-        } else {
+            if (!TextUtils.isEmpty(UserInfo.INSTANCE.getId())) {
+                /*
+                 * Delete all books from User Books Table which belong to the
+                 * current user. Shouldn't be needed, but just a precaution.
+                 */
+                final String deleteStatement = String
+                                .format(Locale.US, SQLConstants.DELETE_FROM_WHERE, TableUserBooks.NAME, DatabaseColumns.USER_ID
+                                                + SQLConstants.EQUALS_QUOTE
+                                                + UserInfo.INSTANCE.getId()
+                                                + SQLConstants.QUOTE);
+                Logger.v(TAG, "Delete Statement: %s", deleteStatement);
+                db.execSQL(deleteStatement);
 
-            db.execSQL(String
-                            .format(Locale.US, SQLConstants.DROP_TABLE_IF_EXISTS, NAME));
-            create(db);
+                final String[] columnsToCopy = new String[] {
+                        DatabaseColumns.BOOK_ID, DatabaseColumns.ID,
+                        DatabaseColumns.ISBN_10, DatabaseColumns.ISBN_13,
+                        DatabaseColumns.TITLE, DatabaseColumns.DESCRIPTION,
+                        DatabaseColumns.AUTHOR, DatabaseColumns.BARTER_TYPE,
+                        DatabaseColumns.USER_ID, DatabaseColumns.LOCATION_ID,
+                        DatabaseColumns.IMAGE_URL,
+                        DatabaseColumns.PUBLICATION_YEAR,
+                        DatabaseColumns.PUBLICATION_MONTH,
+                        DatabaseColumns.VALUE, DatabaseColumns.BOOK_OWNER
+                };
+
+                /* Move books from the my books table to the user books table */
+                final String selectStatement = String
+                                .format(Locale.US, SQLConstants.SELECT_FROM, TextUtils
+                                                .join(",", columnsToCopy), NAME);
+
+                final String insertStatement = String
+                                .format(Locale.US, SQLConstants.INSERT, TableUserBooks.NAME, TextUtils
+                                                .join(",", columnsToCopy), selectStatement);
+
+                Logger.v(TAG, "Insert Statement: %s", insertStatement);
+                db.execSQL(insertStatement);
+
+                /* Drop the current table */
+                db.execSQL(String
+                                .format(Locale.US, SQLConstants.DROP_TABLE_IF_EXISTS, NAME));
+
+            }
+
+            /*
+             * String alterTableDef = String .format(Locale.US,
+             * SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String
+             * .format(Locale.US, SQLConstants.DATA_TEXT,
+             * DatabaseColumns.BOOK_OWNER_IMAGE_URL, "")); Logger.d(TAG,
+             * "Alter Table Def: %s", alterTableDef); db.execSQL(alterTableDef);
+             */
         }
     }
 }

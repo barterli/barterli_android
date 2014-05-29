@@ -33,13 +33,12 @@ import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableLocations;
-import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.data.TableUserBooks;
 import li.barter.data.TableUsers;
 import li.barter.http.HttpConstants.RequestId;
-import li.barter.models.Venue;
 import li.barter.models.Team;
+import li.barter.models.Venue;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.Logger;
@@ -465,13 +464,13 @@ public class HttpResponseParser {
             args[0] = readBookDetailsIntoContentValues(bookObject, values, true, false);
 
             //First try to update the table if a book already exists
-            if (DBInterface.update(TableMyBooks.NAME, values, selection, args, false) == 0) {
+            if (DBInterface.update(TableUserBooks.NAME, values, selection, args, false) == 0) {
 
                 // Unable to update, insert the item
-                DBInterface.insert(TableMyBooks.NAME, null, values, false);
+                DBInterface.insert(TableUserBooks.NAME, null, values, false);
             }
         }
-        DBInterface.notifyChange(TableMyBooks.NAME);
+        DBInterface.notifyChange(TableUserBooks.NAME);
 
         final JSONObject locationObject = JsonUtils
                         .readJSONObject(userObject, HttpConstants.LOCATION, false, false);
@@ -841,7 +840,7 @@ public class HttpResponseParser {
         final String bookId = readBookDetailsIntoContentValues(bookObject, values, true, false);
 
         // Unable to update, insert the item
-        if (DBInterface.insert(TableMyBooks.NAME, null, values, true) >= 0) {
+        if (DBInterface.insert(TableUserBooks.NAME, null, values, true) >= 0) {
 
             final Bundle responseBundle = new Bundle(1);
             responseBundle.putString(HttpConstants.ID_BOOK, bookId);

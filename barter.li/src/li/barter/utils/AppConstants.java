@@ -330,9 +330,11 @@ public class AppConstants {
         public static final String EDIT_PROFILE                                    = "edit_profile";
         public static final String CHATS                                           = "chats";
         public static final String CHAT_DETAILS                                    = "chat_details";
-        public static final String OTHER_USER_PROFILE                              = "other_user_profile";
         public static final String TRIBUTE                                         = "Tribute";
         public static final String TEAM                                            = "Team";
+        public static final String ABOUT_ME                                        = "about_me";
+        public static final String MY_BOOKS                                        = "my_books";
+        public static final String USER_PROFILE                                    = "user_profile";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
@@ -389,11 +391,10 @@ public class AppConstants {
     public static interface QueryTokens {
 
         // 1-100 for load queries
-        public static final int LOAD_LOCATION_FROM_ADD_OR_EDIT_BOOK       = 1;
-        public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE      = 2;
-        public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE      = 3;
-        public static final int LOAD_BOOK_DETAIL_CURRENT_USER             = 4;
-        public static final int LOAD_BOOK_DETAIL_OTHER_USER               = 5;
+        public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE      = 1;
+        public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE      = 2;
+        public static final int LOAD_BOOK_DETAIL_CURRENT_USER             = 3;
+        public static final int LOAD_BOOK_DETAIL_OTHER_USER               = 4;
 
         // 101-200 for insert queries
         public static final int INSERT_CHAT_MESSAGE                       = 101;
