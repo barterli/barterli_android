@@ -297,7 +297,8 @@
                 </LinearLayout>
             </android.support.v4.app.FragmentTabHost>
 
-          <!--   <RelativeLayout
+            <!--
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/activity_margin"
@@ -408,7 +409,8 @@
                     android:paddingBottom="@dimen/bookGridVerticalSpacing"
                     android:scrollbars="none"
                     android:verticalSpacing="@dimen/bookGridVerticalSpacing" />
-            </RelativeLayout> -->
+            </RelativeLayout>
+            -->
         </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 

@@ -139,6 +139,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,PanelSlideListene
 		/////////////////////////////////// TAB HOST CODE////////////////////////////////
 
 
+
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
 
@@ -638,5 +639,6 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,PanelSlideListene
 
 	}
 
+  
 
 }
