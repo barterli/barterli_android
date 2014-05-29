@@ -238,9 +238,12 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                     @Override
                     public void run() {
                         if (isLoggedIn()) {
+                        	  Bundle args = new Bundle();
+                      		args.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
                             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                             .instantiate(AbstractBarterLiActivity.this, ProfileFragment.class
-                                                            .getName(), null), FragmentTags.PROFILE_FROM_NAV_DRAWER, true, null);
+                                                            .getName(), args), FragmentTags.PROFILE_FROM_NAV_DRAWER, true, null);
+                          
                         } else {
 
                             final Bundle loginArgs = new Bundle(1);

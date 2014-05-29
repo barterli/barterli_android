@@ -24,7 +24,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +104,7 @@ OnItemClickListener {
 
 
 		mProfileDetails = inflater
-				.inflate(R.layout.fragment_profile_header, null);
+				.inflate(R.layout.fragment_profile_aboutme, null);
 		mProfileNameTextView = (TextView) mProfileDetails
 				.findViewById(R.id.text_profile_name);
 		mAboutMeTextView = (TextView) mProfileDetails

@@ -15,43 +15,19 @@
 
 package li.barter.fragments;
 
-import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
-import com.squareup.picasso.Picasso;
-
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import java.io.File;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 
 import li.barter.R;
-import li.barter.adapters.BooksAroundMeAdapter;
+import li.barter.chat.ChatService;
 import li.barter.data.DBInterface;
-import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
-import li.barter.data.TableLocations;
-import li.barter.data.ViewMyBooksWithLocations;
+import li.barter.data.TableUsers;
+import li.barter.http.BlRequest;
+import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
@@ -61,41 +37,49 @@ import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
-import li.barter.utils.SharedPreferenceHelper;
+import li.barter.widgets.CircleImageView;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTabHost;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.android.volley.Request.Method;
+import com.squareup.picasso.Picasso;
 
 /**
- * @author Sharath Pandeshwar
+ * @author Anshul Kamboj
  */
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ProfileFragment extends AbstractBarterLiFragment implements
-                AsyncDbQueryCallback, LoaderCallbacks<Cursor>,
-                OnItemClickListener {
+               LoaderCallbacks<Cursor>,
+                OnClickListener {
 
-    private static final String           TAG          = "ProfileFragment";
+    private static final String          TAG          = "ProfileFragment";
 
-    private TextView                      mProfileNameTextView;
-    private TextView                      mAboutMeTextView;
-    private TextView                      mPreferredLocationTextView;
-    private ImageView                     mProfileImageView;
-    private final String                  mDefaultName = "Your Name";
-
-    private ListView                      mBooksAroundMeListView;
-    
-    
-
-    /**
-     * {@link ProfileAdapter} instance for the Books
-     */
-    private BooksAroundMeAdapter          mBooksAroundMeAdapter;
-
-    /**
-     * {@link AnimationAdapter} implementation to provide appearance animations
-     * for the book items as they are brought in
-     */
-    private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
-
-    private View                          mProfileDetails;
+    private FragmentTabHost				 mTabHost;
+    private String             			 mUserId;
+	private String             			 mImageUrl;
+	private String            		  	 mId;
+	private boolean             		 mOwnedByUser;
+	private boolean            			 mCameFromOtherProfile;
+	private ImageView					 mChatLinkImageView;
+	private CircleImageView				 mOwnerImageViewslide;
+	private TextView					 mOwnerNameSlide;
+	
+	
+ 
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -103,103 +87,126 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
         final View view = inflater.inflate(R.layout.fragment_my_profile, null);
-
-     
-        mBooksAroundMeListView = (ListView) view
-                        .findViewById(R.id.list_my_books);
+        initViews(view);
 
         setActionBarTitle(R.string.profilepage_title);
 
-        mProfileDetails = inflater
-                        .inflate(R.layout.fragment_profile_header, mBooksAroundMeListView, false);
-
-        mProfileNameTextView = (TextView) mProfileDetails
-                        .findViewById(R.id.text_profile_name);
-        mAboutMeTextView = (TextView) mProfileDetails
-                        .findViewById(R.id.text_about_me);
-        mPreferredLocationTextView = (TextView) mProfileDetails
-                        .findViewById(R.id.text_current_location);
-        mProfileImageView = (ImageView) mProfileDetails
-                        .findViewById(R.id.image_profile_pic);
-
-        final File mAvatarfile = new File(Environment.getExternalStorageDirectory(), "barterli_avatar_small.png");
-        if (mAvatarfile.exists()) {
-            final Bitmap bmp = BitmapFactory.decodeFile(mAvatarfile
-                            .getAbsolutePath());
-            mProfileImageView.setImageBitmap(bmp);
-        }
-
-        if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_first_name)
-                        && !(TextUtils.isEmpty(SharedPreferenceHelper
-                                        .getString(getActivity(), R.string.pref_first_name)))) {
-
-            final String mFirstName = SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_first_name);
-
-            String mLastName = "";
-
-            if (SharedPreferenceHelper
-                            .contains(getActivity(), R.string.pref_last_name)) {
-                mLastName = SharedPreferenceHelper
-                                .getString(getActivity(), R.string.pref_last_name);
-            }
-
-            // for loading profile image
-
-            String mProfileImageUrl = "";
-            if (SharedPreferenceHelper
-                            .contains(getActivity(), R.string.pref_profile_image)) {
-                mProfileImageUrl = SharedPreferenceHelper
-                                .getString(getActivity(), R.string.pref_profile_image);
-
-            }
-
-            //append "?type=large" for getting large clear image for the profile
-            Picasso.with(getActivity()).load(mProfileImageUrl + "?type=large")
-                            .centerCrop().fit().error(R.drawable.pic_avatar)
-                            .into(mProfileImageView);
-
-            String mFullName = String.format(Locale.US, mFirstName + " "
-                            + mLastName);
-            if (TextUtils.isEmpty(mFullName)) {
-                mFullName = mDefaultName;
-            }
-            mProfileNameTextView.setText(mFullName);
-        } else {
-            mProfileNameTextView.setText(mDefaultName);
-        }
-
-        if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_location)) {
-            loadPreferredLocation();
-        }
-
-        if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_description)) {
-            mAboutMeTextView.setText(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_description));
-        } else {
-            mAboutMeTextView.setVisibility(View.INVISIBLE);
-        }
-
-        mBooksAroundMeListView.addHeaderView(mProfileDetails, null, false);
-        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
-        mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
-        mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeListView);
-        mBooksAroundMeListView.setAdapter(mSwingBottomInAnimationAdapter);
-
-        mBooksAroundMeListView.setOnItemClickListener(this);
-
         setActionBarDrawerToggleEnabled(false);
-        loadMyBooks();
+        
+        final Bundle extras = getArguments();
+
+		if (extras != null) {
+			mUserId = extras.getString(Keys.USER_ID);
+
+			mCameFromOtherProfile = extras.getBoolean(Keys.OTHER_PROFILE_FLAG);
+			if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
+				mOwnedByUser = true;
+				
+			} else {
+				mOwnedByUser = false;
+			}
+		}
+
+		
+		 
+		updateViewForUser();
+
+		
+        mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
+        mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
+		mTabHost.addTab(mTabHost.newTabSpec(getString(R.string.aboutMeSpec)).setIndicator(getString(R.string.aboutMe)),
+				AboutMeFragment.class, getArguments());
+
+		mTabHost.addTab(mTabHost.newTabSpec(getString(R.string.myBooksSpec)).setIndicator(getString(R.string.myBooks)),
+				MyBooksFragment.class, getArguments());
+        
+		
+		getUserDetails(mUserId);
+		if(mOwnedByUser)
+		{
+			mImageUrl = UserInfo.INSTANCE.getProfilePicture();
+
+			mOwnerNameSlide.setText(UserInfo.INSTANCE.getFirstName());
+
+			Picasso.with(getActivity())
+			.load(mImageUrl + "?type=large")
+			.resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile).centerCrop()
+			.into(mOwnerImageViewslide.getTarget());
+		}
+		else
+		{
+		loadUserDetails();
+		}
         return view;
     }
+    
+    
+    
+    private void initViews(final View view) {
+		
+		mOwnerImageViewslide=(CircleImageView)view.findViewById(R.id.image_user_circular);
+		mChatLinkImageView= (ImageView) view.findViewById(R.id.chatwithowner);
+		
+		mChatLinkImageView.setOnClickListener(this);
+		mOwnerNameSlide = (TextView) view.findViewById(R.id.name);
 
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_profile_show, menu);
-    }
+		// initBarterTypeCheckBoxes(view);
+
+	}
+    
+    /**
+	 * Checks whether the book belongs to the current user or not, and updates
+	 * the UI accordingly
+	 */
+	private void updateViewForUser() {
+
+		if (mOwnedByUser) {
+			mChatLinkImageView.setVisibility(View.GONE);
+
+		}
+
+		if (mCameFromOtherProfile) {
+
+		}
+	}
+	
+	/**
+	 * Updates the book owner user details
+	 */
+
+	private void getUserDetails(final String userid) {
+
+		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+				+ ApiEndpoints.USERPROFILE, null, mVolleyCallbacks);
+		request.setRequestId(RequestId.GET_USER_PROFILE);
+
+		final Map<String, String> params = new HashMap<String, String>(2);
+
+		params.put(HttpConstants.ID, String.valueOf(userid).trim());
+		request.setParams(params);
+
+		addRequestToQueue(request, true, 0,true);
+
+	}
+	
+	/**
+	 * Fetches books owned by the current user
+	 */
+
+	private void loadUserDetails() {
+		getLoaderManager().restartLoader(Loaders.USER_DETAILS, null, this);
+
+	}
+
+	
+
+	@Override
+	public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
+
+		if (mOwnedByUser) {
+			inflater.inflate(R.menu.menu_profile_show, menu);
+		}
+	}
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -233,39 +240,60 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         }
     }
 
-    /**
-     * Load the user's preferred location from DB Table and show it in the
-     * profile page.
-     */
-
-    private void loadPreferredLocation() {
-        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
-                        + SQLConstants.EQUALS_ARG, new String[] {
-            SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_location)
-        }, null, null, null, null, this);
-    }
-
+   
     @Override
-    public void onQueryComplete(final int token, final Object cookie,
-                    final Cursor cursor) {
-        if (token == QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE) {
+	public void onClick(final View v) {
+		if (v.getId() == R.id.chatwithowner) {
 
-            if (cursor.moveToFirst()) {
-                final String mPrefAddressName = cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.NAME))
-                                + ", "
-                                + cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.ADDRESS));
+			if (isLoggedIn()) {
 
-                mPreferredLocationTextView.setText(mPrefAddressName);
-            }
+				if (hasFirstName()) {
+					loadChatFragment();
+				} else {
+					showAddFirstNameDialog();
+				}
 
-            cursor.close();
+			} else {
 
-        }
-    }
+				final Bundle loginArgs = new Bundle(1);
+				loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
 
+				loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+						.instantiate(getActivity(), LoginFragment.class
+								.getName(), loginArgs), FragmentTags.LOGIN_TO_CHAT, true, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
+
+			}
+		}
+
+
+		else {
+			// Show Login Fragment
+		}
+
+	}
+    
+    /**
+	 * Loads the Chat Fragment to chat with the book owner
+	 */
+	private void loadChatFragment() {
+		final Bundle args = new Bundle(3);
+		args.putString(Keys.CHAT_ID, ChatService
+				.generateChatId(mUserId, UserInfo.INSTANCE.getId()));
+		args.putString(Keys.USER_ID, mUserId);
+		if(mOwnedByUser)
+		{
+		args.putString(Keys.BOOK_TITLE, "");
+		}
+		else
+		{
+			//TODO add argument from bundle
+			args.putString(Keys.BOOK_TITLE, "");	
+		}
+		loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+				.instantiate(getActivity(), ChatDetailsFragment.class
+						.getName(), args), FragmentTags.CHAT_DETAILS, true, null);
+
+	}
     @Override
     public void onStop() {
         super.onStop();
@@ -295,93 +323,68 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
     }
 
-    @Override
-    public void onInsertComplete(final int token, final Object cookie,
-                    final long insertRowId) {
-        // TODO Auto-generated method stub
+   
 
-    }
 
-    @Override
-    public void onDeleteComplete(final int token, final Object cookie,
-                    final int deleteCount) {
-        // TODO Auto-generated method stub
+	@Override
+	public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
+		if(loaderId == Loaders.USER_DETAILS)
+		{
+			final String selection = DatabaseColumns.USER_ID
+					+ SQLConstants.EQUALS_ARG;
+			final String[] argsId = new String[1];
+			argsId[0]=mUserId;
+			Logger.d(TAG,"load = "+ mUserId);
+			return new SQLiteLoader(getActivity(), false, TableUsers.NAME, null, selection, argsId, null, null, null, null);
+		}
+		else {
 
-    }
 
-    @Override
-    public void onUpdateComplete(final int token, final Object cookie,
-                    final int updateCount) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * Fetches books owned by the current user
-     */
-
-    private void loadMyBooks() {
-        getLoaderManager().restartLoader(Loaders.GET_MY_BOOKS, null, this);
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
-        if (loaderId == Loaders.GET_MY_BOOKS) {
-            return new SQLiteLoader(getActivity(), false, ViewMyBooksWithLocations.NAME, null, null, null, null, null, null, null);
-        } else {
-            return null;
-        }
-    }
+			return null;
+		}
+	}
 
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
-        if (loader.getId() == Loaders.GET_MY_BOOKS) {
-            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-            mBooksAroundMeAdapter.swapCursor(cursor);
-        }
+    	if (loader.getId() == Loaders.USER_DETAILS) {
+
+			Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
+			if(cursor.getCount()!=0)
+			{
+				cursor.moveToFirst();
+
+				mImageUrl = cursor.getString(cursor
+						.getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
+
+				mOwnerNameSlide.setText(cursor.getString(cursor
+						.getColumnIndex(DatabaseColumns.FIRST_NAME))+" "+cursor.getString(cursor
+								.getColumnIndex(DatabaseColumns.LAST_NAME)));
+
+				Picasso.with(getActivity())
+				.load(mImageUrl + "?type=large")
+				.resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile).centerCrop()
+				.into(mOwnerImageViewslide.getTarget());
+
+
+
+				//				mAboutMeTextView.setText(cursor.getString(cursor
+				//						.getColumnIndex(DatabaseColumns.DESCRIPTION)));
+				//				mPreferredLocationTextView.setText(cursor.getString(cursor
+				//						.getColumnIndex(DatabaseColumns.NAME))+","+cursor.getString(cursor
+				//								.getColumnIndex(DatabaseColumns.ADDRESS)));
+
+			}
+
+		}
 
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
-        if (loader.getId() == Loaders.GET_MY_BOOKS) {
-
-            mBooksAroundMeAdapter.swapCursor(null);
-            mBooksAroundMeListView.setAdapter(null);
-            mBooksAroundMeListView.removeHeaderView(mProfileDetails);
-        }
+       
     }
 
-    @Override
-    public void onItemClick(final AdapterView<?> parent, final View view,
-                    final int position, final long id) {
-
-        if (parent.getId() == R.id.list_my_books) {
-
-            /*
-             * Subtract from position to account for header
-             */
-            final Cursor cursor = (Cursor) mBooksAroundMeAdapter
-                            .getItem(position
-                                            - mBooksAroundMeListView
-                                                            .getHeaderViewsCount());
-
-            final String bookId = cursor.getString(cursor
-                            .getColumnIndex(DatabaseColumns.BOOK_ID));
-
-            final String idBook = cursor.getString(cursor
-                            .getColumnIndex(DatabaseColumns.ID));
-
-            final Bundle showBooksArgs = new Bundle();
-            showBooksArgs.putString(Keys.BOOK_ID, bookId);
-            showBooksArgs.putString(Keys.ID, idBook);
-            showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
-
-            loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), BookDetailFragment.class
-                                            .getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
-        }
-    }
+   
     
   
 

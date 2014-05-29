@@ -690,6 +690,7 @@ public class HttpResponseParser {
 
         final String bookId = JsonUtils
                         .readString(bookObject, HttpConstants.ID_BOOK, true, true);
+        
 
         final int id = JsonUtils
                         .readInt(bookObject, HttpConstants.ID, true, true);

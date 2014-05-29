@@ -79,7 +79,7 @@ public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
 		}
     	
 		 mBookDetailPager = (ViewPager)view.findViewById(R.id.bookpager);
-    	
+		 
     	
         loadBookSearchResults();
     	return view;
@@ -158,9 +158,8 @@ public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
 	            	cursor.moveToNext();
 	               
 	            }
-	            mAdapter = new BookPageAdapter(getFragmentManager());
+	            mAdapter = new BookPageAdapter(getChildFragmentManager());
 	            
-	           
 	            mBookDetailPager.setAdapter(mAdapter);
 	            mBookDetailPager.setCurrentItem(mBookPosition);
 	           

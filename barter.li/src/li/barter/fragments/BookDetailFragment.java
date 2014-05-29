@@ -16,19 +16,16 @@
 
 package li.barter.fragments;
 
-import java.security.acl.Owner;
 import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
-import li.barter.adapters.BooksAroundMeAdapter;
 import li.barter.chat.ChatService;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
-import li.barter.data.TableLocations;
 import li.barter.data.TableMyBooks;
 import li.barter.data.TableSearchBooks;
 import li.barter.data.ViewUserBooksWithLocations;
@@ -51,6 +48,7 @@ import li.barter.widgets.CircleImageView;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.Html;
@@ -65,20 +63,17 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
-import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.squareup.picasso.Picasso;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class BookDetailFragment extends AbstractBarterLiFragment implements
-AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListener,PanelSlideListener {
+AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,PanelSlideListener {
 
 	private static final String TAG = "ShowSingleBookFragment";
 
@@ -103,47 +98,33 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 	private ImageView			mChatLinkImageView;
 	private CircleImageView		mOwnerImageViewslide;
 
+
+
 	/**
 	 * {@link SlidingUpPanelLayout} This includes the profile of the owner
 	 */
 
 	private SlidingUpPanelLayout		  mLayout;
 
-	private TextView                      mAboutMeTextView;
-	private TextView                      mPreferredLocationTextView;
-	private ImageView                     mProfileImageView;
-	private GridView                      mBooksAroundMeListView;
-	/**
-	 * {@link BooksAroundMeAdapter} instance for the Books
-	 */
-	private BooksAroundMeAdapter          mBooksAroundMeAdapter;
+	private FragmentTabHost				  mTabHost;
+
 
 	/**
-	 * {@link AnimationAdapter} implementation to provide appearance animations
-	 * for the book items as they are brought in
+	 * Create a new instance of CountingFragment, providing "num"
+	 * as an argument.
 	 */
-	private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
+	public static BookDetailFragment newInstance(String userId,String bookId) {
+		BookDetailFragment f = new BookDetailFragment();
 
-	//private View                          mProfileDetails;
+		// Supply num input as an argument.
+		Bundle args = new Bundle();
+		args.putString(Keys.USER_ID, userId);
+		args.putString(Keys.BOOK_ID, bookId);
+		f.setArguments(args);
 
+		return f;
+	}
 
-	
-	 /**
-     * Create a new instance of CountingFragment, providing "num"
-     * as an argument.
-     */
-    public static BookDetailFragment newInstance(String userId,String bookId) {
-    	BookDetailFragment f = new BookDetailFragment();
-
-        // Supply num input as an argument.
-        Bundle args = new Bundle();
-        args.putString(Keys.USER_ID, userId);
-        args.putString(Keys.BOOK_ID, bookId);
-        f.setArguments(args);
-       
-        return f;
-    }
-    
 	@Override
 	public View onCreateView(final LayoutInflater inflater,
 			final ViewGroup container, final Bundle savedInstanceState) {
@@ -154,22 +135,21 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 		final View view = inflater
 				.inflate(R.layout.fragment_book_detail, container, false);
 		initViews(view);
-		mBooksAroundMeListView = (GridView) view
-				.findViewById(R.id.list_my_books);
 
-		mAboutMeTextView = (TextView) view
-				.findViewById(R.id.text_about_me);
-		mPreferredLocationTextView = (TextView) view
-				.findViewById(R.id.text_current_location);
-		mProfileImageView = (ImageView) view
-				.findViewById(R.id.image_profile_pic);
+		/////////////////////////////////// TAB HOST CODE////////////////////////////////
 
-		mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
-		mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
-		mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeListView);
-		mBooksAroundMeListView.setAdapter(mSwingBottomInAnimationAdapter);
 
-		mBooksAroundMeListView.setOnItemClickListener(this);
+
+        mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
+        mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
+
+        mTabHost.addTab(mTabHost.newTabSpec(getString(R.string.aboutMeSpec)).setIndicator(getString(R.string.aboutMe)),
+				AboutMeFragment.class, getArguments());
+
+		mTabHost.addTab(mTabHost.newTabSpec(getString(R.string.myBooksSpec)).setIndicator(getString(R.string.myBooks)),
+				MyBooksFragment.class, getArguments());
+
+		/////////////////////////////////////////////////////////////////////////////////
 
 		setActionBarDrawerToggleEnabled(false);
 
@@ -186,9 +166,9 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 		if (extras != null) {
 			mBookId = extras.getString(Keys.BOOK_ID);
 			mUserId = extras.getString(Keys.USER_ID);
-			
+
 			Logger.d(TAG,mBookId+"  "+mUserId);
-			
+
 			mId = extras.getString(Keys.ID);
 			mCameFromOtherProfile = extras.getBoolean(Keys.OTHER_PROFILE_FLAG);
 			if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
@@ -200,7 +180,6 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 		updateViewForUser();
 
-		//8585548dfc518682  7f656a3f08cb08c4
 		loadBookDetails();
 		getUserDetails(mUserId);
 		loadMyBooks();
@@ -280,7 +259,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 
 		mChatLinkImageView.setOnClickListener(this);
-
+		setActionBarTitle(R.string.Book_Detail_fragment_title);
 		// initBarterTypeCheckBoxes(view);
 
 	}
@@ -397,19 +376,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 	}
 
-	/**
-	 * Load the user's preferred location from DB Table and show it in the
-	 * profile page.
-	 */
-
-	private void loadPreferredLocation() {
-		DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
-				+ SQLConstants.EQUALS_ARG, new String[] {
-				SharedPreferenceHelper
-				.getString(getActivity(), R.string.pref_location)
-		}, null, null, null, null, this);
-	}
-
+	
 
 
 	@Override
@@ -418,7 +385,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 		if ((token == QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER)
 				|| (token == QueryTokens.LOAD_BOOK_DETAIL_OTHER_USER)) {
-			
+
 			Logger.d(TAG,"query completed "+ cursor.getCount());
 			if (cursor.moveToFirst()) {
 				mIsbnTextView.setText(cursor.getString(cursor
@@ -476,19 +443,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 			cursor.close();
 		}
-		else if(token == QueryTokens.LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE) {
-
-			if (cursor.moveToFirst()) {
-				final String mPrefAddressName = cursor.getString(cursor
-						.getColumnIndex(DatabaseColumns.NAME))
-						+ ", "
-								+ cursor.getString(cursor
-										.getColumnIndex(DatabaseColumns.ADDRESS));
-
-				mPreferredLocationTextView.setText(mPrefAddressName);
-			}
-			cursor.close();
-		}
+		
 
 	}
 
@@ -553,7 +508,7 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 		loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
 				.instantiate(getActivity(), ChatDetailsFragment.class
-						.getName(), args), FragmentTags.CHAT_DETAILS, true, null);
+						.getName(), args), FragmentTags.CHAT_DETAILS, true, FragmentTags.CHATS);
 
 	}
 
@@ -620,36 +575,28 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 				mImageUrl = cursor.getString(cursor
 						.getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
-				
+
 				mOwnerNameSlide.setText(cursor.getString(cursor
 						.getColumnIndex(DatabaseColumns.FIRST_NAME))+" "+cursor.getString(cursor
 								.getColumnIndex(DatabaseColumns.LAST_NAME)));
-				
+
 				Picasso.with(getActivity())
 				.load(mImageUrl + "?type=large")
 				.resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile).centerCrop()
 				.into(mOwnerImageViewslide.getTarget());
-
-			
-
-				mAboutMeTextView.setText(cursor.getString(cursor
-						.getColumnIndex(DatabaseColumns.DESCRIPTION)));
-				mPreferredLocationTextView.setText(cursor.getString(cursor
-						.getColumnIndex(DatabaseColumns.NAME))+","+cursor.getString(cursor
-								.getColumnIndex(DatabaseColumns.ADDRESS)));
 
 			}
 
 		}
 		if (loader.getId() == Loaders.GET_MY_BOOKS) {
 			Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-			mBooksAroundMeAdapter.swapCursor(cursor);
+			//mBooksAroundMeAdapter.swapCursor(cursor);
 			loadUserDetails();
 		}
-		
+
 		if (loader.getId() == Loaders.GET_MY_BOOKS) {
 			Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-			mBooksAroundMeAdapter.swapCursor(cursor);
+			//mBooksAroundMeAdapter.swapCursor(cursor);
 			loadUserDetails();
 		}
 
@@ -659,9 +606,6 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 	public void onLoaderReset(Loader<Cursor> loader) {
 		// TODO Auto-generated method stub
 		if (loader.getId() == Loaders.GET_MY_BOOKS) {
-
-			mBooksAroundMeAdapter.swapCursor(null);
-			mBooksAroundMeListView.setAdapter(null);
 
 		}
 	}
@@ -674,35 +618,6 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 		outState.putBoolean(AppConstants.SAVED_STATE_ACTION_BAR_HIDDEN, mLayout.isExpanded());
 	}
 
-	@Override
-	public void onItemClick(final AdapterView<?> parent, final View view,
-			final int position, final long id) {
-
-		if (parent.getId() == R.id.list_my_books) {
-
-			/*
-			 * Subtract from position to account for header
-			 */
-			final Cursor cursor = (Cursor) mBooksAroundMeAdapter
-					.getItem(position);
-
-
-			final String bookId = cursor.getString(cursor
-					.getColumnIndex(DatabaseColumns.BOOK_ID));
-
-			final String idBook = cursor.getString(cursor
-					.getColumnIndex(DatabaseColumns.ID));
-
-			final Bundle showBooksArgs = new Bundle();
-			showBooksArgs.putString(Keys.BOOK_ID, bookId);
-			showBooksArgs.putString(Keys.ID, idBook);
-			showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
-
-			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-					.instantiate(getActivity(), BookDetailFragment.class
-							.getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
-		}
-	}
 
 	@Override
 	public void onPanelSlide(View panel, float slideOffset) {
@@ -724,5 +639,6 @@ AsyncDbQueryCallback,  LoaderCallbacks<Cursor>,OnClickListener,OnItemClickListen
 
 	}
 
+  
 
 }

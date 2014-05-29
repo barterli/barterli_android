@@ -306,8 +306,11 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             if (TextUtils.isEmpty(locationId)) {
                 final Bundle myArgs = getArguments();
                 Bundle preferredLocationArgs = null;
+                
                 if (myArgs != null) {
                     preferredLocationArgs = new Bundle(myArgs);
+                    preferredLocationArgs.putString(Keys.USER_ID, userInfo
+                            .getString(HttpConstants.ID_USER));
                 }
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), SelectPreferredLocationFragment.class
@@ -319,7 +322,9 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
                     final Bundle args = new Bundle(1);
                     args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-
+                    args.putString(Keys.USER_ID, userInfo
+                            .getString(HttpConstants.ID_USER));
+                    
                     loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                     .instantiate(getActivity(), ProfileFragment.class
                                                     .getName(), args), FragmentTags.PROFILE_FROM_LOGIN, true, FragmentTags.BS_PROFILE);
