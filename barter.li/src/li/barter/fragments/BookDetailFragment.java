@@ -16,7 +16,6 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request.Method;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.squareup.picasso.Picasso;
@@ -24,9 +23,6 @@ import com.squareup.picasso.Picasso;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTabHost;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -34,46 +30,29 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import li.barter.R;
-import li.barter.chat.ChatService;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
-import li.barter.data.SQLiteLoader;
-import li.barter.data.TableSearchBooks;
 import li.barter.data.TableUserBooks;
-import li.barter.data.ViewUserBooksWithLocations;
-import li.barter.data.ViewUsersWithLocations;
-import li.barter.http.BlRequest;
-import li.barter.http.HttpConstants;
-import li.barter.http.HttpConstants.ApiEndpoints;
-import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
-import li.barter.utils.SharedPreferenceHelper;
-import li.barter.widgets.CircleImageView;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class BookDetailFragment extends AbstractBarterLiFragment implements
-                AsyncDbQueryCallback, LoaderCallbacks<Cursor>, OnClickListener,
-                PanelSlideListener {
+                AsyncDbQueryCallback, PanelSlideListener {
 
     private static final String  TAG            = "ShowSingleBookFragment";
 
@@ -86,16 +65,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private ImageView            mBookImageView;
     private TextView             mPublicationDateTextView;
     private TextView             mBarterTypes;
-    private TextView             mOwnerNameSlide;
 
     private String               mBookId;
     private String               mUserId;
-    private String               mImageUrl;
     private boolean              mOwnedByUser;
-    private boolean              mCameFromOtherProfile;
-    private ImageView            mChatLinkImageView;
-    private CircleImageView      mOwnerImageViewslide;
-    private final String               mBookSelection = DatabaseColumns.BOOK_ID
+
+    private final String         mBookSelection = DatabaseColumns.BOOK_ID
                                                                 + SQLConstants.EQUALS_ARG;
 
     /**
@@ -103,8 +78,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
      */
 
     private SlidingUpPanelLayout mLayout;
-
-    private FragmentTabHost      mTabHost;
 
     /**
      * Create a new instance of CountingFragment, providing "num" as an
@@ -133,24 +106,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                         .inflate(R.layout.fragment_book_detail, container, false);
         initViews(view);
 
-        /////////////////////////////////// TAB HOST CODE////////////////////////////////
-
-        mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
-        mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
-
-        mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.ABOUT_ME)
-                        .setIndicator(getString(R.string.about_me)), AboutMeFragment.class, getArguments());
-
-        mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.MY_BOOKS)
-                        .setIndicator(getString(R.string.my_books)), MyBooksFragment.class, getArguments());
-
-        /////////////////////////////////////////////////////////////////////////////////
-
-        setActionBarDrawerToggleEnabled(false);
-
-        mLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
-        mLayout.setPanelSlideListener(this);
-
         getActivity().getWindow()
                         .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                                         | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -160,7 +115,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             mBookId = extras.getString(Keys.BOOK_ID);
             mUserId = extras.getString(Keys.USER_ID);
 
-            mCameFromOtherProfile = extras.getBoolean(Keys.OTHER_PROFILE_FLAG);
             if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
                 mOwnedByUser = true;
             } else {
@@ -168,55 +122,20 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             }
         }
 
-        updateViewForUser();
+        if (savedInstanceState == null) {
+            final ProfileFragment fragment = new ProfileFragment();
+            final Bundle args = new Bundle(1);
+            args.putString(Keys.USER_ID, mUserId);
+            fragment.setArguments(args);
 
-        loadBookDetails();
-        getUserDetails(mUserId);
-        loadMyBooks();
-        loadUserDetails();
+            getChildFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.content_user_profile, fragment, FragmentTags.USER_PROFILE)
+                            .commit();
+        }
         setActionBarDrawerToggleEnabled(false);
+        loadBookDetails();
         return view;
-    }
-
-    /**
-     * Fetches books owned by the current user
-     */
-
-    private void loadMyBooks() {
-        getLoaderManager().restartLoader(Loaders.GET_MY_BOOKS, null, this);
-
-    }
-
-    /**
-     * Checks whether the book belongs to the current user or not, and updates
-     * the UI accordingly
-     */
-    private void updateViewForUser() {
-
-        if (mOwnedByUser) {
-            mChatLinkImageView.setVisibility(View.GONE);
-
-        }
-
-        if (mCameFromOtherProfile) {
-
-        }
-    }
-
-    private void loadBookDetails() {
-
-        if (mOwnedByUser) {
-            //Reached here either by creating a new book, OR by tapping a book item in My Profile
-            DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableUserBooks.NAME, null, mBookSelection, new String[] {
-                mBookId
-            }, null, null, null, null, this);
-        } else {
-            //Reached here by tapping a book item in Books Around Me screen
-            DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_OTHER_USER, null, false, TableSearchBooks.NAME, null, mBookSelection, new String[] {
-                mBookId
-            }, null, null, null, null, this);
-        }
-
     }
 
     /**
@@ -229,12 +148,8 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mTitleTextView = (TextView) view.findViewById(R.id.text_title);
         mAuthorTextView = (TextView) view.findViewById(R.id.text_author);
         mBarterTypes = (TextView) view.findViewById(R.id.label_barter_types);
-        mOwnerNameSlide = (TextView) view.findViewById(R.id.name);
 
         mBookImageView = (ImageView) view.findViewById(R.id.book_avatar);
-        mOwnerImageViewslide = (CircleImageView) view
-                        .findViewById(R.id.image_user_circular);
-        mChatLinkImageView = (ImageView) view.findViewById(R.id.chat_with_owner);
         mDescriptionTextView = (TextView) view
                         .findViewById(R.id.text_description);
 
@@ -246,9 +161,16 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mPublicationDateTextView = (TextView) view
                         .findViewById(R.id.text_publication_date);
 
-        mChatLinkImageView.setOnClickListener(this);
-        setActionBarTitle(R.string.Book_Detail_fragment_title);
-        // initBarterTypeCheckBoxes(view);
+        mLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
+        mLayout.setPanelSlideListener(this);
+        mLayout.setEnableDragViewTouchEvents(true);
+    }
+
+    private void loadBookDetails() {
+
+        DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableUserBooks.NAME, null, mBookSelection, new String[] {
+            mBookId
+        }, null, null, null, null, this);
 
     }
 
@@ -306,31 +228,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                     final IBlRequestContract request,
                     final ResponseInfo response) {
 
-        /*
-         * This will happen in the case where the user has newly signed in using
-         * email/passowrd and doesn't have a first name added yet. The request
-         * is placed into the queue from
-         * AbstractBarterLiFragment#onDialogClick()
-         */
-        if (requestId == RequestId.SAVE_USER_PROFILE) {
-
-            final Bundle userInfo = response.responseBundle;
-            UserInfo.INSTANCE.setFirstName(userInfo
-                            .getString(HttpConstants.FIRST_NAME));
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_first_name, userInfo
-                                            .getString(HttpConstants.FIRST_NAME));
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_name, userInfo
-                                            .getString(HttpConstants.LAST_NAME));
-
-            loadChatFragment();
-
-        }
-
-        if (requestId == RequestId.GET_USER_PROFILE) {
-
-        }
     }
 
     @Override
@@ -364,8 +261,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     public void onQueryComplete(final int token, final Object cookie,
                     final Cursor cursor) {
 
-        if ((token == QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER)
-                        || (token == QueryTokens.LOAD_BOOK_DETAIL_OTHER_USER)) {
+        if (token == QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER) {
 
             Logger.d(TAG, "query completed " + cursor.getCount());
             if (cursor.moveToFirst()) {
@@ -441,150 +337,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
         }
         mBarterTypes.setText(barterTypeHashTag);
-    }
-
-    @Override
-    public void onClick(final View v) {
-        if (v.getId() == R.id.chat_with_owner) {
-
-            if (isLoggedIn()) {
-
-                if (hasFirstName()) {
-                    loadChatFragment();
-                } else {
-                    showAddFirstNameDialog();
-                }
-
-            } else {
-
-                final Bundle loginArgs = new Bundle(1);
-                loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
-
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), LoginFragment.class
-                                                .getName(), loginArgs), FragmentTags.LOGIN_TO_CHAT, true, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
-
-            }
-        }
-
-        else {
-            // Show Login Fragment
-        }
-
-    }
-
-    /**
-     * Loads the Chat Fragment to chat with the book owner
-     */
-    private void loadChatFragment() {
-        final Bundle args = new Bundle(3);
-        args.putString(Keys.CHAT_ID, ChatService
-                        .generateChatId(mUserId, UserInfo.INSTANCE.getId()));
-        args.putString(Keys.USER_ID, mUserId);
-        args.putString(Keys.BOOK_TITLE, mTitleTextView.getText().toString());
-
-        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), ChatDetailsFragment.class
-                                        .getName(), args), FragmentTags.CHAT_DETAILS, true, FragmentTags.CHATS);
-
-    }
-
-    /**
-     * Updates the book owner user details
-     */
-
-    private void getUserDetails(final String userid) {
-
-        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.USERPROFILE, null, mVolleyCallbacks);
-        request.setRequestId(RequestId.GET_USER_PROFILE);
-
-        final Map<String, String> params = new HashMap<String, String>(2);
-
-        params.put(HttpConstants.ID, String.valueOf(userid).trim());
-        request.setParams(params);
-
-        addRequestToQueue(request, true, 0, true);
-
-    }
-
-    /**
-     * Fetches books owned by the current user
-     */
-
-    private void loadUserDetails() {
-        getLoaderManager().restartLoader(Loaders.USER_DETAILS, null, this);
-
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
-        if (loaderId == Loaders.USER_DETAILS) {
-            final String selection = DatabaseColumns.USER_ID
-                            + SQLConstants.EQUALS_ARG;
-            final String[] argsId = new String[1];
-            argsId[0] = mUserId;
-            return new SQLiteLoader(getActivity(), false, ViewUsersWithLocations.NAME, null, selection, argsId, null, null, null, null);
-        }
-        if (loaderId == Loaders.GET_MY_BOOKS) {
-            final String selection = DatabaseColumns.USER_ID
-                            + SQLConstants.EQUALS_ARG;
-            final String[] argsId = new String[1];
-            argsId[0] = mUserId;
-            return new SQLiteLoader(getActivity(), false, ViewUserBooksWithLocations.NAME, null, selection, argsId, null, null, null, null);
-        } else {
-
-            return null;
-        }
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (loader.getId() == Loaders.USER_DETAILS) {
-
-            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-            if (cursor.getCount() != 0) {
-                cursor.moveToFirst();
-
-                mImageUrl = cursor
-                                .getString(cursor
-                                                .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
-
-                mOwnerNameSlide.setText(cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.FIRST_NAME))
-                                + " "
-                                + cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.LAST_NAME)));
-
-                Picasso.with(getActivity())
-                                .load(mImageUrl + "?type=large")
-                                .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                                .centerCrop()
-                                .into(mOwnerImageViewslide.getTarget());
-
-            }
-
-        }
-        if (loader.getId() == Loaders.GET_MY_BOOKS) {
-            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-            //mBooksAroundMeAdapter.swapCursor(cursor);
-            loadUserDetails();
-        }
-
-        if (loader.getId() == Loaders.GET_MY_BOOKS) {
-            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-            //mBooksAroundMeAdapter.swapCursor(cursor);
-            loadUserDetails();
-        }
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        // TODO Auto-generated method stub
-        if (loader.getId() == Loaders.GET_MY_BOOKS) {
-
-        }
     }
 
     @Override

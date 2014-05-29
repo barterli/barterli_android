@@ -21,7 +21,9 @@
     android:layout_height="match_parent"
     android:background="@color/global_bg"
     android:clickable="true"
-    android:focusable="false"
+    android:descendantFocusability="afterDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
     <RelativeLayout
