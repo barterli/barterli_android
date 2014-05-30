@@ -163,7 +163,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
         mLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
         mLayout.setPanelSlideListener(this);
-        mLayout.setEnableDragViewTouchEvents(true);
     }
 
     private void loadBookDetails() {
@@ -364,6 +363,16 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPanelAnchored(View panel) {
 
+    }
+
+    /**
+     * @param view The drag handle to be set for the Sliding Pane Layout
+     */
+    public void setDragHandle(View view) {
+
+        Logger.v(TAG, "Setting Drag View %s", view.toString());
+        mLayout.setDragView(view);
+        mLayout.setEnableDragViewTouchEvents(true);
     }
 
 }

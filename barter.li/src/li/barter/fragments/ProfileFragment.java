@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.chat.ChatService;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -106,11 +107,35 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.MY_BOOKS)
                         .setIndicator(getString(R.string.my_books)), MyBooksFragment.class, args);
 
+        /*
+         * TODO Add check for whether info has been fetched & savedInstanceState
+         * to prevent fetch on orientation change. Also stop notifying loaders
+         * on every insert during parsing of books
+         */
         fetchUserDetailsFromServer(mUserId);
+        handleAttachedToBookDetailFragment(view.findViewById(R.id.container_profile_info));
 
         return view;
     }
-    
+
+    /**
+     * This fragment can be used separately or attached to the Book detail
+     * fragment. In the latter case, this will make sure to set the correct drag
+     * handle for the sliding panel layout in book detail handle so that touch
+     * and scroll events within the profile fragment will be handled properly
+     * @param dragHandle The drag handle to be set for the view
+     */
+    private void handleAttachedToBookDetailFragment(View dragHandle) {
+
+        AbstractBarterLiFragment fragment = ((AbstractBarterLiActivity) getActivity()).getCurrentMasterFragment();
+        
+        if(fragment instanceof BookDetailFragment && fragment.isVisible()) {
+            
+            ((BookDetailFragment) fragment).setDragHandle(dragHandle);
+            
+        }
+    }
+
     private void initViews(final View view) {
 
         mOwnerImageViewslide = (CircleImageView) view
@@ -335,5 +360,5 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public void onLoaderReset(final Loader<Cursor> loader) {
 
     }
-    
+
 }
