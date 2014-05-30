@@ -110,11 +110,11 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         return view;
     }
-
+    
     private void initViews(final View view) {
 
         mOwnerImageViewslide = (CircleImageView) view
-                        .findViewById(R.id.image_user_circular);
+                        .findViewById(R.id.image_user);
         mChatLinkImageView = (ImageView) view
                         .findViewById(R.id.chat_with_owner);
 

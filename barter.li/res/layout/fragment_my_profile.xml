@@ -26,14 +26,27 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical" >
 
+    <!-- What I want to do is move the chat handle outside the layout, then set the rest of the relative layout at the drag handle. Then in the onCreateView() get a reference to the book detail fragment. If it's visible, I need to set the layout as the drag handle -->
+
     <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="72dp" >
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/profile_header_height" >
+
+        <ImageView
+            android:id="@+id/chat_with_owner"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_margin="@dimen/activity_margin"
+            android:contentDescription="@string/app_name"
+            android:gravity="center_vertical|right"
+            android:src="@drawable/chaticon" />
 
         <li.barter.widgets.CircleImageView
-            android:id="@+id/image_user_circular"
+            android:id="@+id/image_user"
             android:layout_width="@dimen/book_user_image_size_profile"
             android:layout_height="@dimen/book_user_image_size_profile"
+            android:layout_alignParentLeft="true"
             android:layout_marginBottom="@dimen/margin_xx_small"
             android:layout_marginLeft="@dimen/activity_margin"
             android:layout_marginRight="@dimen/activity_margin"
@@ -44,33 +57,17 @@
             app:borderWidth="2dp"
             app:cornerRadius="@dimen/book_user_image_size_profile" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:layout_toRightOf="@id/image_user_circular"
-            android:orientation="horizontal" >
-
-            <li.barter.widgets.TypefacedTextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="@string/owner_profile"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_medium"
-                app:fontStyle="regular" />
-
-            <ImageView
-                android:id="@+id/chat_with_owner"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="@dimen/activity_margin"
-                android:layout_weight=".5"
-                android:contentDescription="@string/app_name"
-                android:gravity="center_vertical|right"
-                android:src="@drawable/chaticon" />
-        </LinearLayout>
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@id/chat_with_owner"
+            android:layout_toRightOf="@id/image_user"
+            android:gravity="center_vertical"
+            android:text="@string/owner_profile"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_medium"
+            app:fontStyle="regular" />
     </RelativeLayout>
 
     <View
