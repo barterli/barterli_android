@@ -393,7 +393,8 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
 
     @Override
     public void onPostExecute(final IBlRequestContract request) {
-        if ((mRequestCounter.decrementAndGet() == 0) && mIsAttached) {
+        assert(mRequestCounter != null);
+        if (mIsAttached && (mRequestCounter.decrementAndGet() == 0)) {
             getActivity().setProgressBarIndeterminateVisibility(false);
         }
     }

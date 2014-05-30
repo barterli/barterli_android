@@ -78,17 +78,6 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putString(HttpConstants.DESCRIPTION, mAboutMeTextView
-                        .getText().toString());
-        outState.putString(HttpConstants.ADDRESS, mPreferredLocationTextView
-                        .getText().toString());
-
-    }
-
-    @Override
     public void onQueryComplete(final int token, final Object cookie,
                     final Cursor cursor) {
 
