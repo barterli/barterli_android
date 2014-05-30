@@ -76,6 +76,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     private boolean             mIsLoggedInUser;
     private final String        mUserSelection = DatabaseColumns.USER_ID
                                                                + SQLConstants.EQUALS_ARG;
+    private View mDragHandle;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -113,27 +114,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
          * on every insert during parsing of books
          */
         fetchUserDetailsFromServer(mUserId);
-        handleAttachedToBookDetailFragment(view.findViewById(R.id.container_profile_info));
 
         return view;
-    }
-
-    /**
-     * This fragment can be used separately or attached to the Book detail
-     * fragment. In the latter case, this will make sure to set the correct drag
-     * handle for the sliding panel layout in book detail handle so that touch
-     * and scroll events within the profile fragment will be handled properly
-     * @param dragHandle The drag handle to be set for the view
-     */
-    private void handleAttachedToBookDetailFragment(View dragHandle) {
-
-        AbstractBarterLiFragment fragment = ((AbstractBarterLiActivity) getActivity()).getCurrentMasterFragment();
-        
-        if(fragment instanceof BookDetailFragment && fragment.isVisible()) {
-            
-            ((BookDetailFragment) fragment).setDragHandle(dragHandle);
-            
-        }
     }
 
     private void initViews(final View view) {
@@ -145,6 +127,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         mChatLinkImageView.setOnClickListener(this);
         mOwnerNameSlide = (TextView) view.findViewById(R.id.name);
+        mDragHandle = view.findViewById(R.id.container_profile_info);
 
     }
 
@@ -359,6 +342,13 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
 
+    }
+
+    /**
+     * @return The drag handle view for this fragment
+     */
+    public View getDragHandle() {
+        return mDragHandle;
     }
 
 }

@@ -54,7 +54,7 @@ import li.barter.utils.Logger;
 public class BookDetailFragment extends AbstractBarterLiFragment implements
                 AsyncDbQueryCallback, PanelSlideListener {
 
-    private static final String  TAG            = "ShowSingleBookFragment";
+    private static final String  TAG            = "BookDetailFragment";
 
     private TextView             mIsbnTextView;
     private TextView             mTitleTextView;
@@ -368,11 +368,23 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     /**
      * @param view The drag handle to be set for the Sliding Pane Layout
      */
-    public void setDragHandle(View view) {
+    private void setDragHandle(View view) {
 
         Logger.v(TAG, "Setting Drag View %s", view.toString());
         mLayout.setDragView(view);
-        mLayout.setEnableDragViewTouchEvents(true);
+        mLayout.setEnableDragViewTouchEvents(false);
     }
 
+    /**
+     * Updates the drag handle for this fragment
+     */
+    public void updateDragHandle() {
+        
+        final ProfileFragment profileFragment = (ProfileFragment) getChildFragmentManager().findFragmentByTag(FragmentTags.USER_PROFILE);
+        
+        if(profileFragment != null && profileFragment.isResumed()) {
+            setDragHandle(profileFragment.getDragHandle());
+        }
+   
+    }
 }

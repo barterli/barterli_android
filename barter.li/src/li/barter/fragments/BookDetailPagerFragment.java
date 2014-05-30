@@ -1,6 +1,7 @@
 
 package li.barter.fragments;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +35,7 @@ import li.barter.utils.Logger;
  */
 
 public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
-                LoaderCallbacks<Cursor> {
+                LoaderCallbacks<Cursor>, OnPageChangeListener {
 
     private static final String TAG          = "BookDetailPagerFragment";
 
@@ -82,7 +84,7 @@ public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
         }
 
         mBookDetailPager = (ViewPager) view.findViewById(R.id.bookpager);
-
+        mBookDetailPager.setOnPageChangeListener(this);
         loadBookSearchResults();
         return view;
     }
@@ -103,6 +105,11 @@ public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
          */
         private Map<Integer, BookDetailFragment> mPositionFragmentMap;
 
+        @SuppressLint("UseSparseArrays")
+        /*
+         * The benefits of SparseArrays are not noticeable unless the data size
+         * is huge(~10k) and the API to use them is cumbersome compared to a Map
+         */
         public BookPageAdapter(FragmentManager fm) {
             super(fm);
             mPositionFragmentMap = new HashMap<Integer, BookDetailFragment>();
@@ -185,31 +192,39 @@ public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
 
             mBookDetailPager.setAdapter(mAdapter);
             mBookDetailPager.setCurrentItem(mBookPosition);
+            
 
         }
 
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> arg0) {
-        // TODO Auto-generated method stub
+    public void onLoaderReset(Loader<Cursor> loader) {
 
     }
 
-    /**
-     * Sets the drag handle for the current view
-     * 
-     * @param position The pager position to set the drag handle for
-     * @param view The drag handle to set
-     */
-    public void setBookDetailDragHandle(int position, View view) {
+    @Override
+    public void onPageScrollStateChanged(int state) {
+        
+    }
 
-        final BookDetailFragment fragment = mAdapter
-                        .getFragmentForPosition(position);
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        
+    }
 
-        if (fragment != null) {
-            fragment.setDragHandle(view);
+    @Override
+    public void onPageSelected(int position) {
+        
+        BookDetailFragment fragment = mAdapter.getFragmentForPosition(position);
+        
+        if(fragment != null) {
+            fragment.updateDragHandle();
+        } else {
+            Logger.v(TAG, "Fragment is null for position %d", position);
         }
+        
+        /* TODO Update Action Bar actions depending on whether the fragment that is loaded */
     }
 
 }
