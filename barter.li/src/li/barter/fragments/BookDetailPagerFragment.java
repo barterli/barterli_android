@@ -1,16 +1,6 @@
+
 package li.barter.fragments;
 
-import java.util.ArrayList;
-
-import li.barter.R;
-import li.barter.data.DatabaseColumns;
-import li.barter.data.SQLiteLoader;
-import li.barter.data.TableSearchBooks;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.ResponseInfo;
-import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.AppConstants.Loaders;
-import li.barter.utils.Logger;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,68 +13,80 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import li.barter.R;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLiteLoader;
+import li.barter.data.TableSearchBooks;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.Logger;
 
 /**
- * @author Anshul Kamboj Fragment for Paging Books Around Me. Also contains
- *         a Profile that the user can chat directly with the owner
+ * @author Anshul Kamboj Fragment for Paging Books Around Me. Also contains a
+ *         Profile that the user can chat directly with the owner
  */
 
-public class BookDetailPagerFragment extends AbstractBarterLiFragment implements LoaderCallbacks<Cursor>{
+public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
+                LoaderCallbacks<Cursor> {
 
-	
-	private static final String           TAG                     = "BookDetailPagerFragment";
+    private static final String TAG          = "BookDetailPagerFragment";
 
-	
-	/**
-	 *  {@link BookPageAdapter} holds the {@link BookDetailFragment} as viewpager
-	 */
-	private BookPageAdapter				 mAdapter;
-	
-	
-	/**
-	 *  ViewPager which holds the fragment
-	 */
-    private ViewPager 					 mBookDetailPager;
-    
     /**
-	 *  Counter to load the current number of pages for {@link BookDetailFragment}
-	 */
-    private int 						 mBookCounter;
-    
+     * {@link BookPageAdapter} holds the {@link BookDetailFragment} as viewpager
+     */
+    private BookPageAdapter     mAdapter;
+
     /**
-	 *  It holds the Book which is clicked
-	 */
-    private int							 mBookPosition;
-    
+     * ViewPager which holds the fragment
+     */
+    private ViewPager           mBookDetailPager;
+
     /**
-   	 *  These arrays holds bookids and userids for all the books in the pager to map them
-   	 */
-    private ArrayList<String>			 mBookIdArray=new ArrayList<String>();
-    private ArrayList<String> 			 mUserIdArray=new ArrayList<String>();
+     * Counter to load the current number of pages for
+     * {@link BookDetailFragment}
+     */
+    private int                 mBookCounter;
+
+    /**
+     * It holds the Book which is clicked
+     */
+    private int                 mBookPosition;
+
+    /**
+     * These arrays holds bookids and userids for all the books in the pager to
+     * map them
+     */
+    private ArrayList<String>   mBookIdArray = new ArrayList<String>();
+    private ArrayList<String>   mUserIdArray = new ArrayList<String>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    		Bundle savedInstanceState) {
-    	// TODO Auto-generated method stub
-    	init(container, savedInstanceState);
-    	
-    	final View view = inflater
-				.inflate(R.layout.fragment_book_detail_pager, container, false);
-    	final Bundle extras = getArguments();
+                    Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        init(container, savedInstanceState);
 
-		if (extras != null) {
-			mBookCounter = extras.getInt(Keys.BOOK_COUNT);
-			mBookPosition = extras.getInt(Keys.BOOK_POSITION);
-			
-		}
-    	
-		 mBookDetailPager = (ViewPager)view.findViewById(R.id.bookpager);
-		 
-    	
+        final View view = inflater
+                        .inflate(R.layout.fragment_book_detail_pager, container, false);
+        final Bundle extras = getArguments();
+
+        if (extras != null) {
+            mBookCounter = extras.getInt(Keys.BOOK_COUNT);
+            mBookPosition = extras.getInt(Keys.BOOK_POSITION);
+
+        }
+
+        mBookDetailPager = (ViewPager) view.findViewById(R.id.bookpager);
+
         loadBookSearchResults();
-    	return view;
+        return view;
     }
-	
+
     /**
      * Starts the loader for book search results
      */
@@ -92,13 +94,18 @@ public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
         //TODO Add filters for search results
         getLoaderManager().restartLoader(Loaders.SEARCH_BOOKS, null, this);
     }
-    
-    
-    
-    
-    public  class BookPageAdapter extends FragmentStatePagerAdapter {
+
+    public class BookPageAdapter extends FragmentStatePagerAdapter {
+
+        /**
+         * Maintains a map of the positions to the fragments loaded in that
+         * position
+         */
+        private Map<Integer, BookDetailFragment> mPositionFragmentMap;
+
         public BookPageAdapter(FragmentManager fm) {
             super(fm);
+            mPositionFragmentMap = new HashMap<Integer, BookDetailFragment>();
         }
 
         @Override
@@ -108,69 +115,101 @@ public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
 
         @Override
         public Fragment getItem(int position) {
-        	Logger.d(TAG, mUserIdArray.get(position)+"  "+mBookIdArray.get(position));
-            return BookDetailFragment.newInstance(mUserIdArray.get(position),mBookIdArray.get(position));
-            
+
+            final BookDetailFragment fragment = BookDetailFragment
+                            .newInstance(mUserIdArray.get(position), mBookIdArray
+                                            .get(position));
+            mPositionFragmentMap.put(position, fragment);
+            return fragment;
+
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            super.destroyItem(container, position, object);
+            mPositionFragmentMap.remove(position);
+        }
+
+        public BookDetailFragment getFragmentForPosition(final int position) {
+            return mPositionFragmentMap.get(position);
         }
     }
-    
-	@Override
-	protected Object getVolleyTag() {
-		// TODO Auto-generated method stub
-		
-		return TAG;
-	}
 
-	@Override
-	public void onSuccess(int requestId, IBlRequestContract request,
-			ResponseInfo response) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    protected Object getVolleyTag() {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void onBadRequestError(int requestId, IBlRequestContract request,
-			int errorCode, String errorMessage, Bundle errorResponseBundle) {
-		// TODO Auto-generated method stub
-		
-	}
+        return TAG;
+    }
 
-	@Override
-	public Loader<Cursor> onCreateLoader(int loaderId, Bundle arg1) {
-		   if (loaderId == Loaders.SEARCH_BOOKS) {
-	            return new SQLiteLoader(getActivity(), false, TableSearchBooks.NAME, null, null, null, null, null, null, null);
-	        } else {
-	            return null;
-	        }
-	}
+    @Override
+    public void onSuccess(int requestId, IBlRequestContract request,
+                    ResponseInfo response) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		 if (loader.getId() == Loaders.SEARCH_BOOKS) {
+    }
 
-	            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-	            mBookCounter=cursor.getCount();
-	            cursor.moveToFirst();
-	            for(int i=0;i<mBookCounter;i++)
-	            {
-	            	mBookIdArray.add(cursor.getString(cursor.getColumnIndex(DatabaseColumns.BOOK_ID)));
-	            	mUserIdArray.add(cursor.getString(cursor.getColumnIndex(DatabaseColumns.USER_ID)));
-	            	cursor.moveToNext();
-	               
-	            }
-	            mAdapter = new BookPageAdapter(getChildFragmentManager());
-	            
-	            mBookDetailPager.setAdapter(mAdapter);
-	            mBookDetailPager.setCurrentItem(mBookPosition);
-	           
-	        }
-		
-	}
+    @Override
+    public void onBadRequestError(int requestId, IBlRequestContract request,
+                    int errorCode, String errorMessage,
+                    Bundle errorResponseBundle) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void onLoaderReset(Loader<Cursor> arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int loaderId, Bundle arg1) {
+        if (loaderId == Loaders.SEARCH_BOOKS) {
+            return new SQLiteLoader(getActivity(), false, TableSearchBooks.NAME, null, null, null, null, null, null, null);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (loader.getId() == Loaders.SEARCH_BOOKS) {
+
+            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
+            mBookCounter = cursor.getCount();
+            cursor.moveToFirst();
+            for (int i = 0; i < mBookCounter; i++) {
+                mBookIdArray.add(cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.BOOK_ID)));
+                mUserIdArray.add(cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.USER_ID)));
+                cursor.moveToNext();
+
+            }
+            mAdapter = new BookPageAdapter(getChildFragmentManager());
+
+            mBookDetailPager.setAdapter(mAdapter);
+            mBookDetailPager.setCurrentItem(mBookPosition);
+
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> arg0) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /**
+     * Sets the drag handle for the current view
+     * 
+     * @param position The pager position to set the drag handle for
+     * @param view The drag handle to set
+     */
+    public void setBookDetailDragHandle(int position, View view) {
+
+        final BookDetailFragment fragment = mAdapter
+                        .getFragmentForPosition(position);
+
+        if (fragment != null) {
+            fragment.setDragHandle(view);
+        }
+    }
 
 }
