@@ -77,6 +77,15 @@
                 android:layout_height="wrap_content"
                 android:text="@string/volunteer"
                 app:fontStyle="condensed_regular" />
+            
+            <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_pr_media"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/prmedia"
+                app:fontStyle="condensed_regular" />
+            
+             
         </RadioGroup>
 
         <li.barter.widgets.TypefacedEditText

@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
-import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.chat.ChatService;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;

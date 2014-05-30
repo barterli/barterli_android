@@ -22,7 +22,6 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.ViewUsersWithLocations;
-import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.Keys;
