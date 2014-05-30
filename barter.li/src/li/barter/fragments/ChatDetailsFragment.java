@@ -323,6 +323,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                     mSubmitChatEditText.setText(null);
                 } else {
                     showCrouton(R.string.error_not_connected_to_chat_service, AlertStyle.ERROR);
+                    
                 }
             }
             

@@ -57,5 +57,7 @@ public interface DatabaseColumns {
     public static final String UNREAD_COUNT      = "unread_count";
     public static final String BOOK_OWNER             = "book_owner";
     public static final String BOOK_OWNER_IMAGE_URL = "book_owner_image_url";
+    public static final String CHAT_ACK			 = "sending_ack";
+    
 
 }

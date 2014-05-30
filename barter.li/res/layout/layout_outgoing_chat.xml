@@ -45,4 +45,16 @@
         android:textSize="@dimen/text_medium"
         app:fontStyle="regular" />
 
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/chat_ack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/text_chat_message"
+        android:layout_below="@+id/text_chat_message"
+        android:layout_marginTop="@dimen/margin_medium"
+        android:textSize="@dimen/text_micro"
+        android:textColor="@color/dark_gray"
+        android:visibility="gone"
+        app:fontStyle="regular" />
+
 </RelativeLayout>

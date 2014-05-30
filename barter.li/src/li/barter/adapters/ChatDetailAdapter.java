@@ -33,6 +33,7 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
+import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.UserInfo;
 
 /**
@@ -134,6 +135,19 @@ public class ChatDetailAdapter extends CursorAdapter {
             }
         } else if (itemViewType == OUTGOING_MESSAGE) {
             final String imageUrl = UserInfo.INSTANCE.getProfilePicture();
+            if(cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.CHAT_ACK)).equals(AppConstants.SENT_ACK))
+            {
+            	  ((TextView) view.getTag(R.id.chat_ack))
+                  .setText(AppConstants.SENT_ACK);
+            }
+            else
+            {
+            	 ((TextView) view.getTag(R.id.chat_ack))
+                 .setText(AppConstants.SENDING_ACK);
+            }
+          
+
             if (!TextUtils.isEmpty(imageUrl)) {
                 Picasso.with(context).load(imageUrl).fit()
                                 .error(R.drawable.pic_avatar)
@@ -157,6 +171,8 @@ public class ChatDetailAdapter extends CursorAdapter {
             view = LayoutInflater
                             .from(context)
                             .inflate(R.layout.layout_outgoing_chat, parent, false);
+            view.setTag(R.id.chat_ack, view
+                    .findViewById(R.id.chat_ack));
         }
 
         view.setTag(R.id.image_user, view.findViewById(R.id.image_user));

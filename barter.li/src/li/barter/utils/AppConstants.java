@@ -51,6 +51,12 @@ public class AppConstants {
     public static final String  SAVED_STATE_ACTION_BAR_HIDDEN    = "saved_state_action_bar_hidden";
 
     public static final String  JSON                             = "json";
+    
+    public static final String  SENDING_ACK                      = "...";
+    public static final String  SENT_ACK                         = "sent";
+    
+    
+    
 
     /*
      * heartbeat interval for rabbitmq chat
