@@ -367,9 +367,24 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
                 break;
             }
-
-            //Logout
+            
+            //Share
             case 7: {
+            	 Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            	 
+            	
+            	 shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.subject));
+            	 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.app_share_message));
+            	 
+            	 shareIntent.setType("text/plain");
+                 startActivity(shareIntent);
+                 
+               
+                break;
+            }
+           
+            //Logout
+            case 8: {
 
                 runnable = new Runnable() {
 
