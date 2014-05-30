@@ -26,7 +26,7 @@
         android:layout_height="match_parent"
         android:gravity="bottom"
         sothree:dragView="@+id/name"
-        sothree:panelHeight="72dp"
+        sothree:panelHeight="@dimen/profile_header_height"
         sothree:paralaxOffset="100dp"
         sothree:shadowHeight="4dp" >
 
