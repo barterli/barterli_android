@@ -139,8 +139,7 @@ public class ChatDetailAdapter extends CursorAdapter {
                                         .getColumnIndex(DatabaseColumns.CHAT_ACK)).equals(AppConstants.SENT_ACK))
             {
             	  ((TextView) view.getTag(R.id.chat_ack))
-                  .setText(AppConstants.SENT_ACK+" at "+cursor
-                          .getColumnIndex(DatabaseColumns.TIMESTAMP_EPOCH));
+                  .setText(AppConstants.SENT_ACK);
             }
             else
             {
