@@ -141,7 +141,7 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
 
     @Override
     protected Object getVolleyTag() {
-        return TAG;
+        return hashCode();
     }
 
     @Override

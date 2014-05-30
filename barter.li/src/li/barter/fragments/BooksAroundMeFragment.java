@@ -346,7 +346,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     protected Object getVolleyTag() {
-        return TAG;
+        return hashCode();
     }
 
     public void updateLocation(final Location location) {

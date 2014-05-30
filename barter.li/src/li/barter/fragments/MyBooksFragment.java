@@ -111,7 +111,7 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
 
     @Override
     protected Object getVolleyTag() {
-        return TAG;
+        return hashCode();
     }
 
     @Override

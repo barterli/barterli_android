@@ -203,7 +203,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
     @Override
     protected Object getVolleyTag() {
-        return TAG;
+        return hashCode();
     }
 
     @Override

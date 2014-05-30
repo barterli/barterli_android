@@ -86,7 +86,7 @@ public class TeamFragment extends AbstractBarterLiFragment {
 
     @Override
     protected Object getVolleyTag() {
-        return TAG;
+        return hashCode();
     }
 
     @Override

@@ -61,7 +61,7 @@ public class OssLicenseFragment extends AbstractBarterLiFragment {
 
     @Override
     protected Object getVolleyTag() {
-        return TAG;
+        return hashCode();
     }
 
     @Override

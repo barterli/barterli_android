@@ -143,7 +143,7 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
 
     @Override
     protected Object getVolleyTag() {
-        return TAG;
+        return hashCode();
     }
 
     @Override
