@@ -417,6 +417,7 @@ AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 			chatValues.put(DatabaseColumns.SENDER_ID, senderId);
 			chatValues.put(DatabaseColumns.RECEIVER_ID, receiverId);
 			chatValues.put(DatabaseColumns.MESSAGE, message);
+			chatValues.put(DatabaseColumns.SENT_AT, timeSentAt);
 			chatValues.put(DatabaseColumns.CHAT_ACK, AppConstants.SENDING_ACK);
 
             
@@ -478,6 +479,7 @@ AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 			Logger.d(TAG, "Received:" + text);
 
 			mMessageQueue.add(text);
+			//queueNextMessageForProcessing();
 			if (!mIsProcessingMessage) {
 				//If there aren't any messages in the queue, process the message immediately
 				queueNextMessageForProcessing();
@@ -505,7 +507,7 @@ AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 			final String senderId = JsonUtils
 					.readString(senderObject, HttpConstants.ID_USER, true, true);
 			final String sentAtTime = JsonUtils
-					.readString(senderObject, HttpConstants.SENT_AT, true, true);
+					.readString(messageJson, HttpConstants.SENT_AT, true, true);
 			final String receiverId = JsonUtils
 					.readString(receiverObject, HttpConstants.ID_USER, true, true);
 			final String messageText = JsonUtils
@@ -517,7 +519,7 @@ AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 			//Insert the chat message into DB
 			final String selection = DatabaseColumns.SENDER_ID
 					+ SQLConstants.EQUALS_ARG+SQLConstants.AND+DatabaseColumns.MESSAGE+ SQLConstants.EQUALS_ARG
-					+SQLConstants.AND+DatabaseColumns.TIMESTAMP+ SQLConstants.EQUALS_ARG;
+					+SQLConstants.AND+DatabaseColumns.SENT_AT+ SQLConstants.EQUALS_ARG;
 			final String[] args = new String[3];
 			// DBInterface.delete(TableUserBooks.NAME, null, null, true);
 			args[0] = senderId;
@@ -535,6 +537,7 @@ AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 			chatValues.put(DatabaseColumns.RECEIVER_ID, receiverId);
 			chatValues.put(DatabaseColumns.MESSAGE, messageText);
 			chatValues.put(DatabaseColumns.TIMESTAMP, timestamp);
+			chatValues.put(DatabaseColumns.SENT_AT, sentAtTime);
 			chatValues.put(DatabaseColumns.CHAT_ACK, AppConstants.SENT_ACK);
 			chatValues.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter
 					.getEpoch(timestamp));
@@ -566,7 +569,7 @@ AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 			final String senderId = JsonUtils
 					.readString(senderObject, HttpConstants.ID_USER, true, true);
 			final String sentAtTime = JsonUtils
-					.readString(senderObject, HttpConstants.SENT_AT, true, true);
+					.readString(messageJson, HttpConstants.SENT_AT, true, true);
 			final String receiverId = JsonUtils
 					.readString(receiverObject, HttpConstants.ID_USER, true, true);
 			final String messageText = JsonUtils
@@ -794,6 +797,7 @@ AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 			{
 
 				processChatMessage(mCurrentMessage);
+				Logger.d(TAG, "added = "+mCurrentMessage);
 			}
 			else
 			{
