@@ -31,6 +31,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 
 import java.util.WeakHashMap;
@@ -588,8 +589,8 @@ public class PullToRefreshAttacher {
         mActivity.getWindow().getDecorView().getWindowVisibleDisplayFrame(mRect);
 
         // Honour the requested layout params
-        int width = WindowManager.LayoutParams.MATCH_PARENT;
-        int height = WindowManager.LayoutParams.WRAP_CONTENT;
+        int width = LayoutParams.MATCH_PARENT;
+        int height = LayoutParams.WRAP_CONTENT;
         ViewGroup.LayoutParams requestedLp = headerView.getLayoutParams();
         if (requestedLp != null) {
             width = requestedLp.width;

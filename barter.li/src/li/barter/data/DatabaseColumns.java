@@ -50,11 +50,14 @@ public interface DatabaseColumns {
     public static final String MESSAGE           = "message";
     public static final String TIMESTAMP_HUMAN   = "timestamp_human";
     public static final String TIMESTAMP_EPOCH   = "timestamp_epoch";
+    public static final String SENT_AT           = "sent_at";
     public static final String CHAT_ID           = "chat_id";
     public static final String CHAT_TYPE         = "chat_type";
     public static final String LAST_MESSAGE_ID   = "last_message_id";
     public static final String UNREAD_COUNT      = "unread_count";
     public static final String BOOK_OWNER             = "book_owner";
     public static final String BOOK_OWNER_IMAGE_URL = "book_owner_image_url";
+    public static final String CHAT_ACK			 = "sending_ack";
+    
 
 }
