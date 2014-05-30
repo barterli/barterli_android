@@ -32,6 +32,7 @@ import li.barter.utils.Logger;
  *             {@link ViewUserBooksWithLocations} as of DB version 2
  * @author Vinay S Shenoy
  */
+@Deprecated
 public class ViewMyBooksWithLocations {
 
     private static final String TAG             = "ViewMyBooksWithLocations";

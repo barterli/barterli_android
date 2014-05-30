@@ -33,6 +33,7 @@ import li.barter.utils.Logger;
  *             DB version 2
  * @author Vinay S Shenoy
  */
+@Deprecated
 public class TableMyBooks {
 
     private static final String TAG  = "TableMyBooks";

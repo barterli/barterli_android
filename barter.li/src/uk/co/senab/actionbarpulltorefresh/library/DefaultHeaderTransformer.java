@@ -18,7 +18,6 @@ package uk.co.senab.actionbarpulltorefresh.library;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 import uk.co.senab.actionbarpulltorefresh.library.sdk.Compat;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -37,11 +36,11 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import li.barter.R;
 
 /**
@@ -360,7 +359,7 @@ public class DefaultHeaderTransformer extends HeaderTransformer {
 
     private void applyProgressBarStyle() {
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, mProgressBarHeight);
+                LayoutParams.MATCH_PARENT, mProgressBarHeight);
 
         switch (mProgressBarStyle) {
             case PROGRESS_BAR_STYLE_INSIDE:

@@ -45,10 +45,7 @@ import android.text.TextUtils;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 import li.barter.BarterLiApplication;
@@ -63,7 +60,6 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableChatMessages;
 import li.barter.data.TableChats;
-import li.barter.data.TableUserBooks;
 import li.barter.data.TableUsers;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
