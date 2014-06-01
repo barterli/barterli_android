@@ -67,6 +67,12 @@ public class TableChatMessages {
                                             .format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.CHAT_ACK, ""));
             Logger.d(TAG, "Alter Table Def: %s", alterTableDef);
             db.execSQL(alterTableDef);
+            
+            alterTableDef = String
+                            .format(Locale.US, SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String
+                                            .format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.SENT_AT, ""));
+            Logger.d(TAG, "Alter Table Def: %s", alterTableDef);
+            db.execSQL(alterTableDef);
 
         } else {
             db.execSQL(String
