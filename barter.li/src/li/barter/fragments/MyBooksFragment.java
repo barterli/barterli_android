@@ -15,19 +15,6 @@
 
 package li.barter.fragments;
 
-import li.barter.R;
-import li.barter.adapters.BooksAroundMeAdapter;
-import li.barter.data.DatabaseColumns;
-import li.barter.data.SQLConstants;
-import li.barter.data.SQLiteLoader;
-import li.barter.data.ViewUserBooksWithLocations;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.ResponseInfo;
-import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.AppConstants.Loaders;
-import li.barter.utils.Logger;
-
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,8 +28,18 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
-import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import li.barter.R;
+import li.barter.adapters.BooksAroundMeAdapter;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
+import li.barter.data.SQLiteLoader;
+import li.barter.data.ViewUserBooksWithLocations;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.Logger;
 
 /**
  * @author Anshul Kamboj
@@ -60,12 +57,6 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
      * {@link BooksAroundMeAdapter} instance for the Books
      */
     private BooksAroundMeAdapter          mBooksAroundMeAdapter;
-
-    /**
-     * {@link AnimationAdapter} implementation to provide appearance animations
-     * for the book items as they are brought in
-     */
-    private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
 
     private String                        mUserId;
 
@@ -99,8 +90,6 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
         }
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
-        mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
-        mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
         mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
 
         mBooksAroundMeGridView.setOnItemClickListener(this);

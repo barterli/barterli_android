@@ -17,8 +17,6 @@
 package li.barter.fragments;
 
 import com.android.volley.Request.Method;
-import com.haarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.haarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -44,6 +42,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SearchView;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -105,12 +104,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * {@link BooksAroundMeAdapter} instance for the Books
      */
     private BooksAroundMeAdapter          mBooksAroundMeAdapter;
-
-    /**
-     * {@link AnimationAdapter} implementation to provide appearance animations
-     * for the book items as they are brought in
-     */
-    private SwingBottomInAnimationAdapter mSwingBottomInAnimationAdapter;
 
     /**
      * Current page used for load more
@@ -176,9 +169,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         LoadMoreHelper.init(this).on(mBooksAroundMeGridView);
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
-        mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
-        mSwingBottomInAnimationAdapter.setAbsListView(mBooksAroundMeGridView);
-        mBooksAroundMeGridView.setAdapter(mSwingBottomInAnimationAdapter);
+        mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
         mBooksAroundMeGridView.setOnItemClickListener(this);
 
         if (savedInstanceState == null) {
