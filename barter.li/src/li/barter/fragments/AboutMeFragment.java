@@ -52,6 +52,7 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
     private TextView            mPreferredLocationTextView;
     private final String        mUserSelection = DatabaseColumns.USER_ID
                                                                + SQLConstants.EQUALS_ARG;
+    private String              mLocationFormat;
 
     private String              mUserId;
 
@@ -60,6 +61,7 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
+        mLocationFormat = getString(R.string.location_format);
         final View view = inflater
                         .inflate(R.layout.fragment_profile_aboutme, null);
 
@@ -86,7 +88,7 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
 
         return view;
     }
-    
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -170,11 +172,10 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
                 mAboutMeTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.DESCRIPTION)));
                 mPreferredLocationTextView
-                                .setText(cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.NAME))
-                                                + ","
-                                                + cursor.getString(cursor
-                                                                .getColumnIndex(DatabaseColumns.ADDRESS)));
+                                .setText(String.format(mLocationFormat, cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.NAME)), cursor
+                                                .getString(cursor
+                                                                .getColumnIndex(DatabaseColumns.ADDRESS))));
             }
 
         }

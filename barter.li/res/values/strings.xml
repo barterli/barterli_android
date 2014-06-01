@@ -65,6 +65,7 @@
     <string name="complete_action_using">Complete action using</string>
     <string name="no_books_found">No books were found in this area.</string>
     <string name="no_more_books_found">No more books were found.</string>
+    <string name="location_format" formatted="false">%s, %s</string>
 
     <!-- Strings for AddBookActivity -->
     <string name="search_hint">Search by Title|Author|ISBN</string>
@@ -118,6 +119,7 @@
     <string name="submit">Submit</string>
     <string name="chat_with_owner">Chat with owner</string>
     <string name="owner_profile">Book Owner</string>
+    <string name="owner_location">Owner\'s Preferred Barter Location</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>
     <string name="email_label">Email Id</string>

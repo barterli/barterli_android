@@ -64,15 +64,34 @@
                 app:borderWidth="2dp"
                 app:cornerRadius="@dimen/book_user_image_size_profile" />
 
-            <li.barter.widgets.TypefacedTextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/owner_profile"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_medium"
-                app:fontStyle="regular" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|left"
+                android:orientation="vertical" >
+
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/text_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ellipsize="end"
+                    android:hint="@string/owner_profile"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_medium"
+                    app:fontStyle="bold" />
+
+                <li.barter.widgets.TypefacedTextView
+                    android:id="@+id/text_user_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:ellipsize="marquee"
+                    android:hint="@string/owner_location"
+                    android:maxLines="2"
+                    android:textColor="@color/apptheme_color"
+                    android:textSize="@dimen/text_small"
+                    app:fontStyle="regular" />
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 

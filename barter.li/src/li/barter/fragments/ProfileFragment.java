@@ -49,6 +49,7 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.TableUsers;
+import li.barter.data.ViewUsersWithLocations;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -76,21 +77,24 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     private FragmentTabHost         mTabHost;
     private String                  mUserId;
     private String                  mImageUrl;
-    private ImageView               mChatLinkImageView;
-    private CircleImageView         mOwnerImageViewslide;
-    private TextView                mOwnerNameSlide;
+    private ImageView               mChatImageView;
+    private CircleImageView         mOwnerImageView;
+    private TextView                mOwnerNameTextView;
+    private TextView                mOwnerBarterLocationTextView;
     private boolean                 mIsLoggedInUser;
     private final String            mUserSelection = DatabaseColumns.USER_ID
                                                                    + SQLConstants.EQUALS_ARG;
     private View                    mDragHandle;
     private ViewPager               mViewPager;
     private ProfileFragmentsAdapter mProfileFragmentsAdapter;
+    private String                  mLocationFormat;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
+        mLocationFormat = getString(R.string.location_format);
         final View view = inflater.inflate(R.layout.fragment_my_profile, null);
         initViews(view);
 
@@ -157,13 +161,13 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
     private void initViews(final View view) {
 
-        mOwnerImageViewslide = (CircleImageView) view
-                        .findViewById(R.id.image_user);
-        mChatLinkImageView = (ImageView) view
-                        .findViewById(R.id.chat_with_owner);
+        mOwnerImageView = (CircleImageView) view.findViewById(R.id.image_user);
+        mChatImageView = (ImageView) view.findViewById(R.id.chat_with_owner);
 
-        mChatLinkImageView.setOnClickListener(this);
-        mOwnerNameSlide = (TextView) view.findViewById(R.id.name);
+        mChatImageView.setOnClickListener(this);
+        mOwnerNameTextView = (TextView) view.findViewById(R.id.text_user_name);
+        mOwnerBarterLocationTextView = (TextView) view
+                        .findViewById(R.id.text_user_location);
         mDragHandle = view.findViewById(R.id.container_profile_info);
 
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
@@ -188,19 +192,11 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     private void updateViewsForUser() {
 
         if (mIsLoggedInUser) {
-            mChatLinkImageView.setVisibility(View.GONE);
-            mImageUrl = UserInfo.INSTANCE.getProfilePicture();
-
-            mOwnerNameSlide.setText(UserInfo.INSTANCE.getFirstName());
-
-            Picasso.with(getActivity())
-                            .load(mImageUrl + "?type=large")
-                            .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                            .centerCrop()
-                            .into(mOwnerImageViewslide.getTarget());
+            mChatImageView.setVisibility(View.GONE);
         } else {
-            loadUserDetails();
+            mChatImageView.setVisibility(View.VISIBLE);
         }
+        loadUserDetails();
     }
 
     /**
@@ -344,7 +340,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
         if (loaderId == Loaders.USER_DETAILS) {
 
-            return new SQLiteLoader(getActivity(), false, TableUsers.NAME, null, mUserSelection, new String[] {
+            return new SQLiteLoader(getActivity(), false, ViewUsersWithLocations.NAME, null, mUserSelection, new String[] {
                 mUserId
             }, null, null, null, null);
         } else {
@@ -357,31 +353,31 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         if (loader.getId() == Loaders.USER_DETAILS) {
 
-            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-            if (cursor.getCount() != 0) {
-                cursor.moveToFirst();
+            if (cursor.moveToFirst()) {
 
                 mImageUrl = cursor
                                 .getString(cursor
                                                 .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
 
-                mOwnerNameSlide.setText(cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.FIRST_NAME))
-                                + " "
-                                + cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.LAST_NAME)));
+                mOwnerNameTextView
+                                .setText(cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.FIRST_NAME))
+                                                + " "
+                                                + cursor.getString(cursor
+                                                                .getColumnIndex(DatabaseColumns.LAST_NAME)));
+                mOwnerBarterLocationTextView
+                                .setText(String.format(mLocationFormat, cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.NAME)), cursor
+                                                .getString(cursor
+                                                                .getColumnIndex(DatabaseColumns.ADDRESS))));
+                
+                //Set selected to do marquee if text length is very long
+                mOwnerBarterLocationTextView.setSelected(true);
 
                 Picasso.with(getActivity())
                                 .load(mImageUrl + "?type=large")
                                 .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                                .centerCrop()
-                                .into(mOwnerImageViewslide.getTarget());
-
-                //				mAboutMeTextView.setText(cursor.getString(cursor
-                //						.getColumnIndex(DatabaseColumns.DESCRIPTION)));
-                //				mPreferredLocationTextView.setText(cursor.getString(cursor
-                //						.getColumnIndex(DatabaseColumns.NAME))+","+cursor.getString(cursor
-                //								.getColumnIndex(DatabaseColumns.ADDRESS)));
+                                .centerCrop().into(mOwnerImageView.getTarget());
 
             }
 
