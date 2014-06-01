@@ -15,6 +15,9 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -31,6 +34,7 @@ import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 
 /**
@@ -82,7 +86,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                     Bundle savedInstanceState) {
         init(container, savedInstanceState);
-
+        setHasOptionsMenu(true);
         final View view = inflater
                         .inflate(R.layout.fragment_books_pager, container, false);
         final Bundle extras = getArguments();
@@ -109,6 +113,47 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
         loadBookSearchResults();
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        final int currentItem = mBookDetailPager.getCurrentItem();
+
+        if (mUserIdArray.size() > 0
+                        && mUserIdArray.get(currentItem)
+                                        .equals(UserInfo.INSTANCE.getId())) {
+            inflater.inflate(R.menu.menu_profile_show, menu);
+        }
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home: {
+                onUpNavigate();
+                return true;
+            }
+
+            case R.id.action_edit_profile: {
+
+                final int currentItem = mBookDetailPager.getCurrentItem();
+                final Bundle args = new Bundle(2);
+                args.putString(Keys.BOOK_ID, mBookIdArray.get(currentItem));
+                args.putBoolean(Keys.EDIT_MODE, true);
+                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), AddOrEditBookFragment.class
+                                                .getName(), args), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_EDIT_BOOK);
+
+                return true;
+            }
+
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
     }
 
     /**
@@ -217,8 +262,8 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
              * Viewpager doesn't call on page selected() on the listener if the
              * set item is 0. This is to workaround that
              */
-            
-            if(mBookPosition == 0 && mBookIdArray.size() > 0) {
+
+            if (mBookPosition == 0 && mBookIdArray.size() > 0) {
                 onPageSelected(mBookPosition);
             }
 
@@ -245,6 +290,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPageSelected(int position) {
 
+        getActivity().invalidateOptionsMenu();
         final ProfileFragment fragment = (ProfileFragment) getChildFragmentManager()
                         .findFragmentByTag(FragmentTags.USER_PROFILE);
 
@@ -260,7 +306,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPanelExpanded(View panel) {
         setActionBarTitle(R.string.owner_profile);
-
+        /* TODO If current user is the user whose profile is being displayed, show the edit option */
     }
 
     @Override

@@ -48,7 +48,6 @@ import li.barter.chat.ChatService;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
-import li.barter.data.TableUsers;
 import li.barter.data.ViewUsersWithLocations;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
@@ -60,7 +59,6 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.UserInfo;
-import li.barter.utils.Logger;
 import li.barter.widgets.CircleImageView;
 
 /**
@@ -93,7 +91,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
-        setHasOptionsMenu(true);
         mLocationFormat = getString(R.string.location_format);
         final View view = inflater.inflate(R.layout.fragment_my_profile, null);
         initViews(view);
@@ -113,8 +110,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         if (fragment != null && fragment instanceof BooksPagerFragment) {
             ((BooksPagerFragment) fragment).setDragHandle(view
                             .findViewById(R.id.container_profile_info));
+            setHasOptionsMenu(false);
         } else {
             setActionBarTitle(R.string.profilepage_title);
+            setHasOptionsMenu(true);
         }
 
         return view;

@@ -28,7 +28,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -803,8 +802,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 mAuthorEditText.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.AUTHOR)));
                 mDescriptionEditText
-                                .setText(Html.fromHtml(cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.DESCRIPTION))));
+                                .setText(cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.DESCRIPTION)));
 
                 mPublicationYear = cursor
                                 .getString(cursor

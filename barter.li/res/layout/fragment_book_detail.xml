@@ -175,8 +175,7 @@
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium"
-            android:textStyle="bold"
-            app:fontStyle="regular" />
+            app:fontStyle="bold" />
 
         <ImageView
             android:id="@+id/book_avatar"

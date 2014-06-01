@@ -33,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -85,7 +86,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
-        setHasOptionsMenu(true);
         setActionBarTitle(R.string.Book_Detail_fragment_title);
 
         final View view = inflater
@@ -106,6 +106,14 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             } else {
                 mOwnedByUser = false;
             }
+        }
+        
+        final AbstractBarterLiFragment fragment = ((AbstractBarterLiActivity) getActivity()).getCurrentMasterFragment();
+        
+        if(fragment != null && fragment instanceof BooksPagerFragment) {
+            setHasOptionsMenu(false);
+        } else {
+            setHasOptionsMenu(true);
         }
 
         setActionBarDrawerToggleEnabled(false);
@@ -165,6 +173,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
 
         if (mOwnedByUser) {
+            Logger.v(TAG, "Inflating Menu");
             inflater.inflate(R.menu.menu_profile_show, menu);
         }
     }
