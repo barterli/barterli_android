@@ -274,4 +274,14 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         mLayout.setEnableDragViewTouchEvents(false);
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (mLayout.isExpanded()) {
+            mLayout.collapsePane();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 }
