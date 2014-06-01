@@ -74,7 +74,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         init(container, savedInstanceState);
 
         final View view = inflater
-                        .inflate(R.layout.fragment_book_detail_pager, container, false);
+                        .inflate(R.layout.fragment_books_pager, container, false);
         final Bundle extras = getArguments();
 
         if (extras != null) {
