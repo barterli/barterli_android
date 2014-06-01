@@ -213,6 +213,15 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             mBookDetailPager.setAdapter(mAdapter);
             mBookDetailPager.setCurrentItem(mBookPosition);
 
+            /*
+             * Viewpager doesn't call on page selected() on the listener if the
+             * set item is 0. This is to workaround that
+             */
+            
+            if(mBookPosition == 0 && mBookIdArray.size() > 0) {
+                onPageSelected(mBookPosition);
+            }
+
         }
 
     }
