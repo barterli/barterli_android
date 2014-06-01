@@ -49,7 +49,7 @@ import java.util.Map;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.ScanIsbnActivity;
-import li.barter.adapters.BooksAroundMeAdapter;
+import li.barter.adapters.BooksGridAdapter;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -101,9 +101,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private GridView                      mBooksAroundMeGridView;
 
     /**
-     * {@link BooksAroundMeAdapter} instance for the Books
+     * {@link BooksGridAdapter} instance for the Books
      */
-    private BooksAroundMeAdapter          mBooksAroundMeAdapter;
+    private BooksGridAdapter          mBooksAroundMeAdapter;
 
     /**
      * Current page used for load more
@@ -168,7 +168,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                         .listener(this).setup(mPullToRefreshLayout);
         LoadMoreHelper.init(this).on(mBooksAroundMeGridView);
 
-        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
+        mBooksAroundMeAdapter = new BooksGridAdapter(getActivity());
         mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
         mBooksAroundMeGridView.setOnItemClickListener(this);
 

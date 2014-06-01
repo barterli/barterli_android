@@ -36,9 +36,9 @@
         android:layout_marginTop="@dimen/margin_xx_small"
         android:ellipsize="end"
         android:gravity="left"
-        android:maxLines="1"
+        android:maxLines="2"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_micro"
+        android:textSize="@dimen/text_small"
         app:fontStyle="regular" />
 
     <li.barter.widgets.TypefacedTextView
@@ -66,6 +66,7 @@
         android:singleLine="true"
         android:textColor="@color/apptheme_color"
         android:textSize="@dimen/text_micro"
+        android:visibility="gone"
         app:fontStyle="condensed_regular" />
 
     <View

@@ -29,7 +29,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
 import li.barter.R;
-import li.barter.adapters.BooksAroundMeAdapter;
+import li.barter.adapters.BooksGridAdapter;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
@@ -54,9 +54,9 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
     private GridView                      mBooksAroundMeGridView;
 
     /**
-     * {@link BooksAroundMeAdapter} instance for the Books
+     * {@link BooksGridAdapter} instance for the Books
      */
-    private BooksAroundMeAdapter          mBooksAroundMeAdapter;
+    private BooksGridAdapter          mBooksAroundMeAdapter;
 
     private String                        mUserId;
 
@@ -89,7 +89,7 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
             }
         }
 
-        mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
+        mBooksAroundMeAdapter = new BooksGridAdapter(getActivity());
         mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
 
         mBooksAroundMeGridView.setOnItemClickListener(this);

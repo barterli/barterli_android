@@ -27,6 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
 import li.barter.utils.AppConstants;
@@ -37,27 +38,15 @@ import li.barter.widgets.CircleImageView;
  * 
  * @author Vinay S Shenoy
  */
-public class BooksAroundMeAdapter extends CursorAdapter {
+public class BooksGridAdapter extends CursorAdapter {
 
-    private static final String TAG = "BooksAroundMeAdapter";
-
-    /**
-     * Format string for formatting the location of books
-     */
-    private final String        mLocationFormat;
-
-    /**
-     * Format string for formatting book author
-     */
-    private final String        mAuthorFormat;
+    private static final String TAG = "BooksGridAdapter";
 
     /**
      * @param context A reference to the {@link Context}
      */
-    public BooksAroundMeAdapter(final Context context) {
+    public BooksGridAdapter(final Context context) {
         super(context, null, 0);
-        mLocationFormat = context.getString(R.string.location_format);
-        mAuthorFormat = context.getString(R.string.author_format);
     }
 
     @Override
@@ -69,14 +58,14 @@ public class BooksAroundMeAdapter extends CursorAdapter {
                                         .getColumnIndex(DatabaseColumns.TITLE)));
 
         ((TextView) view.getTag(R.id.text_book_author))
-                        .setText(String.format(mAuthorFormat, cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.AUTHOR))));
+                        .setText(cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.AUTHOR)));
 
-        ((TextView) view.getTag(R.id.text_book_location))
+        /*((TextView) view.getTag(R.id.text_book_location))
                         .setText(String.format(mLocationFormat, cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.NAME)), cursor
                                         .getString(cursor
-                                                        .getColumnIndex(DatabaseColumns.ADDRESS))));
+                                                        .getColumnIndex(DatabaseColumns.ADDRESS))));*/
 
         final String bookImageUrl = cursor.getString(cursor
                         .getColumnIndex(DatabaseColumns.IMAGE_URL));
@@ -118,8 +107,8 @@ public class BooksAroundMeAdapter extends CursorAdapter {
         view.setTag(R.id.text_book_name, view.findViewById(R.id.text_book_name));
         view.setTag(R.id.text_book_author, view
                         .findViewById(R.id.text_book_author));
-        view.setTag(R.id.text_book_location, view
-                        .findViewById(R.id.text_book_location));
+       /* view.setTag(R.id.text_book_location, view
+                        .findViewById(R.id.text_book_location));*/
         view.setTag(R.id.image_user, view.findViewById(R.id.image_user));
 
         return view;
