@@ -34,7 +34,7 @@ import li.barter.utils.Logger;
  *         Profile that the user can chat directly with the owner
  */
 
-public class BookDetailPagerFragment extends AbstractBarterLiFragment implements
+public class BooksPagerFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, OnPageChangeListener {
 
     private static final String TAG          = "BookDetailPagerFragment";

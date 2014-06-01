@@ -571,7 +571,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             showBooksArgs.putString(Keys.USER_ID, userId);
             showBooksArgs.putInt(Keys.BOOK_POSITION, position);
             loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), BookDetailPagerFragment.class
+                            .instantiate(getActivity(), BooksPagerFragment.class
                                             .getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, FragmentTags.BS_BOOK_DETAIL);
 
         }
