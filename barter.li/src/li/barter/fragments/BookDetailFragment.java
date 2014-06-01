@@ -21,7 +21,6 @@ import com.squareup.picasso.Picasso;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,24 +51,24 @@ import li.barter.utils.Logger;
 public class BookDetailFragment extends AbstractBarterLiFragment implements
                 AsyncDbQueryCallback {
 
-    private static final String  TAG            = "BookDetailFragment";
+    private static final String TAG            = "BookDetailFragment";
 
-    private TextView             mIsbnTextView;
-    private TextView             mTitleTextView;
-    private TextView             mAuthorTextView;
-    private TextView             mDescriptionTextView;
-    private TextView             mSuggestedPriceLabelTextView;
-    private TextView             mSuggestedPriceTextView;
-    private ImageView            mBookImageView;
-    private TextView             mPublicationDateTextView;
-    private TextView             mBarterTypes;
+    private TextView            mIsbnTextView;
+    private TextView            mTitleTextView;
+    private TextView            mAuthorTextView;
+    private TextView            mDescriptionTextView;
+    private TextView            mSuggestedPriceLabelTextView;
+    private TextView            mSuggestedPriceTextView;
+    private ImageView           mBookImageView;
+    private TextView            mPublicationDateTextView;
+    private TextView            mBarterTypes;
 
-    private String               mBookId;
-    private String               mUserId;
-    private boolean              mOwnedByUser;
+    private String              mBookId;
+    private String              mUserId;
+    private boolean             mOwnedByUser;
 
-    private final String         mBookSelection = DatabaseColumns.BOOK_ID
-                                                                + SQLConstants.EQUALS_ARG;
+    private final String        mBookSelection = DatabaseColumns.BOOK_ID
+                                                               + SQLConstants.EQUALS_ARG;
 
     public static BookDetailFragment newInstance(String userId, String bookId) {
         BookDetailFragment f = new BookDetailFragment();
@@ -246,27 +245,17 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 mAuthorTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.AUTHOR)));
 
-                try {
-                    mDescriptionTextView
-                                    .setText(Html.fromHtml(cursor.getString(cursor
-                                                    .getColumnIndex(DatabaseColumns.DESCRIPTION))));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                mDescriptionTextView.setText(cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.DESCRIPTION)));
 
-                try {
-                    if (!cursor.getString(cursor.getColumnIndex(DatabaseColumns.VALUE))
-                                    .equals(null)) {
+                final String value = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.VALUE));
 
-                        mSuggestedPriceLabelTextView
-                                        .setVisibility(View.VISIBLE);
-                        mSuggestedPriceTextView.setVisibility(View.VISIBLE);
-                        mSuggestedPriceTextView
-                                        .setText(cursor.getString(cursor
-                                                        .getColumnIndex(DatabaseColumns.VALUE)));
-                    }
-                } catch (final Exception e) {
-                    // handle value = null exception
+                if (!TextUtils.isEmpty(value)) {
+
+                    mSuggestedPriceLabelTextView.setVisibility(View.VISIBLE);
+                    mSuggestedPriceTextView.setVisibility(View.VISIBLE);
+                    mSuggestedPriceTextView.setText(value);
                 }
 
                 mPublicationDateTextView

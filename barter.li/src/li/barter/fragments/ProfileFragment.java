@@ -24,6 +24,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +35,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -39,6 +43,7 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.adapters.ProfileFragmentsAdapter;
 import li.barter.chat.ChatService;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -63,20 +68,23 @@ import li.barter.widgets.CircleImageView;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ProfileFragment extends AbstractBarterLiFragment implements
-                LoaderCallbacks<Cursor>, OnClickListener {
+                LoaderCallbacks<Cursor>, OnClickListener, OnTabChangeListener,
+                OnPageChangeListener {
 
-    private static final String TAG            = "ProfileFragment";
+    private static final String     TAG            = "ProfileFragment";
 
-    private FragmentTabHost     mTabHost;
-    private String              mUserId;
-    private String              mImageUrl;
-    private ImageView           mChatLinkImageView;
-    private CircleImageView     mOwnerImageViewslide;
-    private TextView            mOwnerNameSlide;
-    private boolean             mIsLoggedInUser;
-    private final String        mUserSelection = DatabaseColumns.USER_ID
-                                                               + SQLConstants.EQUALS_ARG;
-    private View                mDragHandle;
+    private FragmentTabHost         mTabHost;
+    private String                  mUserId;
+    private String                  mImageUrl;
+    private ImageView               mChatLinkImageView;
+    private CircleImageView         mOwnerImageViewslide;
+    private TextView                mOwnerNameSlide;
+    private boolean                 mIsLoggedInUser;
+    private final String            mUserSelection = DatabaseColumns.USER_ID
+                                                                   + SQLConstants.EQUALS_ARG;
+    private View                    mDragHandle;
+    private ViewPager               mViewPager;
+    private ProfileFragmentsAdapter mProfileFragmentsAdapter;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -125,17 +133,25 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
          * on every insert during parsing of books
          */
         fetchUserDetailsFromServer(mUserId);
-        
-        final AboutMeFragment aboutMeFragment = (AboutMeFragment) getChildFragmentManager().findFragmentByTag(FragmentTags.ABOUT_ME);
-        
-        if(aboutMeFragment != null) {
-            aboutMeFragment.setUserId(mUserId);
+        updateTab(mProfileFragmentsAdapter.getFragmentAtPosition(mViewPager
+                        .getCurrentItem()));
+    }
+
+    /**
+     * Updates the current selected fragment with the new user id
+     * 
+     * @param fragment The currently selected fragment
+     */
+    private void updateTab(AbstractBarterLiFragment fragment) {
+
+        if (TextUtils.isEmpty(mUserId)) {
+            return;
         }
-        
-        final MyBooksFragment myBooksFragment = (MyBooksFragment) getChildFragmentManager().findFragmentByTag(FragmentTags.MY_BOOKS);
-        
-        if(myBooksFragment != null) {
-            myBooksFragment.setUserId(mUserId);
+
+        if (fragment instanceof AboutMeFragment) {
+            ((AboutMeFragment) fragment).setUserId(mUserId);
+        } else if (fragment instanceof MyBooksFragment) {
+            ((MyBooksFragment) fragment).setUserId(mUserId);
         }
     }
 
@@ -153,9 +169,15 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
         mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.ABOUT_ME)
-                        .setIndicator(getString(R.string.about_me)), AboutMeFragment.class, null);
+                        .setIndicator(getString(R.string.about_me)), DummyFragment.class, null);
         mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.MY_BOOKS)
-                        .setIndicator(getString(R.string.my_books)), MyBooksFragment.class, null);
+                        .setIndicator(getString(R.string.my_books)), DummyFragment.class, null);
+        mTabHost.setOnTabChangedListener(this);
+
+        mViewPager = (ViewPager) view.findViewById(R.id.pager_profile);
+        mProfileFragmentsAdapter = new ProfileFragmentsAdapter(getChildFragmentManager());
+        mViewPager.setAdapter(mProfileFragmentsAdapter);
+        mViewPager.setOnPageChangeListener(this);
 
     }
 
@@ -379,4 +401,55 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         return mDragHandle;
     }
 
+    /**
+     * Empty dummy fragment to provide for the TabHost
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static class DummyFragment extends Fragment {
+
+        public DummyFragment() {
+        }
+
+    }
+
+    @Override
+    public void onTabChanged(String tabId) {
+
+        final int currentViewPagerItem = mViewPager.getCurrentItem();
+        if (tabId.equals(FragmentTags.ABOUT_ME)) {
+
+            if (currentViewPagerItem != 0) {
+                mViewPager.setCurrentItem(0, true);
+            }
+        } else if (tabId.equals(FragmentTags.MY_BOOKS)) {
+
+            if (currentViewPagerItem != 1) {
+                mViewPager.setCurrentItem(1, true);
+            }
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset,
+                    int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+
+        if (mTabHost.getCurrentTab() != position) {
+            mTabHost.setCurrentTab(position);
+        }
+        final AbstractBarterLiFragment fragment = mProfileFragmentsAdapter
+                        .getFragmentAtPosition(position);
+
+        updateTab(fragment);
+    }
 }
