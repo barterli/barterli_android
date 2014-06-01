@@ -48,7 +48,6 @@ public class AppConstants {
     public static final String  ACTION_SHOW_ALL_CHATS            = "li.barter.ACTION_SHOW_ALL_CHATS";
     public static final String  ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
     public static final String  ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
-    public static final String  SAVED_STATE_ACTION_BAR_HIDDEN    = "saved_state_action_bar_hidden";
 
     public static final String  JSON                             = "json";
     

@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,15 +83,20 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeGridView = (GridView) view
                         .findViewById(R.id.list_my_books);
 
-        setActionBarTitle(R.string.profilepage_title);
+        if (savedInstanceState != null) {
+            final String savedUserId = savedInstanceState
+                            .getString(Keys.USER_ID);
 
-        final Bundle extras = getArguments();
+            if (!TextUtils.isEmpty(savedUserId)) {
+                setUserId(savedUserId);
+            }
+        } else {
+            final Bundle extras = getArguments();
 
-        if (extras != null) {
-            mUserId = extras.getString(Keys.USER_ID);
+            if (extras != null && extras.containsKey(Keys.USER_ID)) {
+                setUserId(extras.getString(Keys.USER_ID));
+            }
         }
-
-        loadMyBooks();
 
         mBooksAroundMeAdapter = new BooksAroundMeAdapter(getActivity());
         mSwingBottomInAnimationAdapter = new SwingBottomInAnimationAdapter(mBooksAroundMeAdapter, 150, 500);
@@ -189,6 +195,23 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
                             .instantiate(getActivity(), BookDetailFragment.class
                                             .getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(Keys.USER_ID, mUserId);
+    }
+
+    /**
+     * Sets the user id for this fragment
+     * 
+     * @param userId
+     */
+    public void setUserId(String userId) {
+        mUserId = userId;
+        loadMyBooks();
+
     }
 
 }

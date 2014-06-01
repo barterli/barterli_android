@@ -16,8 +16,6 @@
 
 package li.barter.fragments;
 
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 import com.squareup.picasso.Picasso;
 
 import android.database.Cursor;
@@ -52,7 +50,7 @@ import li.barter.utils.Logger;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class BookDetailFragment extends AbstractBarterLiFragment implements
-                AsyncDbQueryCallback, PanelSlideListener {
+                AsyncDbQueryCallback {
 
     private static final String  TAG            = "BookDetailFragment";
 
@@ -73,20 +71,9 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private final String         mBookSelection = DatabaseColumns.BOOK_ID
                                                                 + SQLConstants.EQUALS_ARG;
 
-    /**
-     * {@link SlidingUpPanelLayout} This includes the profile of the owner
-     */
-
-    private SlidingUpPanelLayout mLayout;
-
-    /**
-     * Create a new instance of CountingFragment, providing "num" as an
-     * argument.
-     */
     public static BookDetailFragment newInstance(String userId, String bookId) {
         BookDetailFragment f = new BookDetailFragment();
 
-        // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putString(Keys.USER_ID, userId);
         args.putString(Keys.BOOK_ID, bookId);
@@ -122,17 +109,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             }
         }
 
-        if (savedInstanceState == null) {
-            final ProfileFragment fragment = new ProfileFragment();
-            final Bundle args = new Bundle(1);
-            args.putString(Keys.USER_ID, mUserId);
-            fragment.setArguments(args);
-
-            getChildFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.content_user_profile, fragment, FragmentTags.USER_PROFILE)
-                            .commit();
-        }
         setActionBarDrawerToggleEnabled(false);
         loadBookDetails();
         return view;
@@ -161,8 +137,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mPublicationDateTextView = (TextView) view
                         .findViewById(R.id.text_publication_date);
 
-        mLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
-        mLayout.setPanelSlideListener(this);
     }
 
     private void loadBookDetails() {
@@ -338,53 +312,4 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mBarterTypes.setText(barterTypeHashTag);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(AppConstants.SAVED_STATE_ACTION_BAR_HIDDEN, mLayout
-                        .isExpanded());
-    }
-
-    @Override
-    public void onPanelSlide(View panel, float slideOffset) {
-    }
-
-    @Override
-    public void onPanelExpanded(View panel) {
-        setActionBarTitle(R.string.owner_profile);
-
-    }
-
-    @Override
-    public void onPanelCollapsed(View panel) {
-        setActionBarTitle(R.string.Book_Detail_fragment_title);
-    }
-
-    @Override
-    public void onPanelAnchored(View panel) {
-
-    }
-
-    /**
-     * @param view The drag handle to be set for the Sliding Pane Layout
-     */
-    private void setDragHandle(View view) {
-
-        Logger.v(TAG, "Setting Drag View %s", view.toString());
-        mLayout.setDragView(view);
-        mLayout.setEnableDragViewTouchEvents(false);
-    }
-
-    /**
-     * Updates the drag handle for this fragment
-     */
-    public void updateDragHandle() {
-        
-        final ProfileFragment profileFragment = (ProfileFragment) getChildFragmentManager().findFragmentByTag(FragmentTags.USER_PROFILE);
-        
-        if(profileFragment != null && profileFragment.isResumed()) {
-            setDragHandle(profileFragment.getDragHandle());
-        }
-   
-    }
 }

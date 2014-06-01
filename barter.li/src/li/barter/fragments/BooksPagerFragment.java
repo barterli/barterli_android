@@ -1,6 +1,9 @@
 
 package li.barter.fragments;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
+
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -25,6 +28,7 @@ import li.barter.data.SQLiteLoader;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.Logger;
@@ -35,42 +39,48 @@ import li.barter.utils.Logger;
  */
 
 public class BooksPagerFragment extends AbstractBarterLiFragment implements
-                LoaderCallbacks<Cursor>, OnPageChangeListener {
+                LoaderCallbacks<Cursor>, OnPageChangeListener,
+                PanelSlideListener {
 
-    private static final String TAG          = "BookDetailPagerFragment";
+    private static final String  TAG          = "BookDetailPagerFragment";
 
     /**
      * {@link BookPageAdapter} holds the {@link BookDetailFragment} as viewpager
      */
-    private BookPageAdapter     mAdapter;
+    private BookPageAdapter      mAdapter;
 
     /**
      * ViewPager which holds the fragment
      */
-    private ViewPager           mBookDetailPager;
+    private ViewPager            mBookDetailPager;
 
     /**
      * Counter to load the current number of pages for
      * {@link BookDetailFragment}
      */
-    private int                 mBookCounter;
+    private int                  mBookCounter;
 
     /**
      * It holds the Book which is clicked
      */
-    private int                 mBookPosition;
+    private int                  mBookPosition;
 
     /**
      * These arrays holds bookids and userids for all the books in the pager to
      * map them
      */
-    private ArrayList<String>   mBookIdArray = new ArrayList<String>();
-    private ArrayList<String>   mUserIdArray = new ArrayList<String>();
+    private ArrayList<String>    mBookIdArray = new ArrayList<String>();
+    private ArrayList<String>    mUserIdArray = new ArrayList<String>();
+
+    /**
+     * Used to provide a slide up UI companent to place the user's profile
+     * fragment
+     */
+    private SlidingUpPanelLayout mLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                     Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         init(container, savedInstanceState);
 
         final View view = inflater
@@ -83,8 +93,20 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
         }
 
-        mBookDetailPager = (ViewPager) view.findViewById(R.id.bookpager);
+        mBookDetailPager = (ViewPager) view.findViewById(R.id.pager_books);
         mBookDetailPager.setOnPageChangeListener(this);
+        mLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
+        mLayout.setPanelSlideListener(this);
+
+        if (savedInstanceState == null) {
+            final ProfileFragment fragment = new ProfileFragment();
+
+            getChildFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.content_user_profile, fragment, FragmentTags.USER_PROFILE)
+                            .commit();
+        }
+
         loadBookSearchResults();
         return view;
     }
@@ -93,7 +115,6 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      * Starts the loader for book search results
      */
     private void loadBookSearchResults() {
-        //TODO Add filters for search results
         getLoaderManager().restartLoader(Loaders.SEARCH_BOOKS, null, this);
     }
 
@@ -177,22 +198,20 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
-            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
             mBookCounter = cursor.getCount();
-            cursor.moveToFirst();
-            for (int i = 0; i < mBookCounter; i++) {
+            mBookIdArray.ensureCapacity(mBookCounter);
+            mUserIdArray.ensureCapacity(mBookCounter);
+            while (cursor.moveToNext()) {
                 mBookIdArray.add(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.BOOK_ID)));
                 mUserIdArray.add(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.USER_ID)));
-                cursor.moveToNext();
-
             }
+
             mAdapter = new BookPageAdapter(getChildFragmentManager());
 
             mBookDetailPager.setAdapter(mAdapter);
             mBookDetailPager.setCurrentItem(mBookPosition);
-            
 
         }
 
@@ -205,26 +224,54 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        
+
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        
+    public void onPageScrolled(int position, float positionOffset,
+                    int positionOffsetPixels) {
+
     }
 
     @Override
     public void onPageSelected(int position) {
-        
-        BookDetailFragment fragment = mAdapter.getFragmentForPosition(position);
-        
-        if(fragment != null) {
-            fragment.updateDragHandle();
-        } else {
-            Logger.v(TAG, "Fragment is null for position %d", position);
+
+        final ProfileFragment fragment = (ProfileFragment) getChildFragmentManager()
+                        .findFragmentByTag(FragmentTags.USER_PROFILE);
+
+        if (fragment != null) {
+            fragment.setUserId(mUserIdArray.get(position));
         }
-        
-        /* TODO Update Action Bar actions depending on whether the fragment that is loaded */
+    }
+
+    @Override
+    public void onPanelSlide(View panel, float slideOffset) {
+    }
+
+    @Override
+    public void onPanelExpanded(View panel) {
+        setActionBarTitle(R.string.owner_profile);
+
+    }
+
+    @Override
+    public void onPanelCollapsed(View panel) {
+        setActionBarTitle(R.string.Book_Detail_fragment_title);
+    }
+
+    @Override
+    public void onPanelAnchored(View panel) {
+
+    }
+
+    /**
+     * @param view The drag handle to be set for the Sliding Pane Layout
+     */
+    public void setDragHandle(View view) {
+
+        Logger.v(TAG, "Setting Drag View %s", view.toString());
+        mLayout.setDragView(view);
+        mLayout.setEnableDragViewTouchEvents(false);
     }
 
 }

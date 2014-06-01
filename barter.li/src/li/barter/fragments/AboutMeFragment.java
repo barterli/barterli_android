@@ -16,26 +16,27 @@ package li.barter.fragments;
  * limitations under the License.
  ******************************************************************************/
 
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
 import li.barter.R;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.ViewUsersWithLocations;
-import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.Logger;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 /**
  * @author Anshul Kamboj
@@ -49,7 +50,7 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
 
     private TextView            mAboutMeTextView;
     private TextView            mPreferredLocationTextView;
-    private final String                mUserSelection = DatabaseColumns.USER_ID
+    private final String        mUserSelection = DatabaseColumns.USER_ID
                                                                + SQLConstants.EQUALS_ARG;
 
     private String              mUserId;
@@ -62,10 +63,19 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
         final View view = inflater
                         .inflate(R.layout.fragment_profile_aboutme, null);
 
-        final Bundle extras = getArguments();
+        if (savedInstanceState != null) {
+            final String savedUserId = savedInstanceState
+                            .getString(Keys.USER_ID);
 
-        if (extras != null) {
-            mUserId = extras.getString(Keys.USER_ID);
+            if (!TextUtils.isEmpty(savedUserId)) {
+                setUserId(savedUserId);
+            }
+        } else {
+            final Bundle extras = getArguments();
+
+            if (extras != null && extras.containsKey(Keys.USER_ID)) {
+                setUserId(extras.getString(Keys.USER_ID));
+            }
         }
 
         mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
@@ -73,19 +83,20 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.text_current_location);
 
         setActionBarDrawerToggleEnabled(false);
-        loadUserDetails();
+
         return view;
+    }
+    
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(Keys.USER_ID, mUserId);
     }
 
     @Override
     public void onQueryComplete(final int token, final Object cookie,
                     final Cursor cursor) {
 
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     @Override
@@ -173,6 +184,16 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
 
+    }
+
+    /**
+     * Sets the User Id for this fragment
+     * 
+     * @param userId
+     */
+    public void setUserId(String userId) {
+        mUserId = userId;
+        loadUserDetails();
     }
 
 }

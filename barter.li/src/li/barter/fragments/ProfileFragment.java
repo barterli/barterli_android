@@ -76,7 +76,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     private boolean             mIsLoggedInUser;
     private final String        mUserSelection = DatabaseColumns.USER_ID
                                                                + SQLConstants.EQUALS_ARG;
-    private View mDragHandle;
+    private View                mDragHandle;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -86,27 +86,38 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         final View view = inflater.inflate(R.layout.fragment_my_profile, null);
         initViews(view);
 
-        setActionBarTitle(R.string.profilepage_title);
-
         setActionBarDrawerToggleEnabled(false);
 
         final Bundle extras = getArguments();
 
-        if (extras != null) {
-            mUserId = extras.getString(Keys.USER_ID);
+        if (extras != null && extras.containsKey(Keys.USER_ID)) {
+            setUserId(extras.getString(Keys.USER_ID));
         }
+
+        //TODO Configure by parameters instead of checking master fragment
+        final AbstractBarterLiFragment fragment = ((AbstractBarterLiActivity) getActivity())
+                        .getCurrentMasterFragment();
+
+        if (fragment != null && fragment instanceof BooksPagerFragment) {
+            ((BooksPagerFragment) fragment).setDragHandle(view
+                            .findViewById(R.id.container_profile_info));
+        } else {
+            setActionBarTitle(R.string.profilepage_title);
+        }
+
+        return view;
+    }
+
+    /**
+     * Sets the User Id to be loaded into this Profile fragment
+     * 
+     * @param userId The user ID whose info has to be loaded
+     */
+    public void setUserId(final String userId) {
+        mUserId = userId;
+
         mIsLoggedInUser = mUserId.equals(UserInfo.INSTANCE.getId());
         updateViewsForUser();
-
-        final Bundle args = new Bundle(1);
-        args.putString(Keys.USER_ID, mUserId);
-
-        mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
-        mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
-        mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.ABOUT_ME)
-                        .setIndicator(getString(R.string.about_me)), AboutMeFragment.class, args);
-        mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.MY_BOOKS)
-                        .setIndicator(getString(R.string.my_books)), MyBooksFragment.class, args);
 
         /*
          * TODO Add check for whether info has been fetched & savedInstanceState
@@ -114,8 +125,18 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
          * on every insert during parsing of books
          */
         fetchUserDetailsFromServer(mUserId);
-
-        return view;
+        
+        final AboutMeFragment aboutMeFragment = (AboutMeFragment) getChildFragmentManager().findFragmentByTag(FragmentTags.ABOUT_ME);
+        
+        if(aboutMeFragment != null) {
+            aboutMeFragment.setUserId(mUserId);
+        }
+        
+        final MyBooksFragment myBooksFragment = (MyBooksFragment) getChildFragmentManager().findFragmentByTag(FragmentTags.MY_BOOKS);
+        
+        if(myBooksFragment != null) {
+            myBooksFragment.setUserId(mUserId);
+        }
     }
 
     private void initViews(final View view) {
@@ -128,6 +149,13 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         mChatLinkImageView.setOnClickListener(this);
         mOwnerNameSlide = (TextView) view.findViewById(R.id.name);
         mDragHandle = view.findViewById(R.id.container_profile_info);
+
+        mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
+        mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
+        mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.ABOUT_ME)
+                        .setIndicator(getString(R.string.about_me)), AboutMeFragment.class, null);
+        mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.MY_BOOKS)
+                        .setIndicator(getString(R.string.my_books)), MyBooksFragment.class, null);
 
     }
 
