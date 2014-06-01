@@ -47,7 +47,7 @@ public class TableChatMessages {
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TIMESTAMP_HUMAN, ""),
                                 String.format(Locale.US, SQLConstants.DATA_INTEGER, DatabaseColumns.TIMESTAMP_EPOCH, 0),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.CHAT_ACK, "")
-                                
+
                         });
 
         Logger.d(TAG, "Column Def: %s", columnDef);
@@ -60,8 +60,18 @@ public class TableChatMessages {
                     final int newVersion) {
 
         //Add any data migration code here. Default is to drop and rebuild the table
-        db.execSQL(String
-                        .format(Locale.US, SQLConstants.DROP_TABLE_IF_EXISTS, NAME));
-        create(db);
+
+        if (oldVersion == 1) {
+            String alterTableDef = String
+                            .format(Locale.US, SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String
+                                            .format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.CHAT_ACK, ""));
+            Logger.d(TAG, "Alter Table Def: %s", alterTableDef);
+            db.execSQL(alterTableDef);
+
+        } else {
+            db.execSQL(String
+                            .format(Locale.US, SQLConstants.DROP_TABLE_IF_EXISTS, NAME));
+            create(db);
+        }
     }
 }
