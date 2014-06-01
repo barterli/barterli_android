@@ -111,11 +111,6 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     protected Object getVolleyTag() {
         return hashCode();
     }
