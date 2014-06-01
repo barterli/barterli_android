@@ -50,6 +50,7 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     private RadioButton         mEnlistAsDeveloperRadioButton;
     private RadioButton         mEnlistAsUserRadioButton;
     private RadioButton         mEnlistAsVolunteerRadioButton;
+    private RadioButton         mEnlistAsPrMediaRadioButton;
     private RadioGroup          mEnlistOptionsRadioGroup;
 
     @Override
@@ -76,6 +77,9 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
         mEnlistAsVolunteerRadioButton = (RadioButton) view
                         .findViewById(R.id.radio_volunteer);
 
+        mEnlistAsPrMediaRadioButton = (RadioButton) view
+                .findViewById(R.id.radio_pr_media);
+        
         mEnlistOptionsRadioGroup = (RadioGroup) view
                         .findViewById(R.id.radio_enlist_options);
 
@@ -96,7 +100,7 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
                                 || mEnlistAsDesignerRadioButton.isChecked()
                                 || mEnlistAsDeveloperRadioButton.isChecked()
                                 || mEnlistAsUserRadioButton.isChecked() || mEnlistAsVolunteerRadioButton
-                                    .isChecked())) {
+                                    .isChecked()||mEnlistAsPrMediaRadioButton.isChecked())) {
                     showCrouton("Please Select in what role you would like to work with us", AlertStyle.ERROR);
                     return;
                 }

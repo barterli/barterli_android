@@ -138,6 +138,7 @@
         <item>Open Source</item>
         <item>About us</item>
         <item>Tribute</item>
+        <item>Share</item>
         <item>Logout</item>
     </string-array>
     <string-array name="take_photo_choices">
@@ -150,6 +151,8 @@
     </string-array>
 
     <string name="tribute_message">A tribute to Aaron Swartz for inspiring us with his passion</string>
+    <string name="app_share_message">Help in sharing billion books. Download app today from https://play.google.com/store/apps/details?id=li.barter</string>
+    <string name="subject">Share barter.li</string>
 
     <string-array name="nav_drawer_descriptions">
         <item>Check out your profile</item>
@@ -159,6 +162,7 @@
         <item>Our aim is 100% attribution</item>
         <item>What and Who is barter.li?</item>
         <item>The inspiration for barter.li</item>
+        <item>Share barter.li with your friends</item>
         <item></item>
     </string-array>
     <string-array name="months">
@@ -214,6 +218,7 @@
     <string name="developer">Developer</string>
     <string name="campus_ambassador">Campus Ambassador</string>
     <string name="volunteer">Volunteer</string>
+    <string name="prmedia">PR/Media</string>
     <string name="barterli_email">joinus@barter.li</string>
     <string name="hint_about_me_description">About Me.</string>
 
