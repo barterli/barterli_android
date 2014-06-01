@@ -25,16 +25,14 @@
         android:id="@+id/grid_books_around_me"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_margin"
-        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_marginLeft="@dimen/margin_xx_small"
+        android:layout_marginRight="@dimen/margin_xx_small"
         android:background="@color/transparent"
         android:cacheColorHint="@color/transparent"
-        android:horizontalSpacing="@dimen/bookGridHorizontalSpacing"
+        android:horizontalSpacing="@dimen/margin_x_small"
         android:numColumns="@integer/grid_col_count"
-        android:overScrollMode="never"
-        android:paddingBottom="@dimen/bookGridVerticalSpacing"
-        android:paddingTop="@dimen/activity_margin"
-        android:scrollbars="none"
-        android:verticalSpacing="@dimen/bookGridVerticalSpacing" />
+        android:paddingBottom="@dimen/margin_xx_small"
+        android:paddingTop="@dimen/margin_xx_small"
+        android:verticalSpacing="@dimen/margin_x_small" />
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
