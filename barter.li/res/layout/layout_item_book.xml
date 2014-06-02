@@ -53,7 +53,8 @@
         android:maxLines="1"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_micro"
-        app:fontStyle="condensed_regular" />
+        app:fontStyle="condensed_regular" 
+        />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_location"

@@ -27,7 +27,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.IBlRequestContract;
@@ -58,7 +57,6 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setActionBarDrawerToggleEnabled(false);
-        setActionBarTitle(R.string.Collaborate_fragment_title);
         final View view = inflater
                         .inflate(R.layout.fragment_collaborate_with_us, null);
         mAboutMeTextView = (EditText) view.findViewById(R.id.text_about_me);
@@ -184,5 +182,10 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
         startActivity(Intent
                         .createChooser(emailIntent, "Choose an Email client :"));
     }
+
+	public static CollaborateFragment newInstance() {
+		CollaborateFragment f = new CollaborateFragment();
+		return f;
+	}
 
 }

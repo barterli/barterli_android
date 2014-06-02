@@ -154,7 +154,7 @@
             android:layout_marginLeft="@dimen/margin_x_small"
             android:layout_toRightOf="@+id/book_avatar"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLines="2"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_medium"
             app:fontStyle="regular" />
@@ -170,9 +170,8 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:marqueeRepeatLimit="marquee_forever"
-            android:maxLines="1"
+            android:maxLines="3"
             android:scrollHorizontally="true"
-            android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/text_medium"
             app:fontStyle="bold" />

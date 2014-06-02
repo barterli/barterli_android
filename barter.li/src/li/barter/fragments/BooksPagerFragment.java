@@ -74,6 +74,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      * map them
      */
     private ArrayList<String>    mBookIdArray = new ArrayList<String>();
+    private ArrayList<String>    mIdArray = new ArrayList<String>();
     private ArrayList<String>    mUserIdArray = new ArrayList<String>();
 
     /**
@@ -142,6 +143,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
                 final int currentItem = mBookDetailPager.getCurrentItem();
                 final Bundle args = new Bundle(2);
                 args.putString(Keys.BOOK_ID, mBookIdArray.get(currentItem));
+                args.putString(Keys.ID, mIdArray.get(currentItem));
                 args.putBoolean(Keys.EDIT_MODE, true);
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), AddOrEditBookFragment.class
@@ -191,7 +193,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
             final BookDetailFragment fragment = BookDetailFragment
                             .newInstance(mUserIdArray.get(position), mBookIdArray
-                                            .get(position));
+                                            .get(position),mIdArray.get(position));
             mPositionFragmentMap.put(position, fragment);
             return fragment;
 
@@ -245,12 +247,16 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
             mBookCounter = cursor.getCount();
             mBookIdArray.ensureCapacity(mBookCounter);
+            mIdArray.ensureCapacity(mBookCounter);
             mUserIdArray.ensureCapacity(mBookCounter);
             while (cursor.moveToNext()) {
                 mBookIdArray.add(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.BOOK_ID)));
+                mIdArray.add(cursor.getString(cursor
+                        .getColumnIndex(DatabaseColumns.ID)));
                 mUserIdArray.add(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.USER_ID)));
+                
             }
 
             mAdapter = new BookPageAdapter(getChildFragmentManager());

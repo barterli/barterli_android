@@ -18,6 +18,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
+    android:layout_margin="@dimen/margin_x_small"
     android:layout_height="match_parent"
     android:background="@color/global_bg" >
 
@@ -26,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/margin_xx_small"
-        android:layout_marginRight="@dimen/margin_xx_small"
+        android:layout_marginRight="@dimen/margin_xxx_small"
         android:background="@color/transparent"
         android:cacheColorHint="@color/transparent"
         android:horizontalSpacing="@dimen/margin_x_small"

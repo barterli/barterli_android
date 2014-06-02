@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import li.barter.R;
 import li.barter.adapters.TeamAdapter;
 import li.barter.http.BlRequest;
@@ -62,7 +61,6 @@ public class TeamFragment extends AbstractBarterLiFragment {
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
-        setActionBarTitle(R.string.Aboutus_fragment_title);
         mListView = (ListView) inflater
                         .inflate(R.layout.fragment_team, container, false);
 
@@ -119,5 +117,10 @@ public class TeamFragment extends AbstractBarterLiFragment {
                     final String errorMessage, final Bundle errorResponseBundle) {
 
     }
+
+	public static TeamFragment newInstance() {
+		TeamFragment f = new TeamFragment();
+		return f;
+	}
 
 }

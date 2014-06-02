@@ -16,7 +16,7 @@
 -->
 <resources>
 
-    <color name="apptheme_color">#2C7E9C</color>
+    <color name="apptheme_color">#0797CB</color>
     <color name="global_bg">#DCE0DA</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>

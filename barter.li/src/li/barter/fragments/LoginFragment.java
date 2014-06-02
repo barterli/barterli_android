@@ -355,6 +355,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     public void call(final Session session, final SessionState state,
                     final Exception exception) {
         // TODO session returns the user_token
+    	Logger.e(TAG, session.getAccessToken()+" token"+state.toString());
+    	//exception.printStackTrace();
         if (!session.getAccessToken().equals("")) {
             loginWithProvider(session.getAccessToken(), AppConstants.FACEBOOK);
         }

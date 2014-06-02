@@ -93,6 +93,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private boolean                       mHasFetchedDetails;
     private boolean                       mEditMode;
     private String                        mBookId;
+    private String						  mId;
 
     private String                        mImage_Url;
     private String                        mPublicationYear;
@@ -135,6 +136,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             if (mEditMode) {
                 mBookId = extras.getString(Keys.BOOK_ID);
+                mId= extras.getString(Keys.ID);
                 setActionBarTitle(R.string.editbook_title2);
 
                 //Reached here by editing current user's book
@@ -430,7 +432,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                 bookJson.put(HttpConstants.LOCATION, locationObject);
             }
             requestObject.put(HttpConstants.BOOK, bookJson);
-            requestObject.put(HttpConstants.ID, mBookId);
+            requestObject.put(HttpConstants.ID, mId);
             final BlRequest updateBookRequest = new BlRequest(Method.PUT, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
             updateBookRequest.setRequestId(RequestId.UPDATE_BOOK);
@@ -453,7 +455,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
          * Do we need the ".json" suffix? That will help with this. Or pass the book id in params.
          */
         final BlRequest deleteBookRequest = new BlRequest(Method.DELETE, HttpConstants.getApiBaseUrl()
-                        + "/books/" + mBookId, null, mVolleyCallbacks);
+                        + "/books/" + mId, null, mVolleyCallbacks);
         deleteBookRequest.setRequestId(RequestId.DELETE_BOOK);
         addRequestToQueue(deleteBookRequest, true, 0, true);
     }

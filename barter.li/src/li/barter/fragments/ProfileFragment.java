@@ -435,6 +435,15 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                     int positionOffsetPixels) {
 
     }
+    @Override
+    public void onResume() {
+    	// TODO Auto-generated method stub
+    	super.onResume();
+    	if(!isAttached())
+    	{
+    		return;
+    	}
+    }
 
     @Override
     public void onPageSelected(int position) {

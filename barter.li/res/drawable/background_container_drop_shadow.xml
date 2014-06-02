@@ -5,14 +5,15 @@
         <shape android:shape="rectangle" >
             <solid android:color="@color/shadow" />
 
-            <corners android:radius="4dp" />
+            <corners android:radius="2dp" />
         </shape>
     </item>
 
     <!-- White Top color -->
-    <item
-        android:bottom="1dp"
-        android:right="1dp">
+<!--     made right shadow from 1dp to 0dp for some ui changes -->
+     <item
+        android:bottom="2dp"
+        android:right="0dp">
         <shape android:shape="rectangle" >
             <solid android:color="@color/white" />
         </shape>

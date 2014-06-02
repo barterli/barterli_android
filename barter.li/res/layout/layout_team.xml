@@ -16,8 +16,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
+    android:background="@color/global_bg"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:background="#ffff"
     android:padding="6dip" >
 
     <ImageView
@@ -28,7 +28,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="6dip"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/ic_launcher" />
+         />
 
     <TextView
         android:id="@+id/team_email"

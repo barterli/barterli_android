@@ -65,18 +65,20 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private TextView            mBarterTypes;
 
     private String              mBookId;
+    private String              mId;
     private String              mUserId;
     private boolean             mOwnedByUser;
 
     private final String        mBookSelection = DatabaseColumns.BOOK_ID
                                                                + SQLConstants.EQUALS_ARG;
 
-    public static BookDetailFragment newInstance(String userId, String bookId) {
+    public static BookDetailFragment newInstance(String userId, String bookId,String id) {
         BookDetailFragment f = new BookDetailFragment();
 
         Bundle args = new Bundle();
         args.putString(Keys.USER_ID, userId);
         args.putString(Keys.BOOK_ID, bookId);
+        args.putString(Keys.ID, id);
         f.setArguments(args);
 
         return f;
@@ -100,7 +102,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         if (extras != null) {
             mBookId = extras.getString(Keys.BOOK_ID);
             mUserId = extras.getString(Keys.USER_ID);
-
+            mId = extras.getString(Keys.ID);
             if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
                 mOwnedByUser = true;
             } else {
@@ -151,7 +153,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableUserBooks.NAME, null, mBookSelection, new String[] {
             mBookId
         }, null, null, null, null, this);
-
+        
     }
 
     @Override
@@ -189,7 +191,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
             case R.id.action_edit_profile: {
                 final Bundle args = new Bundle(2);
-                args.putString(Keys.BOOK_ID, mBookId);
+                args.putString(Keys.ID, mId);
                 args.putBoolean(Keys.EDIT_MODE, true);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), AddOrEditBookFragment.class

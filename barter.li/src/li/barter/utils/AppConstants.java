@@ -21,6 +21,8 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.text.TextUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
 
 import li.barter.http.HttpConstants;
@@ -53,6 +55,8 @@ public class AppConstants {
     
     public static final String  SENDING_ACK                      = "...";
     public static final String  SENT_ACK                         = "sent";
+    public static final ArrayList<String> ABOUTUS_FRAGMENT_TITLES=new ArrayList<String>(Arrays.asList("Tribute", "Barter.li",
+    																"Collaborate","Open Source"));
     
     
     
@@ -69,8 +73,8 @@ public class AppConstants {
      * scrolls DEFAULT_LOAD_BEFORE_COUNT : This is to be subtracted value from
      * the List Count so as to prevent loading lag on scrolling fast
      */
-    public static final int     DEFAULT_PERPAGE_LIMIT            = 10;
-    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL   = 10;
+    public static final int     DEFAULT_PERPAGE_LIMIT            = 18;
+    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL   = 18;
     public static final int     DEFAULT_LOAD_BEFORE_COUNT        = 1;
     public static final int     DEFAULT_PERPAGE_LIMIT_FOR_SEARCH = 20;
 

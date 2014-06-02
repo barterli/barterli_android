@@ -17,6 +17,9 @@
 package li.barter.activities;
 
 import com.facebook.AppEventsLogger;
+import com.facebook.Session;
+import com.facebook.Session.StatusCallback;
+import com.facebook.SessionState;
 import com.google.android.gms.location.LocationListener;
 
 import android.app.ActionBar;
@@ -25,7 +28,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
@@ -40,6 +42,7 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.GooglePlusManager;
+import li.barter.utils.Logger;
 import li.barter.utils.GooglePlusManager.GooglePlusAuthCallback;
 
 /**
@@ -70,6 +73,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
         mGooglePlusManager = new GooglePlusManager(this, this);
+        
         if (savedInstanceState == null) {
 
             final String action = getIntent().getAction();
@@ -230,5 +234,6 @@ public class HomeActivity extends AbstractBarterLiActivity implements
             ((LoginFragment) fragment).onGoogleLogout();
         }
     }
-
 }
+
+
