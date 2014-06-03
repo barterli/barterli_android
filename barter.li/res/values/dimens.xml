@@ -37,7 +37,7 @@
     <dimen name="book_image_width_for_detail">120dp</dimen>
     <dimen name="chats_item_height">90dp</dimen>
     <dimen name="chat_detail_image_size">60dp</dimen>
-    <dimen name="chat_detail_margin">44dp</dimen>
+    <dimen name="chat_detail_margin">54dp</dimen>
     <dimen name="ab_ip_size">32dp</dimen>
     <dimen name="book_user_image_size">26dp</dimen>
     <dimen name="book_user_image_corner_radius">13dp</dimen>
