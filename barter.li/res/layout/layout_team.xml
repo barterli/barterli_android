@@ -15,9 +15,9 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:background="@color/global_bg"
-    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:layout_height="wrap_content"
     android:padding="6dip" >
 
    
@@ -25,12 +25,10 @@
         android:id="@+id/team_image"
         android:layout_width="@dimen/chat_detail_image_size"
         android:layout_height="@dimen/chat_detail_image_size"
-        
         android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/margin_xxx_small"
         android:layout_marginLeft="@dimen/margin_xxx_small"
         android:contentDescription="@string/app_name"
-        android:src="@drawable/pic_avatar"
         app:borderColor="@color/white"
         app:borderWidth="@dimen/book_user_image_border"
         app:cornerRadius="@dimen/chat_image_corner_radius" />
