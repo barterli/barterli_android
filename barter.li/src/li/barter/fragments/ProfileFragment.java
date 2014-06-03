@@ -326,10 +326,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                     final IBlRequestContract request,
                     final ResponseInfo response) {
         if (requestId == RequestId.GET_USER_PROFILE) {
-
-            if (mIsLoggedInUser) {
-                updateViewsForUser();
-            }
+        	  if (isAttached() && mIsLoggedInUser) {
+                  updateViewsForUser();
+              }
+           
         }
 
     }

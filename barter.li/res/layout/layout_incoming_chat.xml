@@ -19,7 +19,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent"
-    android:padding="@dimen/margin_minimum" >
+    android:padding="@dimen/margin_x_small"  >
 
     <li.barter.widgets.CircleImageView
         android:id="@+id/image_user"

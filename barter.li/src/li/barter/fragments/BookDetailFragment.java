@@ -192,6 +192,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             case R.id.action_edit_profile: {
                 final Bundle args = new Bundle(2);
                 args.putString(Keys.ID, mId);
+                args.putString(Keys.BOOK_ID, mBookId);
                 args.putBoolean(Keys.EDIT_MODE, true);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), AddOrEditBookFragment.class

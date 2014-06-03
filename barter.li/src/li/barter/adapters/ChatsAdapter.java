@@ -70,7 +70,7 @@ public class ChatsAdapter extends CursorAdapter {
         .load(cursor.getString(cursor
               .getColumnIndex(DatabaseColumns.PROFILE_PICTURE)))
          .error(R.drawable.pic_avatar)
-        .resizeDimen(R.dimen.chat_detail_image_size, R.dimen.chat_detail_image_size)
+        .resizeDimen(R.dimen.big_chat_detail_image_size, R.dimen.big_chat_detail_image_size)
         .centerCrop().into(circleImageView.getTarget());
         
         

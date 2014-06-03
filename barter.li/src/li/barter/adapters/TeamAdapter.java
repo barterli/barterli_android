@@ -98,7 +98,7 @@ public class TeamAdapter extends BaseAdapter {
            
         Picasso.with(mContext).load(teamMember.getImageUrl())
                         .error(R.drawable.pic_avatar)
-                        .resizeDimen(R.dimen.chat_detail_image_size, R.dimen.chat_detail_image_size)
+                        .resizeDimen(R.dimen.big_chat_detail_image_size, R.dimen.big_chat_detail_image_size)
                         .centerCrop()
                         .into(circleImageView.getTarget());
 

@@ -23,15 +23,15 @@
    
     <li.barter.widgets.CircleImageView
         android:id="@+id/team_image"
-        android:layout_width="@dimen/chat_detail_image_size"
-        android:layout_height="@dimen/chat_detail_image_size"
+        android:layout_width="@dimen/big_chat_detail_image_size"
+        android:layout_height="@dimen/big_chat_detail_image_size"
         android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/margin_xxx_small"
         android:layout_marginLeft="@dimen/margin_xxx_small"
         android:contentDescription="@string/app_name"
         app:borderColor="@color/white"
         app:borderWidth="@dimen/book_user_image_border"
-        app:cornerRadius="@dimen/chat_image_corner_radius" />
+        app:cornerRadius="@dimen/big_chat_image_radius" />
 
     <TextView
         android:id="@+id/team_email"
