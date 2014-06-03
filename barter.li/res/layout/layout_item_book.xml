@@ -27,40 +27,25 @@
         layout="@layout/layout_book_and_user_image" />
 
     <li.barter.widgets.TypefacedTextView
-        android:id="@+id/text_book_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/image_book_and_user"
-        android:layout_marginLeft="@dimen/margin_xx_small"
-        android:layout_marginRight="@dimen/activity_margin"
-        android:layout_marginTop="@dimen/margin_xx_small"
-        android:ellipsize="end"
-        android:gravity="left"
-        android:maxLines="2"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_small"
-        app:fontStyle="regular" />
-
-    <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/text_book_name"
-        android:layout_below="@id/text_book_name"
-        android:layout_marginRight="@dimen/activity_margin"
+        android:layout_below="@+id/text_book_name"
+        android:layout_marginLeft="@dimen/margin_x_small"
+        android:layout_marginRight="@dimen/margin_x_small"
         android:ellipsize="end"
-        android:gravity="left"
+        android:gravity="center_horizontal"
         android:maxLines="1"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_micro"
-        app:fontStyle="condensed_regular" 
-        />
+        android:visibility="gone"
+        app:fontStyle="condensed_regular" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/text_book_name"
+        android:layout_alignLeft="@+id/text_book_name"
         android:layout_below="@id/text_book_author"
         android:ellipsize="end"
         android:gravity="left"
@@ -74,6 +59,25 @@
         android:id="@+id/view_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
         android:background="@drawable/selector_main_item_overlay" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_book_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/margin_x_small"
+        android:layout_marginRight="@dimen/margin_x_small"
+        android:layout_marginTop="56dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_small"
+        android:visibility="gone"
+        app:fontStyle="regular" />
 
 </RelativeLayout>

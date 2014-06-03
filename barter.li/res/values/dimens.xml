@@ -17,6 +17,7 @@
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_margin">16dp</dimen>
+    <dimen name="margin_xxxx_small">1dp</dimen>
     <dimen name="margin_xxx_small">2dp</dimen>
     <dimen name="margin_xx_small">4dp</dimen>
     <dimen name="margin_x_small">8dp</dimen>
@@ -31,7 +32,7 @@
     <dimen name="width_item_border">1dp</dimen>
     <dimen name="nav_drawer_width">240dp</dimen>
     <dimen name="book_height_for_detail">160dp</dimen>
-    <dimen name="book_height">153dp</dimen>
+    <dimen name="book_height">155dp</dimen>
     <dimen name="book_width">105dp</dimen>
     <dimen name="book_image_height">153dp</dimen>
     <dimen name="book_image_width_for_detail">120dp</dimen>

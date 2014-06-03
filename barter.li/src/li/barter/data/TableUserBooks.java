@@ -69,7 +69,7 @@ public class TableUserBooks {
                     final int newVersion) {
 
       //Add any data migration code here. Default is to drop and rebuild the table
-        if (oldVersion == 2) {
+        if (oldVersion == 1) {
 
             String alterTableDef = String
                             .format(Locale.US, SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String

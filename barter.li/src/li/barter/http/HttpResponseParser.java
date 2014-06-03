@@ -709,8 +709,18 @@ public class HttpResponseParser {
                         .readString(bookObject, HttpConstants.TITLE, false, false));
         values.put(DatabaseColumns.DESCRIPTION, JsonUtils
                         .readString(bookObject, HttpConstants.DESCRIPTION, false, false));
+        
+        if(JsonUtils
+                        .readString(bookObject, HttpConstants.IMAGE_PRESENT, false, false).equals(AppConstants.FALSE))
+        {
         values.put(DatabaseColumns.IMAGE_URL, JsonUtils
-                        .readString(bookObject, HttpConstants.IMAGE_URL, false, false));
+                        .readString(bookObject, HttpConstants.IMAGE_PRESENT, false, false));
+        }
+        else
+        {
+        values.put(DatabaseColumns.IMAGE_URL, JsonUtils
+                    .readString(bookObject, HttpConstants.IMAGE_URL, false, false));
+        }
         values.put(DatabaseColumns.PUBLICATION_YEAR, JsonUtils
                         .readString(bookObject, HttpConstants.PUBLICATION_YEAR, false, false));
         values.put(DatabaseColumns.PUBLICATION_MONTH, JsonUtils

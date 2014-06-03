@@ -34,7 +34,7 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG                            = false;
+    public static final boolean DEBUG                            = true;
 
     public static final String  FACEBOOK                         = "facebook";
     public static final String  FBPERMISSIONS[]                  = new String[] {
@@ -57,6 +57,9 @@ public class AppConstants {
     public static final String  SENT_ACK                         = "sent";
     public static final ArrayList<String> ABOUTUS_FRAGMENT_TITLES=new ArrayList<String>(Arrays.asList("Tribute", "Barter.li",
     																"Collaborate","Open Source"));
+    
+    public static final String  TRUE                         = "true";
+    public static final String  FALSE                        = "false";
     
     
     

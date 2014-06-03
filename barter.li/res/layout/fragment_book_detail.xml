@@ -198,6 +198,20 @@
             android:layout_alignParentLeft="true"
             android:layout_marginRight="@dimen/margin_large"
             android:contentDescription="@string/app_name" />
+
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/image_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_below="@+id/label_barter_types"
+            android:text="@string/no_image_text"
+            android:textColor="@color/black"
+            android:visibility="gone"
+            android:textSize="@dimen/text_medium"
+            app:fontStyle="condensed_regular" />
+
     </RelativeLayout>
 
 </ScrollView>

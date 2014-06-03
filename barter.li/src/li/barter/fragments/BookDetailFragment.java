@@ -19,6 +19,7 @@ package li.barter.fragments;
 import com.squareup.picasso.Picasso;
 
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -31,7 +32,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.data.DBInterface;
@@ -47,6 +47,7 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
+import li.barter.widgets.TypefacedTextView;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class BookDetailFragment extends AbstractBarterLiFragment implements
@@ -60,6 +61,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private TextView            mDescriptionTextView;
     private TextView            mSuggestedPriceLabelTextView;
     private TextView            mSuggestedPriceTextView;
+    private TextView            mNoImageTextView;
     private ImageView           mBookImageView;
     private TextView            mPublicationDateTextView;
     private TextView            mBarterTypes;
@@ -140,6 +142,8 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
         mSuggestedPriceTextView = (TextView) view
                         .findViewById(R.id.text_suggested_price);
+        mNoImageTextView = (TextView) view
+                .findViewById(R.id.image_text);
         mSuggestedPriceLabelTextView = (TextView) view
                         .findViewById(R.id.label_suggested_price);
 
@@ -278,10 +282,22 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                                 .getColumnIndex(DatabaseColumns.IMAGE_URL)), "book image");
 
                 // Picasso.with(getActivity()).setDebugging(true);
+                if(cursor.getString(cursor
+                                                .getColumnIndex(DatabaseColumns.IMAGE_URL)).equals(AppConstants.FALSE))
+                {
+                	mBookImageView.setBackgroundColor(Color.WHITE);
+                	mNoImageTextView.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+               
                 Picasso.with(getActivity())
                                 .load(cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.IMAGE_URL)))
                                 .fit().into(mBookImageView);
+                mNoImageTextView.setVisibility(View.GONE);
+             	
+                }
 
                 final String barterType = cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.BARTER_TYPE));

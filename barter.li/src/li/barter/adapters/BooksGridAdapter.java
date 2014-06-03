@@ -70,14 +70,20 @@ public class BooksGridAdapter extends CursorAdapter {
         final String bookImageUrl = cursor.getString(cursor
                         .getColumnIndex(DatabaseColumns.IMAGE_URL));
 
+        //if book image not present
         if (bookImageUrl == null
-                        || bookImageUrl.contains(AppConstants.DEFAULT_BOOKIMAGE_URL)) {
-            ((ImageView) view.getTag(R.id.image_book))
-                            .setImageResource(R.drawable.default_book_icon);
+                        || bookImageUrl.contains(AppConstants.FALSE)) {
+        	
+        	((TextView) view.getTag(R.id.text_book_name)).setVisibility(View.VISIBLE);
+        	((TextView) view.getTag(R.id.text_book_author)).setVisibility(View.VISIBLE);
+        	 Picasso.with(context).load(bookImageUrl).fit()
+             .into((ImageView) view.getTag(R.id.image_book));
         } else {
 
             Picasso.with(context).load(bookImageUrl).fit()
                             .into((ImageView) view.getTag(R.id.image_book));
+            ((TextView) view.getTag(R.id.text_book_name)).setVisibility(View.GONE);
+        	((TextView) view.getTag(R.id.text_book_author)).setVisibility(View.GONE);
 
         }
 
