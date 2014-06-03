@@ -16,18 +16,6 @@
 
 package li.barter.adapters;
 
-import com.squareup.picasso.Picasso;
-
-import android.content.Context;
-import android.database.Cursor;
-import android.support.v4.widget.CursorAdapter;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +23,17 @@ import li.barter.R;
 import li.barter.data.DatabaseColumns;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.widgets.CircleImageView;
+import android.content.Context;
+import android.database.Cursor;
+import android.support.v4.widget.CursorAdapter;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 /**
  * Class to display Chat messages
@@ -129,9 +128,12 @@ public class ChatDetailAdapter extends CursorAdapter {
         final int itemViewType = getItemViewType(cursor.getPosition());
         if (itemViewType == INCOMING_MESSAGE) {
             if (!TextUtils.isEmpty(mChatUserProfilePic)) {
-                Picasso.with(context).load(mChatUserProfilePic).fit()
-                                .error(R.drawable.pic_avatar)
-                                .into((ImageView) view.getTag(R.id.image_user));
+            	 CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.image_user);
+            	 Picasso.with(context)
+                 .load(mChatUserProfilePic)
+                  .error(R.drawable.pic_avatar)
+                 .resizeDimen(R.dimen.chat_detail_image_size, R.dimen.chat_detail_image_size)
+                 .centerCrop().into(circleImageView.getTarget());
             }
         } else if (itemViewType == OUTGOING_MESSAGE) {
             final String imageUrl = UserInfo.INSTANCE.getProfilePicture();
@@ -147,11 +149,13 @@ public class ChatDetailAdapter extends CursorAdapter {
                  .setText(AppConstants.SENDING_ACK);
             }
           
-
+            CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.image_user);
             if (!TextUtils.isEmpty(imageUrl)) {
-                Picasso.with(context).load(imageUrl).fit()
-                                .error(R.drawable.pic_avatar)
-                                .into((ImageView) view.getTag(R.id.image_user));
+            	
+            	 Picasso.with(context)
+                 .load(imageUrl + "?type=large")
+                 .resizeDimen(R.dimen.chat_detail_image_size, R.dimen.chat_detail_image_size)
+                 .centerCrop().into(circleImageView.getTarget());
             }
         }
 

@@ -4,6 +4,8 @@
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/margin_xxx_small"
+    android:layout_marginBottom="@dimen/margin_xxx_small"
     android:gravity="bottom"
     sothree:dragView="@+id/name"
     sothree:panelHeight="@dimen/profile_header_height"

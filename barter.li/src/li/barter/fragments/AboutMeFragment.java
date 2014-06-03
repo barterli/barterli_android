@@ -74,7 +74,6 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
             }
         } else {
             final Bundle extras = getArguments();
-
             if (extras != null && extras.containsKey(Keys.USER_ID)) {
                 setUserId(extras.getString(Keys.USER_ID));
             }

@@ -20,15 +20,20 @@
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dip" >
 
-    <ImageView
+   
+    <li.barter.widgets.CircleImageView
         android:id="@+id/team_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="6dip"
+        android:layout_width="@dimen/chat_detail_image_size"
+        android:layout_height="@dimen/chat_detail_image_size"
+        
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/margin_xxx_small"
+        android:layout_marginLeft="@dimen/margin_xxx_small"
         android:contentDescription="@string/app_name"
-         />
+        android:src="@drawable/pic_avatar"
+        app:borderColor="@color/white"
+        app:borderWidth="@dimen/book_user_image_border"
+        app:cornerRadius="@dimen/chat_image_corner_radius" />
 
     <TextView
         android:id="@+id/team_email"

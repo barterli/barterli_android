@@ -81,6 +81,7 @@
     <string name="title_label">Book Title</string>
     <string name="author_label">Author</string>
     <string name="description_label">Description</string>
+    <string name="bartertype_label">Book Listed For</string>
     <string name="publication_year_label">Publication Year</string>
     <string name="suggested_price_label">Suggested Price</string>
     <string name="publication_month_label">Publication Month</string>

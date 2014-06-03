@@ -21,17 +21,21 @@
     android:background="@color/transparent"
     android:padding="@dimen/margin_minimum" >
 
-    <ImageView
+    <li.barter.widgets.CircleImageView
         android:id="@+id/image_user"
         android:layout_width="@dimen/chat_detail_image_size"
         android:layout_height="@dimen/chat_detail_image_size"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:background="@color/transparent"
+        android:layout_marginBottom="@dimen/margin_xxx_small"
+        android:layout_marginLeft="@dimen/margin_xxx_small"
         android:contentDescription="@string/app_name"
-        android:scaleType="centerCrop"
-        android:src="@drawable/pic_avatar" />
+        android:src="@drawable/pic_avatar"
+        app:borderColor="@color/white"
+        app:borderWidth="@dimen/book_user_image_border"
+        app:cornerRadius="@dimen/chat_image_corner_radius" />
 
+   
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_chat_message"
         android:layout_width="wrap_content"
@@ -51,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/text_chat_message"
         android:layout_below="@+id/text_chat_message"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_x_small"
         android:textSize="@dimen/text_micro"
         android:textColor="@color/dark_gray"
         android:visibility="visible"

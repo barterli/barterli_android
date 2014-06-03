@@ -25,9 +25,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import li.barter.R;
+import li.barter.data.DatabaseColumns;
 import li.barter.models.Team;
+import li.barter.widgets.CircleImageView;
 
 /**
  * Adapter for displaying OSS Licenses
@@ -90,9 +91,16 @@ public class TeamAdapter extends BaseAdapter {
         ((TextView) view.getTag(R.id.team_desc)).setText(teamMember
                         .getDescription());
 
-        Picasso.with(mContext).load(teamMember.getImageUrl()).fit()
+        
+        CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.team_image);
+        
+      	
+           
+        Picasso.with(mContext).load(teamMember.getImageUrl())
                         .error(R.drawable.pic_avatar)
-                        .into(((ImageView) view.getTag(R.id.team_image)));
+                        .resizeDimen(R.dimen.chat_detail_image_size, R.dimen.chat_detail_image_size)
+                        .centerCrop()
+                        .into(circleImageView.getTarget());
 
         return view;
     }

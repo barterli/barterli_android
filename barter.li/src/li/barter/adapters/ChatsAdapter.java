@@ -26,9 +26,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
+import li.barter.widgets.CircleImageView;
 
 /**
  * Adapter for displaying list of all ongoing chats
@@ -63,11 +63,17 @@ public class ChatsAdapter extends CursorAdapter {
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN)));
 
-        Picasso.with(context)
-                        .load(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.PROFILE_PICTURE)))
-                        .fit().error(R.drawable.pic_avatar)
-                        .into((ImageView) view.getTag(R.id.image_user));
+        
+        CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.image_user);
+        
+   	 Picasso.with(context)
+        .load(cursor.getString(cursor
+              .getColumnIndex(DatabaseColumns.PROFILE_PICTURE)))
+         .error(R.drawable.pic_avatar)
+        .resizeDimen(R.dimen.chat_detail_image_size, R.dimen.chat_detail_image_size)
+        .centerCrop().into(circleImageView.getTarget());
+        
+        
 
     }
 

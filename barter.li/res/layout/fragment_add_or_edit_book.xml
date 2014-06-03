@@ -88,39 +88,12 @@
                     app:fontStyle="condensed_regular" />
 
                 <li.barter.widgets.TypefacedCheckBox
-                    android:id="@+id/checkbox_read"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:checked="false"
-                    android:text="@string/read"
-                    android:visibility="gone"
-                    app:fontStyle="condensed_regular" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <li.barter.widgets.TypefacedCheckBox
                     android:id="@+id/checkbox_sell"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
                     android:checked="false"
                     android:text="@string/sell"
-                    app:fontStyle="condensed_regular" />
-
-                <li.barter.widgets.TypefacedCheckBox
-                    android:id="@+id/checkbox_wishlist"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                      android:visibility="gone"
-                    android:layout_weight="0.5"
-                    android:checked="false"
-                    android:text="@string/lend"
                     app:fontStyle="condensed_regular" />
             </LinearLayout>
 
@@ -131,32 +104,6 @@
                 android:hint="@string/set_sell_hint"
                 android:visibility="gone"
                 app:fontStyle="condensed_regular" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal" >
-
-                <li.barter.widgets.TypefacedCheckBox
-                    android:id="@+id/checkbox_give_away"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                      android:visibility="gone"
-                    android:checked="false"
-                    android:text="@string/give_away"
-                    app:fontStyle="condensed_regular" />
-
-                <li.barter.widgets.TypefacedCheckBox
-                    android:id="@+id/checkbox_keep_private"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:checked="false"
-                      android:visibility="gone"
-                    android:text="@string/keep_private"
-                    app:fontStyle="condensed_regular" />
-            </LinearLayout>
         </LinearLayout>
 
         <li.barter.widgets.TypefacedButton

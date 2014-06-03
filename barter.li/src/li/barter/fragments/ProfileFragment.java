@@ -99,7 +99,9 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         final Bundle extras = getArguments();
 
+        
         if (extras != null && extras.containsKey(Keys.USER_ID)) {
+        	
             setUserId(extras.getString(Keys.USER_ID));
         }
 
@@ -110,6 +112,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         if (fragment != null && fragment instanceof BooksPagerFragment) {
             ((BooksPagerFragment) fragment).setDragHandle(view
                             .findViewById(R.id.container_profile_info));
+            
             setHasOptionsMenu(false);
         } else {
             setActionBarTitle(R.string.profilepage_title);
@@ -136,8 +139,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
          * on every insert during parsing of books
          */
         fetchUserDetailsFromServer(mUserId);
-        updateTab(mProfileFragmentsAdapter.getFragmentAtPosition(mViewPager
-                        .getCurrentItem()));
+       
     }
 
     /**
@@ -195,6 +197,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         } else {
             mChatImageView.setVisibility(View.VISIBLE);
         }
+        
         loadUserDetails();
     }
 
@@ -222,7 +225,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
      */
 
     private void loadUserDetails() {
-        getLoaderManager().restartLoader(Loaders.USER_DETAILS, null, this);
+    
+    	
+    		getLoaderManager().restartLoader(Loaders.USER_DETAILS, null, this);
+		
 
     }
 
@@ -377,6 +383,9 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                                 .load(mImageUrl + "?type=large")
                                 .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
                                 .centerCrop().into(mOwnerImageView.getTarget());
+                
+                updateTab(mProfileFragmentsAdapter.getFragmentAtPosition(mViewPager
+                        .getCurrentItem()));
 
             }
 
@@ -439,10 +448,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public void onResume() {
     	// TODO Auto-generated method stub
     	super.onResume();
-    	if(!isAttached())
-    	{
-    		return;
-    	}
+    	
     }
 
     @Override
@@ -455,5 +461,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                         .getFragmentAtPosition(position);
 
         updateTab(fragment);
+        
     }
 }

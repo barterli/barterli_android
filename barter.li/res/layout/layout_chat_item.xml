@@ -22,15 +22,17 @@
     android:orientation="horizontal"
     android:padding="@dimen/margin_minimum" >
 
-    <ImageView
+    <li.barter.widgets.CircleImageView
         android:id="@+id/image_user"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"
-        android:background="@color/transparent"
+        android:layout_width="@dimen/chat_detail_image_size"
+        android:layout_height="@dimen/chat_detail_image_size"
+        android:layout_marginBottom="@dimen/margin_xxx_small"
+        android:layout_marginLeft="@dimen/margin_xxx_small"
         android:contentDescription="@string/app_name"
-        android:scaleType="centerCrop"
-        android:src="@drawable/pic_avatar" />
+        android:src="@drawable/pic_avatar"
+        app:borderColor="@color/white"
+        app:borderWidth="@dimen/book_user_image_border"
+        app:cornerRadius="@dimen/chat_image_corner_radius" />
 
     <LinearLayout
         android:layout_width="0dp"

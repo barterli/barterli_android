@@ -17,9 +17,6 @@
 package li.barter.activities;
 
 import com.facebook.AppEventsLogger;
-import com.facebook.Session;
-import com.facebook.Session.StatusCallback;
-import com.facebook.SessionState;
 import com.google.android.gms.location.LocationListener;
 
 import android.app.ActionBar;
@@ -42,7 +39,6 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.GooglePlusManager;
-import li.barter.utils.Logger;
 import li.barter.utils.GooglePlusManager.GooglePlusAuthCallback;
 
 /**

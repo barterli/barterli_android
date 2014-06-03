@@ -526,6 +526,7 @@ public class HttpResponseParser {
     private ResponseInfo parseSearchBooksResponse(final String response)
                     throws JSONException {
 
+    	
         final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
