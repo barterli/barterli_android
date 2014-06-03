@@ -372,9 +372,6 @@ OnPageChangeListener {
 			.resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
 			.centerCrop().into(mOwnerImageView.getTarget());
 			
-			mOwnerBarterLocationTextView
-			.setText(SharedPreferenceHelper
-		            .getString(getActivity(), R.string.pref_location));
 			
 			}
 		 if (cursor.moveToFirst()) {
@@ -411,6 +408,7 @@ OnPageChangeListener {
 		}
 
 	}
+	
 
 	@Override
 	public void onLoaderReset(final Loader<Cursor> loader) {
