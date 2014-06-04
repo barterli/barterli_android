@@ -153,7 +153,7 @@ public class ChatDetailAdapter extends CursorAdapter {
             if (!TextUtils.isEmpty(imageUrl)) {
             	
             	 Picasso.with(context)
-                 .load(imageUrl + "?type=large")
+                 .load(imageUrl)
                  .resizeDimen(R.dimen.chat_detail_image_size, R.dimen.chat_detail_image_size)
                  .centerCrop().into(circleImageView.getTarget());
             }
