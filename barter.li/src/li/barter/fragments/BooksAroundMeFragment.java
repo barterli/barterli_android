@@ -21,7 +21,6 @@ import com.android.volley.Request.Method;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -42,6 +41,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.SearchView;
+import android.widget.SearchView.OnCloseListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +86,7 @@ import li.barter.utils.Utils;
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, AsyncDbQueryCallback,
                 OnItemClickListener, LoadMoreCallbacks, NetworkCallbacks,
-                OnRefreshListener {
+                OnRefreshListener,OnCloseListener {
 
     private static final String           TAG                     = "BooksAroundMeFragment";
 
@@ -676,5 +676,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
         }
     }
+
+	
 
 }
