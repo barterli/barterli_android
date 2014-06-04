@@ -35,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -86,7 +87,7 @@ import li.barter.utils.Utils;
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, AsyncDbQueryCallback,
                 OnItemClickListener, LoadMoreCallbacks, NetworkCallbacks,
-                OnRefreshListener,OnCloseListener {
+                OnRefreshListener,OnCloseListener,OnActionExpandListener {
 
     private static final String           TAG                     = "BooksAroundMeFragment";
 
@@ -285,6 +286,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         inflater.inflate(R.menu.menu_books_around_me, menu);
         final MenuItem menuItem = menu.findItem(R.id.action_search);
+        menuItem.setOnActionExpandListener(this);
         mSearchView = (SearchView) menuItem.getActionView();
         mSearchNetworkQueryHelper = new SearchViewNetworkQueryHelper(mSearchView, this);
         mSearchNetworkQueryHelper.setSuggestCountThreshold(3);
@@ -676,6 +678,24 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
         }
     }
+
+	@Override
+	public boolean onMenuItemActionCollapse(MenuItem item) {
+		fetchBooksAroundMe(mLastFetchedLocation);
+		return true;
+	}
+
+	@Override
+	public boolean onMenuItemActionExpand(MenuItem item) {
+		
+		return true;
+	}
+
+	@Override
+	public boolean onClose() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 	
 
