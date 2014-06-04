@@ -76,6 +76,9 @@ public class BooksGridAdapter extends CursorAdapter {
         	
         	((TextView) view.getTag(R.id.text_book_name)).setVisibility(View.VISIBLE);
         	((TextView) view.getTag(R.id.text_book_author)).setVisibility(View.VISIBLE);
+        	
+        	// this gives blank image. Its a hack for disabling caching issue for no image present book
+        	
         	 Picasso.with(context).load(bookImageUrl).fit()
              .into((ImageView) view.getTag(R.id.image_book));
         } else {

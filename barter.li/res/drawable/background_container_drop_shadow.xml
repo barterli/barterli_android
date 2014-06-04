@@ -13,7 +13,9 @@
 <!--     made right shadow from 1dp to 0dp for some ui changes -->
      <item
         android:bottom="2dp"
-        android:right="0dp">
+        android:right="1dp"
+        android:left="1dp"
+        android:top="1dp">
         <shape android:shape="rectangle" >
             <solid android:color="@color/white" />
         </shape>

@@ -10,7 +10,7 @@
     sothree:dragView="@+id/name"
     sothree:panelHeight="@dimen/profile_header_height"
     sothree:paralaxOffset="100dp"
-    sothree:shadowHeight="4dp" >
+    sothree:shadowHeight="8dp" >
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager_books"

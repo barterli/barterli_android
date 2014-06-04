@@ -137,7 +137,7 @@
         <item>Chats</item>
         <item>Report a Crash</item>
         <item>Share</item>
-         <item>About us</item>
+        <item>About us</item>
         <item>Logout</item>
     </string-array>
     <string-array name="take_photo_choices">
@@ -229,6 +229,7 @@
         <item>android-quick-response-code, A library for scanning barcodes. Licensed under the Apache v2.0 License.\nhttps://github.com/phishman3579/android-quick-response-code</item>
         <item>Crouton, Context sensitive notifications for Android. Licensed under the Apache v2.0 License.\nhttps://github.com/keyboardsurfer/Crouton</item>
         <item>AndroidSlidingUpPanel, This library provides a simple way to add a draggable sliding up panel (popularized by Google Music, Google Maps and Rdio) to your Android application. Licensed under the Apache v2.0 License.\nhttps://github.com/umano/AndroidSlidingUpPanel</item>
+        <item>Android ViewPagerIndicator, Paging indicator widgets that are compatible with the ViewPager from the Android Support Library to improve discoverability of content.Licensed under the Apache v2.0 License.\nhttps://github.com/JakeWharton/Android-ViewPagerIndicator</item>
     </string-array>
 
     <string name="about_barterli">barter.li is an open source, community driven, not-for-profit project which aims to enable sharing of a billion books across the globe.</string>

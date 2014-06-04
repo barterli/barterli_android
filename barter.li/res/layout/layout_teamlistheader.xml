@@ -42,5 +42,18 @@
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium"
         app:fontStyle="regular" />
+    
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/team_members"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/about_barterli"
+        android:layout_marginBottom="18dp"
+        android:layout_marginTop="18dp"
+        android:gravity="center_horizontal"
+        android:text="@string/team_heading"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="bold" />
 
 </RelativeLayout>
