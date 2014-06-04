@@ -16,6 +16,10 @@
 
 package li.barter.fragments;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.android.volley.Request.Method;
 import com.squareup.picasso.Picasso;
 
 import android.database.Cursor;
@@ -38,9 +42,14 @@ import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
+import li.barter.data.TableSearchBooks;
 import li.barter.data.TableUserBooks;
+import li.barter.http.BlRequest;
+import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -105,6 +114,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             mBookId = extras.getString(Keys.BOOK_ID);
             mUserId = extras.getString(Keys.USER_ID);
             mId = extras.getString(Keys.ID);
+           
             if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
                 mOwnedByUser = true;
             } else {
@@ -154,7 +164,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
     private void loadBookDetails() {
 
-        DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableUserBooks.NAME, null, mBookSelection, new String[] {
+        DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableSearchBooks.NAME, null, mBookSelection, new String[] {
             mBookId
         }, null, null, null, null, this);
         
@@ -211,6 +221,8 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         }
     }
 
+   
+	
     @Override
     public void onSuccess(final int requestId,
                     final IBlRequestContract request,
@@ -258,6 +270,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 mTitleTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.TITLE)));
                 mTitleTextView.setSelected(true);
+             
                 mAuthorTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.AUTHOR)));
 
