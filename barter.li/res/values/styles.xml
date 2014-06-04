@@ -45,7 +45,7 @@
     </style>
 
     <style name="ActionBar.Solid.Apptheme" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/apptheme_color</item>
+        <item name="android:background">@drawable/ab_solid_apptheme</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_apptheme</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_apptheme</item>
         <item name="android:progressBarStyle">@style/ProgressBar.Apptheme</item>
