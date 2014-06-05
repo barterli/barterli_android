@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import li.barter.R;
@@ -35,19 +36,14 @@ import li.barter.http.ResponseInfo;
 import li.barter.models.Team;
 import li.barter.utils.Logger;
 
-/**
- * @author Vinay S Shenoy Fragment to display OSS Software used in the
- *         application
- */
+
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class TeamFragment extends AbstractBarterLiFragment {
 
     private static final String TAG = "TeamFragment";
 
-    /**
-     * List that displays the Oss Licenses
-     */
-    private ListView            mListView;
+    
+    private GridView            mGridView;
 
     private TextView            mAboutBarterli;
     private Team[]              mTeams;
@@ -61,12 +57,12 @@ public class TeamFragment extends AbstractBarterLiFragment {
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
-        mListView = (ListView) inflater
-                        .inflate(R.layout.fragment_team, container, false);
+        
+        final View view = inflater
+                .inflate(R.layout.fragment_team, null);
+        mGridView = (GridView) view.findViewById(R.id.team_grid);
 
-        final ViewGroup header = (ViewGroup) inflater
-                        .inflate(R.layout.layout_teamlistheader, mListView, false);
-        mListView.addHeaderView(header, null, false);
+        
         setActionBarDrawerToggleEnabled(false);
         // Make a call to server
         try {
@@ -79,7 +75,7 @@ public class TeamFragment extends AbstractBarterLiFragment {
             // Should never happen
             Logger.e(TAG, e, "Error building report bug json");
         }
-        return mListView;
+        return view;
     }
 
     @Override
@@ -101,7 +97,7 @@ public class TeamFragment extends AbstractBarterLiFragment {
                                 .getParcelableArray(HttpConstants.TEAM)
                                 .toString());
                 mTeamAdapter = new TeamAdapter(getActivity(), mTeams);
-                mListView.setAdapter(mTeamAdapter);
+                mGridView.setAdapter(mTeamAdapter);
 
             } catch (final Exception e) {
                 // Should never happen

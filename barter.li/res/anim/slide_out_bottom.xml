@@ -14,13 +14,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources>
-
-    <integer name="grid_col_count">3</integer>
-    <integer name="short_anim_time">132</integer>
-    <integer name="medium_anim_time">264</integer>
-    <integer name="long_anim_time">330</integer>
-    <integer name="long_anim_time_appclose">500</integer>
-     <integer name="grid_col_count_for_team">2</integer>
-
-</resources>
+<translate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="@integer/long_anim_time_appclose"
+    android:fromYDelta="0%p"
+    android:interpolator="@android:anim/decelerate_interpolator"
+    android:toYDelta="100%p" />

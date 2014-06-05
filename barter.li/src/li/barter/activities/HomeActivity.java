@@ -230,6 +230,13 @@ public class HomeActivity extends AbstractBarterLiActivity implements
             ((LoginFragment) fragment).onGoogleLogout();
         }
     }
+    
+    @Override
+    public void onBackPressed() {
+    	super.onBackPressed();
+    	overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
+    	
+    }
 }
 
 

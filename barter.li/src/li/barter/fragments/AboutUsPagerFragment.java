@@ -23,7 +23,7 @@ import com.viewpagerindicator.TitlePageIndicator;
 
 /**
  * @author Anshul Kamboj Fragment for Paging {@link CollaborateFragment}, {@link AboutUsPagerFragment}
- * , {@link OssLicenseFragment}, {@link TributeFragment}
+ * , {@link OssLicenseFragment}, {@link TributeFragment} and {@link BarterLiDescriptionFragment}
  */
 
 public class AboutUsPagerFragment extends AbstractBarterLiFragment {
@@ -99,18 +99,23 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment {
 				return tributeFragment;
 
 			case 1:
+				final BarterLiDescriptionFragment barterliDescFragment = BarterLiDescriptionFragment
+				.newInstance();
+				return barterliDescFragment;
+				
+			case 2:
 				final TeamFragment teamFragment = TeamFragment
 				.newInstance();
 				return teamFragment;
 
 
-			case 2:
+			case 3:
 				final CollaborateFragment collaborateFragment = CollaborateFragment
 				.newInstance();
 				return collaborateFragment;
 
 
-			case 3:
+			case 4:
 				final OssLicenseFragment ossLicenseFragment = OssLicenseFragment
 				.newInstance();
 				return ossLicenseFragment;

@@ -55,8 +55,8 @@ public class AppConstants {
     
     public static final String  SENDING_ACK                      = "...";
     public static final String  SENT_ACK                         = "sent";
-    public static final ArrayList<String> ABOUTUS_FRAGMENT_TITLES=new ArrayList<String>(Arrays.asList("Tribute", "Barter.li",
-    																"Collaborate","Open Source"));
+    public static final ArrayList<String> ABOUTUS_FRAGMENT_TITLES=new ArrayList<String>(Arrays.asList("Tribute", "Barter.li","Team",
+    																"Collaborate","Attributions"));
     
     public static final String  TRUE                         = "true";
     public static final String  FALSE                        = "false";

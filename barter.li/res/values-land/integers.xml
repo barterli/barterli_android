@@ -17,5 +17,5 @@
 <resources>
 
     <integer name="grid_col_count">5</integer>
-
+ <integer name="grid_col_count_for_team">4</integer>
 </resources>
