@@ -69,6 +69,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
         mGooglePlusManager = new GooglePlusManager(this, this);
+        overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_bottom );
         
         if (savedInstanceState == null) {
 
@@ -92,8 +93,10 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        
         mGooglePlayClientWrapper.onStart();
         mGooglePlusManager.onActivityStarted();
+       
     }
 
     @Override
@@ -238,6 +241,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     	overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
     	
     }
+    
 }
 
 

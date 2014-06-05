@@ -17,7 +17,7 @@
 <resources>
 
     <color name="apptheme_color">#0797CB</color>
-    <color name="global_bg">#FAFAFA</color>
+    <color name="global_bg">#F8F8FF</color>
     <color name="default_book_color">#AEEEEE</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>

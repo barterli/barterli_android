@@ -34,6 +34,7 @@
         android:numColumns="@integer/grid_col_count"
         android:paddingBottom="@dimen/margin_xx_small"
         android:paddingTop="@dimen/margin_xx_small"
+        android:gravity="center"
         android:verticalSpacing="@dimen/margin_x_small" />
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

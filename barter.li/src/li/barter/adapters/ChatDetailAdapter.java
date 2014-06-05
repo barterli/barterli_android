@@ -136,7 +136,7 @@ public class ChatDetailAdapter extends CursorAdapter {
                  .centerCrop().into(circleImageView.getTarget());
             }
         } else if (itemViewType == OUTGOING_MESSAGE) {
-            final String imageUrl = UserInfo.INSTANCE.getProfilePicture();
+            final String imageUrl = UserInfo.INSTANCE.getProfilePicture()+ "?type=large";
             if(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.CHAT_ACK)).equals(AppConstants.SENT_ACK))
             {
