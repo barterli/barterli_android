@@ -259,5 +259,6 @@ public class HttpConstants {
     public static final String LAT                         = "lat";
     public static final String LNG                         = "lng";
     public static final String DISTANCE                    = "distance";
+    public static final String REFERRER                    = "referrer";
 
 }
