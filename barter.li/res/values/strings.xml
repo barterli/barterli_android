@@ -126,6 +126,7 @@
     <string name="login_with_google">Login with Google</string>
     <string name="email_label">Email Id</string>
     <string name="password_label">Password</string>
+    <string name="share_via">Share Via</string>
 
     <!-- Strings for TakeLatLongActivity -->
     <string name="lat_long">Location</string>
@@ -150,7 +151,7 @@
     </string-array>
 
     <string name="tribute_message">A tribute to Aaron Swartz for inspiring us with his passion</string>
-    <string name="app_share_message">Enter the local book community. Download the android app - https://play.google.com/store/apps/details?id=li.barter</string>
+    <string name="app_share_message">Enter the local book community. Download the android app - </string>
     <string name="subject">Get access to barter.li</string>
 
     <string-array name="nav_drawer_descriptions">

@@ -441,4 +441,6 @@ public class AppConstants {
         public static final String GROUP    = "group";
     }
 
+    public static final String PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=li.barter";
+    public static final String REFERRER_FORMAT = "&referrer=%s";
 }
