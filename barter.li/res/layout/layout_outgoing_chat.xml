@@ -45,7 +45,7 @@
         android:layout_marginLeft="@dimen/chat_detail_margin"
         android:background="@drawable/msg_out_bubble"
         android:gravity="center"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:textSize="@dimen/text_medium"
         app:fontStyle="regular" />
 

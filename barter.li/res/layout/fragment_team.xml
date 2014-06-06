@@ -14,7 +14,18 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/transparent" />
+    android:orientation="vertical" >
+
+    <GridView
+        android:id="@+id/team_grid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:numColumns="@integer/grid_col_count_for_team"
+        android:gravity="center"
+        android:verticalSpacing="@dimen/margin_medium" />
+
+</LinearLayout>

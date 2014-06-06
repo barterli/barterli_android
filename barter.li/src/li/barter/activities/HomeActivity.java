@@ -76,12 +76,12 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_bottom );
         setContentView(R.layout.activity_home);
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
         mGooglePlusManager = new GooglePlusManager(this, this);
-
         if (savedInstanceState == null) {
 
             final String action = getIntent().getAction();
@@ -104,8 +104,10 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        
         mGooglePlayClientWrapper.onStart();
         mGooglePlusManager.onActivityStarted();
+       
     }
 
     @Override
@@ -276,4 +278,12 @@ public class HomeActivity extends AbstractBarterLiActivity implements
             ((LoginFragment) fragment).onGoogleLogout();
         }
     }
+    
+    @Override
+    public void onBackPressed() {
+    	super.onBackPressed();
+    	overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
+    	
+    }
+    
 }

@@ -15,7 +15,7 @@
         android:id="@+id/image_user"
         android:layout_width="@dimen/book_user_image_size"
         android:layout_height="@dimen/book_user_image_size"
-        android:layout_gravity="bottom|left"
+        android:layout_gravity="bottom|right"
         android:layout_marginLeft="@dimen/margin_xxx_small"
         android:layout_marginBottom="@dimen/margin_xxx_small"
         android:contentDescription="@string/app_name"

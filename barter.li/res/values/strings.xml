@@ -232,6 +232,6 @@
         <item>Android ViewPagerIndicator, Paging indicator widgets that are compatible with the ViewPager from the Android Support Library to improve discoverability of content.Licensed under the Apache v2.0 License.\nhttps://github.com/JakeWharton/Android-ViewPagerIndicator</item>
     </string-array>
 
-    <string name="about_barterli">barter.li is an open source, community driven, not-for-profit project which aims to enable sharing of a billion books across the globe.</string>
+    <string name="about_barterli">An open source, community driven, not-for-profit project.\n\n\n We aim to enable sharing of a billion books across the globe.</string>
 
 </resources>
