@@ -16,29 +16,41 @@
 
 package li.barter.activities;
 
+import com.android.volley.Request.Method;
 import com.facebook.AppEventsLogger;
 import com.google.android.gms.location.LocationListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.ActionBar;
 import android.content.Intent;
 import android.location.Location;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
 import li.barter.fragments.ChatDetailsFragment;
 import li.barter.fragments.ChatsFragment;
 import li.barter.fragments.LoginFragment;
+import li.barter.http.BlRequest;
+import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.GooglePlusManager;
+import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.GooglePlusManager.GooglePlusAuthCallback;
 
 /**
@@ -69,7 +81,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
         mGooglePlusManager = new GooglePlusManager(this, this);
-        
+
         if (savedInstanceState == null) {
 
             final String action = getIntent().getAction();
@@ -103,7 +115,36 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         // Call the 'activateApp' method to log an app event for use in analytics and advertising reporting.  Do so in
         // the onResume methods of the primary Activities that an app may be launched into.
         AppEventsLogger.activateApp(this);
-        //TODO Call Api for uploading referrer if it is present in Shared Preferences
+        if (DeviceInfo.INSTANCE.isNetworkConnected()) {
+            informReferralToServer();
+        }
+    }
+
+    /**
+     * Informs the referral to server if it exists
+     */
+    private void informReferralToServer() {
+
+        final String referrer = SharedPreferenceHelper
+                        .getString(this, R.string.pref_referrer);
+
+        if (!TextUtils.isEmpty(referrer)) {
+
+            final JSONObject requestObject = new JSONObject();
+
+            try {
+                requestObject.put(HttpConstants.REFERRAL_ID, referrer);
+                requestObject.put(HttpConstants.DEVICE_ID, UserInfo.INSTANCE
+                                .getDeviceId());
+
+                final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+                                + ApiEndpoints.REFERRAL, requestObject.toString(), mVolleyCallbacks);
+                request.setRequestId(RequestId.REFERRAL);
+                addRequestToQueue(request, false, 0, true);
+            } catch (JSONException e) {
+            }
+
+        }
     }
 
     @Override
@@ -174,6 +215,10 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     public void onSuccess(final int requestId,
                     final IBlRequestContract request,
                     final ResponseInfo response) {
+        
+        if(requestId == RequestId.REFERRAL) {
+            SharedPreferenceHelper.removeKeys(this, R.string.pref_referrer);
+        }
 
     }
 
@@ -232,5 +277,3 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         }
     }
 }
-
-

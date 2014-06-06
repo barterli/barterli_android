@@ -143,12 +143,25 @@ public class HttpResponseParser {
             case RequestId.GOOGLEBOOKS_SHOW_BOOK: {
                 return parseGoogleBooksBookInfo(response);
             }
+            
+            case RequestId.REFERRAL: {
+                return parseReferralResponse(response);
+            }
 
             default: {
                 throw new IllegalArgumentException("Unknown request Id:"
                                 + requestId);
             }
         }
+    }
+
+    /**
+     * Parse the response for referral inform API
+     * @param response
+     * @return
+     */
+    private ResponseInfo parseReferralResponse(String response) {
+        return new ResponseInfo();
     }
 
     /**

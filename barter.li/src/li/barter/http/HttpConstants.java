@@ -111,6 +111,7 @@ public class HttpConstants {
         public static final String TEAM                    = "/team.json";
         public static final String VOLUMES                 = "/volumes";
         public static final String FOURSQUARE_VENUES       = "/venues/search";
+        public static final String REFERRAL                = "/referral";
 
     }
 
@@ -149,6 +150,7 @@ public class HttpConstants {
         public static final int UPDATE_BOOK                 = 120;
         public static final int DELETE_BOOK                 = 121;
         public static final int GOOGLEBOOKS_SHOW_BOOK       = 122;
+        public static final int REFERRAL                    = 123;
 
     }
 
@@ -260,5 +262,8 @@ public class HttpConstants {
     public static final String LNG                         = "lng";
     public static final String DISTANCE                    = "distance";
     public static final String REFERRER                    = "referrer";
+    public static final String SHARE_TOKEN                 = "share_token";
+    public static final String REFERRAL_ID                 = "referral_id";
+    public static final String DEVICE_ID                   = "device_id";
 
 }
