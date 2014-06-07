@@ -33,6 +33,7 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment {
 	/**
 	 * {@link BookPageAdapter} holds the {@link BookDetailFragment} as viewpager
 	 */
+	
 	private AboutUsPageAdapter      mAdapter;
 
 	/**
