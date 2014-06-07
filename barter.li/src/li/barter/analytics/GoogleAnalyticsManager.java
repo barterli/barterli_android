@@ -18,6 +18,7 @@ package li.barter.analytics;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import android.content.Context;
@@ -43,9 +44,7 @@ public class GoogleAnalyticsManager {
 
     private GoogleAnalyticsManager() {
 
-        if (AppConstants.ENABLE_GOOGLE_ANALYTICS) {
-            initTracker();
-        }
+        initTracker();
     }
 
     /**
@@ -72,14 +71,19 @@ public class GoogleAnalyticsManager {
     private void initTracker() {
 
         final Context context = BarterLiApplication.getStaticContext();
-        GoogleAnalytics.getInstance(context).setDryRun(true);
+
+        if (!AppConstants.REPORT_GOOGLE_ANALYTICS) {
+            GoogleAnalytics.getInstance(context).setDryRun(true);
+            GoogleAnalytics.getInstance(context).getLogger()
+                            .setLogLevel(Logger.LogLevel.VERBOSE);
+        }
         mApplicationTracker = GoogleAnalytics.getInstance(context)
                         .newTracker(context.getString(R.string.ga_tracking_id));
 
         //We will track manually since we use Fragments
         mApplicationTracker.enableAutoActivityTracking(false);
         mApplicationTracker.setSessionTimeout(SESSION_TIMEOUT);
-        
+
     }
 
     /**
@@ -89,11 +93,7 @@ public class GoogleAnalyticsManager {
      */
     public void sendScreenHit(String screenName) {
 
-        if (AppConstants.ENABLE_GOOGLE_ANALYTICS) {
-
-            mApplicationTracker.setScreenName(screenName);
-            mApplicationTracker.send(new HitBuilders.ScreenViewBuilder()
-                            .build());
-        }
+        mApplicationTracker.setScreenName(screenName);
+        mApplicationTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 }

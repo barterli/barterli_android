@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import li.barter.R;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.RequestId;
@@ -42,11 +43,13 @@ public class TributeFragment extends AbstractBarterLiFragment {
     private TextView            mTributeTextView;
     private ImageView           mTributeImageView;
     private final String        mDefaultName = "Tribute To Aaron Swartz";
+    private boolean             mLoadedIndividually;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
+        mLoadedIndividually = false;
         setHasOptionsMenu(true);
         setActionBarDrawerToggleEnabled(false);
         final View view = inflater.inflate(R.layout.fragment_tribute, null);
@@ -70,6 +73,15 @@ public class TributeFragment extends AbstractBarterLiFragment {
         //        }
 
         return view;
+    }
+
+    @Override
+    protected String getAnalyticsScreenName() {
+        if (mLoadedIndividually) {
+            return "Tribute";
+        } else {
+            return "";
+        }
     }
 
     @Override
@@ -106,9 +118,9 @@ public class TributeFragment extends AbstractBarterLiFragment {
                     final String errorMessage, final Bundle errorResponseBundle) {
     }
 
-	public static TributeFragment newInstance() {
-		TributeFragment f = new TributeFragment();
-		return f;
-	}
+    public static TributeFragment newInstance() {
+        TributeFragment f = new TributeFragment();
+        return f;
+    }
 
 }

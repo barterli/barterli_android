@@ -394,4 +394,9 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
     }
 
+    @Override
+    protected String getAnalyticsScreenName() {
+        return "Login";
+    }
+
 }

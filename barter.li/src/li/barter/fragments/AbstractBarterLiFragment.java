@@ -42,6 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.fragments.dialogs.AddUserInfoDialogFragment;
 import li.barter.http.BlMultiPartRequest;
 import li.barter.http.HttpConstants;
@@ -115,6 +116,23 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
                             .findFragmentByTag(FragmentTags.DIALOG_ADD_NAME);
         }
     }
+    
+    @Override
+    public void onResume() {
+        super.onResume();
+        final String analyticsScreenName = getAnalyticsScreenName();
+
+        if (!TextUtils.isEmpty(analyticsScreenName)) {
+            GoogleAnalyticsManager.getInstance()
+                            .sendScreenHit(getAnalyticsScreenName());
+        }
+    }
+    
+    /**
+     * Gets the screen name for reporting to google analytics. Send empty
+     * string, or <code>null</code> if you don't want the Fragment tracked
+     */
+    protected abstract String getAnalyticsScreenName();
 
     protected void setActionBarDrawerToggleEnabled(final boolean enabled) {
         final AbstractBarterLiActivity activity = (AbstractBarterLiActivity) getActivity();

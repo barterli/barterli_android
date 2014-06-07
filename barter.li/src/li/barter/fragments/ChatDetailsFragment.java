@@ -39,6 +39,7 @@ import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.Logger;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -415,4 +416,9 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 		// TODO Auto-generated method stub
 		
 	}
+
+    @Override
+    protected String getAnalyticsScreenName() {
+        return "Chat Details";
+    }
 }

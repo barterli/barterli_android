@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import li.barter.R;
 import li.barter.adapters.TeamAdapter;
 import li.barter.http.BlRequest;
@@ -52,12 +53,14 @@ public class TeamFragment extends AbstractBarterLiFragment {
      * Adapter for displaying Team members
      */
     private TeamAdapter         mTeamAdapter;
+    
+    private boolean mLoadedIndividually;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
-        
+        mLoadedIndividually = false;
         final View view = inflater
                 .inflate(R.layout.fragment_team, null);
         mGridView = (GridView) view.findViewById(R.id.team_grid);
@@ -76,6 +79,15 @@ public class TeamFragment extends AbstractBarterLiFragment {
             Logger.e(TAG, e, "Error building report bug json");
         }
         return view;
+    }
+    
+    @Override
+    protected String getAnalyticsScreenName() {
+        if(mLoadedIndividually) {
+            return "Team";
+        } else {
+            return "";
+        }
     }
 
     @Override
