@@ -16,10 +16,6 @@
 
 package li.barter.fragments;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.android.volley.Request.Method;
 import com.squareup.picasso.Picasso;
 
 import android.database.Cursor;
@@ -36,6 +32,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.data.DBInterface;
@@ -43,20 +40,14 @@ import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableSearchBooks;
-import li.barter.data.TableUserBooks;
-import li.barter.http.BlRequest;
-import li.barter.http.HttpConstants;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.http.HttpConstants.ApiEndpoints;
-import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
-import li.barter.widgets.TypefacedTextView;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class BookDetailFragment extends AbstractBarterLiFragment implements
@@ -79,6 +70,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private String              mId;
     private String              mUserId;
     private boolean             mOwnedByUser;
+    
+    
+    /**
+     * Whether this fragment has been loaded by itself or as part of a pager/tab setup 
+     */
+    private boolean mLoadedIndividually;
 
     private final String        mBookSelection = DatabaseColumns.BOOK_ID
                                                                + SQLConstants.EQUALS_ARG;
@@ -125,10 +122,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         final AbstractBarterLiFragment fragment = ((AbstractBarterLiActivity) getActivity()).getCurrentMasterFragment();
         
         if(fragment != null && fragment instanceof BooksPagerFragment) {
-            setHasOptionsMenu(false);
+            mLoadedIndividually = false;
         } else {
-            setHasOptionsMenu(true);
+            mLoadedIndividually = true;
         }
+        
+        setHasOptionsMenu(mLoadedIndividually);
 
         setActionBarDrawerToggleEnabled(false);
         loadBookDetails();
@@ -340,6 +339,15 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
         }
         mBarterTypes.setText(barterTypeHashTag);
+    }
+    
+    @Override
+    protected String getAnalyticsScreenName() {
+        if(mLoadedIndividually) {
+            return "Book Detail";
+        } else {
+            return "";
+        }
     }
 
 }

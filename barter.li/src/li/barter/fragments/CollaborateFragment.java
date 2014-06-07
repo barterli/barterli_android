@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.http.IBlRequestContract;
@@ -51,11 +52,13 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     private RadioButton         mEnlistAsVolunteerRadioButton;
     private RadioButton         mEnlistAsPrMediaRadioButton;
     private RadioGroup          mEnlistOptionsRadioGroup;
+    private boolean mLoadedIndividually;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
+        mLoadedIndividually = false;
         setActionBarDrawerToggleEnabled(false);
         final View view = inflater
                         .inflate(R.layout.fragment_collaborate_with_us, null);
@@ -187,5 +190,14 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
 		CollaborateFragment f = new CollaborateFragment();
 		return f;
 	}
+
+    @Override
+    protected String getAnalyticsScreenName() {
+        if(mLoadedIndividually) {
+            return "Collaborate";
+        } else {
+            return "";
+        }
+    }
 
 }

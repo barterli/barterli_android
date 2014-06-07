@@ -76,7 +76,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_bottom );
+        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
         setContentView(R.layout.activity_home);
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
@@ -104,10 +104,10 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        
+
         mGooglePlayClientWrapper.onStart();
         mGooglePlusManager.onActivityStarted();
-       
+
     }
 
     @Override
@@ -217,8 +217,8 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     public void onSuccess(final int requestId,
                     final IBlRequestContract request,
                     final ResponseInfo response) {
-        
-        if(requestId == RequestId.REFERRAL) {
+
+        if (requestId == RequestId.REFERRAL) {
             SharedPreferenceHelper.removeKeys(this, R.string.pref_referrer);
         }
 
@@ -278,12 +278,23 @@ public class HomeActivity extends AbstractBarterLiActivity implements
             ((LoginFragment) fragment).onGoogleLogout();
         }
     }
-    
+
     @Override
     public void onBackPressed() {
-    	super.onBackPressed();
-    	overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
-    	
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
+
     }
-    
+
+    @Override
+    protected String getAnalyticsScreenName() {
+
+        /*
+         * We don't want to track this Activity since it is an empty activity
+         * for controlling fragments. Instead, we will track the fragments
+         * themselves
+         */
+        return "";
+    }
+
 }

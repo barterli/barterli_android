@@ -36,6 +36,7 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 
 /**
@@ -55,6 +56,8 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
     private String              mLocationFormat;
 
     private String              mUserId;
+
+    private boolean             mLoadedIndividually;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -79,6 +82,7 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
             }
         }
 
+        mLoadedIndividually = false;
         mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
         mPreferredLocationTextView = (TextView) view
                         .findViewById(R.id.text_current_location);
@@ -194,6 +198,21 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
     public void setUserId(String userId) {
         mUserId = userId;
         loadUserDetails();
+    }
+
+    @Override
+    protected String getAnalyticsScreenName() {
+
+        if (mLoadedIndividually) {
+            return mUserId.equals(UserInfo.INSTANCE.getId()) ? "About current user"
+                            : "About other user";
+        } else {
+            /*
+             * We don't need to track this screen since it is loaded within a
+             * viewpager. We will inform in the parent fragment
+             */
+            return "";
+        }
     }
 
 }

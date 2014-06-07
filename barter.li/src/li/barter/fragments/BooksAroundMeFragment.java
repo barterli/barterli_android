@@ -21,6 +21,7 @@ import com.android.volley.Request.Method;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -695,6 +696,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 	public boolean onClose() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Override
+	protected String getAnalyticsScreenName() {
+	    
+	    return "Books Around Me";
 	}
 
 	

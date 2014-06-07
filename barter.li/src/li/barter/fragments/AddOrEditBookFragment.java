@@ -899,5 +899,15 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		}
 
 	}
+	
+	@Override
+	protected String getAnalyticsScreenName() {
+	    
+	    if(mEditMode) {
+	        return "Edit Book";
+	    } else {
+	        return "Add Book";
+	    }
+	}
 
 }

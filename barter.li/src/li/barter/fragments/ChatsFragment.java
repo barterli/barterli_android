@@ -210,4 +210,9 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     public void onServiceDisconnected(final ComponentName name) {
         mBoundToChatService = false;
     }
+
+    @Override
+    protected String getAnalyticsScreenName() {
+        return "Chats";
+    }
 }

@@ -295,4 +295,9 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 
     }
 
+    @Override
+    protected String getAnalyticsScreenName() {
+        return "Scan ISBN";
+    }
+
 }

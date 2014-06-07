@@ -512,4 +512,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         }
     }
 
+    @Override
+    protected String getAnalyticsScreenName() {
+        return "Edit Profile";
+    }
+
 }

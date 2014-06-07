@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+
 import li.barter.R;
 import li.barter.adapters.OssLicensesAdapter;
 import li.barter.http.IBlRequestContract;
@@ -44,11 +45,14 @@ public class OssLicenseFragment extends AbstractBarterLiFragment {
      * Adapter for displaying Oss Licenses
      */
     private OssLicensesAdapter  mLicensesAdapter;
+    
+    private boolean mLoadedIndividually;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
+        mLoadedIndividually = false;
         mListView = (ListView) inflater
                         .inflate(R.layout.fragment_oss_licenses, container, false);
         mLicensesAdapter = new OssLicensesAdapter(getActivity(), R.array.oss_titles);
@@ -80,5 +84,14 @@ public class OssLicenseFragment extends AbstractBarterLiFragment {
 		OssLicenseFragment f = new OssLicenseFragment();
 		return f;
 	}
+
+    @Override
+    protected String getAnalyticsScreenName() {
+        if(mLoadedIndividually) {
+            return "Open Source";
+        } else {
+            return "";
+        }
+    }
 
 }

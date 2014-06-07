@@ -39,6 +39,7 @@ import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 
 /**
@@ -49,25 +50,27 @@ import li.barter.utils.Logger;
 public class MyBooksFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, OnItemClickListener {
 
-    private static final String           TAG            = "MyBooksFragment";
+    private static final String TAG            = "MyBooksFragment";
 
-    private GridView                      mBooksAroundMeGridView;
+    private GridView            mBooksAroundMeGridView;
 
     /**
      * {@link BooksGridAdapter} instance for the Books
      */
-    private BooksGridAdapter          mBooksAroundMeAdapter;
+    private BooksGridAdapter    mBooksAroundMeAdapter;
 
-    private String                        mUserId;
+    private String              mUserId;
 
-    private final String                  mUserSelection = DatabaseColumns.USER_ID
-                                                                         + SQLConstants.EQUALS_ARG;
+    private boolean             mLoadedIndividually;
+    private final String        mUserSelection = DatabaseColumns.USER_ID
+                                                               + SQLConstants.EQUALS_ARG;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
+        mLoadedIndividually = false;
         final View view = inflater
                         .inflate(R.layout.fragment_profile_books, null);
 
@@ -196,6 +199,15 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
         mUserId = userId;
         loadMyBooks();
 
+    }
+
+    @Override
+    protected String getAnalyticsScreenName() {
+        if(mLoadedIndividually) {
+            return mUserId.equals(UserInfo.INSTANCE.getId()) ? "My Books" : "Other User Books";
+        } else {
+            return "";
+        }
     }
 
 }

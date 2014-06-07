@@ -293,4 +293,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         }
     }
 
+    @Override
+    protected String getAnalyticsScreenName() {
+        return "Select Preferred Location";
+    }
+
 }

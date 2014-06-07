@@ -344,5 +344,10 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             super.onBackPressed();
         }
     }
+    
+    @Override
+    protected String getAnalyticsScreenName() {
+        return "Books Pager";
+    }
 
 }

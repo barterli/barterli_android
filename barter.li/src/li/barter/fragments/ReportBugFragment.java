@@ -100,7 +100,7 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
                                         + ApiEndpoints.REPORT_BUG, requestObject
                                         .toString(), mVolleyCallbacks);
                         request.setRequestId(RequestId.REPORT_BUG);
-                        addRequestToQueue(request, true, 0,true);
+                        addRequestToQueue(request, true, 0, true);
                     } catch (final JSONException e) {
                         // Should never happen
                         Logger.e(TAG, e, "Error building report bug json");
@@ -126,7 +126,7 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
                                         + ApiEndpoints.REPORT_BUG, requestObject
                                         .toString(), mVolleyCallbacks);
                         request.setRequestId(RequestId.SUGGEST_FEATURE);
-                        addRequestToQueue(request, true, 0,true);
+                        addRequestToQueue(request, true, 0, true);
                     } catch (final JSONException e) {
                         // Should never happen
                         Logger.e(TAG, e, "Error building create suggest feature json");
@@ -186,6 +186,12 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
     public void onBadRequestError(final int requestId,
                     final IBlRequestContract request, final int errorCode,
                     final String errorMessage, final Bundle errorResponseBundle) {
+    }
+
+    @Override
+    protected String getAnalyticsScreenName() {
+        
+        return "Report Bug";
     }
 
 }
