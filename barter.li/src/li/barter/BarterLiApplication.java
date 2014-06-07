@@ -28,6 +28,7 @@ import android.view.ViewConfiguration;
 
 import java.lang.reflect.Field;
 
+import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.chat.ChatService;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants;
@@ -53,7 +54,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
     private static Context      sStaticContext;
 
     private RequestQueue        mRequestQueue;
-
+    
     /**
      * Gets a reference to the application context
      */
@@ -72,6 +73,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         sStaticContext = getApplicationContext();
         overrideHardwareMenuButton();
         VolleyLog.sDebug = AppConstants.DEBUG;
+        
         mRequestQueue = Volley.newRequestQueue(this);
         // Picasso.with(this).setDebugging(true);
         UserInfo.INSTANCE.setDeviceId(Secure.getString(this
