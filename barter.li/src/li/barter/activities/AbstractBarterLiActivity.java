@@ -60,6 +60,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
 import li.barter.adapters.HomeNavDrawerAdapter;
+import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.chat.ChatService;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -207,6 +208,24 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
         setProgressBarIndeterminateVisibility(false);
         mHandler = new Handler();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        final String analyticsScreenName = getAnalyticsScreenName();
+
+        if (!TextUtils.isEmpty(analyticsScreenName)) {
+            GoogleAnalyticsManager.getInstance()
+                            .sendScreenHit(getAnalyticsScreenName());
+        }
+    }
+
+    /**
+     * Gets the screen name for reporting to google analytics. Send empty
+     * string, or <code>null</code> if you don't want the Activity tracked
+     */
+    protected abstract String getAnalyticsScreenName();
 
     /**
      * Creates a {@link Runnable} for positing to the Handler for launching the
