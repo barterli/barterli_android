@@ -463,6 +463,8 @@ public class HttpResponseParser {
                         .readString(userObject, HttpConstants.LAST_NAME, false, false));
         responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
                         .readString(userObject, HttpConstants.IMAGE_URL, false, false));
+        responseBundle.putString(HttpConstants.SHARE_TOKEN, JsonUtils
+                .readString(userObject, HttpConstants.SHARE_TOKEN, true, true));
 
         final JSONArray booksArray = JsonUtils
                         .readJSONArray(userObject, HttpConstants.BOOKS, true, true);

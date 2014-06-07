@@ -298,6 +298,11 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_profile_image, userInfo
                                             .getString(HttpConstants.IMAGE_URL));
+            SharedPreferenceHelper
+            .set(getActivity(), R.string.pref_profile_image, userInfo
+                            .getString(HttpConstants.SHARE_TOKEN));
+            
+            
 
             BarterLiApplication.startChatService();
 
