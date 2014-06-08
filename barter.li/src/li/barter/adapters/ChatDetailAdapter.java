@@ -138,15 +138,15 @@ public class ChatDetailAdapter extends CursorAdapter {
         } else if (itemViewType == OUTGOING_MESSAGE) {
             final String imageUrl = UserInfo.INSTANCE.getProfilePicture()+ "?type=large";
             if(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.CHAT_ACK)).equals(context.getString(R.string.sent)))
+                                        .getColumnIndex(DatabaseColumns.CHAT_ACK)).equals(context.getResources().getString(R.string.sent)))
             {
             	  ((TextView) view.getTag(R.id.chat_ack))
-                  .setText(context.getString(R.string.sent));
+                  .setText(context.getResources().getString(R.string.sent));
             }
             else
             {
             	 ((TextView) view.getTag(R.id.chat_ack))
-                 .setText(context.getString(R.string.sending));
+                 .setText(context.getResources().getString(R.string.sending));
             }
           
             CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.image_user);

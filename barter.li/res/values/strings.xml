@@ -155,7 +155,6 @@
     <string name="sent">sent</string>
     <string name="sending">&#8230;</string>
     <string name="trueflag">true</string>
-    <string name="falseflag">false</string>
      <string-array name="aboutus_fragment_titles">
         <item>Tribute</item>
         <item>Barter.li</item>

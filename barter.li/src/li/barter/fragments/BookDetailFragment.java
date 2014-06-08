@@ -295,7 +295,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
                 // Picasso.with(getActivity()).setDebugging(true);
                 if(cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.IMAGE_URL)).equals(getString(R.string.falseflag)))
+                                                .getColumnIndex(DatabaseColumns.IMAGE_URL)).equals(AppConstants.FALSE))
                 {
                 	mBookImageView.setBackgroundColor(Color.WHITE);
                 	mNoImageTextView.setVisibility(View.VISIBLE);

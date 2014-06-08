@@ -57,6 +57,8 @@ public class AppConstants {
     public static final String            ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
 
     public static final String            JSON                             = "json";
+    public static final String            FALSE                            = "false";
+    
 
    
     
