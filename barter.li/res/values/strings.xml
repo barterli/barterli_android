@@ -201,7 +201,7 @@
     <string name="text_default_current_location">Set your preferred Location</string>
     <string name="label_about_me">Something About Me</string>
     <string name="label_current_location">Preferred Cafe For Book Exchange</string>
-    <string name="label_referral_count">Number of installs via you</string>
+    <string name="label_referral_count">Number of installs via me</string>
     <string name="text_edit_profile">Edit</string>
     <string name="text_save_profile">Save</string>
     <string name="hint_first_name">First Name</string>
