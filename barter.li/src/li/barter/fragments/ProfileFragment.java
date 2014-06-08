@@ -63,6 +63,7 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.SharedPreferenceHelper;
 import li.barter.widgets.CircleImageView;
 
 /**
@@ -345,6 +346,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                     final ResponseInfo response) {
         if (requestId == RequestId.GET_USER_PROFILE) {
             if (isAttached() && mIsLoggedInUser) {
+            	final Bundle userInfo = response.responseBundle;
+            	SharedPreferenceHelper
+                .set(getActivity(), R.string.pref_referrer_count, userInfo
+                                .getString(HttpConstants.REFERRAL_COUNT));
                 updateViewsForUser();
             }
 

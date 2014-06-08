@@ -2,6 +2,7 @@
 package li.barter.fragments;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import li.barter.R;
 import li.barter.analytics.GoogleAnalyticsManager;
@@ -9,7 +10,6 @@ import li.barter.fragments.BooksPagerFragment.BookPageAdapter;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,6 +40,7 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment implements
      * {@link BookPageAdapter} holds the {@link BookDetailFragment} as viewpager
      */
     private AboutUsPageAdapter  mAdapter;
+    private ArrayList<String>   mTitles = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.aboutus_fragment_titles)));
 
     /**
      * ViewPager which holds the fragment
@@ -59,7 +60,7 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment implements
 
         mAboutUsPager = (ViewPager) view.findViewById(R.id.pager_aboutus);
 
-        mAdapter = new AboutUsPageAdapter(getChildFragmentManager(), AppConstants.ABOUTUS_FRAGMENT_TITLES);
+        mAdapter = new AboutUsPageAdapter(getChildFragmentManager(), mTitles);
 
         mAboutUsPager.setAdapter(mAdapter);
 
@@ -84,7 +85,7 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment implements
         public AboutUsPageAdapter(FragmentManager fm, ArrayList<String> content) {
             super(fm);
 
-            mCount = AppConstants.ABOUTUS_FRAGMENT_TITLES.size();
+            mCount = mTitles.size();
         }
 
         @Override
@@ -140,8 +141,8 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment implements
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return AppConstants.ABOUTUS_FRAGMENT_TITLES.get(position
-                            % AppConstants.ABOUTUS_FRAGMENT_TITLES.size());
+            return mTitles.get(position
+                            % mTitles.size());
         }
 
     }

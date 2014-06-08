@@ -414,7 +414,7 @@ AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 			chatValues.put(DatabaseColumns.RECEIVER_ID, receiverId);
 			chatValues.put(DatabaseColumns.MESSAGE, message);
 			chatValues.put(DatabaseColumns.SENT_AT, timeSentAt);
-			chatValues.put(DatabaseColumns.CHAT_ACK, AppConstants.SENDING_ACK);
+			chatValues.put(DatabaseColumns.CHAT_ACK, getString(R.string.sending));
 
             
 			chatValues.put(DatabaseColumns.TIMESTAMP, timeSentAt);
@@ -534,7 +534,7 @@ AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 			chatValues.put(DatabaseColumns.MESSAGE, messageText);
 			chatValues.put(DatabaseColumns.TIMESTAMP, timestamp);
 			chatValues.put(DatabaseColumns.SENT_AT, sentAtTime);
-			chatValues.put(DatabaseColumns.CHAT_ACK, AppConstants.SENT_ACK);
+			chatValues.put(DatabaseColumns.CHAT_ACK, getString(R.string.sent));
 			chatValues.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter
 					.getEpoch(timestamp));
 			chatValues.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter

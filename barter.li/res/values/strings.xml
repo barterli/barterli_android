@@ -149,6 +149,21 @@
         <item>Scan  Barcode</item>
         <item>Add Manually</item>
     </string-array>
+    
+    
+    <!-- Strings for chat details -->
+    <string name="sent">sent</string>
+    <string name="sending">&#8230;</string>
+    <string name="trueflag">true</string>
+     <string-array name="aboutus_fragment_titles">
+        <item>Tribute</item>
+        <item>Barter.li</item>
+        <item>Team</item>
+        <item>Collaborate</item>
+        <item>Attributions</item>
+       
+    </string-array>
+   
 
     <string name="tribute_message">A tribute to Aaron Swartz for inspiring us with his passion</string>
     <string name="app_share_message">Enter the local book community. Download the android app - </string>
@@ -186,6 +201,7 @@
     <string name="text_default_current_location">Set your preferred Location</string>
     <string name="label_about_me">Something About Me</string>
     <string name="label_current_location">Preferred Cafe For Book Exchange</string>
+    <string name="label_referral_count">Number of installs via me</string>
     <string name="text_edit_profile">Edit</string>
     <string name="text_save_profile">Save</string>
     <string name="hint_first_name">First Name</string>

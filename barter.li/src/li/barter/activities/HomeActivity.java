@@ -17,6 +17,7 @@
 package li.barter.activities;
 
 import com.android.volley.Request.Method;
+import com.crashlytics.android.Crashlytics;
 import com.facebook.AppEventsLogger;
 import com.google.android.gms.location.LocationListener;
 
@@ -76,7 +77,12 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
+        
+        if(AppConstants.CRASHLYTICS_INITIALISE)
+        {
+        Crashlytics.start(this);
+        }
+		overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
         setContentView(R.layout.activity_home);
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);

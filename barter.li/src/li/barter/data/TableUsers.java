@@ -63,6 +63,7 @@ public class TableUsers {
                                             .format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.DESCRIPTION, ""));
             Logger.d(TAG, "Alter Table Def: %s", alterTableDef);
             db.execSQL(alterTableDef);
+            
         } else {
 
             db.execSQL(String

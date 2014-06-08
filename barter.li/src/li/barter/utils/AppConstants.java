@@ -40,6 +40,8 @@ public class AppConstants {
      * reporting. Otherwise, Google Analytics will be set to a dry tun version
      */
     public static final boolean           REPORT_GOOGLE_ANALYTICS          = false;
+    
+    public static final boolean           CRASHLYTICS_INITIALISE		   = false;
 
     public static final String            FACEBOOK                         = "facebook";
     public static final String            FBPERMISSIONS[]                  = new String[] {
@@ -58,14 +60,11 @@ public class AppConstants {
     public static final String            ACTION_CHAT_BUTTON_CLICKED       = "li.barter.ACTION_CHAT_BUTTON_CLICKED";
 
     public static final String            JSON                             = "json";
-
-    public static final String            SENDING_ACK                      = "...";
-    public static final String            SENT_ACK                         = "sent";
-    public static final ArrayList<String> ABOUTUS_FRAGMENT_TITLES          = new ArrayList<String>(Arrays
-                                                                                           .asList("Tribute", "Barter.li", "Team", "Collaborate", "Attributions"));
-
-    public static final String            TRUE                             = "true";
     public static final String            FALSE                            = "false";
+    
+
+   
+    
 
     /*
      * heartbeat interval for rabbitmq chat

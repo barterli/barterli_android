@@ -16,19 +16,11 @@
 
 package li.barter.http;
 
-import org.apache.http.HttpStatus;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParserException;
-
-import android.content.ContentValues;
-import android.os.Bundle;
-import android.text.TextUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 
+import li.barter.R;
+import li.barter.activities.HomeActivity;
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -43,6 +35,17 @@ import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.Logger;
 import li.barter.widgets.autocomplete.Suggestion;
+
+import org.apache.http.HttpStatus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParserException;
+
+import android.app.Activity;
+import android.content.ContentValues;
+import android.os.Bundle;
+import android.text.TextUtils;
 
 /**
  * Class that reads an API response and parses it and stores it in the database
@@ -355,6 +358,11 @@ public class HttpResponseParser {
                         .readString(userObject, HttpConstants.LAST_NAME, false, false));
         responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
                         .readString(userObject, HttpConstants.IMAGE_URL, false, false));
+        responseBundle.putString(HttpConstants.REFERRAL_COUNT, JsonUtils
+                .readString(userObject, HttpConstants.REFERRAL_COUNT, false, false));
+        
+        
+        
 
         final JSONArray booksArray = JsonUtils
                         .readJSONArray(userObject, HttpConstants.BOOKS, true, true);
@@ -465,7 +473,9 @@ public class HttpResponseParser {
                         .readString(userObject, HttpConstants.IMAGE_URL, false, false));
         responseBundle.putString(HttpConstants.SHARE_TOKEN, JsonUtils
                 .readString(userObject, HttpConstants.SHARE_TOKEN, true, true));
-
+        responseBundle.putString(HttpConstants.REFERRAL_COUNT, JsonUtils
+                .readString(userObject, HttpConstants.REFERRAL_COUNT, true, true));
+        
         final JSONArray booksArray = JsonUtils
                         .readJSONArray(userObject, HttpConstants.BOOKS, true, true);
 
@@ -724,9 +734,8 @@ public class HttpResponseParser {
                         .readString(bookObject, HttpConstants.TITLE, false, false));
         values.put(DatabaseColumns.DESCRIPTION, JsonUtils
                         .readString(bookObject, HttpConstants.DESCRIPTION, false, false));
-        
         if(JsonUtils
-                        .readString(bookObject, HttpConstants.IMAGE_PRESENT, false, false).equals(AppConstants.FALSE))
+                        .readString(bookObject, HttpConstants.IMAGE_PRESENT, false, false).equals("false"))
         {
         values.put(DatabaseColumns.IMAGE_URL, JsonUtils
                         .readString(bookObject, HttpConstants.IMAGE_PRESENT, false, false));
