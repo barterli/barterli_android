@@ -87,6 +87,7 @@ import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
+import li.barter.utils.Utils;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
 
@@ -159,6 +160,11 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     private Handler                   mHandler;
 
     /**
+     * Whether a screen hit should be reported to analytics
+     */
+    private boolean                   mShouldReportScreenHit;
+
+    /**
      * Navigation Drawer Item Click Listener. The Nav list items are loaded from
      * R.array.nav_drawer_titles
      */
@@ -189,12 +195,23 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
         mIsActionBarNavDrawerToggleEnabled = false;
         mActivityTransition = getClass()
                         .getAnnotation(ActivityTransition.class);
+
+        long lastScreenTime = 0l;
         if (savedInstanceState == null) {
             if (mActivityTransition != null) {
                 overridePendingTransition(mActivityTransition.createEnterAnimation(), mActivityTransition
                                 .createExitAnimation());
             }
+        } else {
+            lastScreenTime = savedInstanceState.getLong(Keys.LAST_SCREEN_TIME);
         }
+
+        if (Utils.shouldReportScreenHit(lastScreenTime)) {
+            mShouldReportScreenHit = true;
+        } else {
+            mShouldReportScreenHit = false;
+        }
+
         if (getActionBar() != null) {
             getActionBar().setDisplayOptions(ACTION_BAR_DISPLAY_MASK);
             setActionBarTitle(getTitle().toString());
@@ -210,15 +227,30 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(Keys.LAST_SCREEN_TIME, Utils.getCurrentEpochTime());
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
+        checkAndReportScreenHit();
+    }
 
-        final String analyticsScreenName = getAnalyticsScreenName();
+    /**
+     * Reports a screen hit
+     */
+    public void checkAndReportScreenHit() {
+        if (mShouldReportScreenHit) {
+            final String analyticsScreenName = getAnalyticsScreenName();
 
-        if (!TextUtils.isEmpty(analyticsScreenName)) {
-            GoogleAnalyticsManager.getInstance()
-                            .sendScreenHit(getAnalyticsScreenName());
+            if (!TextUtils.isEmpty(analyticsScreenName)) {
+                GoogleAnalyticsManager.getInstance()
+                                .sendScreenHit(getAnalyticsScreenName());
+            }
         }
+
     }
 
     /**
