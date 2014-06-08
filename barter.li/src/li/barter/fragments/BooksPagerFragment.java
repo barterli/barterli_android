@@ -1,10 +1,16 @@
 
 package li.barter.fragments;
 
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
@@ -26,11 +33,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
+import li.barter.analytics.AnalyticsConstants.Actions;
+import li.barter.analytics.AnalyticsConstants.Categories;
+import li.barter.analytics.AnalyticsConstants.ParamKeys;
+import li.barter.analytics.AnalyticsConstants.ParamValues;
+import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
@@ -46,7 +59,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, OnPageChangeListener,
                 PanelSlideListener {
 
-    private static final String  TAG          = "BookDetailPagerFragment";
+    private static final String  TAG                     = "BookDetailPagerFragment";
 
     /**
      * {@link BookPageAdapter} holds the {@link BookDetailFragment} as viewpager
@@ -73,15 +86,25 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      * These arrays holds bookids and userids for all the books in the pager to
      * map them
      */
-    private ArrayList<String>    mBookIdArray = new ArrayList<String>();
-    private ArrayList<String>    mIdArray = new ArrayList<String>();
-    private ArrayList<String>    mUserIdArray = new ArrayList<String>();
+    private ArrayList<String>    mBookIdArray            = new ArrayList<String>();
+    private ArrayList<String>    mIdArray                = new ArrayList<String>();
+    private ArrayList<String>    mUserIdArray            = new ArrayList<String>();
 
     /**
      * Used to provide a slide up UI companent to place the user's profile
      * fragment
      */
-    private SlidingUpPanelLayout mLayout;
+    private SlidingUpPanelLayout mSlidingLayout;
+
+    /**
+     * Intent filter for chat button click events
+     */
+    private final IntentFilter   mChatButtonIntentFilter = new IntentFilter(AppConstants.ACTION_CHAT_BUTTON_CLICKED);
+
+    /**
+     * Receiver for chat button click events
+     */
+    private ChatButtonReceiver   mChatButtonReceiver     = new ChatButtonReceiver();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,8 +123,9 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
         mBookDetailPager = (ViewPager) view.findViewById(R.id.pager_books);
         mBookDetailPager.setOnPageChangeListener(this);
-        mLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
-        mLayout.setPanelSlideListener(this);
+        mSlidingLayout = (SlidingUpPanelLayout) view
+                        .findViewById(R.id.sliding_layout);
+        mSlidingLayout.setPanelSlideListener(this);
 
         if (savedInstanceState == null) {
             final ProfileFragment fragment = new ProfileFragment();
@@ -114,6 +138,21 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
         loadBookSearchResults();
         return view;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        LocalBroadcastManager
+                        .getInstance(activity)
+                        .registerReceiver(mChatButtonReceiver, mChatButtonIntentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getActivity())
+                        .unregisterReceiver(mChatButtonReceiver);
     }
 
     @Override
@@ -193,7 +232,8 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
             final BookDetailFragment fragment = BookDetailFragment
                             .newInstance(mUserIdArray.get(position), mBookIdArray
-                                            .get(position),mIdArray.get(position));
+                                            .get(position), mIdArray
+                                            .get(position));
             mPositionFragmentMap.put(position, fragment);
             return fragment;
 
@@ -253,10 +293,10 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
                 mBookIdArray.add(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.BOOK_ID)));
                 mIdArray.add(cursor.getString(cursor
-                        .getColumnIndex(DatabaseColumns.ID)));
+                                .getColumnIndex(DatabaseColumns.ID)));
                 mUserIdArray.add(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.USER_ID)));
-                
+
             }
 
             mAdapter = new BookPageAdapter(getChildFragmentManager());
@@ -312,7 +352,10 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPanelExpanded(View panel) {
         setActionBarTitle(R.string.owner_profile);
-        /* TODO If current user is the user whose profile is being displayed, show the edit option */
+        /*
+         * TODO If current user is the user whose profile is being displayed,
+         * show the edit option
+         */
     }
 
     @Override
@@ -331,23 +374,46 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     public void setDragHandle(View view) {
 
         Logger.v(TAG, "Setting Drag View %s", view.toString());
-        mLayout.setDragView(view);
-        mLayout.setEnableDragViewTouchEvents(false);
+        mSlidingLayout.setDragView(view);
+        mSlidingLayout.setEnableDragViewTouchEvents(false);
     }
 
     @Override
     public void onBackPressed() {
 
-        if (mLayout.isExpanded()) {
-            mLayout.collapsePane();
+        if (mSlidingLayout.isExpanded()) {
+            mSlidingLayout.collapsePane();
         } else {
             super.onBackPressed();
         }
     }
-    
+
     @Override
     protected String getAnalyticsScreenName() {
         return "Books Pager";
+    }
+
+    /**
+     * Broadcast receiver for receiver chat button clicked events
+     * 
+     * @author Vinay S Shenoy
+     */
+    private final class ChatButtonReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mSlidingLayout.isExpanded()) {
+                GoogleAnalyticsManager
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.USAGE, Actions.CHAT_INITIALIZATION)
+                                                .set(ParamKeys.TYPE, ParamValues.PROFILE));
+            } else {
+                GoogleAnalyticsManager
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.USAGE, Actions.CHAT_INITIALIZATION)
+                                                .set(ParamKeys.TYPE, ParamValues.BOOK));
+            }
+        }
     }
 
 }

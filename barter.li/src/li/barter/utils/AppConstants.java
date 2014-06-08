@@ -55,6 +55,7 @@ public class AppConstants {
     public static final String            ACTION_SHOW_ALL_CHATS            = "li.barter.ACTION_SHOW_ALL_CHATS";
     public static final String            ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
     public static final String            ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
+    public static final String            ACTION_CHAT_BUTTON_CLICKED       = "li.barter.ACTION_CHAT_BUTTON_CLICKED";
 
     public static final String            JSON                             = "json";
 
@@ -314,10 +315,10 @@ public class AppConstants {
         public static final String RELOAD                     = "reload";
         public static final String BOOK_POSITION              = "book_position";
         public static final String BOOK_COUNT                 = "book_count";
-        
+
         /**
-         * The time at which this screen was last seen. Used for google analytics to
-         * detect whether to report a screen hit or not on fragment
+         * The time at which this screen was last seen. Used for google
+         * analytics to detect whether to report a screen hit or not on fragment
          * recreation(orientation change/destroyed in background) etc
          */
         public static final String LAST_SCREEN_TIME           = "last_screen_time";

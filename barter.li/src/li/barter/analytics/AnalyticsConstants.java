@@ -27,10 +27,12 @@ public class AnalyticsConstants {
 
     public static interface Categories {
         public static final String CONVERSION = "CONVERSION";
+        public static final String USAGE      = "USAGE";
     }
 
     public static interface Actions {
-        public static final String SIGN_IN_ATTEMPT = "SIGN_IN_ATTEMPT";
+        public static final String SIGN_IN_ATTEMPT     = "SIGN_IN_ATTEMPT";
+        public static final String CHAT_INITIALIZATION = "CHAT_INITIALIZATION";
     }
 
     public static interface ParamKeys {
@@ -41,5 +43,7 @@ public class AnalyticsConstants {
         public static final String FACEBOOK = "facebook";
         public static final String GOOGLE   = "google";
         public static final String EMAIL    = "email";
+        public static final String PROFILE  = "profile";
+        public static final String BOOK     = "book";
     }
 }

@@ -18,12 +18,14 @@ package li.barter.fragments;
 import com.android.volley.Request.Method;
 import com.squareup.picasso.Picasso;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
@@ -56,6 +58,7 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
@@ -283,6 +286,16 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             if (isLoggedIn()) {
 
+                /*
+                 * Sending a broadcast for this because we don't know whether
+                 * the page is expanded or not when clicking. This will be
+                 * received in BooksPagerFragment and we will check whether the
+                 * Sliding Layout is expanded/collapsed before triggering the
+                 * analytics event
+                 */
+                LocalBroadcastManager
+                                .getInstance(getActivity())
+                                .sendBroadcast(new Intent(AppConstants.ACTION_CHAT_BUTTON_CLICKED));
                 if (hasFirstName()) {
                     loadChatFragment();
                 } else {
@@ -473,7 +486,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         updateTab(fragment);
 
-        if(mUserId == null) {
+        if (mUserId == null) {
             return;
         }
         if (position == 0) {
