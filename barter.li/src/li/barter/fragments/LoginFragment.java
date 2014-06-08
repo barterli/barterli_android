@@ -22,6 +22,7 @@ import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.Settings;
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,6 +44,11 @@ import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.HomeActivity;
+import li.barter.analytics.AnalyticsConstants.ParamKeys;
+import li.barter.analytics.GoogleAnalyticsManager;
+import li.barter.analytics.AnalyticsConstants.Actions;
+import li.barter.analytics.AnalyticsConstants.Categories;
+import li.barter.analytics.AnalyticsConstants.ParamValues;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -140,6 +146,10 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         switch (v.getId()) {
 
             case R.id.button_facebook_login: {
+                GoogleAnalyticsManager
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.CONVERSION, Actions.SIGN_IN_ATTEMPT)
+                                                .set(ParamKeys.TYPE, ParamValues.FACEBOOK));
                 final Session session = Session.getActiveSession();
                 if (!session.isOpened() && !session.isClosed()) {
                     session.openForRead(new Session.OpenRequest(this)
@@ -153,12 +163,20 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             }
 
             case R.id.button_google_login: {
+                GoogleAnalyticsManager
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.CONVERSION, Actions.SIGN_IN_ATTEMPT)
+                                                .set(ParamKeys.TYPE, ParamValues.GOOGLE));
                 ((HomeActivity) getActivity()).getPlusManager().login();
                 break;
             }
 
             case R.id.button_submit: {
                 if (isInputValid()) {
+                    GoogleAnalyticsManager
+                                    .getInstance()
+                                    .sendEvent(new EventBuilder(Categories.CONVERSION, Actions.SIGN_IN_ATTEMPT)
+                                                    .set(ParamKeys.TYPE, ParamValues.EMAIL));
                     login(mEmailEditText.getText().toString(), mPasswordEditText
                                     .getText().toString());
                 }
@@ -184,7 +202,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.CREATE_USER, requestObject.toString(), mVolleyCallbacks);
             request.setRequestId(RequestId.CREATE_USER);
-            addRequestToQueue(request, true, 0,true);
+            addRequestToQueue(request, true, 0, true);
         } catch (final JSONException e) {
             // Should never happen
             Logger.e(TAG, e, "Error building create user json");
@@ -208,7 +226,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.CREATE_USER, requestObject.toString(), mVolleyCallbacks);
             request.setRequestId(RequestId.CREATE_USER);
-            addRequestToQueue(request, true, 0,true);
+            addRequestToQueue(request, true, 0, true);
         } catch (final JSONException e) {
             // Should never happen
             Logger.e(TAG, e, "Error building create user json");
@@ -299,10 +317,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                             .set(getActivity(), R.string.pref_profile_image, userInfo
                                             .getString(HttpConstants.IMAGE_URL));
             SharedPreferenceHelper
-            .set(getActivity(), R.string.pref_profile_image, userInfo
-                            .getString(HttpConstants.SHARE_TOKEN));
-            
-            
+                            .set(getActivity(), R.string.pref_profile_image, userInfo
+                                            .getString(HttpConstants.SHARE_TOKEN));
 
             BarterLiApplication.startChatService();
 
@@ -311,11 +327,11 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             if (TextUtils.isEmpty(locationId)) {
                 final Bundle myArgs = getArguments();
                 Bundle preferredLocationArgs = null;
-                
+
                 if (myArgs != null) {
                     preferredLocationArgs = new Bundle(myArgs);
                     preferredLocationArgs.putString(Keys.USER_ID, userInfo
-                            .getString(HttpConstants.ID_USER));
+                                    .getString(HttpConstants.ID_USER));
                 }
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), SelectPreferredLocationFragment.class
@@ -328,8 +344,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                     final Bundle args = new Bundle(1);
                     args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
                     args.putString(Keys.USER_ID, userInfo
-                            .getString(HttpConstants.ID_USER));
-                    
+                                    .getString(HttpConstants.ID_USER));
+
                     loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                     .instantiate(getActivity(), ProfileFragment.class
                                                     .getName(), args), FragmentTags.PROFILE_FROM_LOGIN, true, FragmentTags.BS_PROFILE);
@@ -360,8 +376,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     public void call(final Session session, final SessionState state,
                     final Exception exception) {
         // TODO session returns the user_token
-    	Logger.e(TAG, session.getAccessToken()+" token"+state.toString());
-    	//exception.printStackTrace();
+        Logger.e(TAG, session.getAccessToken() + " token" + state.toString());
+        //exception.printStackTrace();
         if (!session.getAccessToken().equals("")) {
             loginWithProvider(session.getAccessToken(), AppConstants.FACEBOOK);
         }

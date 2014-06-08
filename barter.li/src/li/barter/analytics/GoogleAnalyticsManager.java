@@ -18,6 +18,7 @@ package li.barter.analytics;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
@@ -95,5 +96,13 @@ public class GoogleAnalyticsManager {
 
         mApplicationTracker.setScreenName(screenName);
         mApplicationTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+    
+    /**
+     * Inform an event to Google Analytics
+     * @param builder
+     */
+    public void sendEvent(EventBuilder builder) {
+        mApplicationTracker.send(builder.build());
     }
 }
