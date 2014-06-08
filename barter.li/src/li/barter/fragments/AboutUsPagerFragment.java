@@ -40,7 +40,7 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment implements
      * {@link BookPageAdapter} holds the {@link BookDetailFragment} as viewpager
      */
     private AboutUsPageAdapter  mAdapter;
-    private ArrayList<String>   mTitles = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.aboutus_fragment_titles)));
+    private ArrayList<String>   mTitles;
 
     /**
      * ViewPager which holds the fragment
@@ -57,6 +57,7 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment implements
         setActionBarTitle(getString(R.string.Aboutus_fragment_title));
         final View view = inflater
                         .inflate(R.layout.fragment_aboutus_pager, container, false);
+        mTitles= new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.aboutus_fragment_titles)));
 
         mAboutUsPager = (ViewPager) view.findViewById(R.id.pager_aboutus);
 
