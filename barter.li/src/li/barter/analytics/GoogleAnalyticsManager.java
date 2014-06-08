@@ -81,6 +81,10 @@ public class GoogleAnalyticsManager {
             GoogleAnalytics.getInstance(context).setDryRun(true);
             GoogleAnalytics.getInstance(context).getLogger()
                             .setLogLevel(Logger.LogLevel.VERBOSE);
+        } else {
+            GoogleAnalytics.getInstance(context).setDryRun(false);
+            GoogleAnalytics.getInstance(context).getLogger()
+                            .setLogLevel(Logger.LogLevel.ERROR);
         }
         mApplicationTracker = GoogleAnalytics.getInstance(context)
                         .newTracker(context.getString(R.string.ga_tracking_id));

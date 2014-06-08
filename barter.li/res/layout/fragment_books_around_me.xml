@@ -18,8 +18,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ptr_layout"
     android:layout_width="match_parent"
-    android:layout_margin="@dimen/margin_x_small"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin_x_small"
     android:background="@color/global_bg" >
 
     <GridView
@@ -30,11 +30,17 @@
         android:layout_marginRight="@dimen/margin_xxx_small"
         android:background="@color/transparent"
         android:cacheColorHint="@color/transparent"
+        android:gravity="center"
         android:horizontalSpacing="@dimen/margin_x_small"
         android:numColumns="@integer/grid_col_count"
         android:paddingBottom="@dimen/margin_xx_small"
         android:paddingTop="@dimen/margin_xx_small"
-        android:gravity="center"
         android:verticalSpacing="@dimen/margin_x_small" />
+
+    <include
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/layout_books_around_me_empty_view" />
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

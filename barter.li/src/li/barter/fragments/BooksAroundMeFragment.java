@@ -39,6 +39,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MenuItem.OnActionExpandListener;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -95,7 +96,8 @@ import li.barter.utils.Utils;
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, AsyncDbQueryCallback,
                 OnItemClickListener, LoadMoreCallbacks, NetworkCallbacks,
-                OnRefreshListener, OnCloseListener, OnActionExpandListener {
+                OnRefreshListener, OnCloseListener, OnActionExpandListener,
+                OnClickListener {
 
     private static final String          TAG                     = "BooksAroundMeFragment";
 
@@ -180,6 +182,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeAdapter = new BooksGridAdapter(getActivity());
         mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
         mBooksAroundMeGridView.setOnItemClickListener(this);
+
+        final View emptyView = contentView.findViewById(R.id.empty_view);
+        mBooksAroundMeGridView.setEmptyView(emptyView);
+        emptyView.findViewById(R.id.text_try_again).setOnClickListener(this);
+        emptyView.findViewById(R.id.text_add_your_own).setOnClickListener(this);
 
         if (savedInstanceState == null) {
             mCurPage = 0;
@@ -317,7 +324,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Method to handle click on profile image
+     * Show dialog for adding books
      */
     private void showAddBookOptions() {
 
@@ -664,9 +671,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             } else if (which == 1) { // add book manually
                 loadAddOrEditBookFragment(null);
                 GoogleAnalyticsManager
-                .getInstance()
-                .sendEvent(new EventBuilder(Categories.USAGE, Actions.ADD_BOOK)
-                                .set(ParamKeys.TYPE, ParamValues.MANUAL));
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.USAGE, Actions.ADD_BOOK)
+                                                .set(ParamKeys.TYPE, ParamValues.MANUAL));
             }
         } else {
             super.onDialogClick(dialog, which);
@@ -687,12 +694,20 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onRefreshStarted(View view) {
 
         if (view.getId() == R.id.grid_books_around_me) {
-            mSearchView.setQuery(null, false);
-            final Bundle cookie = new Bundle(2);
-            cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
-            mEmptySearchCroutonFlag = false;
-            DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
+            reloadNearbyBooks();
         }
+    }
+
+    /**
+     * Reloads nearby books, clearing the ones already present
+     */
+    private void reloadNearbyBooks() {
+        mSearchView.setQuery(null, false);
+        final Bundle cookie = new Bundle(2);
+        cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
+        mEmptySearchCroutonFlag = false;
+        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
+
     }
 
     @Override
@@ -709,7 +724,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     public boolean onClose() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -717,6 +731,18 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     protected String getAnalyticsScreenName() {
 
         return Screens.BOOKS_AROUND_ME;
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        final int id = v.getId();
+
+        if (id == R.id.text_try_again) {
+            reloadNearbyBooks();
+        } else if (id == R.id.text_add_your_own) {
+            showAddBookOptions();
+        }
     }
 
 }

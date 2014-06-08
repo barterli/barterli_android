@@ -36,6 +36,10 @@
     <string name="about_me">About me</string>
     <string name="my_books">My Books</string>
     <string name="no_image_text">No Image</string>
+    <string name="no_books_found_nearby">No books found near you. :-(</string>
+    <string name="try_again"><u>Try Again</u></string>
+    <string name="or">or</string>
+    <string name="add_your_own"><u>Add Your Own</u></string>
 
     <!-- crouton info strings -->
     <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>
@@ -149,21 +153,19 @@
         <item>Scan  Barcode</item>
         <item>Add Manually</item>
     </string-array>
-    
-    
+
     <!-- Strings for chat details -->
     <string name="sent">sent</string>
     <string name="sending">&#8230;</string>
     <string name="trueflag">true</string>
-     <string-array name="aboutus_fragment_titles">
+
+    <string-array name="aboutus_fragment_titles">
         <item>Tribute</item>
         <item>Barter.li</item>
         <item>Team</item>
         <item>Collaborate</item>
         <item>Attributions</item>
-       
     </string-array>
-   
 
     <string name="tribute_message">A tribute to Aaron Swartz for inspiring us with his passion</string>
     <string name="app_share_message">Enter the local book community. Download the android app - </string>
