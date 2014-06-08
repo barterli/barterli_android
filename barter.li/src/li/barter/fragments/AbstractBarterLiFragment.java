@@ -56,6 +56,7 @@ import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Utils;
 import li.barter.widgets.TypefaceCache;
 
 /**
@@ -67,7 +68,7 @@ import li.barter.widgets.TypefaceCache;
 public abstract class AbstractBarterLiFragment extends Fragment implements
                 IHttpCallbacks {
 
-    private static final String       TAG = "BaseBarterLiFragment";
+    private static final String       TAG = "AbstractBarterLiFragment";
 
     /**
      * Flag that indicates that this fragment is attached to an Activity
@@ -87,6 +88,11 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     private AtomicInteger             mRequestCounter;
 
     /**
+     * Whether a screen hit should be reported to analytics
+     */
+    private boolean                   mShouldReportScreenHit;
+
+    /**
      * {@link AddUserInfoDialogFragment} for
      */
     private AddUserInfoDialogFragment mAddUserInfoDialogFragment;
@@ -101,6 +107,12 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         mRequestCounter = new AtomicInteger(0);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(Keys.LAST_SCREEN_TIME, Utils.getCurrentEpochTime());
+    }
+
     /**
      * Call this method in the onCreateView() of any subclasses
      * 
@@ -111,23 +123,41 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     protected void init(final ViewGroup container,
                     final Bundle savedInstanceState) {
         mContainerViewId = container.getId();
+        long lastScreenTime = 0l;
         if (savedInstanceState != null) {
             mAddUserInfoDialogFragment = (AddUserInfoDialogFragment) getFragmentManager()
                             .findFragmentByTag(FragmentTags.DIALOG_ADD_NAME);
+            lastScreenTime = savedInstanceState.getLong(Keys.LAST_SCREEN_TIME);
+        }
+
+        if (Utils.shouldReportScreenHit(lastScreenTime)) {
+            mShouldReportScreenHit = true;
+        } else {
+            mShouldReportScreenHit = false;
         }
     }
-    
+
     @Override
     public void onResume() {
         super.onResume();
-        final String analyticsScreenName = getAnalyticsScreenName();
-
-        if (!TextUtils.isEmpty(analyticsScreenName)) {
-            GoogleAnalyticsManager.getInstance()
-                            .sendScreenHit(getAnalyticsScreenName());
-        }
+        checkAndReportScreenHit();
     }
-    
+
+    /**
+     * Reports a screen hit
+     */
+    private void checkAndReportScreenHit() {
+        if (mShouldReportScreenHit) {
+            final String analyticsScreenName = getAnalyticsScreenName();
+
+            if (!TextUtils.isEmpty(analyticsScreenName)) {
+                GoogleAnalyticsManager.getInstance()
+                                .sendScreenHit(getAnalyticsScreenName());
+            }
+        }
+
+    }
+
     /**
      * Gets the screen name for reporting to google analytics. Send empty
      * string, or <code>null</code> if you don't want the Fragment tracked
@@ -223,7 +253,8 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      *            internet connection, 0 for a default error message
      */
     protected void addRequestToQueue(final Request<?> request,
-                    final boolean showErrorOnNoNetwork, final int errorMsgResId,boolean addHeader) {
+                    final boolean showErrorOnNoNetwork,
+                    final int errorMsgResId, boolean addHeader) {
 
         if (mIsAttached) {
             request.setTag(getVolleyTag());
@@ -334,7 +365,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     public final void setActionBarTitle(final int titleResId) {
         setActionBarTitle(getString(titleResId));
     }
-    
+
     /**
      * Sets the Action bar title, using the desired {@link Typeface} loaded from
      * {@link TypefaceCache}
@@ -342,12 +373,16 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      * @param titleResId The title string resource Id to set for the Action Bar
      */
     public final int getActionBarHeight() {
-    	  int actionBarHeight = 0;
-	        TypedValue tv = new TypedValue();
-	        if (getActivity().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-	            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
-	        }
-    	  return actionBarHeight;
+        int actionBarHeight = 0;
+        TypedValue tv = new TypedValue();
+        if (getActivity()
+                        .getTheme()
+                        .resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            actionBarHeight = TypedValue
+                            .complexToDimensionPixelSize(tv.data, getResources()
+                                            .getDisplayMetrics());
+        }
+        return actionBarHeight;
     }
 
     /**
@@ -411,7 +446,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
 
     @Override
     public void onPostExecute(final IBlRequestContract request) {
-        assert(mRequestCounter != null);
+        assert (mRequestCounter != null);
         if (mIsAttached && (mRequestCounter.decrementAndGet() == 0)) {
             getActivity().setProgressBarIndeterminateVisibility(false);
         }
@@ -508,7 +543,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
                                             .toString());
 
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
-            addRequestToQueue(updateUserProfileRequest, true, 0,true);
+            addRequestToQueue(updateUserProfileRequest, true, 0, true);
 
         } catch (final JSONException e) {
             e.printStackTrace();

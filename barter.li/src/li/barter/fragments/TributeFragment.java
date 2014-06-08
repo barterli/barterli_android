@@ -57,20 +57,8 @@ public class TributeFragment extends AbstractBarterLiFragment {
         mTributeTextView = (TextView) view.findViewById(R.id.tribute_text);
         mTributeImageView = (ImageView) view.findViewById(R.id.tribute_image);
 
-        // Tribute image and text we are not loading from the server for the alpha version
-
-        // Make a call to server
-
-        //        try {
-        //
-        //            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-        //                            + ApiEndpoints.TRIBUTE, null, mVolleyCallbacks);
-        //            request.setRequestId(RequestId.TRIBUTE);
-        //            addRequestToQueue(request, true, 0);
-        //        } catch (final Exception e) {
-        //            // Should never happen
-        //            Logger.e(TAG, e, "Error building report bug json");
-        //        }
+        Picasso.with(getActivity()).load(R.raw.aaron_swartz_profile)
+                        .centerCrop().fit().into(mTributeImageView);
 
         return view;
     }

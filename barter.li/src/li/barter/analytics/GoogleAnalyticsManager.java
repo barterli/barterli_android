@@ -36,7 +36,7 @@ public class GoogleAnalyticsManager {
 
     private static final String           TAG             = "GoogleAnalyticsManager";
     private static final Object           LOCK            = new Object();
-    private static final int              SESSION_TIMEOUT = 300;
+    public static final int               SESSION_TIMEOUT = 300; //seconds
 
     private static GoogleAnalyticsManager sInstance;
 

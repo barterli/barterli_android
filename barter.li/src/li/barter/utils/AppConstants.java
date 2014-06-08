@@ -311,6 +311,13 @@ public class AppConstants {
         public static final String RELOAD                     = "reload";
         public static final String BOOK_POSITION              = "book_position";
         public static final String BOOK_COUNT                 = "book_count";
+        
+        /**
+         * The time at which this screen was last seen. Used for google analytics to
+         * detect whether to report a screen hit or not on fragment
+         * recreation(orientation change/destroyed in background) etc
+         */
+        public static final String LAST_SCREEN_TIME           = "last_screen_time";
     }
 
     /**
