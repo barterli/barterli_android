@@ -323,7 +323,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                             .getString(HttpConstants.REFERRAL_COUNT));
             
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_profile_image, userInfo
+                            .set(getActivity(), R.string.pref_share_token, userInfo
                                             .getString(HttpConstants.SHARE_TOKEN));
 
             BarterLiApplication.startChatService();

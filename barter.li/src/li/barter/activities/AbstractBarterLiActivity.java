@@ -376,7 +376,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                                 .set(ParamKeys.TYPE, ParamValues.SHARE));
                 final String referralId = SharedPreferenceHelper
                                 .getString(this, R.string.pref_share_token);
-                String appShareUrl = getString(R.string.app_share_message);
+                String appShareUrl = getString(R.string.app_share_message).concat(AppConstants.PLAY_STORE_LINK);
 
                 if (!TextUtils.isEmpty(referralId)) {
                     appShareUrl = appShareUrl
