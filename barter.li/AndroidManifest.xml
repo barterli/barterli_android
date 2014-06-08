@@ -60,7 +60,7 @@
         
         <!-- Meta data for crashlytics -->
         <meta-data android:name="com.crashlytics.ApiKey" 
-            android:value="d4620f040895b9b1b788db16ef207907654eba7e"/>
+            android:value="@string/crashalytics_id"/>
 
         <!-- Activity declarations -->
         <activity
