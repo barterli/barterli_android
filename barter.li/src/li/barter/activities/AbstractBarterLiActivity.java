@@ -18,6 +18,7 @@ package li.barter.activities;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 
@@ -60,6 +61,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
 import li.barter.adapters.HomeNavDrawerAdapter;
+import li.barter.analytics.AnalyticsConstants.Actions;
+import li.barter.analytics.AnalyticsConstants.Categories;
+import li.barter.analytics.AnalyticsConstants.ParamKeys;
+import li.barter.analytics.AnalyticsConstants.ParamValues;
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.chat.ChatService;
 import li.barter.data.DBInterface;
@@ -107,8 +112,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * @author Vinay S Shenoy Enum to handle the different types of Alerts that
      *         can be shown
      */
-    
-    
+
     public enum AlertStyle {
         ALERT,
         INFO,
@@ -277,6 +281,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
         //My Profile
             case 0: {
 
+                GoogleAnalyticsManager
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                                .set(ParamKeys.TYPE, ParamValues.PROFILE));
                 /*
                  * If the master fragment is already the login fragment, don't
                  * load it again. TODO Check for Profile Fragment also
@@ -316,6 +324,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             //My Chats
             case 1: {
 
+                GoogleAnalyticsManager
+                .getInstance()
+                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                .set(ParamKeys.TYPE, ParamValues.CHATS));
                 if ((masterFragment != null)
                                 && (masterFragment instanceof ChatsFragment)) {
                     return null;
@@ -336,6 +348,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Report Bug
             case 2: {
+                GoogleAnalyticsManager
+                .getInstance()
+                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                .set(ParamKeys.TYPE, ParamValues.REPORT_BUG));
                 if ((masterFragment != null)
                                 && (masterFragment instanceof ReportBugFragment)) {
                     return null;
@@ -354,7 +370,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Share
             case 3: {
-
+                GoogleAnalyticsManager
+                .getInstance()
+                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                .set(ParamKeys.TYPE, ParamValues.SHARE));
                 final String referralId = SharedPreferenceHelper
                                 .getString(this, R.string.pref_share_token);
                 String appShareUrl = getString(R.string.app_share_message);
@@ -380,6 +399,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             }
             //About Us
             case 4: {
+                GoogleAnalyticsManager
+                .getInstance()
+                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                .set(ParamKeys.TYPE, ParamValues.ABOUT_US));
                 if ((masterFragment != null)
                                 && (masterFragment instanceof TeamFragment)) {
                     return null;
@@ -399,7 +422,10 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
             //Logout
             case 5: {
-
+                GoogleAnalyticsManager
+                .getInstance()
+                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                .set(ParamKeys.TYPE, ParamValues.LOGOUT));
                 runnable = new Runnable() {
 
                     @Override

@@ -35,6 +35,7 @@ public class AnalyticsConstants {
         public static final String CHAT_INITIALIZATION = "CHAT_INITIALIZATION";
         public static final String ADD_BOOK            = "ADD_BOOK";
         public static final String BOOK_PROFILE_CLICK  = "BOOK_PROFILE_CLICK";
+        public static final String NAVIGATION_OPTION   = "NAVIGATION_OPTION";
     }
 
     public static interface ParamKeys {
@@ -43,14 +44,19 @@ public class AnalyticsConstants {
     }
 
     public static interface ParamValues {
-        public static final String FACEBOOK = "facebook";
-        public static final String GOOGLE   = "google";
-        public static final String EMAIL    = "email";
-        public static final String PROFILE  = "profile";
-        public static final String BOOK     = "book";
-        public static final String MANUAL   = "manual";
-        public static final String SCAN     = "scan";
-        public static final String YES      = "yes";
-        public static final String NO       = "no";
+        public static final String FACEBOOK   = "facebook";
+        public static final String GOOGLE     = "google";
+        public static final String EMAIL      = "email";
+        public static final String PROFILE    = "profile";
+        public static final String BOOK       = "book";
+        public static final String MANUAL     = "manual";
+        public static final String SCAN       = "scan";
+        public static final String YES        = "yes";
+        public static final String NO         = "no";
+        public static final String CHATS      = "chats";
+        public static final String REPORT_BUG = "report";
+        public static final String SHARE      = "share";
+        public static final String ABOUT_US   = "about_us";
+        public static final String LOGOUT     = "logout";
     }
 }
