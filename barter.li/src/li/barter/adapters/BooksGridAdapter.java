@@ -72,7 +72,7 @@ public class BooksGridAdapter extends CursorAdapter {
 
         //if book image not present
         if (bookImageUrl == null
-                        || bookImageUrl.contains(AppConstants.FALSE)) {
+                        || bookImageUrl.contains(context.getString(R.string.falseflag))) {
         	
         	((TextView) view.getTag(R.id.text_book_name)).setVisibility(View.VISIBLE);
         	((TextView) view.getTag(R.id.text_book_author)).setVisibility(View.VISIBLE);
