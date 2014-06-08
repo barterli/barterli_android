@@ -71,6 +71,31 @@
         android:textSize="@dimen/text_small"
         app:fontStyle="regular" />
 
-    
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/label_referral_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_current_location"
+        android:layout_marginTop="@dimen/margin_minimum"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/label_referral_count"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="condensed_regular"
+        android:visibility="gone" />
+
+    <li.barter.widgets.TypefacedTextView
+        android:id="@+id/text_referral_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/label_referral_count"
+        android:layout_marginTop="@dimen/margin_xxx_small"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_small"
+        app:fontStyle="regular"
+        android:visibility="gone" />
 
 </RelativeLayout>

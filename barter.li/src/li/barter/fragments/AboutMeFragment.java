@@ -25,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import li.barter.R;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -38,6 +37,7 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 
 /**
  * @author Anshul Kamboj
@@ -51,13 +51,16 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
 
     private TextView            mAboutMeTextView;
     private TextView            mPreferredLocationTextView;
+    private TextView            mLabelReferralCount;
+    private TextView            mReferralCountTextView;
+    
     private final String        mUserSelection = DatabaseColumns.USER_ID
                                                                + SQLConstants.EQUALS_ARG;
     private String              mLocationFormat;
 
     private String              mUserId;
 
-    private boolean             mLoadedIndividually;
+    private boolean             mLoadedIndividually,mLoggedInUser;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -78,6 +81,7 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
         } else {
             final Bundle extras = getArguments();
             if (extras != null && extras.containsKey(Keys.USER_ID)) {
+            	
                 setUserId(extras.getString(Keys.USER_ID));
             }
         }
@@ -86,6 +90,9 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
         mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
         mPreferredLocationTextView = (TextView) view
                         .findViewById(R.id.text_current_location);
+        mReferralCountTextView=(TextView)view.findViewById(R.id.text_referral_count);
+        mLabelReferralCount=(TextView)view.findViewById(R.id.label_referral_count);
+        
 
         setActionBarDrawerToggleEnabled(false);
 
@@ -179,6 +186,14 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
                                                 .getColumnIndex(DatabaseColumns.NAME)), cursor
                                                 .getString(cursor
                                                                 .getColumnIndex(DatabaseColumns.ADDRESS))));
+                if(mLoggedInUser)
+                {
+                	mLabelReferralCount.setVisibility(View.VISIBLE);
+                	mReferralCountTextView.setVisibility(View.VISIBLE);
+                	
+                	mReferralCountTextView.setText(SharedPreferenceHelper.getString(getActivity(),  R.string.pref_referrer_count));
+                }
+                
             }
 
         }
@@ -197,6 +212,14 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
      */
     public void setUserId(String userId) {
         mUserId = userId;
+        if(mUserId==UserInfo.INSTANCE.getId())
+        {
+        	mLoggedInUser=true;
+        }
+        else
+        {
+        	mLoggedInUser=false;
+        }
         loadUserDetails();
     }
 

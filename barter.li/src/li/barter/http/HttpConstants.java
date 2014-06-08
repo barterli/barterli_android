@@ -263,6 +263,7 @@ public class HttpConstants {
     public static final String DISTANCE                    = "distance";
     public static final String REFERRER                    = "referrer";
     public static final String SHARE_TOKEN                 = "share_token";
+    public static final String REFERRAL_COUNT              = "referral_count";
     public static final String REFERRAL_ID                 = "referral_id";
     public static final String DEVICE_ID                   = "device_id";
 

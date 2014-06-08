@@ -355,6 +355,11 @@ public class HttpResponseParser {
                         .readString(userObject, HttpConstants.LAST_NAME, false, false));
         responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
                         .readString(userObject, HttpConstants.IMAGE_URL, false, false));
+        responseBundle.putString(HttpConstants.REFERRAL_COUNT, JsonUtils
+                .readString(userObject, HttpConstants.REFERRAL_COUNT, false, false));
+        
+        
+        
 
         final JSONArray booksArray = JsonUtils
                         .readJSONArray(userObject, HttpConstants.BOOKS, true, true);
@@ -465,7 +470,9 @@ public class HttpResponseParser {
                         .readString(userObject, HttpConstants.IMAGE_URL, false, false));
         responseBundle.putString(HttpConstants.SHARE_TOKEN, JsonUtils
                 .readString(userObject, HttpConstants.SHARE_TOKEN, true, true));
-
+        responseBundle.putString(HttpConstants.REFERRAL_COUNT, JsonUtils
+                .readString(userObject, HttpConstants.REFERRAL_COUNT, true, true));
+        
         final JSONArray booksArray = JsonUtils
                         .readJSONArray(userObject, HttpConstants.BOOKS, true, true);
 
