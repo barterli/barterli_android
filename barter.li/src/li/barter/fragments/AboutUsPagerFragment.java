@@ -30,6 +30,7 @@ import com.viewpagerindicator.TitlePageIndicator;
  *         {@link TributeFragment} and {@link BarterLiDescriptionFragment}
  */
 
+
 public class AboutUsPagerFragment extends AbstractBarterLiFragment implements
                 OnPageChangeListener {
 

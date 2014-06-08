@@ -107,6 +107,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * @author Vinay S Shenoy Enum to handle the different types of Alerts that
      *         can be shown
      */
+    
+    
     public enum AlertStyle {
         ALERT,
         INFO,
