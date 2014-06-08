@@ -77,7 +77,11 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        if(AppConstants.CRASHLYTICS_INITIALISE)
+        {
         Crashlytics.start(this);
+        }
 		overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
         setContentView(R.layout.activity_home);
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
