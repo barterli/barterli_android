@@ -19,6 +19,7 @@ package li.barter;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 
 import android.app.Application;
 import android.content.Context;
@@ -28,7 +29,6 @@ import android.view.ViewConfiguration;
 
 import java.lang.reflect.Field;
 
-import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.chat.ChatService;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants;
@@ -71,6 +71,10 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
     public void onCreate() {
 
         sStaticContext = getApplicationContext();
+        if(AppConstants.ENABLE_CRASHLYTICS) {
+            Crashlytics.start(this);
+        }
+       
         overrideHardwareMenuButton();
         VolleyLog.sDebug = AppConstants.DEBUG;
         
