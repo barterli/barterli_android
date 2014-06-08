@@ -49,6 +49,7 @@ import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.analytics.AnalyticsConstants.Actions;
 import li.barter.analytics.AnalyticsConstants.Categories;
 import li.barter.analytics.AnalyticsConstants.ParamValues;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -422,7 +423,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
     @Override
     protected String getAnalyticsScreenName() {
-        return "Login";
+        return Screens.LOGIN;
     }
 
 }

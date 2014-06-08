@@ -33,6 +33,7 @@ import android.widget.RadioButton;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -191,7 +192,7 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
     @Override
     protected String getAnalyticsScreenName() {
         
-        return "Report Bug";
+        return Screens.REPORT_BUG;
     }
 
 }

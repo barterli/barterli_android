@@ -34,6 +34,7 @@ import li.barter.R;
 import li.barter.adapters.BooksGridAdapter;
 import li.barter.analytics.AnalyticsConstants.Actions;
 import li.barter.analytics.AnalyticsConstants.Categories;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -213,7 +214,7 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
     @Override
     protected String getAnalyticsScreenName() {
         if(mLoadedIndividually) {
-            return mUserId.equals(UserInfo.INSTANCE.getId()) ? "My Books" : "Other User Books";
+            return mUserId.equals(UserInfo.INSTANCE.getId()) ? Screens.CURRENT_USER_BOOKS : Screens.OTHER_USER_BOOKS;
         } else {
             return "";
         }

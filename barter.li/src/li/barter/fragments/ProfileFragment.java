@@ -47,6 +47,7 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.adapters.ProfileFragmentsAdapter;
 import li.barter.analytics.GoogleAnalyticsManager;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.chat.ChatService;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -497,13 +498,13 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         if (position == 0) {
             GoogleAnalyticsManager.getInstance()
                             .sendScreenHit(mUserId.equals(UserInfo.INSTANCE
-                                            .getId()) ? "About current user"
-                                            : "About other user");
+                                            .getId()) ? Screens.ABOUT_CURRENT_USER
+                                            : Screens.ABOUT_OTHER_USER);
         } else {
             GoogleAnalyticsManager.getInstance()
                             .sendScreenHit(mUserId.equals(UserInfo.INSTANCE
-                                            .getId()) ? "My Books"
-                                            : "Other User Books");
+                                            .getId()) ? Screens.CURRENT_USER_BOOKS
+                                            : Screens.OTHER_USER_BOOKS);
         }
 
     }
@@ -512,7 +513,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     protected String getAnalyticsScreenName() {
 
         if (mLoadedIndividually) {
-            return "My Profile";
+            return Screens.CURRENT_USER_PROFILE;
         } else {
             return "";
         }

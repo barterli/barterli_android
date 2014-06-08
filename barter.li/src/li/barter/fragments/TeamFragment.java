@@ -23,11 +23,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import li.barter.R;
 import li.barter.adapters.TeamAdapter;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -84,7 +84,7 @@ public class TeamFragment extends AbstractBarterLiFragment {
     @Override
     protected String getAnalyticsScreenName() {
         if(mLoadedIndividually) {
-            return "Team";
+            return Screens.TEAM;
         } else {
             return "";
         }

@@ -25,7 +25,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import li.barter.R;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -227,8 +229,8 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
     protected String getAnalyticsScreenName() {
 
         if (mLoadedIndividually) {
-            return mUserId.equals(UserInfo.INSTANCE.getId()) ? "About current user"
-                            : "About other user";
+            return mUserId.equals(UserInfo.INSTANCE.getId()) ? Screens.ABOUT_CURRENT_USER
+                            : Screens.ABOUT_OTHER_USER;
         } else {
             /*
              * We don't need to track this screen since it is loaded within a

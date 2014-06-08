@@ -46,6 +46,7 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -904,9 +905,9 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 	protected String getAnalyticsScreenName() {
 	    
 	    if(mEditMode) {
-	        return "Edit Book";
+	        return Screens.EDIT_BOOK;
 	    } else {
-	        return "Add Book";
+	        return Screens.ADD_BOOK;
 	    }
 	}
 

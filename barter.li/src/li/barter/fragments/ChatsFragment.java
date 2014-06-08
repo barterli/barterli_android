@@ -37,6 +37,7 @@ import android.widget.ListView;
 import li.barter.R;
 import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatsAdapter;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.chat.ChatService;
 import li.barter.chat.ChatService.ChatServiceBinder;
 import li.barter.data.DatabaseColumns;
@@ -213,6 +214,6 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
 
     @Override
     protected String getAnalyticsScreenName() {
-        return "Chats";
+        return Screens.CHATS;
     }
 }

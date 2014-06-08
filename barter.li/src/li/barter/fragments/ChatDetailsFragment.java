@@ -24,6 +24,7 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatDetailAdapter;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.chat.ChatAcknowledge;
 import li.barter.chat.ChatService;
 import li.barter.chat.ChatService.ChatServiceBinder;
@@ -419,6 +420,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
     @Override
     protected String getAnalyticsScreenName() {
-        return "Chat Details";
+        return Screens.CHAT_DETAILS;
     }
 }

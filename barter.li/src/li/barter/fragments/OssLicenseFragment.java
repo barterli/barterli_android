@@ -24,6 +24,7 @@ import android.widget.ListView;
 
 import li.barter.R;
 import li.barter.adapters.OssLicensesAdapter;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 
@@ -88,7 +89,7 @@ public class OssLicenseFragment extends AbstractBarterLiFragment {
     @Override
     protected String getAnalyticsScreenName() {
         if(mLoadedIndividually) {
-            return "Open Source";
+            return Screens.OPEN_SOURCE;
         } else {
             return "";
         }

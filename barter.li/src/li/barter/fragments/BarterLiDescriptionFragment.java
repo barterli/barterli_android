@@ -2,6 +2,7 @@
 package li.barter.fragments;
 
 import li.barter.R;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 
@@ -53,7 +54,7 @@ public class BarterLiDescriptionFragment extends AbstractBarterLiFragment {
     protected String getAnalyticsScreenName() {
 
         if (mLoadedIndividually) {
-            return "barter.li Description";
+            return Screens.BARTERLI_DESCRIPTION;
         } else {
             /*
              * We don't need to track this screen since it is loaded within a

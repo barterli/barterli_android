@@ -41,6 +41,7 @@ import java.util.Map;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.adapters.SelectLocationAdapter;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.fragments.dialogs.AlertDialogFragment;
 import li.barter.http.BlRequest;
 import li.barter.http.FoursquareCategoryBuilder;
@@ -295,7 +296,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
     @Override
     protected String getAnalyticsScreenName() {
-        return "Select Preferred Location";
+        return Screens.SELECT_PREFERRED_LOCATION;
     }
 
 }

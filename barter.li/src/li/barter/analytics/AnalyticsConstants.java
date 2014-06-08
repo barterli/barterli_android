@@ -23,6 +23,31 @@ public class AnalyticsConstants {
 
     public static interface Screens {
 
+        public static final String SCAN_ISBN                 = "Scan ISBN";
+        public static final String ABOUT_CURRENT_USER        = "About Current User";
+        public static final String ABOUT_OTHER_USER          = "About Other User";
+        public static final String ABOUT_US_PAGER            = "About Us Pager";
+        public static final String EDIT_BOOK                 = "Edit Book";
+        public static final String ADD_BOOK                  = "Add Book";
+        public static final String BARTERLI_DESCRIPTION      = "barter.li Description";
+        public static final String BOOK_DETAIL               = "Book Detail";
+        public static final String BOOKS_AROUND_ME           = "Books Around Me";
+        public static final String BOOKS_PAGER               = "Books Pager";
+        public static final String CHAT_DETAILS              = "Chat Details";
+        public static final String CHATS                     = "Chats";
+        public static final String COLLABORATE               = "Collaborate";
+        public static final String EDIT_PROFILE              = "Edit Profile";
+        public static final String LOGIN                     = "Login";
+        public static final String CURRENT_USER_BOOKS        = "Current User Books";
+        public static final String OTHER_USER_BOOKS          = "Other User Books";
+        public static final String OPEN_SOURCE               = "Open Source";
+        public static final String CURRENT_USER_PROFILE      = "Current User Profile";
+        public static final String OTHER_USER_PROFILE        = "Other User Profile";
+        public static final String REPORT_BUG                = "Report Bug";
+        public static final String SELECT_PREFERRED_LOCATION = "Select Preferred Location";
+        public static final String TEAM                      = "Team";
+        public static final String TRIBUTE                   = "Tribute";
+
     }
 
     public static interface Categories {

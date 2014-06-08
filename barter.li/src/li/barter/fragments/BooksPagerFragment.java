@@ -37,6 +37,7 @@ import li.barter.analytics.AnalyticsConstants.Actions;
 import li.barter.analytics.AnalyticsConstants.Categories;
 import li.barter.analytics.AnalyticsConstants.ParamKeys;
 import li.barter.analytics.AnalyticsConstants.ParamValues;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLiteLoader;
@@ -390,7 +391,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
     @Override
     protected String getAnalyticsScreenName() {
-        return "Books Pager";
+        return Screens.BOOKS_PAGER;
     }
 
     /**

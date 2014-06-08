@@ -30,6 +30,7 @@ import android.widget.RadioGroup;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 
@@ -194,7 +195,7 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     @Override
     protected String getAnalyticsScreenName() {
         if(mLoadedIndividually) {
-            return "Collaborate";
+            return Screens.COLLABORATE;
         } else {
             return "";
         }

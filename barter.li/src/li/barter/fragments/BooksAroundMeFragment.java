@@ -57,6 +57,7 @@ import li.barter.analytics.AnalyticsConstants.Actions;
 import li.barter.analytics.AnalyticsConstants.Categories;
 import li.barter.analytics.AnalyticsConstants.ParamKeys;
 import li.barter.analytics.AnalyticsConstants.ParamValues;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -715,7 +716,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     protected String getAnalyticsScreenName() {
 
-        return "Books Around Me";
+        return Screens.BOOKS_AROUND_ME;
     }
 
 }

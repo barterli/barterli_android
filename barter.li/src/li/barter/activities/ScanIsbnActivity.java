@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import li.barter.R;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.Keys;
@@ -297,7 +298,7 @@ public class ScanIsbnActivity extends AbstractBarterLiActivity implements
 
     @Override
     protected String getAnalyticsScreenName() {
-        return "Scan ISBN";
+        return Screens.SCAN_ISBN;
     }
 
 }

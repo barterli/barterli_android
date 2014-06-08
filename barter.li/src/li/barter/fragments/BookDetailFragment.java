@@ -35,6 +35,7 @@ import android.widget.TextView;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -344,7 +345,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     @Override
     protected String getAnalyticsScreenName() {
         if(mLoadedIndividually) {
-            return "Book Detail";
+            return Screens.BOOK_DETAIL;
         } else {
             return "";
         }

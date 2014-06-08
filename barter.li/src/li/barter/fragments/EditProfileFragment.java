@@ -51,6 +51,7 @@ import java.io.File;
 import java.util.Locale;
 
 import li.barter.R;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -514,7 +515,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     @Override
     protected String getAnalyticsScreenName() {
-        return "Edit Profile";
+        return Screens.EDIT_PROFILE;
     }
 
 }

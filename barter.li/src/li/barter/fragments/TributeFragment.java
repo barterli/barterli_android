@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import li.barter.R;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
@@ -66,7 +67,7 @@ public class TributeFragment extends AbstractBarterLiFragment {
     @Override
     protected String getAnalyticsScreenName() {
         if (mLoadedIndividually) {
-            return "Tribute";
+            return Screens.TRIBUTE;
         } else {
             return "";
         }

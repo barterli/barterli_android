@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import li.barter.R;
+import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.fragments.BooksPagerFragment.BookPageAdapter;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -170,7 +172,7 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment implements
     @Override
     protected String getAnalyticsScreenName() {
 
-        return "About Us Pager";
+        return Screens.ABOUT_US_PAGER;
     }
 
     @Override
@@ -189,27 +191,27 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment implements
 
         switch (position) {
             case 0: {
-                GoogleAnalyticsManager.getInstance().sendScreenHit("Tribute");
+                GoogleAnalyticsManager.getInstance().sendScreenHit(Screens.TRIBUTE);
                 break;
             }
 
             case 1: {
-                GoogleAnalyticsManager.getInstance().sendScreenHit("barter.li Description");
+                GoogleAnalyticsManager.getInstance().sendScreenHit(Screens.BARTERLI_DESCRIPTION);
                 break;
             }
 
             case 2: {
-                GoogleAnalyticsManager.getInstance().sendScreenHit("Team");
+                GoogleAnalyticsManager.getInstance().sendScreenHit(Screens.TEAM);
                 break;
             }
 
             case 3: {
-                GoogleAnalyticsManager.getInstance().sendScreenHit("Collaborate");
+                GoogleAnalyticsManager.getInstance().sendScreenHit(Screens.COLLABORATE);
                 break;
             }
 
             case 4: {
-                GoogleAnalyticsManager.getInstance().sendScreenHit("Open Source");
+                GoogleAnalyticsManager.getInstance().sendScreenHit(Screens.OPEN_SOURCE);
                 break;
             }
 
