@@ -34,10 +34,12 @@ public class AnalyticsConstants {
         public static final String SIGN_IN_ATTEMPT     = "SIGN_IN_ATTEMPT";
         public static final String CHAT_INITIALIZATION = "CHAT_INITIALIZATION";
         public static final String ADD_BOOK            = "ADD_BOOK";
+        public static final String BOOK_PROFILE_CLICK  = "BOOK_PROFILE_CLICK";
     }
 
     public static interface ParamKeys {
-        public static final String TYPE = "type";
+        public static final String TYPE      = "type";
+        public static final String LOGGED_IN = "logged_in";
     }
 
     public static interface ParamValues {
@@ -48,5 +50,7 @@ public class AnalyticsConstants {
         public static final String BOOK     = "book";
         public static final String MANUAL   = "manual";
         public static final String SCAN     = "scan";
+        public static final String YES      = "yes";
+        public static final String NO       = "no";
     }
 }

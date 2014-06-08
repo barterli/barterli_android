@@ -17,16 +17,20 @@
 package li.barter.analytics;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.HitBuilders.EventBuilder;
+import com.google.android.gms.analytics.HitBuilders.ScreenViewBuilder;
 import com.google.android.gms.analytics.Logger;
 import com.google.android.gms.analytics.Tracker;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import li.barter.BarterLiApplication;
 import li.barter.R;
+import li.barter.analytics.AnalyticsConstants.ParamKeys;
+import li.barter.analytics.AnalyticsConstants.ParamValues;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.UserInfo;
 
 /**
  * Class for managing Google Analytics
@@ -37,7 +41,7 @@ public class GoogleAnalyticsManager {
 
     private static final String           TAG             = "GoogleAnalyticsManager";
     private static final Object           LOCK            = new Object();
-    public static final int               SESSION_TIMEOUT = 300; //seconds
+    public static final int               SESSION_TIMEOUT = 300;                     //seconds
 
     private static GoogleAnalyticsManager sInstance;
 
@@ -95,14 +99,22 @@ public class GoogleAnalyticsManager {
     public void sendScreenHit(String screenName) {
 
         mApplicationTracker.setScreenName(screenName);
-        mApplicationTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        final ScreenViewBuilder screenViewBuilder = new ScreenViewBuilder();
+        screenViewBuilder.set(ParamKeys.LOGGED_IN, TextUtils
+                        .isEmpty(UserInfo.INSTANCE.getId()) ? ParamValues.NO
+                        : ParamValues.YES);
+        mApplicationTracker.send(screenViewBuilder.build());
     }
-    
+
     /**
      * Inform an event to Google Analytics
+     * 
      * @param builder
      */
     public void sendEvent(EventBuilder builder) {
+
+        builder.set(ParamKeys.LOGGED_IN, TextUtils.isEmpty(UserInfo.INSTANCE
+                        .getId()) ? ParamValues.NO : ParamValues.YES);
         mApplicationTracker.send(builder.build());
     }
 }

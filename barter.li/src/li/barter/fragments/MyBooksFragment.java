@@ -15,6 +15,8 @@
 
 package li.barter.fragments;
 
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
+
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,6 +32,9 @@ import android.widget.GridView;
 
 import li.barter.R;
 import li.barter.adapters.BooksGridAdapter;
+import li.barter.analytics.AnalyticsConstants.Actions;
+import li.barter.analytics.AnalyticsConstants.Categories;
+import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
@@ -164,6 +169,10 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
                     final int position, final long id) {
 
         if (parent.getId() == R.id.list_my_books) {
+            
+            if(!mUserId.equals(UserInfo.INSTANCE.getId())) {
+                GoogleAnalyticsManager.getInstance().sendEvent(new EventBuilder(Categories.USAGE, Actions.BOOK_PROFILE_CLICK));
+            }
             final Cursor cursor = (Cursor) mBooksAroundMeAdapter
                             .getItem(position);
 
