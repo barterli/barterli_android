@@ -17,6 +17,7 @@
 package li.barter.fragments;
 
 import com.android.volley.Request.Method;
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
@@ -52,6 +53,11 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksGridAdapter;
+import li.barter.analytics.AnalyticsConstants.Actions;
+import li.barter.analytics.AnalyticsConstants.Categories;
+import li.barter.analytics.AnalyticsConstants.ParamKeys;
+import li.barter.analytics.AnalyticsConstants.ParamValues;
+import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -88,66 +94,66 @@ import li.barter.utils.Utils;
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, AsyncDbQueryCallback,
                 OnItemClickListener, LoadMoreCallbacks, NetworkCallbacks,
-                OnRefreshListener,OnCloseListener,OnActionExpandListener {
+                OnRefreshListener, OnCloseListener, OnActionExpandListener {
 
-    private static final String           TAG                     = "BooksAroundMeFragment";
+    private static final String          TAG                     = "BooksAroundMeFragment";
 
     /**
      * Helper class for performing network search queries from Action Bar easily
      */
-    private SearchViewNetworkQueryHelper  mSearchNetworkQueryHelper;
+    private SearchViewNetworkQueryHelper mSearchNetworkQueryHelper;
 
     /**
      * GridView into which the book content will be placed
      */
-    private GridView                      mBooksAroundMeGridView;
+    private GridView                     mBooksAroundMeGridView;
 
     /**
      * {@link BooksGridAdapter} instance for the Books
      */
-    private BooksGridAdapter          mBooksAroundMeAdapter;
+    private BooksGridAdapter             mBooksAroundMeAdapter;
 
     /**
      * Current page used for load more
      */
-    private int                           mCurPage;
+    private int                          mCurPage;
 
     /**
      * Flag to Display Crouton Message on empty book search result
      */
-    private boolean                       mEmptySearchCroutonFlag = true;
+    private boolean                      mEmptySearchCroutonFlag = true;
 
     /**
      * Used to remember the last location so that we can avoid fetching the
      * books again if the last fetched locations, and current fetched locations
      * are close by
      */
-    private Location                      mLastFetchedLocation;
+    private Location                     mLastFetchedLocation;
 
     /**
      * Flag to indicate whether a load operation is in progress
      */
-    private boolean                       mIsLoading;
+    private boolean                      mIsLoading;
 
     /**
      * Flag to indicate whether all items have been fetched
      */
-    private boolean                       mHasLoadedAllItems;
+    private boolean                      mHasLoadedAllItems;
 
     /**
      * Reference to the Dialog Fragment for selecting the book add options
      */
-    private SingleChoiceDialogFragment    mAddBookDialogFragment;
+    private SingleChoiceDialogFragment   mAddBookDialogFragment;
 
     /**
      * Action Bar SearchView
      */
-    private SearchView                    mSearchView;
+    private SearchView                   mSearchView;
 
     /**
      * {@link PullToRefreshLayout} reference
      */
-    private PullToRefreshLayout           mPullToRefreshLayout;
+    private PullToRefreshLayout          mPullToRefreshLayout;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -649,9 +655,17 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             if (which == 0) { // scan book
                 startActivityForResult(new Intent(getActivity(), ScanIsbnActivity.class), RequestCodes.SCAN_ISBN);
+                GoogleAnalyticsManager
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.USAGE, Actions.ADD_BOOK)
+                                                .set(ParamKeys.TYPE, ParamValues.SCAN));
 
             } else if (which == 1) { // add book manually
                 loadAddOrEditBookFragment(null);
+                GoogleAnalyticsManager
+                .getInstance()
+                .sendEvent(new EventBuilder(Categories.USAGE, Actions.ADD_BOOK)
+                                .set(ParamKeys.TYPE, ParamValues.MANUAL));
             }
         } else {
             super.onDialogClick(dialog, which);
@@ -680,30 +694,28 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         }
     }
 
-	@Override
-	public boolean onMenuItemActionCollapse(MenuItem item) {
-		fetchBooksAroundMe(mLastFetchedLocation);
-		return true;
-	}
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        fetchBooksAroundMe(mLastFetchedLocation);
+        return true;
+    }
 
-	@Override
-	public boolean onMenuItemActionExpand(MenuItem item) {
-		
-		return true;
-	}
+    @Override
+    public boolean onMenuItemActionExpand(MenuItem item) {
 
-	@Override
-	public boolean onClose() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	@Override
-	protected String getAnalyticsScreenName() {
-	    
-	    return "Books Around Me";
-	}
+        return true;
+    }
 
-	
+    @Override
+    public boolean onClose() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    protected String getAnalyticsScreenName() {
+
+        return "Books Around Me";
+    }
 
 }

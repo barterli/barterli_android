@@ -33,6 +33,7 @@ public class AnalyticsConstants {
     public static interface Actions {
         public static final String SIGN_IN_ATTEMPT     = "SIGN_IN_ATTEMPT";
         public static final String CHAT_INITIALIZATION = "CHAT_INITIALIZATION";
+        public static final String ADD_BOOK            = "ADD_BOOK";
     }
 
     public static interface ParamKeys {
@@ -45,5 +46,7 @@ public class AnalyticsConstants {
         public static final String EMAIL    = "email";
         public static final String PROFILE  = "profile";
         public static final String BOOK     = "book";
+        public static final String MANUAL   = "manual";
+        public static final String SCAN     = "scan";
     }
 }
