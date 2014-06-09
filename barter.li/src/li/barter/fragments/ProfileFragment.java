@@ -348,10 +348,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                     final ResponseInfo response) {
         if (requestId == RequestId.GET_USER_PROFILE) {
             if (isAttached() && mIsLoggedInUser) {
-            	final Bundle userInfo = response.responseBundle;
-            	SharedPreferenceHelper
-                .set(getActivity(), R.string.pref_referrer_count, userInfo
-                                .getString(HttpConstants.REFERRAL_COUNT));
+                final Bundle userInfo = response.responseBundle;
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_referrer_count, userInfo
+                                                .getString(HttpConstants.REFERRAL_COUNT));
                 updateViewsForUser();
             }
 
@@ -385,12 +385,16 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             if (mIsLoggedInUser) {
                 mImageUrl = UserInfo.INSTANCE.getProfilePicture();
-                
+
                 mOwnerNameTextView.setText(UserInfo.INSTANCE.getFirstName());
-                Picasso.with(getActivity())
-                                .load(mImageUrl)
-                                .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                                .centerCrop().into(mOwnerImageView.getTarget());
+
+                if (!TextUtils.isEmpty(mImageUrl)) {
+                    Picasso.with(getActivity())
+                                    .load(mImageUrl)
+                                    .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
+                                    .centerCrop()
+                                    .into(mOwnerImageView.getTarget());
+                }
 
             }
             if (cursor.moveToFirst()) {
@@ -496,12 +500,14 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
             return;
         }
         if (position == 0) {
-            GoogleAnalyticsManager.getInstance()
+            GoogleAnalyticsManager
+                            .getInstance()
                             .sendScreenHit(mUserId.equals(UserInfo.INSTANCE
                                             .getId()) ? Screens.ABOUT_CURRENT_USER
                                             : Screens.ABOUT_OTHER_USER);
         } else {
-            GoogleAnalyticsManager.getInstance()
+            GoogleAnalyticsManager
+                            .getInstance()
                             .sendScreenHit(mUserId.equals(UserInfo.INSTANCE
                                             .getId()) ? Screens.CURRENT_USER_BOOKS
                                             : Screens.OTHER_USER_BOOKS);
