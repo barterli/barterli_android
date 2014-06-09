@@ -33,3 +33,34 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-injars      bin/classes
+-outjars     bin/classes-processed.jar
+-libraryjars /home/vinaysshenoy/Dev/android-sdk-linux/platforms/android-19/android.jar
+-libraryjars libs/android-support-v4.jar
+-libraryjars libs/commons-io-1.2.jar
+-libraryjars libs/crashlytics.jar
+-libraryjars libs/picasso-2.2.0.jar
+-libraryjars libs/rabbitmq-client.jar
+
+-dontwarn android.content.Context
+-dontwarn com.google.android.gms.**
+
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep class android.app.** { *; }
+-keep class android.content.** { *; }
+-keepattributes InnerClasses
+-keepattributes **
+-keepattributes *Annotation*,EnclosingMethod
+-keep class **.R
+-keep class **.R$* {
+    <fields>;
+}
+-keep class * extends java.util.ListResourceBundle {
+    protected Object[][] getContents();
+}
+-keepattributes SourceFile,LineNumberTable
+-keep class android.support.** { *; }
