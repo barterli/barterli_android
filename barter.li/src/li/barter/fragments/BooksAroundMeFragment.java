@@ -190,7 +190,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeAdapter = new BooksGridAdapter(getActivity());
         mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
         mBooksAroundMeGridView.setOnItemClickListener(this);
-
+        mBooksAroundMeGridView.setVerticalScrollBarEnabled(false);
+        
          mEmptyView = contentView.findViewById(R.id.empty_view);
         mBooksAroundMeGridView.setEmptyView(mEmptyView);
         mEmptyView.findViewById(R.id.text_try_again).setOnClickListener(this);

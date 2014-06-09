@@ -98,9 +98,11 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setActionBarTitle(R.string.Book_Detail_fragment_title);
+        
 
         final View view = inflater
                         .inflate(R.layout.fragment_book_detail, container, false);
+        view.setVerticalScrollBarEnabled(false);
         initViews(view);
 
         getActivity().getWindow()
