@@ -59,7 +59,7 @@ import li.barter.utils.GooglePlusManager.GooglePlusAuthCallback;
  *         manages loading different fragments/options menus on Navigation items
  *         clicked
  */
-@ActivityTransition(createEnterAnimation = R.anim.slide_in_top, createExitAnimation = R.anim.zoom_out, destroyEnterAnimation = R.anim.zoom_in, destroyExitAnimation = R.anim.slide_out_bottom)
+@ActivityTransition(createEnterAnimation = R.anim.main_activity_launch, createExitAnimation = R.anim.launch_zoom_out, destroyEnterAnimation = R.anim.exit_zoom_in, destroyExitAnimation = R.anim.main_activity_exit)
 public class HomeActivity extends AbstractBarterLiActivity implements
                 LocationListener, GooglePlusAuthCallback {
 
