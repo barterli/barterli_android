@@ -34,7 +34,7 @@
     <dimen name="book_height_for_detail">160dp</dimen>
     <dimen name="book_height">155dp</dimen>
     <dimen name="book_width">105dp</dimen>
-    <dimen name="team_member_height">160dp</dimen>
+    <dimen name="team_member_height">150dp</dimen>
     <dimen name="team_member_width">140dp</dimen>
     <dimen name="book_image_height">153dp</dimen>
     <dimen name="book_image_width_for_detail">120dp</dimen>
