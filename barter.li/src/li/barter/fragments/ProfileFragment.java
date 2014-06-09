@@ -383,20 +383,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         if (loader.getId() == Loaders.USER_DETAILS) {
 
-            if (mIsLoggedInUser) {
-                mImageUrl = UserInfo.INSTANCE.getProfilePicture();
-
-                mOwnerNameTextView.setText(UserInfo.INSTANCE.getFirstName());
-
-                if (!TextUtils.isEmpty(mImageUrl)) {
-                    Picasso.with(getActivity())
-                                    .load(mImageUrl)
-                                    .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                                    .centerCrop()
-                                    .into(mOwnerImageView.getTarget());
-                }
-
-            }
             if (cursor.moveToFirst()) {
 
                 mImageUrl = cursor
@@ -418,10 +404,13 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                 //Set selected to do marquee if text length is very long
                 mOwnerBarterLocationTextView.setSelected(true);
 
-                Picasso.with(getActivity())
-                                .load(mImageUrl)
-                                .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                                .centerCrop().into(mOwnerImageView.getTarget());
+                if (!TextUtils.isEmpty(mImageUrl)) {
+                    Picasso.with(getActivity())
+                                    .load(mImageUrl)
+                                    .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
+                                    .centerCrop()
+                                    .into(mOwnerImageView.getTarget());
+                }
 
                 updateTab(mProfileFragmentsAdapter
                                 .getFragmentAtPosition(mViewPager
