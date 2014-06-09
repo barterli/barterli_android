@@ -672,6 +672,8 @@ public class HttpResponseParser {
                 .readString(locationObject, HttpConstants.STATE, false, false);
         venue.country = JsonUtils
                 .readString(locationObject, HttpConstants.COUNTRY, false, false);
+        
+        
 
     }
 

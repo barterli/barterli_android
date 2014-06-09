@@ -263,7 +263,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
      */
     private void setUserPreferredLocation(final String name,
                     final String address, final double latitude,
-                    final double longitude,final String city,final String state,final String country) {
+                    final double longitude,final String city,final String state,final String country,final String foursquareId) {
 
         final JSONObject requestBody = new JSONObject();
         try {
@@ -274,6 +274,8 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
             requestBody.put(HttpConstants.CITY, city);
             requestBody.put(HttpConstants.STATE, state);
             requestBody.put(HttpConstants.COUNTRY, country);
+            requestBody.put(HttpConstants.FOURSQUARE_ID, foursquareId);
+            
 
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody.toString(), mVolleyCallbacks);
@@ -293,7 +295,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
             final Venue venue = (Venue) mSelectLocationAdapter
                             .getItem(position);
-            setUserPreferredLocation(venue.name, venue.address, venue.latitude, venue.longitude,venue.city,venue.state,venue.country);
+            setUserPreferredLocation(venue.name, venue.address, venue.latitude, venue.longitude,venue.city,venue.state,venue.country,venue.foursquareId);
         }
     }
 
