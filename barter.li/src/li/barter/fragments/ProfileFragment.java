@@ -64,6 +64,7 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.widgets.CircleImageView;
 
@@ -384,11 +385,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             if (mIsLoggedInUser) {
                 mImageUrl = UserInfo.INSTANCE.getProfilePicture();
-
+                
                 mOwnerNameTextView.setText(UserInfo.INSTANCE.getFirstName());
-
                 Picasso.with(getActivity())
-                                .load(mImageUrl + "?type=large")
+                                .load(mImageUrl)
                                 .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
                                 .centerCrop().into(mOwnerImageView.getTarget());
 
@@ -415,7 +415,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                 mOwnerBarterLocationTextView.setSelected(true);
 
                 Picasso.with(getActivity())
-                                .load(mImageUrl + "?type=large")
+                                .load(mImageUrl)
                                 .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
                                 .centerCrop().into(mOwnerImageView.getTarget());
 

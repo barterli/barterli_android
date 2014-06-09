@@ -36,7 +36,8 @@
     <string name="about_me">About me</string>
     <string name="my_books">My Books</string>
     <string name="no_image_text">No Image</string>
-    <string name="no_books_found_nearby">No books found near you. :-(</string>
+    <string name="no_books_found_nearby">No books found near you</string>
+    <string name="loading">loading books please wait &#8230;</string>
     <string name="try_again"><u>Try Again</u></string>
     <string name="or">or</string>
     <string name="add_your_own"><u>Add Your Own</u></string>

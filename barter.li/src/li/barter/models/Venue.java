@@ -29,6 +29,9 @@ public class Venue implements Parcelable {
     public String foursquareId;
     public String name;
     public String address;
+    public String city;
+    public String state;
+    public String country;
     public double latitude;
     public double longitude;
     public int distance;
@@ -43,6 +46,9 @@ public class Venue implements Parcelable {
         foursquareId = source.readString();
         name = source.readString();
         address = source.readString();
+        city = source.readString();
+        state = source.readString();
+        country = source.readString();
         latitude = source.readDouble();
         longitude = source.readDouble();
         distance = source.readInt();
@@ -53,6 +59,9 @@ public class Venue implements Parcelable {
         dest.writeString(foursquareId);
         dest.writeString(name);
         dest.writeString(address);
+        dest.writeString(city);
+        dest.writeString(state);
+        dest.writeString(country);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeInt(distance);

@@ -22,7 +22,7 @@ import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
-
+import android.R.layout;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -152,6 +153,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * Action Bar SearchView
      */
     private SearchView                   mSearchView;
+    
+    private View						 mEmptyViewOnRefresh,mEmptyView;
+    
 
     /**
      * {@link PullToRefreshLayout} reference
@@ -166,6 +170,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         final View contentView = inflater
                         .inflate(R.layout.fragment_books_around_me, container, false);
+        
+        mEmptyViewOnRefresh = inflater
+                .inflate(R.layout.layout_emptyview_onrefresh, container, false);
 
         setActionBarTitle(R.string.app_name);
 
@@ -174,6 +181,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         mBooksAroundMeGridView = (GridView) contentView
                         .findViewById(R.id.grid_books_around_me);
+        
 
         ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
                         .listener(this).setup(mPullToRefreshLayout);
@@ -183,10 +191,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
         mBooksAroundMeGridView.setOnItemClickListener(this);
 
-        final View emptyView = contentView.findViewById(R.id.empty_view);
-        mBooksAroundMeGridView.setEmptyView(emptyView);
-        emptyView.findViewById(R.id.text_try_again).setOnClickListener(this);
-        emptyView.findViewById(R.id.text_add_your_own).setOnClickListener(this);
+         mEmptyView = contentView.findViewById(R.id.empty_view);
+        mBooksAroundMeGridView.setEmptyView(mEmptyView);
+        mEmptyView.findViewById(R.id.text_try_again).setOnClickListener(this);
+        mEmptyView.findViewById(R.id.text_add_your_own).setOnClickListener(this);
 
         if (savedInstanceState == null) {
             mCurPage = 0;
@@ -463,7 +471,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
                 mHasLoadedAllItems = true;
                 mCurPage--;
-
+                mBooksAroundMeGridView.setEmptyView(mEmptyView);
                 showCrouton(mEmptySearchCroutonFlag ? R.string.no_books_found
                                 : R.string.no_more_books_found, AlertStyle.INFO);
             }
@@ -694,6 +702,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onRefreshStarted(View view) {
 
         if (view.getId() == R.id.grid_books_around_me) {
+        	
+            mBooksAroundMeGridView.setEmptyView(mEmptyViewOnRefresh);
             reloadNearbyBooks();
         }
     }

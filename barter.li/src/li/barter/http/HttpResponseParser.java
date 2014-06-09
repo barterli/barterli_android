@@ -666,6 +666,12 @@ public class HttpResponseParser {
                         .readDouble(locationObject, HttpConstants.LNG, true, true);
         venue.distance = JsonUtils
                         .readInt(locationObject, HttpConstants.DISTANCE, false, false);
+        venue.city = JsonUtils
+                .readString(locationObject, HttpConstants.CITY, false, false);
+        venue.state = JsonUtils
+                .readString(locationObject, HttpConstants.STATE, false, false);
+        venue.country = JsonUtils
+                .readString(locationObject, HttpConstants.COUNTRY, false, false);
 
     }
 
