@@ -14,13 +14,22 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:interpolator="@android:anim/decelerate_interpolator"
+    android:shareInterpolator="true" >
 
-    <integer name="grid_col_count">3</integer>
-    <integer name="short_anim_time">132</integer>
-    <integer name="medium_anim_time">264</integer>
-    <integer name="long_anim_time">330</integer>
-    <integer name="main_activity_launch">500</integer>
-    <integer name="grid_col_count_for_team">2</integer>
+    <scale
+        android:duration="@integer/main_activity_launch"
+        android:fromXScale="50%p"
+        android:fromYScale="50%p"
+        android:pivotX="50%p"
+        android:pivotY="50%p"
+        android:toXScale="100%p"
+        android:toYScale="100%p" />
 
-</resources>
+    <alpha
+        android:duration="@integer/main_activity_launch"
+        android:fromAlpha="0.0"
+        android:toAlpha="1.0" />
+
+</set>
