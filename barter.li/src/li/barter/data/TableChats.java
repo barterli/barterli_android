@@ -56,8 +56,17 @@ public class TableChats {
                     final int newVersion) {
 
         //Add any data migration code here. Default is to drop and rebuild the table
-        db.execSQL(String
-                        .format(Locale.US, SQLConstants.DROP_TABLE_IF_EXISTS, NAME));
-        create(db);
+
+        if (oldVersion == 1) {
+
+            /*
+             * Drop & recreate the table if upgrading from DB version 1(alpha
+             * version)
+             */
+            db.execSQL(String
+                            .format(Locale.US, SQLConstants.DROP_TABLE_IF_EXISTS, NAME));
+            create(db);
+
+        }
     }
 }
