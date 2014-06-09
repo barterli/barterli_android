@@ -420,22 +420,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 break;
             }
 
-            //Logout
-            case 5: {
-                GoogleAnalyticsManager
-                .getInstance()
-                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.LOGOUT));
-                runnable = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        logout();
-                    }
-                };
-                break;
-            }
-
             default: {
                 runnable = null;
             }
