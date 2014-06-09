@@ -41,6 +41,7 @@
     <string name="try_again"><u>Try Again</u></string>
     <string name="or">or</string>
     <string name="add_your_own"><u>Add Your Own</u></string>
+    <string name="logout">Logout</string>
 
     <!-- crouton info strings -->
     <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>

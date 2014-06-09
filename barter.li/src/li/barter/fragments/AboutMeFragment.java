@@ -23,10 +23,13 @@ import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -47,7 +50,7 @@ import li.barter.utils.SharedPreferenceHelper;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AboutMeFragment extends AbstractBarterLiFragment implements
-                AsyncDbQueryCallback, LoaderCallbacks<Cursor> {
+                AsyncDbQueryCallback, LoaderCallbacks<Cursor>, OnClickListener {
 
     private static final String TAG            = "AboutMeFragment";
 
@@ -55,14 +58,16 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
     private TextView            mPreferredLocationTextView;
     private TextView            mLabelReferralCount;
     private TextView            mReferralCountTextView;
-    
+
     private final String        mUserSelection = DatabaseColumns.USER_ID
                                                                + SQLConstants.EQUALS_ARG;
     private String              mLocationFormat;
 
     private String              mUserId;
 
-    private boolean             mLoadedIndividually,mLoggedInUser;
+    private boolean             mLoadedIndividually;
+    private boolean             mLoggedInUser;
+    private Button              mLogoutButton;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -83,7 +88,7 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
         } else {
             final Bundle extras = getArguments();
             if (extras != null && extras.containsKey(Keys.USER_ID)) {
-            	
+
                 setUserId(extras.getString(Keys.USER_ID));
             }
         }
@@ -92,9 +97,12 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
         mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
         mPreferredLocationTextView = (TextView) view
                         .findViewById(R.id.text_current_location);
-        mReferralCountTextView=(TextView)view.findViewById(R.id.text_referral_count);
-        mLabelReferralCount=(TextView)view.findViewById(R.id.label_referral_count);
-        
+        mReferralCountTextView = (TextView) view
+                        .findViewById(R.id.text_referral_count);
+        mLabelReferralCount = (TextView) view
+                        .findViewById(R.id.label_referral_count);
+        mLogoutButton = (Button) view.findViewById(R.id.button_logout);
+        mLogoutButton.setOnClickListener(this);
 
         setActionBarDrawerToggleEnabled(false);
 
@@ -188,14 +196,21 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
                                                 .getColumnIndex(DatabaseColumns.NAME)), cursor
                                                 .getString(cursor
                                                                 .getColumnIndex(DatabaseColumns.ADDRESS))));
-                if(mLoggedInUser)
-                {
-                	mLabelReferralCount.setVisibility(View.VISIBLE);
-                	mReferralCountTextView.setVisibility(View.VISIBLE);
-                	
-                	mReferralCountTextView.setText(SharedPreferenceHelper.getString(getActivity(),  R.string.pref_referrer_count));
+                if (mLoggedInUser) {
+                    mLabelReferralCount.setVisibility(View.VISIBLE);
+                    mReferralCountTextView.setVisibility(View.VISIBLE);
+
+                    mReferralCountTextView
+                                    .setText(SharedPreferenceHelper
+                                                    .getString(getActivity(), R.string.pref_referrer_count));
+                    mLogoutButton.setVisibility(View.VISIBLE);
+                } else {
+                    mLabelReferralCount.setVisibility(View.GONE);
+                    mReferralCountTextView.setVisibility(View.GONE);
+                    mReferralCountTextView.setText(null);
+                    mLogoutButton.setVisibility(View.GONE);
                 }
-                
+
             }
 
         }
@@ -214,13 +229,10 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
      */
     public void setUserId(String userId) {
         mUserId = userId;
-        if(mUserId==UserInfo.INSTANCE.getId())
-        {
-        	mLoggedInUser=true;
-        }
-        else
-        {
-        	mLoggedInUser=false;
+        if (mUserId == UserInfo.INSTANCE.getId()) {
+            mLoggedInUser = true;
+        } else {
+            mLoggedInUser = false;
         }
         loadUserDetails();
     }
@@ -237,6 +249,14 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
              * viewpager. We will inform in the parent fragment
              */
             return "";
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (v.getId() == R.id.button_logout) {
+            ((AbstractBarterLiActivity) getActivity()).logout();
         }
     }
 

@@ -447,7 +447,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     /**
      * Disconnects the chat service, clears any local data
      */
-    protected void logout() {
+    public void logout() {
 
         if (isLoggedIn()) {
             UserInfo.INSTANCE.reset();

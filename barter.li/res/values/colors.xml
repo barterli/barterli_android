@@ -33,5 +33,7 @@
     <color name="red">#FF0000</color>
     <color name="shadow">#D3D3D3</color>
     <color name="default_progress_bar_color">#FF33B5E5</color>
+    <color name="logout_normal">#DD4B39</color>
+    <color name="logout_pressed">#B63E2F</color>
 
 </resources>

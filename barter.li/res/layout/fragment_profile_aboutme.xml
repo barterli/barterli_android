@@ -18,10 +18,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-     android:layout_margin="@dimen/activity_margin"
+    android:layout_margin="@dimen/activity_margin"
     android:background="@color/transparent" >
-
-   
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/label_about_me"
@@ -82,8 +80,8 @@
         android:text="@string/label_referral_count"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="condensed_regular"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:fontStyle="condensed_regular" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_referral_count"
@@ -95,7 +93,21 @@
         android:singleLine="true"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
-        app:fontStyle="regular"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:fontStyle="regular" />
+
+    <li.barter.widgets.TypefacedButton
+        android:id="@+id/button_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_referral_count"
+        android:layout_marginTop="@dimen/margin_huge"
+        android:background="@drawable/bg_btn_logout"
+        android:gravity="center"
+        android:text="@string/logout"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_medium"
+        android:visibility="gone"
+        app:fontStyle="bold" />
 
 </RelativeLayout>
