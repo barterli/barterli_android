@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/global_bg"
-    android:padding="@dimen/activity_margin" >
+    android:padding="@dimen/activity_margin"
+    android:visibility="visible" >
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/label_no_books_found"

@@ -42,5 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         layout="@layout/layout_books_around_me_empty_view" />
+    
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>

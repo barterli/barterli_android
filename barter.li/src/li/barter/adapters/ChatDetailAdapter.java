@@ -22,6 +22,7 @@ import java.util.Map;
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
 import li.barter.utils.AppConstants;
+import li.barter.utils.Logger;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.widgets.CircleImageView;
 import android.content.Context;
@@ -53,6 +54,7 @@ public class ChatDetailAdapter extends CursorAdapter {
      */
     private final Map<Integer, Integer> mPositionViewTypeMap;
 
+    private final String TAG="ChatDetailAdapter";
     /**
      * Profile picture of the user the current user is chatting with
      */
@@ -136,7 +138,8 @@ public class ChatDetailAdapter extends CursorAdapter {
                  .centerCrop().into(circleImageView.getTarget());
             }
         } else if (itemViewType == OUTGOING_MESSAGE) {
-            final String imageUrl = UserInfo.INSTANCE.getProfilePicture()+ "?type=large";
+            final String imageUrl = UserInfo.INSTANCE.getProfilePicture();
+            Logger.d(TAG,imageUrl);
             if(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.CHAT_ACK)).equals(context.getResources().getString(R.string.sent)))
             {

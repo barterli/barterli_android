@@ -27,10 +27,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
 import li.barter.utils.AppConstants;
+import li.barter.utils.Logger;
 import li.barter.widgets.CircleImageView;
 
 /**
@@ -97,6 +97,7 @@ public class BooksGridAdapter extends CursorAdapter {
             final CircleImageView circleImageView = (CircleImageView) view
                             .getTag(R.id.image_user);
 
+            
             Picasso.with(context)
                             .load(ownerImageUrl)
                             .resizeDimen(R.dimen.book_user_image_size, R.dimen.book_user_image_size)
