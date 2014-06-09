@@ -110,12 +110,6 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(final SQLiteDatabase db, final int oldVersion,
                     final int newVersion) {
 
-        /*
-         * Even though tables are deprecated, we need to ensure that data from
-         * Table My Books is moved to Table User Books and the older table and
-         * Views are dropped. This must be done before the other upgrade
-         * statements because the tables will perform their own upgrades later
-         */
         TableMyBooks.upgrade(db, oldVersion, newVersion);
         ViewMyBooksWithLocations.upgrade(db, oldVersion, newVersion);
 

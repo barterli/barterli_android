@@ -17,12 +17,8 @@
 package li.barter.data;
 
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.BaseColumns;
-import android.text.TextUtils;
 
 import java.util.Locale;
-
-import li.barter.utils.Logger;
 
 /**
  * View representation for my books, combined with their locations
@@ -37,59 +33,13 @@ public class ViewMyBooksWithLocations {
 
     private static final String TAG             = "ViewMyBooksWithLocations";
 
-    //Aliases for the tables
-    private static final String ALIAS_MY_BOOKS  = "A";
-    private static final String ALIAS_LOCATIONS = "B";
-
     /* No longer public because this table is deprecared and should not be accessible outside*/
     static final String         NAME            = "MY_BOOKS_WITH_LOCATIONS";
-
-    public static void create(final SQLiteDatabase db) {
-
-        final String columnDef = TextUtils
-                        .join(",", new String[] {
-                                String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_MY_BOOKS, BaseColumns._ID),
-                                DatabaseColumns.BOOK_ID,
-                                DatabaseColumns.USER_ID,
-                                DatabaseColumns.TITLE,
-                                DatabaseColumns.ID,
-                                DatabaseColumns.IMAGE_URL,
-                                DatabaseColumns.DESCRIPTION,
-                                DatabaseColumns.AUTHOR,
-                                DatabaseColumns.BOOK_OWNER,
-                                DatabaseColumns.BOOK_OWNER_IMAGE_URL,
-                                String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_MY_BOOKS, DatabaseColumns.LOCATION_ID),
-                                DatabaseColumns.NAME, DatabaseColumns.ADDRESS
-
-                        });
-        Logger.d(TAG, "View Column Def: %s", columnDef);
-
-        final String fromDef = TextUtils
-                        .join(",", new String[] {
-                                String.format(Locale.US, SQLConstants.TABLE_ALIAS, TableMyBooks.NAME, ALIAS_MY_BOOKS),
-                                String.format(Locale.US, SQLConstants.TABLE_ALIAS, TableLocations.NAME, ALIAS_LOCATIONS)
-                        });
-        Logger.d(TAG, "From Def: %s", fromDef);
-
-        final String whereDef = String
-                        .format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_MY_BOOKS, DatabaseColumns.LOCATION_ID)
-                        + SQLConstants.EQUALS
-                        + String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_LOCATIONS, DatabaseColumns.LOCATION_ID);
-        Logger.d(TAG, "Where Def: %s", whereDef);
-
-        final String selectDef = String
-                        .format(Locale.US, SQLConstants.SELECT_FROM_WHERE, columnDef, fromDef, whereDef);
-
-        Logger.d(TAG, "Select Def: %s", selectDef);
-        db.execSQL(String
-                        .format(Locale.US, SQLConstants.CREATE_VIEW, NAME, selectDef));
-        throw new IllegalStateException("Deprecated View is getting created " + NAME);
-
-    }
 
     public static void upgrade(final SQLiteDatabase db, final int oldVersion,
                     final int newVersion) {
 
+        /* Drop the view if upgrading from DB version 1(alpha version) */
         if (oldVersion == 1) {
             db.execSQL(String
                             .format(Locale.US, SQLConstants.DROP_VIEW_IF_EXISTS, NAME));

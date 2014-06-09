@@ -86,8 +86,15 @@ public class ViewSearchBooksWithLocations {
     public static void upgrade(final SQLiteDatabase db, final int oldVersion,
                     final int newVersion) {
 
-        db.execSQL(String
-                        .format(Locale.US, SQLConstants.DROP_VIEW_IF_EXISTS, NAME));
-        create(db);
+      //Add any data migration code here. Default is to drop and rebuild the table
+
+        if (oldVersion == 1) {
+            
+            /* Drop & recreate the view if upgrading from DB version 1(alpha version) */
+            db.execSQL(String
+                            .format(Locale.US, SQLConstants.DROP_VIEW_IF_EXISTS, NAME));
+            create(db);
+
+        }
     }
 }

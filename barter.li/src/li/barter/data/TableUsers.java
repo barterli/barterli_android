@@ -56,19 +56,14 @@ public class TableUsers {
                     final int newVersion) {
 
       //Add any data migration code here. Default is to drop and rebuild the table
-        if (newVersion == 2) {
 
-            String alterTableDef = String
-                            .format(Locale.US, SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String
-                                            .format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.DESCRIPTION, ""));
-            Logger.d(TAG, "Alter Table Def: %s", alterTableDef);
-            db.execSQL(alterTableDef);
+        if (oldVersion == 1) {
             
-        } else {
-
+            /* Drop & recreate the table if upgrading from DB version 1(alpha version) */
             db.execSQL(String
                             .format(Locale.US, SQLConstants.DROP_TABLE_IF_EXISTS, NAME));
             create(db);
+
         }
     }
 }

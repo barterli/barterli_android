@@ -24,6 +24,9 @@ import com.crashlytics.android.Crashlytics;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.provider.Settings.Secure;
 import android.view.ViewConfiguration;
 
@@ -54,7 +57,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
     private static Context      sStaticContext;
 
     private RequestQueue        mRequestQueue;
-    
+
     /**
      * Gets a reference to the application context
      */
@@ -71,13 +74,24 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
     public void onCreate() {
 
         sStaticContext = getApplicationContext();
-        if(AppConstants.ENABLE_CRASHLYTICS) {
+        if (!SharedPreferenceHelper
+                        .getBoolean(this, R.string.pref_migrated_from_alpha)) {
+            doMigrationFromAlpha();
+            SharedPreferenceHelper
+                            .set(this, R.string.pref_migrated_from_alpha, true);
+        }
+        /*
+         * Saves the current app version into shared preferences so we can use
+         * it in a future update if necessary
+         */
+        saveCurrentAppVersionIntoPreferences();
+        if (AppConstants.ENABLE_CRASHLYTICS) {
             Crashlytics.start(this);
         }
-       
+
         overrideHardwareMenuButton();
         VolleyLog.sDebug = AppConstants.DEBUG;
-        
+
         mRequestQueue = Volley.newRequestQueue(this);
         // Picasso.with(this).setDebugging(true);
         UserInfo.INSTANCE.setDeviceId(Secure.getString(this
@@ -89,6 +103,27 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         }
 
     };
+
+    private void saveCurrentAppVersionIntoPreferences() {
+        try {
+            PackageInfo info = getPackageManager()
+                            .getPackageInfo(getPackageName(), 0);
+            SharedPreferenceHelper
+                            .set(this, R.string.pref_last_version_code, info.versionCode);
+            SharedPreferenceHelper
+                            .set(this, R.string.pref_last_version_name, info.versionName);
+        } catch (NameNotFoundException e) {
+            //Shouldn't happen
+        }
+    }
+
+    /**
+     * This migrates the locally cached data from alpha. The only thing this is
+     * doing currently is clearing the Shared preferences
+     */
+    private void doMigrationFromAlpha() {
+        SharedPreferenceHelper.clearPreferences(this);
+    }
 
     /**
      * Reads the previously fetched auth token from Shared Preferencesand stores
