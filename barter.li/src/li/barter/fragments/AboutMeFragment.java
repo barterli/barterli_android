@@ -229,7 +229,7 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
      */
     public void setUserId(String userId) {
         mUserId = userId;
-        if (mUserId == UserInfo.INSTANCE.getId()) {
+        if (mUserId.equals(UserInfo.INSTANCE.getId())) {
             mLoggedInUser = true;
         } else {
             mLoggedInUser = false;

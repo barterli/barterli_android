@@ -59,6 +59,7 @@ import li.barter.utils.GooglePlusManager.GooglePlusAuthCallback;
  *         manages loading different fragments/options menus on Navigation items
  *         clicked
  */
+@ActivityTransition(createEnterAnimation = R.anim.slide_in_top, createExitAnimation = R.anim.zoom_out, destroyEnterAnimation = R.anim.zoom_in, destroyExitAnimation = R.anim.slide_out_bottom)
 public class HomeActivity extends AbstractBarterLiActivity implements
                 LocationListener, GooglePlusAuthCallback {
 
@@ -77,7 +78,6 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
         setContentView(R.layout.activity_home);
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
@@ -278,13 +278,6 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         if ((fragment != null) && (fragment instanceof LoginFragment)) {
             ((LoginFragment) fragment).onGoogleLogout();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_out_bottom);
-
     }
 
     @Override

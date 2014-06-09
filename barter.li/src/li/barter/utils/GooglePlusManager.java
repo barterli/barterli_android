@@ -117,8 +117,6 @@ public class GooglePlusManager implements ConnectionCallbacks,
 
                 final String scope = "oauth2:" + TextUtils.join(" ", mScopes);
 
-                Logger.v(TAG, "Scope %s Client name %s", scope, mPlusClient
-                                .getAccountName());
                 try {
                     // We can retrieve the token to check via
                     // tokeninfo or to pass to a service-side
