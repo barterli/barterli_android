@@ -45,6 +45,9 @@
 
 -dontwarn android.content.Context
 -dontwarn com.google.android.gms.**
+-dontwarn com.squareup.okhttp.**
+-dontwarn java.beans.**
+-dontwarn javax.security.**
 
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
