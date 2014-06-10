@@ -293,6 +293,7 @@ public class AppConstants {
         public static final String SUBMIT_ON_RESUME           = "submit_on_resumt";
         public static final String LOCATIONS                  = "locations";
         public static final String ID                         = "id";
+        public static final String FROM_SEARCH                = "from_search";
         public static final String BOOK_ID                    = "book_id";
         public static final String CHAT_ID                    = "chat_id";
         public static final String USER_ID                    = "user_id";
