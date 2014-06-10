@@ -234,7 +234,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             final BookDetailFragment fragment = BookDetailFragment
                             .newInstance(mUserIdArray.get(position), mBookIdArray
                                             .get(position), mIdArray
-                                            .get(position));
+                                            .get(position), true);
             mPositionFragmentMap.put(position, fragment);
             return fragment;
 

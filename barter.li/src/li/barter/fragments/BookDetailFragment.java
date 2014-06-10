@@ -41,6 +41,7 @@ import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableSearchBooks;
+import li.barter.data.TableUserBooks;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
@@ -70,24 +71,27 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private String              mBookId;
     private String              mId;
     private String              mUserId;
+    private boolean             mFromSearch;
     private boolean             mOwnedByUser;
-    
-    
+
     /**
-     * Whether this fragment has been loaded by itself or as part of a pager/tab setup 
+     * Whether this fragment has been loaded by itself or as part of a pager/tab
+     * setup
      */
-    private boolean mLoadedIndividually;
+    private boolean             mLoadedIndividually;
 
     private final String        mBookSelection = DatabaseColumns.BOOK_ID
                                                                + SQLConstants.EQUALS_ARG;
 
-    public static BookDetailFragment newInstance(String userId, String bookId,String id) {
-        BookDetailFragment f = new BookDetailFragment();
+    public static BookDetailFragment newInstance(String userId, String bookId,
+                    String id, boolean fromSearch) {
+        final BookDetailFragment f = new BookDetailFragment();
 
         Bundle args = new Bundle();
         args.putString(Keys.USER_ID, userId);
         args.putString(Keys.BOOK_ID, bookId);
         args.putString(Keys.ID, id);
+        args.putBoolean(Keys.FROM_SEARCH, fromSearch);
         f.setArguments(args);
 
         return f;
@@ -98,7 +102,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setActionBarTitle(R.string.Book_Detail_fragment_title);
-        
 
         final View view = inflater
                         .inflate(R.layout.fragment_book_detail, container, false);
@@ -114,22 +117,24 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             mBookId = extras.getString(Keys.BOOK_ID);
             mUserId = extras.getString(Keys.USER_ID);
             mId = extras.getString(Keys.ID);
-           
+            mFromSearch = extras.getBoolean(Keys.FROM_SEARCH);
+
             if ((mUserId != null) && mUserId.equals(UserInfo.INSTANCE.getId())) {
                 mOwnedByUser = true;
             } else {
                 mOwnedByUser = false;
             }
         }
-        
-        final AbstractBarterLiFragment fragment = ((AbstractBarterLiActivity) getActivity()).getCurrentMasterFragment();
-        
-        if(fragment != null && fragment instanceof BooksPagerFragment) {
+
+        final AbstractBarterLiFragment fragment = ((AbstractBarterLiActivity) getActivity())
+                        .getCurrentMasterFragment();
+
+        if (fragment != null && fragment instanceof BooksPagerFragment) {
             mLoadedIndividually = false;
         } else {
             mLoadedIndividually = true;
         }
-        
+
         setHasOptionsMenu(mLoadedIndividually);
 
         setActionBarDrawerToggleEnabled(false);
@@ -154,8 +159,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
         mSuggestedPriceTextView = (TextView) view
                         .findViewById(R.id.text_suggested_price);
-        mNoImageTextView = (TextView) view
-                .findViewById(R.id.image_text);
+        mNoImageTextView = (TextView) view.findViewById(R.id.image_text);
         mSuggestedPriceLabelTextView = (TextView) view
                         .findViewById(R.id.label_suggested_price);
 
@@ -166,10 +170,11 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
     private void loadBookDetails() {
 
-        DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableSearchBooks.NAME, null, mBookSelection, new String[] {
+        DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, mFromSearch ? TableSearchBooks.NAME
+                        : TableUserBooks.NAME, null, mBookSelection, new String[] {
             mBookId
         }, null, null, null, null, this);
-        
+
     }
 
     @Override
@@ -223,8 +228,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         }
     }
 
-   
-	
     @Override
     public void onSuccess(final int requestId,
                     final IBlRequestContract request,
@@ -272,7 +275,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 mTitleTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.TITLE)));
                 mTitleTextView.setSelected(true);
-             
+
                 mAuthorTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.AUTHOR)));
 
@@ -297,21 +300,18 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                                 .getColumnIndex(DatabaseColumns.IMAGE_URL)), "book image");
 
                 // Picasso.with(getActivity()).setDebugging(true);
-                if(cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.IMAGE_URL)).equals(AppConstants.FALSE))
-                {
-                	mBookImageView.setBackgroundColor(Color.WHITE);
-                	mNoImageTextView.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-               
-                Picasso.with(getActivity())
-                                .load(cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.IMAGE_URL)))
-                                .fit().into(mBookImageView);
-                mNoImageTextView.setVisibility(View.GONE);
-             	
+                if (cursor.getString(cursor.getColumnIndex(DatabaseColumns.IMAGE_URL))
+                                .equals(AppConstants.FALSE)) {
+                    mBookImageView.setBackgroundColor(Color.WHITE);
+                    mNoImageTextView.setVisibility(View.VISIBLE);
+                } else {
+
+                    Picasso.with(getActivity())
+                                    .load(cursor.getString(cursor
+                                                    .getColumnIndex(DatabaseColumns.IMAGE_URL)))
+                                    .fit().into(mBookImageView);
+                    mNoImageTextView.setVisibility(View.GONE);
+
                 }
 
                 final String barterType = cursor.getString(cursor
@@ -343,10 +343,10 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         }
         mBarterTypes.setText(barterTypeHashTag);
     }
-    
+
     @Override
     protected String getAnalyticsScreenName() {
-        if(mLoadedIndividually) {
+        if (mLoadedIndividually) {
             return Screens.BOOK_DETAIL;
         } else {
             return "";
