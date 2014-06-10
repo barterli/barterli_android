@@ -45,6 +45,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.provider.ContactsContract.Profile;
 import android.text.TextUtils;
 
 /**
@@ -146,7 +147,7 @@ public class HttpResponseParser {
             case RequestId.GOOGLEBOOKS_SHOW_BOOK: {
                 return parseGoogleBooksBookInfo(response);
             }
-            
+
             case RequestId.REFERRAL: {
                 return parseReferralResponse(response);
             }
@@ -160,6 +161,7 @@ public class HttpResponseParser {
 
     /**
      * Parse the response for referral inform API
+     * 
      * @param response
      * @return
      */
@@ -359,10 +361,7 @@ public class HttpResponseParser {
         responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
                         .readString(userObject, HttpConstants.IMAGE_URL, false, false));
         responseBundle.putString(HttpConstants.REFERRAL_COUNT, JsonUtils
-                .readString(userObject, HttpConstants.REFERRAL_COUNT, false, false));
-        
-        
-        
+                        .readString(userObject, HttpConstants.REFERRAL_COUNT, false, false));
 
         final JSONArray booksArray = JsonUtils
                         .readJSONArray(userObject, HttpConstants.BOOKS, true, true);
@@ -457,20 +456,27 @@ public class HttpResponseParser {
                         .readJSONObject(responseObject, HttpConstants.USER, true, true);
 
         final Bundle responseBundle = new Bundle();
-        responseBundle.putString(HttpConstants.ID_USER, JsonUtils
-                        .readString(userObject, HttpConstants.ID_USER, true, true));
+        
+        final String userId = JsonUtils
+                        .readString(userObject, HttpConstants.ID_USER, true, true);
+        final String firstName =JsonUtils
+                        .readString(userObject, HttpConstants.FIRST_NAME, false, false);
+        final String lastName = JsonUtils
+                        .readString(userObject, HttpConstants.LAST_NAME, false, false);
+        final String imageUrl = JsonUtils
+                        .readString(userObject, HttpConstants.IMAGE_URL, false, false);
+        final String description =  JsonUtils
+                        .readString(userObject, HttpConstants.DESCRIPTION, false, false);
+        
+        responseBundle.putString(HttpConstants.ID_USER, userId);
         responseBundle.putString(HttpConstants.AUTH_TOKEN, JsonUtils
                         .readString(userObject, HttpConstants.AUTH_TOKEN, true, true));
         responseBundle.putString(HttpConstants.EMAIL, JsonUtils
                         .readString(userObject, HttpConstants.EMAIL, true, true));
-        responseBundle.putString(HttpConstants.DESCRIPTION, JsonUtils
-                        .readString(userObject, HttpConstants.DESCRIPTION, false, false));
-        responseBundle.putString(HttpConstants.FIRST_NAME, JsonUtils
-                        .readString(userObject, HttpConstants.FIRST_NAME, false, false));
-        responseBundle.putString(HttpConstants.LAST_NAME, JsonUtils
-                        .readString(userObject, HttpConstants.LAST_NAME, false, false));
-        responseBundle.putString(HttpConstants.IMAGE_URL, JsonUtils
-                        .readString(userObject, HttpConstants.IMAGE_URL, false, false));
+        responseBundle.putString(HttpConstants.DESCRIPTION, description);
+        responseBundle.putString(HttpConstants.FIRST_NAME, firstName);
+        responseBundle.putString(HttpConstants.LAST_NAME, lastName);
+        responseBundle.putString(HttpConstants.IMAGE_URL, imageUrl);
         responseBundle.putString(HttpConstants.SHARE_TOKEN, JsonUtils
                 .readString(userObject, HttpConstants.SHARE_TOKEN, true, true));
         responseBundle.putString(HttpConstants.REFERRAL_COUNT, JsonUtils
@@ -505,8 +511,21 @@ public class HttpResponseParser {
             locationId = parseAndStoreLocation(locationObject, false);
         }
 
-        responseBundle.putString(HttpConstants.LOCATION, locationId); //Would like to use location id, but server just sends id for location
+        responseBundle.putString(HttpConstants.LOCATION, locationId); 
         responseInfo.responseBundle = responseBundle;
+        
+        //Save created user into Users table
+        final ContentValues userValues =new ContentValues();
+        userValues.put(DatabaseColumns.USER_ID, userId);
+        userValues.put(DatabaseColumns.FIRST_NAME, firstName);
+        userValues.put(DatabaseColumns.LAST_NAME, lastName);
+        userValues.put(DatabaseColumns.DESCRIPTION, description);
+        userValues.put(DatabaseColumns.PROFILE_PICTURE, imageUrl);
+        userValues.put(DatabaseColumns.LOCATION_ID, locationId);
+        
+        if(DBInterface.update(TableUsers.NAME, userValues, DatabaseColumns.USER_ID + SQLConstants.EQUALS_ARG, new String[] {userId}, true) == 0) {
+            DBInterface.insert(TableUsers.NAME, null, userValues, true);
+        }
         return responseInfo;
     }
 
@@ -535,7 +554,7 @@ public class HttpResponseParser {
         if (DBInterface.update(TableLocations.NAME, values, selection, args, autoNotify) == 0) {
 
             //Location was not present, insert into locations table
-            DBInterface.insert(TableLocations.NAME, null, values, true);
+            DBInterface.insert(TableLocations.NAME, null, values, autoNotify);
         }
 
         return locationId;
@@ -551,7 +570,6 @@ public class HttpResponseParser {
     private ResponseInfo parseSearchBooksResponse(final String response)
                     throws JSONException {
 
-    	
         final ResponseInfo responseInfo = new ResponseInfo();
 
         final JSONObject responseObject = new JSONObject(response);
@@ -608,8 +626,7 @@ public class HttpResponseParser {
         final Venue[] venues = new Venue[venuesArray.length()];
         JSONObject venueObject = null;
         for (int i = 0; i < venues.length; i++) {
-            venueObject = JsonUtils
-                            .readJSONObject(venuesArray, i, true, true);
+            venueObject = JsonUtils.readJSONObject(venuesArray, i, true, true);
             venues[i] = new Venue();
             readVenueObjectIntoVenue(venueObject, venues[i]);
         }
@@ -667,13 +684,11 @@ public class HttpResponseParser {
         venue.distance = JsonUtils
                         .readInt(locationObject, HttpConstants.DISTANCE, false, false);
         venue.city = JsonUtils
-                .readString(locationObject, HttpConstants.CITY, false, false);
+                        .readString(locationObject, HttpConstants.CITY, false, false);
         venue.state = JsonUtils
-                .readString(locationObject, HttpConstants.STATE, false, false);
+                        .readString(locationObject, HttpConstants.STATE, false, false);
         venue.country = JsonUtils
-                .readString(locationObject, HttpConstants.COUNTRY, false, false);
-        
-        
+                        .readString(locationObject, HttpConstants.COUNTRY, false, false);
 
     }
 
@@ -723,7 +738,6 @@ public class HttpResponseParser {
 
         final String bookId = JsonUtils
                         .readString(bookObject, HttpConstants.ID_BOOK, true, true);
-        
 
         final int id = JsonUtils
                         .readInt(bookObject, HttpConstants.ID, true, true);
@@ -742,16 +756,13 @@ public class HttpResponseParser {
                         .readString(bookObject, HttpConstants.TITLE, false, false));
         values.put(DatabaseColumns.DESCRIPTION, JsonUtils
                         .readString(bookObject, HttpConstants.DESCRIPTION, false, false));
-        if(JsonUtils
-                        .readString(bookObject, HttpConstants.IMAGE_PRESENT, false, false).equals("false"))
-        {
-        values.put(DatabaseColumns.IMAGE_URL, JsonUtils
-                        .readString(bookObject, HttpConstants.IMAGE_PRESENT, false, false));
-        }
-        else
-        {
-        values.put(DatabaseColumns.IMAGE_URL, JsonUtils
-                    .readString(bookObject, HttpConstants.IMAGE_URL, false, false));
+        if (JsonUtils.readString(bookObject, HttpConstants.IMAGE_PRESENT, false, false)
+                        .equals("false")) {
+            values.put(DatabaseColumns.IMAGE_URL, JsonUtils
+                            .readString(bookObject, HttpConstants.IMAGE_PRESENT, false, false));
+        } else {
+            values.put(DatabaseColumns.IMAGE_URL, JsonUtils
+                            .readString(bookObject, HttpConstants.IMAGE_URL, false, false));
         }
         values.put(DatabaseColumns.PUBLICATION_YEAR, JsonUtils
                         .readString(bookObject, HttpConstants.PUBLICATION_YEAR, false, false));
