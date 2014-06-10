@@ -16,11 +16,19 @@
 
 package li.barter.http;
 
+import org.apache.http.HttpStatus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.xmlpull.v1.XmlPullParserException;
+
+import android.content.ContentValues;
+import android.os.Bundle;
+import android.text.TextUtils;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
-import li.barter.R;
-import li.barter.activities.HomeActivity;
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -28,6 +36,7 @@ import li.barter.data.TableLocations;
 import li.barter.data.TableSearchBooks;
 import li.barter.data.TableUserBooks;
 import li.barter.data.TableUsers;
+import li.barter.http.HttpConstants.GoogleBookSearchKey;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.models.Team;
 import li.barter.models.Venue;
@@ -35,18 +44,6 @@ import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.Logger;
 import li.barter.widgets.autocomplete.Suggestion;
-
-import org.apache.http.HttpStatus;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.xmlpull.v1.XmlPullParserException;
-
-import android.app.Activity;
-import android.content.ContentValues;
-import android.os.Bundle;
-import android.provider.ContactsContract.Profile;
-import android.text.TextUtils;
 
 /**
  * Class that reads an API response and parses it and stores it in the database
@@ -267,21 +264,22 @@ public class HttpResponseParser {
 
             JSONArray identifiers = JsonUtils
                             .readJSONArray(volumeInfo, HttpConstants.INDUSTRY_IDENTIFIERS, false, false);
+            JSONObject identifierObject = null;
+            if (identifiers != null) {
+                for (int j = 0; j < identifiers.length(); j++) {
+                    identifierObject = JsonUtils
+                                    .readJSONObject(identifiers, j, true, true);
+                    final String type = JsonUtils
+                                    .readString(identifierObject, HttpConstants.TYPE, true, true);
 
-            JSONObject[] types = new JSONObject[identifiers.length()];
-
-            for (int k = 0; k < identifiers.length(); k++) {
-                types[k] = JsonUtils
-                                .readJSONObject(identifiers, k, false, false);
-
-            }
-
-            responseBundle.putString(HttpConstants.ISBN_10, JsonUtils
-                            .readString(types[0], HttpConstants.IDENTIFIER, false, false));
-
-            if (types.length > 1) {
-                responseBundle.putString(HttpConstants.ISBN_13, JsonUtils
-                                .readString(types[1], HttpConstants.IDENTIFIER, false, false));
+                    if (type.equals(GoogleBookSearchKey.ISBN_13)) {
+                        responseBundle.putString(HttpConstants.ISBN_13, JsonUtils
+                                        .readString(identifierObject, HttpConstants.IDENTIFIER, true, true));
+                        break;
+                    } else if(type.equals(GoogleBookSearchKey.ISBN_10)) {
+                        responseBundle.putString(HttpConstants.ISBN_10, JsonUtils.readString(identifierObject, HttpConstants.IDENTIFIER, true, true));
+                    }
+                }
             }
 
             JSONObject imageLinks = null;
@@ -456,18 +454,18 @@ public class HttpResponseParser {
                         .readJSONObject(responseObject, HttpConstants.USER, true, true);
 
         final Bundle responseBundle = new Bundle();
-        
+
         final String userId = JsonUtils
                         .readString(userObject, HttpConstants.ID_USER, true, true);
-        final String firstName =JsonUtils
+        final String firstName = JsonUtils
                         .readString(userObject, HttpConstants.FIRST_NAME, false, false);
         final String lastName = JsonUtils
                         .readString(userObject, HttpConstants.LAST_NAME, false, false);
         final String imageUrl = JsonUtils
                         .readString(userObject, HttpConstants.IMAGE_URL, false, false);
-        final String description =  JsonUtils
+        final String description = JsonUtils
                         .readString(userObject, HttpConstants.DESCRIPTION, false, false);
-        
+
         responseBundle.putString(HttpConstants.ID_USER, userId);
         responseBundle.putString(HttpConstants.AUTH_TOKEN, JsonUtils
                         .readString(userObject, HttpConstants.AUTH_TOKEN, true, true));
@@ -478,10 +476,10 @@ public class HttpResponseParser {
         responseBundle.putString(HttpConstants.LAST_NAME, lastName);
         responseBundle.putString(HttpConstants.IMAGE_URL, imageUrl);
         responseBundle.putString(HttpConstants.SHARE_TOKEN, JsonUtils
-                .readString(userObject, HttpConstants.SHARE_TOKEN, true, true));
+                        .readString(userObject, HttpConstants.SHARE_TOKEN, true, true));
         responseBundle.putString(HttpConstants.REFERRAL_COUNT, JsonUtils
-                .readString(userObject, HttpConstants.REFERRAL_COUNT, true, true));
-        
+                        .readString(userObject, HttpConstants.REFERRAL_COUNT, true, true));
+
         final JSONArray booksArray = JsonUtils
                         .readJSONArray(userObject, HttpConstants.BOOKS, true, true);
 
@@ -511,19 +509,22 @@ public class HttpResponseParser {
             locationId = parseAndStoreLocation(locationObject, false);
         }
 
-        responseBundle.putString(HttpConstants.LOCATION, locationId); 
+        responseBundle.putString(HttpConstants.LOCATION, locationId);
         responseInfo.responseBundle = responseBundle;
-        
+
         //Save created user into Users table
-        final ContentValues userValues =new ContentValues();
+        final ContentValues userValues = new ContentValues();
         userValues.put(DatabaseColumns.USER_ID, userId);
         userValues.put(DatabaseColumns.FIRST_NAME, firstName);
         userValues.put(DatabaseColumns.LAST_NAME, lastName);
         userValues.put(DatabaseColumns.DESCRIPTION, description);
         userValues.put(DatabaseColumns.PROFILE_PICTURE, imageUrl);
         userValues.put(DatabaseColumns.LOCATION_ID, locationId);
-        
-        if(DBInterface.update(TableUsers.NAME, userValues, DatabaseColumns.USER_ID + SQLConstants.EQUALS_ARG, new String[] {userId}, true) == 0) {
+
+        if (DBInterface.update(TableUsers.NAME, userValues, DatabaseColumns.USER_ID
+                        + SQLConstants.EQUALS_ARG, new String[] {
+            userId
+        }, true) == 0) {
             DBInterface.insert(TableUsers.NAME, null, userValues, true);
         }
         return responseInfo;
