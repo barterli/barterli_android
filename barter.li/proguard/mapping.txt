@@ -24037,23 +24037,24 @@ li.barter.fragments.BookDetailFragment -> li.barter.c.f:
     java.lang.String mBookId -> n
     java.lang.String mId -> o
     java.lang.String mUserId -> p
-    boolean mOwnedByUser -> q
-    boolean mLoadedIndividually -> r
-    java.lang.String mBookSelection -> s
-    85:93:li.barter.fragments.BookDetailFragment newInstance(java.lang.String,java.lang.String,java.lang.String) -> a
-    99:137:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    146:165:void initViews(android.view.View) -> a
-    169:173:void loadBookDetails() -> k
-    178:183:void onBackPressed() -> j
-    187:187:java.lang.Object getVolleyTag() -> a
-    193:197:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    201:221:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    233:233:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    239:239:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    246:246:void onInsertComplete(int,java.lang.Object,long) -> a
-    253:253:void onDeleteComplete(int,java.lang.Object,int) -> a
-    260:260:void onUpdateComplete(int,java.lang.Object,int) -> b
-    266:328:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    boolean mFromSearch -> q
+    boolean mOwnedByUser -> r
+    boolean mLoadedIndividually -> s
+    java.lang.String mBookSelection -> t
+    88:97:li.barter.fragments.BookDetailFragment newInstance(java.lang.String,java.lang.String,java.lang.String,boolean) -> a
+    103:142:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    151:169:void initViews(android.view.View) -> a
+    173:178:void loadBookDetails() -> k
+    183:188:void onBackPressed() -> j
+    192:192:java.lang.Object getVolleyTag() -> a
+    198:202:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    206:226:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    236:236:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    242:242:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    249:249:void onInsertComplete(int,java.lang.Object,long) -> a
+    256:256:void onDeleteComplete(int,java.lang.Object,int) -> a
+    263:263:void onUpdateComplete(int,java.lang.Object,int) -> b
+    269:328:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
     337:345:void setBarterCheckboxes(java.lang.String) -> a
     349:352:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.BooksAroundMeFragment -> li.barter.c.g:
@@ -24521,30 +24522,30 @@ li.barter.http.HttpConstants$Server -> li.barter.http.e$a:
     1:1:li.barter.http.HttpConstants$Server[] values() -> values
     1:1:li.barter.http.HttpConstants$Server valueOf(java.lang.String) -> valueOf
 li.barter.http.HttpResponseParser -> li.barter.http.f:
-    75:155:li.barter.http.ResponseInfo getSuccessResponse(int,java.lang.String) -> a
-    167:167:li.barter.http.ResponseInfo parseReferralResponse(java.lang.String) -> a
-    177:213:li.barter.http.ResponseInfo parseGoogleBookSuggestionsResponse(java.lang.String) -> b
-    227:298:li.barter.http.ResponseInfo parseGoogleBooksBookInfo(java.lang.String) -> c
+    73:153:li.barter.http.ResponseInfo getSuccessResponse(int,java.lang.String) -> a
+    166:166:li.barter.http.ResponseInfo parseReferralResponse(java.lang.String) -> a
+    176:212:li.barter.http.ResponseInfo parseGoogleBookSuggestionsResponse(java.lang.String) -> b
+    226:298:li.barter.http.ResponseInfo parseGoogleBooksBookInfo(java.lang.String) -> c
     308:308:li.barter.http.ResponseInfo parseAmpqResponse(java.lang.String) -> d
     319:330:li.barter.http.ResponseInfo parseTributeResponse(java.lang.String) -> e
-    342:413:li.barter.http.ResponseInfo parseUserProfileResponse(java.lang.String) -> f
-    424:439:li.barter.http.ResponseInfo parseTeamResponse(java.lang.String) -> g
-    452:510:li.barter.http.ResponseInfo parseCreateUserResponse(java.lang.String) -> h
-    526:541:java.lang.String parseAndStoreLocation(org.json.JSONObject,boolean) -> a
-    555:588:li.barter.http.ResponseInfo parseSearchBooksResponse(java.lang.String) -> i
-    601:620:li.barter.http.ResponseInfo parseVenuesResponse(java.lang.String) -> j
-    632:642:li.barter.http.ResponseInfo parseSetUserPreferredLocationResponse(java.lang.String) -> k
-    655:678:void readVenueObjectIntoVenue(org.json.JSONObject,li.barter.models.Venue) -> a
-    690:701:void readTeamObjectIntoTeam(org.json.JSONObject,li.barter.models.Team) -> a
-    720:787:java.lang.String readBookDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> a
-    807:833:java.lang.String readUserDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> b
-    851:866:java.lang.String readLocationDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean) -> a
-    876:895:li.barter.http.ResponseInfo parseCreateBookResponse(java.lang.String) -> l
-    900:901:li.barter.http.ResponseInfo parseUpdateBookResponse(java.lang.String) -> m
-    906:907:li.barter.http.ResponseInfo parseDeleteBookResponse(java.lang.String) -> n
-    920:928:li.barter.http.ResponseInfo parseReportBugOrSuggestFeatureResponse(java.lang.String) -> o
-    944:945:li.barter.http.BlBadRequestError getErrorResponse(int,java.lang.String) -> b
-    959:968:li.barter.http.BlBadRequestError parseErrorResponse(int,java.lang.String) -> c
+    342:410:li.barter.http.ResponseInfo parseUserProfileResponse(java.lang.String) -> f
+    421:436:li.barter.http.ResponseInfo parseTeamResponse(java.lang.String) -> g
+    449:530:li.barter.http.ResponseInfo parseCreateUserResponse(java.lang.String) -> h
+    546:561:java.lang.String parseAndStoreLocation(org.json.JSONObject,boolean) -> a
+    574:607:li.barter.http.ResponseInfo parseSearchBooksResponse(java.lang.String) -> i
+    620:638:li.barter.http.ResponseInfo parseVenuesResponse(java.lang.String) -> j
+    650:660:li.barter.http.ResponseInfo parseSetUserPreferredLocationResponse(java.lang.String) -> k
+    673:694:void readVenueObjectIntoVenue(org.json.JSONObject,li.barter.models.Venue) -> a
+    706:717:void readTeamObjectIntoTeam(org.json.JSONObject,li.barter.models.Team) -> a
+    736:799:java.lang.String readBookDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> a
+    819:845:java.lang.String readUserDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> b
+    863:878:java.lang.String readLocationDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean) -> a
+    888:907:li.barter.http.ResponseInfo parseCreateBookResponse(java.lang.String) -> l
+    912:913:li.barter.http.ResponseInfo parseUpdateBookResponse(java.lang.String) -> m
+    918:919:li.barter.http.ResponseInfo parseDeleteBookResponse(java.lang.String) -> n
+    932:940:li.barter.http.ResponseInfo parseReportBugOrSuggestFeatureResponse(java.lang.String) -> o
+    956:957:li.barter.http.BlBadRequestError getErrorResponse(int,java.lang.String) -> b
+    971:980:li.barter.http.BlBadRequestError parseErrorResponse(int,java.lang.String) -> c
 li.barter.http.IBlRequestContract -> li.barter.http.g:
     int getRequestId() -> y
     java.util.Map getExtras() -> x
