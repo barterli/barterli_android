@@ -436,6 +436,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         getFragmentManager().popBackStack();
     }
 
+    
     @Override
     public void onPreExecute(final IBlRequestContract request) {
         mRequestCounter.incrementAndGet();

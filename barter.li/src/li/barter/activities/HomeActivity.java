@@ -231,6 +231,8 @@ public class HomeActivity extends AbstractBarterLiActivity implements
                     final String errorMessage, final Bundle errorResponseBundle) {
 
     }
+    
+  
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,

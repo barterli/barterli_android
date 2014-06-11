@@ -265,6 +265,7 @@ public class HttpResponseParser {
             JSONArray identifiers = JsonUtils
                             .readJSONArray(volumeInfo, HttpConstants.INDUSTRY_IDENTIFIERS, false, false);
             JSONObject identifierObject = null;
+            //TODO might change the true flag
             if (identifiers != null) {
                 for (int j = 0; j < identifiers.length(); j++) {
                     identifierObject = JsonUtils
@@ -275,7 +276,6 @@ public class HttpResponseParser {
                     if (type.equals(GoogleBookSearchKey.ISBN_13)) {
                         responseBundle.putString(HttpConstants.ISBN_13, JsonUtils
                                         .readString(identifierObject, HttpConstants.IDENTIFIER, true, true));
-                        break;
                     } else if(type.equals(GoogleBookSearchKey.ISBN_10)) {
                         responseBundle.putString(HttpConstants.ISBN_10, JsonUtils.readString(identifierObject, HttpConstants.IDENTIFIER, true, true));
                     }
@@ -893,12 +893,15 @@ public class HttpResponseParser {
 
         final ContentValues values = new ContentValues();
         final String bookId = readBookDetailsIntoContentValues(bookObject, values, true, false);
+        final String mId	= JsonUtils
+                .readInt(bookObject, HttpConstants.ID, true, true)+"";
 
         // Unable to update, insert the item
         if (DBInterface.insert(TableUserBooks.NAME, null, values, true) >= 0) {
 
             final Bundle responseBundle = new Bundle(1);
             responseBundle.putString(HttpConstants.ID_BOOK, bookId);
+            responseBundle.putString(HttpConstants.ID, mId);
             responseInfo.responseBundle = responseBundle;
         } else {
             responseInfo.success = false;

@@ -443,7 +443,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             disconnectChatIntent.setAction(AppConstants.ACTION_DISCONNECT_CHAT);
             startService(disconnectChatIntent);
             getSupportFragmentManager()
-                            .popBackStack(FragmentTags.BS_BOOKS_AROUND_ME, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }
     }
 

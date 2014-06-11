@@ -368,6 +368,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 					+ ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
 			createBookRequest.setRequestId(RequestId.CREATE_BOOK);
 			addRequestToQueue(createBookRequest, true, 0, true);
+			
 		} catch (final JSONException e) {
 			e.printStackTrace();
 		}
@@ -652,9 +653,13 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
 			final String bookId = response.responseBundle
 					.getString(HttpConstants.ID_BOOK);
+			
+			final String mId = response.responseBundle
+					.getString(HttpConstants.ID);
 
 			final Bundle showBooksArgs = new Bundle(6);
 			showBooksArgs.putString(Keys.BOOK_ID, bookId);
+			showBooksArgs.putString(Keys.ID, mId);
 			showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
 			showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
 			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
