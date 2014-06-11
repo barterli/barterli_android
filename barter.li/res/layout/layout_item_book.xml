@@ -22,7 +22,9 @@
 
     <include
         android:id="@+id/image_book_and_user"
-        android:layout_width="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="@dimen/book_image_width"
         android:layout_height="@dimen/book_image_height"
         layout="@layout/layout_book_and_user_image" />
 
@@ -55,14 +57,6 @@
         android:visibility="gone"
         app:fontStyle="condensed_regular" />
 
-    <View
-        android:id="@+id/view_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/selector_main_item_overlay" />
-
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_book_name"
         android:layout_width="match_parent"
@@ -79,5 +73,13 @@
         android:textSize="@dimen/text_small"
         android:visibility="gone"
         app:fontStyle="regular" />
+
+    <View
+        android:id="@+id/view_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/selector_main_item_overlay" />
 
 </RelativeLayout>

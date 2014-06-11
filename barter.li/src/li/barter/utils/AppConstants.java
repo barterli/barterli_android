@@ -370,6 +370,8 @@ public class AppConstants {
         public static final String DIALOG_ADD_NAME                                 = "dialog_add_name";
         public static final String DIALOG_ADD_BOOK                                 = "dialog_add_book";
         public static final String DIALOG_ABOUT_LOCATION                           = "dialog_about_location";
+        public static final String DIALOG_CHAT_LONGCLICK                           = "dialog_chat_longclick";
+        
     }
 
     /**

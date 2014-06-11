@@ -101,7 +101,9 @@ public class BooksGridAdapter extends CursorAdapter {
             Picasso.with(context)
                             .load(ownerImageUrl)
                             .resizeDimen(R.dimen.book_user_image_size, R.dimen.book_user_image_size)
+                            .centerCrop()
                             .into(circleImageView.getTarget());
+            
         } else {
             //TODO DIsplay default image for user
         }

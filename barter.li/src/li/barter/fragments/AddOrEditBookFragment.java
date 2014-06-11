@@ -281,14 +281,14 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 	 * 
 	 * @param bookId The unique ID of the book to get info for
 	 */
-	private void getBookInfoById(final String bookId) {
+	private void getBookInfoById(final String bookId,final String bookName) {
 
 		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getGoogleBooksUrl()
 				+ ApiEndpoints.VOLUMES, null, mVolleyCallbacks);
 		request.setRequestId(RequestId.GOOGLEBOOKS_SHOW_BOOK);
 
 		final Map<String, String> params = new HashMap<String, String>(1);
-		params.put(HttpConstants.Q, GoogleBookSearchKey.ID + bookId);
+		params.put(HttpConstants.Q, GoogleBookSearchKey.ID + bookId+"+"+GoogleBookSearchKey.INTITLE+bookName);
 
 		final Map<String, String> headers = new HashMap<String, String>(1);
 		headers.put(HttpConstants.KEY, mGoogleBooksApiKey);
@@ -891,7 +891,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
 		if (textView.getId() == R.id.edit_text_title) {
 			Logger.v(TAG, "On Suggestion Clicked %s", suggestion);
-			getBookInfoById(suggestion.id);
+			getBookInfoById(suggestion.id,suggestion.name);
 		}
 	}
 

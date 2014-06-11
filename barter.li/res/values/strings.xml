@@ -42,6 +42,8 @@
     <string name="or">or</string>
     <string name="add_your_own"><u>Add Your Own</u></string>
     <string name="logout">Logout</string>
+    <string name="delete_chat_alert_message">Are you sure you want to delete this chat?</string>
+    <string name="block_user_alert_message">Are you sure you want to block this user?</string>
 
     <!-- crouton info strings -->
     <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>
@@ -69,6 +71,7 @@
     <string name="chat_opened_from" formatted="false">This chat was opened from %s.</string>
     <string name="take_picture">Take Picture</string>
     <string name="add_book_dialog_head">Add Book</string>
+     <string name="chat_longclick_dialog_head">Chat Options</string>
     <string name="complete_action_using">Complete action using</string>
     <string name="no_books_found">No books were found in this area.</string>
     <string name="no_more_books_found">No more books were found.</string>
@@ -103,6 +106,7 @@
     <string name="unable_to_fetch_books">Unable to fetch books.</string>
     <string name="unable_to_fetch_hangouts">Unable to fetch hangouts.</string>
     <string name="error_enter_email">Please enter your email address.</string>
+    <string name="error_block_user">User cannot be blocked this time, Please try again later</string>
     <string name="error_invalid_email">Please enter a valid email address.</string>
     <string name="error_enter_password">Please enter a password.</string>
     <string name="error_password_minimum_length">Password must be at least %d characters long.</string>
@@ -161,6 +165,12 @@
         <item>Scan  Barcode</item>
         <item>Add Manually</item>
     </string-array>
+    
+    <string-array name="chat_longclick_choices">
+        <item>Delete Chat</item>
+        <item>Block User</item>
+    </string-array>
+    
 
     <!-- Strings for chat details -->
     <string name="sent">sent</string>

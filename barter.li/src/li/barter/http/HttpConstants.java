@@ -64,7 +64,7 @@ public class HttpConstants {
         }
     }
 
-    private static Server SERVER = Server.PRODUCTION;
+    private static Server SERVER = Server.DEV;
 
     public static String getApiBaseUrl() {
         return SERVER.mUrl;
@@ -112,6 +112,7 @@ public class HttpConstants {
         public static final String VOLUMES                 = "/volumes";
         public static final String FOURSQUARE_VENUES       = "/venues/search";
         public static final String REFERRAL                = "/referral";
+        public static final String CHAT_BLOCK              = "/chat_block";
 
     }
 
@@ -153,6 +154,7 @@ public class HttpConstants {
         public static final int DELETE_BOOK                 = 121;
         public static final int GOOGLEBOOKS_SHOW_BOOK       = 122;
         public static final int REFERRAL                    = 123;
+        public static final int BLOCK_CHATS					= 124;
 
     }
 
@@ -214,6 +216,7 @@ public class HttpConstants {
     public static final String ID_LOCATION                 = "id_location";
     public static final String ID_BOOK                     = "id_book";
     public static final String ID_USER                     = "id_user";
+    public static final String USER_ID                     = "user_id";
     public static final String HEADER_AUTHORIZATION_FORMAT = "Token token=\"%s\", email=\"%s\"";
     public static final String HEADER_AUTHORIZATION        = "Authorization";
     public static final String MESSAGE                     = "message";

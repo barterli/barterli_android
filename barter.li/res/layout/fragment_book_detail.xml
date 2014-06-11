@@ -197,7 +197,12 @@
             android:layout_height="@dimen/book_height_for_detail"
             android:layout_alignParentLeft="true"
             android:layout_marginRight="@dimen/margin_large"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name" 
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            android:paddingTop="1dp"
+            android:paddingBottom="2dp"
+            android:background="@drawable/background_container_drop_shadow"/>
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/image_text"
