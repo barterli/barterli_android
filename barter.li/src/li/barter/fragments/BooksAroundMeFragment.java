@@ -198,7 +198,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mEmptyView.findViewById(R.id.text_add_your_own).setOnClickListener(this);
 
         if (savedInstanceState == null) {
-            mCurPage = 0;
+            mCurPage = 1;
 
         } else {
             mLastFetchedLocation = savedInstanceState
