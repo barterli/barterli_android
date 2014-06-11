@@ -21,7 +21,6 @@ import com.android.volley.RequestQueue;
 import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
-
 import android.app.ActionBar;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -73,6 +72,7 @@ import li.barter.data.TableChatMessages;
 import li.barter.data.TableChats;
 import li.barter.fragments.AboutUsPagerFragment;
 import li.barter.fragments.AbstractBarterLiFragment;
+import li.barter.fragments.BooksAroundMeFragment;
 import li.barter.fragments.ChatsFragment;
 import li.barter.fragments.FragmentTransition;
 import li.barter.fragments.LoginFragment;
@@ -900,13 +900,39 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     public void onBackPressed() {
 
         final AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
+        
+        final AbstractBarterLiFragment chatDetailFragment=(AbstractBarterLiFragment) getSupportFragmentManager()
+        .findFragmentByTag(FragmentTags.CHAT_DETAILS);
+        
+        final AbstractBarterLiFragment chatFragment=(AbstractBarterLiFragment) getSupportFragmentManager()
+                .findFragmentByTag(FragmentTags.CHATS);
+        
+        
         if ((masterFragment != null)
                         && (getSupportFragmentManager()
                                         .getBackStackEntryCount() > 0)) {
+        	
             masterFragment.onBackPressed();
-        } else {
-            super.onBackPressed();
+        	
         }
+        else if((chatDetailFragment!=null)&& (getSupportFragmentManager()
+                .getBackStackEntryCount() == 0))
+        {
+        	chatDetailFragment.onBackPressed();
+        }
+        else if((chatFragment!=null)&& (getSupportFragmentManager()
+                .getBackStackEntryCount() == 0))
+        {
+        	chatFragment.onBackPressed();
+        }
+        
+        else
+    	{
+    		super.onBackPressed();	
+    	}
+      
+      
+       
     }
 
     /**
@@ -925,6 +951,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                         .findFragmentById(R.id.frame_content);
 
     }
+    
+    
 
     @Override
     public void onPreExecute(final IBlRequestContract request) {

@@ -33,7 +33,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-
 import li.barter.R;
 import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatsAdapter;
@@ -46,6 +45,7 @@ import li.barter.data.SQLiteLoader;
 import li.barter.data.ViewChatsWithMessagesAndUsers;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.Logger;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
@@ -215,5 +215,19 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     @Override
     protected String getAnalyticsScreenName() {
         return Screens.CHATS;
+    }
+    
+    @Override
+    public void onBackPressed() {
+
+		final int backStackEntryCount = getFragmentManager()
+
+				.getBackStackEntryCount();
+		if (backStackEntryCount == 0) {
+			((HomeActivity) getActivity()).loadBooksAroundMeFragment();
+			
+		} else {
+			onUpNavigate();
+		}
     }
 }

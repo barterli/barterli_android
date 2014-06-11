@@ -434,6 +434,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     public void onBackPressed() {
 
         getFragmentManager().popBackStack();
+        
     }
 
     

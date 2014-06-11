@@ -191,13 +191,13 @@ ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback
 	@Override
 	public void onBackPressed() {
 
-		Logger.d(TAG, "OnBackPressed");
 
 		final int backStackEntryCount = getFragmentManager()
 
 				.getBackStackEntryCount();
 		if (backStackEntryCount == 0) {
 			((HomeActivity) getActivity()).loadBooksAroundMeFragment();
+			
 		} else {
 			onUpNavigate();
 		}
