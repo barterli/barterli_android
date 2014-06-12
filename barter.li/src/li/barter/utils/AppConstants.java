@@ -74,10 +74,10 @@ public class AppConstants {
      * scrolls DEFAULT_LOAD_BEFORE_COUNT : This is to be subtracted value from
      * the List Count so as to prevent loading lag on scrolling fast
      */
-    public static final int     DEFAULT_PERPAGE_LIMIT            = 27;
-    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL   = 27;
-    public static final int     DEFAULT_LOAD_BEFORE_COUNT        = 18;
-    public static final int     DEFAULT_PERPAGE_LIMIT_FOR_SEARCH = 27;
+    public static final int     DEFAULT_PERPAGE_LIMIT            = 81;
+    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL   = 81;
+    public static final int     DEFAULT_LOAD_BEFORE_COUNT        = 45;
+    public static final int     DEFAULT_PERPAGE_LIMIT_FOR_SEARCH = 81;
 
     public static final int     DEFAULT_SEARCH_RADIUS            = 25;
 

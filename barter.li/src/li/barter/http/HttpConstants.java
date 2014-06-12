@@ -64,7 +64,7 @@ public class HttpConstants {
         }
     }
 
-    private static Server SERVER = Server.DEV;
+    private static Server SERVER = Server.PRODUCTION;
 
     public static String getApiBaseUrl() {
         return SERVER.mUrl;

@@ -28,9 +28,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.RadioButton;
-
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.analytics.AnalyticsConstants.Screens;
@@ -49,13 +50,14 @@ import li.barter.utils.Logger;
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ReportBugFragment extends AbstractBarterLiFragment implements
-                OnClickListener {
+                OnClickListener,OnCheckedChangeListener {
 
     private static final String TAG = "ReportBugFragment";
-    private EditText            mReportedBugTextView;
+    private EditText            mReportedBugTextView,mDeviceInfoTextView;
     private Button              mReportBugButton;
     private RadioButton         mReportBugSelect;
     private RadioButton         mReportSuggestionSelect;
+    
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -66,10 +68,13 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
         final View view = inflater.inflate(R.layout.fragment_report_bug, null);
         mReportedBugTextView = (EditText) view
                         .findViewById(R.id.text_bug_description);
+        mDeviceInfoTextView=(EditText)view.findViewById(R.id.text_device_description);
         mReportBugSelect = (RadioButton) view
                         .findViewById(R.id.radio_reportbug);
         mReportSuggestionSelect = (RadioButton) view
                         .findViewById(R.id.radio_suggestfeature);
+        
+        mReportSuggestionSelect.setOnCheckedChangeListener(this);
         mReportBugButton = (Button) view.findViewById(R.id.button_report_bug);
         mReportBugButton.setOnClickListener(this);
         return view;
@@ -84,7 +89,7 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
                     final String ReportedBugTitle = getResources()
                                     .getString(R.string.text_bug_title);
                     final String mReportedBugText = mReportedBugTextView
-                                    .getText().toString();
+                                    .getText().toString()+" "+getString(R.string.deviceinfo_tag)+" "+mDeviceInfoTextView.getText().toString();
 
                     if (TextUtils.isEmpty(mReportedBugText)) {
                         showCrouton("Please Enter a Valid Text", AlertStyle.ERROR);
@@ -160,6 +165,7 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
                 }
                 showCrouton(mMessage, AlertStyle.INFO);
                 mReportedBugTextView.setText("");
+                mDeviceInfoTextView.setText("");
             } else {
                 showCrouton("Something went Wrong.", AlertStyle.ERROR);
             }
@@ -194,5 +200,18 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
         
         return Screens.REPORT_BUG;
     }
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if(isChecked)
+		{
+			mDeviceInfoTextView.setVisibility(View.GONE);
+		}
+		else
+		{
+			mDeviceInfoTextView.setVisibility(View.VISIBLE);
+		}
+		
+	}
 
 }

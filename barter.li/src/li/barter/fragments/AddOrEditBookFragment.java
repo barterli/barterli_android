@@ -16,30 +16,6 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request.Method;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +46,32 @@ import li.barter.utils.SharedPreferenceHelper;
 import li.barter.widgets.autocomplete.INetworkSuggestCallbacks;
 import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView;
 import li.barter.widgets.autocomplete.Suggestion;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
+
+import com.android.volley.Request.Method;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
@@ -892,7 +894,11 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		if (textView.getId() == R.id.edit_text_title) {
 			Logger.v(TAG, "On Suggestion Clicked %s", suggestion);
 			getBookInfoById(suggestion.id,suggestion.name);
+			
+			hideKeyBoard(textView);
+			
 		}
+		
 	}
 
 	@Override

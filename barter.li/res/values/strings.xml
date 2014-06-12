@@ -230,6 +230,8 @@
     <string name="button_submit">Submit</string>
     <string name="text_bug_title">Barter.Li/Reported Bug</string>
     <string name="hint_report_bug">Enter Your Findings Here.</string>
+    <string name="hint_enter_device">Enter Device,Version and 3G/Wifi</string>
+    <string name="deviceinfo_tag">Device Info: </string>
 
     <!-- String Related to Suggest Feature -->
     <string name="text_suggest_feature">Suggest a Feature</string>

@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -35,7 +36,9 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -550,6 +553,19 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         } catch (final JSONException e) {
             e.printStackTrace();
         }
+    }
+    
+    /**
+     * Hides the keyboard
+     * 
+     * @param view the view from which keyboard was open
+     */
+    
+    public void hideKeyBoard(View view)
+    {
+    	InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
+			      Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

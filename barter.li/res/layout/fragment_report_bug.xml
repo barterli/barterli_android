@@ -55,6 +55,18 @@
         android:singleLine="false"
         android:textSize="@dimen/text_medium"
         app:fontStyle="regular" />
+    
+    <li.barter.widgets.TypefacedEditText
+        android:id="@+id/text_device_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_medium"
+        android:hint="@string/hint_enter_device"
+        android:inputType="textCapSentences"
+        android:lines="6"
+        android:singleLine="false"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="regular" />
 
     <li.barter.widgets.TypefacedButton
         android:id="@+id/button_report_bug"
