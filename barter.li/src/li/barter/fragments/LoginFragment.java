@@ -106,12 +106,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 session = new Session(getActivity());
             }
             Session.setActiveSession(session);
-            if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
-                session.openForRead(new Session.OpenRequest(this)
-                                .setPermissions(Arrays
-                                                .asList(AppConstants.FBPERMISSIONS))
-                                .setCallback(this));
-            }
+           
         }
         mFacebookLoginButton.setOnClickListener(this);
         mGoogleLoginButton.setOnClickListener(this);
