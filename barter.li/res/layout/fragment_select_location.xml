@@ -30,5 +30,11 @@
         android:cacheColorHint="@color/transparent"
         android:divider="@color/transparent"
         android:dividerHeight="@dimen/margin_x_small" />
+    
+    <include
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/layout_select_location_empty_view" />
 
 </FrameLayout>

@@ -105,7 +105,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 
 	private static final String    TAG                      = "ChatService";
-	private static final String    OUTPUT_TIME_FORMAT       = "dd MMM, h:m a";
+	private static final String    OUTPUT_TIME_FORMAT       = "dd MMM, h:mm a";
 	private static final String    QUEUE_NAME_FORMAT        = "%squeue";
 	private static final String    VIRTUAL_HOST             = "/";
 	private static final String    EXCHANGE_NAME_FORMAT     = "%sexchange";

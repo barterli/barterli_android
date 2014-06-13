@@ -40,7 +40,6 @@ import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.Logger;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -58,6 +57,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 
@@ -78,7 +78,7 @@ ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback
 
 	private EditText                mSubmitChatEditText;
 
-	private Button                  mSubmitChatButton;
+	private ImageButton             mSubmitChatButton;
 
 	private ChatService             mChatService;
 
@@ -130,7 +130,7 @@ ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback
 		mSubmitChatEditText = (EditText) view
 				.findViewById(R.id.edit_text_chat_message);
 
-		mSubmitChatButton = (Button) view.findViewById(R.id.button_send);
+		mSubmitChatButton = (ImageButton) view.findViewById(R.id.button_send);
 		mSubmitChatButton.setOnClickListener(this);
 
 		setActionBarDrawerToggleEnabled(false);

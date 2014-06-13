@@ -36,7 +36,7 @@
 
 -injars      bin/classes
 -outjars     bin/classes-processed.jar
--libraryjars /home/vinaysshenoy/Dev/android-sdk-linux/platforms/android-19/android.jar
+-libraryjars /Users/anshul1235/Desktop/data/adt-bundle-mac-x86_64-20140321/sdk/platforms/android-19/android.jar
 -libraryjars libs/android-support-v4.jar
 -libraryjars libs/commons-io-1.2.jar
 -libraryjars libs/crashlytics.jar

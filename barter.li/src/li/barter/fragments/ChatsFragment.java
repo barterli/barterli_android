@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import com.android.volley.Request.Method;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatsAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
@@ -155,6 +156,12 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 	public void onSuccess(final int requestId,
 			final IBlRequestContract request,
 			final ResponseInfo response) {
+		
+		if(requestId==RequestId.BLOCK_CHATS)
+		{
+			showCrouton(R.string.success_message_for_chatblock, AlertStyle.INFO);
+		}
+			
 
 	}
 

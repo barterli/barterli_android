@@ -32,15 +32,18 @@
     <string name="Tribute_fragment_title">Tribute</string>
     <string name="Book_Detail_fragment_title">Book Detail</string>
     <string name="update_info">Update Info</string>
+     <string name="preferred_location">Preferred location</string>
     <string name="cancel">Cancel</string>
     <string name="about_me">About me</string>
     <string name="my_books">My Books</string>
     <string name="no_image_text">No Image</string>
     <string name="no_books_found_nearby">No books found near you</string>
+    <string name="no_places_found_nearby">No places found near you</string>
     <string name="loading">loading books please wait &#8230;</string>
     <string name="try_again"><u>Try Again</u></string>
     <string name="or">or</string>
     <string name="add_your_own"><u>Add Your Own</u></string>
+    <string name="add_location_manually"><u>Add Manually</u></string>
     <string name="logout">Logout</string>
     <string name="delete_chat_alert_message">Are you sure you want to delete this chat?</string>
     <string name="block_user_alert_message">Are you sure you want to block this user?</string>
@@ -119,6 +122,7 @@
     <string name="error_required">Required</string>
     <string name="delete">Delete</string>
     <string name="help_select_location">In order to protect your privacy, we don\'t reveal your location to anybody.\n\nInstead, please select a nearby venue from the list. This will be set as your preferred location for exchanging books. You can change this from your profile page anytime.</string>
+    <string name="hint_location_name">Enter preferred location name</string>
     <string name="about">About</string>
     <string name="ok">OK</string>
     <!-- Barter Type Options -->
@@ -176,6 +180,8 @@
     <string name="sent">sent</string>
     <string name="sending">&#8230;</string>
     <string name="trueflag">true</string>
+    <string name="success_message_for_chatblock">User blocked successfully</string>
+    
 
     <string-array name="aboutus_fragment_titles">
         <item>Tribute</item>
@@ -239,13 +245,13 @@
     <string name="hint_suggest_feature">Enter Your Thoughts Here.</string>
 
     <!-- String Related to Collaborate Page -->
-    <string name="text_collaborate">I am interested to partner in the role of</string>
+    <string name="text_collaborate">I am interested to be a pro-bono partner in the role of</string>
     <string name="sponsor">Sponsor</string>
     <string name="designer">Designer</string>
     <string name="developer">Developer</string>
     <string name="campus_ambassador">Campus Ambassador</string>
-    <string name="volunteer">Volunteer</string>
-    <string name="prmedia">PR/Media</string>
+    <string name="product_evangelist">Product Evangelist</string>
+    <string name="marketing">Marketing/PR/Social Media</string>
     <string name="barterli_email">joinus@barter.li</string>
     <string name="hint_about_me_description">About Me.</string>
 
@@ -261,6 +267,7 @@
         <item>Crouton, Context sensitive notifications for Android. Licensed under the Apache v2.0 License.\nhttps://github.com/keyboardsurfer/Crouton</item>
         <item>AndroidSlidingUpPanel, This library provides a simple way to add a draggable sliding up panel (popularized by Google Music, Google Maps and Rdio) to your Android application. Licensed under the Apache v2.0 License.\nhttps://github.com/umano/AndroidSlidingUpPanel</item>
         <item>Android ViewPagerIndicator, Paging indicator widgets that are compatible with the ViewPager from the Android Support Library to improve discoverability of content.Licensed under the Apache v2.0 License.\nhttps://github.com/JakeWharton/Android-ViewPagerIndicator</item>
+        <item>Aaron Swartz photo credit: Fred Benenson/www.fredbenenson.com; licenced under Creative Commons Attribution 2.0 Generic License</item>
     </string-array>
 
     <string name="about_barterli">An open source, community driven, not-for-profit project.\n\n\n We aim to enable sharing of a billion books across the globe.</string>

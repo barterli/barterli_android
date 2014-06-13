@@ -63,7 +63,23 @@
                 android:layout_height="wrap_content"
                 android:text="@string/developer"
                 app:fontStyle="condensed_regular" />
+            
+            <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_marketing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/marketing"
+                app:fontStyle="condensed_regular" />
+            
 
+            <li.barter.widgets.TypefacedRadioButton
+                android:id="@+id/radio_product_evangelist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/product_evangelist"
+                app:fontStyle="condensed_regular" />
+            
+            
             <li.barter.widgets.TypefacedRadioButton
                 android:id="@+id/radio_sponsor"
                 android:layout_width="wrap_content"
@@ -71,19 +87,7 @@
                 android:text="@string/sponsor"
                 app:fontStyle="condensed_regular" />
 
-            <li.barter.widgets.TypefacedRadioButton
-                android:id="@+id/radio_volunteer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/volunteer"
-                app:fontStyle="condensed_regular" />
             
-            <li.barter.widgets.TypefacedRadioButton
-                android:id="@+id/radio_pr_media"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/prmedia"
-                app:fontStyle="condensed_regular" />
             
              
         </RadioGroup>

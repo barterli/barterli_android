@@ -128,6 +128,9 @@ public class ChatDetailAdapter extends CursorAdapter {
                                         .getColumnIndex(DatabaseColumns.MESSAGE)));
 
         final int itemViewType = getItemViewType(cursor.getPosition());
+        String[] timestamp=cursor.getString(cursor
+                .getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN)).split(",");
+        
         if (itemViewType == INCOMING_MESSAGE) {
             if (!TextUtils.isEmpty(mChatUserProfilePic)) {
             	 CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.image_user);
@@ -136,6 +139,9 @@ public class ChatDetailAdapter extends CursorAdapter {
                   .error(R.drawable.pic_avatar)
                  .resizeDimen(R.dimen.chat_detail_image_size, R.dimen.chat_detail_image_size)
                  .centerCrop().into(circleImageView.getTarget());
+            	 
+            	 ((TextView) view.getTag(R.id.chat_ack))
+                 .setText(timestamp[1]);
             }
         } else if (itemViewType == OUTGOING_MESSAGE) {
             final String imageUrl = UserInfo.INSTANCE.getProfilePicture();
@@ -144,7 +150,7 @@ public class ChatDetailAdapter extends CursorAdapter {
                                         .getColumnIndex(DatabaseColumns.CHAT_ACK)).equals(context.getResources().getString(R.string.sent)))
             {
             	  ((TextView) view.getTag(R.id.chat_ack))
-                  .setText(context.getResources().getString(R.string.sent));
+                  .setText(timestamp[1]);
             }
             else
             {
@@ -174,6 +180,8 @@ public class ChatDetailAdapter extends CursorAdapter {
             view = LayoutInflater
                             .from(context)
                             .inflate(R.layout.layout_incoming_chat, parent, false);
+            view.setTag(R.id.chat_ack, view
+                    .findViewById(R.id.chat_ack));
         } else if (viewType == OUTGOING_MESSAGE) {
             view = LayoutInflater
                             .from(context)

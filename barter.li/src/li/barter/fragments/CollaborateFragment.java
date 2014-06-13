@@ -50,8 +50,8 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
     private RadioButton         mEnlistAsDesignerRadioButton;
     private RadioButton         mEnlistAsDeveloperRadioButton;
     private RadioButton         mEnlistAsUserRadioButton;
-    private RadioButton         mEnlistAsVolunteerRadioButton;
-    private RadioButton         mEnlistAsPrMediaRadioButton;
+    private RadioButton         mEnlistAsProductEvangelistRadioButton;
+    private RadioButton         mEnlistAsMarketingRadioButton;
     private RadioGroup          mEnlistOptionsRadioGroup;
     private boolean mLoadedIndividually;
 
@@ -76,11 +76,11 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
         mEnlistAsUserRadioButton = (RadioButton) view
                         .findViewById(R.id.radio_user);
 
-        mEnlistAsVolunteerRadioButton = (RadioButton) view
-                        .findViewById(R.id.radio_volunteer);
+        mEnlistAsProductEvangelistRadioButton = (RadioButton) view
+                        .findViewById(R.id.radio_product_evangelist);
 
-        mEnlistAsPrMediaRadioButton = (RadioButton) view
-                .findViewById(R.id.radio_pr_media);
+        mEnlistAsMarketingRadioButton = (RadioButton) view
+                .findViewById(R.id.radio_marketing);
         
         mEnlistOptionsRadioGroup = (RadioGroup) view
                         .findViewById(R.id.radio_enlist_options);
@@ -101,8 +101,8 @@ public class CollaborateFragment extends AbstractBarterLiFragment implements
                 if (!(mEnlistAsSponsorRadioButton.isChecked()
                                 || mEnlistAsDesignerRadioButton.isChecked()
                                 || mEnlistAsDeveloperRadioButton.isChecked()
-                                || mEnlistAsUserRadioButton.isChecked() || mEnlistAsVolunteerRadioButton
-                                    .isChecked()||mEnlistAsPrMediaRadioButton.isChecked())) {
+                                || mEnlistAsUserRadioButton.isChecked() || mEnlistAsProductEvangelistRadioButton
+                                    .isChecked()||mEnlistAsMarketingRadioButton.isChecked())) {
                     showCrouton("Please Select in what role you would like to work with us", AlertStyle.ERROR);
                     return;
                 }

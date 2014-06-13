@@ -468,11 +468,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             mCurPage++;
 
+            mBooksAroundMeGridView.setEmptyView(mEmptyView);
             if (response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)) {
 
                 mHasLoadedAllItems = true;
                 mCurPage--;
-                mBooksAroundMeGridView.setEmptyView(mEmptyView);
+                
                 showCrouton(mEmptySearchCroutonFlag ? R.string.no_books_found
                                 : R.string.no_more_books_found, AlertStyle.INFO);
             }

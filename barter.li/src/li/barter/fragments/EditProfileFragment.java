@@ -65,6 +65,7 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.PhotoUtils;
@@ -284,9 +285,11 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.button_edit_current_location: {
+            	 final Bundle args = new Bundle();
+                 args.putBoolean(Keys.EDIT_MODE, true);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), SelectPreferredLocationFragment.class
-                                                .getName(), null), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
+                                                .getName(), args), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
 
                 break;
             }

@@ -37,7 +37,7 @@ public class LoadMoreHelper implements OnScrollListener {
 
     private static final String TAG                 = "LoadMoreHelper";
 
-    private static final int    DEFAULT_LOAD_OFFSET = 9;
+    private static final int    DEFAULT_LOAD_OFFSET = 45;
 
     /**
      * External {@link OnScrollListener} listener

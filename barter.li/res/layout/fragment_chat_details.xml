@@ -20,7 +20,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/margin_minimum"
+    android:layout_marginTop="@dimen/margin_minimum"
     android:background="@color/transparent"
     android:orientation="vertical" >
 
@@ -37,8 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/margin_minimum"
-        android:paddingRight="@dimen/margin_minimum" >
+         >
 
         <li.barter.widgets.TypefacedEditText
             android:id="@+id/edit_text_chat_message"
@@ -47,14 +46,16 @@
             android:layout_height="wrap_content"
             android:hint="@string/enter_message"
             android:singleLine="false"
+            android:layout_margin="@dimen/margin_xx_small"
             app:fontStyle="regular" />
 
-        <li.barter.widgets.TypefacedButton
+        <ImageButton
             android:id="@+id/button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/send"
-            app:fontStyle="bold" />
+            android:src="@drawable/social_send_now"
+            android:contentDescription="@string/send"
+            />
     </LinearLayout>
 
 </LinearLayout>

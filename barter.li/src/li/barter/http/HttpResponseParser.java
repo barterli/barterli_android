@@ -100,6 +100,11 @@ public class HttpResponseParser {
 		case RequestId.FOURSQUARE_VENUES: {
 			return parseVenuesResponse(response);
 		}
+		
+		case RequestId.FOURSQUARE_VENUES_WITHOUT_CATEGORIES: {
+			return parseVenuesResponse(response);
+		}
+		
 
 		case RequestId.REPORT_BUG: {
 			return parseReportBugOrSuggestFeatureResponse(response);

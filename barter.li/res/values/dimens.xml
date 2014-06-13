@@ -42,7 +42,7 @@
     <dimen name="chats_item_height">100dp</dimen>
     <dimen name="chat_detail_image_size">50dp</dimen>
     <dimen name="big_chat_detail_image_size">60dp</dimen>
-    <dimen name="chat_detail_margin">44dp</dimen>
+    <dimen name="chat_detail_margin">48dp</dimen>
     <dimen name="ab_ip_size">32dp</dimen>
     <dimen name="book_user_image_size">26dp</dimen>
     <dimen name="book_user_image_corner_radius">13dp</dimen>

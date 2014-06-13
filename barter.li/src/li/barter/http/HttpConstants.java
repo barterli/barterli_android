@@ -134,27 +134,28 @@ public class HttpConstants {
      */
     public static interface RequestId {
 
-        public static final int GET_BOOK_INFO               = 100;
-        public static final int CREATE_BOOK                 = 101;
-        public static final int SEARCH_BOOKS                = 102;
-        public static final int CREATE_USER                 = 103;
-        public static final int FOURSQUARE_VENUES           = 104;
-        public static final int SET_USER_PREFERRED_LOCATION = 105;
-        public static final int SAVE_USER_PROFILE           = 110;
-        public static final int GET_USER_PROFILE            = 111;
-        public static final int REPORT_BUG                  = 112;
-        public static final int SUGGEST_FEATURE             = 113;
-        public static final int COLLABORATE_REQUEST         = 114;
-        public static final int AMPQ                        = 115;
-        public static final int TRIBUTE                     = 116;
-        public static final int TEAM                        = 117;
-        public static final int SEARCH_BOOKS_FROM_EDITTEXT  = 118;
-        public static final int BOOK_SUGGESTIONS            = 119;
-        public static final int UPDATE_BOOK                 = 120;
-        public static final int DELETE_BOOK                 = 121;
-        public static final int GOOGLEBOOKS_SHOW_BOOK       = 122;
-        public static final int REFERRAL                    = 123;
-        public static final int BLOCK_CHATS					= 124;
+        public static final int GET_BOOK_INFO              					   = 100;
+        public static final int CREATE_BOOK                 				   = 101;
+        public static final int SEARCH_BOOKS           						   = 102;
+        public static final int CREATE_USER             					   = 103;
+        public static final int FOURSQUARE_VENUES          			           = 104;
+        public static final int FOURSQUARE_VENUES_WITHOUT_CATEGORIES           = 105;
+        public static final int SET_USER_PREFERRED_LOCATION 				   = 106;
+        public static final int SAVE_USER_PROFILE           				   = 110;
+        public static final int GET_USER_PROFILE             				   = 111;
+        public static final int REPORT_BUG                  				   = 112;
+        public static final int SUGGEST_FEATURE             			       = 113;
+        public static final int COLLABORATE_REQUEST         				   = 114;
+        public static final int AMPQ                       					   = 115;
+        public static final int TRIBUTE                     				   = 116;
+        public static final int TEAM                        				   = 117;
+        public static final int SEARCH_BOOKS_FROM_EDITTEXT  				   = 118;
+        public static final int BOOK_SUGGESTIONS           					   = 119;
+        public static final int UPDATE_BOOK                 				   = 120;
+        public static final int DELETE_BOOK                					   = 121;
+        public static final int GOOGLEBOOKS_SHOW_BOOK       				   = 122;
+        public static final int REFERRAL                   					   = 123;
+        public static final int BLOCK_CHATS									   = 124;
 
     }
 

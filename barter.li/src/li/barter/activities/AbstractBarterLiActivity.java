@@ -646,8 +646,11 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * @param style The {@link AlertStyle} of message to display
      */
     public void showCrouton(final String message, final AlertStyle style) {
-        Crouton.make(this, getCroutonViewForStyle(this, message, style)).show();
-
+    	//Crouton.make(activity, customView, viewGroupResId, configuration)
+        //Crouton.make(this, getCroutonViewForStyle(this, message, style)).show();
+        Crouton.make(this, getCroutonViewForStyle(this, message, style)).setConfiguration(new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
+        .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_SHORT)
+        .build()).show();
     }
 
     /**
