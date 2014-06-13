@@ -142,6 +142,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
 				//Reached here by editing current user's book
 				mdelete.setVisibility(View.VISIBLE);
+				mSubmit.setVisibility(View.GONE);
 				DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableUserBooks.NAME, null, mBookSelection, new String[] {
 						mBookId
 				}, null, null, null, null, this);
