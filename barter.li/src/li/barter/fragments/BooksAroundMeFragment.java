@@ -231,6 +231,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void loadBookSearchResults() {
         //TODO Add filters for search results
+    	mEmptyView.setVisibility(View.GONE);
         getLoaderManager().restartLoader(Loaders.SEARCH_BOOKS, null, this);
     }
 
@@ -526,6 +527,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             {
                 mBooksAroundMeAdapter.swapCursor(cursor);
                 
+            }
+            if(cursor.getCount()==0)
+            {
+            	mEmptyView.setVisibility(View.VISIBLE);
             }
         }
     }
