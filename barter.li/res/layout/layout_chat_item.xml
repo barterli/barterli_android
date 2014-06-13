@@ -20,7 +20,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/chats_item_height"
     android:orientation="horizontal"
-    android:padding="@dimen/margin_minimum" >
+    android:padding="@dimen/margin_xx_small" >
 
     <li.barter.widgets.CircleImageView
         android:id="@+id/image_user"
@@ -36,9 +36,9 @@
         app:cornerRadius="@dimen/big_chat_image_radius" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.8"
+        
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingLeft="@dimen/margin_medium" >

@@ -97,6 +97,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 	private String                        mImage_Url;
 	private String                        mPublicationYear;
 	private Button                        mdelete;
+	private Button                        mSubmit;
 	private String                        mGoogleBooksApiKey;
 	private final String                        mBookSelection = DatabaseColumns.BOOK_ID
 			+ SQLConstants.EQUALS_ARG;
@@ -119,8 +120,9 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 				.inflate(R.layout.fragment_add_or_edit_book, container, false);
 		initViews(view);
 		mGoogleBooksApiKey = getString(R.string.google_maps_v2_api_key);
-		view.findViewById(R.id.button_submit).setOnClickListener(this);
+		mSubmit=(Button)view.findViewById(R.id.button_submit);
 		mdelete = (Button) view.findViewById(R.id.button_delete);
+		mSubmit.setOnClickListener(this);
 		mdelete.setOnClickListener(this);
 		getActivity().getWindow()
 		.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
@@ -371,8 +373,11 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			createBookRequest.setRequestId(RequestId.CREATE_BOOK);
 			addRequestToQueue(createBookRequest, true, 0, true);
 			
+			mSubmit.setEnabled(false);
+			
 		} catch (final JSONException e) {
 			e.printStackTrace();
+			mSubmit.setEnabled(true);
 		}
 	}
 
@@ -619,6 +624,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 					.getString(HttpConstants.IMAGE_URL);
 
 			Logger.d(TAG, "image url %s", mImage_Url);
+			mSubmit.setEnabled(true);
 			break;
 		}
 
@@ -744,8 +750,21 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			final String errorMessage, final Bundle errorResponseBundle) {
 		if (requestId == RequestId.GET_BOOK_INFO) {
 			showCrouton(R.string.unable_to_fetch_book_info, AlertStyle.ERROR);
-		} else if (requestId == RequestId.GET_BOOK_INFO) {
+		} else if (requestId == RequestId.CREATE_BOOK) {
 			showCrouton(R.string.unable_to_create_book, AlertStyle.ERROR);
+			mSubmit.setEnabled(true);
+		}
+		
+	}
+	
+	@Override
+	public void onOtherError(int requestId, IBlRequestContract request,
+			int errorCode) {
+		if (requestId == RequestId.GET_BOOK_INFO) {
+			showCrouton(R.string.unable_to_fetch_book_info, AlertStyle.ERROR);
+		} else if (requestId == RequestId.CREATE_BOOK) {
+			showCrouton(R.string.unable_to_create_book, AlertStyle.ERROR);
+			mSubmit.setEnabled(true);
 		}
 	}
 

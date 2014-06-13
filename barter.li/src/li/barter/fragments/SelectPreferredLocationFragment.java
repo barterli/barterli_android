@@ -169,7 +169,17 @@ implements OnItemClickListener,OnClickListener {
 		if (item.getItemId() == R.id.action_about_select_location) {
 			showAboutSelectLocationDialog();
 			return true;
-		} else {
+		} 
+		
+		else if (item.getItemId() == android.R.id.home) {
+			if (getTag().equals(FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN)) {
+				showCrouton(R.string.add_location_message, AlertStyle.ALERT);
+			} else {
+				onUpNavigate();
+			}
+			return true;
+		} 
+		else {
 			return super.onOptionsItemSelected(item);
 		}
 	}
@@ -200,6 +210,7 @@ implements OnItemClickListener,OnClickListener {
 
 				params.put(HttpConstants.LL, String.format(Locale.US, "%f,%f", location
 						.getLatitude(), location.getLongitude()));
+		
 
 		
 		params.put(HttpConstants.RADIUS, String.valueOf(radius));
@@ -246,6 +257,7 @@ implements OnItemClickListener,OnClickListener {
 
 		params.put(HttpConstants.LL, String.format(Locale.US, "%f,%f", location
 				.getLatitude(), location.getLongitude()));
+		
 		
 		
 		params.put(HttpConstants.RADIUS, String.valueOf(radius));
@@ -356,7 +368,7 @@ implements OnItemClickListener,OnClickListener {
 	public void onBackPressed() {
 
 		if (getTag().equals(FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN)) {
-			onUpNavigate();
+			showCrouton(R.string.add_location_message, AlertStyle.ALERT);
 		} else {
 			super.onBackPressed();
 		}

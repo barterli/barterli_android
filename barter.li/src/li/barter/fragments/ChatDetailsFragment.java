@@ -22,6 +22,7 @@ import java.util.Locale;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatDetailAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
@@ -37,8 +38,10 @@ import li.barter.data.TableUsers;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import android.content.ComponentName;
 import android.content.Context;
@@ -47,6 +50,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -55,6 +59,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -68,7 +74,7 @@ import android.widget.ListView;
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ChatDetailsFragment extends AbstractBarterLiFragment implements
-ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback {
+ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback,OnItemClickListener {
 
 	private static final String     TAG            = "ChatDetailsFragment";
 
@@ -124,6 +130,7 @@ ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback
 		mChatListView = (ListView) view.findViewById(R.id.list_chats);
 		mChatDetailAdapter = new ChatDetailAdapter(getActivity(), null);
 		mChatListView.setAdapter(mChatDetailAdapter);
+		mChatListView.setOnItemClickListener(this);
 		mChatId = getArguments().getString(Keys.CHAT_ID);
 		mWithUserId = getArguments().getString(Keys.USER_ID);
 
@@ -438,5 +445,28 @@ ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback
 	@Override
 	protected String getAnalyticsScreenName() {
 		return Screens.CHAT_DETAILS;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		
+			final Cursor cursor = (Cursor) mChatDetailAdapter
+                    .getItem(position);
+
+    final String idUser = cursor.getString(cursor
+                    .getColumnIndex(DatabaseColumns.SENDER_ID));
+
+
+    Logger.d(TAG, idUser);
+    final Bundle showUserProfileArgs = new Bundle();
+    showUserProfileArgs.putString(Keys.USER_ID, idUser);
+    if(!idUser.equals(UserInfo.INSTANCE.getId()))
+    {
+    loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+            .instantiate(getActivity(), ProfileFragment.class
+                            .getName(), showUserProfileArgs), FragmentTags.PROFILE_FROM_CHAT_DETAILS, true, FragmentTags.CHAT_DETAILS);
+    }
+		
+		
 	}
 }

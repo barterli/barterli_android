@@ -50,7 +50,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:textColor="@color/dark_gray"
+        android:autoLink="web"
+        android:textColorLink="@color/white"
+        android:textColor="@color/white"
         android:textSize="@dimen/text_medium"
         app:fontStyle="regular" />
 
@@ -59,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/text_micro"
-        android:textColor="@color/white"
+        android:textColor="@color/dark_gray"
         android:visibility="visible"
         app:fontStyle="regular" 
         

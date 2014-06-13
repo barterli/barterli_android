@@ -68,6 +68,7 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
 import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
 

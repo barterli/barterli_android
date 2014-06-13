@@ -344,6 +344,7 @@ public class AppConstants {
         public static final String MY_BOOK_FROM_ADD_OR_EDIT                        = "my_book_from_add_or_edit";
         public static final String BOOK_FROM_BOOKS_AROUND_ME                       = "book_from_books_around_me";
         public static final String PROFILE_FROM_NAV_DRAWER                         = "profile_from_nav_drawer";
+        public static final String PROFILE_FROM_CHAT_DETAILS                       = "profile_from_chat_details";
         public static final String PROFILE_FROM_LOGIN                              = "profile_from_login";
         public static final String EDIT_PROFILE                                    = "edit_profile";
         public static final String CHATS                                           = "chats";

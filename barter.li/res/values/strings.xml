@@ -43,7 +43,7 @@
     <string name="try_again"><u>Try Again</u></string>
     <string name="or">or</string>
     <string name="add_your_own"><u>Add Your Own</u></string>
-    <string name="add_location_manually"><u>Add Manually</u></string>
+    <string name="add_location_manually"><u>Add Your Current Location</u></string>
     <string name="logout">Logout</string>
     <string name="delete_chat_alert_message">Are you sure you want to delete this chat?</string>
     <string name="block_user_alert_message">Are you sure you want to block this user?</string>
@@ -51,6 +51,8 @@
     <!-- crouton info strings -->
     <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>
     <string name="crouton_prefferedlocation_message">Please Select Your Book Exchange Point Where You Would Like To Deal</string>
+    <string name="add_location_message">Please select your preferred location</string>
+    
 
     <!-- menu strings -->
     <string name="signup">Sign Up</string>
