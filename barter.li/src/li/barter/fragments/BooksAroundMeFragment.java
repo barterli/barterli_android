@@ -525,7 +525,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
             {
+            	 mEmptyView.setVisibility(View.GONE);
                 mBooksAroundMeAdapter.swapCursor(cursor);
+               
                 
             }
             if(cursor.getCount()==0)
@@ -734,6 +736,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
+    	mCurPage = 0;
+        mHasLoadedAllItems = false;
         fetchBooksAroundMe(mLastFetchedLocation);
         return true;
     }

@@ -7940,7 +7940,7 @@ com.facebook.Settings -> com.facebook.Settings:
     161:171:java.util.concurrent.Executor getExecutor() -> getExecutor
     181:185:void setExecutor(java.util.concurrent.Executor) -> setExecutor
     194:194:java.lang.String getFacebookDomain() -> getFacebookDomain
-    206:210:void setFacebookDomain(java.lang.String) -> setFacebookDomain
+    209:210:void setFacebookDomain(java.lang.String) -> setFacebookDomain
     213:235:java.util.concurrent.Executor getAsyncTaskExecutor() -> getAsyncTaskExecutor
     248:249:void publishInstallAsync(android.content.Context,java.lang.String) -> publishInstallAsync
     264:281:void publishInstallAsync(android.content.Context,java.lang.String,com.facebook.Request$Callback) -> publishInstallAsync
@@ -8909,8 +8909,8 @@ com.facebook.internal.Utility -> com.facebook.internal.Utility:
     278:290:boolean stringsEqualOrEmpty(java.lang.String,java.lang.String) -> stringsEqualOrEmpty
     296:315:void clearCookiesForDomain(android.content.Context,java.lang.String) -> clearCookiesForDomain
     320:324:void clearFacebookCookies(android.content.Context) -> clearFacebookCookies
-    330:330:void logd(java.lang.String,java.lang.Exception) -> logd
-    336:336:void logd(java.lang.String,java.lang.String) -> logd
+    327:330:void logd(java.lang.String,java.lang.Exception) -> logd
+    333:336:void logd(java.lang.String,java.lang.String) -> logd
     339:342:boolean areObjectsEqual(java.lang.Object,java.lang.Object) -> areObjectsEqual
     349:366:com.facebook.internal.Utility$FetchedAppSettings queryAppSettings(java.lang.String,boolean) -> queryAppSettings
     370:377:boolean safeGetBooleanFromResponse(com.facebook.model.GraphObject,java.lang.String) -> safeGetBooleanFromResponse
@@ -10220,27 +10220,12 @@ com.google.android.gms.R$attr -> com.google.android.gms.R$attr:
     int adSize -> adSize
     int adSizes -> adSizes
     int adUnitId -> adUnitId
-    int buyButtonAppearance -> buyButtonAppearance
-    int buyButtonHeight -> buyButtonHeight
-    int buyButtonText -> buyButtonText
-    int buyButtonWidth -> buyButtonWidth
     int cameraBearing -> cameraBearing
     int cameraTargetLat -> cameraTargetLat
     int cameraTargetLng -> cameraTargetLng
     int cameraTilt -> cameraTilt
     int cameraZoom -> cameraZoom
-    int environment -> environment
-    int fragmentMode -> fragmentMode
-    int fragmentStyle -> fragmentStyle
     int mapType -> mapType
-    int maskedWalletDetailsBackground -> maskedWalletDetailsBackground
-    int maskedWalletDetailsButtonBackground -> maskedWalletDetailsButtonBackground
-    int maskedWalletDetailsButtonTextAppearance -> maskedWalletDetailsButtonTextAppearance
-    int maskedWalletDetailsHeaderTextAppearance -> maskedWalletDetailsHeaderTextAppearance
-    int maskedWalletDetailsLogoImageType -> maskedWalletDetailsLogoImageType
-    int maskedWalletDetailsLogoTextColor -> maskedWalletDetailsLogoTextColor
-    int maskedWalletDetailsTextAppearance -> maskedWalletDetailsTextAppearance
-    int theme -> theme
     int uiCompass -> uiCompass
     int uiRotateGestures -> uiRotateGestures
     int uiScrollGestures -> uiScrollGestures
@@ -10262,21 +10247,6 @@ com.google.android.gms.R$color -> com.google.android.gms.R$color:
     int common_signin_btn_light_text_pressed -> common_signin_btn_light_text_pressed
     int common_signin_btn_text_dark -> common_signin_btn_text_dark
     int common_signin_btn_text_light -> common_signin_btn_text_light
-    int wallet_bright_foreground_disabled_holo_light -> wallet_bright_foreground_disabled_holo_light
-    int wallet_bright_foreground_holo_dark -> wallet_bright_foreground_holo_dark
-    int wallet_bright_foreground_holo_light -> wallet_bright_foreground_holo_light
-    int wallet_dim_foreground_disabled_holo_dark -> wallet_dim_foreground_disabled_holo_dark
-    int wallet_dim_foreground_holo_dark -> wallet_dim_foreground_holo_dark
-    int wallet_dim_foreground_inverse_disabled_holo_dark -> wallet_dim_foreground_inverse_disabled_holo_dark
-    int wallet_dim_foreground_inverse_holo_dark -> wallet_dim_foreground_inverse_holo_dark
-    int wallet_highlighted_text_holo_dark -> wallet_highlighted_text_holo_dark
-    int wallet_highlighted_text_holo_light -> wallet_highlighted_text_holo_light
-    int wallet_hint_foreground_holo_dark -> wallet_hint_foreground_holo_dark
-    int wallet_hint_foreground_holo_light -> wallet_hint_foreground_holo_light
-    int wallet_holo_blue_light -> wallet_holo_blue_light
-    int wallet_link_text_light -> wallet_link_text_light
-    int wallet_primary_text_holo_light -> wallet_primary_text_holo_light
-    int wallet_secondary_text_holo_dark -> wallet_secondary_text_holo_dark
 com.google.android.gms.R$drawable -> com.google.android.gms.R$drawable:
     int common_signin_btn_icon_dark -> common_signin_btn_icon_dark
     int common_signin_btn_icon_disabled_dark -> common_signin_btn_icon_disabled_dark
@@ -10306,29 +10276,12 @@ com.google.android.gms.R$drawable -> com.google.android.gms.R$drawable:
     int ic_plusone_small_off_client -> ic_plusone_small_off_client
     int ic_plusone_standard_off_client -> ic_plusone_standard_off_client
     int ic_plusone_tall_off_client -> ic_plusone_tall_off_client
-    int powered_by_google_dark -> powered_by_google_dark
-    int powered_by_google_light -> powered_by_google_light
 com.google.android.gms.R$id -> com.google.android.gms.R$id:
-    int book_now -> book_now
-    int buyButton -> buyButton
-    int buy_now -> buy_now
-    int buy_with_google -> buy_with_google
-    int classic -> classic
-    int grayscale -> grayscale
-    int holo_dark -> holo_dark
-    int holo_light -> holo_light
     int hybrid -> hybrid
-    int match_parent -> match_parent
-    int monochrome -> monochrome
     int none -> none
     int normal -> normal
-    int production -> production
-    int sandbox -> sandbox
     int satellite -> satellite
-    int selectionDetails -> selectionDetails
-    int strict_sandbox -> strict_sandbox
     int terrain -> terrain
-    int wrap_content -> wrap_content
 com.google.android.gms.R$integer -> com.google.android.gms.R$integer:
     int google_play_services_version -> google_play_services_version
 com.google.android.gms.R$string -> com.google.android.gms.R$string:
@@ -10341,19 +10294,14 @@ com.google.android.gms.R$string -> com.google.android.gms.R$string:
     int common_google_play_services_enable_button -> common_google_play_services_enable_button
     int common_google_play_services_enable_text -> common_google_play_services_enable_text
     int common_google_play_services_enable_title -> common_google_play_services_enable_title
-    int common_google_play_services_error_notification_requested_by_msg -> common_google_play_services_error_notification_requested_by_msg
     int common_google_play_services_install_button -> common_google_play_services_install_button
     int common_google_play_services_install_text_phone -> common_google_play_services_install_text_phone
     int common_google_play_services_install_text_tablet -> common_google_play_services_install_text_tablet
     int common_google_play_services_install_title -> common_google_play_services_install_title
     int common_google_play_services_invalid_account_text -> common_google_play_services_invalid_account_text
     int common_google_play_services_invalid_account_title -> common_google_play_services_invalid_account_title
-    int common_google_play_services_needs_enabling_title -> common_google_play_services_needs_enabling_title
     int common_google_play_services_network_error_text -> common_google_play_services_network_error_text
     int common_google_play_services_network_error_title -> common_google_play_services_network_error_title
-    int common_google_play_services_notification_needs_installation_title -> common_google_play_services_notification_needs_installation_title
-    int common_google_play_services_notification_needs_update_title -> common_google_play_services_notification_needs_update_title
-    int common_google_play_services_notification_ticker -> common_google_play_services_notification_ticker
     int common_google_play_services_unknown_issue -> common_google_play_services_unknown_issue
     int common_google_play_services_unsupported_date_text -> common_google_play_services_unsupported_date_text
     int common_google_play_services_unsupported_text -> common_google_play_services_unsupported_text
@@ -10363,12 +10311,6 @@ com.google.android.gms.R$string -> com.google.android.gms.R$string:
     int common_google_play_services_update_title -> common_google_play_services_update_title
     int common_signin_button_text -> common_signin_button_text
     int common_signin_button_text_long -> common_signin_button_text_long
-    int wallet_buy_button_place_holder -> wallet_buy_button_place_holder
-com.google.android.gms.R$style -> com.google.android.gms.R$style:
-    int WalletFragmentDefaultButtonTextAppearance -> WalletFragmentDefaultButtonTextAppearance
-    int WalletFragmentDefaultDetailsHeaderTextAppearance -> WalletFragmentDefaultDetailsHeaderTextAppearance
-    int WalletFragmentDefaultDetailsTextAppearance -> WalletFragmentDefaultDetailsTextAppearance
-    int WalletFragmentDefaultStyle -> WalletFragmentDefaultStyle
 com.google.android.gms.R$styleable -> com.google.android.gms.R$styleable:
     int[] AdsAttrs -> AdsAttrs
     int AdsAttrs_adSize -> AdsAttrs_adSize
@@ -10389,23 +10331,6 @@ com.google.android.gms.R$styleable -> com.google.android.gms.R$styleable:
     int MapAttrs_uiZoomGestures -> MapAttrs_uiZoomGestures
     int MapAttrs_useViewLifecycle -> MapAttrs_useViewLifecycle
     int MapAttrs_zOrderOnTop -> MapAttrs_zOrderOnTop
-    int[] WalletFragmentOptions -> WalletFragmentOptions
-    int WalletFragmentOptions_environment -> WalletFragmentOptions_environment
-    int WalletFragmentOptions_fragmentMode -> WalletFragmentOptions_fragmentMode
-    int WalletFragmentOptions_fragmentStyle -> WalletFragmentOptions_fragmentStyle
-    int WalletFragmentOptions_theme -> WalletFragmentOptions_theme
-    int[] WalletFragmentStyle -> WalletFragmentStyle
-    int WalletFragmentStyle_buyButtonAppearance -> WalletFragmentStyle_buyButtonAppearance
-    int WalletFragmentStyle_buyButtonHeight -> WalletFragmentStyle_buyButtonHeight
-    int WalletFragmentStyle_buyButtonText -> WalletFragmentStyle_buyButtonText
-    int WalletFragmentStyle_buyButtonWidth -> WalletFragmentStyle_buyButtonWidth
-    int WalletFragmentStyle_maskedWalletDetailsBackground -> WalletFragmentStyle_maskedWalletDetailsBackground
-    int WalletFragmentStyle_maskedWalletDetailsButtonBackground -> WalletFragmentStyle_maskedWalletDetailsButtonBackground
-    int WalletFragmentStyle_maskedWalletDetailsButtonTextAppearance -> WalletFragmentStyle_maskedWalletDetailsButtonTextAppearance
-    int WalletFragmentStyle_maskedWalletDetailsHeaderTextAppearance -> WalletFragmentStyle_maskedWalletDetailsHeaderTextAppearance
-    int WalletFragmentStyle_maskedWalletDetailsLogoImageType -> WalletFragmentStyle_maskedWalletDetailsLogoImageType
-    int WalletFragmentStyle_maskedWalletDetailsLogoTextColor -> WalletFragmentStyle_maskedWalletDetailsLogoTextColor
-    int WalletFragmentStyle_maskedWalletDetailsTextAppearance -> WalletFragmentStyle_maskedWalletDetailsTextAppearance
 com.google.android.gms.ads.AdActivity -> com.google.android.gms.ads.AdActivity:
     com.google.android.gms.internal.ck ko -> a
     void onCreate(android.os.Bundle) -> onCreate
@@ -21718,6 +21643,7 @@ de.keyboardsurfer.android.widget.crouton.Crouton -> a.a.a.a.a.b:
     538:539:void show() -> b
     542:553:android.view.animation.Animation getInAnimation() -> c
     557:567:android.view.animation.Animation getOutAnimation() -> d
+    608:609:de.keyboardsurfer.android.widget.crouton.Crouton setConfiguration(de.keyboardsurfer.android.widget.crouton.Configuration) -> a
     614:614:java.lang.String toString() -> toString
     656:656:boolean isShowing() -> e
     661:661:boolean isCroutonViewNotNull() -> p
@@ -22003,13 +21929,13 @@ li.barter.BarterLiApplication -> li.barter.BarterLiApplication:
     android.content.Context sStaticContext -> a
     com.android.volley.RequestQueue mRequestQueue -> b
     65:70:android.content.Context getStaticContext() -> a
-    76:105:void onCreate() -> onCreate
-    109:118:void saveCurrentAppVersionIntoPreferences() -> d
-    125:126:void doMigrationFromAlpha() -> e
-    134:144:void readUserInfoFromSharedPref() -> f
-    158:169:void overrideHardwareMenuButton() -> g
-    173:173:com.android.volley.RequestQueue getRequestQueue() -> b
-    182:184:void startChatService() -> c
+    76:107:void onCreate() -> onCreate
+    111:120:void saveCurrentAppVersionIntoPreferences() -> d
+    127:128:void doMigrationFromAlpha() -> e
+    136:146:void readUserInfoFromSharedPref() -> f
+    160:171:void overrideHardwareMenuButton() -> g
+    175:175:com.android.volley.RequestQueue getRequestQueue() -> b
+    184:186:void startChatService() -> c
 li.barter.R -> li.barter.R:
 li.barter.R$anim -> li.barter.R$anim:
     int exit_zoom_in -> exit_zoom_in
@@ -22023,6 +21949,7 @@ li.barter.R$anim -> li.barter.R$anim:
 li.barter.R$array -> li.barter.R$array:
     int aboutus_fragment_titles -> aboutus_fragment_titles
     int add_book_choices -> add_book_choices
+    int chat_longclick_choices -> chat_longclick_choices
     int months -> months
     int nav_drawer_descriptions -> nav_drawer_descriptions
     int nav_drawer_titles -> nav_drawer_titles
@@ -22262,6 +22189,7 @@ li.barter.R$dimen -> li.barter.R$dimen:
     int book_height -> book_height
     int book_height_for_detail -> book_height_for_detail
     int book_image_height -> book_image_height
+    int book_image_width -> book_image_width
     int book_image_width_for_detail -> book_image_width_for_detail
     int book_user_image_border -> book_user_image_border
     int book_user_image_corner_radius -> book_user_image_corner_radius
@@ -22562,6 +22490,7 @@ li.barter.R$drawable -> li.barter.R$drawable:
     int selector_facebook_login -> selector_facebook_login
     int selector_google_login -> selector_google_login
     int selector_main_item_overlay -> selector_main_item_overlay
+    int social_send_now -> social_send_now
     int spinner_ab_default_apptheme -> spinner_ab_default_apptheme
     int spinner_ab_disabled_apptheme -> spinner_ab_disabled_apptheme
     int spinner_ab_focused_apptheme -> spinner_ab_focused_apptheme
@@ -22655,6 +22584,7 @@ li.barter.R$id -> li.barter.R$id:
     int edit_text_title -> edit_text_title
     int edittext_first_name -> edittext_first_name
     int edittext_last_name -> edittext_last_name
+    int edittext_location_name -> edittext_location_name
     int empty_view -> empty_view
     int encode_view -> encode_view
     int format_text_view -> format_text_view
@@ -22720,12 +22650,12 @@ li.barter.R$id -> li.barter.R$id:
     int radio_designer -> radio_designer
     int radio_developer -> radio_developer
     int radio_enlist_options -> radio_enlist_options
-    int radio_pr_media -> radio_pr_media
+    int radio_marketing -> radio_marketing
+    int radio_product_evangelist -> radio_product_evangelist
     int radio_reportbug -> radio_reportbug
     int radio_sponsor -> radio_sponsor
     int radio_suggestfeature -> radio_suggestfeature
     int radio_user -> radio_user
-    int radio_volunteer -> radio_volunteer
     int regular -> regular
     int restart_preview -> restart_preview
     int result_view -> result_view
@@ -22748,6 +22678,7 @@ li.barter.R$id -> li.barter.R$id:
     int team_name -> team_name
     int terrain -> terrain
     int text_about_me -> text_about_me
+    int text_add_manually -> text_add_manually
     int text_add_your_own -> text_add_your_own
     int text_author -> text_author
     int text_book_author -> text_book_author
@@ -22759,6 +22690,7 @@ li.barter.R$id -> li.barter.R$id:
     int text_chat_time -> text_chat_time
     int text_current_location -> text_current_location
     int text_description -> text_description
+    int text_device_description -> text_device_description
     int text_distance -> text_distance
     int text_feature_description -> text_feature_description
     int text_first_name -> text_first_name
@@ -22798,6 +22730,7 @@ li.barter.R$integer -> li.barter.R$integer:
     int default_title_indicator_line_position -> default_title_indicator_line_position
     int default_underline_indicator_fade_delay -> default_underline_indicator_fade_delay
     int default_underline_indicator_fade_length -> default_underline_indicator_fade_length
+    int descriptionedittextcount -> descriptionedittextcount
     int google_play_services_version -> google_play_services_version
     int grid_col_count -> grid_col_count
     int grid_col_count_for_team -> grid_col_count_for_team
@@ -22859,12 +22792,14 @@ li.barter.R$layout -> li.barter.R$layout:
     int layout_books_tab -> layout_books_tab
     int layout_chat_item -> layout_chat_item
     int layout_dialog_names -> layout_dialog_names
+    int layout_dialog_place -> layout_dialog_place
     int layout_emptyview_onrefresh -> layout_emptyview_onrefresh
     int layout_incoming_chat -> layout_incoming_chat
     int layout_item_book -> layout_item_book
     int layout_nav_drawer_item -> layout_nav_drawer_item
     int layout_oss_item -> layout_oss_item
     int layout_outgoing_chat -> layout_outgoing_chat
+    int layout_select_location_empty_view -> layout_select_location_empty_view
     int layout_select_place_item -> layout_select_place_item
     int layout_team -> layout_team
 li.barter.R$menu -> li.barter.R$menu:
@@ -22888,6 +22823,8 @@ li.barter.R$string -> li.barter.R$string:
     int action_settings -> action_settings
     int add_book -> add_book
     int add_book_dialog_head -> add_book_dialog_head
+    int add_location_manually -> add_location_manually
+    int add_location_message -> add_location_message
     int add_manually -> add_manually
     int add_new_book_label -> add_new_book_label
     int add_your_own -> add_your_own
@@ -22906,6 +22843,7 @@ li.barter.R$string -> li.barter.R$string:
     int barter_type_label -> barter_type_label
     int barterli_email -> barterli_email
     int bartertype_label -> bartertype_label
+    int block_user_alert_message -> block_user_alert_message
     int book_added -> book_added
     int build_library -> build_library
     int button_edit_preferred_location -> button_edit_preferred_location
@@ -22914,6 +22852,7 @@ li.barter.R$string -> li.barter.R$string:
     int cancel -> cancel
     int capture_name -> capture_name
     int chat_fragment_title -> chat_fragment_title
+    int chat_longclick_dialog_head -> chat_longclick_dialog_head
     int chat_opened_from -> chat_opened_from
     int chat_with_owner -> chat_with_owner
     int com_crashlytics_android_build_id -> com_crashlytics_android_build_id
@@ -22979,9 +22918,11 @@ li.barter.R$string -> li.barter.R$string:
     int crouton_prefferedlocation_message -> crouton_prefferedlocation_message
     int decoder_name -> decoder_name
     int delete -> delete
+    int delete_chat_alert_message -> delete_chat_alert_message
     int description_label -> description_label
     int designer -> designer
     int developer -> developer
+    int deviceinfo_tag -> deviceinfo_tag
     int drawer_closed -> drawer_closed
     int drawer_open -> drawer_open
     int editbook_title -> editbook_title
@@ -22989,6 +22930,7 @@ li.barter.R$string -> li.barter.R$string:
     int email_label -> email_label
     int encoder_name -> encoder_name
     int enter_message -> enter_message
+    int error_block_user -> error_block_user
     int error_enter_email -> error_enter_email
     int error_enter_password -> error_enter_password
     int error_enter_title -> error_enter_title
@@ -23003,11 +22945,16 @@ li.barter.R$string -> li.barter.R$string:
     int foursquare_client_secret -> foursquare_client_secret
     int ga_tracking_id -> ga_tracking_id
     int give_away -> give_away
+    int goodreads_api_key -> goodreads_api_key
     int google_maps_v2_api_key -> google_maps_v2_api_key
+    int google_maps_v2_api_key_debug -> google_maps_v2_api_key_debug
+    int googlebooks_api_key -> googlebooks_api_key
     int help_select_location -> help_select_location
     int hint_about_me_description -> hint_about_me_description
+    int hint_enter_device -> hint_enter_device
     int hint_first_name -> hint_first_name
     int hint_last_name -> hint_last_name
+    int hint_location_name -> hint_location_name
     int hint_report_bug -> hint_report_bug
     int hint_suggest_feature -> hint_suggest_feature
     int image_profile_pic_description -> image_profile_pic_description
@@ -23027,6 +22974,7 @@ li.barter.R$string -> li.barter.R$string:
     int login_with_facebook -> login_with_facebook
     int login_with_google -> login_with_google
     int logout -> logout
+    int marketing -> marketing
     int meters_away -> meters_away
     int msg_default_contents -> msg_default_contents
     int msg_default_format -> msg_default_format
@@ -23044,6 +22992,7 @@ li.barter.R$string -> li.barter.R$string:
     int no_network_connection -> no_network_connection
     int no_personal_info_bug_and_suggest -> no_personal_info_bug_and_suggest
     int no_personal_info_suggest -> no_personal_info_suggest
+    int no_places_found_nearby -> no_places_found_nearby
     int not_a_valid_isbn -> not_a_valid_isbn
     int ok -> ok
     int or -> or
@@ -23066,7 +23015,8 @@ li.barter.R$string -> li.barter.R$string:
     int pref_referrer_count -> pref_referrer_count
     int pref_share_token -> pref_share_token
     int pref_user_id -> pref_user_id
-    int prmedia -> prmedia
+    int preferred_location -> preferred_location
+    int product_evangelist -> product_evangelist
     int profile -> profile
     int profilepage_title -> profilepage_title
     int publication_date_label -> publication_date_label
@@ -23111,6 +23061,7 @@ li.barter.R$string -> li.barter.R$string:
     int sponsor -> sponsor
     int subject -> subject
     int submit -> submit
+    int success_message_for_chatblock -> success_message_for_chatblock
     int suggested_price_label -> suggested_price_label
     int tag_barter_type -> tag_barter_type
     int take_picture -> take_picture
@@ -23136,7 +23087,6 @@ li.barter.R$string -> li.barter.R$string:
     int update_info -> update_info
     int url_google -> url_google
     int url_me -> url_me
-    int volunteer -> volunteer
     int wallet_buy_button_place_holder -> wallet_buy_button_place_holder
     int welcome_back -> welcome_back
     int welcome_fb -> welcome_fb
@@ -23378,29 +23328,29 @@ li.barter.activities.AbstractBarterLiActivity -> li.barter.activities.AbstractBa
     589:613:void doUpNavigation() -> c
     624:630:void setActionBarTitle(java.lang.String) -> a
     639:640:void setActionBarTitle(int) -> b
-    649:651:void showCrouton(java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
-    660:661:void showCrouton(int,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
-    693:694:void cancelAllCroutons() -> i
-    707:712:void finish(boolean) -> a
-    716:717:void finish() -> finish
-    734:754:void loadFragment(int,li.barter.fragments.AbstractBarterLiFragment,java.lang.String,boolean,java.lang.String) -> a
-    769:816:void initDrawer(int,int,boolean) -> a
-    820:825:void onPostCreate(android.os.Bundle) -> onPostCreate
-    829:833:void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
-    837:840:boolean onPrepareOptionsMenu(android.view.Menu) -> onPrepareOptionsMenu
-    845:847:void setOptionsGroupHidden(android.view.Menu,boolean) -> a
-    853:853:boolean hasNavigationDrawer() -> j
-    861:861:boolean isActionBarNavDrawerToggleEnabled() -> k
-    876:883:void setActionBarDrawerToggleEnabled(boolean) -> b
-    889:889:boolean isLoggedIn() -> l
-    894:897:void onWindowFocusChanged(boolean) -> onWindowFocusChanged
-    902:910:void onBackPressed() -> onBackPressed
-    924:924:li.barter.fragments.AbstractBarterLiFragment getCurrentMasterFragment() -> m
-    937:940:void onPostExecute(li.barter.http.IBlRequestContract) -> a
-    955:955:void onAuthError(int,li.barter.http.IBlRequestContract) -> a
-    961:961:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
-    974:995:android.view.View getCroutonViewForStyle(android.content.Context,java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
-    1001:1008:void onClick(android.content.DialogInterface,int) -> onClick
+    651:654:void showCrouton(java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
+    663:664:void showCrouton(int,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
+    696:697:void cancelAllCroutons() -> i
+    710:715:void finish(boolean) -> a
+    719:720:void finish() -> finish
+    737:757:void loadFragment(int,li.barter.fragments.AbstractBarterLiFragment,java.lang.String,boolean,java.lang.String) -> a
+    772:819:void initDrawer(int,int,boolean) -> a
+    823:828:void onPostCreate(android.os.Bundle) -> onPostCreate
+    832:836:void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
+    840:843:boolean onPrepareOptionsMenu(android.view.Menu) -> onPrepareOptionsMenu
+    848:850:void setOptionsGroupHidden(android.view.Menu,boolean) -> a
+    856:856:boolean hasNavigationDrawer() -> j
+    864:864:boolean isActionBarNavDrawerToggleEnabled() -> k
+    879:886:void setActionBarDrawerToggleEnabled(boolean) -> b
+    892:892:boolean isLoggedIn() -> l
+    897:900:void onWindowFocusChanged(boolean) -> onWindowFocusChanged
+    905:939:void onBackPressed() -> onBackPressed
+    953:953:li.barter.fragments.AbstractBarterLiFragment getCurrentMasterFragment() -> m
+    968:971:void onPostExecute(li.barter.http.IBlRequestContract) -> a
+    986:986:void onAuthError(int,li.barter.http.IBlRequestContract) -> a
+    992:992:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
+    1005:1026:android.view.View getCroutonViewForStyle(android.content.Context,java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
+    1032:1039:void onClick(android.content.DialogInterface,int) -> onClick
     275:275:java.lang.Runnable access$0(li.barter.activities.AbstractBarterLiActivity,int) -> a
     166:166:android.os.Handler access$1(li.barter.activities.AbstractBarterLiActivity) -> a
     133:133:android.support.v4.widget.DrawerLayout access$2(li.barter.activities.AbstractBarterLiActivity) -> b
@@ -23423,8 +23373,8 @@ li.barter.activities.AbstractBarterLiActivity$5 -> li.barter.activities.Abstract
     414:417:void run() -> run
 li.barter.activities.AbstractBarterLiActivity$6 -> li.barter.activities.AbstractBarterLiActivity$6:
     li.barter.activities.AbstractBarterLiActivity this$0 -> a
-    787:791:void onDrawerOpened(android.view.View) -> onDrawerOpened
-    795:799:void onDrawerClosed(android.view.View) -> onDrawerClosed
+    790:794:void onDrawerOpened(android.view.View) -> onDrawerOpened
+    798:802:void onDrawerClosed(android.view.View) -> onDrawerClosed
 li.barter.activities.AbstractBarterLiActivity$AlertStyle -> li.barter.activities.AbstractBarterLiActivity$a:
     li.barter.activities.AbstractBarterLiActivity$AlertStyle ALERT -> a
     li.barter.activities.AbstractBarterLiActivity$AlertStyle INFO -> b
@@ -23452,11 +23402,11 @@ li.barter.activities.HomeActivity -> li.barter.activities.HomeActivity:
     214:214:java.lang.Object getVolleyTag() -> g
     222:226:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
     233:233:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    239:245:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    252:252:li.barter.utils.GooglePlusManager getPlusManager() -> d
-    258:263:void onLogin() -> e
-    267:272:void onLoginError(java.lang.Exception) -> a
-    291:291:java.lang.String getAnalyticsScreenName() -> b
+    241:247:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    254:254:li.barter.utils.GooglePlusManager getPlusManager() -> d
+    260:265:void onLogin() -> e
+    269:274:void onLoginError(java.lang.Exception) -> a
+    293:293:java.lang.String getAnalyticsScreenName() -> b
 li.barter.activities.ScanIsbnActivity -> li.barter.activities.ScanIsbnActivity:
     com.jwetherell.quick_response_code.DecoderActivityHandler mDecoderActivityHandler -> b
     com.jwetherell.quick_response_code.ViewfinderView mViewFinderView -> c
@@ -23487,8 +23437,8 @@ li.barter.activities.ScanIsbnActivity -> li.barter.activities.ScanIsbnActivity:
     297:297:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
     301:301:java.lang.String getAnalyticsScreenName() -> b
 li.barter.adapters.BooksGridAdapter -> li.barter.a.a:
-    56:108:void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
-    113:124:android.view.View newView(android.content.Context,android.database.Cursor,android.view.ViewGroup) -> newView
+    56:110:void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
+    115:126:android.view.View newView(android.content.Context,android.database.Cursor,android.view.ViewGroup) -> newView
 li.barter.adapters.ChatDetailAdapter -> li.barter.a.b:
     java.util.Map mPositionViewTypeMap -> a
     java.lang.String TAG -> b
@@ -23498,8 +23448,8 @@ li.barter.adapters.ChatDetailAdapter -> li.barter.a.b:
     106:108:void notifyDataSetChanged() -> notifyDataSetChanged
     113:113:int getItemViewType(int) -> getItemViewType
     119:119:int getViewTypeCount() -> getViewTypeCount
-    126:165:void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
-    171:188:android.view.View newView(android.content.Context,android.database.Cursor,android.view.ViewGroup) -> newView
+    126:171:void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
+    177:196:android.view.View newView(android.content.Context,android.database.Cursor,android.view.ViewGroup) -> newView
 li.barter.adapters.ChatsAdapter -> li.barter.a.c:
     java.lang.String mUserNameFormat -> a
     52:78:void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
@@ -23870,16 +23820,16 @@ li.barter.data.ViewUsersWithLocations -> li.barter.b.q:
     45:78:void create(android.database.sqlite.SQLiteDatabase) -> a
     85:93:void upgrade(android.database.sqlite.SQLiteDatabase,int,int) -> a
 li.barter.fragments.AboutMeFragment -> li.barter.c.a:
-    android.widget.TextView mAboutMeTextView -> d
-    android.widget.TextView mPreferredLocationTextView -> e
-    android.widget.TextView mLabelReferralCount -> f
-    android.widget.TextView mReferralCountTextView -> g
-    java.lang.String mUserSelection -> h
-    java.lang.String mLocationFormat -> i
-    java.lang.String mUserId -> j
-    boolean mLoadedIndividually -> k
-    boolean mLoggedInUser -> l
-    android.widget.Button mLogoutButton -> m
+    android.widget.TextView mAboutMeTextView -> e
+    android.widget.TextView mPreferredLocationTextView -> f
+    android.widget.TextView mLabelReferralCount -> g
+    android.widget.TextView mReferralCountTextView -> h
+    java.lang.String mUserSelection -> i
+    java.lang.String mLocationFormat -> j
+    java.lang.String mUserId -> k
+    boolean mLoadedIndividually -> l
+    boolean mLoggedInUser -> m
+    android.widget.Button mLogoutButton -> n
     75:109:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     114:116:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
     122:122:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
@@ -23891,17 +23841,17 @@ li.barter.fragments.AboutMeFragment -> li.barter.c.a:
     159:159:void onUpdateComplete(int,java.lang.Object,int) -> b
     166:167:void loadUserDetails() -> k
     172:179:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    186:218:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    223:223:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    231:238:void setUserId(java.lang.String) -> a
-    243:251:java.lang.String getAnalyticsScreenName() -> b
-    258:261:void onClick(android.view.View) -> onClick
+    186:221:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    226:226:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    234:241:void setUserId(java.lang.String) -> a
+    246:254:java.lang.String getAnalyticsScreenName() -> b
+    261:264:void onClick(android.view.View) -> onClick
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
 li.barter.fragments.AboutUsPagerFragment -> li.barter.c.b:
-    li.barter.fragments.AboutUsPagerFragment$AboutUsPageAdapter mAdapter -> d
-    java.util.ArrayList mTitles -> e
-    android.support.v4.view.ViewPager mAboutUsPager -> f
-    com.viewpagerindicator.TitlePageIndicator mIndicator -> g
+    li.barter.fragments.AboutUsPagerFragment$AboutUsPageAdapter mAdapter -> e
+    java.util.ArrayList mTitles -> f
+    android.support.v4.view.ViewPager mAboutUsPager -> g
+    com.viewpagerindicator.TitlePageIndicator mIndicator -> h
     57:75:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     155:155:java.lang.Object getVolleyTag() -> a
     163:163:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
@@ -23919,104 +23869,108 @@ li.barter.fragments.AboutUsPagerFragment$AboutUsPageAdapter -> li.barter.c.b$a:
     136:137:void destroyItem(android.view.ViewGroup,int,java.lang.Object) -> destroyItem
     147:147:java.lang.CharSequence getPageTitle(int) -> getPageTitle
 li.barter.fragments.AbstractBarterLiFragment -> li.barter.c.c:
-    boolean mIsAttached -> d
+    boolean mIsAttached -> e
     int mContainerViewId -> a
     li.barter.http.VolleyCallbacks mVolleyCallbacks -> b
-    java.util.concurrent.atomic.AtomicInteger mRequestCounter -> e
-    boolean mShouldReportScreenHit -> f
-    li.barter.fragments.dialogs.AddUserInfoDialogFragment mAddUserInfoDialogFragment -> g
-    boolean $assertionsDisabled -> c
-    102:108:void onAttach(android.app.Activity) -> onAttach
-    112:114:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    125:138:void init(android.view.ViewGroup,android.os.Bundle) -> a
-    142:144:void onResume() -> onResume
-    150:159:void checkAndReportScreenHit() -> k
+    java.util.concurrent.atomic.AtomicInteger mRequestCounter -> f
+    boolean mShouldReportScreenHit -> g
+    boolean mRefreshBooks -> c
+    li.barter.fragments.dialogs.AddUserInfoDialogFragment mAddUserInfoDialogFragment -> h
+    boolean $assertionsDisabled -> d
+    107:113:void onAttach(android.app.Activity) -> onAttach
+    117:119:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    130:143:void init(android.view.ViewGroup,android.os.Bundle) -> a
+    147:149:void onResume() -> onResume
+    155:164:void checkAndReportScreenHit() -> k
     java.lang.String getAnalyticsScreenName() -> b
-    168:172:void setActionBarDrawerToggleEnabled(boolean) -> a
-    189:194:void loadFragment(int,li.barter.fragments.AbstractBarterLiFragment,java.lang.String,boolean,java.lang.String) -> a
-    198:200:void onDestroyView() -> onDestroyView
-    204:208:void onDetach() -> onDetach
-    212:216:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    226:226:boolean isConnectedToInternet() -> c
-    240:244:void onStop() -> onStop
-    259:270:void addRequestToQueue(com.android.volley.Request,boolean,int,boolean) -> a
+    173:177:void setActionBarDrawerToggleEnabled(boolean) -> a
+    194:199:void loadFragment(int,li.barter.fragments.AbstractBarterLiFragment,java.lang.String,boolean,java.lang.String) -> a
+    203:205:void onDestroyView() -> onDestroyView
+    209:213:void onDetach() -> onDetach
+    217:221:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    231:231:boolean isConnectedToInternet() -> c
+    245:249:void onStop() -> onStop
+    264:275:void addRequestToQueue(com.android.volley.Request,boolean,int,boolean) -> a
     java.lang.Object getVolleyTag() -> a
-    287:291:void showCrouton(java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
-    300:303:void showCrouton(int,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
-    319:322:void cancelAllCroutons() -> d
-    343:343:boolean isAttached() -> e
-    354:357:void setActionBarTitle(java.lang.String) -> b
-    366:367:void setActionBarTitle(int) -> a
-    392:392:boolean isLoggedIn() -> f
-    399:399:boolean hasFirstName() -> g
-    408:411:void showAddFirstNameDialog() -> h
-    419:427:void onUpNavigate() -> i
-    436:437:void onBackPressed() -> j
-    449:453:void onPostExecute(li.barter.http.IBlRequestContract) -> a
-    468:468:void onAuthError(int,li.barter.http.IBlRequestContract) -> a
-    474:474:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
-    485:490:boolean willHandleDialog(android.content.DialogInterface) -> a
-    503:518:void onDialogClick(android.content.DialogInterface,int) -> a
-    528:551:void updateUserInfo(java.lang.String,java.lang.String) -> a
+    292:296:void showCrouton(java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
+    305:308:void showCrouton(int,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
+    324:327:void cancelAllCroutons() -> d
+    348:348:boolean isAttached() -> e
+    359:362:void setActionBarTitle(java.lang.String) -> b
+    371:372:void setActionBarTitle(int) -> a
+    397:397:boolean isLoggedIn() -> f
+    406:406:boolean hasFirstName() -> g
+    415:418:void showAddFirstNameDialog() -> h
+    426:434:void onUpNavigate() -> i
+    443:445:void onBackPressed() -> j
+    458:462:void onPostExecute(li.barter.http.IBlRequestContract) -> a
+    477:477:void onAuthError(int,li.barter.http.IBlRequestContract) -> a
+    483:483:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
+    494:499:boolean willHandleDialog(android.content.DialogInterface) -> a
+    512:527:void onDialogClick(android.content.DialogInterface,int) -> a
+    537:560:void updateUserInfo(java.lang.String,java.lang.String) -> a
+    570:573:void hideKeyBoard(android.view.View) -> d
 li.barter.fragments.AddOrEditBookFragment -> li.barter.c.d:
-    android.widget.EditText mIsbnEditText -> d
-    li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView mTitleEditText -> e
-    android.widget.EditText mAuthorEditText -> f
-    android.widget.EditText mDescriptionEditText -> g
-    android.widget.EditText mSellPriceEditText -> h
-    android.widget.CheckBox mBarterCheckBox -> i
-    android.widget.CheckBox mSellCheckBox -> j
-    android.widget.CheckBox[] mBarterTypeCheckBoxes -> k
-    java.lang.String mIsbnNumber -> l
-    boolean mHasFetchedDetails -> m
-    boolean mEditMode -> n
-    java.lang.String mBookId -> o
-    java.lang.String mId -> p
-    java.lang.String mImage_Url -> q
-    java.lang.String mPublicationYear -> r
-    android.widget.Button mdelete -> s
-    java.lang.String mGoogleBooksApiKey -> t
-    java.lang.String mBookSelection -> u
-    boolean mShouldSubmitOnResume -> v
-    113:171:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    180:197:void initViews(android.view.View) -> a
-    206:218:void initBarterTypeCheckBoxes(android.view.View) -> b
-    222:225:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    232:247:void loadDetailsForIntent(android.os.Bundle) -> a
-    251:251:java.lang.Object getVolleyTag() -> a
-    261:276:void getBookInfoFromServer(java.lang.String) -> a
-    286:301:void getBookInfoById(java.lang.String) -> c
-    309:320:void setCheckBoxesForBarterTypes(java.util.List) -> a
-    330:374:void createBookOnServer(org.json.JSONObject) -> a
-    385:424:void updateBookOnServer(org.json.JSONObject) -> b
-    438:442:void deleteBookOnServer(org.json.JSONObject) -> c
-    451:459:org.json.JSONArray getBarterTagsArray() -> k
-    464:468:void onResume() -> onResume
-    473:542:void onClick(android.view.View) -> onClick
-    553:586:boolean isInputValid() -> l
-    594:732:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    738:743:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    749:749:void onInsertComplete(int,java.lang.Object,long) -> a
-    755:768:void onDeleteComplete(int,java.lang.Object,int) -> a
-    774:774:void onUpdateComplete(int,java.lang.Object,int) -> b
-    779:817:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    826:838:void setBarterCheckboxes(java.lang.String) -> d
-    842:844:void onStop() -> onStop
-    854:854:boolean isNumeric(java.lang.String) -> e
-    862:880:void performNetworkQuery(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,java.lang.String) -> a
-    887:891:void onSuggestionClicked(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,li.barter.widgets.autocomplete.Suggestion) -> a
-    896:902:void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-    907:910:java.lang.String getAnalyticsScreenName() -> b
-    91:91:boolean access$0(li.barter.fragments.AddOrEditBookFragment) -> a
-    432:432:void access$1(li.barter.fragments.AddOrEditBookFragment,org.json.JSONObject) -> a
+    android.widget.EditText mIsbnEditText -> e
+    li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView mTitleEditText -> f
+    android.widget.EditText mAuthorEditText -> g
+    android.widget.EditText mDescriptionEditText -> h
+    android.widget.EditText mSellPriceEditText -> i
+    android.widget.CheckBox mBarterCheckBox -> j
+    android.widget.CheckBox mSellCheckBox -> k
+    android.widget.CheckBox[] mBarterTypeCheckBoxes -> l
+    java.lang.String mIsbnNumber -> m
+    boolean mHasFetchedDetails -> n
+    boolean mEditMode -> o
+    java.lang.String mBookId -> p
+    java.lang.String mId -> q
+    java.lang.String mImage_Url -> r
+    java.lang.String mPublicationYear -> s
+    android.widget.Button mdelete -> t
+    android.widget.Button mSubmit -> u
+    java.lang.String mGoogleBooksApiKey -> v
+    java.lang.String mBookSelection -> w
+    boolean mShouldSubmitOnResume -> x
+    116:176:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    185:202:void initViews(android.view.View) -> a
+    211:223:void initBarterTypeCheckBoxes(android.view.View) -> b
+    227:230:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    237:252:void loadDetailsForIntent(android.os.Bundle) -> a
+    256:256:java.lang.Object getVolleyTag() -> a
+    266:281:void getBookInfoFromServer(java.lang.String) -> a
+    291:306:void getBookInfoById(java.lang.String,java.lang.String) -> a
+    314:325:void setCheckBoxesForBarterTypes(java.util.List) -> a
+    335:383:void createBookOnServer(org.json.JSONObject) -> a
+    394:433:void updateBookOnServer(org.json.JSONObject) -> b
+    447:451:void deleteBookOnServer(org.json.JSONObject) -> c
+    460:468:org.json.JSONArray getBarterTagsArray() -> k
+    473:477:void onResume() -> onResume
+    482:551:void onClick(android.view.View) -> onClick
+    562:595:boolean isInputValid() -> l
+    603:746:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    752:759:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    764:770:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
+    776:776:void onInsertComplete(int,java.lang.Object,long) -> a
+    782:795:void onDeleteComplete(int,java.lang.Object,int) -> a
+    801:801:void onUpdateComplete(int,java.lang.Object,int) -> b
+    806:844:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    853:865:void setBarterCheckboxes(java.lang.String) -> c
+    869:871:void onStop() -> onStop
+    881:881:boolean isNumeric(java.lang.String) -> d
+    889:907:void performNetworkQuery(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,java.lang.String) -> a
+    914:922:void onSuggestionClicked(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,li.barter.widgets.autocomplete.Suggestion) -> a
+    927:933:void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
+    938:941:java.lang.String getAnalyticsScreenName() -> b
+    93:93:boolean access$0(li.barter.fragments.AddOrEditBookFragment) -> a
+    441:441:void access$1(li.barter.fragments.AddOrEditBookFragment,org.json.JSONObject) -> a
 li.barter.fragments.AddOrEditBookFragment$1 -> li.barter.c.d$1:
     li.barter.fragments.AddOrEditBookFragment this$0 -> a
-    517:522:void onClick(android.content.DialogInterface,int) -> onClick
+    526:531:void onClick(android.content.DialogInterface,int) -> onClick
 li.barter.fragments.AddOrEditBookFragment$2 -> li.barter.c.d$2:
     li.barter.fragments.AddOrEditBookFragment this$0 -> a
-    531:532:void onClick(android.content.DialogInterface,int) -> onClick
+    540:541:void onClick(android.content.DialogInterface,int) -> onClick
 li.barter.fragments.BarterLiDescriptionFragment -> li.barter.c.e:
-    boolean mLoadedIndividually -> d
+    boolean mLoadedIndividually -> e
     25:27:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     32:32:java.lang.Object getVolleyTag() -> a
     39:39:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
@@ -24024,23 +23978,23 @@ li.barter.fragments.BarterLiDescriptionFragment -> li.barter.c.e:
     49:50:li.barter.fragments.BarterLiDescriptionFragment newInstance() -> k
     56:63:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.BookDetailFragment -> li.barter.c.f:
-    android.widget.TextView mIsbnTextView -> d
-    android.widget.TextView mTitleTextView -> e
-    android.widget.TextView mAuthorTextView -> f
-    android.widget.TextView mDescriptionTextView -> g
-    android.widget.TextView mSuggestedPriceLabelTextView -> h
-    android.widget.TextView mSuggestedPriceTextView -> i
-    android.widget.TextView mNoImageTextView -> j
-    android.widget.ImageView mBookImageView -> k
-    android.widget.TextView mPublicationDateTextView -> l
-    android.widget.TextView mBarterTypes -> m
-    java.lang.String mBookId -> n
-    java.lang.String mId -> o
-    java.lang.String mUserId -> p
-    boolean mFromSearch -> q
-    boolean mOwnedByUser -> r
-    boolean mLoadedIndividually -> s
-    java.lang.String mBookSelection -> t
+    android.widget.TextView mIsbnTextView -> e
+    android.widget.TextView mTitleTextView -> f
+    android.widget.TextView mAuthorTextView -> g
+    android.widget.TextView mDescriptionTextView -> h
+    android.widget.TextView mSuggestedPriceLabelTextView -> i
+    android.widget.TextView mSuggestedPriceTextView -> j
+    android.widget.TextView mNoImageTextView -> k
+    android.widget.ImageView mBookImageView -> l
+    android.widget.TextView mPublicationDateTextView -> m
+    android.widget.TextView mBarterTypes -> n
+    java.lang.String mBookId -> o
+    java.lang.String mId -> p
+    java.lang.String mUserId -> q
+    boolean mFromSearch -> r
+    boolean mOwnedByUser -> s
+    boolean mLoadedIndividually -> t
+    java.lang.String mBookSelection -> u
     88:97:li.barter.fragments.BookDetailFragment newInstance(java.lang.String,java.lang.String,java.lang.String,boolean) -> a
     103:142:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     151:169:void initViews(android.view.View) -> a
@@ -24058,96 +24012,96 @@ li.barter.fragments.BookDetailFragment -> li.barter.c.f:
     337:345:void setBarterCheckboxes(java.lang.String) -> a
     349:352:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.BooksAroundMeFragment -> li.barter.c.g:
-    li.barter.utils.SearchViewNetworkQueryHelper mSearchNetworkQueryHelper -> e
-    android.widget.GridView mBooksAroundMeGridView -> f
-    li.barter.adapters.BooksGridAdapter mBooksAroundMeAdapter -> g
-    int mCurPage -> h
-    boolean mEmptySearchCroutonFlag -> i
-    android.location.Location mLastFetchedLocation -> j
-    boolean mIsLoading -> k
-    boolean mHasLoadedAllItems -> l
-    li.barter.fragments.dialogs.SingleChoiceDialogFragment mAddBookDialogFragment -> m
-    android.widget.SearchView mSearchView -> n
-    android.view.View mEmptyViewOnRefresh -> o
-    android.view.View mEmptyView -> p
-    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout mPullToRefreshLayout -> q
-    boolean $assertionsDisabled -> d
-    168:215:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    220:225:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    232:233:void loadBookSearchResults() -> n
-    243:270:void fetchBooksAroundMe(android.location.Location) -> b
-    283:307:void fetchBooksAroundMeForSearch(android.location.Location,int,java.lang.String) -> a
-    311:318:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    322:330:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    340:344:void showAddBookOptions() -> o
-    349:362:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    366:366:java.lang.Object getVolleyTag() -> a
-    371:375:void updateLocation(android.location.Location) -> a
-    385:392:void fetchBooksOnLocationUpdate(android.location.Location) -> c
-    396:398:void onPause() -> onPause
-    406:415:void saveLastFetchedInfoToPref() -> p
-    419:426:void onResume() -> onResume
-    434:444:void readLastFetchedInfoFromPref() -> q
-    454:457:void loadAddOrEditBookFragment(android.os.Bundle) -> a
-    464:485:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    489:494:void onPostExecute(li.barter.http.IBlRequestContract) -> a
-    500:506:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    511:514:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    521:528:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    532:535:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    546:564:boolean shouldRefetchBooks(android.location.Location) -> d
-    570:595:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-    602:602:void onInsertComplete(int,java.lang.Object,long) -> a
-    607:625:void onDeleteComplete(int,java.lang.Object,int) -> a
-    632:632:void onUpdateComplete(int,java.lang.Object,int) -> b
-    639:639:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    643:645:void onLoadMore() -> k
-    649:649:boolean isLoading() -> l
-    654:654:boolean hasLoadedAllItems() -> m
-    660:664:boolean willHandleDialog(android.content.DialogInterface) -> a
-    670:690:void onDialogClick(android.content.DialogInterface,int) -> a
-    694:700:void performQuery(android.widget.SearchView,java.lang.String) -> a
-    705:710:void onRefreshStarted(android.view.View) -> a
-    716:722:void reloadNearbyBooks() -> r
-    726:727:boolean onMenuItemActionCollapse(android.view.MenuItem) -> onMenuItemActionCollapse
-    733:733:boolean onMenuItemActionExpand(android.view.MenuItem) -> onMenuItemActionExpand
-    738:738:boolean onClose() -> onClose
-    744:744:java.lang.String getAnalyticsScreenName() -> b
-    750:757:void onClick(android.view.View) -> onClick
+    li.barter.utils.SearchViewNetworkQueryHelper mSearchNetworkQueryHelper -> f
+    android.widget.GridView mBooksAroundMeGridView -> g
+    li.barter.adapters.BooksGridAdapter mBooksAroundMeAdapter -> h
+    int mCurPage -> i
+    boolean mEmptySearchCroutonFlag -> j
+    android.location.Location mLastFetchedLocation -> k
+    boolean mIsLoading -> l
+    boolean mHasLoadedAllItems -> m
+    li.barter.fragments.dialogs.SingleChoiceDialogFragment mAddBookDialogFragment -> n
+    android.widget.SearchView mSearchView -> o
+    android.view.View mEmptyViewOnRefresh -> p
+    android.view.View mEmptyView -> q
+    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout mPullToRefreshLayout -> r
+    boolean $assertionsDisabled -> e
+    168:217:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    222:227:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    234:236:void loadBookSearchResults() -> n
+    246:273:void fetchBooksAroundMe(android.location.Location) -> b
+    286:310:void fetchBooksAroundMeForSearch(android.location.Location,int,java.lang.String) -> a
+    314:321:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    325:333:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    343:347:void showAddBookOptions() -> o
+    352:365:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    369:369:java.lang.Object getVolleyTag() -> a
+    374:378:void updateLocation(android.location.Location) -> a
+    388:395:void fetchBooksOnLocationUpdate(android.location.Location) -> c
+    399:401:void onPause() -> onPause
+    409:418:void saveLastFetchedInfoToPref() -> p
+    422:429:void onResume() -> onResume
+    437:447:void readLastFetchedInfoFromPref() -> q
+    457:460:void loadAddOrEditBookFragment(android.os.Bundle) -> a
+    467:488:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    492:497:void onPostExecute(li.barter.http.IBlRequestContract) -> a
+    503:509:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    514:517:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    524:536:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    540:543:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    554:572:boolean shouldRefetchBooks(android.location.Location) -> d
+    578:603:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    610:610:void onInsertComplete(int,java.lang.Object,long) -> a
+    615:633:void onDeleteComplete(int,java.lang.Object,int) -> a
+    640:640:void onUpdateComplete(int,java.lang.Object,int) -> b
+    647:647:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    651:653:void onLoadMore() -> k
+    657:657:boolean isLoading() -> l
+    662:662:boolean hasLoadedAllItems() -> m
+    668:672:boolean willHandleDialog(android.content.DialogInterface) -> a
+    678:698:void onDialogClick(android.content.DialogInterface,int) -> a
+    702:708:void performQuery(android.widget.SearchView,java.lang.String) -> a
+    713:718:void onRefreshStarted(android.view.View) -> a
+    724:733:void reloadNearbyBooks() -> r
+    737:738:boolean onMenuItemActionCollapse(android.view.MenuItem) -> onMenuItemActionCollapse
+    744:744:boolean onMenuItemActionExpand(android.view.MenuItem) -> onMenuItemActionExpand
+    749:749:boolean onClose() -> onClose
+    755:755:java.lang.String getAnalyticsScreenName() -> b
+    761:768:void onClick(android.view.View) -> onClick
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
 li.barter.fragments.BooksPagerFragment -> li.barter.c.h:
-    li.barter.fragments.BooksPagerFragment$BookPageAdapter mAdapter -> d
-    android.support.v4.view.ViewPager mBookDetailPager -> e
-    int mBookCounter -> f
-    int mBookPosition -> g
-    java.util.ArrayList mBookIdArray -> h
-    java.util.ArrayList mIdArray -> i
-    java.util.ArrayList mUserIdArray -> j
-    com.sothree.slidinguppanel.SlidingUpPanelLayout mSlidingLayout -> k
-    android.content.IntentFilter mChatButtonIntentFilter -> l
-    li.barter.fragments.BooksPagerFragment$ChatButtonReceiver mChatButtonReceiver -> m
-    113:141:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    146:150:void onAttach(android.app.Activity) -> onAttach
-    154:157:void onPause() -> onPause
-    162:170:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    174:196:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    205:206:void loadBookSearchResults() -> k
-    258:258:java.lang.Object getVolleyTag() -> a
-    266:266:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    274:274:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    278:281:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    287:319:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    324:324:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    329:329:void onPageScrollStateChanged(int) -> onPageScrollStateChanged
-    335:335:void onPageScrolled(int,float,int) -> onPageScrolled
-    340:347:void onPageSelected(int) -> onPageSelected
-    351:351:void onPanelSlide(android.view.View,float) -> a
-    355:360:void onPanelExpanded(android.view.View) -> b
-    364:365:void onPanelCollapsed(android.view.View) -> a
-    370:370:void onPanelAnchored(android.view.View) -> c
-    377:380:void setDragHandle(android.view.View) -> d
-    385:390:void onBackPressed() -> j
-    394:394:java.lang.String getAnalyticsScreenName() -> b
+    li.barter.fragments.BooksPagerFragment$BookPageAdapter mAdapter -> e
+    android.support.v4.view.ViewPager mBookDetailPager -> f
+    int mBookCounter -> g
+    int mBookPosition -> h
+    java.util.ArrayList mBookIdArray -> i
+    java.util.ArrayList mIdArray -> j
+    java.util.ArrayList mUserIdArray -> k
+    com.sothree.slidinguppanel.SlidingUpPanelLayout mSlidingLayout -> l
+    android.content.IntentFilter mChatButtonIntentFilter -> m
+    li.barter.fragments.BooksPagerFragment$ChatButtonReceiver mChatButtonReceiver -> n
+    113:142:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    147:151:void onAttach(android.app.Activity) -> onAttach
+    155:158:void onPause() -> onPause
+    163:171:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    175:197:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    206:207:void loadBookSearchResults() -> k
+    259:259:java.lang.Object getVolleyTag() -> a
+    267:267:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    275:275:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    279:282:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    288:326:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    331:331:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    336:336:void onPageScrollStateChanged(int) -> onPageScrollStateChanged
+    342:342:void onPageScrolled(int,float,int) -> onPageScrolled
+    347:354:void onPageSelected(int) -> onPageSelected
+    358:358:void onPanelSlide(android.view.View,float) -> a
+    362:367:void onPanelExpanded(android.view.View) -> b
+    371:372:void onPanelCollapsed(android.view.View) -> a
+    377:377:void onPanelAnchored(android.view.View) -> c
+    384:387:void setDragHandle(android.view.View) -> e
+    392:397:void onBackPressed() -> j
+    401:401:java.lang.String getAnalyticsScreenName() -> b
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
     79:79:int access$1(li.barter.fragments.BooksPagerFragment) -> a
     92:92:java.util.ArrayList access$2(li.barter.fragments.BooksPagerFragment) -> b
@@ -24157,83 +24111,116 @@ li.barter.fragments.BooksPagerFragment -> li.barter.c.h:
 li.barter.fragments.BooksPagerFragment$BookPageAdapter -> li.barter.c.h$a:
     java.util.Map mPositionFragmentMap -> b
     li.barter.fragments.BooksPagerFragment this$0 -> a
-    228:228:int getCount() -> getCount
-    235:239:android.support.v4.app.Fragment getItem(int) -> getItem
-    245:247:void destroyItem(android.view.ViewGroup,int,java.lang.Object) -> destroyItem
+    229:229:int getCount() -> getCount
+    236:240:android.support.v4.app.Fragment getItem(int) -> getItem
+    246:248:void destroyItem(android.view.ViewGroup,int,java.lang.Object) -> destroyItem
 li.barter.fragments.BooksPagerFragment$ChatButtonReceiver -> li.barter.c.h$b:
     li.barter.fragments.BooksPagerFragment this$0 -> a
-    406:417:void onReceive(android.content.Context,android.content.Intent) -> onReceive
+    413:424:void onReceive(android.content.Context,android.content.Intent) -> onReceive
 li.barter.fragments.ChatDetailsFragment -> li.barter.c.i:
-    li.barter.adapters.ChatDetailAdapter mChatDetailAdapter -> d
-    android.widget.ListView mChatListView -> e
-    android.widget.EditText mSubmitChatEditText -> f
-    android.widget.Button mSubmitChatButton -> g
-    li.barter.chat.ChatService mChatService -> h
-    boolean mBoundToChatService -> i
-    boolean mFirstMessage -> j
-    java.lang.String mChatSelection -> k
-    java.lang.String mUserSelection -> l
-    java.lang.String mChatId -> m
-    java.lang.String mWithUserId -> n
-    li.barter.fragments.ChatDetailsFragment$ConcreteChatAcknowledge mAcknowledge -> o
-    114:147:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    152:154:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    158:175:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    182:188:void onPause() -> onPause
-    192:197:void onResume() -> onResume
-    201:201:java.lang.Object getVolleyTag() -> a
-    210:210:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    218:218:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    224:227:void onServiceConnected(android.content.ComponentName,android.os.IBinder) -> onServiceConnected
-    231:232:void onServiceDisconnected(android.content.ComponentName) -> onServiceDisconnected
-    237:247:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    253:303:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    308:311:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    316:337:void onClick(android.view.View) -> onClick
-    347:349:void setActionEnabled(boolean) -> c
-    385:395:void onChatComplete(boolean) -> b
-    401:401:void onInsertComplete(int,java.lang.Object,long) -> a
-    407:407:void onDeleteComplete(int,java.lang.Object,int) -> a
-    413:413:void onUpdateComplete(int,java.lang.Object,int) -> b
-    419:419:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    423:423:java.lang.String getAnalyticsScreenName() -> b
+    li.barter.adapters.ChatDetailAdapter mChatDetailAdapter -> e
+    android.widget.ListView mChatListView -> f
+    android.widget.EditText mSubmitChatEditText -> g
+    android.widget.ImageButton mSubmitChatButton -> h
+    li.barter.chat.ChatService mChatService -> i
+    boolean mBoundToChatService -> j
+    boolean mFirstMessage -> k
+    java.lang.String mChatSelection -> l
+    java.lang.String mUserSelection -> m
+    java.lang.String mChatId -> n
+    java.lang.String mWithUserId -> o
+    li.barter.fragments.ChatDetailsFragment$ConcreteChatAcknowledge mAcknowledge -> p
+    120:154:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    159:161:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    165:182:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    189:195:void onPause() -> onPause
+    202:212:void onBackPressed() -> j
+    216:221:void onResume() -> onResume
+    225:225:java.lang.Object getVolleyTag() -> a
+    234:234:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    242:242:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    248:251:void onServiceConnected(android.content.ComponentName,android.os.IBinder) -> onServiceConnected
+    255:256:void onServiceDisconnected(android.content.ComponentName) -> onServiceDisconnected
+    261:271:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    277:327:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    332:335:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    340:361:void onClick(android.view.View) -> onClick
+    371:373:void setActionEnabled(boolean) -> c
+    409:419:void onChatComplete(boolean) -> b
+    425:425:void onInsertComplete(int,java.lang.Object,long) -> a
+    431:431:void onDeleteComplete(int,java.lang.Object,int) -> a
+    437:437:void onUpdateComplete(int,java.lang.Object,int) -> b
+    443:443:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    447:447:java.lang.String getAnalyticsScreenName() -> b
+    453:471:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
 li.barter.fragments.ChatDetailsFragment$ConcreteChatAcknowledge -> li.barter.c.i$a:
     li.barter.fragments.ChatDetailsFragment mChatDetailsFragment -> a
-    368:373:void onChatRequestComplete(boolean) -> a
-    363:363:void access$1(li.barter.fragments.ChatDetailsFragment$ConcreteChatAcknowledge,li.barter.fragments.ChatDetailsFragment) -> a
+    392:397:void onChatRequestComplete(boolean) -> a
+    387:387:void access$1(li.barter.fragments.ChatDetailsFragment$ConcreteChatAcknowledge,li.barter.fragments.ChatDetailsFragment) -> a
 li.barter.fragments.ChatsFragment -> li.barter.c.j:
-    li.barter.adapters.ChatsAdapter mChatsAdapter -> d
-    android.widget.ListView mChatsListView -> e
-    li.barter.chat.ChatService mChatService -> f
-    boolean mBoundToChatService -> g
-    75:86:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    91:96:void onPause() -> onPause
-    100:104:void onResume() -> onResume
-    108:109:void onDetach() -> onDetach
-    113:113:java.lang.Object getVolleyTag() -> a
-    121:121:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    128:128:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    132:136:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    141:145:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    150:153:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    159:173:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-    177:195:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    204:208:void onServiceConnected(android.content.ComponentName,android.os.IBinder) -> onServiceConnected
-    212:213:void onServiceDisconnected(android.content.ComponentName) -> onServiceDisconnected
-    217:217:java.lang.String getAnalyticsScreenName() -> b
+    li.barter.adapters.ChatsAdapter mChatsAdapter -> e
+    android.widget.ListView mChatsListView -> f
+    li.barter.chat.ChatService mChatService -> g
+    boolean mBoundToChatService -> h
+    java.lang.String mDeleteChatId -> i
+    java.lang.String mBlockUserId -> j
+    java.lang.String mChatSelectionForDelete -> k
+    li.barter.fragments.dialogs.SingleChoiceDialogFragment mChatDialogFragment -> l
+    111:125:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    130:135:void onPause() -> onPause
+    139:143:void onResume() -> onResume
+    147:148:void onDetach() -> onDetach
+    152:152:java.lang.Object getVolleyTag() -> a
+    160:166:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    173:173:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    177:181:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    186:190:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    195:198:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    204:218:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    222:240:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    249:253:void onServiceConnected(android.content.ComponentName,android.os.IBinder) -> onServiceConnected
+    257:258:void onServiceDisconnected(android.content.ComponentName) -> onServiceDisconnected
+    262:262:java.lang.String getAnalyticsScreenName() -> b
+    268:277:void onBackPressed() -> j
+    283:291:boolean onItemLongClick(android.widget.AdapterView,android.view.View,int,long) -> onItemLongClick
+    299:303:void showChatOptions() -> k
+    308:312:boolean willHandleDialog(android.content.DialogInterface) -> a
+    318:405:void onDialogClick(android.content.DialogInterface,int) -> a
+    409:416:void deleteChat(java.lang.String) -> a
+    424:440:void blockUser(java.lang.String) -> c
+    447:447:void onInsertComplete(int,java.lang.Object,long) -> a
+    451:467:void onDeleteComplete(int,java.lang.Object,int) -> a
+    473:473:void onUpdateComplete(int,java.lang.Object,int) -> b
+    479:479:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
+    96:96:java.lang.String access$1(li.barter.fragments.ChatsFragment) -> a
+    407:407:void access$2(li.barter.fragments.ChatsFragment,java.lang.String) -> a
+    96:96:java.lang.String access$3(li.barter.fragments.ChatsFragment) -> b
+    422:422:void access$4(li.barter.fragments.ChatsFragment,java.lang.String) -> b
+li.barter.fragments.ChatsFragment$1 -> li.barter.c.j$1:
+    li.barter.fragments.ChatsFragment this$0 -> a
+    339:341:void onClick(android.content.DialogInterface,int) -> onClick
+li.barter.fragments.ChatsFragment$2 -> li.barter.c.j$2:
+    li.barter.fragments.ChatsFragment this$0 -> a
+    350:351:void onClick(android.content.DialogInterface,int) -> onClick
+li.barter.fragments.ChatsFragment$3 -> li.barter.c.j$3:
+    li.barter.fragments.ChatsFragment this$0 -> a
+    379:381:void onClick(android.content.DialogInterface,int) -> onClick
+li.barter.fragments.ChatsFragment$4 -> li.barter.c.j$4:
+    li.barter.fragments.ChatsFragment this$0 -> a
+    390:391:void onClick(android.content.DialogInterface,int) -> onClick
 li.barter.fragments.CollaborateFragment -> li.barter.c.k:
-    android.widget.EditText mAboutMeTextView -> d
-    android.widget.Button mSubmitEnlistingButton -> e
-    android.widget.RadioButton mEnlistAsSponsorRadioButton -> f
-    android.widget.RadioButton mEnlistAsDesignerRadioButton -> g
-    android.widget.RadioButton mEnlistAsDeveloperRadioButton -> h
-    android.widget.RadioButton mEnlistAsUserRadioButton -> i
-    android.widget.RadioButton mEnlistAsVolunteerRadioButton -> j
-    android.widget.RadioButton mEnlistAsPrMediaRadioButton -> k
-    android.widget.RadioGroup mEnlistOptionsRadioGroup -> l
-    boolean mLoadedIndividually -> m
+    android.widget.EditText mAboutMeTextView -> e
+    android.widget.Button mSubmitEnlistingButton -> f
+    android.widget.RadioButton mEnlistAsSponsorRadioButton -> g
+    android.widget.RadioButton mEnlistAsDesignerRadioButton -> h
+    android.widget.RadioButton mEnlistAsDeveloperRadioButton -> i
+    android.widget.RadioButton mEnlistAsUserRadioButton -> j
+    android.widget.RadioButton mEnlistAsProductEvangelistRadioButton -> k
+    android.widget.RadioButton mEnlistAsMarketingRadioButton -> l
+    android.widget.RadioGroup mEnlistOptionsRadioGroup -> m
+    boolean mLoadedIndividually -> n
     61:91:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     96:148:void onClick(android.view.View) -> onClick
     152:152:java.lang.Object getVolleyTag() -> a
@@ -24243,72 +24230,72 @@ li.barter.fragments.CollaborateFragment -> li.barter.c.k:
     191:192:li.barter.fragments.CollaborateFragment newInstance() -> k
     197:200:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.EditProfileFragment -> li.barter.c.l:
-    android.widget.TextView mFirstNameTextView -> d
-    android.widget.TextView mLastNameTextView -> e
-    android.widget.TextView mAboutMeTextView -> f
-    android.widget.TextView mPreferredLocationTextView -> g
-    android.widget.ImageView mProfileImageView -> h
-    android.widget.ImageView mEditPreferredLocationImageView -> i
-    boolean mWasProfileImageChanged -> j
-    android.graphics.Bitmap mCompressedPhoto -> k
-    java.io.File mAvatarfile -> l
-    android.net.Uri mCameraImageCaptureUri -> m
-    android.net.Uri mGalleryImageCaptureUri -> n
-    java.lang.String mAvatarFileName -> o
-    li.barter.fragments.dialogs.SingleChoiceDialogFragment mChoosePictureDialogFragment -> p
-    109:177:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    182:183:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    187:211:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    224:233:boolean isInputValid() -> k
-    242:247:void loadPreferredLocation() -> l
-    252:270:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    274:276:void onStop() -> onStop
-    280:280:java.lang.Object getVolleyTag() -> a
-    285:299:void onClick(android.view.View) -> onClick
-    305:332:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    339:343:void showChoosePictureSourceDialog() -> m
-    354:368:void setAndSaveImage(android.net.Uri,int) -> a
-    384:414:void saveProfileInfoToServer(java.lang.String,java.lang.String,java.lang.String,java.lang.Boolean,java.lang.String) -> a
-    421:446:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    452:454:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    461:461:void onInsertComplete(int,java.lang.Object,long) -> a
-    468:468:void onDeleteComplete(int,java.lang.Object,int) -> a
-    475:475:void onUpdateComplete(int,java.lang.Object,int) -> b
-    480:485:boolean willHandleDialog(android.content.DialogInterface) -> a
-    491:514:void onDialogClick(android.content.DialogInterface,int) -> a
-    518:518:java.lang.String getAnalyticsScreenName() -> b
+    android.widget.TextView mFirstNameTextView -> e
+    android.widget.TextView mLastNameTextView -> f
+    android.widget.TextView mAboutMeTextView -> g
+    android.widget.TextView mPreferredLocationTextView -> h
+    android.widget.ImageView mProfileImageView -> i
+    android.widget.ImageView mEditPreferredLocationImageView -> j
+    boolean mWasProfileImageChanged -> k
+    android.graphics.Bitmap mCompressedPhoto -> l
+    java.io.File mAvatarfile -> m
+    android.net.Uri mCameraImageCaptureUri -> n
+    android.net.Uri mGalleryImageCaptureUri -> o
+    java.lang.String mAvatarFileName -> p
+    li.barter.fragments.dialogs.SingleChoiceDialogFragment mChoosePictureDialogFragment -> q
+    111:179:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    184:185:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    189:213:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    226:235:boolean isInputValid() -> k
+    244:249:void loadPreferredLocation() -> l
+    254:272:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    276:278:void onStop() -> onStop
+    282:282:java.lang.Object getVolleyTag() -> a
+    287:303:void onClick(android.view.View) -> onClick
+    309:336:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    343:347:void showChoosePictureSourceDialog() -> m
+    358:372:void setAndSaveImage(android.net.Uri,int) -> a
+    388:418:void saveProfileInfoToServer(java.lang.String,java.lang.String,java.lang.String,java.lang.Boolean,java.lang.String) -> a
+    425:450:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    456:458:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    465:465:void onInsertComplete(int,java.lang.Object,long) -> a
+    472:472:void onDeleteComplete(int,java.lang.Object,int) -> a
+    479:479:void onUpdateComplete(int,java.lang.Object,int) -> b
+    484:489:boolean willHandleDialog(android.content.DialogInterface) -> a
+    495:518:void onDialogClick(android.content.DialogInterface,int) -> a
+    522:522:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.FragmentTransition -> li.barter.c.m:
     int enterAnimation() -> a
     int exitAnimation() -> b
     int popEnterAnimation() -> c
     int popExitAnimation() -> d
 li.barter.fragments.LoginFragment -> li.barter.c.n:
-    int mMinPasswordLength -> d
-    android.widget.Button mFacebookLoginButton -> e
-    android.widget.Button mGoogleLoginButton -> f
-    android.widget.Button mSubmitButton -> g
-    android.widget.EditText mEmailEditText -> h
-    android.widget.EditText mPasswordEditText -> i
-    85:120:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    125:128:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    132:132:java.lang.Object getVolleyTag() -> a
-    138:142:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    147:187:void onClick(android.view.View) -> onClick
-    197:212:void login(java.lang.String,java.lang.String) -> a
-    222:236:void loginWithProvider(java.lang.String,java.lang.String) -> b
-    247:276:boolean isInputValid() -> l
-    283:369:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    376:379:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    385:391:void call(com.facebook.Session,com.facebook.SessionState,java.lang.Exception) -> call
-    398:405:void onGoogleLogin() -> k
-    414:415:void onGoogleLoginError(java.lang.Exception) -> a
-    426:426:java.lang.String getAnalyticsScreenName() -> b
+    int mMinPasswordLength -> e
+    android.widget.Button mFacebookLoginButton -> f
+    android.widget.Button mGoogleLoginButton -> g
+    android.widget.Button mSubmitButton -> h
+    android.widget.EditText mEmailEditText -> i
+    android.widget.EditText mPasswordEditText -> j
+    85:115:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    120:123:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    127:127:java.lang.Object getVolleyTag() -> a
+    133:137:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    142:182:void onClick(android.view.View) -> onClick
+    192:207:void login(java.lang.String,java.lang.String) -> a
+    217:231:void loginWithProvider(java.lang.String,java.lang.String) -> b
+    242:271:boolean isInputValid() -> l
+    278:364:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    371:374:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    380:386:void call(com.facebook.Session,com.facebook.SessionState,java.lang.Exception) -> call
+    393:400:void onGoogleLogin() -> k
+    409:410:void onGoogleLoginError(java.lang.Exception) -> a
+    421:421:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.MyBooksFragment -> li.barter.c.o:
-    android.widget.GridView mBooksAroundMeGridView -> d
-    li.barter.adapters.BooksGridAdapter mBooksAroundMeAdapter -> e
-    java.lang.String mUserId -> f
-    boolean mLoadedIndividually -> g
-    java.lang.String mUserSelection -> h
+    android.widget.GridView mBooksAroundMeGridView -> e
+    li.barter.adapters.BooksGridAdapter mBooksAroundMeAdapter -> f
+    java.lang.String mUserId -> g
+    boolean mLoadedIndividually -> h
+    java.lang.String mUserSelection -> i
     77:108:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     113:113:java.lang.Object getVolleyTag() -> a
     121:121:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
@@ -24323,9 +24310,9 @@ li.barter.fragments.MyBooksFragment -> li.barter.c.o:
     216:219:java.lang.String getAnalyticsScreenName() -> b
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
 li.barter.fragments.OssLicenseFragment -> li.barter.c.p:
-    android.widget.ListView mListView -> d
-    li.barter.adapters.OssLicensesAdapter mLicensesAdapter -> e
-    boolean mLoadedIndividually -> f
+    android.widget.ListView mListView -> e
+    li.barter.adapters.OssLicensesAdapter mLicensesAdapter -> f
+    boolean mLoadedIndividually -> g
     55:62:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     67:67:java.lang.Object getVolleyTag() -> a
     75:75:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
@@ -24333,81 +24320,92 @@ li.barter.fragments.OssLicenseFragment -> li.barter.c.p:
     85:86:li.barter.fragments.OssLicenseFragment newInstance() -> k
     91:94:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.ProfileFragment -> li.barter.c.q:
-    android.support.v4.app.FragmentTabHost mTabHost -> d
-    java.lang.String mUserId -> e
-    java.lang.String mImageUrl -> f
-    android.widget.ImageView mChatImageView -> g
-    li.barter.widgets.CircleImageView mOwnerImageView -> h
-    android.widget.TextView mOwnerNameTextView -> i
-    android.widget.TextView mOwnerBarterLocationTextView -> j
-    boolean mIsLoggedInUser -> k
-    java.lang.String mUserSelection -> l
-    android.view.View mDragHandle -> m
-    android.support.v4.view.ViewPager mViewPager -> n
-    li.barter.adapters.ProfileFragmentsAdapter mProfileFragmentsAdapter -> o
-    java.lang.String mLocationFormat -> p
-    boolean mLoadedIndividually -> q
+    android.support.v4.app.FragmentTabHost mTabHost -> e
+    java.lang.String mUserId -> f
+    java.lang.String mImageUrl -> g
+    android.widget.ImageView mChatImageView -> h
+    li.barter.widgets.CircleImageView mOwnerImageView -> i
+    android.widget.TextView mOwnerNameTextView -> j
+    android.widget.TextView mOwnerBarterLocationTextView -> k
+    boolean mIsLoggedInUser -> l
+    java.lang.String mUserSelection -> m
+    android.view.View mDragHandle -> n
+    android.support.v4.view.ViewPager mViewPager -> o
+    li.barter.adapters.ProfileFragmentsAdapter mProfileFragmentsAdapter -> p
+    java.lang.String mLocationFormat -> q
+    boolean mLoadedIndividually -> r
     101:135:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     144:156:void setUserId(java.lang.String) -> a
     165:174:void updateTab(li.barter.fragments.AbstractBarterLiFragment) -> a
     178:200:void initViews(android.view.View) -> a
-    208:215:void updateViewsForUser() -> k
-    223:234:void fetchUserDetailsFromServer(java.lang.String) -> c
-    242:244:void loadUserDetails() -> l
-    249:252:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    256:272:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    279:284:void onBackPressed() -> j
-    288:324:void onClick(android.view.View) -> onClick
-    330:338:void loadChatFragment() -> m
-    342:342:java.lang.Object getVolleyTag() -> a
-    349:360:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    367:367:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    371:378:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    384:423:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    428:428:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    452:464:void onTabChanged(java.lang.String) -> onTabChanged
-    469:469:void onPageScrollStateChanged(int) -> onPageScrollStateChanged
-    475:475:void onPageScrolled(int,float,int) -> onPageScrolled
-    480:505:void onPageSelected(int) -> onPageSelected
-    510:513:java.lang.String getAnalyticsScreenName() -> b
+    208:238:void updateViewsForUser() -> k
+    246:257:void fetchUserDetailsFromServer(java.lang.String) -> c
+    265:267:void loadUserDetails() -> l
+    272:275:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    279:295:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    302:307:void onBackPressed() -> j
+    311:347:void onClick(android.view.View) -> onClick
+    353:361:void loadChatFragment() -> m
+    365:365:java.lang.Object getVolleyTag() -> a
+    372:385:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    392:392:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    396:403:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    409:448:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    453:453:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    477:489:void onTabChanged(java.lang.String) -> onTabChanged
+    494:494:void onPageScrollStateChanged(int) -> onPageScrollStateChanged
+    500:500:void onPageScrolled(int,float,int) -> onPageScrolled
+    505:530:void onPageSelected(int) -> onPageSelected
+    535:538:java.lang.String getAnalyticsScreenName() -> b
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
 li.barter.fragments.ProfileFragment$DummyFragment -> li.barter.c.q$a:
 li.barter.fragments.ReportBugFragment -> li.barter.c.r:
-    android.widget.EditText mReportedBugTextView -> d
-    android.widget.Button mReportBugButton -> e
-    android.widget.RadioButton mReportBugSelect -> f
-    android.widget.RadioButton mReportSuggestionSelect -> g
-    63:75:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    80:141:void onClick(android.view.View) -> onClick
-    145:145:java.lang.Object getVolleyTag() -> a
-    153:184:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    190:190:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    195:195:java.lang.String getAnalyticsScreenName() -> b
+    android.widget.EditText mReportedBugTextView -> e
+    android.widget.EditText mDeviceInfoTextView -> f
+    android.widget.Button mReportBugButton -> g
+    android.widget.RadioButton mReportBugSelect -> h
+    android.widget.RadioButton mReportSuggestionSelect -> i
+    65:80:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    85:146:void onClick(android.view.View) -> onClick
+    150:150:java.lang.Object getVolleyTag() -> a
+    158:190:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    196:196:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    201:201:java.lang.String getAnalyticsScreenName() -> b
+    206:215:void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
 li.barter.fragments.SelectPreferredLocationFragment -> li.barter.c.s:
-    li.barter.models.Venue[] mVenues -> d
-    li.barter.adapters.SelectLocationAdapter mSelectLocationAdapter -> e
-    android.widget.ListView mVenueListView -> f
-    java.lang.String mFoursquareClientId -> g
-    java.lang.String mFoursquareClientSecret -> h
-    99:129:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    134:135:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    140:144:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    152:154:void showAboutSelectLocationDialog() -> k
-    166:197:void fetchVenuesForLocation(android.location.Location,int) -> a
-    201:203:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    207:207:java.lang.Object getVolleyTag() -> a
-    212:214:void onPause() -> onPause
-    220:233:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    239:244:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    249:254:void onBackPressed() -> j
-    268:288:void setUserPreferredLocation(java.lang.String,java.lang.String,double,double,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
-    294:300:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-    304:304:java.lang.String getAnalyticsScreenName() -> b
+    li.barter.models.Venue[] mVenues -> e
+    li.barter.adapters.SelectLocationAdapter mSelectLocationAdapter -> f
+    android.widget.ListView mVenueListView -> g
+    java.lang.String mFoursquareClientId -> h
+    java.lang.String mFoursquareClientSecret -> i
+    android.view.View mEmptyView -> j
+    li.barter.fragments.dialogs.AddLocationDialogFragment mAddLocationDialogFragment -> k
+    boolean mEditMode -> l
+    111:160:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    165:166:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    171:185:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    193:195:void showAboutSelectLocationDialog() -> l
+    207:241:void fetchVenuesForLocation(android.location.Location,int) -> a
+    254:276:void fetchVenuesForLocationWithoutCategoryFilter(android.location.Location,int) -> b
+    280:282:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    286:286:java.lang.Object getVolleyTag() -> a
+    291:293:void onPause() -> onPause
+    299:333:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    339:349:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    355:366:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
+    371:376:void onBackPressed() -> j
+    390:410:void setUserPreferredLocation(java.lang.String,java.lang.String,double,double,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+    416:422:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    426:426:java.lang.String getAnalyticsScreenName() -> b
+    431:445:void onClick(android.view.View) -> onClick
+    453:456:void showAddLocationDialog() -> k
+    468:473:boolean willHandleDialog(android.content.DialogInterface) -> a
+    486:501:void onDialogClick(android.content.DialogInterface,int) -> a
 li.barter.fragments.TeamFragment -> li.barter.c.t:
-    android.widget.GridView mGridView -> d
-    li.barter.models.Team[] mTeams -> e
-    li.barter.adapters.TeamAdapter mTeamAdapter -> f
-    boolean mLoadedIndividually -> g
+    android.widget.GridView mGridView -> e
+    li.barter.models.Team[] mTeams -> f
+    li.barter.adapters.TeamAdapter mTeamAdapter -> g
+    boolean mLoadedIndividually -> h
     62:81:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     86:89:java.lang.String getAnalyticsScreenName() -> b
     95:95:java.lang.Object getVolleyTag() -> a
@@ -24415,17 +24413,34 @@ li.barter.fragments.TeamFragment -> li.barter.c.t:
     127:127:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
     130:131:li.barter.fragments.TeamFragment newInstance() -> k
 li.barter.fragments.TributeFragment -> li.barter.c.u:
-    android.widget.TextView mTributeTextView -> d
-    android.widget.ImageView mTributeImageView -> e
-    java.lang.String mDefaultName -> f
-    boolean mLoadedIndividually -> g
+    android.widget.TextView mTributeTextView -> e
+    android.widget.ImageView mTributeImageView -> f
+    java.lang.String mDefaultName -> g
+    boolean mLoadedIndividually -> h
     52:64:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
     69:72:java.lang.String getAnalyticsScreenName() -> b
     78:78:java.lang.Object getVolleyTag() -> a
     86:102:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
     108:108:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
     111:112:li.barter.fragments.TributeFragment newInstance() -> k
-li.barter.fragments.dialogs.AddUserInfoDialogFragment -> li.barter.c.a.a:
+li.barter.fragments.dialogs.AddLocationDialogFragment -> li.barter.c.a.a:
+    int mTitleId -> a
+    int mPositiveLabelId -> b
+    int mNegativeLabelId -> c
+    int mNeutralLabelId -> d
+    android.content.DialogInterface$OnClickListener mClickListener -> e
+    android.content.DialogInterface$OnDismissListener mOnDismissListener -> f
+    int mIconId -> g
+    boolean isCancellable -> h
+    int mTheme -> i
+    android.widget.EditText mLocationNameEditText -> j
+    76:120:android.app.Dialog onCreateDialog(android.os.Bundle) -> onCreateDialog
+    126:139:void onAttach(android.app.Activity) -> onAttach
+    143:147:void onDismiss(android.content.DialogInterface) -> onDismiss
+    152:160:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    167:181:void show(int,int,int,int,int,int,android.support.v4.app.FragmentManager,boolean,java.lang.String) -> a
+    184:184:java.lang.String getLocationName() -> a
+li.barter.fragments.dialogs.AddUserInfoDialogFragment -> li.barter.c.a.b:
     int mTitleId -> a
     int mPositiveLabelId -> b
     int mNegativeLabelId -> c
@@ -24444,7 +24459,7 @@ li.barter.fragments.dialogs.AddUserInfoDialogFragment -> li.barter.c.a.a:
     170:184:void show(int,int,int,int,int,int,android.support.v4.app.FragmentManager,boolean,java.lang.String) -> a
     187:187:java.lang.String getFirstName() -> a
     191:191:java.lang.String getLastName() -> b
-li.barter.fragments.dialogs.AlertDialogFragment -> li.barter.c.a.b:
+li.barter.fragments.dialogs.AlertDialogFragment -> li.barter.c.a.c:
     int mTitleId -> a
     int mMessageId -> b
     int mPositiveLabelId -> c
@@ -24461,7 +24476,7 @@ li.barter.fragments.dialogs.AlertDialogFragment -> li.barter.c.a.b:
     152:156:void onDismiss(android.content.DialogInterface) -> onDismiss
     161:171:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
     179:195:void show(int,int,int,int,int,int,int,android.support.v4.app.FragmentManager,boolean,java.lang.String,java.lang.String[]) -> a
-li.barter.fragments.dialogs.SingleChoiceDialogFragment -> li.barter.c.a.c:
+li.barter.fragments.dialogs.SingleChoiceDialogFragment -> li.barter.c.a.d:
     int mTitleId -> a
     android.content.DialogInterface$OnClickListener mClickListener -> b
     android.content.DialogInterface$OnDismissListener mOnDismissListener -> c
@@ -24522,30 +24537,31 @@ li.barter.http.HttpConstants$Server -> li.barter.http.e$a:
     1:1:li.barter.http.HttpConstants$Server[] values() -> values
     1:1:li.barter.http.HttpConstants$Server valueOf(java.lang.String) -> valueOf
 li.barter.http.HttpResponseParser -> li.barter.http.f:
-    73:153:li.barter.http.ResponseInfo getSuccessResponse(int,java.lang.String) -> a
-    166:166:li.barter.http.ResponseInfo parseReferralResponse(java.lang.String) -> a
-    176:212:li.barter.http.ResponseInfo parseGoogleBookSuggestionsResponse(java.lang.String) -> b
-    226:298:li.barter.http.ResponseInfo parseGoogleBooksBookInfo(java.lang.String) -> c
-    308:308:li.barter.http.ResponseInfo parseAmpqResponse(java.lang.String) -> d
-    319:330:li.barter.http.ResponseInfo parseTributeResponse(java.lang.String) -> e
-    342:410:li.barter.http.ResponseInfo parseUserProfileResponse(java.lang.String) -> f
-    421:436:li.barter.http.ResponseInfo parseTeamResponse(java.lang.String) -> g
-    449:530:li.barter.http.ResponseInfo parseCreateUserResponse(java.lang.String) -> h
-    546:561:java.lang.String parseAndStoreLocation(org.json.JSONObject,boolean) -> a
-    574:607:li.barter.http.ResponseInfo parseSearchBooksResponse(java.lang.String) -> i
-    620:638:li.barter.http.ResponseInfo parseVenuesResponse(java.lang.String) -> j
-    650:660:li.barter.http.ResponseInfo parseSetUserPreferredLocationResponse(java.lang.String) -> k
-    673:694:void readVenueObjectIntoVenue(org.json.JSONObject,li.barter.models.Venue) -> a
-    706:717:void readTeamObjectIntoTeam(org.json.JSONObject,li.barter.models.Team) -> a
-    736:799:java.lang.String readBookDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> a
-    819:845:java.lang.String readUserDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> b
-    863:878:java.lang.String readLocationDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean) -> a
-    888:907:li.barter.http.ResponseInfo parseCreateBookResponse(java.lang.String) -> l
-    912:913:li.barter.http.ResponseInfo parseUpdateBookResponse(java.lang.String) -> m
-    918:919:li.barter.http.ResponseInfo parseDeleteBookResponse(java.lang.String) -> n
-    932:940:li.barter.http.ResponseInfo parseReportBugOrSuggestFeatureResponse(java.lang.String) -> o
-    956:957:li.barter.http.BlBadRequestError getErrorResponse(int,java.lang.String) -> b
-    971:980:li.barter.http.BlBadRequestError parseErrorResponse(int,java.lang.String) -> c
+    73:162:li.barter.http.ResponseInfo getSuccessResponse(int,java.lang.String) -> a
+    175:175:li.barter.http.ResponseInfo parseReferralResponse(java.lang.String) -> a
+    185:221:li.barter.http.ResponseInfo parseGoogleBookSuggestionsResponse(java.lang.String) -> b
+    235:307:li.barter.http.ResponseInfo parseGoogleBooksBookInfo(java.lang.String) -> c
+    317:317:li.barter.http.ResponseInfo parseAmpqResponse(java.lang.String) -> d
+    328:339:li.barter.http.ResponseInfo parseTributeResponse(java.lang.String) -> e
+    351:419:li.barter.http.ResponseInfo parseUserProfileResponse(java.lang.String) -> f
+    430:445:li.barter.http.ResponseInfo parseTeamResponse(java.lang.String) -> g
+    458:539:li.barter.http.ResponseInfo parseCreateUserResponse(java.lang.String) -> h
+    555:570:java.lang.String parseAndStoreLocation(org.json.JSONObject,boolean) -> a
+    583:616:li.barter.http.ResponseInfo parseSearchBooksResponse(java.lang.String) -> i
+    629:647:li.barter.http.ResponseInfo parseVenuesResponse(java.lang.String) -> j
+    656:659:li.barter.http.ResponseInfo parseBlockUserResponse(java.lang.String) -> k
+    671:681:li.barter.http.ResponseInfo parseSetUserPreferredLocationResponse(java.lang.String) -> l
+    694:715:void readVenueObjectIntoVenue(org.json.JSONObject,li.barter.models.Venue) -> a
+    727:738:void readTeamObjectIntoTeam(org.json.JSONObject,li.barter.models.Team) -> a
+    757:820:java.lang.String readBookDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> a
+    840:866:java.lang.String readUserDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> b
+    884:899:java.lang.String readLocationDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean) -> a
+    909:931:li.barter.http.ResponseInfo parseCreateBookResponse(java.lang.String) -> m
+    936:937:li.barter.http.ResponseInfo parseUpdateBookResponse(java.lang.String) -> n
+    942:943:li.barter.http.ResponseInfo parseDeleteBookResponse(java.lang.String) -> o
+    956:964:li.barter.http.ResponseInfo parseReportBugOrSuggestFeatureResponse(java.lang.String) -> p
+    980:981:li.barter.http.BlBadRequestError getErrorResponse(int,java.lang.String) -> b
+    995:1004:li.barter.http.BlBadRequestError parseErrorResponse(int,java.lang.String) -> c
 li.barter.http.IBlRequestContract -> li.barter.http.g:
     int getRequestId() -> y
     java.util.Map getExtras() -> x
@@ -24790,12 +24806,14 @@ li.barter.utils.SharedPreferenceHelper -> li.barter.d.i:
     42:43:boolean contains(android.content.Context,int) -> a
     56:56:java.lang.String getString(android.content.Context,int) -> b
     72:73:java.lang.String getString(android.content.Context,int,java.lang.String) -> a
-    144:144:double getDouble(android.content.Context,int) -> c
+    85:85:int getInt(android.content.Context,int) -> c
+    100:101:int getInt(android.content.Context,int,int) -> a
+    144:144:double getDouble(android.content.Context,int) -> d
     161:172:double getDouble(android.content.Context,int,double) -> a
-    216:216:boolean getBoolean(android.content.Context,int) -> d
+    216:216:boolean getBoolean(android.content.Context,int) -> e
     231:232:boolean getBoolean(android.content.Context,int,boolean) -> a
     246:250:void set(android.content.Context,int,java.lang.String) -> b
-    262:266:void set(android.content.Context,int,int) -> a
+    262:266:void set(android.content.Context,int,int) -> b
     297:302:void set(android.content.Context,int,double) -> b
     332:336:void set(android.content.Context,int,boolean) -> b
     346:350:void clearPreferences(android.content.Context) -> a
