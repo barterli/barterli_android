@@ -40,7 +40,7 @@
         android:layout_marginTop="@dimen/margin_xxx_small"
         android:hint="@string/label_about_me"
         android:textColor="@color/dark_gray"
-        android:textSize="@dimen/text_medium"
+         android:textSize="@dimen/text_small"
         app:fontStyle="regular" />
 
     <li.barter.widgets.TypefacedTextView

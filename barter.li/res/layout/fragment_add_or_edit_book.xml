@@ -53,6 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_margin"
             android:hint="@string/description_label"
+            android:maxLines="@integer/descriptionedittextcount"
             android:inputType="textCapSentences|textAutoComplete|textMultiLine"
             app:fontStyle="regular" />
 

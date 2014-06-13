@@ -22,5 +22,7 @@
     <integer name="long_anim_time">330</integer>
     <integer name="main_activity_launch">500</integer>
     <integer name="grid_col_count_for_team">2</integer>
+    <integer name="descriptionedittextcount">4</integer>
+    
 
 </resources>

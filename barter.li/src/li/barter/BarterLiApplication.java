@@ -75,7 +75,9 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
 
         sStaticContext = getApplicationContext();
         if (!SharedPreferenceHelper
-                        .getBoolean(this, R.string.pref_migrated_from_alpha)) {
+                        .getBoolean(this, R.string.pref_migrated_from_alpha)&&
+                        (SharedPreferenceHelper
+                        .getInt(this, R.string.pref_last_version_code)==0)) {
             doMigrationFromAlpha();
             SharedPreferenceHelper
                             .set(this, R.string.pref_migrated_from_alpha, true);

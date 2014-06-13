@@ -209,7 +209,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         }
         mAddBookDialogFragment = (SingleChoiceDialogFragment) getFragmentManager()
                         .findFragmentByTag(FragmentTags.DIALOG_ADD_BOOK);
-
+       
+        
+        
         loadBookSearchResults();
         setActionBarDrawerToggleEnabled(true);
         return contentView;
@@ -474,8 +476,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 mHasLoadedAllItems = true;
                 mCurPage--;
                 
-                showCrouton(mEmptySearchCroutonFlag ? R.string.no_books_found
-                                : R.string.no_more_books_found, AlertStyle.INFO);
+               
             }
 
             /*
@@ -524,6 +525,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
             {
                 mBooksAroundMeAdapter.swapCursor(cursor);
+                
             }
         }
     }
@@ -711,14 +713,17 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Reloads nearby books, clearing the ones already present
+     * Reloads nearby books
      */
     private void reloadNearbyBooks() {
         mSearchView.setQuery(null, false);
         final Bundle cookie = new Bundle(2);
         cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
         mEmptySearchCroutonFlag = false;
-        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
+        final Bundle args = (Bundle) cookie;
+        mCurPage = 0;
+        mHasLoadedAllItems = false;
+        fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION));
 
     }
 

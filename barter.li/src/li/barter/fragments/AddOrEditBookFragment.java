@@ -664,7 +664,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			
 			final String mId = response.responseBundle
 					.getString(HttpConstants.ID);
-
+			
 			final Bundle showBooksArgs = new Bundle(6);
 			showBooksArgs.putString(Keys.BOOK_ID, bookId);
 			showBooksArgs.putString(Keys.ID, mId);
@@ -673,6 +673,8 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
 					.instantiate(getActivity(), BookDetailFragment.class
 							.getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
+			
+			
 			break;
 		}
 
@@ -702,7 +704,6 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
 				fm.popBackStack();
 			}
-
 			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
 					.instantiate(getActivity(), BooksAroundMeFragment.class
 							.getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
@@ -711,7 +712,6 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		}
 
 		case RequestId.DELETE_BOOK: {
-
 			DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK, null, TableUserBooks.NAME, mBookSelection, new String[] {
 					mBookId
 			}, true, this);

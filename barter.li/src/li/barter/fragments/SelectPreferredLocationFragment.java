@@ -150,6 +150,8 @@ implements OnItemClickListener,OnClickListener {
 		}
 
 		if ((mVenues == null) || (mVenues.length == 0)) {
+
+			
 			fetchVenuesForLocation(DeviceInfo.INSTANCE.getLatestLocation(), SEARCH_RADIUS_IN_METERS);
 		} else {
 			mSelectLocationAdapter.setVenues(mVenues);
@@ -257,7 +259,6 @@ implements OnItemClickListener,OnClickListener {
 
 		params.put(HttpConstants.LL, String.format(Locale.US, "%f,%f", location
 				.getLatitude(), location.getLongitude()));
-		
 		
 		
 		params.put(HttpConstants.RADIUS, String.valueOf(radius));

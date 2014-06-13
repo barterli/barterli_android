@@ -94,6 +94,8 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      * Whether a screen hit should be reported to analytics
      */
     private boolean                   mShouldReportScreenHit;
+    
+    public boolean				  mRefreshBooks=false;				 
 
     /**
      * {@link AddUserInfoDialogFragment} for
@@ -394,6 +396,8 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     protected boolean isLoggedIn() {
         return !TextUtils.isEmpty(UserInfo.INSTANCE.getAuthToken());
     }
+    
+   
 
     /**
      * Does the user have a first name
