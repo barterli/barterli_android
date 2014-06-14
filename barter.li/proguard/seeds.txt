@@ -11628,10 +11628,7 @@ li.barter.R$string: int foursquare_client_id
 li.barter.R$string: int foursquare_client_secret
 li.barter.R$string: int ga_tracking_id
 li.barter.R$string: int give_away
-li.barter.R$string: int goodreads_api_key
 li.barter.R$string: int google_maps_v2_api_key
-li.barter.R$string: int google_maps_v2_api_key_debug
-li.barter.R$string: int googlebooks_api_key
 li.barter.R$string: int help_select_location
 li.barter.R$string: int hint_about_me_description
 li.barter.R$string: int hint_enter_device

@@ -473,7 +473,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             mBooksAroundMeGridView.setEmptyView(mEmptyView);
             if (response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)) {
-
+            	
+                 	mEmptyView.setVisibility(View.VISIBLE);
+               
                 mHasLoadedAllItems = true;
                 mCurPage--;
                 
@@ -493,6 +495,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (request.getRequestId() == RequestId.SEARCH_BOOKS) {
             mIsLoading = false;
             mPullToRefreshLayout.setRefreshComplete();
+            mEmptyView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -502,10 +505,23 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                     final String errorMessage, final Bundle errorResponseBundle) {
         if (requestId == RequestId.SEARCH_BOOKS) {
             showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
+            mEmptyView.setVisibility(View.VISIBLE);
         }
         if (requestId == RequestId.SEARCH_BOOKS_FROM_EDITTEXT) {
             showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
         }
+    }
+    
+    @Override
+    public void onOtherError(int requestId, IBlRequestContract request,
+    		int errorCode) {
+    	  if (requestId == RequestId.SEARCH_BOOKS) {
+              showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
+              mEmptyView.setVisibility(View.VISIBLE);
+          }
+          if (requestId == RequestId.SEARCH_BOOKS_FROM_EDITTEXT) {
+              showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
+          }
     }
 
     @Override
@@ -530,10 +546,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                
                 
             }
-            if(cursor.getCount()==0)
-            {
-            	mEmptyView.setVisibility(View.VISIBLE);
-            }
+           
         }
     }
 
@@ -713,9 +726,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onRefreshStarted(View view) {
 
         if (view.getId() == R.id.grid_books_around_me) {
-        	
-            mBooksAroundMeGridView.setEmptyView(mEmptyViewOnRefresh);
-            reloadNearbyBooks();
+        	reloadBookWithClearedEmptyView();
         }
     }
 
@@ -727,18 +738,23 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         final Bundle cookie = new Bundle(2);
         cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
         mEmptySearchCroutonFlag = false;
-        final Bundle args = (Bundle) cookie;
-        mCurPage = 0;
-        mHasLoadedAllItems = false;
-        fetchBooksAroundMe((Location) args.getParcelable(Keys.LOCATION));
+        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
 
+    }
+    
+    /**
+     * Reloads nearby books with no view in background
+     */
+    private void reloadBookWithClearedEmptyView()
+    {
+    	mEmptyView.setVisibility(View.GONE);
+        mBooksAroundMeGridView.setEmptyView(mEmptyViewOnRefresh);
+        reloadNearbyBooks();
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-    	mCurPage = 0;
-        mHasLoadedAllItems = false;
-        fetchBooksAroundMe(mLastFetchedLocation);
+    	reloadBookWithClearedEmptyView();
         return true;
     }
 
