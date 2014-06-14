@@ -474,8 +474,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             mBooksAroundMeGridView.setEmptyView(mEmptyView);
             if (response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)) {
             	
-                 	mEmptyView.setVisibility(View.VISIBLE);
-               
                 mHasLoadedAllItems = true;
                 mCurPage--;
                 
