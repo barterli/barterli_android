@@ -142,7 +142,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
 				//Reached here by editing current user's book
 				mdelete.setVisibility(View.VISIBLE);
-				mSubmit.setVisibility(View.GONE);
+				mSubmit.setText("Update");
 				DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableUserBooks.NAME, null, mBookSelection, new String[] {
 						mBookId
 				}, null, null, null, null, this);
@@ -780,16 +780,18 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			final int deleteCount) {
 
 		if (token == QueryTokens.DELETE_MY_BOOK) {
-
-			final FragmentManager fm = getActivity()
-					.getSupportFragmentManager();
-			for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
-				fm.popBackStack();
+		
+			FragmentManager fm = getActivity().getSupportFragmentManager();
+			for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {    
+			    fm.popBackStack();
 			}
+			final Bundle args = new Bundle(1);
+			args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
 			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
 					.instantiate(getActivity(), BooksAroundMeFragment.class
-							.getName(), null), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
-
+							.getName(), args), FragmentTags.BOOKS_AROUND_ME, true, FragmentTags.BS_BOOKS_AROUND_ME);
+			
+			
 		}
 
 	}

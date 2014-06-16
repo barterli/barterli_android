@@ -186,13 +186,16 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             case R.id.action_edit_profile: {
 
                 final int currentItem = mBookDetailPager.getCurrentItem();
-                final Bundle args = new Bundle(2);
+                final Bundle args = new Bundle(4);
                 args.putString(Keys.BOOK_ID, mBookIdArray.get(currentItem));
                 args.putString(Keys.ID, mIdArray.get(currentItem));
                 args.putBoolean(Keys.EDIT_MODE, true);
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), AddOrEditBookFragment.class
-                                                .getName(), args), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_EDIT_BOOK);
+                args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+                
+    			loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+    					.instantiate(getActivity(), AddOrEditBookFragment.class
+    							.getName(), args), FragmentTags.BS_EDIT_BOOK, true, FragmentTags.BS_BOOKS_AROUND_ME);
+    			
 
                 return true;
             }

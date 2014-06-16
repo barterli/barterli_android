@@ -43,8 +43,14 @@ public class HttpConstants {
                         API_VERSION,
                         "162.243.198.171",
                         5672),
-
+                        
         PRODUCTION(
+                        "http://api.barter.li/api/v",
+                         API_VERSION,
+                         "api.barter.li",
+                          5672),
+
+        PRODUCTION_IP(
                         "http://107.170.10.25/api/v",
                         API_VERSION,
                         "107.170.10.25",
