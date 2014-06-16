@@ -111,7 +111,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                     Bundle savedInstanceState) {
         init(container, savedInstanceState);
-        
+        setHasOptionsMenu(true);
         final View view = inflater
                         .inflate(R.layout.fragment_books_pager, container, false);
         final Bundle extras = getArguments();
@@ -169,6 +169,8 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         }
 
     }
+    
+   
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -319,7 +321,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
              * this has moved from oncreateview to here to prevent the crash on oncreateoptionsmenu
              * - so the options menu was created before creating the pager object.
              */
-            setHasOptionsMenu(true);
+            
 
         }
 
