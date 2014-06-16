@@ -106,12 +106,17 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      * Receiver for chat button click events
      */
     private ChatButtonReceiver   mChatButtonReceiver     = new ChatButtonReceiver();
+    
+    /**
+     * for loading the owned user menu i.e with edit options
+     */
+    private boolean				mOwnedByUser=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                     Bundle savedInstanceState) {
         init(container, savedInstanceState);
-        
+        setHasOptionsMenu(true);
         final View view = inflater
                         .inflate(R.layout.fragment_books_pager, container, false);
         final Bundle extras = getArguments();
@@ -160,15 +165,14 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        final int currentItem = mBookDetailPager.getCurrentItem();
         
-        if (mUserIdArray.size() > 0
-                        && mUserIdArray.get(currentItem)
-                                        .equals(UserInfo.INSTANCE.getId())) {
+       if(mOwnedByUser) {
             inflater.inflate(R.menu.menu_profile_show, menu);
         }
 
     }
+    
+   
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -182,13 +186,16 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             case R.id.action_edit_profile: {
 
                 final int currentItem = mBookDetailPager.getCurrentItem();
-                final Bundle args = new Bundle(2);
+                final Bundle args = new Bundle(4);
                 args.putString(Keys.BOOK_ID, mBookIdArray.get(currentItem));
                 args.putString(Keys.ID, mIdArray.get(currentItem));
                 args.putBoolean(Keys.EDIT_MODE, true);
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), AddOrEditBookFragment.class
-                                                .getName(), args), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_EDIT_BOOK);
+                args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
+                
+    			loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+    					.instantiate(getActivity(), AddOrEditBookFragment.class
+    							.getName(), args), FragmentTags.BS_EDIT_BOOK, true, FragmentTags.BS_BOOKS_AROUND_ME);
+    			
 
                 return true;
             }
@@ -319,7 +326,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
              * this has moved from oncreateview to here to prevent the crash on oncreateoptionsmenu
              * - so the options menu was created before creating the pager object.
              */
-            setHasOptionsMenu(true);
+            
 
         }
 
@@ -344,7 +351,18 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPageSelected(int position) {
 
+        
+        if (mUserIdArray.size() > 0
+                        && mUserIdArray.get(position)
+                                        .equals(UserInfo.INSTANCE.getId())) {
+           mOwnedByUser=true;
+        }
+        else
+        {
+        	 mOwnedByUser=false;
+        }
         getActivity().invalidateOptionsMenu();
+        
         final ProfileFragment fragment = (ProfileFragment) getChildFragmentManager()
                         .findFragmentByTag(FragmentTags.USER_PROFILE);
 

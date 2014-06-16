@@ -215,6 +215,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 args.putString(Keys.ID, mId);
                 args.putString(Keys.BOOK_ID, mBookId);
                 args.putBoolean(Keys.EDIT_MODE, true);
+                args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BOOKS_AROUND_ME);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), AddOrEditBookFragment.class
                                                 .getName(), args), FragmentTags.ADD_OR_EDIT_BOOK, true, FragmentTags.BS_EDIT_BOOK);

@@ -610,7 +610,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             showBooksArgs.putInt(Keys.BOOK_POSITION, position);
             loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                             .instantiate(getActivity(), BooksPagerFragment.class
-                                            .getName(), showBooksArgs), FragmentTags.BOOK_FROM_BOOKS_AROUND_ME, true, FragmentTags.BS_BOOK_DETAIL);
+                                            .getName(), showBooksArgs), FragmentTags.BOOKS_AROUND_ME, true, FragmentTags.BS_BOOK_DETAIL);
 
         }
     }
