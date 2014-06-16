@@ -106,6 +106,11 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      * Receiver for chat button click events
      */
     private ChatButtonReceiver   mChatButtonReceiver     = new ChatButtonReceiver();
+    
+    /**
+     * for loading the owned user menu i.e with edit options
+     */
+    private boolean				mOwnedByUser=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -160,11 +165,8 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        final int currentItem = mBookDetailPager.getCurrentItem();
         
-        if (mUserIdArray.size() > 0
-                        && mUserIdArray.get(currentItem)
-                                        .equals(UserInfo.INSTANCE.getId())) {
+       if(mOwnedByUser) {
             inflater.inflate(R.menu.menu_profile_show, menu);
         }
 
@@ -346,7 +348,18 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPageSelected(int position) {
 
+        
+        if (mUserIdArray.size() > 0
+                        && mUserIdArray.get(position)
+                                        .equals(UserInfo.INSTANCE.getId())) {
+           mOwnedByUser=true;
+        }
+        else
+        {
+        	 mOwnedByUser=false;
+        }
         getActivity().invalidateOptionsMenu();
+        
         final ProfileFragment fragment = (ProfileFragment) getChildFragmentManager()
                         .findFragmentByTag(FragmentTags.USER_PROFILE);
 
