@@ -177,14 +177,11 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
             final Cursor cursor = (Cursor) mBooksAroundMeAdapter
                             .getItem(position);
 
-            final String bookId = cursor.getString(cursor
-                            .getColumnIndex(DatabaseColumns.BOOK_ID));
-
+            
             final String idBook = cursor.getString(cursor
                             .getColumnIndex(DatabaseColumns.ID));
 
             final Bundle showBooksArgs = new Bundle();
-            showBooksArgs.putString(Keys.BOOK_ID, bookId);
             showBooksArgs.putString(Keys.ID, idBook);
             showBooksArgs.putString(Keys.USER_ID, mUserId);
 

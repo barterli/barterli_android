@@ -74,6 +74,8 @@ public class HomeActivity extends AbstractBarterLiActivity implements
      * Helper class for connectiong to GooglePlus for login
      */
     private GooglePlusManager       mGooglePlusManager;
+    
+    
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

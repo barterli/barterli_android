@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.ContentValues;
+import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
 
@@ -41,6 +42,7 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.models.Team;
 import li.barter.models.Venue;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.Logger;
 import li.barter.widgets.autocomplete.Suggestion;
@@ -51,6 +53,18 @@ import li.barter.widgets.autocomplete.Suggestion;
  * @author Vinay S Shenoy
  */
 public class HttpResponseParser {
+	
+	/**
+	 * It stores the latitude of the book response which we use for adding the book by calculating
+	 * the distance between current location and the preferred location
+	 */
+	private double mEndLatitude;
+	
+	/**
+	 * It stores the longitude of the book response which we use for adding the book by calculating
+	 * the distance between current location and the preferred location
+	 */
+	private double mEndLongitude;
 
 	private static final String TAG = "HttpResponseParser";
 
@@ -375,7 +389,7 @@ public class HttpResponseParser {
 
 		JSONObject bookObject = null;
 		final ContentValues values = new ContentValues();
-		final String selection = DatabaseColumns.BOOK_ID
+		final String selection = DatabaseColumns.ID
 				+ SQLConstants.EQUALS_ARG;
 		final String[] args = new String[1];
 		// DBInterface.delete(TableUserBooks.NAME, null, null, true);
@@ -494,7 +508,7 @@ public class HttpResponseParser {
 
 		JSONObject bookObject = null;
 		final ContentValues values = new ContentValues();
-		final String selection = DatabaseColumns.BOOK_ID
+		final String selection = DatabaseColumns.ID
 				+ SQLConstants.EQUALS_ARG;
 		final String[] args = new String[1];
 		for (int i = 0; i < booksArray.length(); i++) {
@@ -589,7 +603,7 @@ public class HttpResponseParser {
 
 		JSONObject bookObject = null;
 		final ContentValues values = new ContentValues();
-		final String selection = DatabaseColumns.BOOK_ID
+		final String selection = DatabaseColumns.ID
 				+ SQLConstants.EQUALS_ARG;
 		final String[] args = new String[1];
 
@@ -759,12 +773,11 @@ public class HttpResponseParser {
 		}
 
 		final String bookId = JsonUtils
-				.readString(bookObject, HttpConstants.ID_BOOK, true, true);
+				.readString(bookObject, HttpConstants.ID_BOOK, false, false);
 
 		final int id = JsonUtils
 				.readInt(bookObject, HttpConstants.ID, true, true);
 		Logger.d(TAG, "ID : " + id);
-		values.put(DatabaseColumns.BOOK_ID, bookId);
 		values.put(DatabaseColumns.ID, id + "");
 		values.put(DatabaseColumns.ISBN_10, JsonUtils
 				.readString(bookObject, HttpConstants.ISBN_10, false, false));
@@ -817,7 +830,7 @@ public class HttpResponseParser {
 			values.put(DatabaseColumns.BARTER_TYPE, TextUtils
 					.join(AppConstants.BARTER_TYPE_SEPARATOR, tags));
 		}
-		return bookId;
+		return id+"";
 	}
 
 	/**
@@ -896,6 +909,13 @@ public class HttpResponseParser {
 				.readDouble(locationObject, HttpConstants.LATITUDE, true, true));
 		values.put(DatabaseColumns.LONGITUDE, JsonUtils
 				.readDouble(locationObject, HttpConstants.LONGITUDE, true, true));
+		
+		mEndLatitude=JsonUtils
+				.readDouble(locationObject, HttpConstants.LATITUDE, true, true);
+		
+		mEndLongitude=JsonUtils
+				.readDouble(locationObject, HttpConstants.LONGITUDE, true, true);
+		
 		return locationId;
 	}
 
@@ -913,15 +933,30 @@ public class HttpResponseParser {
 				.readJSONObject(responseObject, HttpConstants.BOOK, true, true);
 
 		final ContentValues values = new ContentValues();
-		final String bookId = readBookDetailsIntoContentValues(bookObject, values, true, false);
+		final String[] args = new String[1];
+		
+		args[0] = readBookDetailsIntoContentValues(bookObject, values, true, false);
 		final String mId	= JsonUtils
 				.readInt(bookObject, HttpConstants.ID, true, true)+"";
 
-		// Unable to update, insert the item
-		if (DBInterface.insert(TableUserBooks.NAME, null, values, true) >= 0) {
+		final String selection = DatabaseColumns.ID
+				+ SQLConstants.EQUALS_ARG;
+		
+		final Location latestLocation = DeviceInfo.INSTANCE.getLatestLocation();
+		
+        
+        float distanceBetween=getDistanceBetweenInKms(latestLocation.getLatitude(), latestLocation.getLongitude(), mEndLatitude, mEndLongitude);
+        Logger.d(TAG, distanceBetween+"");
+		if(distanceBetween<=AppConstants.DEFAULT_SEARCH_RADIUS)
+		{
+		if (DBInterface.update(TableSearchBooks.NAME, values, selection, args, false) == 0) {
 
+			// Unable to update, insert the item
+			DBInterface.insert(TableSearchBooks.NAME, null, values, false);
+		}
+		}
+		if (DBInterface.insert(TableUserBooks.NAME, null, values, true) >= 0) {
 			final Bundle responseBundle = new Bundle(1);
-			responseBundle.putString(HttpConstants.ID_BOOK, bookId);
 			responseBundle.putString(HttpConstants.ID, mId);
 			responseInfo.responseBundle = responseBundle;
 		} else {
@@ -941,6 +976,33 @@ public class HttpResponseParser {
 			throws JSONException {
 		final ResponseInfo responseInfo = new ResponseInfo();
 		return responseInfo;
+	}
+	
+	/**
+	 * Method for calculating the distance between two location points
+	 * 
+	 * @param startLatitude
+	 * @param startLongitude
+	 * @param endLatitude
+	 * @param endLongitude
+	 * @return distance in kms
+	 * 
+	 */
+	private float getDistanceBetweenInKms(double startLatitude,double startLongitude,double endLatitude,double endLongitude)
+	{
+		float[] distanceBetween=new float[1];
+        if ((startLatitude != 0.0)
+                        && (startLongitude != 0.0)) {
+        	Location.distanceBetween(startLatitude, startLongitude, mEndLatitude, mEndLongitude, distanceBetween);
+        	// to convert it into kms
+        	distanceBetween[0]=distanceBetween[0]/1000; 
+        }
+        else
+        {
+        	distanceBetween[0]=0;
+        }
+       return distanceBetween[0];
+		
 	}
 
 	/**
@@ -1004,5 +1066,7 @@ public class HttpResponseParser {
 		return error;
 
 	}
+	
+	
 
 }

@@ -53,6 +53,7 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.activities.HomeActivity;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksGridAdapter;
 import li.barter.analytics.AnalyticsConstants.Actions;
@@ -82,6 +83,7 @@ import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.ResultCodes;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.LoadMoreHelper;
 import li.barter.utils.LoadMoreHelper.LoadMoreCallbacks;
 import li.barter.utils.Logger;
@@ -154,6 +156,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private SearchView                   mSearchView;
     
+    
     private View						 mEmptyViewOnRefresh,mEmptyView;
     
 
@@ -161,6 +164,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * {@link PullToRefreshLayout} reference
      */
     private PullToRefreshLayout          mPullToRefreshLayout;
+    
+    
+    
+    private boolean 					 mIsNotSearch=true;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -196,6 +203,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeGridView.setEmptyView(mEmptyView);
         mEmptyView.findViewById(R.id.text_try_again).setOnClickListener(this);
         mEmptyView.findViewById(R.id.text_add_your_own).setOnClickListener(this);
+        
 
         if (savedInstanceState == null) {
             mCurPage = 1;
@@ -375,6 +383,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             return;
         }
         fetchBooksOnLocationUpdate(location);
+        
     }
 
     /**
@@ -426,6 +435,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                         && (latestLocation.getLongitude() != 0.0)) {
             updateLocation(latestLocation);
         }
+       
     }
 
     /**
@@ -541,7 +551,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             {
             	 mEmptyView.setVisibility(View.GONE);
                 mBooksAroundMeAdapter.swapCursor(cursor);
-               
+                if(cursor.getCount()==0&&mIsNotSearch)
+                {
+                	final Bundle cookie = new Bundle(1);
+                    cookie.putParcelable(Keys.LOCATION, DeviceInfo.INSTANCE.getLatestLocation());
+                    //   Delete the current search results before parsing the old ones
+                    DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);	
+               	
+                } 
                 
             }
            
@@ -598,13 +615,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             Logger.d(TAG, "ID:" + idBook);
 
-            final String bookId = cursor.getString(cursor
-                            .getColumnIndex(DatabaseColumns.BOOK_ID));
+            
             final String userId = cursor.getString(cursor
                             .getColumnIndex(DatabaseColumns.USER_ID));
 
             final Bundle showBooksArgs = new Bundle();
-            showBooksArgs.putString(Keys.BOOK_ID, bookId);
             showBooksArgs.putString(Keys.ID, idBook);
             showBooksArgs.putString(Keys.USER_ID, userId);
             showBooksArgs.putInt(Keys.BOOK_POSITION, position);
@@ -753,12 +768,13 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
     	reloadBookWithClearedEmptyView();
+    	mIsNotSearch=true;
         return true;
     }
 
     @Override
     public boolean onMenuItemActionExpand(MenuItem item) {
-
+    	mIsNotSearch=false;
         return true;
     }
 

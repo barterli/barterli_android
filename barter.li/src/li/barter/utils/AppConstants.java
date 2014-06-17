@@ -402,6 +402,7 @@ public class AppConstants {
         public static final int CHAT_DETAILS               = 204;
         public static final int USER_DETAILS               = 205;
         public static final int SEARCH_BOOKS_FROM_EDITTEXT = 206;
+        public static final int REFRESH_BOOKS			   = 207;
     }
 
     /**
@@ -435,6 +436,7 @@ public class AppConstants {
         public static final int DELETE_CHATS                              = 304;
         public static final int DELETE_MY_BOOKS                           = 305;
         public static final int DELETE_MY_BOOK                            = 306;
+        public static final int DELETE_MY_BOOK_FROM_SEARCH				  = 307;
 
     }
 
