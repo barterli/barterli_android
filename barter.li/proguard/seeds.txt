@@ -11682,6 +11682,7 @@ li.barter.R$string: int owner_profile
 li.barter.R$string: int password_label
 li.barter.R$string: int pref_auth_token
 li.barter.R$string: int pref_description
+li.barter.R$string: int pref_dont_refresh_books
 li.barter.R$string: int pref_email
 li.barter.R$string: int pref_first_name
 li.barter.R$string: int pref_last_fetched_latitude

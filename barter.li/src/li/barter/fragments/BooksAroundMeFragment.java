@@ -429,11 +429,27 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onResume() {
         super.onResume();
+        
+        //done to force refresh! just change the value accordingly, default value is false
+        if(!SharedPreferenceHelper
+                .getBoolean(getActivity(), R.string.pref_dont_refresh_books))
+        {
+        	 SharedPreferenceHelper
+             .set(getActivity(), R.string.pref_last_fetched_latitude, 0.0);
+        	 SharedPreferenceHelper
+             .set(getActivity(), R.string.pref_last_fetched_longitude, 0.0);
+        	 
+        	 SharedPreferenceHelper
+             .set(getActivity(), R.string.pref_dont_refresh_books, true);
+        	 
+        }
         readLastFetchedInfoFromPref();
         final Location latestLocation = DeviceInfo.INSTANCE.getLatestLocation();
         if ((latestLocation.getLatitude() != 0.0)
                         && (latestLocation.getLongitude() != 0.0)) {
             updateLocation(latestLocation);
+            
+            
         }
        
     }
@@ -551,11 +567,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             {
             	 mEmptyView.setVisibility(View.GONE);
                 mBooksAroundMeAdapter.swapCursor(cursor);
-                if(cursor.getCount()==0&&mIsNotSearch)
-                {
-                	
-                  fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation());
-                } 
                 
             }
            
