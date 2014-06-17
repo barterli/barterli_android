@@ -553,11 +553,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 mBooksAroundMeAdapter.swapCursor(cursor);
                 if(cursor.getCount()==0&&mIsNotSearch)
                 {
-                	final Bundle cookie = new Bundle(1);
-                    cookie.putParcelable(Keys.LOCATION, DeviceInfo.INSTANCE.getLatestLocation());
-                    //   Delete the current search results before parsing the old ones
-                    DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);	
-               	
+                	
+                  fetchBooksAroundMe(DeviceInfo.INSTANCE.getLatestLocation());
                 } 
                 
             }

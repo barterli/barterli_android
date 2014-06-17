@@ -128,212 +128,66 @@ com.android.volley.toolbox.multipart.MultipartEntity:
     static final java.lang.String CRLF
 com.android.volley.toolbox.multipart.UrlEncodingHelper:
     8:8:public UrlEncodingHelper()
-com.crashlytics.android.A
-com.crashlytics.android.B
-com.crashlytics.android.C
 com.crashlytics.android.CrashTest
-com.crashlytics.android.Crashlytics
-com.crashlytics.android.CrashlyticsListener
-com.crashlytics.android.CrashlyticsMissingDependencyException
-com.crashlytics.android.D
-com.crashlytics.android.E
-com.crashlytics.android.F
-com.crashlytics.android.G
-com.crashlytics.android.H
-com.crashlytics.android.I
-com.crashlytics.android.J
-com.crashlytics.android.K
-com.crashlytics.android.L
-com.crashlytics.android.M
-com.crashlytics.android.N
-com.crashlytics.android.O
+com.crashlytics.android.Crashlytics:
+    public static final java.lang.String TAG
+    176:189:public static void logException(java.lang.Throwable)
+    195:200:static void a(java.lang.String)
+    224:225:public static void log(java.lang.String)
+    228:236:private static void a(int,java.lang.String,java.lang.String)
+    252:256:public static void log(int,java.lang.String,java.lang.String)
+    284:285:public static void setUserIdentifier(java.lang.String)
+    293:294:public static void setUserName(java.lang.String)
+    302:303:public static void setUserEmail(java.lang.String)
+    309:310:public static void setApplicationInstallationIdentifier(java.lang.String)
+    321:341:public static void setString(java.lang.String,java.lang.String)
+    349:350:public static void setBool(java.lang.String,boolean)
+    358:359:public static void setDouble(java.lang.String,double)
+    367:368:public static void setFloat(java.lang.String,float)
+    376:377:public static void setInt(java.lang.String,int)
+    385:386:public static void setLong(java.lang.String,long)
+    399:400:public final void setListener(com.crashlytics.android.CrashlyticsListener)
+    408:409:public final void setDebugMode(boolean)
+    417:417:public final boolean getDebugMode()
+    425:457:public static void setPinningInfoProvider(com.crashlytics.android.PinningInfoProvider)
+    460:460:public static com.crashlytics.android.PinningInfoProvider getPinningInfoProvider()
+    473:476:public final boolean verifyPinning(java.net.URL)
+    514:515:public final void crash()
+    755:761:private static java.lang.String c(java.lang.String)
+com.crashlytics.android.CrashlyticsMissingDependencyException:
+    private static final long serialVersionUID
 com.crashlytics.android.P
-com.crashlytics.android.PinningInfoProvider
-com.crashlytics.android.Q
-com.crashlytics.android.R:
-    75:77:public R(java.lang.String)
-com.crashlytics.android.S
-com.crashlytics.android.T
-com.crashlytics.android.U
-com.crashlytics.android.V
-com.crashlytics.android.W
-com.crashlytics.android.X
-com.crashlytics.android.Y
-com.crashlytics.android.Z
-com.crashlytics.android.a
-com.crashlytics.android.aa
-com.crashlytics.android.ab
-com.crashlytics.android.ac
-com.crashlytics.android.ad
-com.crashlytics.android.ae
-com.crashlytics.android.b
-com.crashlytics.android.c
-com.crashlytics.android.d
-com.crashlytics.android.e
-com.crashlytics.android.f
-com.crashlytics.android.g
-com.crashlytics.android.h
-com.crashlytics.android.i
-com.crashlytics.android.internal.A
+com.crashlytics.android.PinningInfoProvider:
+    public abstract java.io.InputStream getKeyStoreStream()
+    public abstract java.lang.String getKeyStorePassword()
+    public abstract java.lang.String[] getPins()
+com.crashlytics.android.i:
+    private static final long serialVersionUID
+com.crashlytics.android.internal.A:
+    68:68:public final void a(int,java.lang.String,java.lang.String,boolean)
 com.crashlytics.android.internal.B:
     35:42:public final void c(java.lang.Object)
     13:13:static synthetic void a(com.crashlytics.android.internal.B,java.lang.Object)
 com.crashlytics.android.internal.C
-com.crashlytics.android.internal.D
-com.crashlytics.android.internal.E
-com.crashlytics.android.internal.F
-com.crashlytics.android.internal.G
-com.crashlytics.android.internal.H
-com.crashlytics.android.internal.I
-com.crashlytics.android.internal.J
-com.crashlytics.android.internal.K
-com.crashlytics.android.internal.L
-com.crashlytics.android.internal.M
-com.crashlytics.android.internal.N
+com.crashlytics.android.internal.D:
+    104:104:public java.lang.String getVersion()
+    184:187:public final void a(com.crashlytics.android.internal.ag)
 com.crashlytics.android.internal.O:
-    private final java.lang.String b
-    private final java.lang.String c
-    private final java.lang.String d
-    private final java.lang.String e
-    private final java.lang.String f
-    private final java.lang.String g
-    private final java.lang.String h
-    private final java.lang.String i
-    private final java.util.concurrent.ScheduledExecutorService j
-    37:41:public O(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,com.crashlytics.android.internal.K,com.crashlytics.android.internal.av)
-    47:62:O(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,com.crashlytics.android.internal.K,java.util.concurrent.ScheduledExecutorService,com.crashlytics.android.internal.av)
-    72:91:public final void a(java.lang.String)
-    94:97:public final void b()
-    100:101:public final void a(android.app.Activity)
-    104:105:public final void b(android.app.Activity)
     108:112:public final void b(java.lang.String)
-    115:116:public final void c(android.app.Activity)
-    119:120:public final void d(android.app.Activity)
-    123:124:public final void e(android.app.Activity)
-    127:128:public final void f(android.app.Activity)
-    131:132:public final void g(android.app.Activity)
-    135:138:private void a(com.crashlytics.android.internal.W,android.app.Activity,boolean)
-    141:157:private void a(com.crashlytics.android.internal.V,boolean)
-    161:173:final void a(com.crashlytics.android.internal.aK,java.lang.String)
-    177:188:public final void c()
-    191:203:void a()
-    215:219:private void a(java.lang.Runnable)
-    17:17:static synthetic java.lang.String a(com.crashlytics.android.internal.O)
-    17:17:static synthetic java.lang.String b(com.crashlytics.android.internal.O)
-    17:17:static synthetic java.lang.String c(com.crashlytics.android.internal.O)
-    17:17:static synthetic java.lang.String d(com.crashlytics.android.internal.O)
-    17:17:static synthetic java.lang.String e(com.crashlytics.android.internal.O)
-    17:17:static synthetic java.lang.String f(com.crashlytics.android.internal.O)
-    17:17:static synthetic java.lang.String g(com.crashlytics.android.internal.O)
-    17:17:static synthetic java.lang.String h(com.crashlytics.android.internal.O)
-com.crashlytics.android.internal.P
-com.crashlytics.android.internal.Q
-com.crashlytics.android.internal.R:
-    161:161:R(com.crashlytics.android.internal.O,com.crashlytics.android.internal.aK,java.lang.String)
-com.crashlytics.android.internal.S
-com.crashlytics.android.internal.T
-com.crashlytics.android.internal.U:
-    public abstract void a()
-    public abstract void b()
-    public abstract void a(com.crashlytics.android.internal.V)
-    public abstract void c()
-    public abstract void d()
-com.crashlytics.android.internal.V
-com.crashlytics.android.internal.W
-com.crashlytics.android.internal.X
-com.crashlytics.android.internal.Y
-com.crashlytics.android.internal.Z
 com.crashlytics.android.internal.a
-com.crashlytics.android.internal.aA
-com.crashlytics.android.internal.aB
-com.crashlytics.android.internal.aC
-com.crashlytics.android.internal.aD
-com.crashlytics.android.internal.aE
-com.crashlytics.android.internal.aF
-com.crashlytics.android.internal.aG
-com.crashlytics.android.internal.aH
-com.crashlytics.android.internal.aI
-com.crashlytics.android.internal.aJ
-com.crashlytics.android.internal.aK:
-    public final java.lang.String a
-    public final int b
-    public final int c
-    14:18:public aK(java.lang.String,int,int,int,int)
-com.crashlytics.android.internal.aL
-com.crashlytics.android.internal.aM
-com.crashlytics.android.internal.aN
-com.crashlytics.android.internal.aO
-com.crashlytics.android.internal.aP
-com.crashlytics.android.internal.aQ
-com.crashlytics.android.internal.aR
-com.crashlytics.android.internal.aS
-com.crashlytics.android.internal.aT
-com.crashlytics.android.internal.aU
-com.crashlytics.android.internal.aV
-com.crashlytics.android.internal.aW
-com.crashlytics.android.internal.aX
-com.crashlytics.android.internal.aY
-com.crashlytics.android.internal.aZ
-com.crashlytics.android.internal.aa
+com.crashlytics.android.internal.aD:
+    private static final long serialVersionUID
 com.crashlytics.android.internal.ab:
-    101:101:public static android.content.SharedPreferences a()
-    110:132:private static java.lang.String a(java.io.File,java.lang.String)
-    140:140:public static int b()
-    192:219:public static synchronized long c()
-    227:227:private static long a(java.lang.String,java.lang.String,int)
-    232:244:public static android.app.ActivityManager$RunningAppProcessInfo a(java.lang.String,android.content.Context)
-    251:252:public static java.lang.String a(java.io.InputStream)
-    270:270:public static java.lang.String a(java.lang.String)
-    283:298:private static java.lang.String b(java.io.InputStream)
-    302:316:private static java.lang.String a(byte[],java.lang.String)
-    329:357:public static varargs java.lang.String a(java.lang.String[])
-    367:369:public static long a(android.content.Context)
-    380:384:public static long b(java.lang.String)
-    389:395:public static float b(android.content.Context)
-    399:406:public static boolean c(android.content.Context)
-    415:418:public static void c(java.lang.String)
-    435:438:public static void a(int,java.lang.String)
-    453:458:public static boolean d(android.content.Context)
-    524:525:public static boolean d()
-    534:554:public static boolean e()
-    570:583:public static int f()
-    594:608:public static int a(boolean)
-    624:638:public static javax.crypto.Cipher b(int,java.lang.String)
-    643:650:public static java.lang.String a(byte[])
-    675:675:public static boolean f(android.content.Context)
-    700:706:public static java.lang.String a(android.content.Context,java.lang.String)
-    716:723:public static void a(java.io.Closeable,java.lang.String)
-    726:733:public static void a(java.io.Flushable,java.lang.String)
-    737:737:public static boolean e(java.lang.String)
     748:753:public static java.lang.String a(int)
-    795:798:public static void a(java.io.InputStream,java.io.OutputStream,byte[])
     801:815:public static java.lang.String b(int)
-    824:836:public static java.lang.String g(android.content.Context)
-    840:840:public static int h(android.content.Context)
-    847:856:public static java.lang.String i(android.content.Context)
-com.crashlytics.android.internal.ad
-com.crashlytics.android.internal.ae
-com.crashlytics.android.internal.af
 com.crashlytics.android.internal.ag
-com.crashlytics.android.internal.ah
-com.crashlytics.android.internal.ai
-com.crashlytics.android.internal.aj
-com.crashlytics.android.internal.ak
-com.crashlytics.android.internal.al
-com.crashlytics.android.internal.am
-com.crashlytics.android.internal.an
-com.crashlytics.android.internal.ao
-com.crashlytics.android.internal.ap
-com.crashlytics.android.internal.aq
-com.crashlytics.android.internal.ar
-com.crashlytics.android.internal.as
-com.crashlytics.android.internal.at
-com.crashlytics.android.internal.au
-com.crashlytics.android.internal.av
-com.crashlytics.android.internal.aw
-com.crashlytics.android.internal.ax
-com.crashlytics.android.internal.ay
-com.crashlytics.android.internal.az
+com.crashlytics.android.internal.aq:
+    495:509:public final synchronized void c()
+    513:520:private synchronized void d()
+com.crashlytics.android.internal.av:
+    45:49:public void a(com.crashlytics.android.internal.aG)
+    58:58:public com.crashlytics.android.internal.ay a(com.crashlytics.android.internal.ax,java.lang.String)
+    52:54:private synchronized void a()
 com.crashlytics.android.internal.b:
     public static final java.lang.String a
     125:126:public b()
@@ -346,7 +200,6 @@ com.crashlytics.android.internal.b:
     372:377:private static void a(java.lang.Object,com.crashlytics.android.internal.g)
     398:398:private java.util.Set a(java.lang.Class)
     442:446:private static void a(java.lang.String,java.lang.reflect.InvocationTargetException)
-com.crashlytics.android.internal.ba
 com.crashlytics.android.internal.e
 com.crashlytics.android.internal.f
 com.crashlytics.android.internal.g
@@ -366,73 +219,26 @@ com.crashlytics.android.internal.n:
 com.crashlytics.android.internal.o:
     46:49:public final void a(com.crashlytics.android.internal.b)
 com.crashlytics.android.internal.p:
-    private boolean b
-    protected abstract void c()
     public abstract java.lang.String getVersion()
-    56:73:protected final synchronized void a(android.content.Context)
-    87:87:public final synchronized boolean isInitialized()
-    95:95:public final java.lang.String getName()
     103:103:public java.lang.String getComponentPath()
 com.crashlytics.android.internal.q:
-    public abstract void a(java.lang.String,java.lang.String,java.lang.Throwable)
-    public abstract void a(java.lang.String,java.lang.String)
-    public abstract void b(java.lang.String,java.lang.String)
-    public abstract void c(java.lang.String,java.lang.String)
-    public abstract void a(int,java.lang.String,java.lang.String)
     public abstract void a(int,java.lang.String,java.lang.String,boolean)
-com.crashlytics.android.internal.r:
-    49:50:public final void a(java.lang.String,java.lang.String)
-    59:60:public final void b(java.lang.String,java.lang.String)
-    64:65:public final void c(java.lang.String,java.lang.String)
-    74:75:public final void a(int,java.lang.String,java.lang.String)
-    79:82:public final void a(int,java.lang.String,java.lang.String,boolean)
-    276:276:static synthetic android.app.Activity a(android.content.Context)
-    276:276:static synthetic android.app.Application b(android.content.Context)
-    19:52:public static java.lang.String a(android.content.Context,boolean)
-    26:36:public static int a(int)
 com.crashlytics.android.internal.s
 com.crashlytics.android.internal.t
-com.crashlytics.android.internal.u
 com.crashlytics.android.internal.v:
-    private boolean c
-    private java.io.File d
-    private android.app.Application e
-    private java.lang.ref.WeakReference f
-    private java.lang.String g
-    89:98:public static synchronized varargs void a(android.content.Context,com.crashlytics.android.internal.u[])
-    124:125:public final void a(com.crashlytics.android.internal.q)
-    131:131:public final android.app.Application d()
-    140:141:private com.crashlytics.android.internal.v a(android.app.Activity)
-    149:152:public final android.app.Activity e()
-    157:185:protected final void c()
-    192:192:public final java.lang.String getVersion()
-    213:213:public final com.crashlytics.android.internal.u a(java.lang.Class)
     233:237:public final void a(boolean)
-    245:245:public final boolean f()
-    261:261:public final java.io.File h()
     269:270:public final void a(java.lang.String)
-    273:273:public final java.lang.String i()
-    22:22:static synthetic com.crashlytics.android.internal.v a(com.crashlytics.android.internal.v,android.app.Activity)
-com.crashlytics.android.internal.w
-com.crashlytics.android.internal.x
-com.crashlytics.android.internal.z
 com.crashlytics.android.j
 com.crashlytics.android.k
-com.crashlytics.android.l
-com.crashlytics.android.m
-com.crashlytics.android.n
-com.crashlytics.android.o
-com.crashlytics.android.p
-com.crashlytics.android.q
-com.crashlytics.android.r
-com.crashlytics.android.s
-com.crashlytics.android.t
-com.crashlytics.android.u
-com.crashlytics.android.v
-com.crashlytics.android.w
+com.crashlytics.android.v:
+    357:367:final void a(java.lang.Thread,java.lang.Throwable)
+    373:385:final void a(long,java.lang.String)
+    532:576:static void a(com.crashlytics.android.internal.aq,int,long,java.lang.String)
+    603:634:private boolean k()
+    66:66:static synthetic void b(com.crashlytics.android.v,java.util.Date,java.lang.Thread,java.lang.Throwable)
+    66:66:static synthetic com.crashlytics.android.internal.aq d(com.crashlytics.android.v)
+    66:66:static synthetic boolean e(com.crashlytics.android.v)
 com.crashlytics.android.x
-com.crashlytics.android.y
-com.crashlytics.android.z
 com.google.ads.AdRequest
 com.google.ads.AdRequest$ErrorCode
 com.google.ads.AdRequest$Gender
@@ -6270,7 +6076,7 @@ li.barter.utils.LoadMoreHelper:
     195:196:public void setLoadMoreOffset(int)
 li.barter.utils.Logger:
     62:63:public static varargs void w(java.lang.String,java.lang.Throwable,java.lang.String,java.lang.Object[])
-    68:70:public static varargs void i(java.lang.String,java.lang.String,java.lang.Object[])
+    70:70:public static varargs void i(java.lang.String,java.lang.String,java.lang.Object[])
 li.barter.utils.Logger$MarkerLog
 li.barter.utils.Logger$MarkerLog$Marker
 li.barter.utils.PhotoUtils:
