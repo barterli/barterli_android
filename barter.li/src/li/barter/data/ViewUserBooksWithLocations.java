@@ -44,7 +44,6 @@ public class ViewUserBooksWithLocations {
         final String columnDef = TextUtils
                         .join(",", new String[] {
                                 String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_MY_BOOKS, BaseColumns._ID),
-                                DatabaseColumns.BOOK_ID,
                                 DatabaseColumns.USER_ID,
                                 DatabaseColumns.ID,
                                 DatabaseColumns.TITLE,
@@ -86,7 +85,7 @@ public class ViewUserBooksWithLocations {
 
       //Add any data migration code here. Default is to drop and rebuild the table
 
-        if (oldVersion == 1) {
+        if (oldVersion == 2) {
             
             /* Drop & recreate the view if upgrading from DB version 1(alpha version) */
             db.execSQL(String

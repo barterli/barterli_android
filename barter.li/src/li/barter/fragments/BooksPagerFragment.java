@@ -87,7 +87,6 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      * These arrays holds bookids and userids for all the books in the pager to
      * map them
      */
-    private ArrayList<String>    mBookIdArray            = new ArrayList<String>();
     private ArrayList<String>    mIdArray                = new ArrayList<String>();
     private ArrayList<String>    mUserIdArray            = new ArrayList<String>();
 
@@ -186,8 +185,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             case R.id.action_edit_profile: {
 
                 final int currentItem = mBookDetailPager.getCurrentItem();
-                final Bundle args = new Bundle(4);
-                args.putString(Keys.BOOK_ID, mBookIdArray.get(currentItem));
+                final Bundle args = new Bundle(3);
                 args.putString(Keys.ID, mIdArray.get(currentItem));
                 args.putBoolean(Keys.EDIT_MODE, true);
                 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
@@ -240,8 +238,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         public Fragment getItem(int position) {
 
             final BookDetailFragment fragment = BookDetailFragment
-                            .newInstance(mUserIdArray.get(position), mBookIdArray
-                                            .get(position), mIdArray
+                            .newInstance(mUserIdArray.get(position), mIdArray
                                             .get(position), true);
             mPositionFragmentMap.put(position, fragment);
             return fragment;
@@ -295,12 +292,10 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
             mBookCounter = cursor.getCount();
-            mBookIdArray.ensureCapacity(mBookCounter);
             mIdArray.ensureCapacity(mBookCounter);
             mUserIdArray.ensureCapacity(mBookCounter);
             while (cursor.moveToNext()) {
-                mBookIdArray.add(cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.BOOK_ID)));
+               
                 mIdArray.add(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.ID)));
                 mUserIdArray.add(cursor.getString(cursor
@@ -318,7 +313,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
              * set item is 0. This is to workaround that
              */
 
-            if (mBookPosition == 0 && mBookIdArray.size() > 0) {
+            if (mBookPosition == 0 && mIdArray.size() > 0) {
                 onPageSelected(mBookPosition);
             }
             

@@ -40,7 +40,6 @@ public class TableUserBooks {
         final String columnDef = TextUtils
                         .join(SQLConstants.COMMA, new String[] {
                                 String.format(Locale.US, SQLConstants.DATA_INTEGER_PK, BaseColumns._ID),
-                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.BOOK_ID, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ID, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ISBN_10, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.ISBN_13, ""),
@@ -70,7 +69,7 @@ public class TableUserBooks {
 
       //Add any data migration code here. Default is to drop and rebuild the table
 
-        if (oldVersion == 1) {
+        if (oldVersion == 2) {
             
             /* Drop & recreate the table if upgrading from DB version 1(alpha version) */
             db.execSQL(String

@@ -68,7 +68,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private TextView            mPublicationDateTextView;
     private TextView            mBarterTypes;
 
-    private String              mBookId;
     private String              mId;
     private String              mUserId;
     private boolean             mFromSearch;
@@ -80,16 +79,15 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
      */
     private boolean             mLoadedIndividually;
 
-    private final String        mBookSelection = DatabaseColumns.BOOK_ID
+    private final String        mBookSelection = DatabaseColumns.ID
                                                                + SQLConstants.EQUALS_ARG;
 
-    public static BookDetailFragment newInstance(String userId, String bookId,
+    public static BookDetailFragment newInstance(String userId,
                     String id, boolean fromSearch) {
         final BookDetailFragment f = new BookDetailFragment();
 
         Bundle args = new Bundle();
         args.putString(Keys.USER_ID, userId);
-        args.putString(Keys.BOOK_ID, bookId);
         args.putString(Keys.ID, id);
         args.putBoolean(Keys.FROM_SEARCH, fromSearch);
         f.setArguments(args);
@@ -114,7 +112,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         final Bundle extras = getArguments();
 
         if (extras != null) {
-            mBookId = extras.getString(Keys.BOOK_ID);
             mUserId = extras.getString(Keys.USER_ID);
             mId = extras.getString(Keys.ID);
             mFromSearch = extras.getBoolean(Keys.FROM_SEARCH);
@@ -172,7 +169,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
         DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, mFromSearch ? TableSearchBooks.NAME
                         : TableUserBooks.NAME, null, mBookSelection, new String[] {
-            mBookId
+            mId
         }, null, null, null, null, this);
 
     }
@@ -213,7 +210,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             case R.id.action_edit_profile: {
                 final Bundle args = new Bundle(2);
                 args.putString(Keys.ID, mId);
-                args.putString(Keys.BOOK_ID, mBookId);
                 args.putBoolean(Keys.EDIT_MODE, true);
                 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BOOKS_AROUND_ME);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment

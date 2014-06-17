@@ -27,6 +27,7 @@ import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
+import li.barter.data.TableSearchBooks;
 import li.barter.data.TableUserBooks;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
@@ -91,7 +92,6 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 	private String                        mIsbnNumber;
 	private boolean                       mHasFetchedDetails;
 	private boolean                       mEditMode;
-	private String                        mBookId;
 	private String						  mId;
 
 	private String                        mImage_Url;
@@ -99,7 +99,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 	private Button                        mdelete;
 	private Button                        mSubmit;
 	private String                        mGoogleBooksApiKey;
-	private final String                        mBookSelection = DatabaseColumns.BOOK_ID
+	private final String                        mBookSelection = DatabaseColumns.ID
 			+ SQLConstants.EQUALS_ARG;
 
 	/**
@@ -136,7 +136,6 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			mEditMode = extras.getBoolean(Keys.EDIT_MODE);
 
 			if (mEditMode) {
-				mBookId = extras.getString(Keys.BOOK_ID);
 				mId= extras.getString(Keys.ID);
 				setActionBarTitle(R.string.editbook_title2);
 
@@ -144,7 +143,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 				mdelete.setVisibility(View.VISIBLE);
 				mSubmit.setText("Update");
 				DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableUserBooks.NAME, null, mBookSelection, new String[] {
-						mBookId
+						mId
 				}, null, null, null, null, this);
 
 			} else {
@@ -373,9 +372,9 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 					+ ApiEndpoints.BOOKS, requestObject.toString(), mVolleyCallbacks);
 			createBookRequest.setRequestId(RequestId.CREATE_BOOK);
 			addRequestToQueue(createBookRequest, true, 0, true);
-			
+
 			mSubmit.setEnabled(false);
-			
+
 		} catch (final JSONException e) {
 			e.printStackTrace();
 			mSubmit.setEnabled(true);
@@ -660,22 +659,19 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			Logger.v(TAG, "Created Book Id %s", response.responseBundle
 					.getString(HttpConstants.ID_BOOK));
 
-			final String bookId = response.responseBundle
-					.getString(HttpConstants.ID_BOOK);
 			
 			final String mId = response.responseBundle
 					.getString(HttpConstants.ID);
-			
+
 			final Bundle showBooksArgs = new Bundle(6);
-			showBooksArgs.putString(Keys.BOOK_ID, bookId);
 			showBooksArgs.putString(Keys.ID, mId);
 			showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
 			showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
 			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
 					.instantiate(getActivity(), BookDetailFragment.class
 							.getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);
-			
-			
+
+
 			break;
 		}
 
@@ -696,7 +692,6 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		case RequestId.UPDATE_BOOK: {
 
 			final Bundle showBooksArgs = new Bundle(6);
-			showBooksArgs.putString(Keys.BOOK_ID, mBookId);
 			showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
 			showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
 			showBooksArgs.putBoolean(Keys.RELOAD, true);
@@ -714,7 +709,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 
 		case RequestId.DELETE_BOOK: {
 			DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK, null, TableUserBooks.NAME, mBookSelection, new String[] {
-					mBookId
+					mId
 			}, true, this);
 
 			break;
@@ -727,20 +722,20 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		 * request is placed into the queue from
 		 * AbstractBarterLiFragment#onDialogClick()
 		 */
-		 case RequestId.SAVE_USER_PROFILE: {
+		case RequestId.SAVE_USER_PROFILE: {
 
-			 final Bundle userInfo = response.responseBundle;
-			 UserInfo.INSTANCE.setFirstName(userInfo
-					 .getString(HttpConstants.FIRST_NAME));
-			 SharedPreferenceHelper
-			 .set(getActivity(), R.string.pref_first_name, userInfo
-					 .getString(HttpConstants.FIRST_NAME));
-			 SharedPreferenceHelper
-			 .set(getActivity(), R.string.pref_last_name, userInfo
-					 .getString(HttpConstants.LAST_NAME));
-			 createBookOnServer(null);
-			 break;
-		 }
+			final Bundle userInfo = response.responseBundle;
+			UserInfo.INSTANCE.setFirstName(userInfo
+					.getString(HttpConstants.FIRST_NAME));
+			SharedPreferenceHelper
+			.set(getActivity(), R.string.pref_first_name, userInfo
+					.getString(HttpConstants.FIRST_NAME));
+			SharedPreferenceHelper
+			.set(getActivity(), R.string.pref_last_name, userInfo
+					.getString(HttpConstants.LAST_NAME));
+			createBookOnServer(null);
+			break;
+		}
 		}
 
 	}
@@ -755,9 +750,9 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			showCrouton(R.string.unable_to_create_book, AlertStyle.ERROR);
 			mSubmit.setEnabled(true);
 		}
-		
+
 	}
-	
+
 	@Override
 	public void onOtherError(int requestId, IBlRequestContract request,
 			int errorCode) {
@@ -780,20 +775,25 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			final int deleteCount) {
 
 		if (token == QueryTokens.DELETE_MY_BOOK) {
-		
+			DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK_FROM_SEARCH, null, TableSearchBooks.NAME, mBookSelection, new String[] {
+					mId
+			}, true, this);
+
+
+		}
+		else if(token==QueryTokens.DELETE_MY_BOOK_FROM_SEARCH)
+		{
 			FragmentManager fm = getActivity().getSupportFragmentManager();
 			for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {    
-			    fm.popBackStack();
+				fm.popBackStack();
 			}
 			final Bundle args = new Bundle(1);
 			args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
 			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
 					.instantiate(getActivity(), BooksAroundMeFragment.class
 							.getName(), args), FragmentTags.BOOKS_AROUND_ME, true, FragmentTags.BS_BOOKS_AROUND_ME);
-			
-			
-		}
 
+		}
 	}
 
 	@Override
@@ -850,7 +850,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 	 * 
 	 * @param barterType The barter types supported by the book
 	 */
-	 private void setBarterCheckboxes(final String barterType) {
+	private void setBarterCheckboxes(final String barterType) {
 
 		final String[] barterTypes = barterType
 				.split(AppConstants.BARTER_TYPE_SEPARATOR);
@@ -916,11 +916,11 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		if (textView.getId() == R.id.edit_text_title) {
 			Logger.v(TAG, "On Suggestion Clicked %s", suggestion);
 			getBookInfoById(suggestion.id,suggestion.name);
-			
+
 			hideKeyBoard(textView);
-			
+
 		}
-		
+
 	}
 
 	@Override
@@ -933,15 +933,15 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		}
 
 	}
-	
+
 	@Override
 	protected String getAnalyticsScreenName() {
-	    
-	    if(mEditMode) {
-	        return Screens.EDIT_BOOK;
-	    } else {
-	        return Screens.ADD_BOOK;
-	    }
+
+		if(mEditMode) {
+			return Screens.EDIT_BOOK;
+		} else {
+			return Screens.ADD_BOOK;
+		}
 	}
 
 }

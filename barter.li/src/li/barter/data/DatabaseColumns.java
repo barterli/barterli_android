@@ -24,7 +24,6 @@ package li.barter.data;
 public interface DatabaseColumns {
 
     public static final String ID                = "id";
-    public static final String BOOK_ID           = "book_id";
     public static final String ISBN_10           = "isbn_10";
     public static final String ISBN_13           = "isbn_13";
     public static final String DESCRIPTION       = "description";
@@ -55,7 +54,7 @@ public interface DatabaseColumns {
     public static final String CHAT_TYPE         = "chat_type";
     public static final String LAST_MESSAGE_ID   = "last_message_id";
     public static final String UNREAD_COUNT      = "unread_count";
-    public static final String BOOK_OWNER             = "book_owner";
+    public static final String BOOK_OWNER        = "book_owner";
     public static final String BOOK_OWNER_IMAGE_URL = "book_owner_image_url";
     public static final String CHAT_ACK			 = "sending_ack";
     
