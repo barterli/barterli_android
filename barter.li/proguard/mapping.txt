@@ -23956,16 +23956,16 @@ li.barter.fragments.AddOrEditBookFragment -> li.barter.c.d:
     747:754:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
     759:765:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
     771:771:void onInsertComplete(int,java.lang.Object,long) -> a
-    777:797:void onDeleteComplete(int,java.lang.Object,int) -> a
-    803:803:void onUpdateComplete(int,java.lang.Object,int) -> b
-    808:846:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    855:867:void setBarterCheckboxes(java.lang.String) -> c
-    871:873:void onStop() -> onStop
-    883:883:boolean isNumeric(java.lang.String) -> d
-    891:909:void performNetworkQuery(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,java.lang.String) -> a
-    916:924:void onSuggestionClicked(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,li.barter.widgets.autocomplete.Suggestion) -> a
-    929:935:void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-    940:943:java.lang.String getAnalyticsScreenName() -> b
+    777:798:void onDeleteComplete(int,java.lang.Object,int) -> a
+    804:804:void onUpdateComplete(int,java.lang.Object,int) -> b
+    809:847:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    856:868:void setBarterCheckboxes(java.lang.String) -> c
+    872:874:void onStop() -> onStop
+    884:884:boolean isNumeric(java.lang.String) -> d
+    892:910:void performNetworkQuery(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,java.lang.String) -> a
+    917:925:void onSuggestionClicked(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,li.barter.widgets.autocomplete.Suggestion) -> a
+    930:936:void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
+    941:944:java.lang.String getAnalyticsScreenName() -> b
     94:94:boolean access$0(li.barter.fragments.AddOrEditBookFragment) -> a
     440:440:void access$1(li.barter.fragments.AddOrEditBookFragment,org.json.JSONObject) -> a
 li.barter.fragments.AddOrEditBookFragment$1 -> li.barter.c.d$1:
