@@ -157,7 +157,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private SearchView                   mSearchView;
     
     
-    private View						 mEmptyViewOnRefresh,mEmptyView;
+    private View						 mEmptyViewOnRefresh,mEmptyViewNormal;
     
 
     /**
@@ -199,10 +199,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeGridView.setOnItemClickListener(this);
         mBooksAroundMeGridView.setVerticalScrollBarEnabled(false);
         
-        mEmptyView = contentView.findViewById(R.id.empty_view);
-        mBooksAroundMeGridView.setEmptyView(mEmptyView);
-        mEmptyView.findViewById(R.id.text_try_again).setOnClickListener(this);
-        mEmptyView.findViewById(R.id.text_add_your_own).setOnClickListener(this);
+        mEmptyViewNormal   = contentView.findViewById(R.id.empty_view_normal);
+        
+        mEmptyViewNormal.findViewById(R.id.text_try_again).setOnClickListener(this);
+        mEmptyViewNormal.findViewById(R.id.text_add_your_own).setOnClickListener(this);
         
 
         if (savedInstanceState == null) {
@@ -239,7 +239,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void loadBookSearchResults() {
         //TODO Add filters for search results
-    	mEmptyView.setVisibility(View.GONE);
+    	mEmptyViewNormal.setVisibility(View.GONE);
         getLoaderManager().restartLoader(Loaders.SEARCH_BOOKS, null, this);
     }
 
@@ -503,7 +503,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             mCurPage++;
 
-            mBooksAroundMeGridView.setEmptyView(mEmptyView);
+            mBooksAroundMeGridView.setEmptyView(mEmptyViewNormal);
             if (response.responseBundle.getBoolean(Keys.NO_BOOKS_FLAG_KEY)) {
             	
                 mHasLoadedAllItems = true;
@@ -525,7 +525,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (request.getRequestId() == RequestId.SEARCH_BOOKS) {
             mIsLoading = false;
             mPullToRefreshLayout.setRefreshComplete();
-            mEmptyView.setVisibility(View.VISIBLE);
+            mEmptyViewNormal.setVisibility(View.VISIBLE);
         }
     }
 
@@ -535,7 +535,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                     final String errorMessage, final Bundle errorResponseBundle) {
         if (requestId == RequestId.SEARCH_BOOKS) {
             showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
-            mEmptyView.setVisibility(View.VISIBLE);
         }
         if (requestId == RequestId.SEARCH_BOOKS_FROM_EDITTEXT) {
             showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
@@ -547,7 +546,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     		int errorCode) {
     	  if (requestId == RequestId.SEARCH_BOOKS) {
               showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
-              mEmptyView.setVisibility(View.VISIBLE);
           }
           if (requestId == RequestId.SEARCH_BOOKS_FROM_EDITTEXT) {
               showCrouton(R.string.unable_to_fetch_books, AlertStyle.ERROR);
@@ -571,7 +569,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
             {
-            	 mEmptyView.setVisibility(View.GONE);
+            	mEmptyViewNormal.setVisibility(View.GONE);
                 mBooksAroundMeAdapter.swapCursor(cursor);
                 
             }
@@ -774,7 +772,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void reloadBookWithClearedEmptyView()
     {
-    	mEmptyView.setVisibility(View.GONE);
+    	mEmptyViewNormal.setVisibility(View.GONE);
         mBooksAroundMeGridView.setEmptyView(mEmptyViewOnRefresh);
         reloadNearbyBooks();
     }

@@ -52,8 +52,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top|right"
             android:autoLink="web"
-            android:textColorLink="@color/white"
-            android:textColor="@color/white"
+            android:textColorLink="@color/incoming_message"
+            android:textColor="@color/incoming_message"
             android:textSize="@dimen/text_medium"
             app:fontStyle="regular" />
 
