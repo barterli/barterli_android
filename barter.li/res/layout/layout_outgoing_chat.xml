@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="left"
         android:autoLink="web"
-        android:textColorLink="@color/white"
+        android:textColorLink="@color/outgoing_message"
         android:textColor="@color/white"
         android:textSize="@dimen/text_medium"
         app:fontStyle="regular" />

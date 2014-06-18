@@ -22132,8 +22132,10 @@ li.barter.R$color -> li.barter.R$color:
     int default_underline_indicator_selected_color -> default_underline_indicator_selected_color
     int encode_view -> encode_view
     int global_bg -> global_bg
+    int incoming_message -> incoming_message
     int logout_normal -> logout_normal
     int logout_pressed -> logout_pressed
+    int outgoing_message -> outgoing_message
     int overlay_black_15p -> overlay_black_15p
     int overlay_black_40p -> overlay_black_40p
     int overlay_gray_40p -> overlay_gray_40p
@@ -22586,6 +22588,7 @@ li.barter.R$id -> li.barter.R$id:
     int edittext_last_name -> edittext_last_name
     int edittext_location_name -> edittext_location_name
     int empty_view -> empty_view
+    int empty_view_normal -> empty_view_normal
     int encode_view -> encode_view
     int format_text_view -> format_text_view
     int format_text_view_label -> format_text_view_label
@@ -22789,6 +22792,7 @@ li.barter.R$layout -> li.barter.R$layout:
     int layout_book_and_user_image -> layout_book_and_user_image
     int layout_book_suggestion_item -> layout_book_suggestion_item
     int layout_books_around_me_empty_view -> layout_books_around_me_empty_view
+    int layout_books_around_me_empty_view_normal -> layout_books_around_me_empty_view_normal
     int layout_books_tab -> layout_books_tab
     int layout_chat_item -> layout_chat_item
     int layout_dialog_names -> layout_dialog_names
@@ -22822,6 +22826,7 @@ li.barter.R$string -> li.barter.R$string:
     int about_barterli -> about_barterli
     int about_me -> about_me
     int action_settings -> action_settings
+    int add -> add
     int add_book -> add_book
     int add_book_dialog_head -> add_book_dialog_head
     int add_location_manually -> add_location_manually
@@ -22985,6 +22990,7 @@ li.barter.R$string -> li.barter.R$string:
     int new_messages -> new_messages
     int no_books_found -> no_books_found
     int no_books_found_nearby -> no_books_found_nearby
+    int no_books_found_nearby_on_nobooks -> no_books_found_nearby_on_nobooks
     int no_image_text -> no_image_text
     int no_more_books_found -> no_more_books_found
     int no_network_connection -> no_network_connection
@@ -22999,6 +23005,7 @@ li.barter.R$string -> li.barter.R$string:
     int password_label -> password_label
     int pref_auth_token -> pref_auth_token
     int pref_description -> pref_description
+    int pref_dont_refresh_books -> pref_dont_refresh_books
     int pref_email -> pref_email
     int pref_first_name -> pref_first_name
     int pref_last_fetched_latitude -> pref_last_fetched_latitude
@@ -23026,6 +23033,7 @@ li.barter.R$string -> li.barter.R$string:
     int read -> read
     int receiver_network -> receiver_network
     int refresh -> refresh
+    int refresh_page -> refresh_page
     int result_address_book -> result_address_book
     int result_calendar -> result_calendar
     int result_email_address -> result_email_address
@@ -23948,16 +23956,16 @@ li.barter.fragments.AddOrEditBookFragment -> li.barter.c.d:
     747:754:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
     759:765:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
     771:771:void onInsertComplete(int,java.lang.Object,long) -> a
-    777:797:void onDeleteComplete(int,java.lang.Object,int) -> a
-    803:803:void onUpdateComplete(int,java.lang.Object,int) -> b
-    808:846:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    855:867:void setBarterCheckboxes(java.lang.String) -> c
-    871:873:void onStop() -> onStop
-    883:883:boolean isNumeric(java.lang.String) -> d
-    891:909:void performNetworkQuery(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,java.lang.String) -> a
-    916:924:void onSuggestionClicked(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,li.barter.widgets.autocomplete.Suggestion) -> a
-    929:935:void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-    940:943:java.lang.String getAnalyticsScreenName() -> b
+    777:798:void onDeleteComplete(int,java.lang.Object,int) -> a
+    804:804:void onUpdateComplete(int,java.lang.Object,int) -> b
+    809:847:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    856:868:void setBarterCheckboxes(java.lang.String) -> c
+    872:874:void onStop() -> onStop
+    884:884:boolean isNumeric(java.lang.String) -> d
+    892:910:void performNetworkQuery(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,java.lang.String) -> a
+    917:925:void onSuggestionClicked(li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView,li.barter.widgets.autocomplete.Suggestion) -> a
+    930:936:void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
+    941:944:java.lang.String getAnalyticsScreenName() -> b
     94:94:boolean access$0(li.barter.fragments.AddOrEditBookFragment) -> a
     440:440:void access$1(li.barter.fragments.AddOrEditBookFragment,org.json.JSONObject) -> a
 li.barter.fragments.AddOrEditBookFragment$1 -> li.barter.c.d$1:
@@ -24019,7 +24027,7 @@ li.barter.fragments.BooksAroundMeFragment -> li.barter.c.g:
     li.barter.fragments.dialogs.SingleChoiceDialogFragment mAddBookDialogFragment -> n
     android.widget.SearchView mSearchView -> o
     android.view.View mEmptyViewOnRefresh -> p
-    android.view.View mEmptyView -> q
+    android.view.View mEmptyViewNormal -> q
     uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout mPullToRefreshLayout -> r
     boolean mIsNotSearch -> s
     boolean $assertionsDisabled -> e
@@ -24034,39 +24042,39 @@ li.barter.fragments.BooksAroundMeFragment -> li.barter.c.g:
     360:373:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
     377:377:java.lang.Object getVolleyTag() -> a
     382:387:void updateLocation(android.location.Location) -> a
-    397:404:void fetchBooksOnLocationUpdate(android.location.Location) -> c
-    408:410:void onPause() -> onPause
-    418:427:void saveLastFetchedInfoToPref() -> p
-    431:439:void onResume() -> onResume
-    447:457:void readLastFetchedInfoFromPref() -> q
-    467:470:void loadAddOrEditBookFragment(android.os.Bundle) -> a
-    477:498:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    502:508:void onPostExecute(li.barter.http.IBlRequestContract) -> a
-    514:521:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    526:533:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
-    538:541:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    548:566:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    570:573:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    584:602:boolean shouldRefetchBooks(android.location.Location) -> d
-    608:631:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-    638:638:void onInsertComplete(int,java.lang.Object,long) -> a
-    643:661:void onDeleteComplete(int,java.lang.Object,int) -> a
-    668:668:void onUpdateComplete(int,java.lang.Object,int) -> b
-    675:675:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    679:681:void onLoadMore() -> k
-    685:685:boolean isLoading() -> l
-    690:690:boolean hasLoadedAllItems() -> m
-    696:700:boolean willHandleDialog(android.content.DialogInterface) -> a
-    706:726:void onDialogClick(android.content.DialogInterface,int) -> a
-    730:736:void performQuery(android.widget.SearchView,java.lang.String) -> a
-    741:744:void onRefreshStarted(android.view.View) -> a
-    750:756:void reloadNearbyBooks() -> r
-    763:766:void reloadBookWithClearedEmptyView() -> s
-    770:772:boolean onMenuItemActionCollapse(android.view.MenuItem) -> onMenuItemActionCollapse
-    777:778:boolean onMenuItemActionExpand(android.view.MenuItem) -> onMenuItemActionExpand
-    783:783:boolean onClose() -> onClose
-    789:789:java.lang.String getAnalyticsScreenName() -> b
-    795:802:void onClick(android.view.View) -> onClick
+    397:410:void fetchBooksOnLocationUpdate(android.location.Location) -> c
+    414:416:void onPause() -> onPause
+    424:433:void saveLastFetchedInfoToPref() -> p
+    437:461:void onResume() -> onResume
+    469:479:void readLastFetchedInfoFromPref() -> q
+    489:492:void loadAddOrEditBookFragment(android.os.Bundle) -> a
+    499:520:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    524:530:void onPostExecute(li.barter.http.IBlRequestContract) -> a
+    536:542:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    547:553:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
+    558:561:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    568:578:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    582:585:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    596:614:boolean shouldRefetchBooks(android.location.Location) -> d
+    620:643:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    650:650:void onInsertComplete(int,java.lang.Object,long) -> a
+    655:673:void onDeleteComplete(int,java.lang.Object,int) -> a
+    680:680:void onUpdateComplete(int,java.lang.Object,int) -> b
+    687:687:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    691:693:void onLoadMore() -> k
+    697:697:boolean isLoading() -> l
+    702:702:boolean hasLoadedAllItems() -> m
+    708:712:boolean willHandleDialog(android.content.DialogInterface) -> a
+    718:738:void onDialogClick(android.content.DialogInterface,int) -> a
+    742:748:void performQuery(android.widget.SearchView,java.lang.String) -> a
+    753:756:void onRefreshStarted(android.view.View) -> a
+    762:768:void reloadNearbyBooks() -> r
+    775:778:void reloadBookWithClearedEmptyView() -> s
+    782:784:boolean onMenuItemActionCollapse(android.view.MenuItem) -> onMenuItemActionCollapse
+    789:790:boolean onMenuItemActionExpand(android.view.MenuItem) -> onMenuItemActionExpand
+    795:795:boolean onClose() -> onClose
+    801:801:java.lang.String getAnalyticsScreenName() -> b
+    807:814:void onClick(android.view.View) -> onClick
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
 li.barter.fragments.BooksPagerFragment -> li.barter.c.h:
     li.barter.fragments.BooksPagerFragment$BookPageAdapter mAdapter -> e

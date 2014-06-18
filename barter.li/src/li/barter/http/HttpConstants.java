@@ -39,7 +39,7 @@ public class HttpConstants {
                         5672),
 
         DEV(
-                        "http://162.243.198.171/api/v",
+                        "http://162.243.198.171:3000/api/v",
                         API_VERSION,
                         "162.243.198.171",
                         5672),

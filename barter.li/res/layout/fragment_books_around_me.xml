@@ -39,11 +39,12 @@
         />
 
    
-
+    
     <include
-        android:id="@+id/empty_view"
+        android:id="@+id/empty_view_normal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        layout="@layout/layout_books_around_me_empty_view" />
+        android:visibility="gone"
+        layout="@layout/layout_books_around_me_empty_view_normal" />
 
 </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
