@@ -199,7 +199,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mBooksAroundMeGridView.setOnItemClickListener(this);
         mBooksAroundMeGridView.setVerticalScrollBarEnabled(false);
         
-         mEmptyView = contentView.findViewById(R.id.empty_view);
+        mEmptyView = contentView.findViewById(R.id.empty_view);
         mBooksAroundMeGridView.setEmptyView(mEmptyView);
         mEmptyView.findViewById(R.id.text_try_again).setOnClickListener(this);
         mEmptyView.findViewById(R.id.text_add_your_own).setOnClickListener(this);
@@ -401,6 +401,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             //   Delete the current search results before parsing the old ones
             DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
         }
+        else
+        {
+        	  mCurPage = 0;
+              mHasLoadedAllItems = false;
+              fetchBooksAroundMe(location);
+        }
     }
 
     @Override
@@ -448,7 +454,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if ((latestLocation.getLatitude() != 0.0)
                         && (latestLocation.getLongitude() != 0.0)) {
             updateLocation(latestLocation);
-            
+          
             
         }
        
