@@ -783,10 +783,11 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		}
 		else if(token==QueryTokens.DELETE_MY_BOOK_FROM_SEARCH)
 		{
-			FragmentManager fm = getActivity().getSupportFragmentManager();
-			for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {    
-				fm.popBackStack();
+			if (isAttached()&&isAdded())
+			{
+				getActivity().getSupportFragmentManager().popBackStack(getActivity().getSupportFragmentManager().getBackStackEntryAt(0).getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 			}
+			
 			final Bundle args = new Bundle(1);
 			args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
 			loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment

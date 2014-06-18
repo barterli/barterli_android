@@ -10815,8 +10815,10 @@ li.barter.R$color: int default_title_indicator_text_color
 li.barter.R$color: int default_underline_indicator_selected_color
 li.barter.R$color: int encode_view
 li.barter.R$color: int global_bg
+li.barter.R$color: int incoming_message
 li.barter.R$color: int logout_normal
 li.barter.R$color: int logout_pressed
+li.barter.R$color: int outgoing_message
 li.barter.R$color: int overlay_black_15p
 li.barter.R$color: int overlay_black_40p
 li.barter.R$color: int overlay_gray_40p
@@ -11269,6 +11271,7 @@ li.barter.R$id: int edittext_first_name
 li.barter.R$id: int edittext_last_name
 li.barter.R$id: int edittext_location_name
 li.barter.R$id: int empty_view
+li.barter.R$id: int empty_view_normal
 li.barter.R$id: int encode_view
 li.barter.R$id: int format_text_view
 li.barter.R$id: int format_text_view_label
@@ -11472,6 +11475,7 @@ li.barter.R$layout: int layout_barter_desc
 li.barter.R$layout: int layout_book_and_user_image
 li.barter.R$layout: int layout_book_suggestion_item
 li.barter.R$layout: int layout_books_around_me_empty_view
+li.barter.R$layout: int layout_books_around_me_empty_view_normal
 li.barter.R$layout: int layout_books_tab
 li.barter.R$layout: int layout_chat_item
 li.barter.R$layout: int layout_dialog_names
@@ -11505,6 +11509,7 @@ li.barter.R$string: int about
 li.barter.R$string: int about_barterli
 li.barter.R$string: int about_me
 li.barter.R$string: int action_settings
+li.barter.R$string: int add
 li.barter.R$string: int add_book
 li.barter.R$string: int add_book_dialog_head
 li.barter.R$string: int add_location_manually
@@ -11668,6 +11673,7 @@ li.barter.R$string: int my_books
 li.barter.R$string: int new_messages
 li.barter.R$string: int no_books_found
 li.barter.R$string: int no_books_found_nearby
+li.barter.R$string: int no_books_found_nearby_on_nobooks
 li.barter.R$string: int no_image_text
 li.barter.R$string: int no_more_books_found
 li.barter.R$string: int no_network_connection
@@ -11710,6 +11716,7 @@ li.barter.R$string: int pull_to_refresh_release_label
 li.barter.R$string: int read
 li.barter.R$string: int receiver_network
 li.barter.R$string: int refresh
+li.barter.R$string: int refresh_page
 li.barter.R$string: int result_address_book
 li.barter.R$string: int result_calendar
 li.barter.R$string: int result_email_address
