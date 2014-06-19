@@ -753,7 +753,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
         if (addToBackStack) {
             transaction.addToBackStack(backStackTag);
         }
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
     }
 
     /**

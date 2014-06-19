@@ -403,7 +403,7 @@ public class HttpResponseParser {
 				// Unable to update, insert the item
 				DBInterface.insert(TableUserBooks.NAME, null, values, false);
 			}
-
+		}
 			final ContentValues userValues = new ContentValues();
 			final String selectionUser = DatabaseColumns.USER_ID
 					+ SQLConstants.EQUALS_ARG;
@@ -417,7 +417,7 @@ public class HttpResponseParser {
 
 				// Unable to update, insert the item
 				DBInterface.insert(TableUsers.NAME, null, userValues, false);
-			}
+			
 
 		}
 

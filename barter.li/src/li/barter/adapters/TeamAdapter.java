@@ -81,18 +81,23 @@ public class TeamAdapter extends BaseAdapter {
 
         if (view == null) {
             view = mLayoutInflater.inflate(R.layout.layout_team, parent, false);
-            view.setTag(R.id.team_desc, view.findViewById(R.id.team_desc));
-            view.setTag(R.id.team_name, view.findViewById(R.id.team_name));
-            view.setTag(R.id.team_image, view.findViewById(R.id.team_image));
+            view.setTag(R.id.team_desc+position, view.findViewById(R.id.team_desc));
+            view.setTag(R.id.team_name+position, view.findViewById(R.id.team_name));
+            view.setTag(R.id.team_image+position, view.findViewById(R.id.team_image));
 
         }
+        else {
+            view.setTag(R.id.team_desc+position, view.findViewById(R.id.team_desc));
+            view.setTag(R.id.team_name+position, view.findViewById(R.id.team_name));
+            view.setTag(R.id.team_image+position, view.findViewById(R.id.team_image));
+        }
         final Team teamMember = getItem(position);
-        ((TextView) view.getTag(R.id.team_name)).setText(teamMember.getName());
-        ((TextView) view.getTag(R.id.team_desc)).setText(teamMember
+        ((TextView) view.getTag(R.id.team_name+position)).setText(teamMember.getName());
+        ((TextView) view.getTag(R.id.team_desc+position)).setText(teamMember
                         .getDescription());
 
         
-        CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.team_image);
+        CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.team_image+position);
         
       	
            
