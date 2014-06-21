@@ -403,10 +403,11 @@ public class AppConstants {
         public static final int ALL_CHATS                  = 203;
         public static final int CHAT_DETAILS               = 204;
         public static final int USER_DETAILS               = 205;
-        public static final int SEARCH_BOOKS_FROM_EDITTEXT = 206;
-        public static final int REFRESH_BOOKS			   = 207;
+        public static final int SEARCH_BOOKS_ON_PAGER = 206;
+        public static final int USER_DETAILS_ABOUT_ME = 207;
+        public static final int USER_DETAILS_CHAT_DETAILS = 208;
     }
-
+    
     /**
      * Constant interface. DO NOT IMPLEMENT
      * 
