@@ -163,13 +163,13 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
      */
 
     private void loadUserDetails() {
-        getLoaderManager().restartLoader(Loaders.USER_DETAILS, null, this);
+        getLoaderManager().restartLoader(Loaders.USER_DETAILS_ABOUT_ME, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
 
-        if (loaderId == Loaders.USER_DETAILS) {
+        if (loaderId == Loaders.USER_DETAILS_ABOUT_ME) {
 
             return new SQLiteLoader(getActivity(), false, ViewUsersWithLocations.NAME, null, mUserSelection, new String[] {
                 mUserId
@@ -183,7 +183,7 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
 
-        if (loader.getId() == Loaders.USER_DETAILS) {
+        if (loader.getId() == Loaders.USER_DETAILS_ABOUT_ME) {
 
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
             if (cursor.getCount() != 0) {

@@ -208,7 +208,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      * Starts the loader for book search results
      */
     private void loadBookSearchResults() {
-        getLoaderManager().restartLoader(Loaders.SEARCH_BOOKS, null, this);
+        getLoaderManager().restartLoader(Loaders.SEARCH_BOOKS_ON_PAGER, null, this);
     }
 
     public class BookPageAdapter extends FragmentStatePagerAdapter {
@@ -280,7 +280,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle arg1) {
-        if (loaderId == Loaders.SEARCH_BOOKS) {
+        if (loaderId == Loaders.SEARCH_BOOKS_ON_PAGER) {
             return new SQLiteLoader(getActivity(), false, TableSearchBooks.NAME, null, null, null, null, null, null, null);
         } else {
             return null;
@@ -289,7 +289,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (loader.getId() == Loaders.SEARCH_BOOKS) {
+        if (loader.getId() == Loaders.SEARCH_BOOKS_ON_PAGER) {
 
             mBookCounter = cursor.getCount();
             mIdArray.ensureCapacity(mBookCounter);

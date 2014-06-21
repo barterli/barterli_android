@@ -143,7 +143,7 @@ ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback
 		setActionBarDrawerToggleEnabled(false);
 
 		getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
-		getLoaderManager().restartLoader(Loaders.USER_DETAILS, null, this);
+		getLoaderManager().restartLoader(Loaders.USER_DETAILS_CHAT_DETAILS, null, this);
 		mAcknowledge = new ConcreteChatAcknowledge();
 
 		if (savedInstanceState == null) {
@@ -263,7 +263,7 @@ ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback
 				mChatId
 			}, null, null, DatabaseColumns.TIMESTAMP_EPOCH
 			+ SQLConstants.ASCENDING, null);
-		} else if (id == Loaders.USER_DETAILS) {
+		} else if (id == Loaders.USER_DETAILS_CHAT_DETAILS) {
 			return new SQLiteLoader(getActivity(), false, TableUsers.NAME, null, mUserSelection, new String[] {
 				mWithUserId
 			}, null, null, null, null);
@@ -315,7 +315,7 @@ ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,AsyncDbQueryCallback
 				}
 			}
 
-		} else if (id == Loaders.USER_DETAILS) {
+		} else if (id == Loaders.USER_DETAILS_CHAT_DETAILS) {
 			if (cursor.moveToFirst()) {
 				final String profilePic = cursor
 						.getString(cursor
