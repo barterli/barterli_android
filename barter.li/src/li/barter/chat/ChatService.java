@@ -436,12 +436,13 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             text = new String(message, HTTP.UTF_8);
             Logger.d(TAG, "Received:" + text);
 
-            mMessageQueue.add(text);
+            mChatProcessor.submit(new ChatProcessTask(this, text, mDateFormatter));
+           /* mMessageQueue.add(text);
             //queueNextMessageForProcessing();
             if (!mIsProcessingMessage) {
                 //If there aren't any messages in the queue, process the message immediately
                 queueNextMessageForProcessing();
-            }
+            }*/
 
         } catch (final UnsupportedEncodingException e) {
             e.printStackTrace();

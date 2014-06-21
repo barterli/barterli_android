@@ -42,7 +42,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
     /** Database file name and version */
     private static final String                              DB_NAME    = "barterli.sqlite";
-    private static final int                                 DB_VERSION = 3;
+    private static final int                                 DB_VERSION = 4;
 
     /** SQLite Open Helper instance */
     private static BarterLiSQLiteOpenHelper                  sSQLiteOpenHelper;

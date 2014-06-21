@@ -71,7 +71,7 @@ public class TableChatMessages {
                             .format(Locale.US, SQLConstants.DROP_TABLE_IF_EXISTS, NAME));
             create(db);
 
-        } else if (oldVersion < 3) {
+        } else if (oldVersion < 4) {
 
             /*
              * Add a column for chat sending status(already present messages

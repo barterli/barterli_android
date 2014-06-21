@@ -68,7 +68,7 @@ public interface DatabaseColumns {
      */
     public static final String CHAT_STATUS          = "chat_status";
 
-    /** @deprecated Not used as of DB Version 3 */
+    /** @deprecated Not used as of DB Version 4 */
     public static final String CHAT_ACK             = "sending_ack";
 
 }
