@@ -20,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
-import android.content.Context;
 
 import java.text.ParseException;
 
@@ -32,12 +31,11 @@ import li.barter.data.TableChats;
 import li.barter.data.TableUsers;
 import li.barter.http.HttpConstants;
 import li.barter.http.JsonUtils;
-import li.barter.utils.DateFormatter;
-import li.barter.utils.Logger;
 import li.barter.utils.AppConstants.ChatStatus;
 import li.barter.utils.AppConstants.ChatType;
-import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.DateFormatter;
+import li.barter.utils.Logger;
 
 /**
  * Runnable implementation to process chat messages
@@ -55,16 +53,13 @@ class ChatProcessTask implements Runnable {
                                                                + SQLConstants.EQUALS_ARG;
 
     private final String        mMessage;
-    private final Context       mContext;
     private final DateFormatter mDateFormatter;
 
     /**
-     * @param context A reference to the Application context
      * @param message the Chat message to process
      * @param dateFormatter A date formatter to format dates
      */
-    public ChatProcessTask(final Context context, final String message, final DateFormatter dateFormatter) {
-        mContext = context;
+    public ChatProcessTask(final String message, final DateFormatter dateFormatter) {
         mMessage = message;
         mDateFormatter = dateFormatter;
     }
@@ -133,29 +128,25 @@ class ChatProcessTask implements Runnable {
                  * Parse and store sender info. We will receive messages both
                  * when we send and receive, so we need to check the sender id
                  * if it is our own id first to detect who sent the message
-                 * TODO: Refactor these methods out
                  */
-                if (!senderId.equals(UserInfo.INSTANCE.getId())) {
+                final String senderName = parseAndStoreChatUserInfo(senderId, senderObject);
+                //TODO Send notification
 
-                    final String senderName = parseAndStoreChatUserInfo(senderId, senderObject);
-                    //TODO Send notification
+                final ContentValues values = new ContentValues(4);
+                values.put(DatabaseColumns.CHAT_ID, chatId);
+                values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
+                values.put(DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL);
+                values.put(DatabaseColumns.USER_ID, isSenderCurrentUser ? receiverId
+                                : senderId);
 
-                    final ContentValues values = new ContentValues(4);
-                    values.put(DatabaseColumns.CHAT_ID, chatId);
-                    values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
-                    values.put(DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL);
-                    values.put(DatabaseColumns.USER_ID, isSenderCurrentUser ? receiverId
-                                    : senderId);
+                Logger.v(TAG, "Updating chats for Id %s", chatId);
+                final int updateCount = DBInterface
+                                .update(TableChats.NAME, values, CHAT_SELECTION, new String[] {
+                                    chatId
+                                }, true);
 
-                    Logger.v(TAG, "Updating chats for Id %s", chatId);
-                    final int updateCount = DBInterface
-                                    .update(TableChats.NAME, values, CHAT_SELECTION, new String[] {
-                                        chatId
-                                    }, true);
-
-                    if (updateCount == 0) {
-                        DBInterface.insert(TableChats.NAME, null, values, true);
-                    }
+                if (updateCount == 0) {
+                    DBInterface.insert(TableChats.NAME, null, values, true);
                 }
             }
 

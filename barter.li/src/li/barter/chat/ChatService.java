@@ -682,6 +682,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
         switch (token) {
 
+            case QueryTokens.INSERT_CHAT_MESSAGE_LOCALLY:
             case QueryTokens.INSERT_CHAT_MESSAGE: {
                 assert (cookie != null);
                 assert (cookie instanceof ContentValues);
