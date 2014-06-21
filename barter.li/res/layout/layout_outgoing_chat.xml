@@ -18,54 +18,36 @@
     xmlns:app="http://schemas.android.com/apk/res/li.barter"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/transparent"
-    >
+    android:background="@color/transparent" >
 
-    <li.barter.widgets.CircleImageView
-        android:id="@+id/image_user"
-        android:layout_width="@dimen/chat_detail_image_size"
-        android:layout_height="@dimen/chat_detail_image_size"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginBottom="@dimen/margin_xxx_small"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/pic_avatar"
-        app:borderColor="@color/white"
-        app:borderWidth="@dimen/book_user_image_border"
-        app:cornerRadius="@dimen/chat_image_corner_radius" />
-
-<FrameLayout 
-       android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_marginLeft="@dimen/margin_x_small"
         android:layout_marginRight="@dimen/margin_xx_small"
-        android:layout_marginLeft="@dimen/chat_detail_margin"
-        android:background="@drawable/msg_out_bubble">  
+        android:background="@drawable/msg_out_bubble"
+        android:orientation="vertical" >
 
-       <LinearLayout android:layout_height="wrap_content"
-           android:layout_width="wrap_content"
-           android:orientation="vertical"> 
-    <li.barter.widgets.TypefacedTextView
-        android:id="@+id/text_chat_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
-        android:autoLink="web"
-        android:textColorLink="@color/outgoing_message"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_medium"
-        app:fontStyle="regular" />
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/text_chat_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:autoLink="web"
+            android:textColor="@color/white"
+            android:textColorLink="@color/outgoing_message"
+            android:textSize="@dimen/text_medium"
+            app:fontStyle="regular" />
 
-    <li.barter.widgets.TypefacedTextView
-        android:id="@+id/chat_ack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/text_micro"
-        android:textColor="@color/dark_gray"
-        android:visibility="visible"
-        app:fontStyle="regular" 
-        
-        />
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/chat_ack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/dark_gray"
+            android:textSize="@dimen/text_micro"
+            android:visibility="visible"
+            app:fontStyle="regular" />
     </LinearLayout>
-</FrameLayout>
+
 </RelativeLayout>

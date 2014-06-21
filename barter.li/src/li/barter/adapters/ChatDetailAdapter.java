@@ -16,25 +16,19 @@
 
 package li.barter.adapters;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import li.barter.R;
-import li.barter.data.DatabaseColumns;
-import li.barter.utils.AppConstants;
-import li.barter.utils.Logger;
-import li.barter.utils.AppConstants.UserInfo;
-import li.barter.widgets.CircleImageView;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
+import java.util.HashMap;
+import java.util.Map;
+import li.barter.R;
+import li.barter.data.DatabaseColumns;
+import li.barter.utils.AppConstants.UserInfo;
 
 /**
  * Class to display Chat messages
@@ -54,21 +48,14 @@ public class ChatDetailAdapter extends CursorAdapter {
      */
     private final Map<Integer, Integer> mPositionViewTypeMap;
 
-    private final String TAG="ChatDetailAdapter";
-    /**
-     * Profile picture of the user the current user is chatting with
-     */
-    private String                      mChatUserProfilePic;
+    private final String                TAG              = "ChatDetailAdapter";
 
+    @SuppressLint("UseSparseArrays")
+    /* Sparse Array benefits are noticable only upwards of 10k items */
     public ChatDetailAdapter(final Context context, final Cursor cursor) {
         super(context, cursor, 0);
         mPositionViewTypeMap = new HashMap<Integer, Integer>();
         buildMapForCursor(cursor);
-    }
-
-    public void setChatUserProfilePic(final String profileImage) {
-        mChatUserProfilePic = profileImage;
-        notifyDataSetChanged();
     }
 
     /**
@@ -128,44 +115,25 @@ public class ChatDetailAdapter extends CursorAdapter {
                                         .getColumnIndex(DatabaseColumns.MESSAGE)));
 
         final int itemViewType = getItemViewType(cursor.getPosition());
-        String[] timestamp=cursor.getString(cursor
-                .getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN)).split(",");
-        
+        String[] timestamp = cursor
+                        .getString(cursor.getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN))
+                        .split(",");
+
         if (itemViewType == INCOMING_MESSAGE) {
-            if (!TextUtils.isEmpty(mChatUserProfilePic)) {
-            	 CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.image_user);
-            	 Picasso.with(context)
-                 .load(mChatUserProfilePic)
-                  .error(R.drawable.pic_avatar)
-                 .resizeDimen(R.dimen.chat_detail_image_size, R.dimen.chat_detail_image_size)
-                 .centerCrop().into(circleImageView.getTarget());
-            	 
-            	 ((TextView) view.getTag(R.id.chat_ack))
-                 .setText(timestamp[1]);
-            }
+
+            ((TextView) view.getTag(R.id.chat_ack)).setText(timestamp[1]);
+
         } else if (itemViewType == OUTGOING_MESSAGE) {
-            final String imageUrl = UserInfo.INSTANCE.getProfilePicture();
-            Logger.d(TAG,imageUrl);
-            if(cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.CHAT_ACK)).equals(context.getResources().getString(R.string.sent)))
-            {
-            	  ((TextView) view.getTag(R.id.chat_ack))
-                  .setText(timestamp[1]);
+
+            if (cursor.getString(cursor.getColumnIndex(DatabaseColumns.CHAT_ACK))
+                            .equals(context.getResources()
+                                            .getString(R.string.sent))) {
+                ((TextView) view.getTag(R.id.chat_ack)).setText(timestamp[1]);
+            } else {
+                ((TextView) view.getTag(R.id.chat_ack)).setText(context
+                                .getResources().getString(R.string.sending));
             }
-            else
-            {
-            	 ((TextView) view.getTag(R.id.chat_ack))
-                 .setText(context.getResources().getString(R.string.sending));
-            }
-          
-            CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.image_user);
-            if (!TextUtils.isEmpty(imageUrl)) {
-            	
-            	 Picasso.with(context)
-                 .load(imageUrl)
-                 .resizeDimen(R.dimen.chat_detail_image_size, R.dimen.chat_detail_image_size)
-                 .centerCrop().into(circleImageView.getTarget());
-            }
+
         }
 
     }
@@ -180,14 +148,12 @@ public class ChatDetailAdapter extends CursorAdapter {
             view = LayoutInflater
                             .from(context)
                             .inflate(R.layout.layout_incoming_chat, parent, false);
-            view.setTag(R.id.chat_ack, view
-                    .findViewById(R.id.chat_ack));
+            view.setTag(R.id.chat_ack, view.findViewById(R.id.chat_ack));
         } else if (viewType == OUTGOING_MESSAGE) {
             view = LayoutInflater
                             .from(context)
                             .inflate(R.layout.layout_outgoing_chat, parent, false);
-            view.setTag(R.id.chat_ack, view
-                    .findViewById(R.id.chat_ack));
+            view.setTag(R.id.chat_ack, view.findViewById(R.id.chat_ack));
         }
 
         view.setTag(R.id.image_user, view.findViewById(R.id.image_user));

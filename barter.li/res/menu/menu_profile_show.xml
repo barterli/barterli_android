@@ -16,9 +16,12 @@
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
+    <group android:id="@+id/group_hide_on_drawer_open" >
         <item
             android:id="@+id/action_edit_profile"
-            android:showAsAction="ifRoom"
             android:icon="@drawable/ic_action_edit"
+            android:showAsAction="ifRoom"
             android:title="@string/text_edit_profile"/>
+    </group>
+
 </menu>
