@@ -25,13 +25,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
 import li.barter.utils.AppConstants.ChatStatus;
-import li.barter.utils.AppConstants.UserInfo;
 
 /**
  * Class to display Chat messages
@@ -44,70 +40,46 @@ public class ChatDetailAdapter extends CursorAdapter {
      * View Types. If there are n types of views, these HAVE to be numbered from
      * 0 to n-1
      */
-    private static final int            INCOMING_MESSAGE = 0;
-    private static final int            OUTGOING_MESSAGE = 1;
-    /**
-     * Map to maintain a reference between the positions and the view types
-     */
-    private final Map<Integer, Integer> mPositionViewTypeMap;
+    private static final int INCOMING_MESSAGE = 0;
+    private static final int OUTGOING_MESSAGE = 1;
 
-    private final String                TAG              = "ChatDetailAdapter";
+    private final String     TAG              = "ChatDetailAdapter";
 
     /* Strings that indicate the chat status */
-    private final String                mSendingString;
-    private final String                mFailedString;
+    private final String     mSendingString;
+    private final String     mFailedString;
 
     @SuppressLint("UseSparseArrays")
     /* Sparse Array benefits are noticable only upwards of 10k items */
     public ChatDetailAdapter(final Context context, final Cursor cursor) {
         super(context, cursor, 0);
-        mPositionViewTypeMap = new HashMap<Integer, Integer>();
-        buildMapForCursor(cursor);
-
         mSendingString = context.getString(R.string.sending);
         mFailedString = context.getString(R.string.failed);
-    }
-
-    /**
-     * Traverses the cursor once to make a map of the position to the view type
-     * for in memory lookup. Call this whenever the cursor backing the adapter
-     * changes
-     * 
-     * @param cursor The cursor to traverse
-     */
-    private void buildMapForCursor(final Cursor cursor) {
-
-        mPositionViewTypeMap.clear();
-        if ((cursor != null) && !cursor.isClosed()) {
-            cursor.moveToPosition(-1);
-            String receiverId = null;
-            while (cursor.moveToNext()) {
-                receiverId = cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.RECEIVER_ID));
-
-                if (receiverId.equals(UserInfo.INSTANCE.getId())) {
-                    //Incoming message 
-                    mPositionViewTypeMap
-                                    .put(cursor.getPosition(), INCOMING_MESSAGE);
-                } else {
-                    //Outgoing message
-                    mPositionViewTypeMap
-                                    .put(cursor.getPosition(), OUTGOING_MESSAGE);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-        buildMapForCursor(mCursor);
-        super.notifyDataSetChanged();
     }
 
     @Override
     public int getItemViewType(final int position) {
 
-        return mPositionViewTypeMap.get(position);
+        mCursor.moveToPosition(position);
+        final int chatStatus = mCursor.getInt(mCursor
+                        .getColumnIndex(DatabaseColumns.CHAT_STATUS));
+
+        switch (chatStatus) {
+
+            case ChatStatus.FAILED:
+            case ChatStatus.SENDING:
+            case ChatStatus.SENT: {
+                return OUTGOING_MESSAGE;
+            }
+
+            case ChatStatus.RECEIVED: {
+                return INCOMING_MESSAGE;
+            }
+
+            default: {
+                throw new IllegalStateException("Unknown chat status");
+            }
+        }
     }
 
     @Override
@@ -125,13 +97,12 @@ public class ChatDetailAdapter extends CursorAdapter {
                                         .getColumnIndex(DatabaseColumns.MESSAGE)));
 
         final int itemViewType = getItemViewType(cursor.getPosition());
-        String[] timestamp = cursor
-                        .getString(cursor.getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN))
-                        .split(",");
+        final String timestamp = cursor.getString(cursor
+                        .getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN));
 
         if (itemViewType == INCOMING_MESSAGE) {
 
-            ((TextView) view.getTag(R.id.chat_ack)).setText(timestamp[1]);
+            ((TextView) view.getTag(R.id.chat_ack)).setText(timestamp);
 
         } else if (itemViewType == OUTGOING_MESSAGE) {
 
@@ -147,7 +118,7 @@ public class ChatDetailAdapter extends CursorAdapter {
                     break;
                 }
                 case ChatStatus.SENT: {
-                    chatStatusTextView.setText(timestamp[1]);
+                    chatStatusTextView.setText(timestamp);
                     break;
                 }
                 case ChatStatus.FAILED: {
@@ -164,7 +135,7 @@ public class ChatDetailAdapter extends CursorAdapter {
     public View newView(final Context context, final Cursor cursor,
                     final ViewGroup parent) {
 
-        final int viewType = mPositionViewTypeMap.get(cursor.getPosition());
+        final int viewType = getItemViewType(cursor.getPosition());
         View view = null;
         if (viewType == INCOMING_MESSAGE) {
             view = LayoutInflater

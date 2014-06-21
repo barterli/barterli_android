@@ -55,18 +55,22 @@ class ChatProcessTask implements Runnable {
 
     private final Context       mContext;
     private final String        mMessage;
-    private final DateFormatter mDateFormatter;
+    private final DateFormatter mChatDateFormatter;
+    private final DateFormatter mMessageDateFormatter;
 
     /**
      * @param context
      * @param message the Chat message to process
-     * @param dateFormatter A date formatter to format dates
+     * @param chatDateFormatter A date formatter to format dates for chats
+     * @param messageDateFormatter A date formatter to format dates for chat
+     *            messages
      */
-    public ChatProcessTask(final Context context, final String message, final DateFormatter dateFormatter) {
+    public ChatProcessTask(final Context context, final String message, final DateFormatter chatDateFormatter, final DateFormatter messageDateFormatter) {
 
         mContext = context;
         mMessage = message;
-        mDateFormatter = dateFormatter;
+        mChatDateFormatter = chatDateFormatter;
+        mMessageDateFormatter = messageDateFormatter;
     }
 
     @Override
@@ -104,9 +108,9 @@ class ChatProcessTask implements Runnable {
             chatValues.put(DatabaseColumns.SENT_AT, sentAtTime);
             chatValues.put(DatabaseColumns.CHAT_STATUS, isSenderCurrentUser ? ChatStatus.SENT
                             : ChatStatus.RECEIVED);
-            chatValues.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter
+            chatValues.put(DatabaseColumns.TIMESTAMP_EPOCH, mMessageDateFormatter
                             .getEpoch(timestamp));
-            chatValues.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter
+            chatValues.put(DatabaseColumns.TIMESTAMP_HUMAN, mMessageDateFormatter
                             .getOutputTimestamp(timestamp));
 
             if (isSenderCurrentUser) {
@@ -135,14 +139,21 @@ class ChatProcessTask implements Runnable {
                  * if it is our own id first to detect who sent the message
                  */
                 final String senderName = parseAndStoreChatUserInfo(senderId, senderObject);
-                ChatNotificationHelper.getInstance(mContext).showChatReceivedNotification(mContext, chatId, senderId, senderName, messageText);
+                ChatNotificationHelper
+                                .getInstance(mContext)
+                                .showChatReceivedNotification(mContext, chatId, senderId, senderName, messageText);
 
-                final ContentValues values = new ContentValues(4);
+                final ContentValues values = new ContentValues(7);
                 values.put(DatabaseColumns.CHAT_ID, chatId);
                 values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
                 values.put(DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL);
                 values.put(DatabaseColumns.USER_ID, isSenderCurrentUser ? receiverId
                                 : senderId);
+                values.put(DatabaseColumns.TIMESTAMP_HUMAN, mChatDateFormatter
+                                .getOutputTimestamp(timestamp));
+                values.put(DatabaseColumns.TIMESTAMP, timestamp);
+                values.put(DatabaseColumns.TIMESTAMP_EPOCH, mChatDateFormatter
+                                .getEpoch(timestamp));
 
                 Logger.v(TAG, "Updating chats for Id %s", chatId);
                 final int updateCount = DBInterface

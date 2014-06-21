@@ -53,8 +53,9 @@ public class ViewChatsWithMessagesAndUsers {
                                 DatabaseColumns.LAST_NAME,
                                 DatabaseColumns.UNREAD_COUNT,
                                 DatabaseColumns.MESSAGE,
-                                DatabaseColumns.TIMESTAMP_HUMAN,
-                                DatabaseColumns.TIMESTAMP_EPOCH
+                                String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_CHATS, DatabaseColumns.TIMESTAMP_HUMAN),
+                                String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_CHATS, DatabaseColumns.TIMESTAMP_EPOCH),
+                                String.format(Locale.US, SQLConstants.ALIAS_COLUMN, ALIAS_CHATS, DatabaseColumns.TIMESTAMP)
                         });
         Logger.d(TAG, "View Column Def: %s", columnDef);
 
@@ -88,11 +89,14 @@ public class ViewChatsWithMessagesAndUsers {
     public static void upgrade(final SQLiteDatabase db, final int oldVersion,
                     final int newVersion) {
 
-      //Add any data migration code here. Default is to drop and rebuild the table
+        //Add any data migration code here. Default is to drop and rebuild the table
 
-        if (oldVersion == 1) {
-            
-            /* Drop & recreate the view if upgrading from DB version 1(alpha version) */
+        if (oldVersion < 4) {
+
+            /*
+             * Drop & recreate the view if upgrading from DB version 1(alpha
+             * version)
+             */
             db.execSQL(String
                             .format(Locale.US, SQLConstants.DROP_VIEW_IF_EXISTS, NAME));
             create(db);
