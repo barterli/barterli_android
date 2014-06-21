@@ -25,26 +25,30 @@ import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
-
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import li.barter.R;
 import li.barter.utils.Logger;
 
 /**
- * Generic Alert Dialog.
+ * Alert Dialog to display a custom view to Enable Location if not enabled
  * 
- * @author Vinay S Shenoy
+ * @author Anshul Kamboj
  */
-public class AlertDialogFragment extends DialogFragment {
+public class EnableLocationDialogFragment extends DialogFragment {
 
-    private static final String TAG = "AlertDialogFragment";
+    private static final String TAG = "EnableLocationDialogFragment";
 
     /** Res Id for the Dialog Title. */
     private int                 mTitleId;
 
-    /** Res Id for the Dialog message. */
-    private int                 mMessageId;
-
     /** Res Id for the Positive button label. */
     private int                 mPositiveLabelId;
+    
+    /** Res Id for the Dialog message. */
+    private int                 mMessageId;
 
     /** Res Id for the negative Button label. */
     private int                 mNegativeLabelId;
@@ -75,6 +79,7 @@ public class AlertDialogFragment extends DialogFragment {
 
         if (savedInstanceState != null) {
             mTitleId = savedInstanceState.getInt(DialogKeys.TITLE_ID);
+            
             mMessageId = savedInstanceState.getInt(DialogKeys.MESSAGE_ID);
             mNegativeLabelId = savedInstanceState
                             .getInt(DialogKeys.NEGATIVE_LABEL_ID);
@@ -87,7 +92,7 @@ public class AlertDialogFragment extends DialogFragment {
             mIconId = savedInstanceState.getInt(DialogKeys.ICON_ID);
             mTheme = savedInstanceState.getInt(DialogKeys.THEME);
             mMessageParams = savedInstanceState
-                            .getStringArray(DialogKeys.MESSAGE_PARAMS);
+                    .getStringArray(DialogKeys.MESSAGE_PARAMS);
         }
 
         final Builder builder = new Builder(getActivity(), mTheme);
@@ -95,13 +100,7 @@ public class AlertDialogFragment extends DialogFragment {
         if ((mTitleId == 0) && (mMessageId == 0)) {
             throw new IllegalArgumentException("No Title and no message");
         }
-        if (mIconId != 0) {
-            builder.setIcon(mIconId);
-        }
-        if (mTitleId != 0) {
-            builder.setTitle(mTitleId);
-        }
-
+        
         if (mMessageId != 0) {
 
             if ((mMessageParams != null) && (mMessageParams.length > 0)) {
@@ -110,6 +109,15 @@ public class AlertDialogFragment extends DialogFragment {
             } else {
                 builder.setMessage(mMessageId);
             }
+        }
+
+      
+
+        if (mIconId != 0) {
+            builder.setIcon(mIconId);
+        }
+        if (mTitleId != 0) {
+            builder.setTitle(mTitleId);
         }
 
         if (mPositiveLabelId != 0) {
@@ -171,10 +179,10 @@ public class AlertDialogFragment extends DialogFragment {
     }
 
     public void show(final int theme, final int iconId, final int titleId,
-                    final int messageId, final int positiveLabelId,
-                    final int negativeLabelId, final int neutralLabelId,
-                    final FragmentManager manager, final boolean cancellable,
-                    final String fragmentTag, final String... messageParams) {
+            final int messageId, final int positiveLabelId,
+            final int negativeLabelId, final int neutralLabelId,
+            final FragmentManager manager, final boolean cancellable,
+            final String fragmentTag, final String... messageParams) {
 
         mTheme = theme;
         mIconId = iconId;
@@ -193,5 +201,8 @@ public class AlertDialogFragment extends DialogFragment {
         }
 
     }
+
+
+  
 
 }

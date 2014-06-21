@@ -16,22 +16,6 @@
 
 package li.barter.activities;
 
-import com.android.volley.Request.Method;
-import com.crashlytics.android.Crashlytics;
-import com.facebook.AppEventsLogger;
-import com.google.android.gms.location.LocationListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.ActionBar;
-import android.content.Intent;
-import android.location.Location;
-import android.net.NetworkInfo;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
@@ -40,10 +24,10 @@ import li.barter.fragments.ChatsFragment;
 import li.barter.fragments.LoginFragment;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
@@ -51,8 +35,24 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.GooglePlusManager;
-import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.GooglePlusManager.GooglePlusAuthCallback;
+import li.barter.utils.SharedPreferenceHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.ActionBar;
+import android.content.Intent;
+import android.location.Location;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+
+import com.android.volley.Request.Method;
+import com.facebook.AppEventsLogger;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.plus.PlusClient;
+import com.google.android.gms.plus.PlusOneButton.OnPlusOneClickListener;
 
 /**
  * @author Vinay S Shenoy Main Activity for holding the Navigation Drawer and
@@ -74,6 +74,8 @@ public class HomeActivity extends AbstractBarterLiActivity implements
      * Helper class for connectiong to GooglePlus for login
      */
     private GooglePlusManager       mGooglePlusManager;
+    
+
     
     
 
@@ -294,6 +296,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
          */
         return "";
     }
+
     
 
 }

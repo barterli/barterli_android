@@ -195,6 +195,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             requestObject.put(HttpConstants.PROVIDER, AppConstants.MANUAL);
             requestObject.put(HttpConstants.EMAIL, email);
             requestObject.put(HttpConstants.PASSWORD, password);
+            requestObject.put(HttpConstants.DEVICE_ID, UserInfo.INSTANCE
+                    .getDeviceId());
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.CREATE_USER, requestObject.toString(), mVolleyCallbacks);
             request.setRequestId(RequestId.CREATE_USER);
@@ -219,6 +221,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         try {
             requestObject.put(HttpConstants.PROVIDER, provider);
             requestObject.put(HttpConstants.ACCESS_TOKEN, token);
+            requestObject.put(HttpConstants.DEVICE_ID, UserInfo.INSTANCE
+                    .getDeviceId());
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.CREATE_USER, requestObject.toString(), mVolleyCallbacks);
             request.setRequestId(RequestId.CREATE_USER);

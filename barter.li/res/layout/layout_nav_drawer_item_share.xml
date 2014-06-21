@@ -18,30 +18,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:paddingBottom="@dimen/margin_x_small"
     android:paddingLeft="@dimen/activity_margin"
     android:paddingRight="@dimen/activity_margin"
     android:paddingTop="@dimen/margin_x_small" >
 
-    <li.barter.widgets.TypefacedTextView
-        android:id="@+id/text_nav_item_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left|center_vertical"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_medium"
-        app:fontStyle="bold" />
+    <ImageView
+        android:id="@+id/share"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@android:drawable/ic_menu_share" />
 
-    <li.barter.widgets.TypefacedTextView
-        android:id="@+id/text_nav_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left|center_vertical"
-        android:textColor="@color/dark_gray"
-        android:textSize="@dimen/text_small"
-        app:fontStyle="condensed_regular" />
-    
+    <ImageView
+        android:id="@+id/whatsapp_share"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:src="@drawable/pic_avatar"
+        android:visibility="gone" />
 
+    <ImageView
+        android:id="@+id/facebook_share"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginLeft="@dimen/activity_margin"
+        android:src="@drawable/pic_avatar"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/message_share"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/pic_avatar"
+        android:visibility="gone" />
 
 </LinearLayout>

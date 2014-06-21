@@ -16,95 +16,116 @@
 
 package li.barter.adapters;
 
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import java.util.List;
+import java.util.Locale;
 
 import li.barter.R;
+import li.barter.utils.AppConstants;
+import li.barter.utils.SharedPreferenceHelper;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Adapter for adding items in the Navigration in the home screen
  * 
  * @author Vinay S Shenoy
  */
-public class HomeNavDrawerAdapter extends BaseAdapter {
+public class HomeNavDrawerAdapter extends BaseAdapter{
 
-    /**
-     * Navigation Drawer titles
-     */
-    private final String[]       mNavDrawerTitles;
+	/**
+	 * Navigation Drawer titles
+	 */
+	private final String[]       mNavDrawerTitles;
 
-    /**
-     * Navigation Drawer descriptions
-     */
-    private final String[]       mNavDrawerDescriptions;
+	/**
+	 * Navigation Drawer descriptions
+	 */
+	private final String[]       mNavDrawerDescriptions;
 
-    /**
-     * Layout Inflater for inflating layouts
-     */
-    private final LayoutInflater mLayoutInflater;
+	/**
+	 * Layout Inflater for inflating layouts
+	 */
+	private final LayoutInflater mLayoutInflater;
 
-    /**
-     * COnstruct the adapter for the Navigation drawer
-     * 
-     * @param context {@link Context} reference
-     * @param drawerItemTitlesResId The resource id of an aray that contains the
-     *            strings of the titles in the nav drawer
-     * @param drawerItemDescriptionResId The resource id of an array that
-     *            contains the strings of the descriptions of the items in the
-     *            navigation drawer
-     */
-    public HomeNavDrawerAdapter(final Context context, final int drawerItemTitlesResId, final int drawerItemDescriptionResId) throws IllegalArgumentException {
-        mLayoutInflater = LayoutInflater.from(context);
-        mNavDrawerTitles = context.getResources()
-                        .getStringArray(drawerItemTitlesResId);
-        mNavDrawerDescriptions = context.getResources()
-                        .getStringArray(drawerItemDescriptionResId);
+	private final Context mContext;
 
-        if (mNavDrawerTitles.length != mNavDrawerDescriptions.length) {
-            throw new IllegalArgumentException("The passed arrays do not have an equal number of items. There should be one description matching to each item. Add an empty item if you don't want any description to be displayed");
-        }
-    }
+	/**
+	 * COnstruct the adapter for the Navigation drawer
+	 * 
+	 * @param context {@link Context} reference
+	 * @param drawerItemTitlesResId The resource id of an aray that contains the
+	 *            strings of the titles in the nav drawer
+	 * @param drawerItemDescriptionResId The resource id of an array that
+	 *            contains the strings of the descriptions of the items in the
+	 *            navigation drawer
+	 */
+	public HomeNavDrawerAdapter(final Context context, final int drawerItemTitlesResId, final int drawerItemDescriptionResId) throws IllegalArgumentException {
+		mLayoutInflater = LayoutInflater.from(context);
+		mNavDrawerTitles = context.getResources()
+				.getStringArray(drawerItemTitlesResId);
+		mNavDrawerDescriptions = context.getResources()
+				.getStringArray(drawerItemDescriptionResId);
+		mContext=context;
+		if (mNavDrawerTitles.length != mNavDrawerDescriptions.length) {
+			throw new IllegalArgumentException("The passed arrays do not have an equal number of items. There should be one description matching to each item. Add an empty item if you don't want any description to be displayed");
+		}
+	}
 
-    @Override
-    public int getCount() {
-        return mNavDrawerTitles.length;
-    }
+	@Override
+	public int getCount() {
+		return mNavDrawerTitles.length;
+	}
 
-    @Override
-    public Object getItem(final int position) {
-        return mNavDrawerTitles[position];
-    }
+	@Override
+	public Object getItem(final int position) {
+		return mNavDrawerTitles[position];
+	}
 
-    @Override
-    public long getItemId(final int position) {
-        return position;
-    }
+	@Override
+	public long getItemId(final int position) {
+		return position;
+	}
 
-    @Override
-    public View getView(final int position, final View convertView,
-                    final ViewGroup parent) {
+	@Override
+	public View getView(final int position, final View convertView,
+			final ViewGroup parent) {
 
-        View view = convertView;
+		View view = convertView;
 
-        if (view == null) {
-            view = mLayoutInflater
-                            .inflate(R.layout.layout_nav_drawer_item, parent, false);
+		if (view == null) {
+			view = mLayoutInflater
+					.inflate(R.layout.layout_nav_drawer_item, parent, false);
 
-            view.setTag(R.id.text_nav_item_title, view
-                            .findViewById(R.id.text_nav_item_title));
-            view.setTag(R.id.text_nav_desc, view
-                            .findViewById(R.id.text_nav_desc));
-        }
+			view.setTag(R.id.text_nav_item_title, view
+					.findViewById(R.id.text_nav_item_title));
+			view.setTag(R.id.text_nav_desc, view
+					.findViewById(R.id.text_nav_desc));
 
-        ((TextView) view.getTag(R.id.text_nav_item_title))
-                        .setText(mNavDrawerTitles[position]);
-        ((TextView) view.getTag(R.id.text_nav_desc))
-                        .setText(mNavDrawerDescriptions[position]);
-        return view;
-    }
+
+		}
+	
+
+			((TextView) view.getTag(R.id.text_nav_item_title))
+			.setText(mNavDrawerTitles[position]);
+			((TextView) view.getTag(R.id.text_nav_desc))
+			.setText(mNavDrawerDescriptions[position]);
+	
+		return view;
+	}
+
+
 
 }

@@ -30,6 +30,7 @@ import android.text.TextUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import li.barter.R;
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -42,8 +43,10 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.models.Team;
 import li.barter.models.Venue;
 import li.barter.utils.AppConstants;
+import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.widgets.autocomplete.Suggestion;
 
@@ -477,7 +480,7 @@ public class HttpResponseParser {
 				.readJSONObject(responseObject, HttpConstants.USER, true, true);
 
 		final Bundle responseBundle = new Bundle();
-
+ 
 		final String userId = JsonUtils
 				.readString(userObject, HttpConstants.ID_USER, true, true);
 		final String firstName = JsonUtils
@@ -489,6 +492,7 @@ public class HttpResponseParser {
 		final String description = JsonUtils
 				.readString(userObject, HttpConstants.DESCRIPTION, false, false);
 
+		UserInfo.INSTANCE.setFirstName(firstName);
 		responseBundle.putString(HttpConstants.ID_USER, userId);
 		responseBundle.putString(HttpConstants.AUTH_TOKEN, JsonUtils
 				.readString(userObject, HttpConstants.AUTH_TOKEN, true, true));

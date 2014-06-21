@@ -18,6 +18,8 @@ package li.barter.fragments;
 import com.android.volley.Request.Method;
 import com.squareup.picasso.Picasso;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -43,6 +45,9 @@ import android.widget.TextView;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.adapters.ProfileFragmentsAdapter;
@@ -53,6 +58,8 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.ViewUsersWithLocations;
+import li.barter.fragments.dialogs.AddUserInfoDialogFragment;
+import li.barter.http.BlMultiPartRequest;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -94,6 +101,10 @@ OnPageChangeListener {
 	private ProfileFragmentsAdapter mProfileFragmentsAdapter;
 	private String                  mLocationFormat;
 	private boolean                 mLoadedIndividually;
+	 /**
+     * {@link AddUserInfoDialogFragment} for
+     */
+    private AddUserInfoDialogFragment mAddUserInfoDialogFragment;
 
 	@Override
 	public View onCreateView(final LayoutInflater inflater,
@@ -106,6 +117,8 @@ OnPageChangeListener {
 		setActionBarDrawerToggleEnabled(false);
 
 		final Bundle extras = getArguments();
+		 mAddUserInfoDialogFragment = (AddUserInfoDialogFragment) getFragmentManager()
+                 .findFragmentByTag(FragmentTags.DIALOG_ADD_NAME);
 
 		if (extras != null && extras.containsKey(Keys.USER_ID)) {
 
@@ -381,6 +394,14 @@ OnPageChangeListener {
 			 }
 
 		 }
+		 else if(requestId==RequestId.SAVE_USER_PROFILE)
+		 {
+			 if(isAttached())
+			 {
+				 loadChatFragment();
+			 }
+		 }
+		
 
 	 }
 
@@ -498,7 +519,53 @@ OnPageChangeListener {
 			 int positionOffsetPixels) {
 
 	 }
+	 
+	 
+	  /**
+	     * Show the dialog for the user to add his name, in case it's not already
+	     * added
+	     */
+	    protected void showAddFirstNameDialog() {
 
+	        mAddUserInfoDialogFragment = new AddUserInfoDialogFragment();
+	        mAddUserInfoDialogFragment
+	                        .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.update_info, R.string.submit, R.string.cancel, 0, getFragmentManager(), true, FragmentTags.DIALOG_ADD_NAME);
+	    }
+
+	
+	    public boolean willHandleDialog(final DialogInterface dialog) {
+
+	        if ((mAddUserInfoDialogFragment != null)
+	                        && mAddUserInfoDialogFragment.getDialog()
+	                                        .equals(dialog)) {
+	            return true;
+	        }
+	        return false;
+	    }
+
+	    
+	    public void onDialogClick(final DialogInterface dialog, final int which) {
+
+	        if ((mAddUserInfoDialogFragment != null)
+	                        && mAddUserInfoDialogFragment.getDialog()
+	                                        .equals(dialog)) {
+
+	            if (which == DialogInterface.BUTTON_POSITIVE) {
+	                final String firstName = mAddUserInfoDialogFragment
+	                                .getFirstName();
+	                final String lastName = mAddUserInfoDialogFragment
+	                                .getLastName();
+
+	                if (!TextUtils.isEmpty(firstName)) {
+	                    updateUserInfo(firstName, lastName);
+	                }
+	            }
+	        }
+	    }
+	    
+	   
+	    
+	   
 	 @Override
 	 public void onPageSelected(int position) {
 

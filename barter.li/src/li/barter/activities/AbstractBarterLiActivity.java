@@ -16,11 +16,45 @@
 
 package li.barter.activities;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.google.android.gms.analytics.HitBuilders.EventBuilder;
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
+import li.barter.R;
+import li.barter.adapters.HomeNavDrawerAdapter;
+import li.barter.analytics.AnalyticsConstants.Actions;
+import li.barter.analytics.AnalyticsConstants.Categories;
+import li.barter.analytics.AnalyticsConstants.ParamKeys;
+import li.barter.analytics.AnalyticsConstants.ParamValues;
+import li.barter.analytics.GoogleAnalyticsManager;
+import li.barter.chat.ChatService;
+import li.barter.data.DBInterface;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.TableChatMessages;
+import li.barter.data.TableChats;
+import li.barter.fragments.AboutUsPagerFragment;
+import li.barter.fragments.AbstractBarterLiFragment;
+import li.barter.fragments.ChatsFragment;
+import li.barter.fragments.FragmentTransition;
+import li.barter.fragments.LoginFragment;
+import li.barter.fragments.ProfileFragment;
+import li.barter.fragments.ReportBugFragment;
+import li.barter.fragments.TeamFragment;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.IVolleyHelper;
+import li.barter.http.ResponseInfo;
+import li.barter.http.VolleyCallbacks;
+import li.barter.http.VolleyCallbacks.IHttpCallbacks;
+import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.DeviceInfo;
+import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
+import li.barter.utils.Utils;
+import li.barter.widgets.TypefaceCache;
+import li.barter.widgets.TypefacedSpan;
 import android.app.ActionBar;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -30,6 +64,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -55,46 +90,11 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 
-import li.barter.R;
-import li.barter.adapters.HomeNavDrawerAdapter;
-import li.barter.analytics.AnalyticsConstants.Actions;
-import li.barter.analytics.AnalyticsConstants.Categories;
-import li.barter.analytics.AnalyticsConstants.ParamKeys;
-import li.barter.analytics.AnalyticsConstants.ParamValues;
-import li.barter.analytics.GoogleAnalyticsManager;
-import li.barter.chat.ChatService;
-import li.barter.data.DBInterface;
-import li.barter.data.DBInterface.AsyncDbQueryCallback;
-import li.barter.data.TableChatMessages;
-import li.barter.data.TableChats;
-import li.barter.fragments.AboutUsPagerFragment;
-import li.barter.fragments.AbstractBarterLiFragment;
-import li.barter.fragments.BooksAroundMeFragment;
-import li.barter.fragments.ChatsFragment;
-import li.barter.fragments.FragmentTransition;
-import li.barter.fragments.LoginFragment;
-import li.barter.fragments.ProfileFragment;
-import li.barter.fragments.ReportBugFragment;
-import li.barter.fragments.TeamFragment;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.IVolleyHelper;
-import li.barter.http.ResponseInfo;
-import li.barter.http.VolleyCallbacks;
-import li.barter.http.VolleyCallbacks.IHttpCallbacks;
-import li.barter.utils.AppConstants;
-import li.barter.utils.AppConstants.DeviceInfo;
-import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.AppConstants.QueryTokens;
-import li.barter.utils.AppConstants.UserInfo;
-import li.barter.utils.Logger;
-import li.barter.utils.SharedPreferenceHelper;
-import li.barter.utils.Utils;
-import li.barter.widgets.TypefaceCache;
-import li.barter.widgets.TypefacedSpan;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 /**
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
@@ -386,7 +386,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.subject));
                 shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, appShareUrl);
-
+                
                 shareIntent.setType("text/plain");
                 try {
                     startActivity(Intent
@@ -397,8 +397,23 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
                 break;
             }
-            //About Us
+            
+          //Rate Us
             case 4: {
+                GoogleAnalyticsManager
+                .getInstance()
+                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                .set(ParamKeys.TYPE, ParamValues.RATE_US));
+               
+                Uri marketUri = Uri.parse(AppConstants.PLAY_STORE_MARKET_LINK);
+                Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
+                startActivity(marketIntent);
+
+                break;
+            }
+            
+            //About Us
+            case 5: {
                 GoogleAnalyticsManager
                 .getInstance()
                 .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
@@ -419,6 +434,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
                 break;
             }
+            
+            
 
             default: {
                 runnable = null;

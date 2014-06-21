@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -39,11 +40,13 @@ import li.barter.analytics.AnalyticsConstants.ParamKeys;
 import li.barter.analytics.AnalyticsConstants.ParamValues;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.analytics.GoogleAnalyticsManager;
+import li.barter.chat.ChatService;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -55,6 +58,7 @@ import li.barter.utils.Logger;
  * @author Anshul Kamboj Fragment for Paging Books Around Me. Also contains a
  *         Profile that the user can chat directly with the owner
  */
+
 
 public class BooksPagerFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, OnPageChangeListener,
@@ -110,6 +114,8 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      * for loading the owned user menu i.e with edit options
      */
     private boolean				mOwnedByUser=false;
+    
+    private String 				mUserId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -266,9 +272,22 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
-        // TODO Auto-generated method stub
-
+    	 
     }
+    
+	 /**
+	  * Loads the Chat Fragment to chat with the book owner
+	  */
+	 private void loadChatFragment() {
+		 final Bundle args = new Bundle(3);
+		 args.putString(Keys.CHAT_ID, ChatService
+				 .generateChatId(mUserId, UserInfo.INSTANCE.getId()));
+		 args.putString(Keys.USER_ID, mUserId);
+		 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+				 .instantiate(getActivity(), ChatDetailsFragment.class
+						 .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
+
+	 }
 
     @Override
     public void onBadRequestError(int requestId, IBlRequestContract request,
@@ -346,7 +365,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPageSelected(int position) {
 
-        
+    	mUserId= mUserIdArray.get(position);
         if (mUserIdArray.size() > 0
                         && mUserIdArray.get(position)
                                         .equals(UserInfo.INSTANCE.getId())) {
@@ -387,6 +406,20 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPanelAnchored(View panel) {
 
+    }
+    
+    @Override
+    public void onDialogClick(DialogInterface dialog, int which) {
+     ((ProfileFragment)getChildFragmentManager()
+    	        .findFragmentByTag(FragmentTags.USER_PROFILE)).onDialogClick(dialog, which);
+    }
+    
+    @Override
+    public boolean willHandleDialog(DialogInterface dialog) {
+    	// TODO Auto-generated method stub
+    	 return ((ProfileFragment)getChildFragmentManager()
+        .findFragmentByTag(FragmentTags.USER_PROFILE)).willHandleDialog(dialog);
+    	//return super.willHandleDialog(dialog);
     }
 
     /**

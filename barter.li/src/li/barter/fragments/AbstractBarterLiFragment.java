@@ -16,30 +16,6 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request;
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
@@ -61,6 +37,33 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Utils;
 import li.barter.widgets.TypefaceCache;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Typeface;
+import android.location.Criteria;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
+import android.util.TypedValue;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+
+import com.android.volley.Request;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+import com.google.zxing.common.StringUtils;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 /**
  * Base fragment class to encapsulate common functionality. Call the init()
@@ -532,7 +535,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      * @param firstName The user's first name
      * @param lastName The user's last name
      */
-    private void updateUserInfo(final String firstName, final String lastName) {
+    public void updateUserInfo(final String firstName, final String lastName) {
 
         final String url = HttpConstants.getApiBaseUrl()
                         + ApiEndpoints.UPDATE_USER_INFO;
@@ -570,6 +573,16 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     	InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
 			      Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+    
+    public boolean isLocationServiceEnabled() {
+        LocationManager lm = (LocationManager)
+                getActivity().getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria=new Criteria();
+       
+        String provider = lm.getBestProvider(criteria, true);
+        return ((provider!=null) &&
+                !LocationManager.PASSIVE_PROVIDER.equals(provider));
     }
 
 }

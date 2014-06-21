@@ -257,6 +257,7 @@ public class AppConstants {
     public static interface RequestCodes {
 
         public static final int SCAN_ISBN = 100;
+        public static final int PLUS_LIKE = 101;
     }
 
     /**
@@ -370,6 +371,7 @@ public class AppConstants {
         public static final String DIALOG_TAKE_PICTURE                             = "dialog_take_picture";
         public static final String DIALOG_ADD_NAME                                 = "dialog_add_name";
         public static final String DIALOG_ADD_BOOK                                 = "dialog_add_book";
+        public static final String DIALOG_ENABLE_LOCATION                          = "dialog_enable_location";
         public static final String DIALOG_ABOUT_LOCATION                           = "dialog_about_location";
         public static final String DIALOG_CHAT_LONGCLICK                           = "dialog_chat_longclick";
         
@@ -452,5 +454,8 @@ public class AppConstants {
     }
 
     public static final String PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=li.barter";
+    public static final String PLAY_STORE_MARKET_LINK = "market://details?id=li.barter";
+
+
     public static final String REFERRER_FORMAT = "&referrer=%s";
 }

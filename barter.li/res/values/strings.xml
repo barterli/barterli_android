@@ -33,6 +33,9 @@
     <string name="Book_Detail_fragment_title">Book Detail</string>
     <string name="update_info">Update Info</string>
      <string name="preferred_location">Preferred location</string>
+     <string name="enable_location">Enable location</string>
+     <string name="enable">Enable</string>
+     <string name="enable_location_message">Please enable your location settings for getting nearby books</string>
     <string name="cancel">Cancel</string>
     <string name="about_me">About me</string>
     <string name="my_books">My Books</string>
@@ -91,6 +94,7 @@
     <string name="scan_barcode_button_label">Scan ISBN BarCode</string>
     <string name="add_new_book_label">Manual Entry</string>
     <string name="search_for_books">Search for books</string>
+    <string name="share">share</string>
     <string name="set_sell_hint">Set Price (eg $10)</string>
     <string name="set_lend_hint">Set Lend Price (eg $10)</string>
 
@@ -157,6 +161,7 @@
         <item>Chats</item>
         <item>Report a Crash</item>
         <item>Share</item>
+        <item>Rate Us</item>
         <item>About us</item>
     </string-array>
     <string-array name="nav_drawer_descriptions">
@@ -164,6 +169,7 @@
         <item>Your ongoing chats</item>
         <item>or a suggestion</item>
         <item>Share barter.li with your friends</item>
+        <item></item>
         <item>What is barter.li</item>
     </string-array>
     <string-array name="take_photo_choices">

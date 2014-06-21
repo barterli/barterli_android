@@ -16,6 +16,9 @@ package li.barter.fragments;
  * limitations under the License.
  ******************************************************************************/
 
+import com.google.android.gms.plus.PlusOneButton;
+
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -27,7 +30,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.analytics.AnalyticsConstants.Screens;
@@ -40,7 +42,9 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.AppConstants.RequestCodes;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 
@@ -68,6 +72,8 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
     private boolean             mLoadedIndividually;
     private boolean             mLoggedInUser;
     private Button              mLogoutButton;
+    
+    
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -102,12 +108,18 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
         mLabelReferralCount = (TextView) view
                         .findViewById(R.id.label_referral_count);
         mLogoutButton = (Button) view.findViewById(R.id.button_logout);
+        
+        
+        
         mLogoutButton.setOnClickListener(this);
 
         setActionBarDrawerToggleEnabled(false);
 
         return view;
     }
+  
+    
+  
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

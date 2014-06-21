@@ -82,5 +82,6 @@ public class AnalyticsConstants {
         public static final String REPORT_BUG = "report";
         public static final String SHARE      = "share";
         public static final String ABOUT_US   = "about_us";
+        public static final String RATE_US    = "rate_us";
     }
 }

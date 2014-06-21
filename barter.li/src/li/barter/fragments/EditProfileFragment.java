@@ -139,6 +139,11 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                             .setText(SharedPreferenceHelper
                                             .getString(getActivity(), R.string.pref_first_name));
         }
+        else
+        {
+        	mFirstNameTextView
+            .setText(UserInfo.INSTANCE.getFirstName());
+        }
 
         if (SharedPreferenceHelper
                         .contains(getActivity(), R.string.pref_last_name)) {

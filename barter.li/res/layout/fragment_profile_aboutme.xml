@@ -16,6 +16,7 @@
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:plus="http://schemas.android.com/apk/lib/com.google.android.gms.plus"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/activity_margin"
@@ -40,7 +41,7 @@
         android:layout_marginTop="@dimen/margin_xxx_small"
         android:hint="@string/label_about_me"
         android:textColor="@color/dark_gray"
-         android:textSize="@dimen/text_small"
+        android:textSize="@dimen/text_small"
         app:fontStyle="regular" />
 
     <li.barter.widgets.TypefacedTextView
@@ -109,5 +110,8 @@
         android:textSize="@dimen/text_medium"
         android:visibility="gone"
         app:fontStyle="bold" />
+
+    
+
 
 </RelativeLayout>
