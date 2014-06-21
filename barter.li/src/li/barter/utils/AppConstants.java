@@ -312,6 +312,7 @@ public class AppConstants {
         public static final String RELOAD                     = "reload";
         public static final String BOOK_POSITION              = "book_position";
         public static final String BOOK_COUNT                 = "book_count";
+        public static final String EMAIL					  = "email";
 
         /**
          * The time at which this screen was last seen. Used for google
@@ -355,6 +356,7 @@ public class AppConstants {
         public static final String ABOUT_ME                                        = "about_me";
         public static final String MY_BOOKS                                        = "my_books";
         public static final String USER_PROFILE                                    = "user_profile";
+        public static final String PASSWORD_RESET								   = "password_reset";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
@@ -370,6 +372,7 @@ public class AppConstants {
         /* Tags for Dialog fragments */
         public static final String DIALOG_TAKE_PICTURE                             = "dialog_take_picture";
         public static final String DIALOG_ADD_NAME                                 = "dialog_add_name";
+        public static final String DIALOG_FORGOT_PASSWORD                          = "dialog_add_name";
         public static final String DIALOG_ADD_BOOK                                 = "dialog_add_book";
         public static final String DIALOG_ENABLE_LOCATION                          = "dialog_enable_location";
         public static final String DIALOG_ABOUT_LOCATION                           = "dialog_about_location";

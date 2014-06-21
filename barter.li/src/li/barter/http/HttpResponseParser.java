@@ -105,6 +105,10 @@ public class HttpResponseParser {
 		case RequestId.BLOCK_CHATS: {
 			return parseBlockUserResponse(response);
 		}
+		
+		case RequestId.PASSWORD_RESET: {
+			return parsePasswordResetResponse(response);
+		}
 
 		case RequestId.CREATE_USER: {
 			return parseCreateUserResponse(response);
@@ -676,7 +680,17 @@ public class HttpResponseParser {
 		
 		return responseInfo;
 	}
+	
+	private ResponseInfo parsePasswordResetResponse(final String response)
+			throws JSONException {
 
+		final ResponseInfo responseInfo = new ResponseInfo();
+
+		
+		return responseInfo;
+	}
+
+	
 	/**
 	 * Parse the set user preferred location response
 	 * 

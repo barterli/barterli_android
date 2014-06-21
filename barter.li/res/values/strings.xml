@@ -33,6 +33,7 @@
     <string name="Book_Detail_fragment_title">Book Detail</string>
     <string name="update_info">Update Info</string>
      <string name="preferred_location">Preferred location</string>
+     <string name="forgot_password"><u>Forgot password</u></string>
      <string name="enable_location">Enable location</string>
      <string name="enable">Enable</string>
      <string name="enable_location_message">Please enable your location settings for getting nearby books</string>
@@ -118,6 +119,7 @@
     <string name="unable_to_fetch_books">Unable to fetch books.</string>
     <string name="unable_to_fetch_hangouts">Unable to fetch hangouts.</string>
     <string name="error_enter_email">Please enter your email address.</string>
+    <string name="error_enter_token">Please enter your token</string>
     <string name="error_block_user">User cannot be blocked this time, Please try again later</string>
     <string name="error_invalid_email">Please enter a valid email address.</string>
     <string name="error_enter_password">Please enter a password.</string>
@@ -142,12 +144,16 @@
     <string name="lend">Lend</string>
     <string name="keep_private">Keep Private</string>
     <string name="submit">Submit</string>
+    <string name="reset">Reset</string>
     <string name="chat_with_owner">Chat with owner</string>
     <string name="owner_profile">Book Owner</string>
     <string name="owner_location">Owner\'s Preferred Barter Location</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>
     <string name="email_label">Email Id</string>
+    <string name="token_label">Token</string>
+    <string name="new_password_label">New password</string>
+    <string name="confirm_password_label">Confirm password</string>
     <string name="password_label">Password</string>
     <string name="share_via">Share Via</string>
 
