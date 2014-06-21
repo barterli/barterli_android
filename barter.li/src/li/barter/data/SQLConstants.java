@@ -27,6 +27,7 @@ public interface SQLConstants {
     public static final String SELECT_FROM_WHERE      = "SELECT %s FROM %s WHERE %s";
     public static final String SELECT_FROM            = "SELECT %s FROM %s";
     public static final String INSERT                 = "INSERT INTO %s (%s) %s";
+    public static final String UPDATE                 = "UPDATE %s SET %s WHERE %s";
     public static final String DELETE_FROM_WHERE      = "DELETE FROM %s WHERE %s";
     public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s;";
     public static final String TABLE_ALIAS            = "%s %s";
@@ -44,7 +45,7 @@ public interface SQLConstants {
     public static final String OR                     = " OR ";
     public static final String EQUALS_ARG             = "=?";
     public static final String NOT_EQUALS_ARG         = "!=?";
-    public static final String EQUALS_QUOTE          = "='";
+    public static final String EQUALS_QUOTE           = "='";
     public static final String FROM                   = " FROM ";
     public static final String WHERE                  = " WHERE ";
     public static final String IN                     = " IN ";

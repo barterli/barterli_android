@@ -23,23 +23,17 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat.Builder;
-import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -51,8 +45,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import li.barter.BarterLiApplication;
-import li.barter.R;
-import li.barter.activities.HomeActivity;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.AbstractRabbitMQConnector.OnDisconnectCallback;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
@@ -77,7 +69,6 @@ import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.ChatStatus;
 import li.barter.utils.AppConstants.ChatType;
 import li.barter.utils.AppConstants.DeviceInfo;
-import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
@@ -108,8 +99,6 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
 
     private static final String    TAG                      = "ChatService";
-    private static final String    CHAT_TIME_FORMAT         = "dd MMM, h:mm a";
-    private static final String    MESSAGE_TIME_FORMAT      = "h:mm a";
     private static final String    QUEUE_NAME_FORMAT        = "%squeue";
     private static final String    VIRTUAL_HOST             = "/";
     private static final String    EXCHANGE_NAME_FORMAT     = "%sexchange";
@@ -182,8 +171,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     public void onCreate() {
         super.onCreate();
         mMessageQueue = new ArrayDeque<String>();
-        mChatDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, CHAT_TIME_FORMAT);
-        mMessageDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, MESSAGE_TIME_FORMAT);
+        mChatDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, AppConstants.CHAT_TIME_FORMAT);
+        mMessageDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, AppConstants.MESSAGE_TIME_FORMAT);
         mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
         mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
         mCurrentConnectMultiplier = 0;
