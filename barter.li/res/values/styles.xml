@@ -51,6 +51,7 @@
         <item name="android:progressBarStyle">@style/ProgressBar.Apptheme</item>
         <item name="android:indeterminateProgressStyle">@style/ProgressBar.Apptheme</item>
         <item name="android:icon">@drawable/ic_actionbar</item>
+        <item name="android:height">@dimen/ab_height</item>
         <item name="android:titleTextStyle">@style/ActionBarStyle.TitleTextStyle</item>
         <item name="android:displayOptions">none</item>
     </style>

@@ -32,10 +32,10 @@
     <string name="Tribute_fragment_title">Tribute</string>
     <string name="Book_Detail_fragment_title">Book Detail</string>
     <string name="update_info">Update Info</string>
-     <string name="preferred_location">Preferred location</string>
-     <string name="enable_location">Enable location</string>
-     <string name="enable">Enable</string>
-     <string name="enable_location_message">Please enable your location settings for getting nearby books</string>
+    <string name="preferred_location">Preferred location</string>
+    <string name="enable_location">Enable location</string>
+    <string name="enable">Enable</string>
+    <string name="enable_location_message">Please enable your location settings for getting nearby books</string>
     <string name="cancel">Cancel</string>
     <string name="about_me">About me</string>
     <string name="my_books">My Books</string>
@@ -58,7 +58,6 @@
     <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>
     <string name="crouton_prefferedlocation_message">Please Select Your Book Exchange Point Where You Would Like To Deal</string>
     <string name="add_location_message">Please select your preferred location</string>
-    
 
     <!-- menu strings -->
     <string name="signup">Sign Up</string>
@@ -82,7 +81,7 @@
     <string name="chat_opened_from" formatted="false">This chat was opened from %s.</string>
     <string name="take_picture">Take Picture</string>
     <string name="add_book_dialog_head">Add Book</string>
-     <string name="chat_longclick_dialog_head">Chat Options</string>
+    <string name="chat_longclick_dialog_head">Chat Options</string>
     <string name="complete_action_using">Complete action using</string>
     <string name="no_books_found">No books were found in this area.</string>
     <string name="no_more_books_found">No more books were found.</string>
@@ -180,19 +179,16 @@
         <item>Scan  Barcode</item>
         <item>Add Manually</item>
     </string-array>
-    
     <string-array name="chat_longclick_choices">
         <item>Delete Chat</item>
         <item>Block User</item>
     </string-array>
-    
 
     <!-- Strings for chat details -->
     <string name="sent">sent</string>
     <string name="sending">&#8230;</string>
     <string name="trueflag">true</string>
     <string name="success_message_for_chatblock">User blocked successfully</string>
-    
 
     <string-array name="aboutus_fragment_titles">
         <item>Tribute</item>
