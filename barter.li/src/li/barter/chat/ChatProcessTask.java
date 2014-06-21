@@ -20,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentValues;
+import android.content.Context;
 
 import java.text.ParseException;
 
@@ -52,14 +53,18 @@ class ChatProcessTask implements Runnable {
     private static final String USER_SELECTION = DatabaseColumns.USER_ID
                                                                + SQLConstants.EQUALS_ARG;
 
+    private final Context       mContext;
     private final String        mMessage;
     private final DateFormatter mDateFormatter;
 
     /**
+     * @param context
      * @param message the Chat message to process
      * @param dateFormatter A date formatter to format dates
      */
-    public ChatProcessTask(final String message, final DateFormatter dateFormatter) {
+    public ChatProcessTask(final Context context, final String message, final DateFormatter dateFormatter) {
+
+        mContext = context;
         mMessage = message;
         mDateFormatter = dateFormatter;
     }
@@ -130,7 +135,7 @@ class ChatProcessTask implements Runnable {
                  * if it is our own id first to detect who sent the message
                  */
                 final String senderName = parseAndStoreChatUserInfo(senderId, senderObject);
-                //TODO Send notification
+                ChatNotificationHelper.getInstance(mContext).showChatReceivedNotification(mContext, chatId, senderId, senderName, messageText);
 
                 final ContentValues values = new ContentValues(4);
                 values.put(DatabaseColumns.CHAT_ID, chatId);

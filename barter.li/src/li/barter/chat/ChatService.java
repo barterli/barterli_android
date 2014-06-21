@@ -125,11 +125,6 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private static final int       MAX_CONNECT_MULTIPLIER   = 180;
 
-    /**
-     * Notification Id for notifications related to messages
-     */
-    private static final int       MESSAGE_NOTIFICATION_ID  = 1;
-
     private final IBinder          mChatServiceBinder       = new ChatServiceBinder();
 
     private final String           mChatSelection           = DatabaseColumns.CHAT_ID
@@ -159,17 +154,6 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private ConnectToChatAsyncTask mConnectTask;
 
-    private Builder                mNotificationBuilder;
-
-    private NotificationManager    mNotificationManager;
-
-    private Uri                    mNotificationSoundUri;
-
-    /**
-     * Holds the number of unread received messages
-     */
-    private int                    mUnreadMessageCount;
-
     /**
      * Holds an array of chat messages, to be processed in order
      */
@@ -178,16 +162,6 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     private Handler                mHandler;
 
     private Runnable               mConnectRunnable;
-
-    /**
-     * Id of the user with whom the user is currently chatting.
-     */
-    private String                 mCurrentChattingUserId;
-
-    /**
-     * Whether chat notifications are enabled or not
-     */
-    private boolean                mNotificationsEnabled;
 
     /**
      * Whether any message is being currently processed
@@ -208,15 +182,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, OUTPUT_TIME_FORMAT);
         mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
         mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
-        mNotificationBuilder = new Builder(this);
-        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationSoundUri = RingtoneManager
-                        .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        mUnreadMessageCount = 0;
         mCurrentConnectMultiplier = 0;
         mHandler = new Handler();
         mChatProcessor = Executors.newSingleThreadExecutor();
-        mNotificationsEnabled = true;
         mIsProcessingMessage = false;
     }
 
@@ -230,7 +198,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      *            with
      */
     public void setCurrentChattingUserId(final String currentChattingUserId) {
-        mCurrentChattingUserId = currentChattingUserId;
+        ChatNotificationHelper.getInstance(this)
+                        .setCurrentChattingUserId(currentChattingUserId);
     }
 
     /**
@@ -436,8 +405,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     public void clearChatNotifications() {
 
-        mNotificationManager.cancel(MESSAGE_NOTIFICATION_ID);
-        mUnreadMessageCount = 0;
+        ChatNotificationHelper.getInstance(this).clearChatNotifications();
     }
 
     /**
@@ -447,7 +415,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      *            <code>false</code> to disable them
      */
     public void setNotificationsEnabled(final boolean enabled) {
-        mNotificationsEnabled = enabled;
+        ChatNotificationHelper.getInstance(this).setNotificationsEnabled(enabled);
     }
 
     /**
@@ -590,16 +558,16 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 parseAndStoreChatUserInfo(receiverId, receiverObject);
             } else {
                 final String senderName = parseAndStoreChatUserInfo(senderId, senderObject);
-                if ((mCurrentChattingUserId != null)
+                /*if ((mCurrentChattingUserId != null)
                                 && mCurrentChattingUserId.equals(senderId)) {
 
-                    /*
+                    
                      * Don't show notification if the user is currently chatting
                      * with this same user
-                     */
+                     
                     return;
                 }
-                showChatReceivedNotification(chatId, senderId, senderName, messageText);
+                showChatReceivedNotification(chatId, senderId, senderName, messageText);*/
             }
 
         } catch (final JSONException e) {
@@ -928,54 +896,6 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 }
             }
         }
-    }
-
-    /**
-     * Displays a notification for a received chat message
-     * 
-     * @param chatId The ID of the chat. This is so that the right chat detail
-     *            fragment can be launched when the notification is tapped
-     * @param withUserId The id of the user who sent the notification
-     * @param senderName The name of the sender
-     * @param messageText The message body
-     */
-    private void showChatReceivedNotification(final String chatId,
-                    final String withUserId, final String senderName,
-                    final String messageText) {
-
-        if (mNotificationsEnabled) {
-            mUnreadMessageCount++;
-            final Intent resultIntent = new Intent(this, HomeActivity.class);
-            if (mUnreadMessageCount == 1) {
-                mNotificationBuilder.setSmallIcon(R.drawable.ic_launcher)
-                                .setContentTitle(senderName)
-                                .setContentText(messageText)
-                                .setAutoCancel(true);
-                resultIntent.setAction(AppConstants.ACTION_SHOW_CHAT_DETAIL);
-                resultIntent.putExtra(Keys.CHAT_ID, chatId);
-                resultIntent.putExtra(Keys.USER_ID, withUserId);
-
-            } else {
-                mNotificationBuilder
-                                .setSmallIcon(R.drawable.ic_launcher)
-                                .setContentTitle(getString(R.string.new_messages, mUnreadMessageCount))
-                                .setContentText(messageText)
-                                .setAutoCancel(true);
-                resultIntent.setAction(AppConstants.ACTION_SHOW_ALL_CHATS);
-            }
-
-            mNotificationBuilder.setSound(mNotificationSoundUri);
-            final TaskStackBuilder taskStackBuilder = TaskStackBuilder
-                            .create(this);
-            taskStackBuilder.addNextIntent(resultIntent);
-            final PendingIntent pendingIntent = taskStackBuilder
-                            .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            mNotificationBuilder.setContentIntent(pendingIntent);
-            mNotificationManager
-                            .notify(MESSAGE_NOTIFICATION_ID, mNotificationBuilder
-                                            .build());
-        }
-
     }
 
     @Override
