@@ -185,8 +185,8 @@
     </string-array>
 
     <!-- Strings for chat details -->
-    <string name="sent">sent</string>
     <string name="sending">&#8230;</string>
+    <string name="failed">failed</string>
     <string name="trueflag">true</string>
     <string name="success_message_for_chatblock">User blocked successfully</string>
 

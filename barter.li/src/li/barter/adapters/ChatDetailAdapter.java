@@ -24,10 +24,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import java.util.HashMap;
 import java.util.Map;
+
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
+import li.barter.utils.AppConstants.ChatStatus;
 import li.barter.utils.AppConstants.UserInfo;
 
 /**
@@ -50,12 +53,19 @@ public class ChatDetailAdapter extends CursorAdapter {
 
     private final String                TAG              = "ChatDetailAdapter";
 
+    /* Strings that indicate the chat status */
+    private final String                mSendingString;
+    private final String                mFailedString;
+
     @SuppressLint("UseSparseArrays")
     /* Sparse Array benefits are noticable only upwards of 10k items */
     public ChatDetailAdapter(final Context context, final Cursor cursor) {
         super(context, cursor, 0);
         mPositionViewTypeMap = new HashMap<Integer, Integer>();
         buildMapForCursor(cursor);
+
+        mSendingString = context.getString(R.string.sending);
+        mFailedString = context.getString(R.string.failed);
     }
 
     /**
@@ -125,13 +135,25 @@ public class ChatDetailAdapter extends CursorAdapter {
 
         } else if (itemViewType == OUTGOING_MESSAGE) {
 
-            if (cursor.getString(cursor.getColumnIndex(DatabaseColumns.CHAT_ACK))
-                            .equals(context.getResources()
-                                            .getString(R.string.sent))) {
-                ((TextView) view.getTag(R.id.chat_ack)).setText(timestamp[1]);
-            } else {
-                ((TextView) view.getTag(R.id.chat_ack)).setText(context
-                                .getResources().getString(R.string.sending));
+            final int chatStatus = cursor.getInt(cursor
+                            .getColumnIndex(DatabaseColumns.CHAT_STATUS));
+            final TextView chatStatusTextView = ((TextView) view
+                            .getTag(R.id.chat_ack));
+
+            switch (chatStatus) {
+
+                case ChatStatus.SENDING: {
+                    chatStatusTextView.setText(mSendingString);
+                    break;
+                }
+                case ChatStatus.SENT: {
+                    chatStatusTextView.setText(timestamp[1]);
+                    break;
+                }
+                case ChatStatus.FAILED: {
+                    chatStatusTextView.setText(mFailedString);
+                    break;
+                }
             }
 
         }

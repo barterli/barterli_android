@@ -21,8 +21,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 
 import li.barter.http.HttpConstants;
@@ -374,7 +372,7 @@ public class AppConstants {
         public static final String DIALOG_ENABLE_LOCATION                          = "dialog_enable_location";
         public static final String DIALOG_ABOUT_LOCATION                           = "dialog_about_location";
         public static final String DIALOG_CHAT_LONGCLICK                           = "dialog_chat_longclick";
-        
+
     }
 
     /**
@@ -398,16 +396,16 @@ public class AppConstants {
      */
     public static interface Loaders {
 
-        public static final int SEARCH_BOOKS               = 201;
-        public static final int GET_MY_BOOKS               = 202;
-        public static final int ALL_CHATS                  = 203;
-        public static final int CHAT_DETAILS               = 204;
-        public static final int USER_DETAILS               = 205;
-        public static final int SEARCH_BOOKS_ON_PAGER = 206;
-        public static final int USER_DETAILS_ABOUT_ME = 207;
+        public static final int SEARCH_BOOKS              = 201;
+        public static final int GET_MY_BOOKS              = 202;
+        public static final int ALL_CHATS                 = 203;
+        public static final int CHAT_DETAILS              = 204;
+        public static final int USER_DETAILS              = 205;
+        public static final int SEARCH_BOOKS_ON_PAGER     = 206;
+        public static final int USER_DETAILS_ABOUT_ME     = 207;
         public static final int USER_DETAILS_CHAT_DETAILS = 208;
     }
-    
+
     /**
      * Constant interface. DO NOT IMPLEMENT
      * 
@@ -439,7 +437,7 @@ public class AppConstants {
         public static final int DELETE_CHATS                              = 304;
         public static final int DELETE_MY_BOOKS                           = 305;
         public static final int DELETE_MY_BOOK                            = 306;
-        public static final int DELETE_MY_BOOK_FROM_SEARCH				  = 307;
+        public static final int DELETE_MY_BOOK_FROM_SEARCH                = 307;
 
     }
 
@@ -454,9 +452,21 @@ public class AppConstants {
         public static final String GROUP    = "group";
     }
 
-    public static final String PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=li.barter";
+    /**
+     * Constant interface. DO NOT IMPLEMENT.
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static interface ChatStatus {
+        //Different types of chat status. Linked to the chat_sending_status of database 
+        public static final int SENDING  = 0;
+        public static final int SENT     = 1;
+        public static final int FAILED   = -1;
+        public static final int RECEIVED = 2;
+    }
+
+    public static final String PLAY_STORE_LINK        = "https://play.google.com/store/apps/details?id=li.barter";
     public static final String PLAY_STORE_MARKET_LINK = "market://details?id=li.barter";
 
-
-    public static final String REFERRER_FORMAT = "&referrer=%s";
+    public static final String REFERRER_FORMAT        = "&referrer=%s";
 }
