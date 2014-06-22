@@ -99,11 +99,10 @@ public class ChatDetailAdapter extends CursorAdapter {
         final int itemViewType = getItemViewType(cursor.getPosition());
         final String timestamp = cursor.getString(cursor
                         .getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN));
+        view.setTag(R.string.tag_resend_on_click, false);
 
         if (itemViewType == INCOMING_MESSAGE) {
-
             ((TextView) view.getTag(R.id.chat_ack)).setText(timestamp);
-
         } else if (itemViewType == OUTGOING_MESSAGE) {
 
             final int chatStatus = cursor.getInt(cursor
@@ -123,6 +122,7 @@ public class ChatDetailAdapter extends CursorAdapter {
                 }
                 case ChatStatus.FAILED: {
                     chatStatusTextView.setText(mFailedString);
+                    view.setTag(R.string.tag_resend_on_click, true);
                     break;
                 }
             }

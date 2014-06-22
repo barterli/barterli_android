@@ -257,6 +257,11 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         params.put(HttpConstants.ID, String.valueOf(userid).trim());
         request.setParams(params);
 
+        if (mIsLoggedInUser
+                        && SharedPreferenceHelper
+                                        .getBoolean(getActivity(), R.string.pref_force_user_refetch)) {
+            request.setShouldCache(false);
+        }
         addRequestToQueue(request, true, 0, true);
 
     }
@@ -376,6 +381,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                     final ResponseInfo response) {
         if (requestId == RequestId.GET_USER_PROFILE) {
             if (isAttached() && mIsLoggedInUser) {
+                SharedPreferenceHelper
+                                .set(getActivity(), R.string.pref_force_user_refetch, false);
                 final Bundle userInfo = response.responseBundle;
                 SharedPreferenceHelper
                                 .set(getActivity(), R.string.pref_referrer_count, userInfo
@@ -422,12 +429,18 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                                 .getString(cursor
                                                 .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
 
-                mOwnerNameTextView
-                                .setText(cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.FIRST_NAME))
-                                                + " "
-                                                + cursor.getString(cursor
-                                                                .getColumnIndex(DatabaseColumns.LAST_NAME)));
+                final String firstName = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.FIRST_NAME));
+                final String lastName = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.LAST_NAME));
+                final String fullName = Utils
+                                .makeUserFullName(firstName, lastName);
+                mOwnerNameTextView.setText(fullName);
+
+                if (mLoadedIndividually && !TextUtils.isEmpty(fullName)) {
+                    setActionBarTitle(fullName);
+                }
+
                 mOwnerBarterLocationTextView
                                 .setText(String.format(mLocationFormat, cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.NAME)), cursor

@@ -134,7 +134,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         ViewUsersWithLocations.upgrade(db, oldVersion, newVersion);
 
         if (oldVersion < 4) {
-            migrateChats();
+            migrateChats(db);
         }
 
     }
@@ -144,7 +144,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      * representation to the new way. The representation was changed in DB
      * version 4.
      */
-    private void migrateChats() {
+    private void migrateChats(SQLiteDatabase db) {
 
         //Delete all the old chats
         delete(TableChats.NAME, null, null, false);
@@ -155,7 +155,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
                         .append(DatabaseColumns.TIMESTAMP_EPOCH)
                         .append(SQLConstants.DESCENDING).toString();
         Logger.d(TAG, "Order by %s", orderBy);
-        final Cursor cursor = query(false, TableChatMessages.NAME, null, null, null, null, null, orderBy, null);
+        final Cursor cursor = db.query(false, TableChatMessages.NAME, null, null, null, null, null, orderBy, null);
 
         if (cursor.getCount() > 0) {
 

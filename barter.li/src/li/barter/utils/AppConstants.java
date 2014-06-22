@@ -32,47 +32,47 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG                            = true;
+    public static final boolean DEBUG                      = true;
     /**
      * Set to <code>true</code> for release builds. Will enable Google Analytics
      * reporting. Otherwise, Google Analytics will be set to a dry tun version
      */
-    public static final boolean REPORT_GOOGLE_ANALYTICS          = false;
+    public static final boolean REPORT_GOOGLE_ANALYTICS    = false;
 
-    public static final boolean ENABLE_CRASHLYTICS               = false;
+    public static final boolean ENABLE_CRASHLYTICS         = false;
 
-    public static final String  FACEBOOK                         = "facebook";
-    public static final String  FBPERMISSIONS[]                  = new String[] {
-                                                                     "email"
-                                                                 };
-    public static final String  GOOGLE                           = "google";
-    public static final String  MANUAL                           = "manual";
+    public static final String  FACEBOOK                   = "facebook";
+    public static final String  FBPERMISSIONS[]            = new String[] {
+                                                               "email"
+                                                           };
+    public static final String  GOOGLE                     = "google";
+    public static final String  MANUAL                     = "manual";
 
-    public static final String  TIMESTAMP_FORMAT                 = "yyyy-MM-dd'T'HH:mm:ssZ";
-    public static final String  CHAT_TIME_FORMAT                 = "dd MMM, h:mm a";
-    public static final String  MESSAGE_TIME_FORMAT              = "h:mm a";
-    public static final String  CHAT_ID_FORMAT                   = "%s#%s";
-    public static final String  BARTER_TYPE_SEPARATOR            = ",";
+    public static final String  TIMESTAMP_FORMAT           = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String  CHAT_TIME_FORMAT           = "dd MMM, h:mm a";
+    public static final String  MESSAGE_TIME_FORMAT        = "h:mm a";
+    public static final String  CHAT_ID_FORMAT             = "%s#%s";
+    public static final String  BARTER_TYPE_SEPARATOR      = ",";
 
-    public static final String  ACTION_SHOW_ALL_CHATS            = "li.barter.ACTION_SHOW_ALL_CHATS";
-    public static final String  ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
-    public static final String  ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
-    public static final String  ACTION_CHAT_BUTTON_CLICKED       = "li.barter.ACTION_CHAT_BUTTON_CLICKED";
+    public static final String  ACTION_SHOW_ALL_CHATS      = "li.barter.ACTION_SHOW_ALL_CHATS";
+    public static final String  ACTION_SHOW_CHAT_DETAIL    = "li.barter.ACTION_SHOW_CHAT_DETAIL";
+    public static final String  ACTION_DISCONNECT_CHAT     = "li.barter.ACTION_DISCONNECT_CHAT";
+    public static final String  ACTION_CHAT_BUTTON_CLICKED = "li.barter.ACTION_CHAT_BUTTON_CLICKED";
 
-    public static final String  JSON                             = "json";
-    public static final String  FALSE                            = "false";
+    public static final String  JSON                       = "json";
+    public static final String  FALSE                      = "false";
 
     /*
      * heartbeat interval for rabbitmq chat
      */
-    public static final int     HEART_BEAT_INTERVAL              = 20;
+    public static final int     HEART_BEAT_INTERVAL        = 20;
 
-    public static final int     DEFAULT_ITEM_COUNT            = 10;
+    public static final int     DEFAULT_ITEM_COUNT         = 20;
 
-    public static final int     DEFAULT_SEARCH_RADIUS            = 25;
+    public static final int     DEFAULT_SEARCH_RADIUS      = 25;
 
     // Default Book Image url we getting from the server when there is no image
-    public static final String  DEFAULT_BOOKIMAGE_URL            = "1_default.png";
+    public static final String  DEFAULT_BOOKIMAGE_URL      = "1_default.png";
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -302,6 +302,7 @@ public class AppConstants {
         public static final String RELOAD                     = "reload";
         public static final String BOOK_POSITION              = "book_position";
         public static final String BOOK_COUNT                 = "book_count";
+        public static final String EMAIL					  = "email";
 
         /**
          * The time at which this screen was last seen. Used for google
@@ -345,6 +346,7 @@ public class AppConstants {
         public static final String ABOUT_ME                                        = "about_me";
         public static final String MY_BOOKS                                        = "my_books";
         public static final String USER_PROFILE                                    = "user_profile";
+        public static final String PASSWORD_RESET								   = "password_reset";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
@@ -360,6 +362,7 @@ public class AppConstants {
         /* Tags for Dialog fragments */
         public static final String DIALOG_TAKE_PICTURE                             = "dialog_take_picture";
         public static final String DIALOG_ADD_NAME                                 = "dialog_add_name";
+        public static final String DIALOG_FORGOT_PASSWORD                          = "dialog_add_name";
         public static final String DIALOG_ADD_BOOK                                 = "dialog_add_book";
         public static final String DIALOG_ENABLE_LOCATION                          = "dialog_enable_location";
         public static final String DIALOG_ABOUT_LOCATION                           = "dialog_about_location";
@@ -414,6 +417,7 @@ public class AppConstants {
         // 101-200 for insert queries
 
         // 201-300 for update queries
+        public static final int UPDATE_MESSAGE_STATUS                     = 201;
 
         //301-400 for delete queries
         public static final int DELETE_BOOKS_SEARCH_RESULTS               = 301;
@@ -423,6 +427,7 @@ public class AppConstants {
         public static final int DELETE_MY_BOOKS                           = 305;
         public static final int DELETE_MY_BOOK                            = 306;
         public static final int DELETE_MY_BOOK_FROM_SEARCH                = 307;
+        public static final int DELETE_CHAT_MESSAGE                       = 308;
 
     }
 

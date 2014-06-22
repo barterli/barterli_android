@@ -9,7 +9,6 @@
         android:id="@+id/edittext_location_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_location_name"
         android:inputType="textCapWords"
         android:singleLine="true"
         android:textSize="@dimen/text_medium" />

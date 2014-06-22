@@ -18,6 +18,7 @@ package com.android.volley.toolbox;
 
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
+import com.android.volley.VolleyLog;
 
 import org.apache.http.impl.cookie.DateParseException;
 import org.apache.http.impl.cookie.DateUtils;
@@ -40,6 +41,8 @@ public class HttpHeaderParser {
         long now = System.currentTimeMillis();
 
         Map<String, String> headers = response.headers;
+        
+        VolleyLog.v("Response headers: %s", headers);
 
         long serverDate = 0;
         long serverExpires = 0;

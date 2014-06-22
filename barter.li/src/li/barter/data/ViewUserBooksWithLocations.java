@@ -85,7 +85,7 @@ public class ViewUserBooksWithLocations {
 
       //Add any data migration code here. Default is to drop and rebuild the table
 
-        if (oldVersion == 2) {
+        if (oldVersion == 1) {
             
             /* Drop & recreate the view if upgrading from DB version 1(alpha version) */
             db.execSQL(String

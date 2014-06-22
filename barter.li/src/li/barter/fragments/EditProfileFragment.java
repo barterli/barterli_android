@@ -428,6 +428,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                     final ResponseInfo response) {
 
         if (requestId == RequestId.SAVE_USER_PROFILE) {
+            
+            SharedPreferenceHelper.set(getActivity(), R.string.pref_force_user_refetch, true);
+            
             final Bundle userInfo = response.responseBundle;
 
             final String firstName = userInfo

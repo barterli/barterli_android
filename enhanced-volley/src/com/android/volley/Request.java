@@ -464,8 +464,9 @@ public abstract class Request<T> implements Comparable<Request<T>> {
                 encodedParams.append('&');
             }
             
+            
             //Delete the trailing '&'
-            if(encodedParams.charAt(encodedParams.length() - 1) == '&') {
+            if(encodedParams.length() > 0 && encodedParams.charAt(encodedParams.length() - 1) == '&') {
                 encodedParams.deleteCharAt(encodedParams.length() - 1);
             }
             return encodedParams.toString();

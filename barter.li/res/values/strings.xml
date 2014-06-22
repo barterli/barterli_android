@@ -33,6 +33,8 @@
     <string name="Book_Detail_fragment_title">Book Detail</string>
     <string name="update_info">Update Info</string>
     <string name="preferred_location">Preferred location</string>
+    <string name="forgot_password_underlined"><u>Forgot password?</u></string>
+    <string name="forgot_password">Forgot password</string>
     <string name="enable_location">Enable location</string>
     <string name="enable">Enable</string>
     <string name="enable_location_message">Please enable your location settings for getting nearby books</string>
@@ -117,6 +119,7 @@
     <string name="unable_to_fetch_books">Unable to fetch books.</string>
     <string name="unable_to_fetch_hangouts">Unable to fetch hangouts.</string>
     <string name="error_enter_email">Please enter your email address.</string>
+    <string name="error_enter_token">Please enter your token</string>
     <string name="error_block_user">User cannot be blocked this time, Please try again later</string>
     <string name="error_invalid_email">Please enter a valid email address.</string>
     <string name="error_enter_password">Please enter a password.</string>
@@ -124,9 +127,9 @@
     <string name="error_unable_to_login">Unable to login.</string>
     <string name="error_unable_to_set_preferred_location">Unable to set preferred location for user.</string>
     <string name="error_not_connected_to_chat_service">Not connected to chat service.</string>
-    <string name="error_unable_to_send_chat">Not able to send chat message</string>
     <string name="no_personal_info_bug_and_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this bug report or feature suggestion will be available publicly.</string>
     <string name="no_personal_info_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this feature suggestion will be available publicly.</string>
+    <string name="token_email_message">Token is emailed to you</string>
     <string name="error_required">Required</string>
     <string name="delete">Delete</string>
     <string name="help_select_location">In order to protect your privacy, we don\'t reveal your location to anybody.\n\nInstead, please select a nearby venue from the list. This will be set as your preferred location for exchanging books. You can change this from your profile page anytime.</string>
@@ -141,12 +144,16 @@
     <string name="lend">Lend</string>
     <string name="keep_private">Keep Private</string>
     <string name="submit">Submit</string>
+    <string name="reset">Reset</string>
     <string name="chat_with_owner">Chat with owner</string>
     <string name="owner_profile">Book Owner</string>
     <string name="owner_location">Owner\'s Preferred Barter Location</string>
     <string name="login_with_facebook">Login with Facebook</string>
     <string name="login_with_google">Login with Google</string>
     <string name="email_label">Email Id</string>
+    <string name="token_label">Token</string>
+    <string name="new_password_label">New password</string>
+    <string name="confirm_password_label">Confirm password</string>
     <string name="password_label">Password</string>
     <string name="share_via">Share Via</string>
 
@@ -168,7 +175,7 @@
         <item>Your ongoing chats</item>
         <item>or a suggestion</item>
         <item>Share barter.li with your friends</item>
-        <item></item>
+        <item>On Google Play</item>
         <item>What is barter.li</item>
     </string-array>
     <string-array name="take_photo_choices">
@@ -186,8 +193,7 @@
 
     <!-- Strings for chat details -->
     <string name="sending">&#8230;</string>
-    <string name="failed">failed</string>
-    <string name="trueflag">true</string>
+    <string name="failed">Failed to send. Tap to retry.</string>
     <string name="success_message_for_chatblock">User blocked successfully</string>
 
     <string-array name="aboutus_fragment_titles">
