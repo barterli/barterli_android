@@ -16,6 +16,8 @@
 
 package com.android.volley;
 
+import com.android.volley.toolbox.HttpStack.UrlRewriter;
+
 import android.os.Handler;
 import android.os.Looper;
 
@@ -87,6 +89,9 @@ public class RequestQueue {
     /** The cache dispatcher. */
     private CacheDispatcher                      mCacheDispatcher;
 
+    /** Url rewriter */
+    private UrlRewriter                          mUrlRewriter;
+
     /**
      * Creates the worker pool. Processing will not begin until {@link #start()}
      * is called.
@@ -96,12 +101,15 @@ public class RequestQueue {
      * @param threadPoolSize Number of network dispatcher threads to create
      * @param delivery A ResponseDelivery interface for posting responses and
      *            errors
+     * @param urlRewriter A {@link UrlRewriter} implementation for rewriting
+     *            urls
      */
-    public RequestQueue(Cache cache, Network network, int threadPoolSize, ResponseDelivery delivery) {
+    public RequestQueue(Cache cache, Network network, int threadPoolSize, ResponseDelivery delivery, UrlRewriter urlRewriter) {
         mCache = cache;
         mNetwork = network;
         mDispatchers = new NetworkDispatcher[threadPoolSize];
         mDelivery = delivery;
+        mUrlRewriter = urlRewriter;
     }
 
     /**
@@ -111,10 +119,12 @@ public class RequestQueue {
      * @param cache A Cache to use for persisting responses to disk
      * @param network A Network interface for performing HTTP requests
      * @param threadPoolSize Number of network dispatcher threads to create
+     * @param urlRewriter A {@link UrlRewriter} implementation for rewriting
+     *            urls
      */
-    public RequestQueue(Cache cache, Network network, int threadPoolSize) {
+    public RequestQueue(Cache cache, Network network, int threadPoolSize, UrlRewriter urlRewriter) {
         this(cache, network, threadPoolSize, new ExecutorDelivery(new Handler(Looper
-                        .getMainLooper())));
+                        .getMainLooper())), urlRewriter);
     }
 
     /**
@@ -123,9 +133,11 @@ public class RequestQueue {
      * 
      * @param cache A Cache to use for persisting responses to disk
      * @param network A Network interface for performing HTTP requests
+     * @param urlRewriter A {@link UrlRewriter} implementation for rewriting
+     *            urls
      */
-    public RequestQueue(Cache cache, Network network) {
-        this(cache, network, DEFAULT_NETWORK_THREAD_POOL_SIZE);
+    public RequestQueue(Cache cache, Network network, UrlRewriter urlRewriter) {
+        this(cache, network, DEFAULT_NETWORK_THREAD_POOL_SIZE, urlRewriter);
     }
 
     /**
@@ -222,6 +234,12 @@ public class RequestQueue {
     public Request add(Request request) {
         // Tag the request as belonging to this queue and add it to the set of current requests.
         request.setRequestQueue(this);
+        
+        //Rewrite the url, in case of GET requests
+        if(mUrlRewriter != null) {
+            request.setUrl(mUrlRewriter.rewriteUrl(request));
+        }
+        
         synchronized (mCurrentRequests) {
             mCurrentRequests.add(request);
         }

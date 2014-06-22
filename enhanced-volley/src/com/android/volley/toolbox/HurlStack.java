@@ -74,25 +74,18 @@ public class HurlStack implements HttpStack {
     private static final String    COLON_SPACE                      = ": ";
     private static final String    SEMICOLON_SPACE                  = "; ";
 
-    private UrlRewriter            mUrlRewriter;
     private final SSLSocketFactory mSslSocketFactory;
     private String                 mUserAgent;
 
-    /**
-     * @param urlRewriter Rewriter to use for request URLs
-     */
-    public HurlStack(UrlRewriter urlRewriter, String userAgent) {
-
-        this(urlRewriter, null, userAgent);
+    public HurlStack(String userAgent) {
+        this(null, userAgent);
     }
 
     /**
-     * @param urlRewriter Rewriter to use for request URLs
      * @param sslSocketFactory SSL factory to use for HTTPS connections
      */
-    public HurlStack(UrlRewriter urlRewriter, SSLSocketFactory sslSocketFactory, String userAgent) {
+    public HurlStack(SSLSocketFactory sslSocketFactory, String userAgent) {
 
-        mUrlRewriter = urlRewriter;
         mSslSocketFactory = sslSocketFactory;
         mUserAgent = userAgent;
     }
@@ -124,7 +117,7 @@ public class HurlStack implements HttpStack {
         HashMap<String, String> map = new HashMap<String, String>();
         map.putAll(request.getHeaders());
         map.putAll(additionalHeaders);
-        URL parsedUrl = new URL(mUrlRewriter.rewriteUrl(request));
+        URL parsedUrl = new URL(request.getUrl());
 
         request.addMarker(String.format("Calling url %s", parsedUrl));
         HttpURLConnection connection = openConnection(parsedUrl, request);

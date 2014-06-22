@@ -47,11 +47,11 @@ public interface HttpStack {
     /**
      * An interface for transforming URLs before use.
      */
-    interface UrlRewriter {
+    public interface UrlRewriter {
         /**
          * Returns a URL to use instead of the provided one, or null to indicate
          * this URL should not be used at all.
          */
-        public String rewriteUrl(Request<?> request) throws IOException;
+        public String rewriteUrl(Request<?> request);
     }
 }
