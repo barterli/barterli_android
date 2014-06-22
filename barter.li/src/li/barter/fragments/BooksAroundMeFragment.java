@@ -205,13 +205,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mEmptyViewNormal.findViewById(R.id.text_add_your_own)
                         .setOnClickListener(this);
 
-        if (savedInstanceState == null) {
-            mCurPage = 1;
-
-        } else {
+        mCurPage = SharedPreferenceHelper
+                        .getInt(getActivity(), R.string.pref_last_fetched_page, 0);
+        if (savedInstanceState != null) {
             mLastFetchedLocation = savedInstanceState
                             .getParcelable(Keys.LAST_FETCHED_LOCATION);
-            mCurPage = savedInstanceState.getInt(Keys.CUR_PAGE);
             mHasLoadedAllItems = savedInstanceState
                             .getBoolean(Keys.HAS_LOADED_ALL_ITEMS);
         }
@@ -230,7 +228,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(Keys.LAST_FETCHED_LOCATION, mLastFetchedLocation);
-        outState.putInt(Keys.CUR_PAGE, mCurPage);
         outState.putBoolean(Keys.HAS_LOADED_ALL_ITEMS, mHasLoadedAllItems);
 
     }
@@ -417,6 +414,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void saveLastFetchedInfoToPref() {
 
+        SharedPreferenceHelper.set(getActivity(), R.string.pref_last_fetched_page, mCurPage);
         if (mLastFetchedLocation != null) {
             SharedPreferenceHelper
                             .set(getActivity(), R.string.pref_last_fetched_latitude, mLastFetchedLocation
