@@ -180,7 +180,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         LoadMoreHelper.init(this).on(mBooksAroundMeGridView);
 
         mBooksAroundMeAdapter = new BooksGridAdapter(getActivity());
-        mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
+        //mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
         mBooksAroundMeGridView.setOnItemClickListener(this);
         mBooksAroundMeGridView.setVerticalScrollBarEnabled(false);
 
@@ -189,6 +189,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mEmptyView.findViewById(R.id.text_try_again).setOnClickListener(this);
         mEmptyView.findViewById(R.id.text_add_your_own)
                         .setOnClickListener(this);
+        mEmptyView.findViewById(R.id.image_add_graphic).setOnClickListener(this);
 
         mBooksAroundMeGridView.setEmptyView(mEmptyView);
 
@@ -804,10 +805,17 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         final int id = v.getId();
 
-        if (id == R.id.text_try_again) {
-            reloadNearbyBooks();
-        } else if (id == R.id.text_add_your_own) {
-            showAddBookOptions();
+        switch(id) {
+            case R.id.text_try_again: {
+                reloadNearbyBooks();
+                break;
+            }
+            
+            case R.id.image_add_graphic:
+            case R.id.text_add_your_own: {
+                showAddBookOptions();
+                break;
+            }
         }
     }
 

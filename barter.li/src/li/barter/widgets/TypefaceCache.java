@@ -30,7 +30,7 @@ public class TypefaceCache {
 
     public static final String                       BOLD_ITALIC       = "fonts/Roboto-BoldItalic.ttf";
     public static final String                       BOLD              = "fonts/Roboto-Bold.ttf";
-    public static final String                       ITALIC            = "fonts/Roboto-Italic.ttf";
+    public static final String                       ITALIC            = "fonts/Roboto-MediumItalic.ttf";
     public static final String                       REGULAR           = "fonts/Roboto-Regular.ttf";
     public static final String                       CONDENSED_REGULAR = "fonts/RobotoCondensed-Regular.ttf";
 

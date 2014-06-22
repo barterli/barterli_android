@@ -19,8 +19,9 @@
         android:id="@+id/label_no_books_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_add_graphic"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/margin_huge"
+        android:layout_toRightOf="@id/image_add_graphic"
         android:gravity="center"
         android:text="@string/no_books_found_nearby"
         android:textColor="@color/dark_gray"
@@ -28,12 +29,23 @@
         app:fontStyle="italic" />
 
     <li.barter.widgets.TypefacedTextView
+        android:id="@+id/label_or"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/image_add_graphic"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin_medium"
+        android:text="@string/or"
+        android:textColor="@color/dark_gray"
+        android:textSize="@dimen/text_big"
+        app:fontStyle="regular" />
+
+    <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_add_your_own"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/label_no_books_found"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_alignTop="@id/label_or"
+        android:layout_toLeftOf="@id/label_or"
         android:gravity="center"
         android:text="@string/add_your_own"
         android:textColor="@color/apptheme_color"
@@ -41,24 +53,11 @@
         app:fontStyle="bold" />
 
     <li.barter.widgets.TypefacedTextView
-        android:id="@+id/label_or"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text_add_your_own"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:text="@string/or"
-        android:textColor="@color/dark_gray"
-        android:textSize="@dimen/text_big"
-        app:fontStyle="regular" />
-
-    <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_try_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/label_or"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_alignTop="@id/label_or"
+        android:layout_toRightOf="@id/label_or"
         android:gravity="center"
         android:text="@string/try_again"
         android:textColor="@color/apptheme_color"
