@@ -25,6 +25,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -54,6 +55,7 @@ import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.chat.ChatService;
 import li.barter.chat.ChatService.ChatServiceBinder;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
@@ -65,6 +67,7 @@ import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.Logger;
 import li.barter.widgets.CircleImageView;
 
@@ -78,7 +81,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,
                 AsyncDbQueryCallback, OnItemClickListener {
 
-    private static final String TAG            = "ChatDetailsFragment";
+    private static final String TAG               = "ChatDetailsFragment";
 
     private ChatDetailAdapter   mChatDetailAdapter;
 
@@ -94,11 +97,14 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
     private boolean             mFirstMessage;
 
-    private final String        mChatSelection = DatabaseColumns.CHAT_ID
-                                                               + SQLConstants.EQUALS_ARG;
+    private final String        mChatSelection    = DatabaseColumns.CHAT_ID
+                                                                  + SQLConstants.EQUALS_ARG;
 
-    private final String        mUserSelection = DatabaseColumns.USER_ID
-                                                               + SQLConstants.EQUALS_ARG;
+    private final String        mUserSelection    = DatabaseColumns.USER_ID
+                                                                  + SQLConstants.EQUALS_ARG;
+
+    private final String        mMessageSelection = BaseColumns._ID
+                                                                  + SQLConstants.EQUALS_ARG;
 
     /**
      * The Id of the Chat
@@ -118,6 +124,8 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
      */
     private CircleImageView     mWithImageView;
 
+    private SimpleDateFormat    mFormatter;
+
     @Override
     public View onCreateView(final LayoutInflater inflater,
                     final ViewGroup container, final Bundle savedInstanceState) {
@@ -131,6 +139,8 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
          * .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
          * | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
          */
+
+        mFormatter = new SimpleDateFormat(AppConstants.TIMESTAMP_FORMAT, Locale.getDefault());
         mChatListView = (ListView) view.findViewById(R.id.list_chats);
         mChatDetailAdapter = new ChatDetailAdapter(getActivity(), null);
         mChatListView.setAdapter(mChatDetailAdapter);
@@ -383,26 +393,36 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         final int id = v.getId();
 
         if (id == R.id.button_send) {
-            final String message = mSubmitChatEditText.getText().toString();
-
-            if (!TextUtils.isEmpty(message)) {
-                if (mBoundToChatService && mChatService.isConnectedToChat()) {
-
-                    SimpleDateFormat formatter = new SimpleDateFormat(AppConstants.TIMESTAMP_FORMAT, Locale
-                                    .getDefault());
-                    final String sentAt = formatter.format(new Date());
-                    mChatService.sendMessageToUser(mWithUserId, message, sentAt);
-
-                    mSubmitChatEditText.setText(null);
-                } else {
-                    showCrouton(R.string.error_not_connected_to_chat_service, AlertStyle.ERROR);
-
-                }
+            if (sendChatMessage(mSubmitChatEditText.getText().toString())) {
+                mSubmitChatEditText.setText(null);
+            } else {
+                showCrouton(R.string.error_not_connected_to_chat_service, AlertStyle.ERROR);
             }
-
         } else if (id == R.id.image_user) {
             loadChattingWithUser();
         }
+    }
+
+    /**
+     * Send a chat message to the user the current user is chatting with
+     * 
+     * @param message The message to send.
+     * @return <code>true</code> If the message was sent, <code>false</code>
+     *         otherwise
+     */
+    private boolean sendChatMessage(String message) {
+
+        boolean sent = true;
+        if (!TextUtils.isEmpty(message)) {
+            if (mBoundToChatService) {
+                final String sentAt = mFormatter.format(new Date());
+                mChatService.sendMessageToUser(mWithUserId, message, sentAt);
+            } else {
+                sent = false;
+            }
+        }
+        return sent;
+
     }
 
     @Override
@@ -413,8 +433,10 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onDeleteComplete(int token, Object cookie, int deleteCount) {
-        // TODO Auto-generated method stub
 
+        if(token == QueryTokens.DELETE_CHAT_MESSAGE) {
+            //Do nothing for now
+        }
     }
 
     @Override
@@ -444,7 +466,22 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                             .getTag(R.string.tag_resend_on_click);
 
             if (resendOnClick) {
-                //TODO: Resend message
+                final Cursor cursor = (Cursor) mChatDetailAdapter
+                                .getItem(position);
+
+                final int dbRowId = cursor.getInt(cursor
+                                .getColumnIndex(BaseColumns._ID));
+                final String message = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.MESSAGE));
+
+                if (sendChatMessage(message)) {
+                    //Delete the older message from the table
+                    DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGE, null, TableChatMessages.NAME, mMessageSelection, new String[] {
+                        String.valueOf(dbRowId)
+                    }, true, this);
+                } else {
+                    showCrouton(R.string.error_not_connected_to_chat_service, AlertStyle.ERROR);
+                }
             }
         }
     }

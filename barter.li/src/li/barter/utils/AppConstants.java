@@ -302,7 +302,7 @@ public class AppConstants {
         public static final String RELOAD                     = "reload";
         public static final String BOOK_POSITION              = "book_position";
         public static final String BOOK_COUNT                 = "book_count";
-        public static final String EMAIL					  = "email";
+        public static final String EMAIL                      = "email";
 
         /**
          * The time at which this screen was last seen. Used for google
@@ -346,7 +346,7 @@ public class AppConstants {
         public static final String ABOUT_ME                                        = "about_me";
         public static final String MY_BOOKS                                        = "my_books";
         public static final String USER_PROFILE                                    = "user_profile";
-        public static final String PASSWORD_RESET								   = "password_reset";
+        public static final String PASSWORD_RESET                                  = "password_reset";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME                              = "to_books_around_me";
@@ -427,6 +427,7 @@ public class AppConstants {
         public static final int DELETE_MY_BOOKS                           = 305;
         public static final int DELETE_MY_BOOK                            = 306;
         public static final int DELETE_MY_BOOK_FROM_SEARCH                = 307;
+        public static final int DELETE_CHAT_MESSAGE                       = 308;
 
     }
 
