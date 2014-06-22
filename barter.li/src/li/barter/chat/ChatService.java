@@ -388,7 +388,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     final String userEmail, final String deviceId) {
 
         final String emailPart1 = userEmail
-                        .substring(0, userEmail.indexOf("@") + 1);
+                        .substring(0, userEmail.indexOf("@"));
         Logger.d(TAG, "User email part 1 %s", emailPart1);
         return String.format(Locale.US, QUEUE_NAME_FORMAT, deviceId, emailPart1);
 
