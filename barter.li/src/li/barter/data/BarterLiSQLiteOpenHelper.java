@@ -22,9 +22,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 
+import java.text.ParseException;
+import java.util.HashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.ChatStatus;
+import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
 
 /**
@@ -42,7 +48,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
 
     /** Database file name and version */
     private static final String                              DB_NAME    = "barterli.sqlite";
-    private static final int                                 DB_VERSION = 3;
+    private static final int                                 DB_VERSION = 4;
 
     /** SQLite Open Helper instance */
     private static BarterLiSQLiteOpenHelper                  sSQLiteOpenHelper;
@@ -127,6 +133,106 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
         ViewUserBooksWithLocations.upgrade(db, oldVersion, newVersion);
         ViewUsersWithLocations.upgrade(db, oldVersion, newVersion);
 
+        if (oldVersion < 4) {
+            migrateChats();
+        }
+
+    }
+
+    /**
+     * Migrate the chat messages & chats(if any) from the old way of
+     * representation to the new way. The representation was changed in DB
+     * version 4.
+     */
+    private void migrateChats() {
+
+        //Delete all the old chats
+        delete(TableChats.NAME, null, null, false);
+
+        //Build the chats from the chat messages
+        final String orderBy = new StringBuilder(DatabaseColumns.CHAT_ID)
+                        .append(SQLConstants.COMMA)
+                        .append(DatabaseColumns.TIMESTAMP_EPOCH)
+                        .append(SQLConstants.DESCENDING).toString();
+        Logger.d(TAG, "Order by %s", orderBy);
+        final Cursor cursor = query(false, TableChatMessages.NAME, null, null, null, null, null, orderBy, null);
+
+        if (cursor.getCount() > 0) {
+
+            /*
+             * Store all the visited chat ids so we don't need to convert them
+             * again since they are already arranged according to descending
+             * order of timestamps
+             */
+            final HashMap<String, ContentValues> chats = new HashMap<String, ContentValues>();
+            final DateFormatter dateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, AppConstants.CHAT_TIME_FORMAT);
+
+            String chatId, userId, timestamp;
+            int chatStatus;
+            ContentValues values;
+            while (cursor.moveToNext()) {
+
+                chatId = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.CHAT_ID));
+
+                if (chats.containsKey(chatId)) {
+                    continue;
+                }
+
+                values = new ContentValues(6);
+                values.put(DatabaseColumns.CHAT_ID, chatId);
+                values.put(DatabaseColumns.LAST_MESSAGE_ID, cursor.getString(cursor
+                                .getColumnIndex(BaseColumns._ID)));
+                chatStatus = cursor.getInt(cursor
+                                .getColumnIndex(DatabaseColumns.CHAT_STATUS));
+
+                switch (chatStatus) {
+
+                    case ChatStatus.SENT: {
+                        userId = cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.RECEIVER_ID));
+                        break;
+                    }
+
+                    case ChatStatus.RECEIVED: {
+                        userId = cursor.getString(cursor
+                                        .getColumnIndex(DatabaseColumns.SENDER_ID));
+                        break;
+                    }
+
+                    default: {
+                        //Shouldn't happen when migrating
+                        continue;
+                    }
+                }
+
+                values.put(DatabaseColumns.USER_ID, userId);
+                timestamp = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.TIMESTAMP));
+
+                values.put(DatabaseColumns.TIMESTAMP, timestamp);
+                try {
+                    values.put(DatabaseColumns.TIMESTAMP_EPOCH, dateFormatter
+                                    .getEpoch(timestamp));
+                    values.put(DatabaseColumns.TIMESTAMP_HUMAN, dateFormatter
+                                    .getOutputTimestamp(timestamp));
+                } catch (ParseException e) {
+                    // Not much we can do here
+                    continue;
+                }
+
+                chats.put(chatId, values);
+
+            }
+
+            if (chats.size() > 0) {
+
+                for (String eachChat : chats.keySet()) {
+                    insert(TableChats.NAME, null, chats.get(eachChat), true);
+                }
+            }
+
+        }
     }
 
     /**

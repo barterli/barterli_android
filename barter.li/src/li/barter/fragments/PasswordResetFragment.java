@@ -37,7 +37,12 @@ import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -136,15 +141,26 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
 	
 	private void callPasswordReset(String token,String password,String email)
 	{
-		final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-				 + ApiEndpoints.PASSWORD_RESET, null, mVolleyCallbacks);
-		 request.setRequestId(RequestId.CREATE_USER);
-		 final Map<String, String> params = new HashMap<String, String>(3);
-		 params.put(HttpConstants.EMAIL, email);
-		 params.put(HttpConstants.PASSWORD, email);
-		 params.put(HttpConstants.TOKEN, token);
-		 request.setParams(params);
-		 addRequestToQueue(request, true, 0, true);
+
+		 
+		 final JSONObject requestObject = new JSONObject();
+
+	        try {
+	            requestObject.put(HttpConstants.EMAIL, email);
+	            requestObject.put(HttpConstants.PASSWORD, email);
+	            requestObject.put(HttpConstants.TOKEN, token);
+	    		final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
+	   				 + ApiEndpoints.PASSWORD_RESET, requestObject.toString(), mVolleyCallbacks);
+	   		
+	   		 request.setRequestId(RequestId.CREATE_USER);
+	   		 addRequestToQueue(request, true, 0, true);
+
+	        } catch (final JSONException e) {
+	            // Should never happen
+	            Logger.e(TAG, e, "Error building create user json");
+	        }
+
+	        
 	}
 
     
@@ -267,7 +283,7 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
 
             } else {
                 final String tag = getTag();
-                if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+                if (tag.equals(FragmentTags.PASSWORD_RESET)) {
 
                     final Bundle args = new Bundle(1);
                     args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);

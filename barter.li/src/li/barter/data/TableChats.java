@@ -43,7 +43,10 @@ public class TableChats {
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.LAST_MESSAGE_ID, ""),
                                 String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.USER_ID, ""),
-                                String.format(Locale.US, SQLConstants.DATA_INTEGER, DatabaseColumns.UNREAD_COUNT, 0)
+                                String.format(Locale.US, SQLConstants.DATA_INTEGER, DatabaseColumns.UNREAD_COUNT, 0),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TIMESTAMP, ""),
+                                String.format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TIMESTAMP_HUMAN, ""),
+                                String.format(Locale.US, SQLConstants.DATA_INTEGER, DatabaseColumns.TIMESTAMP_EPOCH, 0),
                         });
 
         Logger.d(TAG, "Column Def: %s", columnDef);
@@ -67,6 +70,23 @@ public class TableChats {
                             .format(Locale.US, SQLConstants.DROP_TABLE_IF_EXISTS, NAME));
             create(db);
 
+        } else if (oldVersion < 4) {
+
+            String alterTableDef = String
+                            .format(Locale.US, SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String
+                                            .format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TIMESTAMP, ""));
+            Logger.d(TAG, "Alter Table Def: %s", alterTableDef);
+            db.execSQL(alterTableDef);
+            alterTableDef = String
+                            .format(Locale.US, SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String
+                                            .format(Locale.US, SQLConstants.DATA_TEXT, DatabaseColumns.TIMESTAMP_HUMAN, ""));
+            Logger.d(TAG, "Alter Table Def: %s", alterTableDef);
+            db.execSQL(alterTableDef);
+            alterTableDef = String
+                            .format(Locale.US, SQLConstants.ALTER_TABLE_ADD_COLUMN, NAME, String
+                                            .format(Locale.US, SQLConstants.DATA_INTEGER, DatabaseColumns.TIMESTAMP_EPOCH, 0));
+            Logger.d(TAG, "Alter Table Def: %s", alterTableDef);
+            db.execSQL(alterTableDef);
         }
     }
 }

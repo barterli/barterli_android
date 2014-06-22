@@ -444,12 +444,30 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             
                
         	 args.putString(Keys.EMAIL, mEmailForPasswordChange);
-             
-             loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                             .instantiate(getActivity(), PasswordResetFragment.class
-                                             .getName(), args), FragmentTags.PASSWORD_RESET, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
 
-        }
+        	 final String tag = getTag();
+             if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+
+            	 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                         .instantiate(getActivity(), PasswordResetFragment.class
+                                         .getName(), args), FragmentTags.PASSWORD_RESET, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+
+             } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
+            	 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
+            	 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                         .instantiate(getActivity(), PasswordResetFragment.class
+                                         .getName(), args), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+             } else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
+            	 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
+            	 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                         .instantiate(getActivity(), PasswordResetFragment.class
+                                         .getName(), args), FragmentTags.LOGIN_TO_CHAT, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+
+             }
+
+         }
+             
+        
 
     }
 

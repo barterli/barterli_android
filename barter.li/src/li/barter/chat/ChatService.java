@@ -23,63 +23,54 @@ import org.apache.http.protocol.HTTP;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat.Builder;
-import android.support.v4.app.TaskStackBuilder;
+import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.text.ParseException;
-import java.util.ArrayDeque;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import li.barter.BarterLiApplication;
-import li.barter.R;
-import li.barter.activities.HomeActivity;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.AbstractRabbitMQConnector.OnDisconnectCallback;
+import li.barter.chat.ChatProcessTask.Builder;
+import li.barter.chat.ChatProcessTask.SendChatCallback;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableChatMessages;
-import li.barter.data.TableChats;
-import li.barter.data.TableUsers;
+import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
-import li.barter.http.JsonUtils;
 import li.barter.http.NetworkChangeReceiver;
 import li.barter.http.ResponseInfo;
 import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
-import li.barter.utils.AppConstants.ChatType;
+import li.barter.utils.AppConstants.ChatStatus;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
-import li.barter.utils.Utils;
 
 /**
  * Bound service to send and receive chat messages. The service will receive
@@ -102,925 +93,517 @@ import li.barter.utils.Utils;
  * @author Vinay S Shenoy
  */
 public class ChatService extends Service implements OnReceiveMessageHandler,
-AsyncDbQueryCallback, IHttpCallbacks, OnDisconnectCallback {
-
-	private static final String    TAG                      = "ChatService";
-	private static final String    OUTPUT_TIME_FORMAT       = "dd MMM, h:mm a";
-	private static final String    QUEUE_NAME_FORMAT        = "%squeue";
-	private static final String    VIRTUAL_HOST             = "/";
-	private static final String    EXCHANGE_NAME_FORMAT     = "%sexchange";
-	private static final String    USERNAME                 = "barterli";
-	private static final String    PASSWORD                 = "barter";
-	/**
-	 * Minimum time interval(in seconds) to wait between subsequent connect
-	 * attempts
-	 */
-	private static final int       CONNECT_BACKOFF_INTERVAL = 5;
-
-	/**
-	 * Maximum multiplier for the connect interval
-	 */
-	private static final int       MAX_CONNECT_MULTIPLIER   = 180;
-
-	/**
-	 * Notification Id for notifications related to messages
-	 */
-	private static final int       MESSAGE_NOTIFICATION_ID  = 1;
-
-	private final IBinder          mChatServiceBinder       = new ChatServiceBinder();
-
-	private final String           mChatSelection           = DatabaseColumns.CHAT_ID
-			+ SQLConstants.EQUALS_ARG;
-
-	private final String           mUserSelection           = DatabaseColumns.USER_ID
-			+ SQLConstants.EQUALS_ARG;
-
-	/** {@link ChatRabbitMQConnector} instance for listening to messages */
-	private ChatRabbitMQConnector  mMessageConsumer;
-
-	private DateFormatter          mDateFormatter;
-
-	private RequestQueue           mRequestQueue;
-
-	private VolleyCallbacks        mVolleyCallbacks;
-
-	private String                 mQueueName;
-
-	/**
-	 * Current multiplier for connecting to chat. Can vary between 0 to
-	 * {@link #MAX_CONNECT_MULTIPLIER}
-	 */
-	private int                    mCurrentConnectMultiplier;
-	/**
-	 * Task to connect to Rabbit MQ Chat server
-	 */
-	private ConnectToChatAsyncTask mConnectTask;
-
-	private Builder                mNotificationBuilder;
-
-	private NotificationManager    mNotificationManager;
-
-	private Uri                    mNotificationSoundUri;
-
-	/**
-	 * Holds the number of unread received messages
-	 */
-	private int                    mUnreadMessageCount;
-
-	/**
-	 * Holds an array of chat messages, to be processed in order
-	 */
-	private ArrayDeque<String>     mMessageQueue;
-
-	private Handler                mHandler;
-
-	private Runnable               mConnectRunnable;
-
-	/**
-	 * Id of the user with whom the user is currently chatting.
-	 */
-	private String                 mCurrentChattingUserId;
-
-	/**
-	 * Whether chat notifications are enabled or not
-	 */
-	private boolean                mNotificationsEnabled;
-
-	/**
-	 * Whether any message is being currently processed
-	 */
-	private boolean                mIsProcessingMessage;
-
-	private String				   mCurrentMessage;
-
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		mMessageQueue = new ArrayDeque<String>();
-		mDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, OUTPUT_TIME_FORMAT);
-		mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
-		mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
-		mNotificationBuilder = new Builder(this);
-		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		mNotificationSoundUri = RingtoneManager
-				.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		mUnreadMessageCount = 0;
-		mCurrentConnectMultiplier = 0;
-		mHandler = new Handler();
-		mNotificationsEnabled = true;
-		mIsProcessingMessage = false;
-		//testNotifications();
-	}
-
-	private void testNotifications() {
-		showChatReceivedNotification("Some crap1", "jsdjksncjdn", "Vinay S Shenoy", "I WANTZ THAT BOOKZ!!!");
-		mHandler.postDelayed(new Runnable() {
-
-			@Override
-			public void run() {
-				showChatReceivedNotification("Some crap2", "janckjdnc", "Some random idiot", "FUUUUUUUUUUU....");
-			}
-		}, 5000);
-	}
-
-	/**
-	 * Sets the id of the user the current chat is being done with. Set this to
-	 * the user id when the chat detail screen opens, and clear it when the
-	 * screen is paused. It is used to hide notifications when the chat message
-	 * received is from the user currently being chatted with
-	 * 
-	 * @param currentChattingUserId The id of the current user being chatted
-	 *            with
-	 */
-	public void setCurrentChattingUserId(final String currentChattingUserId) {
-		mCurrentChattingUserId = currentChattingUserId;
-	}
-
-	/**
-	 * Binder to connect to the Chat Service
-	 * 
-	 * @author Vinay S Shenoy
-	 */
-	public class ChatServiceBinder extends Binder {
-
-		public ChatService getService() {
-			return ChatService.this;
-		}
-	}
-
-	@Override
-	public IBinder onBind(final Intent intent) {
-		return mChatServiceBinder;
-	}
-
-	@Override
-	public int onStartCommand(final Intent intent, final int flags,
-			final int startId) {
-
-		final String action = intent != null ? intent.getAction() : null;
-
-		if ((action != null)
-				&& action.equals(AppConstants.ACTION_DISCONNECT_CHAT)) {
-
-			if (isConnectedToChat()) {
-
-				mMessageConsumer.dispose(true);
-				mMessageConsumer = null;
-			}
-		} else {
-			mCurrentConnectMultiplier = 0;
-			initMessageConsumer();
-			connectChatService();
-		}
-
-		return START_STICKY;
-	}
-
-	/**
-	 * Connects to the Chat Service
-	 */
-	private void connectChatService() {
-
-		//If there already is a pending connect task, remove it since we have a newer one
-		if (mConnectRunnable != null) {
-			mHandler.removeCallbacks(mConnectRunnable);
-		}
-		if (isLoggedIn() && !mMessageConsumer.isRunning()) {
-
-			mConnectRunnable = new Runnable() {
-
-				@Override
-				public void run() {
-
-					if (!isLoggedIn()
-							|| !DeviceInfo.INSTANCE
-							.isNetworkConnected()) {
-
-						//If there is no internet connection or we are not logged in, we need not attempt to connect
-						mConnectRunnable = null;
-						return;
-					}
-
-					final String string = UserInfo.INSTANCE.getEmail();
-					final String[] parts = string.split("@");
-					mQueueName = UserInfo.INSTANCE.getDeviceId() + parts[0];/*
-					 * generateQueueNameFromUserId
-					 * (
-					 * UserInfo
-					 * .
-					 * INSTANCE
-					 * .
-					 * getId
-					 * (
-					 * )
-					 * )
-					 * ;
-					 */
-					if (mConnectTask == null) {
-						mConnectTask = new ConnectToChatAsyncTask();
-						mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
-								.getId());
-					} else {
-						final Status connectingStatus = mConnectTask
-								.getStatus();
-
-						if (connectingStatus != Status.RUNNING) {
-
-							// We are not already attempting to connect, let's try connecting
-							if (connectingStatus == Status.PENDING) {
-								//Cancel a pending task
-								mConnectTask.cancel(false);
-							}
-
-							mConnectTask = new ConnectToChatAsyncTask();
-							mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
-									.getId());
-						}
-					}
-					mConnectRunnable = null;
-
-				}
-
-			};
-
-			mHandler.postDelayed(mConnectRunnable, mCurrentConnectMultiplier
-					* CONNECT_BACKOFF_INTERVAL * 1000);
-			mCurrentConnectMultiplier = (++mCurrentConnectMultiplier > MAX_CONNECT_MULTIPLIER) ? MAX_CONNECT_MULTIPLIER
-					: mCurrentConnectMultiplier;
-		}
-
-	}
-
-	/**
-	 * Check if user is logged in or not
-	 */
-	private boolean isLoggedIn() {
-		return !TextUtils.isEmpty(UserInfo.INSTANCE.getId());
-	}
-
-	@Override
-	public void onDestroy() {
-		if (isConnectedToChat()) {
-			mMessageConsumer.dispose(true);
-			mMessageConsumer = null;
-		}
-		mVolleyCallbacks.cancelAll(TAG);
-		super.onDestroy();
-	}
-
-	/**
-	 * Is the chat service connected or not
-	 */
-	public boolean isConnectedToChat() {
-
-		return (mMessageConsumer != null) && mMessageConsumer.isRunning();
-	}
-
-	/**
-	 * Send a message to a user
-	 * 
-	 * @param toUserId The user Id to send the message to
-	 * @param message The message to send
-	 * @param acknowledge An implementation of {@link ChatAcknowledge} to be
-	 *            notified when the chat request completes
-	 */
-	public void sendMessageToUser(final String toUserId, final String message,
-			final ChatAcknowledge acknowledge,final String timeSentAt) {
-
-		if (!isLoggedIn()) {
-			return;
-		}
-		final JSONObject requestObject = new JSONObject();
-		try {
-
-			String senderId=UserInfo.INSTANCE
-					.getId();
-			String receiverId=toUserId;
-			requestObject.put(HttpConstants.SENDER_ID, senderId);
-			requestObject.put(HttpConstants.RECEIVER_ID, receiverId);
-			requestObject.put(HttpConstants.SENT_AT, timeSentAt);
-
-			requestObject.put(HttpConstants.MESSAGE, message);
-			final ChatRequest request = new ChatRequest(Method.POST, HttpConstants.getChangedChatUrl()
-					+ ApiEndpoints.AMPQ_EVENT_MACHINE, requestObject.toString(), mVolleyCallbacks, acknowledge);
-			request.setRequestId(RequestId.AMPQ);
-			request.setTag(TAG);
-
-			final String chatId = generateChatId(receiverId, senderId);
-			final ContentValues chatValues = new ContentValues(7);
-
-			chatValues.put(DatabaseColumns.CHAT_ID, chatId);
-			chatValues.put(DatabaseColumns.SENDER_ID, senderId);
-			chatValues.put(DatabaseColumns.RECEIVER_ID, receiverId);
-			chatValues.put(DatabaseColumns.MESSAGE, message);
-			chatValues.put(DatabaseColumns.SENT_AT, timeSentAt);
-			chatValues.put(DatabaseColumns.CHAT_ACK, getString(R.string.sending));
-
-            
-			chatValues.put(DatabaseColumns.TIMESTAMP, timeSentAt);
-			chatValues.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter
-					.getEpoch(timeSentAt));
-			chatValues.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter
-					.getOutputTimestamp(timeSentAt));
-
-			DBInterface.insertAsync(QueryTokens.INSERT_CHAT_MESSAGE_LOCALLY, chatValues, TableChatMessages.NAME, null, chatValues, true, this);
-
-			mVolleyCallbacks.queue(request,true);
-		} catch (final JSONException e) {
-			e.printStackTrace();
-			//Should never happen
-		}
-		catch (final ParseException e) {
-			Logger.e(TAG, e, "Invalid chat timestamp");
-		}
-
-	}
-
-	/**
-	 * Cancels any notifications being displayed. Call this if the relevant
-	 * screen is opened within the app
-	 */
-	public void clearChatNotifications() {
-
-		mNotificationManager.cancel(MESSAGE_NOTIFICATION_ID);
-		mUnreadMessageCount = 0;
-	}
-
-	/**
-	 * Set notifications enabled
-	 * 
-	 * @param enabled <code>true</code> to enable notifications,
-	 *            <code>false</code> to disable them
-	 */
-	public void setNotificationsEnabled(final boolean enabled) {
-		mNotificationsEnabled = enabled;
-	}
-
-	/**
-	 * Generates the queue name from the user Id
-	 * 
-	 * @param userId The user Id to generate the queue name for
-	 * @return The queue name for the user id
-	 */
-	private String generateQueueNameFromUserId(final String userId) {
-		return String.format(Locale.US, QUEUE_NAME_FORMAT, userId);
-	}
-
-	@Override
-	public void onReceiveMessage(final byte[] message) {
-
-		String text = "";
-		try {
-			text = new String(message, HTTP.UTF_8);
-			Logger.d(TAG, "Received:" + text);
-
-			mMessageQueue.add(text);
-			//queueNextMessageForProcessing();
-			if (!mIsProcessingMessage) {
-				//If there aren't any messages in the queue, process the message immediately
-				queueNextMessageForProcessing();
-			}
-
-		} catch (final UnsupportedEncodingException e) {
-			e.printStackTrace();
-			//Shouldn't be happening
-		}
-
-	}
-
-	/**
-	 * Processes a received chat message
-	 * 
-	 * @param message The chat message
-	 */
-	private void updateChatMessage(final String message) {
-		try {
-			final JSONObject messageJson = new JSONObject(message);
-			final JSONObject senderObject = JsonUtils
-					.readJSONObject(messageJson, HttpConstants.SENDER, true, true);
-			final JSONObject receiverObject = JsonUtils
-					.readJSONObject(messageJson, HttpConstants.RECEIVER, true, true);
-			final String senderId = JsonUtils
-					.readString(senderObject, HttpConstants.ID_USER, true, true);
-			final String sentAtTime = JsonUtils
-					.readString(messageJson, HttpConstants.SENT_AT, true, true);
-			final String receiverId = JsonUtils
-					.readString(receiverObject, HttpConstants.ID_USER, true, true);
-			final String messageText = JsonUtils
-					.readString(messageJson, HttpConstants.MESSAGE, true, true);
-			final String timestamp = JsonUtils
-					.readString(messageJson, HttpConstants.TIME, true, true);
-
-			
-			//Insert the chat message into DB
-			final String selection = DatabaseColumns.SENDER_ID
-					+ SQLConstants.EQUALS_ARG+SQLConstants.AND+DatabaseColumns.MESSAGE+ SQLConstants.EQUALS_ARG
-					+SQLConstants.AND+DatabaseColumns.SENT_AT+ SQLConstants.EQUALS_ARG;
-			final String[] args = new String[3];
-			// DBInterface.delete(TableUserBooks.NAME, null, null, true);
-			args[0] = senderId;
-			args[1] =messageText;
-			args[2] =sentAtTime;
-			
-			
-
-
-			final String chatId = generateChatId(receiverId, senderId);
-			final ContentValues chatValues = new ContentValues(7);
-
-			chatValues.put(DatabaseColumns.CHAT_ID, chatId);
-			chatValues.put(DatabaseColumns.SENDER_ID, senderId);
-			chatValues.put(DatabaseColumns.RECEIVER_ID, receiverId);
-			chatValues.put(DatabaseColumns.MESSAGE, messageText);
-			chatValues.put(DatabaseColumns.TIMESTAMP, timestamp);
-			chatValues.put(DatabaseColumns.SENT_AT, sentAtTime);
-			chatValues.put(DatabaseColumns.CHAT_ACK, getString(R.string.sent));
-			chatValues.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter
-					.getEpoch(timestamp));
-			chatValues.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter
-					.getOutputTimestamp(timestamp));
-
-			//First try to update the table if a book already exists
-			DBInterface.updateAsync(QueryTokens.UPDATE_CHAT_MESSAGE,null,TableChatMessages.NAME, chatValues, selection, args, true,this);
-
-		} catch (final JSONException e) {
-			Logger.e(TAG, e, "Invalid Chat Json");
-		} catch (final ParseException e) {
-			Logger.e(TAG, e, "Invalid chat timestamp");
-		}
-	}
-
-	/**
-	 * Processes a received chat message
-	 * 
-	 * @param message The chat message
-	 */
-	private void processChatMessage(final String message) {
-		try {
-			final JSONObject messageJson = new JSONObject(message);
-			final JSONObject senderObject = JsonUtils
-					.readJSONObject(messageJson, HttpConstants.SENDER, true, true);
-			final JSONObject receiverObject = JsonUtils
-					.readJSONObject(messageJson, HttpConstants.RECEIVER, true, true);
-			final String senderId = JsonUtils
-					.readString(senderObject, HttpConstants.ID_USER, true, true);
-			final String sentAtTime = JsonUtils
-					.readString(messageJson, HttpConstants.SENT_AT, true, true);
-			final String receiverId = JsonUtils
-					.readString(receiverObject, HttpConstants.ID_USER, true, true);
-			final String messageText = JsonUtils
-					.readString(messageJson, HttpConstants.MESSAGE, true, true);
-			final String timestamp = JsonUtils
-					.readString(messageJson, HttpConstants.TIME, true, true);
-
-
-			final String chatId = generateChatId(receiverId, senderId);
-			final ContentValues chatValues = new ContentValues(7);
-
-			chatValues.put(DatabaseColumns.CHAT_ID, chatId);
-			chatValues.put(DatabaseColumns.SENDER_ID, senderId);
-			chatValues.put(DatabaseColumns.RECEIVER_ID, receiverId);
-			chatValues.put(DatabaseColumns.MESSAGE, messageText);
-			chatValues.put(DatabaseColumns.TIMESTAMP, timestamp);
-			chatValues.put(DatabaseColumns.SENT_AT, sentAtTime);
-			chatValues.put(DatabaseColumns.TIMESTAMP_EPOCH, mDateFormatter
-					.getEpoch(timestamp));
-			chatValues.put(DatabaseColumns.TIMESTAMP_HUMAN, mDateFormatter
-					.getOutputTimestamp(timestamp));
-
-
-			// Unable to update, insert the item
-			DBInterface.insertAsync(QueryTokens.INSERT_CHAT_MESSAGE, chatValues, TableChatMessages.NAME, null, chatValues, true, this);
-
-
-
-
-
-			/*
-			 * Parse and store sender info. We will receive messages both when
-			 * we send and receive, so we need to check the sender id if it is
-			 * our own id first to detect who sent the message
-			 */
-			if (senderId.equals(UserInfo.INSTANCE.getId())) {
-				parseAndStoreChatUserInfo(receiverId, receiverObject);
-			} else {
-				final String senderName = parseAndStoreChatUserInfo(senderId, senderObject);
-				if ((mCurrentChattingUserId != null)
-						&& mCurrentChattingUserId.equals(senderId)) {
-
-					/*
-					 * Don't show notification if the user is currently chatting
-					 * with this same user
-					 */
-					return;
-				}
-				showChatReceivedNotification(chatId, senderId, senderName, messageText);
-			}
-
-		} catch (final JSONException e) {
-			Logger.e(TAG, e, "Invalid Chat Json");
-		} catch (final ParseException e) {
-			Logger.e(TAG, e, "Invalid chat timestamp");
-		}
-	}
-
-
-	/**
-	 * Parses the user info of the user who sent the message and updates the
-	 * local users table
-	 * 
-	 * @param senderId The id for the user who sent the chat message
-	 * @param senderObject The Sender object received in the chat message
-	 * @return The name of the sender
-	 * @throws JSONException If the JSON is invalid
-	 */
-	private String parseAndStoreChatUserInfo(final String senderId,
-			final JSONObject senderObject) throws JSONException {
-
-		final String senderFirstName = JsonUtils
-				.readString(senderObject, HttpConstants.FIRST_NAME, true, false);
-		final String senderLastName = JsonUtils
-				.readString(senderObject, HttpConstants.LAST_NAME, true, false);
-		final String senderImage = JsonUtils
-				.readString(senderObject, HttpConstants.PROFILE_IMAGE, true, false);
-
-		final ContentValues senderValues = new ContentValues(4);
-		senderValues.put(DatabaseColumns.USER_ID, senderId);
-		senderValues.put(DatabaseColumns.FIRST_NAME, senderFirstName);
-		senderValues.put(DatabaseColumns.LAST_NAME, senderLastName);
-		senderValues.put(DatabaseColumns.PROFILE_PICTURE, senderImage);
-
-		DBInterface.updateAsync(QueryTokens.UPDATE_USER_FOR_CHAT, senderValues, TableUsers.NAME, senderValues, mUserSelection, new String[] {
-				senderId
-		}, true, this);
-
-		return String.format("%s %s", senderFirstName, senderLastName);
-	}
-
-	/**
-	 * Asynchronously connect to Chat Server TODO: Move the connect async task
-	 * to the Rabbit MQ Connector The execute() call requires 4 string params -
-	 * The username, password, queue name in the same order. All parameters
-	 * should be passed. Send an EMPTY STRING if not required
-	 * 
-	 * @author Vinay S Shenoy
-	 */
-	private class ConnectToChatAsyncTask extends AsyncTask<String, Void, Void> {
-
-		@Override
-		protected Void doInBackground(final String... params) {
-
-			//Validation
-			assert (params != null);
-			assert (params.length == 3);
-			assert (params[0] != null);
-			assert (params[1] != null);
-			assert (params[2] != null);
-			Logger.v(TAG, "Username %s, Password %s, Queue %s", params[0], params[1], params[2]);
-			mMessageConsumer.connectToRabbitMQ(params[0], params[1], params[2], true, false, false, null);
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(final Void result) {
-			if (!isConnectedToChat()) {
-				/* If it's not connected, try connecting again */
-				connectChatService();
-			} else {
-				mCurrentConnectMultiplier = 0;
-			}
-		}
-	}
-
-	@Override
-	public void onInsertComplete(final int token, final Object cookie,
-			final long insertRowId) {
-
-		switch (token) {
-
-		case QueryTokens.INSERT_CHAT_MESSAGE: {
-			assert (cookie != null);
-			assert (cookie instanceof ContentValues);
-
-			if (insertRowId >= 0) {
-				Logger.v(TAG, "Inserted chat with row Id %d with cookie %s", insertRowId, cookie);
-				//TODO Show notification
-				//Try to update the Chats table
-				final ContentValues chatData = (ContentValues) cookie;
-				final String chatId = chatData
-						.getAsString(DatabaseColumns.CHAT_ID);
-
-				final ContentValues values = new ContentValues(4);
-				values.put(DatabaseColumns.CHAT_ID, chatId);
-				values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
-				values.put(DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL);
-
-				final String senderId = chatData
-						.getAsString(DatabaseColumns.SENDER_ID);
-				final String receiverId = chatData
-						.getAsString(DatabaseColumns.RECEIVER_ID);
-
-				final boolean isSenderCurrentUser = senderId
-						.equals(UserInfo.INSTANCE.getId());
-
-				values.put(DatabaseColumns.USER_ID, isSenderCurrentUser ? receiverId
-						: senderId);
-
-				Logger.v(TAG, "Updating chats for Id %s", chatId);
-				DBInterface.updateAsync(QueryTokens.UPDATE_CHAT, values, TableChats.NAME, values, mChatSelection, new String[] {
-						chatId
-				}, true, this);
-			} else {
-				//Rare case
-				Logger.e(TAG, "Unable to insert chat message");
-			}
-			break;
-		}
-
-		case QueryTokens.INSERT_CHAT: {
-			assert (cookie != null);
-			assert (cookie instanceof ContentValues);
-			//Chat was successfully created
-			mIsProcessingMessage = false;
-			queueNextMessageForProcessing();
-			break;
-		}
-
-		case QueryTokens.INSERT_USER_FOR_CHAT: {
-			//Nothing to do here as of now
-			break;
-		}
-		}
-
-	}
-
-	@Override
-	public void onDeleteComplete(final int token, final Object cookie,
-			final int deleteCount) {
-
-	}
-
-	@Override
-	public void onUpdateComplete(final int token, final Object cookie,
-			final int updateCount) {
-
-		if (token == QueryTokens.UPDATE_CHAT) {
-			assert (cookie != null);
-			assert (cookie instanceof ContentValues);
-
-			if (updateCount == 0) {
-				//Unable to update chats table, create a row
-				Logger.v(TAG, "Chat not found. Inserting %s", cookie);
-				DBInterface.insertAsync(QueryTokens.INSERT_CHAT, cookie, TableChats.NAME, null, (ContentValues) cookie, true, this);
-			} else {
-				Logger.v(TAG, "Chat Updated!");
-				mIsProcessingMessage = false;
-				queueNextMessageForProcessing();
-			}
-		} else if (token == QueryTokens.UPDATE_USER_FOR_CHAT) {
-			assert (cookie != null);
-			assert (cookie instanceof ContentValues);
-
-			if (updateCount == 0) {
-				//Unable to update user, create the user
-				Logger.v(TAG, "User not found. Inserting %s", cookie);
-				DBInterface.insertAsync(QueryTokens.INSERT_USER_FOR_CHAT, cookie, TableUsers.NAME, null, (ContentValues) cookie, true, this);
-			}
-		}
-		else if(token==QueryTokens.UPDATE_CHAT_MESSAGE)
-		{
-			if(updateCount==0)
-			{
-
-				processChatMessage(mCurrentMessage);
-				Logger.d(TAG, "added = "+mCurrentMessage);
-			}
-			else
-			{
-				Logger.d(TAG, "UPDATED = "+updateCount);
-				mIsProcessingMessage = false;
-				queueNextMessageForProcessing();
-			}
-		}
-	}
-
-	/**
-	 * Checks whether there are any pending messages in the queue, and adds them
-	 * for processing if there are
-	 */
-	private void queueNextMessageForProcessing() {
-
-		if ((mMessageQueue != null) && (mMessageQueue.peek() != null)) {
-			mIsProcessingMessage = true;
-			mCurrentMessage=mMessageQueue.poll();
-			updateChatMessage(mCurrentMessage);
-			//processChatMessage(mCurrentMessage);
-
-		}
-	}
-
-	@Override
-	public void onQueryComplete(final int token, final Object cookie,
-			final Cursor cursor) {
-
-	}
-
-	/**
-	 * Generates as chat ID which will be unique for a given sender/receiver
-	 * pair
-	 * 
-	 * @param receiverId The receiver of the chat
-	 * @param senderId The sender of the chat
-	 * @return The chat Id
-	 */
-	public static String generateChatId(final String receiverId,
-			final String senderId) {
-
-		/*
-		 * Method of generating the chat ID is simple. First we compare the two
-		 * ids and combine them in ascending order separate by a '#'. Then we
-		 * SHA1 the result to make the chat id
-		 */
-
-		String combined = null;
-		if (receiverId.compareTo(senderId) < 0) {
-			combined = String
-					.format(Locale.US, AppConstants.CHAT_ID_FORMAT, receiverId, senderId);
-		} else {
-			combined = String
-					.format(Locale.US, AppConstants.CHAT_ID_FORMAT, senderId, receiverId);
-		}
-
-		String hashed = null;
-
-		try {
-			hashed = Utils.sha1(combined);
-		} catch (final NoSuchAlgorithmException e) {
-			/*
-			 * Shouldn't happen sinch SHA-1 is standard, but in case it does use
-			 * the combined string directly since they are local chat IDs
-			 */
-			hashed = combined;
-		}
-
-		return hashed;
-	}
-
-	@Override
-	public void onPreExecute(final IBlRequestContract request) {
-
-	}
-
-	@Override
-	public void onPostExecute(final IBlRequestContract request) {
-
-	}
-
-	@Override
-	public void onSuccess(final int requestId,
-			final IBlRequestContract request,
-			final ResponseInfo response) {
-
-		if (requestId == RequestId.AMPQ) {
-
-			if (request instanceof ChatRequest) {
-
-				final ChatAcknowledge acknowledge = ((ChatRequest) request)
-						.getAcknowledge();
-
-				if (acknowledge != null) {
-					acknowledge.onChatRequestComplete(true);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void onBadRequestError(final int requestId,
-			final IBlRequestContract request, final int errorCode,
-			final String errorMessage, final Bundle errorResponseBundle) {
-
-		if (requestId == RequestId.AMPQ) {
-
-			if (request instanceof ChatRequest) {
-
-				final ChatAcknowledge acknowledge = ((ChatRequest) request)
-						.getAcknowledge();
-
-				if (acknowledge != null) {
-					acknowledge.onChatRequestComplete(false);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void onAuthError(final int requestId,
-			final IBlRequestContract request) {
-
-		if (requestId == RequestId.AMPQ) {
-
-			if (request instanceof ChatRequest) {
-
-				final ChatAcknowledge acknowledge = ((ChatRequest) request)
-						.getAcknowledge();
-
-				if (acknowledge != null) {
-					acknowledge.onChatRequestComplete(false);
-				}
-			}
-		}
-	}
-
-	@Override
-	public void onOtherError(final int requestId,
-			final IBlRequestContract request, final int errorCode) {
-
-		if (requestId == RequestId.AMPQ) {
-
-			if (request instanceof ChatRequest) {
-
-				final ChatAcknowledge acknowledge = ((ChatRequest) request)
-						.getAcknowledge();
-
-				if (acknowledge != null) {
-					acknowledge.onChatRequestComplete(false);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Displays a notification for a received chat message
-	 * 
-	 * @param chatId The ID of the chat. This is so that the right chat detail
-	 *            fragment can be launched when the notification is tapped
-	 * @param withUserId The id of the user who sent the notification
-	 * @param senderName The name of the sender
-	 * @param messageText The message body
-	 */
-	private void showChatReceivedNotification(final String chatId,
-			final String withUserId, final String senderName,
-			final String messageText) {
-
-		if (mNotificationsEnabled) {
-			mUnreadMessageCount++;
-			final Intent resultIntent = new Intent(this, HomeActivity.class);
-			if (mUnreadMessageCount == 1) {
-				mNotificationBuilder.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(senderName)
-				.setContentText(messageText)
-				.setAutoCancel(true);
-				resultIntent.setAction(AppConstants.ACTION_SHOW_CHAT_DETAIL);
-				resultIntent.putExtra(Keys.CHAT_ID, chatId);
-				resultIntent.putExtra(Keys.USER_ID, withUserId);
-
-
-
-			} else {
-				mNotificationBuilder
-				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(getString(R.string.new_messages, mUnreadMessageCount))
-				.setContentText(messageText)
-				.setAutoCancel(true);
-				resultIntent.setAction(AppConstants.ACTION_SHOW_ALL_CHATS);
-			}
-
-			mNotificationBuilder.setSound(mNotificationSoundUri);
-			final TaskStackBuilder taskStackBuilder = TaskStackBuilder
-					.create(this);
-			taskStackBuilder.addNextIntent(resultIntent);
-			final PendingIntent pendingIntent = taskStackBuilder
-					.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-			mNotificationBuilder.setContentIntent(pendingIntent);
-			mNotificationManager
-			.notify(MESSAGE_NOTIFICATION_ID, mNotificationBuilder
-					.build());
-		}
-
-	}
-
-	@Override
-	public void onDisconnect(final boolean manual) {
-		if (!manual) {
-			connectChatService();
-		}
-	}
-
-	/**
-	 * Creates a new consumer
-	 */
-	private void initMessageConsumer() {
-		if ((mMessageConsumer == null) && isLoggedIn()) {
-			mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
-					.getChatPort(), VIRTUAL_HOST, String
-					.format(Locale.US, EXCHANGE_NAME_FORMAT, UserInfo.INSTANCE
-							.getId()), ExchangeType.FANOUT);
-
-			mMessageConsumer.setOnReceiveMessageHandler(ChatService.this);
-			mMessageConsumer.setOnDisconnectCallback(ChatService.this);
-		}
-
-	}
+                IHttpCallbacks, OnDisconnectCallback, AsyncDbQueryCallback {
+
+    private static final String    TAG                      = "ChatService";
+    private static final String    QUEUE_NAME_FORMAT        = "%s%s";
+    private static final String    VIRTUAL_HOST             = "/";
+    private static final String    EXCHANGE_NAME_FORMAT     = "%sexchange";
+    private static final String    USERNAME                 = "barterli";
+    private static final String    PASSWORD                 = "barter";
+    /**
+     * Minimum time interval(in seconds) to wait between subsequent connect
+     * attempts
+     */
+    private static final int       CONNECT_BACKOFF_INTERVAL = 5;
+
+    /**
+     * Maximum multiplier for the connect interval
+     */
+    private static final int       MAX_CONNECT_MULTIPLIER   = 180;
+
+    private static final String    MESSAGE_SELECT_BY_ID     = BaseColumns._ID
+                                                                            + SQLConstants.EQUALS_ARG;
+
+    private final IBinder          mChatServiceBinder       = new ChatServiceBinder();
+
+    /** {@link ChatRabbitMQConnector} instance for listening to messages */
+    private ChatRabbitMQConnector  mMessageConsumer;
+
+    private DateFormatter          mChatDateFormatter;
+
+    private DateFormatter          mMessageDateFormatter;
+
+    private RequestQueue           mRequestQueue;
+
+    private VolleyCallbacks        mVolleyCallbacks;
+
+    private String                 mQueueName;
+
+    /**
+     * Current multiplier for connecting to chat. Can vary between 0 to
+     * {@link #MAX_CONNECT_MULTIPLIER}
+     */
+    private int                    mCurrentConnectMultiplier;
+    /**
+     * Task to connect to Rabbit MQ Chat server
+     */
+    private ConnectToChatAsyncTask mConnectTask;
+
+    private Handler                mHandler;
+
+    private Runnable               mConnectRunnable;
+
+    private Builder                mChatProcessTaskBuilder;
+
+    /**
+     * Single thread executor to process incoming chat messages in a queue
+     */
+    private ExecutorService        mChatProcessor;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mChatDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, AppConstants.CHAT_TIME_FORMAT);
+        mMessageDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, AppConstants.MESSAGE_TIME_FORMAT);
+        mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
+        mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
+        mCurrentConnectMultiplier = 0;
+        mHandler = new Handler();
+        mChatProcessor = Executors.newSingleThreadExecutor();
+        mChatProcessTaskBuilder = new Builder(this);
+    }
+
+    /**
+     * Sets the id of the user the current chat is being done with. Set this to
+     * the user id when the chat detail screen opens, and clear it when the
+     * screen is paused. It is used to hide notifications when the chat message
+     * received is from the user currently being chatted with
+     * 
+     * @param currentChattingUserId The id of the current user being chatted
+     *            with
+     */
+    public void setCurrentChattingUserId(final String currentChattingUserId) {
+        ChatNotificationHelper.getInstance(this)
+                        .setCurrentChattingUserId(currentChattingUserId);
+    }
+
+    /**
+     * Binder to connect to the Chat Service
+     * 
+     * @author Vinay S Shenoy
+     */
+    public class ChatServiceBinder extends Binder {
+
+        public ChatService getService() {
+            return ChatService.this;
+        }
+    }
+
+    @Override
+    public IBinder onBind(final Intent intent) {
+        return mChatServiceBinder;
+    }
+
+    @Override
+    public int onStartCommand(final Intent intent, final int flags,
+                    final int startId) {
+
+        final String action = intent != null ? intent.getAction() : null;
+
+        if ((action != null)
+                        && action.equals(AppConstants.ACTION_DISCONNECT_CHAT)) {
+
+            if (isConnectedToChat()) {
+
+                mMessageConsumer.dispose(true);
+                mMessageConsumer = null;
+            }
+        } else {
+            mCurrentConnectMultiplier = 0;
+            initMessageConsumer();
+            connectChatService();
+        }
+
+        return START_STICKY;
+    }
+
+    /**
+     * Connects to the Chat Service
+     */
+    private void connectChatService() {
+
+        //If there already is a pending connect task, remove it since we have a newer one
+        if (mConnectRunnable != null) {
+            mHandler.removeCallbacks(mConnectRunnable);
+        }
+        if (isLoggedIn() && !mMessageConsumer.isRunning()) {
+
+            mConnectRunnable = new Runnable() {
+
+                @Override
+                public void run() {
+
+                    if (!isLoggedIn()
+                                    || !DeviceInfo.INSTANCE
+                                                    .isNetworkConnected()) {
+
+                        //If there is no internet connection or we are not logged in, we need not attempt to connect
+                        mConnectRunnable = null;
+                        return;
+                    }
+
+                    mQueueName = generateQueueNameFromUserEmailAndDeviceId(UserInfo.INSTANCE
+                                    .getEmail(), UserInfo.INSTANCE
+                                    .getDeviceId());
+
+                    if (mConnectTask == null) {
+                        mConnectTask = new ConnectToChatAsyncTask();
+                        mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
+                                        .getId());
+                    } else {
+                        final Status connectingStatus = mConnectTask
+                                        .getStatus();
+
+                        if (connectingStatus != Status.RUNNING) {
+
+                            // We are not already attempting to connect, let's try connecting
+                            if (connectingStatus == Status.PENDING) {
+                                //Cancel a pending task
+                                mConnectTask.cancel(false);
+                            }
+
+                            mConnectTask = new ConnectToChatAsyncTask();
+                            mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
+                                            .getId());
+                        }
+                    }
+                    mConnectRunnable = null;
+
+                }
+
+            };
+
+            mHandler.postDelayed(mConnectRunnable, mCurrentConnectMultiplier
+                            * CONNECT_BACKOFF_INTERVAL * 1000);
+            mCurrentConnectMultiplier = (++mCurrentConnectMultiplier > MAX_CONNECT_MULTIPLIER) ? MAX_CONNECT_MULTIPLIER
+                            : mCurrentConnectMultiplier;
+        }
+
+    }
+
+    /**
+     * Check if user is logged in or not
+     */
+    private boolean isLoggedIn() {
+        return !TextUtils.isEmpty(UserInfo.INSTANCE.getId());
+    }
+
+    @Override
+    public void onDestroy() {
+        if (isConnectedToChat()) {
+            mMessageConsumer.dispose(true);
+            mMessageConsumer = null;
+        }
+        mChatProcessor.shutdownNow();
+        mVolleyCallbacks.cancelAll(TAG);
+        super.onDestroy();
+    }
+
+    /**
+     * Is the chat service connected or not
+     */
+    public boolean isConnectedToChat() {
+
+        return (mMessageConsumer != null) && mMessageConsumer.isRunning();
+    }
+
+    /**
+     * Send a message to a user
+     * 
+     * @param toUserId The user Id to send the message to
+     * @param message The message to send
+     */
+    public void sendMessageToUser(final String toUserId, final String message,
+                    final String timeSentAt) {
+
+        if (!isLoggedIn()) {
+            return;
+        }
+        final JSONObject requestObject = new JSONObject();
+        try {
+
+            String senderId = UserInfo.INSTANCE.getId();
+            String receiverId = toUserId;
+            requestObject.put(HttpConstants.SENDER_ID, senderId);
+            requestObject.put(HttpConstants.RECEIVER_ID, receiverId);
+            requestObject.put(HttpConstants.SENT_AT, timeSentAt);
+
+            requestObject.put(HttpConstants.MESSAGE, message);
+
+            final ChatProcessTask chatProcessTask = mChatProcessTaskBuilder
+                            .setProcessType(ChatProcessTask.PROCESS_SEND)
+                            .setMessage(requestObject.toString())
+                            .setMessageDateFormatter(mMessageDateFormatter)
+                            .setChatDateFormatter(mChatDateFormatter)
+                            .setSendChatCallback(new SendChatCallback() {
+
+                                @Override
+                                public void sendChat(String text,
+
+                                long dbRowId) {
+
+                                    final BlRequest request = new BlRequest(Method.POST, HttpConstants
+                                                    .getChangedChatUrl()
+                                                    + ApiEndpoints.AMPQ_EVENT_MACHINE, text, mVolleyCallbacks);
+                                    request.setRequestId(RequestId.AMPQ);
+                                    request.addExtra(Keys.ID, dbRowId);
+                                    request.setTag(TAG);
+
+                                    //Post on main thread
+                                    mHandler.post(new Runnable() {
+
+                                        @Override
+                                        public void run() {
+                                            mVolleyCallbacks.queue(request, true);
+                                        }
+                                    });
+                                }
+                            }).build();
+
+            mChatProcessTaskBuilder.reset();
+            mChatProcessor.submit(chatProcessTask);
+
+        } catch (final JSONException e) {
+            e.printStackTrace();
+            //Should never happen
+        }
+    }
+
+    /**
+     * Cancels any notifications being displayed. Call this if the relevant
+     * screen is opened within the app
+     */
+    public void clearChatNotifications() {
+
+        ChatNotificationHelper.getInstance(this).clearChatNotifications();
+    }
+
+    /**
+     * Set notifications enabled
+     * 
+     * @param enabled <code>true</code> to enable notifications,
+     *            <code>false</code> to disable them
+     */
+    public void setNotificationsEnabled(final boolean enabled) {
+        ChatNotificationHelper.getInstance(this)
+                        .setNotificationsEnabled(enabled);
+    }
+
+    /**
+     * Uses the portion of the user's email before the "@" to generate the queue
+     * name
+     * 
+     * @param userEmail The user email
+     * @param deviceId The device Id
+     * @return The queue name for the user email
+     */
+    private String generateQueueNameFromUserEmailAndDeviceId(
+                    final String userEmail, final String deviceId) {
+
+        final String emailPart1 = userEmail
+                        .substring(0, userEmail.indexOf("@"));
+        Logger.d(TAG, "User email part 1 %s", emailPart1);
+        return String.format(Locale.US, QUEUE_NAME_FORMAT, deviceId, emailPart1);
+
+    }
+
+    @Override
+    public void onReceiveMessage(final byte[] message) {
+
+        String text = "";
+        try {
+            text = new String(message, HTTP.UTF_8);
+            Logger.d(TAG, "Received:" + text);
+
+            final ChatProcessTask chatProcessTask = mChatProcessTaskBuilder
+                            .setProcessType(ChatProcessTask.PROCESS_RECEIVE)
+                            .setMessage(text)
+                            .setChatDateFormatter(mChatDateFormatter)
+                            .setMessageDateFormatter(mMessageDateFormatter)
+                            .build();
+            mChatProcessTaskBuilder.reset();
+            mChatProcessor.submit(chatProcessTask);
+
+        } catch (final UnsupportedEncodingException e) {
+            e.printStackTrace();
+            //Shouldn't be happening
+        }
+
+    }
+
+    /**
+     * Asynchronously connect to Chat Server TODO: Move the connect async task
+     * to the Rabbit MQ Connector The execute() call requires 4 string params -
+     * The username, password, queue name in the same order. All parameters
+     * should be passed. Send an EMPTY STRING if not required
+     * 
+     * @author Vinay S Shenoy
+     */
+    private class ConnectToChatAsyncTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(final String... params) {
+
+            //Validation
+            assert (params != null);
+            assert (params.length == 3);
+            assert (params[0] != null);
+            assert (params[1] != null);
+            assert (params[2] != null);
+            Logger.v(TAG, "Username %s, Password %s, Queue %s", params[0], params[1], params[2]);
+            mMessageConsumer.connectToRabbitMQ(params[0], params[1], params[2], true, false, false, null);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Void result) {
+            if (!isConnectedToChat()) {
+                /* If it's not connected, try connecting again */
+                connectChatService();
+            } else {
+                mCurrentConnectMultiplier = 0;
+            }
+        }
+    }
+
+    @Override
+    public void onPreExecute(final IBlRequestContract request) {
+
+    }
+
+    @Override
+    public void onPostExecute(final IBlRequestContract request) {
+
+    }
+
+    @Override
+    public void onSuccess(final int requestId,
+                    final IBlRequestContract request,
+                    final ResponseInfo response) {
+
+        if (requestId == RequestId.AMPQ) {
+            Logger.v(TAG, "Chat sent");
+        }
+    }
+
+    @Override
+    public void onBadRequestError(final int requestId,
+                    final IBlRequestContract request, final int errorCode,
+                    final String errorMessage, final Bundle errorResponseBundle) {
+
+        if (requestId == RequestId.AMPQ) {
+
+            final long messageDbId = (Long) (request.getExtras().get(Keys.ID));
+
+            markChatAsFailed(messageDbId);
+        }
+    }
+
+    @Override
+    public void onAuthError(final int requestId,
+                    final IBlRequestContract request) {
+
+        if (requestId == RequestId.AMPQ) {
+
+            final long messageDbId = (Long) (request.getExtras().get(Keys.ID));
+
+            markChatAsFailed(messageDbId);
+        }
+    }
+
+    @Override
+    public void onOtherError(final int requestId,
+                    final IBlRequestContract request, final int errorCode) {
+
+        if (requestId == RequestId.AMPQ) {
+
+            final long messageDbId = (Long) (request.getExtras().get(Keys.ID));
+
+            markChatAsFailed(messageDbId);
+        }
+    }
+
+    /**
+     * @param messageDbId The database row of the locally inserted chat message
+     */
+    private void markChatAsFailed(long messageDbId) {
+        final ContentValues values = new ContentValues(1);
+        values.put(DatabaseColumns.CHAT_STATUS, ChatStatus.FAILED);
+
+        DBInterface.updateAsync(QueryTokens.UPDATE_MESSAGE_STATUS, null, TableChatMessages.NAME, values, MESSAGE_SELECT_BY_ID, new String[] {
+            String.valueOf(messageDbId)
+        }, true, this);
+    }
+
+    @Override
+    public void onDisconnect(final boolean manual) {
+        if (!manual) {
+            connectChatService();
+        }
+    }
+
+    /**
+     * Creates a new consumer
+     */
+    private void initMessageConsumer() {
+        if ((mMessageConsumer == null) && isLoggedIn()) {
+            mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
+                            .getChatPort(), VIRTUAL_HOST, String
+                            .format(Locale.US, EXCHANGE_NAME_FORMAT, UserInfo.INSTANCE
+                                            .getId()), ExchangeType.FANOUT);
+
+            mMessageConsumer.setOnReceiveMessageHandler(ChatService.this);
+            mMessageConsumer.setOnDisconnectCallback(ChatService.this);
+        }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * li.barter.data.DBInterface.AsyncDbQueryCallback#onInsertComplete(int,
+     * java.lang.Object, long)
+     */
+    @Override
+    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * li.barter.data.DBInterface.AsyncDbQueryCallback#onDeleteComplete(int,
+     * java.lang.Object, int)
+     */
+    @Override
+    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * li.barter.data.DBInterface.AsyncDbQueryCallback#onUpdateComplete(int,
+     * java.lang.Object, int)
+     */
+    @Override
+    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see li.barter.data.DBInterface.AsyncDbQueryCallback#onQueryComplete(int,
+     * java.lang.Object, android.database.Cursor)
+     */
+    @Override
+    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

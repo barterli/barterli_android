@@ -18,20 +18,19 @@
 
 package com.android.volley.toolbox;
 
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.http.AndroidHttpClient;
-import android.os.Build;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.http.AndroidHttpClient;
+import android.os.Build;
+
 import java.io.File;
-import java.io.IOException;
 
 public class Volley {
 
@@ -63,18 +62,18 @@ public class Volley {
 
         if (stack == null) {
             if (Build.VERSION.SDK_INT >= 9) {
-                stack = new HurlStack(new BasicUrlRewriter(), userAgent);
+                stack = new HurlStack(userAgent);
             } else {
                 // Prior to Gingerbread, HttpUrlConnection was unreliable.
                 // See:
                 // http://android-developers.blogspot.com/2011/09/androids-http-clients.html
-                stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent), new BasicUrlRewriter());
+                stack = new HttpClientStack(AndroidHttpClient.newInstance(userAgent));
             }
         }
 
         Network network = new BasicNetwork(stack);
 
-        RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network);
+        RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network, new BasicUrlRewriter());
         queue.start();
 
         return queue;
@@ -105,7 +104,7 @@ public class Volley {
     private static class BasicUrlRewriter implements HttpStack.UrlRewriter {
 
         @Override
-        public String rewriteUrl(Request<?> request) throws IOException {
+        public String rewriteUrl(Request<?> request) {
 
             switch (request.getMethod()) {
 

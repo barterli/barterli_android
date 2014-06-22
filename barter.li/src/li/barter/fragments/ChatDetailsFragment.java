@@ -25,6 +25,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
@@ -36,6 +37,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -49,10 +52,10 @@ import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatDetailAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
-import li.barter.chat.ChatAcknowledge;
 import li.barter.chat.ChatService;
 import li.barter.chat.ChatService.ChatServiceBinder;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
@@ -64,6 +67,7 @@ import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
+import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.Logger;
 import li.barter.widgets.CircleImageView;
 
@@ -75,53 +79,52 @@ import li.barter.widgets.CircleImageView;
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,
-                AsyncDbQueryCallback {
+                AsyncDbQueryCallback, OnItemClickListener {
 
-    private static final String     TAG            = "ChatDetailsFragment";
+    private static final String TAG               = "ChatDetailsFragment";
 
-    private ChatDetailAdapter       mChatDetailAdapter;
+    private ChatDetailAdapter   mChatDetailAdapter;
 
-    private ListView                mChatListView;
+    private ListView            mChatListView;
 
-    private EditText                mSubmitChatEditText;
+    private EditText            mSubmitChatEditText;
 
-    private ImageButton             mSubmitChatButton;
+    private ImageButton         mSubmitChatButton;
 
-    private ChatService             mChatService;
+    private ChatService         mChatService;
 
-    private boolean                 mBoundToChatService;
+    private boolean             mBoundToChatService;
 
-    private boolean                 mFirstMessage;
+    private boolean             mFirstMessage;
 
-    private final String            mChatSelection = DatabaseColumns.CHAT_ID
-                                                                   + SQLConstants.EQUALS_ARG;
+    private final String        mChatSelection    = DatabaseColumns.CHAT_ID
+                                                                  + SQLConstants.EQUALS_ARG;
 
-    private final String            mUserSelection = DatabaseColumns.USER_ID
-                                                                   + SQLConstants.EQUALS_ARG;
+    private final String        mUserSelection    = DatabaseColumns.USER_ID
+                                                                  + SQLConstants.EQUALS_ARG;
+
+    private final String        mMessageSelection = BaseColumns._ID
+                                                                  + SQLConstants.EQUALS_ARG;
 
     /**
      * The Id of the Chat
      */
-    private String                  mChatId;
+    private String              mChatId;
 
     /**
      * Id of the user with whom the current user is chatting
      */
-    private String                  mWithUserId;
+    private String              mWithUserId;
 
     /** Profile image of the user with whom the current user is chatting */
-    private String                  mWithUserImage;
-
-    /**
-     * Implementation of {@link ConcreteChatAcknowledge} to receive
-     * notifications when chat requests are complete
-     */
-    private ConcreteChatAcknowledge mAcknowledge;
+    private String              mWithUserImage;
 
     /**
      * User with whom the chat is happening
      */
-    private CircleImageView         mWithImageView;
+    private CircleImageView     mWithImageView;
+
+    private SimpleDateFormat    mFormatter;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -136,9 +139,12 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
          * .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
          * | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
          */
+
+        mFormatter = new SimpleDateFormat(AppConstants.TIMESTAMP_FORMAT, Locale.getDefault());
         mChatListView = (ListView) view.findViewById(R.id.list_chats);
         mChatDetailAdapter = new ChatDetailAdapter(getActivity(), null);
         mChatListView.setAdapter(mChatDetailAdapter);
+        mChatListView.setOnItemClickListener(this);
         mChatId = getArguments().getString(Keys.CHAT_ID);
         mWithUserId = getArguments().getString(Keys.USER_ID);
 
@@ -153,7 +159,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
         getLoaderManager()
                         .restartLoader(Loaders.USER_DETAILS_CHAT_DETAILS, null, this);
-        mAcknowledge = new ConcreteChatAcknowledge();
 
         if (savedInstanceState == null) {
             mFirstMessage = true;
@@ -222,7 +227,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPause() {
         super.onPause();
-        mAcknowledge.mChatDetailsFragment = null;
         if (mBoundToChatService) {
             mChatService.setCurrentChattingUserId(null);
             getActivity().unbindService(this);
@@ -247,7 +251,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        mAcknowledge.mChatDetailsFragment = this;
         //Bind to chat service
         final Intent chatServiceBindIntent = new Intent(getActivity(), ChatService.class);
         getActivity().bindService(chatServiceBindIntent, this, Context.BIND_AUTO_CREATE);
@@ -390,83 +393,35 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         final int id = v.getId();
 
         if (id == R.id.button_send) {
-            final String message = mSubmitChatEditText.getText().toString();
-
-            if (!TextUtils.isEmpty(message)) {
-                if (mBoundToChatService && mChatService.isConnectedToChat()) {
-
-                    SimpleDateFormat formatter = new SimpleDateFormat(AppConstants.TIMESTAMP_FORMAT, Locale
-                                    .getDefault());
-                    final String sentAt = formatter.format(new Date());
-                    mChatService.sendMessageToUser(mWithUserId, message, mAcknowledge, sentAt);
-
-                    mSubmitChatEditText.setText(null);
-                } else {
-                    showCrouton(R.string.error_not_connected_to_chat_service, AlertStyle.ERROR);
-
-                }
+            if (sendChatMessage(mSubmitChatEditText.getText().toString())) {
+                mSubmitChatEditText.setText(null);
+            } else {
+                showCrouton(R.string.error_not_connected_to_chat_service, AlertStyle.ERROR);
             }
-
         } else if (id == R.id.image_user) {
             loadChattingWithUser();
         }
     }
 
     /**
-     * While a chat message is being sent, disable sending of any more chats
-     * until the current one either fails or succeeds
+     * Send a chat message to the user the current user is chatting with
      * 
-     * @param enabled <code>true</code> to enable the actions,
-     *            <code>false</code> to disable
+     * @param message The message to send.
+     * @return <code>true</code> If the message was sent, <code>false</code>
+     *         otherwise
      */
-    private void setActionEnabled(final boolean enabled) {
-        mSubmitChatEditText.setEnabled(enabled);
-        mSubmitChatButton.setEnabled(enabled);
-    }
+    private boolean sendChatMessage(String message) {
 
-    /**
-     * Concrete implementation of {@link ChatAcknowledge} for receiving
-     * callbacks when a sent chat message completes. The reason we are making a
-     * concrete implementation is because the fragment can go to background or
-     * get destroyed before the request completes(which is done in
-     * {@link ChatService}). This class will act as a check to make sure the
-     * fragment is still visible before updating the UI
-     * 
-     * @author Vinay S Shenoy
-     */
-    private static class ConcreteChatAcknowledge implements ChatAcknowledge {
-
-        private ChatDetailsFragment mChatDetailsFragment;
-
-        @Override
-        public void onChatRequestComplete(final boolean success) {
-
-            if ((mChatDetailsFragment != null)
-                            && mChatDetailsFragment.isVisible()) {
-
-                mChatDetailsFragment.onChatComplete(success);
+        boolean sent = true;
+        if (!TextUtils.isEmpty(message)) {
+            if (mBoundToChatService) {
+                final String sentAt = mFormatter.format(new Date());
+                mChatService.sendMessageToUser(mWithUserId, message, sentAt);
+            } else {
+                sent = false;
             }
         }
-
-    }
-
-    /**
-     * Whether the sent chat message was sent successfully or not
-     * 
-     * @param success <code>true</code> if the message was sent sucessfully,
-     *            <code>false</code> otherwise
-     */
-    public void onChatComplete(final boolean success) {
-
-        if (success) {
-            //Clear the submit chat text since it was sent successfully
-            //TODO
-        } else {
-            //Show error message
-            showCrouton(R.string.error_unable_to_send_chat, AlertStyle.ERROR);
-        }
-
-        setActionEnabled(true);
+        return sent;
 
     }
 
@@ -478,8 +433,10 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onDeleteComplete(int token, Object cookie, int deleteCount) {
-        // TODO Auto-generated method stub
 
+        if(token == QueryTokens.DELETE_CHAT_MESSAGE) {
+            //Do nothing for now
+        }
     }
 
     @Override
@@ -497,6 +454,36 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     protected String getAnalyticsScreenName() {
         return Screens.CHAT_DETAILS;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+
+        if (parent.getId() == R.id.list_chats) {
+
+            final boolean resendOnClick = (Boolean) view
+                            .getTag(R.string.tag_resend_on_click);
+
+            if (resendOnClick) {
+                final Cursor cursor = (Cursor) mChatDetailAdapter
+                                .getItem(position);
+
+                final int dbRowId = cursor.getInt(cursor
+                                .getColumnIndex(BaseColumns._ID));
+                final String message = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.MESSAGE));
+
+                if (sendChatMessage(message)) {
+                    //Delete the older message from the table
+                    DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGE, null, TableChatMessages.NAME, mMessageSelection, new String[] {
+                        String.valueOf(dbRowId)
+                    }, true, this);
+                } else {
+                    showCrouton(R.string.error_not_connected_to_chat_service, AlertStyle.ERROR);
+                }
+            }
+        }
     }
 
 }

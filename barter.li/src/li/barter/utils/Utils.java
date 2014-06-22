@@ -39,6 +39,7 @@ import java.nio.channels.NonReadableChannelException;
 import java.nio.channels.NonWritableChannelException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Locale;
 
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.utils.AppConstants.DeviceInfo;
@@ -260,6 +261,47 @@ public class Utils {
          */
 
         return ((System.currentTimeMillis() - lastScreenSeenTime) >= GoogleAnalyticsManager.SESSION_TIMEOUT);
+    }
+    
+    /**
+     * Generates as chat ID which will be unique for a given sender/receiver
+     * pair
+     * 
+     * @param receiverId The receiver of the chat
+     * @param senderId The sender of the chat
+     * @return The chat Id
+     */
+    public static String generateChatId(final String receiverId,
+                    final String senderId) {
+
+        /*
+         * Method of generating the chat ID is simple. First we compare the two
+         * ids and combine them in ascending order separate by a '#'. Then we
+         * SHA1 the result to make the chat id
+         */
+
+        String combined = null;
+        if (receiverId.compareTo(senderId) < 0) {
+            combined = String
+                            .format(Locale.US, AppConstants.CHAT_ID_FORMAT, receiverId, senderId);
+        } else {
+            combined = String
+                            .format(Locale.US, AppConstants.CHAT_ID_FORMAT, senderId, receiverId);
+        }
+
+        String hashed = null;
+
+        try {
+            hashed = Utils.sha1(combined);
+        } catch (final NoSuchAlgorithmException e) {
+            /*
+             * Shouldn't happen sinch SHA-1 is standard, but in case it does use
+             * the combined string directly since they are local chat IDs
+             */
+            hashed = combined;
+        }
+
+        return hashed;
     }
 
 }

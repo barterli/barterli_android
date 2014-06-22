@@ -55,11 +55,8 @@ public class HttpClientStack implements HttpStack {
 
     private final static String HEADER_CONTENT_TYPE       = "Content-Type";
 
-    private UrlRewriter         mUrlRewriter;
-
-    public HttpClientStack(HttpClient client, UrlRewriter urlRewriter) {
+    public HttpClientStack(HttpClient client) {
         mClient = client;
-        mUrlRewriter = urlRewriter;
     }
 
     private static void addHeaders(HttpUriRequest httpRequest, Map<String, String> headers) {
@@ -79,7 +76,7 @@ public class HttpClientStack implements HttpStack {
 
     @Override
     public HttpResponse performRequest(Request<?> request, Map<String, String> additionalHeaders) throws IOException, AuthFailureError {
-        HttpUriRequest httpRequest = createHttpRequest(request, additionalHeaders, mUrlRewriter);
+        HttpUriRequest httpRequest = createHttpRequest(request, additionalHeaders);
         addHeaders(httpRequest, additionalHeaders);
         addHeaders(httpRequest, request.getHeaders());
         onPrepareRequest(httpRequest);
@@ -95,20 +92,20 @@ public class HttpClientStack implements HttpStack {
     /**
      * Creates the appropriate subclass of HttpUriRequest for passed in request.
      */
-    protected static HttpUriRequest createHttpRequest(Request<?> request, Map<String, String> additionalHeaders, UrlRewriter urlRewriter) throws AuthFailureError, IOException {
+    protected static HttpUriRequest createHttpRequest(Request<?> request, Map<String, String> additionalHeaders) throws AuthFailureError, IOException {
         switch (request.getMethod()) {
         case Method.GET:
-            return new HttpGet(urlRewriter.rewriteUrl(request));
+            return new HttpGet(request.getUrl());
         case Method.DELETE:
-            return new HttpDelete(urlRewriter.rewriteUrl(request));
+            return new HttpDelete(request.getUrl());
         case Method.POST: {
-            HttpPost postRequest = new HttpPost(urlRewriter.rewriteUrl(request));
+            HttpPost postRequest = new HttpPost(request.getUrl());
             postRequest.addHeader(HEADER_CONTENT_TYPE, request.getBodyContentType());
             setEntityIfNonEmptyBody(postRequest, request);
             return postRequest;
         }
         case Method.PUT: {
-            HttpPut putRequest = new HttpPut(urlRewriter.rewriteUrl(request));
+            HttpPut putRequest = new HttpPut(request.getUrl());
             putRequest.addHeader(HEADER_CONTENT_TYPE, request.getBodyContentType());
             setEntityIfNonEmptyBody(putRequest, request);
             return putRequest;

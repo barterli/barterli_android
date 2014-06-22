@@ -21,8 +21,6 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.text.TextUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Locale;
 
 import li.barter.http.HttpConstants;
@@ -34,55 +32,47 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG                            = true;
+    public static final boolean DEBUG                      = true;
     /**
      * Set to <code>true</code> for release builds. Will enable Google Analytics
      * reporting. Otherwise, Google Analytics will be set to a dry tun version
      */
-    public static final boolean REPORT_GOOGLE_ANALYTICS          = false;
+    public static final boolean REPORT_GOOGLE_ANALYTICS    = false;
 
-    public static final boolean ENABLE_CRASHLYTICS               = false;
+    public static final boolean ENABLE_CRASHLYTICS         = false;
 
-    public static final String  FACEBOOK                         = "facebook";
-    public static final String  FBPERMISSIONS[]                  = new String[] {
-                                                                     "email"
-                                                                 };
-    public static final String  GOOGLE                           = "google";
-    public static final String  MANUAL                           = "manual";
+    public static final String  FACEBOOK                   = "facebook";
+    public static final String  FBPERMISSIONS[]            = new String[] {
+                                                               "email"
+                                                           };
+    public static final String  GOOGLE                     = "google";
+    public static final String  MANUAL                     = "manual";
 
-    public static final String  TIMESTAMP_FORMAT                 = "yyyy-MM-dd'T'HH:mm:ssZ";
-    public static final String  CHAT_ID_FORMAT                   = "%s#%s";
-    public static final String  BARTER_TYPE_SEPARATOR            = ",";
+    public static final String  TIMESTAMP_FORMAT           = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final String  CHAT_TIME_FORMAT           = "dd MMM, h:mm a";
+    public static final String  MESSAGE_TIME_FORMAT        = "h:mm a";
+    public static final String  CHAT_ID_FORMAT             = "%s#%s";
+    public static final String  BARTER_TYPE_SEPARATOR      = ",";
 
-    public static final String  ACTION_SHOW_ALL_CHATS            = "li.barter.ACTION_SHOW_ALL_CHATS";
-    public static final String  ACTION_SHOW_CHAT_DETAIL          = "li.barter.ACTION_SHOW_CHAT_DETAIL";
-    public static final String  ACTION_DISCONNECT_CHAT           = "li.barter.ACTION_DISCONNECT_CHAT";
-    public static final String  ACTION_CHAT_BUTTON_CLICKED       = "li.barter.ACTION_CHAT_BUTTON_CLICKED";
+    public static final String  ACTION_SHOW_ALL_CHATS      = "li.barter.ACTION_SHOW_ALL_CHATS";
+    public static final String  ACTION_SHOW_CHAT_DETAIL    = "li.barter.ACTION_SHOW_CHAT_DETAIL";
+    public static final String  ACTION_DISCONNECT_CHAT     = "li.barter.ACTION_DISCONNECT_CHAT";
+    public static final String  ACTION_CHAT_BUTTON_CLICKED = "li.barter.ACTION_CHAT_BUTTON_CLICKED";
 
-    public static final String  JSON                             = "json";
-    public static final String  FALSE                            = "false";
+    public static final String  JSON                       = "json";
+    public static final String  FALSE                      = "false";
 
     /*
      * heartbeat interval for rabbitmq chat
      */
-    public static final int     HEART_BEAT_INTERVAL              = 20;
+    public static final int     HEART_BEAT_INTERVAL        = 20;
 
-    /*
-     * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :
-     * Default Book count value loaded when app starts
-     * DEFAULT_PERPAGE_LIMIT_ONSCROLL : Default Book count value loaded when it
-     * scrolls DEFAULT_LOAD_BEFORE_COUNT : This is to be subtracted value from
-     * the List Count so as to prevent loading lag on scrolling fast
-     */
-    public static final int     DEFAULT_PERPAGE_LIMIT            = 81;
-    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL   = 81;
-    public static final int     DEFAULT_LOAD_BEFORE_COUNT        = 45;
-    public static final int     DEFAULT_PERPAGE_LIMIT_FOR_SEARCH = 81;
+    public static final int     DEFAULT_ITEM_COUNT         = 10;
 
-    public static final int     DEFAULT_SEARCH_RADIUS            = 25;
+    public static final int     DEFAULT_SEARCH_RADIUS      = 25;
 
     // Default Book Image url we getting from the server when there is no image
-    public static final String  DEFAULT_BOOKIMAGE_URL            = "1_default.png";
+    public static final String  DEFAULT_BOOKIMAGE_URL      = "1_default.png";
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -377,7 +367,7 @@ public class AppConstants {
         public static final String DIALOG_ENABLE_LOCATION                          = "dialog_enable_location";
         public static final String DIALOG_ABOUT_LOCATION                           = "dialog_about_location";
         public static final String DIALOG_CHAT_LONGCLICK                           = "dialog_chat_longclick";
-        
+
     }
 
     /**
@@ -401,16 +391,16 @@ public class AppConstants {
      */
     public static interface Loaders {
 
-        public static final int SEARCH_BOOKS               = 201;
-        public static final int GET_MY_BOOKS               = 202;
-        public static final int ALL_CHATS                  = 203;
-        public static final int CHAT_DETAILS               = 204;
-        public static final int USER_DETAILS               = 205;
-        public static final int SEARCH_BOOKS_ON_PAGER = 206;
-        public static final int USER_DETAILS_ABOUT_ME = 207;
+        public static final int SEARCH_BOOKS              = 201;
+        public static final int GET_MY_BOOKS              = 202;
+        public static final int ALL_CHATS                 = 203;
+        public static final int CHAT_DETAILS              = 204;
+        public static final int USER_DETAILS              = 205;
+        public static final int SEARCH_BOOKS_ON_PAGER     = 206;
+        public static final int USER_DETAILS_ABOUT_ME     = 207;
         public static final int USER_DETAILS_CHAT_DETAILS = 208;
     }
-    
+
     /**
      * Constant interface. DO NOT IMPLEMENT
      * 
@@ -425,15 +415,9 @@ public class AppConstants {
         public static final int LOAD_BOOK_DETAIL_OTHER_USER               = 4;
 
         // 101-200 for insert queries
-        public static final int INSERT_CHAT_MESSAGE                       = 101;
-        public static final int INSERT_CHAT                               = 102;
-        public static final int INSERT_USER_FOR_CHAT                      = 103;
-        public static final int INSERT_CHAT_MESSAGE_LOCALLY               = 104;
 
         // 201-300 for update queries
-        public static final int UPDATE_CHAT                               = 201;
-        public static final int UPDATE_USER_FOR_CHAT                      = 202;
-        public static final int UPDATE_CHAT_MESSAGE                       = 203;
+        public static final int UPDATE_MESSAGE_STATUS                     = 201;
 
         //301-400 for delete queries
         public static final int DELETE_BOOKS_SEARCH_RESULTS               = 301;
@@ -442,7 +426,8 @@ public class AppConstants {
         public static final int DELETE_CHATS                              = 304;
         public static final int DELETE_MY_BOOKS                           = 305;
         public static final int DELETE_MY_BOOK                            = 306;
-        public static final int DELETE_MY_BOOK_FROM_SEARCH				  = 307;
+        public static final int DELETE_MY_BOOK_FROM_SEARCH                = 307;
+        public static final int DELETE_CHAT_MESSAGE                       = 308;
 
     }
 
@@ -457,9 +442,21 @@ public class AppConstants {
         public static final String GROUP    = "group";
     }
 
-    public static final String PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=li.barter";
+    /**
+     * Constant interface. DO NOT IMPLEMENT.
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static interface ChatStatus {
+        //Different types of chat status. Linked to the chat_sending_status of database 
+        public static final int SENDING  = 0;
+        public static final int SENT     = 1;
+        public static final int FAILED   = -1;
+        public static final int RECEIVED = 2;
+    }
+
+    public static final String PLAY_STORE_LINK        = "https://play.google.com/store/apps/details?id=li.barter";
     public static final String PLAY_STORE_MARKET_LINK = "market://details?id=li.barter";
 
-
-    public static final String REFERRER_FORMAT = "&referrer=%s";
+    public static final String REFERRER_FORMAT        = "&referrer=%s";
 }
