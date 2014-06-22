@@ -16,27 +16,11 @@
 
 package li.barter.fragments;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import com.android.volley.Request;
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
 
-import li.barter.R;
-import li.barter.activities.AbstractBarterLiActivity;
-import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
-import li.barter.analytics.GoogleAnalyticsManager;
-import li.barter.fragments.dialogs.AddUserInfoDialogFragment;
-import li.barter.http.BlMultiPartRequest;
-import li.barter.http.HttpConstants;
-import li.barter.http.HttpConstants.ApiEndpoints;
-import li.barter.http.HttpConstants.RequestId;
-import li.barter.http.IBlRequestContract;
-import li.barter.http.IVolleyHelper;
-import li.barter.http.ResponseInfo;
-import li.barter.http.VolleyCallbacks;
-import li.barter.http.VolleyCallbacks.IHttpCallbacks;
-import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.AppConstants.UserInfo;
-import li.barter.utils.Utils;
-import li.barter.widgets.TypefaceCache;
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,12 +42,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import com.android.volley.Request;
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-import com.google.zxing.common.StringUtils;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import de.keyboardsurfer.android.widget.crouton.Crouton;
+import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.analytics.GoogleAnalyticsManager;
+import li.barter.fragments.dialogs.AddUserInfoDialogFragment;
+import li.barter.http.BlMultiPartRequest;
+import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.ApiEndpoints;
+import li.barter.http.HttpConstants.RequestId;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.IVolleyHelper;
+import li.barter.http.ResponseInfo;
+import li.barter.http.VolleyCallbacks;
+import li.barter.http.VolleyCallbacks.IHttpCallbacks;
+import li.barter.utils.AppConstants.FragmentTags;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Utils;
+import li.barter.widgets.TypefaceCache;
 
 /**
  * Base fragment class to encapsulate common functionality. Call the init()

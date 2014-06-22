@@ -185,7 +185,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                                                                           final Runnable launchRunnable = makeRunnableForNavDrawerClick(position);
                                                                           if (launchRunnable != null) {
                                                                               //Give time for drawer to close before performing the action
-                                                                              mHandler.postDelayed(launchRunnable, 250);
+                                                                              mHandler.postDelayed(launchRunnable, 220);
                                                                           }
                                                                           mDrawerLayout.closeDrawer(mNavListView);
 
@@ -325,9 +325,9 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             case 1: {
 
                 GoogleAnalyticsManager
-                .getInstance()
-                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.CHATS));
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                                .set(ParamKeys.TYPE, ParamValues.CHATS));
                 if ((masterFragment != null)
                                 && (masterFragment instanceof ChatsFragment)) {
                     return null;
@@ -349,9 +349,9 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             //Report Bug
             case 2: {
                 GoogleAnalyticsManager
-                .getInstance()
-                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.REPORT_BUG));
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                                .set(ParamKeys.TYPE, ParamValues.REPORT_BUG));
                 if ((masterFragment != null)
                                 && (masterFragment instanceof ReportBugFragment)) {
                     return null;
@@ -371,53 +371,69 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             //Share
             case 3: {
                 GoogleAnalyticsManager
-                .getInstance()
-                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.SHARE));
-                final String referralId = SharedPreferenceHelper
-                                .getString(this, R.string.pref_share_token);
-                String appShareUrl = getString(R.string.app_share_message).concat(AppConstants.PLAY_STORE_LINK);
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                                .set(ParamKeys.TYPE, ParamValues.SHARE));
+                runnable = new Runnable() {
 
-                if (!TextUtils.isEmpty(referralId)) {
-                    appShareUrl = appShareUrl
-                                    .concat(String.format(Locale.US, AppConstants.REFERRER_FORMAT, referralId));
-                }
+                    @Override
+                    public void run() {
+                        final String referralId = SharedPreferenceHelper
+                                        .getString(AbstractBarterLiActivity.this, R.string.pref_share_token);
+                        String appShareUrl = getString(R.string.app_share_message)
+                                        .concat(AppConstants.PLAY_STORE_LINK);
 
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.subject));
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, appShareUrl);
-                
-                shareIntent.setType("text/plain");
-                try {
-                    startActivity(Intent
-                                    .createChooser(shareIntent, getString(R.string.share_via)));
-                } catch (ActivityNotFoundException e) {
-                    //Shouldn't happen
-                }
+                        if (!TextUtils.isEmpty(referralId)) {
+                            appShareUrl = appShareUrl
+                                            .concat(String.format(Locale.US, AppConstants.REFERRER_FORMAT, referralId));
+                        }
+
+                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.subject));
+                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, appShareUrl);
+
+                        shareIntent.setType("text/plain");
+                        try {
+                            startActivity(Intent
+                                            .createChooser(shareIntent, getString(R.string.share_via)));
+                        } catch (ActivityNotFoundException e) {
+                            //Shouldn't happen
+                        }
+
+                    }
+                };
 
                 break;
             }
-            
-          //Rate Us
+
+            //Rate Us
             case 4: {
                 GoogleAnalyticsManager
-                .getInstance()
-                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.RATE_US));
-               
-                Uri marketUri = Uri.parse(AppConstants.PLAY_STORE_MARKET_LINK);
-                Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
-                startActivity(marketIntent);
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                                .set(ParamKeys.TYPE, ParamValues.RATE_US));
+
+                runnable = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Uri marketUri = Uri
+                                        .parse(AppConstants.PLAY_STORE_MARKET_LINK);
+                        Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
+                        startActivity(marketIntent);
+
+                    }
+                };
 
                 break;
             }
-            
+
             //About Us
             case 5: {
                 GoogleAnalyticsManager
-                .getInstance()
-                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.ABOUT_US));
+                                .getInstance()
+                                .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
+                                                .set(ParamKeys.TYPE, ParamValues.ABOUT_US));
                 if ((masterFragment != null)
                                 && (masterFragment instanceof TeamFragment)) {
                     return null;
@@ -434,8 +450,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
                 break;
             }
-            
-            
 
             default: {
                 runnable = null;
@@ -663,11 +677,12 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * @param style The {@link AlertStyle} of message to display
      */
     public void showCrouton(final String message, final AlertStyle style) {
-    	//Crouton.make(activity, customView, viewGroupResId, configuration)
+        //Crouton.make(activity, customView, viewGroupResId, configuration)
         //Crouton.make(this, getCroutonViewForStyle(this, message, style)).show();
-        Crouton.make(this, getCroutonViewForStyle(this, message, style)).setConfiguration(new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
-        .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_SHORT)
-        .build()).show();
+        Crouton.make(this, getCroutonViewForStyle(this, message, style))
+                        .setConfiguration(new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
+                                        .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_SHORT)
+                                        .build()).show();
     }
 
     /**
@@ -920,39 +935,33 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     public void onBackPressed() {
 
         final AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
-        
-        final AbstractBarterLiFragment chatDetailFragment=(AbstractBarterLiFragment) getSupportFragmentManager()
-        .findFragmentByTag(FragmentTags.CHAT_DETAILS);
-        
-        final AbstractBarterLiFragment chatFragment=(AbstractBarterLiFragment) getSupportFragmentManager()
-                .findFragmentByTag(FragmentTags.CHATS);
-        
-        
+
+        final AbstractBarterLiFragment chatDetailFragment = (AbstractBarterLiFragment) getSupportFragmentManager()
+                        .findFragmentByTag(FragmentTags.CHAT_DETAILS);
+
+        final AbstractBarterLiFragment chatFragment = (AbstractBarterLiFragment) getSupportFragmentManager()
+                        .findFragmentByTag(FragmentTags.CHATS);
+
         if ((masterFragment != null)
                         && (getSupportFragmentManager()
                                         .getBackStackEntryCount() > 0)) {
-        	
+
             masterFragment.onBackPressed();
-        	
+
+        } else if ((chatDetailFragment != null)
+                        && (getSupportFragmentManager()
+                                        .getBackStackEntryCount() == 0)) {
+            chatDetailFragment.onBackPressed();
+        } else if ((chatFragment != null)
+                        && (getSupportFragmentManager()
+                                        .getBackStackEntryCount() == 0)) {
+            chatFragment.onBackPressed();
         }
-        else if((chatDetailFragment!=null)&& (getSupportFragmentManager()
-                .getBackStackEntryCount() == 0))
-        {
-        	chatDetailFragment.onBackPressed();
+
+        else {
+            super.onBackPressed();
         }
-        else if((chatFragment!=null)&& (getSupportFragmentManager()
-                .getBackStackEntryCount() == 0))
-        {
-        	chatFragment.onBackPressed();
-        }
-        
-        else
-    	{
-    		super.onBackPressed();	
-    	}
-      
-      
-       
+
     }
 
     /**
@@ -971,8 +980,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                         .findFragmentById(R.id.frame_content);
 
     }
-    
-    
 
     @Override
     public void onPreExecute(final IBlRequestContract request) {
