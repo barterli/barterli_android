@@ -21,11 +21,23 @@
     android:layout_height="match_parent"
     android:background="@color/global_bg" >
 
-    <FrameLayout
-        android:id="@+id/frame_content"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/global_bg" />
+        android:background="@color/global_bg" >
+
+        <FrameLayout
+            android:id="@+id/frame_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/frame_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/overlay_black_90p"
+            android:visibility="gone" />
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/list_nav_drawer"

@@ -28,6 +28,7 @@
     <color name="silver">#C0C0C0</color>
     <color name="overlay_black_15p">#26000000</color>
     <color name="overlay_black_40p">#66000000</color>
+    <color name="overlay_black_90p">#E6000000</color>
     <color name="overlay_gray_40p">#66565051</color>
     <color name="crouton_error">#FFFF4444</color>
     <color name="crouton_alert">#FF99CC00</color>
