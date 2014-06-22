@@ -19,9 +19,6 @@ package li.barter.fragments;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
@@ -42,6 +39,10 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -81,8 +82,6 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
                     final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         final View view = inflater.inflate(R.layout.fragment_reset_password, null);
-        
-        
 
         final Bundle extras = getArguments();
 
@@ -142,6 +141,7 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
 	
 	private void callPasswordReset(String token,String password,String email)
 	{
+
 		 
 		 final JSONObject requestObject = new JSONObject();
 

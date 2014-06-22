@@ -444,7 +444,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             
                
         	 args.putString(Keys.EMAIL, mEmailForPasswordChange);
-             
+
         	 final String tag = getTag();
              if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
 
