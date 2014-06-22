@@ -54,8 +54,8 @@ import li.barter.adapters.ChatDetailAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.chat.ChatService;
 import li.barter.chat.ChatService.ChatServiceBinder;
-import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DBInterface;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.SQLiteLoader;
@@ -69,6 +69,7 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.Logger;
+import li.barter.utils.Utils;
 import li.barter.widgets.CircleImageView;
 
 /**
@@ -118,6 +119,9 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
     /** Profile image of the user with whom the current user is chatting */
     private String              mWithUserImage;
+
+    /** Name of the user with whom the current user is chatting */
+    private String              mWithUserName;
 
     /**
      * User with whom the chat is happening
@@ -178,7 +182,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
             mWithImageView = (CircleImageView) actionView
                             .findViewById(R.id.image_user);
             mWithImageView.setOnClickListener(this);
-            loadUserImageIntoActionBar();
+            loadUserInfoIntoActionBar();
         }
     }
 
@@ -356,7 +360,12 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 mWithUserImage = cursor
                                 .getString(cursor
                                                 .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
-                loadUserImageIntoActionBar();
+                
+                final String firstName = cursor.getString(cursor.getColumnIndex(DatabaseColumns.FIRST_NAME));
+                final String lastName = cursor.getString(cursor.getColumnIndex(DatabaseColumns.LAST_NAME));
+                
+                mWithUserName = Utils.makeUserFullName(firstName, lastName);
+                loadUserInfoIntoActionBar();
 
             }
         }
@@ -365,7 +374,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     /**
      * Loads the user image into the Action Bar profile pic
      */
-    private void loadUserImageIntoActionBar() {
+    private void loadUserInfoIntoActionBar() {
 
         if (mWithImageView != null) {
 
@@ -376,6 +385,10 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                                 .resizeDimen(R.dimen.ab_user_image_size, R.dimen.ab_user_image_size)
                                 .centerCrop().into(mWithImageView.getTarget());
             }
+        }
+
+        if (!TextUtils.isEmpty(mWithUserName)) {
+            setActionBarTitle(mWithUserName);
         }
     }
 
@@ -434,7 +447,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onDeleteComplete(int token, Object cookie, int deleteCount) {
 
-        if(token == QueryTokens.DELETE_CHAT_MESSAGE) {
+        if (token == QueryTokens.DELETE_CHAT_MESSAGE) {
             //Do nothing for now
         }
     }

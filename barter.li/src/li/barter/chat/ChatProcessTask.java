@@ -355,7 +355,7 @@ class ChatProcessTask implements Runnable {
             DBInterface.insert(TableUsers.NAME, null, senderValues, true);
         }
 
-        return String.format("%s %s", senderFirstName, senderLastName);
+        return Utils.makeUserFullName(senderFirstName, senderLastName);
     }
 
     /**

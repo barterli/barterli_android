@@ -67,7 +67,7 @@ public class AppConstants {
      */
     public static final int     HEART_BEAT_INTERVAL        = 20;
 
-    public static final int     DEFAULT_ITEM_COUNT         = 10;
+    public static final int     DEFAULT_ITEM_COUNT         = 20;
 
     public static final int     DEFAULT_SEARCH_RADIUS      = 25;
 

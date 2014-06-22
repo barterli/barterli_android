@@ -293,9 +293,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                                 .setText(cursor.getString(cursor
                                                 .getColumnIndex(DatabaseColumns.PUBLICATION_YEAR)));
 
-                Logger.d(TAG, cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.IMAGE_URL)), "book image");
-
                 // Picasso.with(getActivity()).setDebugging(true);
                 if (cursor.getString(cursor.getColumnIndex(DatabaseColumns.IMAGE_URL))
                                 .equals(AppConstants.FALSE)) {

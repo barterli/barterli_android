@@ -24,6 +24,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -262,7 +263,7 @@ public class Utils {
 
         return ((System.currentTimeMillis() - lastScreenSeenTime) >= GoogleAnalyticsManager.SESSION_TIMEOUT);
     }
-    
+
     /**
      * Generates as chat ID which will be unique for a given sender/receiver
      * pair
@@ -302,6 +303,27 @@ public class Utils {
         }
 
         return hashed;
+    }
+
+    /**
+     * Generate a user's name from the first name last name
+     * 
+     * @param firstName
+     * @param lastName
+     * @return
+     */
+    public static String makeUserFullName(String firstName, String lastName) {
+
+        if (TextUtils.isEmpty(firstName)) {
+            return "";
+        }
+
+        final StringBuilder builder = new StringBuilder(firstName);
+
+        if (!TextUtils.isEmpty(lastName)) {
+            builder.append(" ").append(lastName);
+        }
+        return builder.toString();
     }
 
 }
