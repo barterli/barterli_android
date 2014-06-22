@@ -83,15 +83,14 @@
             android:layout_marginTop="@dimen/activity_margin"
             android:text="@string/submit"
             app:fontStyle="bold" />
-        
-        
+
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_margin"
             android:layout_gravity="center_horizontal"
-            android:text="@string/forgot_password"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:text="@string/forgot_password_underlined"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_medium"
             app:fontStyle="regular" />
