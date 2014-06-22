@@ -37,7 +37,7 @@ import li.barter.utils.Logger;
  * 
  * @author Anshul Kamboj
  */
-public class AddLocationDialogFragment extends DialogFragment {
+public class AddSingleEditTextDialogFragment extends DialogFragment {
 
     private static final String TAG = "AddLocationDialogFragment";
 
@@ -52,6 +52,9 @@ public class AddLocationDialogFragment extends DialogFragment {
 
     /** Res Id for the neutral button label. */
     private int                 mNeutralLabelId;
+    
+    /** Res Id for the hint label. */
+    private int                 mHintLabelId;
 
     /** Click Listener for the Dialog buttons. */
     private OnClickListener     mClickListener;
@@ -68,7 +71,7 @@ public class AddLocationDialogFragment extends DialogFragment {
     /** Resource Id for the theme to be used for the alert dialog. */
     private int                 mTheme;
 
-    private EditText            mLocationNameEditText;
+    private EditText            mNameEditText;
 
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
@@ -91,9 +94,13 @@ public class AddLocationDialogFragment extends DialogFragment {
 
         final View contentView = LayoutInflater.from(getActivity())
                         .inflate(R.layout.layout_dialog_place, null);
-        mLocationNameEditText = (EditText) contentView
+        mNameEditText = (EditText) contentView
                         .findViewById(R.id.edittext_location_name);
-
+        
+        if(mHintLabelId!=0)
+        {
+        	mNameEditText.setHint(mHintLabelId);
+        }
         builder.setView(contentView);
 
         if (mIconId != 0) {
@@ -153,6 +160,7 @@ public class AddLocationDialogFragment extends DialogFragment {
         outState.putInt(DialogKeys.NEGATIVE_LABEL_ID, mNegativeLabelId);
         outState.putInt(DialogKeys.POSITIVE_LABEL_ID, mPositiveLabelId);
         outState.putInt(DialogKeys.NEUTRAL_LABEL_ID, mNeutralLabelId);
+        outState.putInt(DialogKeys.HINT_LABEL_ID, mHintLabelId);
         outState.putBoolean(DialogKeys.CANCELLABLE, isCancellable);
         outState.putInt(DialogKeys.ICON_ID, mIconId);
         outState.putInt(DialogKeys.THEME, mTheme);
@@ -161,7 +169,7 @@ public class AddLocationDialogFragment extends DialogFragment {
 
     public void show(final int theme, final int iconId, final int titleId,
                     final int positiveLabelId, final int negativeLabelId,
-                    final int neutralLabelId, final FragmentManager manager,
+                    final int neutralLabelId,final int hintLabelId, final FragmentManager manager,
                     final boolean cancellable, final String fragmentTag) {
 
         mTheme = theme;
@@ -170,6 +178,7 @@ public class AddLocationDialogFragment extends DialogFragment {
         mPositiveLabelId = positiveLabelId;
         mNegativeLabelId = negativeLabelId;
         mNeutralLabelId = neutralLabelId;
+        mHintLabelId=hintLabelId;
         isCancellable = cancellable;
 
         try {
@@ -180,8 +189,8 @@ public class AddLocationDialogFragment extends DialogFragment {
 
     }
 
-    public String getLocationName() {
-        return mLocationNameEditText.getText().toString();
+    public String getName() {
+        return mNameEditText.getText().toString();
     }
 
   

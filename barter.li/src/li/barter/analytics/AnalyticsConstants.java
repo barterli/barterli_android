@@ -47,6 +47,7 @@ public class AnalyticsConstants {
         public static final String SELECT_PREFERRED_LOCATION = "Select Preferred Location";
         public static final String TEAM                      = "Team";
         public static final String TRIBUTE                   = "Tribute";
+        public static final String PASSWORD_RESET            = "Password Reset";
 
     }
 
@@ -70,6 +71,7 @@ public class AnalyticsConstants {
 
     public static interface ParamValues {
         public static final String FACEBOOK   = "facebook";
+        public static final String RESET      = "reset";
         public static final String GOOGLE     = "google";
         public static final String EMAIL      = "email";
         public static final String PROFILE    = "profile";

@@ -68,7 +68,7 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.TableSearchBooks;
 import li.barter.data.ViewSearchBooksWithLocations;
-import li.barter.fragments.dialogs.AddLocationDialogFragment;
+import li.barter.fragments.dialogs.AddSingleEditTextDialogFragment;
 import li.barter.fragments.dialogs.EnableLocationDialogFragment;
 import li.barter.fragments.dialogs.SingleChoiceDialogFragment;
 import li.barter.http.BlRequest;

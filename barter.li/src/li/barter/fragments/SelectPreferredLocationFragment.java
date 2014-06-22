@@ -45,7 +45,7 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.adapters.SelectLocationAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
-import li.barter.fragments.dialogs.AddLocationDialogFragment;
+import li.barter.fragments.dialogs.AddSingleEditTextDialogFragment;
 import li.barter.fragments.dialogs.AddUserInfoDialogFragment;
 import li.barter.fragments.dialogs.AlertDialogFragment;
 import li.barter.http.BlRequest;
@@ -101,7 +101,7 @@ implements OnItemClickListener,OnClickListener {
 
 	private View				  mEmptyView;
 
-	private AddLocationDialogFragment mAddLocationDialogFragment;
+	private AddSingleEditTextDialogFragment mAddLocationDialogFragment;
 	
 	private boolean				  mEditMode;
 
@@ -445,14 +445,13 @@ implements OnItemClickListener,OnClickListener {
 	}
 
 	/**
-	 * Show the dialog for the user to add his name, in case it's not already
-	 * added
+	 * Show the dialog for the user to enter his location detail
 	 */
-	protected void showAddLocationDialog() {
+	private void showAddLocationDialog() {
 
-		mAddLocationDialogFragment = new AddLocationDialogFragment();
+		mAddLocationDialogFragment = new AddSingleEditTextDialogFragment();
 		mAddLocationDialogFragment
-		.show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.preferred_location, R.string.submit, R.string.cancel, 0, getFragmentManager(), true, FragmentTags.DIALOG_ADD_NAME);
+		.show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.preferred_location, R.string.submit, R.string.cancel, 0,R.string.hint_location_name, getFragmentManager(), true, FragmentTags.DIALOG_ADD_NAME);
 	}
 
 
@@ -489,7 +488,7 @@ implements OnItemClickListener,OnClickListener {
 
 			if (which == DialogInterface.BUTTON_POSITIVE) {
 				final String locationName = mAddLocationDialogFragment
-						.getLocationName();
+						.getName();
 				final double latitude=DeviceInfo.INSTANCE.getLatestLocation().getLatitude();
 				final double longitude=DeviceInfo.INSTANCE.getLatestLocation().getLongitude();
 

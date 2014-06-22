@@ -27,6 +27,8 @@ import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -37,8 +39,11 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import li.barter.BarterLiApplication;
 import li.barter.R;
@@ -50,6 +55,7 @@ import li.barter.analytics.AnalyticsConstants.Actions;
 import li.barter.analytics.AnalyticsConstants.Categories;
 import li.barter.analytics.AnalyticsConstants.ParamValues;
 import li.barter.analytics.AnalyticsConstants.Screens;
+import li.barter.fragments.dialogs.AddSingleEditTextDialogFragment;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -57,6 +63,7 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
@@ -72,12 +79,15 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     /**
      * Minimum length of the entered password
      */
-    private final int           mMinPasswordLength = 8;
-    private Button              mFacebookLoginButton;
-    private Button              mGoogleLoginButton;
-    private Button              mSubmitButton;
-    private EditText            mEmailEditText;
-    private EditText            mPasswordEditText;
+    private final int          						 mMinPasswordLength = 8;
+    private Button             						 mFacebookLoginButton;
+    private Button             						 mGoogleLoginButton;
+    private Button             						 mSubmitButton;
+    private EditText           						 mEmailEditText;
+    private EditText           						 mPasswordEditText;
+    private TextView							   	 mForgotPassword;
+    private AddSingleEditTextDialogFragment 		 mAddSingleEditTextDialogFragment;
+    private String 									 mEmailForPasswordChange;			 
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -93,7 +103,10 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         mEmailEditText = (EditText) view.findViewById(R.id.edit_text_email);
         mPasswordEditText = (EditText) view
                         .findViewById(R.id.edit_text_password);
-
+        mForgotPassword=(TextView)view.findViewById(R.id.forgot_password);
+        
+        mForgotPassword.setOnClickListener(this);
+        
         Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
 
         Session session = Session.getActiveSession();
@@ -178,8 +191,68 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 }
                 break;
             }
+            
+            case R.id.forgot_password: {
+            	showForgotPasswordDialog();
+            	
+            }
         }
     }
+    
+    
+    /**
+	 * Show the dialog for the user to enter his email address
+	 */
+	private void showForgotPasswordDialog() {
+
+		mAddSingleEditTextDialogFragment = new AddSingleEditTextDialogFragment();
+		mAddSingleEditTextDialogFragment
+		.show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.forgot_password, R.string.submit, R.string.cancel, 0,R.string.email_label, getFragmentManager(), true, FragmentTags.DIALOG_FORGOT_PASSWORD);
+	
+	}
+	
+	
+	@Override
+	public boolean willHandleDialog(final DialogInterface dialog) {
+
+		if ((mAddSingleEditTextDialogFragment != null)
+				&& mAddSingleEditTextDialogFragment.getDialog()
+				.equals(dialog)) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onDialogClick(final DialogInterface dialog, final int which) {
+
+		if ((mAddSingleEditTextDialogFragment != null)
+				&& mAddSingleEditTextDialogFragment.getDialog()
+				.equals(dialog)) {
+
+			if (which == DialogInterface.BUTTON_POSITIVE) {
+				callForgotPassword(mAddSingleEditTextDialogFragment.getName());
+			}
+		}
+	}
+	
+	
+	/**
+	 * Call the password_reset Api
+	 * @param email The entered email
+	 */
+	
+	private void callForgotPassword(String email)
+	{
+		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+				 + ApiEndpoints.PASSWORD_RESET, null, mVolleyCallbacks);
+		 request.setRequestId(RequestId.PASSWORD_RESET);
+		 mEmailForPasswordChange=email;
+		 final Map<String, String> params = new HashMap<String, String>(1);
+		 params.put(HttpConstants.EMAIL, email);
+		 request.setParams(params);
+		 addRequestToQueue(request, true, 0, true);
+	}
 
     /**
      * Call the login Api
@@ -364,6 +437,37 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             }
 
         }
+        
+        else if(requestId==RequestId.PASSWORD_RESET)
+        {
+        	 Bundle args = new Bundle(1);
+            
+               
+        	 args.putString(Keys.EMAIL, mEmailForPasswordChange);
+             
+        	 final String tag = getTag();
+             if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+
+            	 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                         .instantiate(getActivity(), PasswordResetFragment.class
+                                         .getName(), args), FragmentTags.PASSWORD_RESET, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+
+             } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
+            	 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
+            	 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                         .instantiate(getActivity(), PasswordResetFragment.class
+                                         .getName(), args), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+             } else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
+            	 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
+            	 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                         .instantiate(getActivity(), PasswordResetFragment.class
+                                         .getName(), args), FragmentTags.LOGIN_TO_CHAT, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+
+             }
+
+         }
+             
+        
 
     }
 
