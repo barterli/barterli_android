@@ -180,7 +180,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         LoadMoreHelper.init(this).on(mBooksAroundMeGridView);
 
         mBooksAroundMeAdapter = new BooksGridAdapter(getActivity());
-        //mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
+        mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
         mBooksAroundMeGridView.setOnItemClickListener(this);
         mBooksAroundMeGridView.setVerticalScrollBarEnabled(false);
 
