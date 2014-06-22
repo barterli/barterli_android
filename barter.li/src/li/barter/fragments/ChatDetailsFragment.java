@@ -36,6 +36,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -74,47 +76,47 @@ import li.barter.widgets.CircleImageView;
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,
-                AsyncDbQueryCallback {
+                AsyncDbQueryCallback, OnItemClickListener {
 
-    private static final String     TAG            = "ChatDetailsFragment";
+    private static final String TAG            = "ChatDetailsFragment";
 
-    private ChatDetailAdapter       mChatDetailAdapter;
+    private ChatDetailAdapter   mChatDetailAdapter;
 
-    private ListView                mChatListView;
+    private ListView            mChatListView;
 
-    private EditText                mSubmitChatEditText;
+    private EditText            mSubmitChatEditText;
 
-    private ImageButton             mSubmitChatButton;
+    private ImageButton         mSubmitChatButton;
 
-    private ChatService             mChatService;
+    private ChatService         mChatService;
 
-    private boolean                 mBoundToChatService;
+    private boolean             mBoundToChatService;
 
-    private boolean                 mFirstMessage;
+    private boolean             mFirstMessage;
 
-    private final String            mChatSelection = DatabaseColumns.CHAT_ID
-                                                                   + SQLConstants.EQUALS_ARG;
+    private final String        mChatSelection = DatabaseColumns.CHAT_ID
+                                                               + SQLConstants.EQUALS_ARG;
 
-    private final String            mUserSelection = DatabaseColumns.USER_ID
-                                                                   + SQLConstants.EQUALS_ARG;
+    private final String        mUserSelection = DatabaseColumns.USER_ID
+                                                               + SQLConstants.EQUALS_ARG;
 
     /**
      * The Id of the Chat
      */
-    private String                  mChatId;
+    private String              mChatId;
 
     /**
      * Id of the user with whom the current user is chatting
      */
-    private String                  mWithUserId;
+    private String              mWithUserId;
 
     /** Profile image of the user with whom the current user is chatting */
-    private String                  mWithUserImage;
+    private String              mWithUserImage;
 
     /**
      * User with whom the chat is happening
      */
-    private CircleImageView         mWithImageView;
+    private CircleImageView     mWithImageView;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -132,6 +134,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         mChatListView = (ListView) view.findViewById(R.id.list_chats);
         mChatDetailAdapter = new ChatDetailAdapter(getActivity(), null);
         mChatListView.setAdapter(mChatDetailAdapter);
+        mChatListView.setOnItemClickListener(this);
         mChatId = getArguments().getString(Keys.CHAT_ID);
         mWithUserId = getArguments().getString(Keys.USER_ID);
 
@@ -429,6 +432,21 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     protected String getAnalyticsScreenName() {
         return Screens.CHAT_DETAILS;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                    long id) {
+
+        if (parent.getId() == R.id.list_chats) {
+
+            final boolean resendOnClick = (Boolean) view
+                            .getTag(R.string.tag_resend_on_click);
+
+            if (resendOnClick) {
+                //TODO: Resend message
+            }
+        }
     }
 
 }
