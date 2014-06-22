@@ -67,17 +67,7 @@ public class AppConstants {
      */
     public static final int     HEART_BEAT_INTERVAL              = 20;
 
-    /*
-     * These are three constants for loading of books. DEFAULT_PERPAGE_LIMIT :
-     * Default Book count value loaded when app starts
-     * DEFAULT_PERPAGE_LIMIT_ONSCROLL : Default Book count value loaded when it
-     * scrolls DEFAULT_LOAD_BEFORE_COUNT : This is to be subtracted value from
-     * the List Count so as to prevent loading lag on scrolling fast
-     */
-    public static final int     DEFAULT_PERPAGE_LIMIT            = 81;
-    public static final int     DEFAULT_PERPAGE_LIMIT_ONSCROLL   = 81;
-    public static final int     DEFAULT_LOAD_BEFORE_COUNT        = 45;
-    public static final int     DEFAULT_PERPAGE_LIMIT_FOR_SEARCH = 81;
+    public static final int     DEFAULT_ITEM_COUNT            = 10;
 
     public static final int     DEFAULT_SEARCH_RADIUS            = 25;
 
