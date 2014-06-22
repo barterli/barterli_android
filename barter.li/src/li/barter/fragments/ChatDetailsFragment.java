@@ -49,7 +49,6 @@ import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.HomeActivity;
 import li.barter.adapters.ChatDetailAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
-import li.barter.chat.ChatAcknowledge;
 import li.barter.chat.ChatService;
 import li.barter.chat.ChatService.ChatServiceBinder;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -113,12 +112,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     private String                  mWithUserImage;
 
     /**
-     * Implementation of {@link ConcreteChatAcknowledge} to receive
-     * notifications when chat requests are complete
-     */
-    private ConcreteChatAcknowledge mAcknowledge;
-
-    /**
      * User with whom the chat is happening
      */
     private CircleImageView         mWithImageView;
@@ -153,7 +146,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
         getLoaderManager()
                         .restartLoader(Loaders.USER_DETAILS_CHAT_DETAILS, null, this);
-        mAcknowledge = new ConcreteChatAcknowledge();
 
         if (savedInstanceState == null) {
             mFirstMessage = true;
@@ -222,7 +214,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPause() {
         super.onPause();
-        mAcknowledge.mChatDetailsFragment = null;
         if (mBoundToChatService) {
             mChatService.setCurrentChattingUserId(null);
             getActivity().unbindService(this);
@@ -247,7 +238,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onResume() {
         super.onResume();
-        mAcknowledge.mChatDetailsFragment = this;
         //Bind to chat service
         final Intent chatServiceBindIntent = new Intent(getActivity(), ChatService.class);
         getActivity().bindService(chatServiceBindIntent, this, Context.BIND_AUTO_CREATE);
@@ -398,7 +388,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                     SimpleDateFormat formatter = new SimpleDateFormat(AppConstants.TIMESTAMP_FORMAT, Locale
                                     .getDefault());
                     final String sentAt = formatter.format(new Date());
-                    mChatService.sendMessageToUser(mWithUserId, message, mAcknowledge, sentAt);
+                    mChatService.sendMessageToUser(mWithUserId, message, sentAt);
 
                     mSubmitChatEditText.setText(null);
                 } else {
@@ -410,64 +400,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         } else if (id == R.id.image_user) {
             loadChattingWithUser();
         }
-    }
-
-    /**
-     * While a chat message is being sent, disable sending of any more chats
-     * until the current one either fails or succeeds
-     * 
-     * @param enabled <code>true</code> to enable the actions,
-     *            <code>false</code> to disable
-     */
-    private void setActionEnabled(final boolean enabled) {
-        mSubmitChatEditText.setEnabled(enabled);
-        mSubmitChatButton.setEnabled(enabled);
-    }
-
-    /**
-     * Concrete implementation of {@link ChatAcknowledge} for receiving
-     * callbacks when a sent chat message completes. The reason we are making a
-     * concrete implementation is because the fragment can go to background or
-     * get destroyed before the request completes(which is done in
-     * {@link ChatService}). This class will act as a check to make sure the
-     * fragment is still visible before updating the UI
-     * 
-     * @author Vinay S Shenoy
-     */
-    private static class ConcreteChatAcknowledge implements ChatAcknowledge {
-
-        private ChatDetailsFragment mChatDetailsFragment;
-
-        @Override
-        public void onChatRequestComplete(final boolean success) {
-
-            if ((mChatDetailsFragment != null)
-                            && mChatDetailsFragment.isVisible()) {
-
-                mChatDetailsFragment.onChatComplete(success);
-            }
-        }
-
-    }
-
-    /**
-     * Whether the sent chat message was sent successfully or not
-     * 
-     * @param success <code>true</code> if the message was sent sucessfully,
-     *            <code>false</code> otherwise
-     */
-    public void onChatComplete(final boolean success) {
-
-        if (success) {
-            //Clear the submit chat text since it was sent successfully
-            //TODO
-        } else {
-            //Show error message
-            showCrouton(R.string.error_unable_to_send_chat, AlertStyle.ERROR);
-        }
-
-        setActionEnabled(true);
-
     }
 
     @Override

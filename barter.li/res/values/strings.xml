@@ -124,7 +124,6 @@
     <string name="error_unable_to_login">Unable to login.</string>
     <string name="error_unable_to_set_preferred_location">Unable to set preferred location for user.</string>
     <string name="error_not_connected_to_chat_service">Not connected to chat service.</string>
-    <string name="error_unable_to_send_chat">Not able to send chat message</string>
     <string name="no_personal_info_bug_and_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this bug report or feature suggestion will be available publicly.</string>
     <string name="no_personal_info_suggest">Please don\'t include any personally identifiable information(email, name, phone number, address, etc) as this feature suggestion will be available publicly.</string>
     <string name="error_required">Required</string>
@@ -186,8 +185,7 @@
 
     <!-- Strings for chat details -->
     <string name="sending">&#8230;</string>
-    <string name="failed">failed</string>
-    <string name="trueflag">true</string>
+    <string name="failed">Failed to send. Tap to retry.</string>
     <string name="success_message_for_chatblock">User blocked successfully</string>
 
     <string-array name="aboutus_fragment_titles">

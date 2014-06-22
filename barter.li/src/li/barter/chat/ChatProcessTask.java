@@ -85,12 +85,6 @@ class ChatProcessTask implements Runnable {
     private DateFormatter       mMessageDateFormatter;
 
     /**
-     * {@link ChatAcknowledge} instance for sending back to the caller after the
-     * local chat message is inserted into the database
-     */
-    private ChatAcknowledge     mChatAcknowledge;
-
-    /**
      * Callback for receiving when it is ready to send the chat message
      */
     private SendChatCallback    mSendChatCallback;
@@ -107,10 +101,9 @@ class ChatProcessTask implements Runnable {
          * Send the chat request
          * 
          * @param text The request body
-         * @param acknowledge The chat acknowledge passed into the task
+         * @param dbRowId The row id of the inserted local chat message
          */
-        public void sendChat(final String text,
-                        final ChatAcknowledge acknowledge);
+        public void sendChat(final String text, final long dbRowId);
     }
 
     private ChatProcessTask() {
@@ -135,10 +128,6 @@ class ChatProcessTask implements Runnable {
 
     public DateFormatter getMessageDateFormatter() {
         return mMessageDateFormatter;
-    }
-
-    public ChatAcknowledge getChatAcknowledge() {
-        return mChatAcknowledge;
     }
 
     public SendChatCallback getSendChatCallback() {
@@ -222,7 +211,7 @@ class ChatProcessTask implements Runnable {
                 }
 
                 //After finishing the local chat insertion, give a callback to do the actual network call
-                mSendChatCallback.sendChat(mMessage, mChatAcknowledge);
+                mSendChatCallback.sendChat(mMessage, insertRowId);
             }
         } catch (JSONException e) {
             Logger.e(TAG, e, "Invalid message json");
@@ -403,11 +392,6 @@ class ChatProcessTask implements Runnable {
         public Builder setMessageDateFormatter(
                         DateFormatter messageDateFormatter) {
             mChatProcessTask.mMessageDateFormatter = messageDateFormatter;
-            return this;
-        }
-
-        public Builder setChatAcknowledge(ChatAcknowledge chatAcknowledge) {
-            mChatProcessTask.mChatAcknowledge = chatAcknowledge;
             return this;
         }
 

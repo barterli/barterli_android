@@ -24,14 +24,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Service;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.BaseColumns;
 import android.text.TextUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -45,6 +48,12 @@ import li.barter.chat.AbstractRabbitMQConnector.OnDisconnectCallback;
 import li.barter.chat.ChatProcessTask.Builder;
 import li.barter.chat.ChatProcessTask.SendChatCallback;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
+import li.barter.data.DBInterface;
+import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.DatabaseColumns;
+import li.barter.data.SQLConstants;
+import li.barter.data.TableChatMessages;
+import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
@@ -55,7 +64,10 @@ import li.barter.http.ResponseInfo;
 import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AppConstants.ChatStatus;
 import li.barter.utils.AppConstants.DeviceInfo;
+import li.barter.utils.AppConstants.Keys;
+import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
@@ -81,7 +93,7 @@ import li.barter.utils.Logger;
  * @author Vinay S Shenoy
  */
 public class ChatService extends Service implements OnReceiveMessageHandler,
-                IHttpCallbacks, OnDisconnectCallback {
+                IHttpCallbacks, OnDisconnectCallback, AsyncDbQueryCallback {
 
     private static final String    TAG                      = "ChatService";
     private static final String    QUEUE_NAME_FORMAT        = "%s%s";
@@ -99,6 +111,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * Maximum multiplier for the connect interval
      */
     private static final int       MAX_CONNECT_MULTIPLIER   = 180;
+
+    private static final String    MESSAGE_SELECT_BY_ID     = BaseColumns._ID
+                                                                            + SQLConstants.EQUALS_ARG;
 
     private final IBinder          mChatServiceBinder       = new ChatServiceBinder();
 
@@ -298,11 +313,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      * 
      * @param toUserId The user Id to send the message to
      * @param message The message to send
-     * @param acknowledge An implementation of {@link ChatAcknowledge} to be
-     *            notified when the chat request completes
      */
     public void sendMessageToUser(final String toUserId, final String message,
-                    final ChatAcknowledge acknowledge, final String timeSentAt) {
+                    final String timeSentAt) {
 
         if (!isLoggedIn()) {
             return;
@@ -321,19 +334,20 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             final ChatProcessTask chatProcessTask = mChatProcessTaskBuilder
                             .setProcessType(ChatProcessTask.PROCESS_SEND)
                             .setMessage(requestObject.toString())
-                            .setChatAcknowledge(acknowledge)
                             .setMessageDateFormatter(mMessageDateFormatter)
                             .setChatDateFormatter(mChatDateFormatter)
                             .setSendChatCallback(new SendChatCallback() {
 
                                 @Override
                                 public void sendChat(String text,
-                                                ChatAcknowledge acknowledge) {
 
-                                    final ChatRequest request = new ChatRequest(Method.POST, HttpConstants
+                                long dbRowId) {
+
+                                    final BlRequest request = new BlRequest(Method.POST, HttpConstants
                                                     .getChangedChatUrl()
-                                                    + ApiEndpoints.AMPQ_EVENT_MACHINE, text, mVolleyCallbacks, acknowledge);
+                                                    + ApiEndpoints.AMPQ_EVENT_MACHINE, text, mVolleyCallbacks);
                                     request.setRequestId(RequestId.AMPQ);
+                                    request.addExtra(Keys.ID, dbRowId);
                                     request.setTag(TAG);
 
                                     //Post on main thread
@@ -469,16 +483,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     final ResponseInfo response) {
 
         if (requestId == RequestId.AMPQ) {
-
-            if (request instanceof ChatRequest) {
-
-                final ChatAcknowledge acknowledge = ((ChatRequest) request)
-                                .getAcknowledge();
-
-                if (acknowledge != null) {
-                    acknowledge.onChatRequestComplete(true);
-                }
-            }
+            Logger.v(TAG, "Chat sent");
         }
     }
 
@@ -489,15 +494,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
         if (requestId == RequestId.AMPQ) {
 
-            if (request instanceof ChatRequest) {
+            final long messageDbId = (Long) (request.getExtras().get(Keys.ID));
 
-                final ChatAcknowledge acknowledge = ((ChatRequest) request)
-                                .getAcknowledge();
-
-                if (acknowledge != null) {
-                    acknowledge.onChatRequestComplete(false);
-                }
-            }
+            markChatAsFailed(messageDbId);
         }
     }
 
@@ -507,15 +506,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
         if (requestId == RequestId.AMPQ) {
 
-            if (request instanceof ChatRequest) {
+            final long messageDbId = (Long) (request.getExtras().get(Keys.ID));
 
-                final ChatAcknowledge acknowledge = ((ChatRequest) request)
-                                .getAcknowledge();
-
-                if (acknowledge != null) {
-                    acknowledge.onChatRequestComplete(false);
-                }
-            }
+            markChatAsFailed(messageDbId);
         }
     }
 
@@ -525,16 +518,22 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
         if (requestId == RequestId.AMPQ) {
 
-            if (request instanceof ChatRequest) {
+            final long messageDbId = (Long) (request.getExtras().get(Keys.ID));
 
-                final ChatAcknowledge acknowledge = ((ChatRequest) request)
-                                .getAcknowledge();
-
-                if (acknowledge != null) {
-                    acknowledge.onChatRequestComplete(false);
-                }
-            }
+            markChatAsFailed(messageDbId);
         }
+    }
+
+    /**
+     * @param messageDbId The database row of the locally inserted chat message
+     */
+    private void markChatAsFailed(long messageDbId) {
+        final ContentValues values = new ContentValues(1);
+        values.put(DatabaseColumns.CHAT_STATUS, ChatStatus.FAILED);
+
+        DBInterface.updateAsync(QueryTokens.UPDATE_MESSAGE_STATUS, null, TableChatMessages.NAME, values, MESSAGE_SELECT_BY_ID, new String[] {
+            String.valueOf(messageDbId)
+        }, true, this);
     }
 
     @Override
@@ -557,6 +556,53 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             mMessageConsumer.setOnReceiveMessageHandler(ChatService.this);
             mMessageConsumer.setOnDisconnectCallback(ChatService.this);
         }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * li.barter.data.DBInterface.AsyncDbQueryCallback#onInsertComplete(int,
+     * java.lang.Object, long)
+     */
+    @Override
+    public void onInsertComplete(int token, Object cookie, long insertRowId) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * li.barter.data.DBInterface.AsyncDbQueryCallback#onDeleteComplete(int,
+     * java.lang.Object, int)
+     */
+    @Override
+    public void onDeleteComplete(int token, Object cookie, int deleteCount) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see
+     * li.barter.data.DBInterface.AsyncDbQueryCallback#onUpdateComplete(int,
+     * java.lang.Object, int)
+     */
+    @Override
+    public void onUpdateComplete(int token, Object cookie, int updateCount) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see li.barter.data.DBInterface.AsyncDbQueryCallback#onQueryComplete(int,
+     * java.lang.Object, android.database.Cursor)
+     */
+    @Override
+    public void onQueryComplete(int token, Object cookie, Cursor cursor) {
+        // TODO Auto-generated method stub
 
     }
 
