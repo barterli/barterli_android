@@ -100,7 +100,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 OnRefreshListener, OnCloseListener, OnActionExpandListener,
                 OnClickListener {
 
-    private static final String          TAG                     = "BooksAroundMeFragment";
+    private static final String          TAG = "BooksAroundMeFragment";
 
     /**
      * Helper class for performing network search queries from Action Bar easily
@@ -189,7 +189,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mEmptyView.findViewById(R.id.text_try_again).setOnClickListener(this);
         mEmptyView.findViewById(R.id.text_add_your_own)
                         .setOnClickListener(this);
-        mEmptyView.findViewById(R.id.image_add_graphic).setOnClickListener(this);
+        mEmptyView.findViewById(R.id.image_add_graphic)
+                        .setOnClickListener(this);
 
         mBooksAroundMeGridView.setEmptyView(mEmptyView);
 
@@ -523,7 +524,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         super.onPostExecute(request);
         if (request.getRequestId() == RequestId.SEARCH_BOOKS) {
             mIsLoading = false;
-            mEmptyView.setVisibility(View.VISIBLE);
             mPullToRefreshLayout.setRefreshComplete();
         }
     }
@@ -616,24 +616,28 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                     final int position, final long id) {
         if (parent.getId() == R.id.grid_books_around_me) {
 
-            final Cursor cursor = (Cursor) mBooksAroundMeAdapter
-                            .getItem(position);
+            if (position == mBooksAroundMeAdapter.getCount() - 1) {
+                showAddBookOptions();
+            } else {
+                final Cursor cursor = (Cursor) mBooksAroundMeAdapter
+                                .getItem(position);
 
-            final String idBook = cursor.getString(cursor
-                            .getColumnIndex(DatabaseColumns.ID));
+                final String idBook = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.ID));
 
-            Logger.d(TAG, "ID:" + idBook);
+                Logger.d(TAG, "ID:" + idBook);
 
-            final String userId = cursor.getString(cursor
-                            .getColumnIndex(DatabaseColumns.USER_ID));
+                final String userId = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.USER_ID));
 
-            final Bundle showBooksArgs = new Bundle();
-            showBooksArgs.putString(Keys.ID, idBook);
-            showBooksArgs.putString(Keys.USER_ID, userId);
-            showBooksArgs.putInt(Keys.BOOK_POSITION, position);
-            loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), BooksPagerFragment.class
-                                            .getName(), showBooksArgs), FragmentTags.BOOKS_AROUND_ME, true, FragmentTags.BS_BOOK_DETAIL);
+                final Bundle showBooksArgs = new Bundle();
+                showBooksArgs.putString(Keys.ID, idBook);
+                showBooksArgs.putString(Keys.USER_ID, userId);
+                showBooksArgs.putInt(Keys.BOOK_POSITION, position);
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), BooksPagerFragment.class
+                                                .getName(), showBooksArgs), FragmentTags.BOOKS_AROUND_ME, true, FragmentTags.BS_BOOK_DETAIL);
+            }
 
         }
     }
@@ -761,7 +765,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onRefreshStarted(View view) {
 
         if (view.getId() == R.id.grid_books_around_me) {
-            mEmptyView.setVisibility(View.INVISIBLE);
             reloadNearbyBooks();
         }
     }
@@ -779,7 +782,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        mEmptyView.setVisibility(View.INVISIBLE);
         reloadNearbyBooks();
         return true;
     }
@@ -805,12 +807,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         final int id = v.getId();
 
-        switch(id) {
+        switch (id) {
             case R.id.text_try_again: {
                 reloadNearbyBooks();
                 break;
             }
-            
+
             case R.id.image_add_graphic:
             case R.id.text_add_your_own: {
                 showAddBookOptions();

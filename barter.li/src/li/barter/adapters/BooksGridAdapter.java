@@ -27,10 +27,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
 import li.barter.utils.AppConstants;
-import li.barter.utils.Logger;
 import li.barter.widgets.CircleImageView;
 
 /**
@@ -40,13 +40,96 @@ import li.barter.widgets.CircleImageView;
  */
 public class BooksGridAdapter extends CursorAdapter {
 
-    private static final String TAG = "BooksGridAdapter";
+    private static final String TAG          = "BooksGridAdapter";
+
+    private static final int    VIEW_BOOK    = 0;
+    private static final int    VIEW_GRAPHIC = 1;
+
+    private int                 mCount;
 
     /**
      * @param context A reference to the {@link Context}
      */
     public BooksGridAdapter(final Context context) {
         super(context, null, 0);
+        mCount = 0;
+    }
+
+    @Override
+    public int getCount() {
+        return mCount;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+
+        if (mCursor == null) {
+            mCount = 0;
+        } else {
+            mCount = mCursor.getCount() + 1;//Empty graphic
+        }
+        super.notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == (mCount - 1) ? VIEW_GRAPHIC : VIEW_BOOK;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        final int viewType = getItemViewType(position);
+        View view = convertView;
+        if (viewType == VIEW_BOOK) {
+
+            if (view == null) {
+                view = inflateBookView(parent);
+            }
+
+            mCursor.moveToPosition(position);
+            bindView(view, parent.getContext(), mCursor);
+
+        } else if (viewType == VIEW_GRAPHIC) {
+
+            if (view == null) {
+                view = inflateGraphicView(parent);
+            }
+        }
+
+        return view;
+    }
+
+    /**
+     * @param parent
+     * @return
+     */
+    private View inflateGraphicView(ViewGroup parent) {
+        final View view = LayoutInflater
+                        .from(parent.getContext())
+                        .inflate(R.layout.layout_item_add_graphic, parent, false);
+        return view;
+    }
+
+    /**
+     * @param parent
+     * @return
+     */
+    private View inflateBookView(ViewGroup parent) {
+        final View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.layout_item_book, parent, false);
+
+        view.setTag(R.id.image_book, view.findViewById(R.id.image_book));
+        view.setTag(R.id.text_book_name, view.findViewById(R.id.text_book_name));
+        view.setTag(R.id.text_book_author, view
+                        .findViewById(R.id.text_book_author));
+        view.setTag(R.id.image_user, view.findViewById(R.id.image_user));
+        return view;
     }
 
     @Override
@@ -61,32 +144,29 @@ public class BooksGridAdapter extends CursorAdapter {
                         .setText(cursor.getString(cursor
                                         .getColumnIndex(DatabaseColumns.AUTHOR)));
 
-        /*((TextView) view.getTag(R.id.text_book_location))
-                        .setText(String.format(mLocationFormat, cursor.getString(cursor
-                                        .getColumnIndex(DatabaseColumns.NAME)), cursor
-                                        .getString(cursor
-                                                        .getColumnIndex(DatabaseColumns.ADDRESS))));*/
-
         final String bookImageUrl = cursor.getString(cursor
                         .getColumnIndex(DatabaseColumns.IMAGE_URL));
 
         //if book image not present
-        if (bookImageUrl == null
-                        || bookImageUrl.contains(AppConstants.FALSE)) {
-        	
-        	((TextView) view.getTag(R.id.text_book_name)).setVisibility(View.VISIBLE);
-        	((TextView) view.getTag(R.id.text_book_author)).setVisibility(View.VISIBLE);
-        	
-        	// this gives blank image. Its a hack for disabling caching issue for no image present book
-        	
-        	 Picasso.with(context).load(bookImageUrl).fit()
-             .into((ImageView) view.getTag(R.id.image_book));
+        if (bookImageUrl == null || bookImageUrl.contains(AppConstants.FALSE)) {
+
+            ((TextView) view.getTag(R.id.text_book_name))
+                            .setVisibility(View.VISIBLE);
+            ((TextView) view.getTag(R.id.text_book_author))
+                            .setVisibility(View.VISIBLE);
+
+            // this gives blank image. Its a hack for disabling caching issue for no image present book
+
+            Picasso.with(context).load(bookImageUrl).fit()
+                            .into((ImageView) view.getTag(R.id.image_book));
         } else {
 
             Picasso.with(context).load(bookImageUrl).fit()
                             .into((ImageView) view.getTag(R.id.image_book));
-            ((TextView) view.getTag(R.id.text_book_name)).setVisibility(View.GONE);
-        	((TextView) view.getTag(R.id.text_book_author)).setVisibility(View.GONE);
+            ((TextView) view.getTag(R.id.text_book_name))
+                            .setVisibility(View.GONE);
+            ((TextView) view.getTag(R.id.text_book_author))
+                            .setVisibility(View.GONE);
 
         }
 
@@ -97,33 +177,22 @@ public class BooksGridAdapter extends CursorAdapter {
             final CircleImageView circleImageView = (CircleImageView) view
                             .getTag(R.id.image_user);
 
-            
             Picasso.with(context)
                             .load(ownerImageUrl)
                             .resizeDimen(R.dimen.book_user_image_size, R.dimen.book_user_image_size)
-                            .centerCrop()
-                            .into(circleImageView.getTarget());
-            
+                            .centerCrop().into(circleImageView.getTarget());
+
         } else {
             //TODO DIsplay default image for user
         }
+
     }
 
     @Override
     public View newView(final Context context, final Cursor cursor,
                     final ViewGroup parent) {
-        final View view = LayoutInflater.from(context)
-                        .inflate(R.layout.layout_item_book, parent, false);
 
-        view.setTag(R.id.image_book, view.findViewById(R.id.image_book));
-        view.setTag(R.id.text_book_name, view.findViewById(R.id.text_book_name));
-        view.setTag(R.id.text_book_author, view
-                        .findViewById(R.id.text_book_author));
-       /* view.setTag(R.id.text_book_location, view
-                        .findViewById(R.id.text_book_location));*/
-        view.setTag(R.id.image_user, view.findViewById(R.id.image_user));
-
-        return view;
+        return null;
     }
 
 }
