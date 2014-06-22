@@ -15,8 +15,7 @@
   limitations under the License.
 -->
 
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -36,26 +35,24 @@
         android:id="@+id/container_submit_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-         >
+        android:orientation="horizontal" >
 
         <li.barter.widgets.TypefacedEditText
             android:id="@+id/edit_text_chat_message"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_xx_small"
+            android:layout_weight="1"
             android:hint="@string/enter_message"
             android:singleLine="false"
-            android:layout_margin="@dimen/margin_xx_small"
             app:fontStyle="regular" />
 
         <ImageButton
             android:id="@+id/button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/social_send_now"
             android:contentDescription="@string/send"
-            />
+            android:src="@drawable/social_send_now" />
     </LinearLayout>
 
 </LinearLayout>

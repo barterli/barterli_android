@@ -55,6 +55,7 @@
     <dimen name="profile_header_height">72dp</dimen>
     <dimen name="ab_user_image_size">38dp</dimen>
     <dimen name="ab_user_image_radius">19dp</dimen>
+    <dimen name="location_pin_size">256dp</dimen>
 
     <!-- Text sizes -->
     <dimen name="text_micro">12sp</dimen>

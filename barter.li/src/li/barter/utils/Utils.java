@@ -25,6 +25,9 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -324,6 +327,26 @@ public class Utils {
             builder.append(" ").append(lastName);
         }
         return builder.toString();
+    }
+
+    /**
+     * Test whether a viewgroup already contains a specific instance of a child view
+     * @param viewGroup
+     * @param view
+     * @return
+     */
+    public static boolean containsChild(ViewGroup viewGroup, View view) {
+        
+        boolean contains = false;
+        
+        for(int i = 0; i < viewGroup.getChildCount(); i++) {
+            
+            if(viewGroup.getChildAt(i).equals(view)) {
+                contains = true;
+                break;
+            }
+        }
+        return contains;
     }
 
 }

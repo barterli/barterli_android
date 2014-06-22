@@ -53,11 +53,6 @@
     <string name="delete_chat_alert_message">Are you sure you want to delete this chat?</string>
     <string name="block_user_alert_message">Are you sure you want to block this user?</string>
 
-    <!-- crouton info strings -->
-    <string name="crouton_map_message">Navigate to the location where you want to see books and swap left</string>
-    <string name="crouton_prefferedlocation_message">Please Select Your Book Exchange Point Where You Would Like To Deal</string>
-    <string name="add_location_message">Please select your preferred location</string>
-
     <!-- menu strings -->
     <string name="signup">Sign Up</string>
     <string name="build_library">Build Library</string>
@@ -129,7 +124,8 @@
     <string name="token_email_message">Token is emailed to you</string>
     <string name="error_required">Required</string>
     <string name="delete">Delete</string>
-    <string name="help_select_location">In order to protect your privacy, we don\'t reveal your location to anybody.\n\nInstead, please select a nearby venue from the list. This will be set as your preferred location for exchanging books. You can change this from your profile page anytime.</string>
+    <string name="help_select_location">Please select your preferred location for book exchange.</string>
+    <string name="your_privacy_is_important">Your privacy is important to us. We don\'t reveal your actual location to anyone.</string>
     <string name="hint_location_name">Enter preferred location name</string>
     <string name="about">About</string>
     <string name="ok">OK</string>

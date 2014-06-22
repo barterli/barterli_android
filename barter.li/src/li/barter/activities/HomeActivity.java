@@ -16,6 +16,22 @@
 
 package li.barter.activities;
 
+import com.android.volley.Request.Method;
+import com.facebook.AppEventsLogger;
+import com.google.android.gms.location.LocationListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.ActionBar;
+import android.content.Intent;
+import android.location.Location;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.FrameLayout;
+
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
@@ -37,22 +53,7 @@ import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.GooglePlusManager;
 import li.barter.utils.GooglePlusManager.GooglePlusAuthCallback;
 import li.barter.utils.SharedPreferenceHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.ActionBar;
-import android.content.Intent;
-import android.location.Location;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-
-import com.android.volley.Request.Method;
-import com.facebook.AppEventsLogger;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.plus.PlusClient;
-import com.google.android.gms.plus.PlusOneButton.OnPlusOneClickListener;
+import li.barter.utils.Utils;
 
 /**
  * @author Vinay S Shenoy Main Activity for holding the Navigation Drawer and
@@ -74,15 +75,17 @@ public class HomeActivity extends AbstractBarterLiActivity implements
      * Helper class for connectiong to GooglePlus for login
      */
     private GooglePlusManager       mGooglePlusManager;
-    
 
-    
-    
+    /**
+     * Framelayout for adding overlay views
+     */
+    private FrameLayout             mOverlayFrameLayout;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        mOverlayFrameLayout = (FrameLayout) findViewById(R.id.frame_overlay);
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
@@ -104,6 +107,28 @@ public class HomeActivity extends AbstractBarterLiActivity implements
 
         }
 
+    }
+
+    /**
+     * Displays an overlay view
+     * 
+     * @param view TODO: Animate the view in
+     */
+    public void showOverlayView(View view) {
+
+        if(Utils.containsChild(mOverlayFrameLayout, view)) {
+            return;
+        }
+            mOverlayFrameLayout.addView(view);
+            mOverlayFrameLayout.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Hides the overlay view TODO: Animate the view out
+     */
+    public void hideOverlayView() {
+        mOverlayFrameLayout.removeAllViews();
+        mOverlayFrameLayout.setVisibility(View.GONE);
     }
 
     @Override
@@ -235,8 +260,6 @@ public class HomeActivity extends AbstractBarterLiActivity implements
                     final String errorMessage, final Bundle errorResponseBundle) {
 
     }
-    
-  
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,
@@ -296,7 +319,5 @@ public class HomeActivity extends AbstractBarterLiActivity implements
          */
         return "";
     }
-
-    
 
 }

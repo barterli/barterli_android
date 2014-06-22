@@ -35,7 +35,7 @@
             android:id="@+id/frame_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/overlay_black_90p"
+            android:background="@color/transparent"
             android:visibility="gone" />
     </RelativeLayout>
 
