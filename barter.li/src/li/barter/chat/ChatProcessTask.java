@@ -21,6 +21,7 @@ import org.json.JSONObject;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.text.TextUtils;
 
 import java.text.ParseException;
 
@@ -37,6 +38,7 @@ import li.barter.utils.AppConstants.ChatType;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
+import li.barter.utils.Utils;
 
 /**
  * Runnable implementation to process chat messages
@@ -45,37 +47,194 @@ import li.barter.utils.Logger;
  */
 class ChatProcessTask implements Runnable {
 
-    private static final String TAG            = "ChatProcessTask";
+    private static final String TAG             = "ChatProcessTask";
 
-    private static final String CHAT_SELECTION = DatabaseColumns.CHAT_ID
-                                                               + SQLConstants.EQUALS_ARG;
+    private static final String CHAT_SELECTION  = DatabaseColumns.CHAT_ID
+                                                                + SQLConstants.EQUALS_ARG;
 
-    private static final String USER_SELECTION = DatabaseColumns.USER_ID
-                                                               + SQLConstants.EQUALS_ARG;
+    private static final String USER_SELECTION  = DatabaseColumns.USER_ID
+                                                                + SQLConstants.EQUALS_ARG;
 
-    private final Context       mContext;
-    private final String        mMessage;
-    private final DateFormatter mChatDateFormatter;
-    private final DateFormatter mMessageDateFormatter;
+    public static final int     PROCESS_SEND    = 1;
+    public static final int     PROCESS_RECEIVE = 2;
 
     /**
-     * @param context
-     * @param message the Chat message to process
-     * @param chatDateFormatter A date formatter to format dates for chats
-     * @param messageDateFormatter A date formatter to format dates for chat
-     *            messages
+     * The process type of the task, either {@linkplain #PROCESS_SEND} or
+     * {@linkplain #PROCESS_RECEIVE}
      */
-    public ChatProcessTask(final Context context, final String message, final DateFormatter chatDateFormatter, final DateFormatter messageDateFormatter) {
+    private int                 mProcessType;
 
+    /**
+     * Reference to the context to prepare notifications
+     */
+    private Context             mContext;
+
+    /**
+     * The message text, currently the JSON formatted string
+     */
+    private String              mMessage;
+
+    /**
+     * Date formatter for formatting chat timestamps
+     */
+    private DateFormatter       mChatDateFormatter;
+
+    /**
+     * Date formatter for formatting timestamps for messages
+     */
+    private DateFormatter       mMessageDateFormatter;
+
+    /**
+     * {@link ChatAcknowledge} instance for sending back to the caller after the
+     * local chat message is inserted into the database
+     */
+    private ChatAcknowledge     mChatAcknowledge;
+
+    /**
+     * Callback for receiving when it is ready to send the chat message
+     */
+    private SendChatCallback    mSendChatCallback;
+
+    /**
+     * Callback defined for when the local chat has been saved to the database
+     * and the request can be sent
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static interface SendChatCallback {
+
+        /**
+         * Send the chat request
+         * 
+         * @param text The request body
+         * @param acknowledge The chat acknowledge passed into the task
+         */
+        public void sendChat(final String text,
+                        final ChatAcknowledge acknowledge);
+    }
+
+    private ChatProcessTask() {
+        //Private constructor
+    }
+
+    private ChatProcessTask(final Context context) {
         mContext = context;
-        mMessage = message;
-        mChatDateFormatter = chatDateFormatter;
-        mMessageDateFormatter = messageDateFormatter;
+    }
+
+    public int getProcessType() {
+        return mProcessType;
+    }
+
+    public String getMessage() {
+        return mMessage;
+    }
+
+    public DateFormatter getChatDateFormatter() {
+        return mChatDateFormatter;
+    }
+
+    public DateFormatter getMessageDateFormatter() {
+        return mMessageDateFormatter;
+    }
+
+    public ChatAcknowledge getChatAcknowledge() {
+        return mChatAcknowledge;
+    }
+
+    public SendChatCallback getSendChatCallback() {
+        return mSendChatCallback;
     }
 
     @Override
     public void run() {
 
+        if (mProcessType == PROCESS_RECEIVE) {
+            processReceivedMessage();
+        } else if (mProcessType == PROCESS_SEND) {
+            saveMessageAndCallback();
+        }
+
+    }
+
+    /**
+     * Save a local message in the database, and give a callback to make the
+     * chat send request once it is saved
+     */
+    private void saveMessageAndCallback() {
+
+        try {
+            final JSONObject messageJson = new JSONObject(mMessage);
+            final String senderId = JsonUtils
+                            .readString(messageJson, HttpConstants.SENDER_ID, true, true);
+            final String sentAtTime = JsonUtils
+                            .readString(messageJson, HttpConstants.SENT_AT, true, true);
+            final String receiverId = JsonUtils
+                            .readString(messageJson, HttpConstants.RECEIVER_ID, true, true);
+            final String messageText = JsonUtils
+                            .readString(messageJson, HttpConstants.MESSAGE, true, true);
+
+            final String chatId = Utils.generateChatId(receiverId, senderId);
+            final ContentValues chatValues = new ContentValues(7);
+
+            chatValues.put(DatabaseColumns.CHAT_ID, chatId);
+            chatValues.put(DatabaseColumns.SENDER_ID, senderId);
+            chatValues.put(DatabaseColumns.RECEIVER_ID, receiverId);
+            chatValues.put(DatabaseColumns.MESSAGE, messageText);
+            chatValues.put(DatabaseColumns.TIMESTAMP, sentAtTime);
+            chatValues.put(DatabaseColumns.SENT_AT, sentAtTime);
+            chatValues.put(DatabaseColumns.CHAT_STATUS, ChatStatus.SENDING);
+            chatValues.put(DatabaseColumns.TIMESTAMP_EPOCH, mMessageDateFormatter
+                            .getEpoch(sentAtTime));
+            chatValues.put(DatabaseColumns.TIMESTAMP_HUMAN, mMessageDateFormatter
+                            .getOutputTimestamp(sentAtTime));
+
+            final long insertRowId = DBInterface
+                            .insert(TableChatMessages.NAME, null, chatValues, true);
+
+            if (insertRowId >= 0) {
+
+                //Update or insert the chats table
+                final ContentValues values = new ContentValues(7);
+                values.put(DatabaseColumns.CHAT_ID, chatId);
+                values.put(DatabaseColumns.LAST_MESSAGE_ID, insertRowId);
+                values.put(DatabaseColumns.CHAT_TYPE, ChatType.PERSONAL);
+                values.put(DatabaseColumns.TIMESTAMP, sentAtTime);
+                try {
+                    values.put(DatabaseColumns.TIMESTAMP_HUMAN, mChatDateFormatter
+                                    .getOutputTimestamp(sentAtTime));
+                    values.put(DatabaseColumns.TIMESTAMP_EPOCH, mChatDateFormatter
+                                    .getEpoch(sentAtTime));
+                } catch (ParseException e) {
+                    //Shouldn't happen
+                }
+
+                values.put(DatabaseColumns.USER_ID, receiverId);
+
+                Logger.v(TAG, "Updating chats for Id %s", chatId);
+                final int updateCount = DBInterface
+                                .update(TableChats.NAME, values, CHAT_SELECTION, new String[] {
+                                    chatId
+                                }, true);
+
+                if (updateCount == 0) {
+                    //Insert the chat message
+                    DBInterface.insert(TableChats.NAME, null, values, true);
+                }
+
+                //After finishing the local chat insertion, give a callback to do the actual network call
+                mSendChatCallback.sendChat(mMessage, mChatAcknowledge);
+            }
+        } catch (JSONException e) {
+            Logger.e(TAG, e, "Invalid message json");
+        } catch (ParseException e) {
+            Logger.e(TAG, e, "Invalid timestamp");
+        }
+    }
+
+    /**
+     * Processes a received message, stores it in the database
+     */
+    private void processReceivedMessage() {
         try {
             final JSONObject messageJson = new JSONObject(mMessage);
             final JSONObject senderObject = JsonUtils
@@ -93,8 +252,7 @@ class ChatProcessTask implements Runnable {
             final String timestamp = JsonUtils
                             .readString(messageJson, HttpConstants.TIME, true, true);
 
-            final String chatId = ChatService
-                            .generateChatId(receiverId, senderId);
+            final String chatId = Utils.generateChatId(receiverId, senderId);
             final ContentValues chatValues = new ContentValues(7);
 
             final boolean isSenderCurrentUser = senderId
@@ -171,6 +329,7 @@ class ChatProcessTask implements Runnable {
         } catch (ParseException e) {
             Logger.e(TAG, e, "Invalid timestamp");
         }
+
     }
 
     /**
@@ -208,6 +367,95 @@ class ChatProcessTask implements Runnable {
         }
 
         return String.format("%s %s", senderFirstName, senderLastName);
+    }
+
+    /**
+     * Builder for Chat Process tasks
+     * 
+     * @author Vinay S Shenoy
+     */
+    public static class Builder {
+
+        private Context         mContext;
+
+        private ChatProcessTask mChatProcessTask;
+
+        public Builder(Context context) {
+            mContext = context;
+            mChatProcessTask = new ChatProcessTask(mContext);
+        }
+
+        public Builder setProcessType(int processType) {
+            mChatProcessTask.mProcessType = processType;
+            return this;
+        }
+
+        public Builder setMessage(String message) {
+            mChatProcessTask.mMessage = message;
+            return this;
+        }
+
+        public Builder setChatDateFormatter(DateFormatter chatDateFormatter) {
+            mChatProcessTask.mChatDateFormatter = chatDateFormatter;
+            return this;
+        }
+
+        public Builder setMessageDateFormatter(
+                        DateFormatter messageDateFormatter) {
+            mChatProcessTask.mMessageDateFormatter = messageDateFormatter;
+            return this;
+        }
+
+        public Builder setChatAcknowledge(ChatAcknowledge chatAcknowledge) {
+            mChatProcessTask.mChatAcknowledge = chatAcknowledge;
+            return this;
+        }
+
+        public Builder setSendChatCallback(SendChatCallback sendChatCallback) {
+            mChatProcessTask.mSendChatCallback = sendChatCallback;
+            return this;
+        }
+
+        /**
+         * Builds the chat process task
+         * 
+         * @return The complete chat process task
+         * @throws IllegalStateException If the chat process task is invalid
+         */
+        public ChatProcessTask build() {
+
+            if (mChatProcessTask.mProcessType != PROCESS_RECEIVE
+                            && mChatProcessTask.mProcessType != PROCESS_SEND) {
+                throw new IllegalStateException("Invalid process type");
+            }
+
+            if (TextUtils.isEmpty(mChatProcessTask.mMessage)) {
+                throw new IllegalStateException("Empty or null message");
+            }
+
+            if (mChatProcessTask.mChatDateFormatter == null) {
+                throw new IllegalStateException("No chat date formatter set");
+            }
+
+            if (mChatProcessTask.mMessageDateFormatter == null) {
+                throw new IllegalStateException("No message date formatter set");
+            }
+
+            if (mChatProcessTask.mProcessType == PROCESS_SEND
+                            && mChatProcessTask.mSendChatCallback == null) {
+                throw new IllegalStateException("No send chat callback set for a send message");
+            }
+
+            return mChatProcessTask;
+        }
+
+        /**
+         * Resets the builder for preparing another chat process task
+         */
+        public Builder reset() {
+            mChatProcessTask = new ChatProcessTask(mContext);
+            return this;
+        }
     }
 
 }

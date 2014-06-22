@@ -40,13 +40,11 @@ import li.barter.analytics.AnalyticsConstants.ParamKeys;
 import li.barter.analytics.AnalyticsConstants.ParamValues;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.analytics.GoogleAnalyticsManager;
-import li.barter.chat.ChatService;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.TableSearchBooks;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.http.HttpConstants.RequestId;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
@@ -115,7 +113,6 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      */
     private boolean				mOwnedByUser=false;
     
-    private String 				mUserId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -275,20 +272,6 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     	 
     }
     
-	 /**
-	  * Loads the Chat Fragment to chat with the book owner
-	  */
-	 private void loadChatFragment() {
-		 final Bundle args = new Bundle(3);
-		 args.putString(Keys.CHAT_ID, ChatService
-				 .generateChatId(mUserId, UserInfo.INSTANCE.getId()));
-		 args.putString(Keys.USER_ID, mUserId);
-		 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-				 .instantiate(getActivity(), ChatDetailsFragment.class
-						 .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
-
-	 }
-
     @Override
     public void onBadRequestError(int requestId, IBlRequestContract request,
                     int errorCode, String errorMessage,
@@ -365,7 +348,6 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPageSelected(int position) {
 
-    	mUserId= mUserIdArray.get(position);
         if (mUserIdArray.size() > 0
                         && mUserIdArray.get(position)
                                         .equals(UserInfo.INSTANCE.getId())) {

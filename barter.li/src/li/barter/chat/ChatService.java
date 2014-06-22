@@ -37,7 +37,6 @@ import android.os.IBinder;
 import android.text.TextUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.ArrayDeque;
 import java.util.Locale;
@@ -47,6 +46,8 @@ import java.util.concurrent.Executors;
 import li.barter.BarterLiApplication;
 import li.barter.chat.AbstractRabbitMQConnector.ExchangeType;
 import li.barter.chat.AbstractRabbitMQConnector.OnDisconnectCallback;
+import li.barter.chat.ChatProcessTask.Builder;
+import li.barter.chat.ChatProcessTask.SendChatCallback;
 import li.barter.chat.ChatRabbitMQConnector.OnReceiveMessageHandler;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -162,6 +163,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     private String                 mCurrentMessage;
 
+    private Builder                mChatProcessTaskBuilder;
+
     /**
      * Single thread executor to process incoming chat messages in a queue
      */
@@ -179,6 +182,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mHandler = new Handler();
         mChatProcessor = Executors.newSingleThreadExecutor();
         mIsProcessingMessage = false;
+        mChatProcessTaskBuilder = new Builder(this);
     }
 
     /**
@@ -360,12 +364,40 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             requestObject.put(HttpConstants.SENT_AT, timeSentAt);
 
             requestObject.put(HttpConstants.MESSAGE, message);
-            final ChatRequest request = new ChatRequest(Method.POST, HttpConstants.getChangedChatUrl()
-                            + ApiEndpoints.AMPQ_EVENT_MACHINE, requestObject.toString(), mVolleyCallbacks, acknowledge);
-            request.setRequestId(RequestId.AMPQ);
-            request.setTag(TAG);
 
-            final String chatId = generateChatId(receiverId, senderId);
+            final ChatProcessTask chatProcessTask = mChatProcessTaskBuilder
+                            .setProcessType(ChatProcessTask.PROCESS_SEND)
+                            .setMessage(requestObject.toString())
+                            .setChatAcknowledge(acknowledge)
+                            .setMessageDateFormatter(mMessageDateFormatter)
+                            .setChatDateFormatter(mChatDateFormatter)
+                            .setSendChatCallback(new SendChatCallback() {
+
+                                @Override
+                                public void sendChat(String text,
+                                                ChatAcknowledge acknowledge) {
+
+                                    final ChatRequest request = new ChatRequest(Method.POST, HttpConstants
+                                                    .getChangedChatUrl()
+                                                    + ApiEndpoints.AMPQ_EVENT_MACHINE, text, mVolleyCallbacks, acknowledge);
+                                    request.setRequestId(RequestId.AMPQ);
+                                    request.setTag(TAG);
+
+                                    //Post on main thread
+                                    mHandler.post(new Runnable() {
+
+                                        @Override
+                                        public void run() {
+                                            mVolleyCallbacks.queue(request, true);
+                                        }
+                                    });
+                                }
+                            }).build();
+
+            mChatProcessTaskBuilder.reset();
+            mChatProcessor.submit(chatProcessTask);
+
+            /*final String chatId = Utils.generateChatId(receiverId, senderId);
             final ContentValues chatValues = new ContentValues(7);
 
             chatValues.put(DatabaseColumns.CHAT_ID, chatId);
@@ -381,15 +413,14 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             chatValues.put(DatabaseColumns.TIMESTAMP_HUMAN, mMessageDateFormatter
                             .getOutputTimestamp(timeSentAt));
 
-            DBInterface.insertAsync(QueryTokens.INSERT_CHAT_MESSAGE_LOCALLY, chatValues, TableChatMessages.NAME, null, chatValues, true, this);
+            DBInterface.insertAsync(QueryTokens.INSERT_CHAT_MESSAGE_LOCALLY, chatValues, TableChatMessages.NAME, null, chatValues, true, this);*/
 
-            mVolleyCallbacks.queue(request, true);
         } catch (final JSONException e) {
             e.printStackTrace();
             //Should never happen
-        } catch (final ParseException e) {
+        } /*catch (final ParseException e) {
             Logger.e(TAG, e, "Invalid chat timestamp");
-        }
+        }*/
 
     }
 
@@ -431,7 +462,15 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             text = new String(message, HTTP.UTF_8);
             Logger.d(TAG, "Received:" + text);
 
-            mChatProcessor.submit(new ChatProcessTask(this, text, mChatDateFormatter, mMessageDateFormatter));
+            final ChatProcessTask chatProcessTask = mChatProcessTaskBuilder
+                            .setProcessType(ChatProcessTask.PROCESS_RECEIVE)
+                            .setMessage(text)
+                            .setChatDateFormatter(mChatDateFormatter)
+                            .setMessageDateFormatter(mMessageDateFormatter)
+                            .build();
+            mChatProcessTaskBuilder.reset();
+            mChatProcessor.submit(chatProcessTask);
+
             /*
              * mMessageQueue.add(text); //queueNextMessageForProcessing(); if
              * (!mIsProcessingMessage) { //If there aren't any messages in the
@@ -480,7 +519,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     senderId, messageText, sentAtTime
             };
 
-            final String chatId = generateChatId(receiverId, senderId);
+            final String chatId = Utils.generateChatId(receiverId, senderId);
             final ContentValues chatValues = new ContentValues(7);
 
             chatValues.put(DatabaseColumns.CHAT_ID, chatId);
@@ -528,7 +567,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             final String timestamp = JsonUtils
                             .readString(messageJson, HttpConstants.TIME, true, true);
 
-            final String chatId = generateChatId(receiverId, senderId);
+            final String chatId = Utils.generateChatId(receiverId, senderId);
             final ContentValues chatValues = new ContentValues(7);
 
             chatValues.put(DatabaseColumns.CHAT_ID, chatId);
@@ -775,47 +814,6 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     public void onQueryComplete(final int token, final Object cookie,
                     final Cursor cursor) {
 
-    }
-
-    /**
-     * Generates as chat ID which will be unique for a given sender/receiver
-     * pair
-     * 
-     * @param receiverId The receiver of the chat
-     * @param senderId The sender of the chat
-     * @return The chat Id
-     */
-    public static String generateChatId(final String receiverId,
-                    final String senderId) {
-
-        /*
-         * Method of generating the chat ID is simple. First we compare the two
-         * ids and combine them in ascending order separate by a '#'. Then we
-         * SHA1 the result to make the chat id
-         */
-
-        String combined = null;
-        if (receiverId.compareTo(senderId) < 0) {
-            combined = String
-                            .format(Locale.US, AppConstants.CHAT_ID_FORMAT, receiverId, senderId);
-        } else {
-            combined = String
-                            .format(Locale.US, AppConstants.CHAT_ID_FORMAT, senderId, receiverId);
-        }
-
-        String hashed = null;
-
-        try {
-            hashed = Utils.sha1(combined);
-        } catch (final NoSuchAlgorithmException e) {
-            /*
-             * Shouldn't happen sinch SHA-1 is standard, but in case it does use
-             * the combined string directly since they are local chat IDs
-             */
-            hashed = combined;
-        }
-
-        return hashed;
     }
 
     @Override
