@@ -257,6 +257,9 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         params.put(HttpConstants.ID, String.valueOf(userid).trim());
         request.setParams(params);
 
+        if(mIsLoggedInUser && SharedPreferenceHelper.getBoolean(getActivity(), R.string.pref_force_user_refetch)) {
+            request.setShouldCache(false);
+        }
         addRequestToQueue(request, true, 0, true);
 
     }
@@ -376,6 +379,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                     final ResponseInfo response) {
         if (requestId == RequestId.GET_USER_PROFILE) {
             if (isAttached() && mIsLoggedInUser) {
+                SharedPreferenceHelper.set(getActivity(), R.string.pref_force_user_refetch, false);
                 final Bundle userInfo = response.responseBundle;
                 SharedPreferenceHelper
                                 .set(getActivity(), R.string.pref_referrer_count, userInfo
