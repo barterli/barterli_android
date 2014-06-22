@@ -37,6 +37,10 @@ public interface DialogKeys {
 
     /** Key used to identify the neutral button text. */
     public static final String NEUTRAL_LABEL_ID  = "neutral_label_id";
+    
+    /** Key used to identify the neutral button text. */
+    public static final String HINT_LABEL_ID 	 = "hint_label_id";
+    
 
     /** Key used to identify if the dialog is cancellable. */
     public static final String CANCELLABLE       = "cancellable";

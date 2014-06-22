@@ -119,6 +119,7 @@ public class HttpConstants {
         public static final String FOURSQUARE_VENUES       = "/venues/search";
         public static final String REFERRAL                = "/referral";
         public static final String CHAT_BLOCK              = "/chat_block";
+        public static final String PASSWORD_RESET          = "/password_reset.json";
 
     }
 
@@ -162,6 +163,7 @@ public class HttpConstants {
         public static final int GOOGLEBOOKS_SHOW_BOOK       				   = 122;
         public static final int REFERRAL                   					   = 123;
         public static final int BLOCK_CHATS									   = 124;
+        public static final int PASSWORD_RESET           					   = 125;
 
     }
 
