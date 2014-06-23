@@ -388,7 +388,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             //   Delete the current search results before parsing the old ones
             DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
         } else {
-            mCurPage = 0;
+        	mCurPage = SharedPreferenceHelper
+                    .getInt(getActivity(), R.string.pref_last_fetched_page, 0);
             mHasLoadedAllItems = false;
             fetchBooksAroundMe(location);
         }
