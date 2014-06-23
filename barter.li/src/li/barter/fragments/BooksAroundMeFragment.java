@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksGridAdapter;
@@ -802,6 +803,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         reloadNearbyBooks();
+        ((AbstractBarterLiActivity) getActivity()).resetUpState();
         return true;
     }
 
