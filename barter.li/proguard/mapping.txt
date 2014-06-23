@@ -5216,50 +5216,52 @@ com.android.volley.Request -> com.a.a.m:
     java.util.Map mParams -> o
     java.lang.Object mTag -> p
     com.android.volley.Request$Priority mPriority -> q
-    159:159:int getMethod() -> a
-    167:168:void setTag(java.lang.Object) -> a
-    175:175:java.lang.Object getTag() -> b
-    182:182:int getTrafficStatsTag() -> c
-    189:190:void setRetryPolicy(com.android.volley.RetryPolicy) -> a
-    196:201:void addMarker(java.lang.String) -> a
-    209:236:void finish(java.lang.String) -> b
-    243:244:void setRequestQueue(com.android.volley.RequestQueue) -> a
-    250:251:void setSequence(int) -> a
-    267:267:java.lang.String getUrl() -> d
-    274:274:java.lang.String getCacheKey() -> e
-    282:283:void setCacheEntry(com.android.volley.Cache$Entry) -> a
-    289:289:com.android.volley.Cache$Entry getCacheEntry() -> f
-    296:297:void cancel() -> g
-    303:303:boolean isCanceled() -> h
-    314:314:java.util.Map getHeaders() -> i
-    323:324:void setHeaders(java.util.Map) -> a
-    336:336:java.util.Map getParams() -> j
-    345:346:void setParams(java.util.Map) -> b
-    361:361:java.lang.String getParamsEncoding() -> k
-    365:365:java.lang.String getBodyContentType() -> l
-    375:382:byte[] getBody() -> m
-    392:394:byte[] encodeParameters(java.util.Map,java.lang.String) -> b
-    400:410:java.lang.String getEncodedParameterString(java.util.Map,java.lang.String) -> a
-    416:428:java.lang.String getEncodedUrlBody() -> n
-    445:448:boolean shouldCache() -> o
-    479:479:com.android.volley.Request$Priority getPriority() -> p
-    488:488:int getTimeoutMs() -> q
-    495:495:com.android.volley.RetryPolicy getRetryPolicy() -> r
-    503:504:void markDelivered() -> s
-    510:510:boolean hasHadResponseDelivered() -> t
+    173:173:int getMethod() -> a
+    181:182:void setTag(java.lang.Object) -> a
+    190:191:void setUrl(java.lang.String) -> a
+    199:199:java.lang.Object getTag() -> b
+    206:206:int getTrafficStatsTag() -> c
+    213:214:void setRetryPolicy(com.android.volley.RetryPolicy) -> a
+    220:225:void addMarker(java.lang.String) -> b
+    235:263:void finish(java.lang.String) -> c
+    270:271:void setRequestQueue(com.android.volley.RequestQueue) -> a
+    277:278:void setSequence(int) -> a
+    294:294:java.lang.String getUrl() -> d
+    301:301:java.lang.String getCacheKey() -> e
+    309:310:void setCacheEntry(com.android.volley.Cache$Entry) -> a
+    316:316:com.android.volley.Cache$Entry getCacheEntry() -> f
+    323:324:void cancel() -> g
+    330:330:boolean isCanceled() -> h
+    342:342:java.util.Map getHeaders() -> i
+    353:354:void setHeaders(java.util.Map) -> a
+    368:368:java.util.Map getParams() -> j
+    379:380:void setParams(java.util.Map) -> b
+    395:395:java.lang.String getParamsEncoding() -> k
+    399:399:java.lang.String getBodyContentType() -> l
+    410:417:byte[] getBody() -> m
+    428:431:byte[] encodeParameters(java.util.Map,java.lang.String) -> b
+    439:449:java.lang.String getEncodedParameterString(java.util.Map,java.lang.String) -> a
+    456:474:java.lang.String getEncodedUrlBody() -> n
+    483:484:void setShouldCache(boolean) -> a
+    492:495:boolean shouldCache() -> o
+    528:528:com.android.volley.Request$Priority getPriority() -> p
+    538:538:int getTimeoutMs() -> q
+    545:545:com.android.volley.RetryPolicy getRetryPolicy() -> r
+    553:554:void markDelivered() -> s
+    560:560:boolean hasHadResponseDelivered() -> t
     com.android.volley.Response parseNetworkResponse(com.android.volley.NetworkResponse) -> a
-    532:532:com.android.volley.VolleyError parseNetworkError(com.android.volley.VolleyError) -> a
+    584:584:com.android.volley.VolleyError parseNetworkError(com.android.volley.VolleyError) -> a
     void deliverResponse(java.lang.Object) -> b
-    551:554:void deliverError(com.android.volley.VolleyError) -> b
-    562:567:int compareTo(com.android.volley.Request) -> a
-    574:575:java.lang.String toString() -> toString
+    604:607:void deliverError(com.android.volley.VolleyError) -> b
+    615:620:int compareTo(com.android.volley.Request) -> a
+    626:628:java.lang.String toString() -> toString
     1:1:int compareTo(java.lang.Object) -> compareTo
-    58:58:com.android.volley.VolleyLog$MarkerLog access$1(com.android.volley.Request) -> b
+    59:59:com.android.volley.VolleyLog$MarkerLog access$1(com.android.volley.Request) -> b
 com.android.volley.Request$1 -> com.a.a.m$1:
     com.android.volley.Request this$0 -> a
     java.lang.String val$tag -> b
     long val$threadId -> c
-    221:223:void run() -> run
+    247:249:void run() -> run
 com.android.volley.Request$Priority -> com.a.a.m$a:
     com.android.volley.Request$Priority LOW -> a
     com.android.volley.Request$Priority NORMAL -> b
@@ -5279,17 +5281,18 @@ com.android.volley.RequestQueue -> com.a.a.n:
     com.android.volley.ResponseDelivery mDelivery -> h
     com.android.volley.NetworkDispatcher[] mDispatchers -> i
     com.android.volley.CacheDispatcher mCacheDispatcher -> j
-    135:146:void start() -> a
-    152:160:void stop() -> b
-    166:166:int getSequenceNumber() -> c
-    190:197:void cancelAll(com.android.volley.RequestQueue$RequestFilter) -> a
-    204:214:void cancelAll(java.lang.Object) -> a
-    224:240:com.android.volley.Request add(com.android.volley.Request) -> a
-    273:293:void finish(com.android.volley.Request) -> b
+    com.android.volley.toolbox.HttpStack$UrlRewriter mUrlRewriter -> k
+    147:158:void start() -> a
+    164:172:void stop() -> b
+    178:178:int getSequenceNumber() -> c
+    202:209:void cancelAll(com.android.volley.RequestQueue$RequestFilter) -> a
+    216:226:void cancelAll(java.lang.Object) -> a
+    236:258:com.android.volley.Request add(com.android.volley.Request) -> a
+    291:311:void finish(com.android.volley.Request) -> b
 com.android.volley.RequestQueue$1 -> com.a.a.n$1:
     com.android.volley.RequestQueue this$0 -> a
     java.lang.Object val$tag -> b
-    211:211:boolean apply(com.android.volley.Request) -> a
+    223:223:boolean apply(com.android.volley.Request) -> a
 com.android.volley.RequestQueue$RequestFilter -> com.a.a.n$a:
     boolean apply(com.android.volley.Request) -> a
 com.android.volley.Response -> com.a.a.o:
@@ -5404,31 +5407,29 @@ com.android.volley.toolbox.DiskBasedCache$CountingInputStream -> com.a.a.a.c$b:
     434:434:int access$1(com.android.volley.toolbox.DiskBasedCache$CountingInputStream) -> a
 com.android.volley.toolbox.HttpClientStack -> com.a.a.a.d:
     org.apache.http.client.HttpClient mClient -> a
-    com.android.volley.toolbox.HttpStack$UrlRewriter mUrlRewriter -> b
-    66:69:void addHeaders(org.apache.http.client.methods.HttpUriRequest,java.util.Map) -> a
-    82:92:org.apache.http.HttpResponse performRequest(com.android.volley.Request,java.util.Map) -> a
-    99:117:org.apache.http.client.methods.HttpUriRequest createHttpRequest(com.android.volley.Request,java.util.Map,com.android.volley.toolbox.HttpStack$UrlRewriter) -> a
-    123:156:void setEntityIfNonEmptyBody(org.apache.http.client.methods.HttpEntityEnclosingRequestBase,com.android.volley.Request) -> a
-    167:167:void onPrepareRequest(org.apache.http.client.methods.HttpUriRequest) -> a
+    63:66:void addHeaders(org.apache.http.client.methods.HttpUriRequest,java.util.Map) -> a
+    79:89:org.apache.http.HttpResponse performRequest(com.android.volley.Request,java.util.Map) -> a
+    96:114:org.apache.http.client.methods.HttpUriRequest createHttpRequest(com.android.volley.Request,java.util.Map) -> b
+    120:153:void setEntityIfNonEmptyBody(org.apache.http.client.methods.HttpEntityEnclosingRequestBase,com.android.volley.Request) -> a
+    164:164:void onPrepareRequest(org.apache.http.client.methods.HttpUriRequest) -> a
 com.android.volley.toolbox.HttpHeaderParser -> com.a.a.a.e:
-    40:101:com.android.volley.Cache$Entry parseCacheHeaders(com.android.volley.NetworkResponse) -> a
-    110:113:long parseDateAsEpoch(java.lang.String) -> a
+    41:104:com.android.volley.Cache$Entry parseCacheHeaders(com.android.volley.NetworkResponse) -> a
+    113:116:long parseDateAsEpoch(java.lang.String) -> a
 com.android.volley.toolbox.HttpStack -> com.a.a.a.f:
     org.apache.http.HttpResponse performRequest(com.android.volley.Request,java.util.Map) -> a
 com.android.volley.toolbox.HttpStack$UrlRewriter -> com.a.a.a.f$a:
     java.lang.String rewriteUrl(com.android.volley.Request) -> a
 com.android.volley.toolbox.HurlStack -> com.a.a.a.g:
-    com.android.volley.toolbox.HttpStack$UrlRewriter mUrlRewriter -> a
-    javax.net.ssl.SSLSocketFactory mSslSocketFactory -> b
-    java.lang.String mUserAgent -> c
-    111:117:void addHeadersToConnection(java.net.HttpURLConnection,java.lang.String,java.util.Map) -> a
-    124:161:org.apache.http.HttpResponse performRequest(com.android.volley.Request,java.util.Map) -> a
-    179:294:void setConnectionParametersForMultipartRequest(java.net.HttpURLConnection,com.android.volley.Request,java.util.HashMap,java.lang.String) -> a
-    305:316:org.apache.http.HttpEntity entityFromConnection(java.net.HttpURLConnection) -> a
-    324:324:java.net.HttpURLConnection createConnection(java.net.URL) -> a
-    337:351:java.net.HttpURLConnection openConnection(java.net.URL,com.android.volley.Request) -> a
-    359:381:void setConnectionParametersForRequest(java.net.HttpURLConnection,com.android.volley.Request,java.util.HashMap,java.lang.String) -> b
-    386:398:void addBodyIfExists(java.net.HttpURLConnection,com.android.volley.Request) -> a
+    javax.net.ssl.SSLSocketFactory mSslSocketFactory -> a
+    java.lang.String mUserAgent -> b
+    104:110:void addHeadersToConnection(java.net.HttpURLConnection,java.lang.String,java.util.Map) -> a
+    117:154:org.apache.http.HttpResponse performRequest(com.android.volley.Request,java.util.Map) -> a
+    172:287:void setConnectionParametersForMultipartRequest(java.net.HttpURLConnection,com.android.volley.Request,java.util.HashMap,java.lang.String) -> a
+    298:309:org.apache.http.HttpEntity entityFromConnection(java.net.HttpURLConnection) -> a
+    317:317:java.net.HttpURLConnection createConnection(java.net.URL) -> a
+    330:344:java.net.HttpURLConnection openConnection(java.net.URL,com.android.volley.Request) -> a
+    352:374:void setConnectionParametersForRequest(java.net.HttpURLConnection,com.android.volley.Request,java.util.HashMap,java.lang.String) -> b
+    379:391:void addBodyIfExists(java.net.HttpURLConnection,com.android.volley.Request) -> a
 com.android.volley.toolbox.JsonRequest -> com.a.a.a.h:
     java.lang.String PROTOCOL_CONTENT_TYPE -> a
     com.android.volley.Response$Listener mListener -> b
@@ -5457,10 +5458,10 @@ com.android.volley.toolbox.PoolingByteArrayOutputStream -> com.a.a.a.j:
     84:86:void write(byte[],int,int) -> write
     90:92:void write(int) -> write
 com.android.volley.toolbox.Volley -> com.a.a.a.k:
-    53:80:com.android.volley.RequestQueue newRequestQueue(android.content.Context,com.android.volley.toolbox.HttpStack) -> a
-    98:98:com.android.volley.RequestQueue newRequestQueue(android.content.Context) -> a
+    52:79:com.android.volley.RequestQueue newRequestQueue(android.content.Context,com.android.volley.toolbox.HttpStack) -> a
+    97:97:com.android.volley.RequestQueue newRequestQueue(android.content.Context) -> a
 com.android.volley.toolbox.Volley$BasicUrlRewriter -> com.a.a.a.k$a:
-    110:139:java.lang.String rewriteUrl(com.android.volley.Request) -> a
+    109:138:java.lang.String rewriteUrl(com.android.volley.Request) -> a
 com.android.volley.toolbox.multipart.BasePart -> com.a.a.a.a.a:
     byte[] CRLF -> a
     com.android.volley.toolbox.multipart.BasePart$IHeadersProvider headersProvider -> b
@@ -13982,7 +13983,9 @@ com.google.android.gms.internal.fq -> com.google.android.gms.internal.bg:
     void a(boolean,java.lang.String,java.lang.Object[]) -> a
     void z(boolean) -> b
     void ak(java.lang.String) -> b
-com.google.android.gms.internal.fu -> com.google.android.gms.internal.bh:
+com.google.android.gms.internal.ft -> com.google.android.gms.internal.bh:
+    java.lang.String a(java.lang.String,java.lang.String,android.content.Context,android.util.AttributeSet,boolean,boolean,java.lang.String) -> a
+com.google.android.gms.internal.fu -> com.google.android.gms.internal.bi:
     java.util.LinkedHashMap DL -> a
     int size -> b
     int DM -> c
@@ -14010,7 +14013,7 @@ com.google.android.gms.internal.fv -> com.google.android.gms.internal.fv:
     com.google.android.gms.internal.ga$b eU() -> c
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.fw -> com.google.android.gms.internal.bi:
+com.google.android.gms.internal.fw -> com.google.android.gms.internal.bj:
     com.google.android.gms.internal.fv q(android.os.Parcel) -> a
     com.google.android.gms.internal.fv[] S(int) -> a
     void a(com.google.android.gms.internal.fv,android.os.Parcel,int) -> a
@@ -14039,13 +14042,13 @@ com.google.android.gms.internal.fx$a -> com.google.android.gms.internal.fx$a:
     int DX -> d
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.fy -> com.google.android.gms.internal.bj:
+com.google.android.gms.internal.fy -> com.google.android.gms.internal.bk:
     com.google.android.gms.internal.fx r(android.os.Parcel) -> a
     com.google.android.gms.internal.fx[] T(int) -> a
     void a(com.google.android.gms.internal.fx,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.fz -> com.google.android.gms.internal.bk:
+com.google.android.gms.internal.fz -> com.google.android.gms.internal.bl:
     com.google.android.gms.internal.fx$a s(android.os.Parcel) -> a
     com.google.android.gms.internal.fx$a[] U(int) -> a
     void a(com.google.android.gms.internal.fx$a,android.os.Parcel,int) -> a
@@ -14108,13 +14111,13 @@ com.google.android.gms.internal.ga$b -> com.google.android.gms.internal.ga$b:
     int eW() -> c
     int eX() -> d
     java.lang.Object g(java.lang.Object) -> a
-com.google.android.gms.internal.gb -> com.google.android.gms.internal.bl:
+com.google.android.gms.internal.gb -> com.google.android.gms.internal.bm:
     com.google.android.gms.internal.ga$a t(android.os.Parcel) -> a
     com.google.android.gms.internal.ga$a[] V(int) -> a
     void a(com.google.android.gms.internal.ga$a,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.gc -> com.google.android.gms.internal.bm:
+com.google.android.gms.internal.gc -> com.google.android.gms.internal.bn:
     com.google.android.gms.internal.gd$b u(android.os.Parcel) -> a
     com.google.android.gms.internal.gd$b[] W(int) -> a
     void a(com.google.android.gms.internal.gd$b,android.os.Parcel,int) -> a
@@ -14151,13 +14154,13 @@ com.google.android.gms.internal.gd$b -> com.google.android.gms.internal.gd$b:
     com.google.android.gms.internal.ga$a Em -> d
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.ge -> com.google.android.gms.internal.bn:
+com.google.android.gms.internal.ge -> com.google.android.gms.internal.bo:
     com.google.android.gms.internal.gd v(android.os.Parcel) -> a
     com.google.android.gms.internal.gd[] X(int) -> a
     void a(com.google.android.gms.internal.gd,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.gf -> com.google.android.gms.internal.bo:
+com.google.android.gms.internal.gf -> com.google.android.gms.internal.bp:
     com.google.android.gms.internal.gd$a w(android.os.Parcel) -> a
     com.google.android.gms.internal.gd$a[] Y(int) -> a
     void a(com.google.android.gms.internal.gd$a,android.os.Parcel,int) -> a
@@ -14190,13 +14193,13 @@ com.google.android.gms.internal.gg -> com.google.android.gms.internal.gg:
     void b(java.lang.StringBuilder,com.google.android.gms.internal.ga$a,java.util.ArrayList) -> a
     void a(java.lang.StringBuilder,int,java.lang.Object) -> a
     java.util.HashMap c(android.os.Bundle) -> a
-com.google.android.gms.internal.gh -> com.google.android.gms.internal.bp:
+com.google.android.gms.internal.gh -> com.google.android.gms.internal.bq:
     com.google.android.gms.internal.gg x(android.os.Parcel) -> a
     com.google.android.gms.internal.gg[] Z(int) -> a
     void a(com.google.android.gms.internal.gg,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.gi -> com.google.android.gms.internal.bq:
+com.google.android.gms.internal.gi -> com.google.android.gms.internal.br:
     void a(java.lang.StringBuilder,java.lang.Object[]) -> a
     void a(java.lang.StringBuilder,int[]) -> a
     void a(java.lang.StringBuilder,long[]) -> a
@@ -14205,30 +14208,30 @@ com.google.android.gms.internal.gi -> com.google.android.gms.internal.bq:
     void a(java.lang.StringBuilder,boolean[]) -> a
     void a(java.lang.StringBuilder,java.lang.String[]) -> a
     java.util.ArrayList fs() -> a
-com.google.android.gms.internal.gj -> com.google.android.gms.internal.br:
+com.google.android.gms.internal.gj -> com.google.android.gms.internal.bs:
     java.lang.String d(byte[]) -> a
     java.lang.String e(byte[]) -> b
-com.google.android.gms.internal.gk -> com.google.android.gms.internal.bs:
+com.google.android.gms.internal.gk -> com.google.android.gms.internal.bt:
     boolean y(android.content.Context) -> a
-com.google.android.gms.internal.gl -> com.google.android.gms.internal.bt:
+com.google.android.gms.internal.gl -> com.google.android.gms.internal.bu:
     long currentTimeMillis() -> a
-com.google.android.gms.internal.gn -> com.google.android.gms.internal.bu:
+com.google.android.gms.internal.gn -> com.google.android.gms.internal.bv:
     com.google.android.gms.internal.gn Er -> a
     com.google.android.gms.internal.gl ft() -> b
     long currentTimeMillis() -> a
-com.google.android.gms.internal.go -> com.google.android.gms.internal.bv:
+com.google.android.gms.internal.go -> com.google.android.gms.internal.bw:
     boolean aa(int) -> a
-com.google.android.gms.internal.gp -> com.google.android.gms.internal.bw:
+com.google.android.gms.internal.gp -> com.google.android.gms.internal.bx:
     java.util.regex.Pattern Es -> a
     java.util.regex.Pattern Et -> b
     java.lang.String av(java.lang.String) -> a
-com.google.android.gms.internal.gq -> com.google.android.gms.internal.bx:
+com.google.android.gms.internal.gq -> com.google.android.gms.internal.by:
     void a(java.lang.StringBuilder,java.util.HashMap) -> a
-com.google.android.gms.internal.gr -> com.google.android.gms.internal.by:
+com.google.android.gms.internal.gr -> com.google.android.gms.internal.bz:
     boolean fu() -> a
     boolean fw() -> b
     boolean ab(int) -> a
-com.google.android.gms.internal.gs -> com.google.android.gms.internal.bz:
+com.google.android.gms.internal.gs -> com.google.android.gms.internal.ca:
     com.google.android.gms.drive.metadata.MetadataField FR -> a
     com.google.android.gms.drive.metadata.MetadataField FS -> b
     com.google.android.gms.drive.metadata.MetadataField FT -> c
@@ -14256,50 +14259,50 @@ com.google.android.gms.internal.gs -> com.google.android.gms.internal.bz:
     com.google.android.gms.internal.gs$g Gp -> y
     com.google.android.gms.drive.metadata.MetadataField Gq -> z
     com.google.android.gms.drive.metadata.MetadataField Gr -> A
-com.google.android.gms.internal.gs$1 -> com.google.android.gms.internal.bz$1:
-com.google.android.gms.internal.gs$a -> com.google.android.gms.internal.bz$a:
-com.google.android.gms.internal.gs$b -> com.google.android.gms.internal.bz$b:
-com.google.android.gms.internal.gs$c -> com.google.android.gms.internal.bz$c:
-com.google.android.gms.internal.gs$d -> com.google.android.gms.internal.bz$d:
-com.google.android.gms.internal.gs$e -> com.google.android.gms.internal.bz$e:
-com.google.android.gms.internal.gs$f -> com.google.android.gms.internal.bz$f:
-com.google.android.gms.internal.gs$g -> com.google.android.gms.internal.bz$g:
-com.google.android.gms.internal.gt -> com.google.android.gms.internal.ca:
+com.google.android.gms.internal.gs$1 -> com.google.android.gms.internal.ca$1:
+com.google.android.gms.internal.gs$a -> com.google.android.gms.internal.ca$a:
+com.google.android.gms.internal.gs$b -> com.google.android.gms.internal.ca$b:
+com.google.android.gms.internal.gs$c -> com.google.android.gms.internal.ca$c:
+com.google.android.gms.internal.gs$d -> com.google.android.gms.internal.ca$d:
+com.google.android.gms.internal.gs$e -> com.google.android.gms.internal.ca$e:
+com.google.android.gms.internal.gs$f -> com.google.android.gms.internal.ca$f:
+com.google.android.gms.internal.gs$g -> com.google.android.gms.internal.ca$g:
+com.google.android.gms.internal.gt -> com.google.android.gms.internal.cc:
     com.google.android.gms.internal.gt$a Gs -> a
     com.google.android.gms.internal.gt$b Gt -> b
     com.google.android.gms.internal.gt$d Gu -> c
     com.google.android.gms.internal.gt$c Gv -> d
     com.google.android.gms.internal.gt$e Gw -> e
-com.google.android.gms.internal.gt$a -> com.google.android.gms.internal.ca$a:
-com.google.android.gms.internal.gt$b -> com.google.android.gms.internal.ca$b:
-com.google.android.gms.internal.gt$c -> com.google.android.gms.internal.ca$c:
-com.google.android.gms.internal.gt$d -> com.google.android.gms.internal.ca$d:
-com.google.android.gms.internal.gt$e -> com.google.android.gms.internal.ca$e:
-com.google.android.gms.internal.gu -> com.google.android.gms.internal.cc:
+com.google.android.gms.internal.gt$a -> com.google.android.gms.internal.cc$a:
+com.google.android.gms.internal.gt$b -> com.google.android.gms.internal.cc$b:
+com.google.android.gms.internal.gt$c -> com.google.android.gms.internal.cc$c:
+com.google.android.gms.internal.gt$d -> com.google.android.gms.internal.cc$d:
+com.google.android.gms.internal.gt$e -> com.google.android.gms.internal.cc$e:
+com.google.android.gms.internal.gu -> com.google.android.gms.internal.cd:
     com.google.android.gms.internal.gu Gx -> a
-com.google.android.gms.internal.gv -> com.google.android.gms.internal.cd:
+com.google.android.gms.internal.gv -> com.google.android.gms.internal.cf:
     com.google.android.gms.drive.metadata.MetadataField Gy -> a
     com.google.android.gms.drive.metadata.MetadataField Gz -> b
-com.google.android.gms.internal.gz -> com.google.android.gms.internal.cf:
+com.google.android.gms.internal.gz -> com.google.android.gms.internal.cg:
     void onAddGeofencesResult(int,java.lang.String[]) -> a
     void onRemoveGeofencesByRequestIdsResult(int,java.lang.String[]) -> b
     void onRemoveGeofencesByPendingIntentResult(int,android.app.PendingIntent) -> a
-com.google.android.gms.internal.gz$a -> com.google.android.gms.internal.cf$a:
+com.google.android.gms.internal.gz$a -> com.google.android.gms.internal.cg$a:
     com.google.android.gms.internal.gz V(android.os.IBinder) -> a
     android.os.IBinder asBinder() -> asBinder
     boolean onTransact(int,android.os.Parcel,android.os.Parcel,int) -> onTransact
-com.google.android.gms.internal.gz$a$a -> com.google.android.gms.internal.cf$a$a:
+com.google.android.gms.internal.gz$a$a -> com.google.android.gms.internal.cg$a$a:
     android.os.IBinder kn -> a
     android.os.IBinder asBinder() -> asBinder
     void onAddGeofencesResult(int,java.lang.String[]) -> a
     void onRemoveGeofencesByRequestIdsResult(int,java.lang.String[]) -> b
     void onRemoveGeofencesByPendingIntentResult(int,android.app.PendingIntent) -> a
-com.google.android.gms.internal.h -> com.google.android.gms.internal.cg:
+com.google.android.gms.internal.h -> com.google.android.gms.internal.ch:
     java.lang.String a(android.content.Context) -> a
     java.lang.String a(android.content.Context,java.lang.String) -> a
     void a(android.view.MotionEvent) -> a
     void a(int,int,int) -> a
-com.google.android.gms.internal.ha -> com.google.android.gms.internal.ch:
+com.google.android.gms.internal.ha -> com.google.android.gms.internal.ci:
     void a(java.util.List,android.app.PendingIntent,com.google.android.gms.internal.gz,java.lang.String) -> a
     void a(android.app.PendingIntent,com.google.android.gms.internal.gz,java.lang.String) -> a
     void a(java.lang.String[],com.google.android.gms.internal.gz,java.lang.String) -> a
@@ -14328,10 +14331,10 @@ com.google.android.gms.internal.ha -> com.google.android.gms.internal.ch:
     void a(com.google.android.gms.internal.hi,com.google.android.gms.internal.hs) -> a
     void a(android.location.Location,int) -> a
     com.google.android.gms.location.b aX(java.lang.String) -> b
-com.google.android.gms.internal.ha$a -> com.google.android.gms.internal.ch$a:
+com.google.android.gms.internal.ha$a -> com.google.android.gms.internal.ci$a:
     com.google.android.gms.internal.ha W(android.os.IBinder) -> a
     boolean onTransact(int,android.os.Parcel,android.os.Parcel,int) -> onTransact
-com.google.android.gms.internal.ha$a$a -> com.google.android.gms.internal.ch$a$a:
+com.google.android.gms.internal.ha$a$a -> com.google.android.gms.internal.ci$a$a:
     android.os.IBinder kn -> a
     android.os.IBinder asBinder() -> asBinder
     void a(java.util.List,android.app.PendingIntent,com.google.android.gms.internal.gz,java.lang.String) -> a
@@ -14362,7 +14365,7 @@ com.google.android.gms.internal.ha$a$a -> com.google.android.gms.internal.ch$a$a
     void a(com.google.android.gms.internal.hi,com.google.android.gms.internal.hs) -> a
     void a(android.location.Location,int) -> a
     com.google.android.gms.location.b aX(java.lang.String) -> b
-com.google.android.gms.internal.hb -> com.google.android.gms.internal.ci:
+com.google.android.gms.internal.hb -> com.google.android.gms.internal.cj:
     com.google.android.gms.internal.hf Ok -> a
     android.content.Context mContext -> b
     android.content.ContentProviderClient Ol -> c
@@ -14373,14 +14376,14 @@ com.google.android.gms.internal.hb -> com.google.android.gms.internal.ci:
     void setMockMode(boolean) -> a
     void removeAllListeners() -> a
     void hQ() -> b
-com.google.android.gms.internal.hb$a -> com.google.android.gms.internal.ci$a:
+com.google.android.gms.internal.hb$a -> com.google.android.gms.internal.cj$a:
     com.google.android.gms.location.LocationListener Oo -> a
     void handleMessage(android.os.Message) -> handleMessage
-com.google.android.gms.internal.hb$b -> com.google.android.gms.internal.ci$b:
+com.google.android.gms.internal.hb$b -> com.google.android.gms.internal.cj$b:
     android.os.Handler Op -> a
     void onLocationChanged(android.location.Location) -> a
     void release() -> a
-com.google.android.gms.internal.hc -> com.google.android.gms.internal.cj:
+com.google.android.gms.internal.hc -> com.google.android.gms.internal.ck:
     com.google.android.gms.internal.hf Ok -> d
     android.content.Context mContext -> e
     com.google.android.gms.internal.hb Oq -> f
@@ -14398,8 +14401,8 @@ com.google.android.gms.internal.hc -> com.google.android.gms.internal.cj:
     android.os.IInterface r(android.os.IBinder) -> a
     void a(com.google.android.gms.internal.hc) -> a
     android.os.IInterface b(com.google.android.gms.internal.hc) -> b
-com.google.android.gms.internal.hc$1 -> com.google.android.gms.internal.cj$1:
-com.google.android.gms.internal.hc$c -> com.google.android.gms.internal.cj$a:
+com.google.android.gms.internal.hc$1 -> com.google.android.gms.internal.ck$1:
+com.google.android.gms.internal.hc$c -> com.google.android.gms.internal.ck$a:
     com.google.android.gms.internal.hc Ou -> a
     void bT() -> a
     com.google.android.gms.internal.ha hR() -> b
@@ -14436,13 +14439,13 @@ com.google.android.gms.internal.hd -> com.google.android.gms.internal.hd:
     java.lang.String toString() -> toString
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
-com.google.android.gms.internal.he -> com.google.android.gms.internal.ck:
+com.google.android.gms.internal.he -> com.google.android.gms.internal.cl:
     com.google.android.gms.internal.hd aC(android.os.Parcel) -> a
     com.google.android.gms.internal.hd[] bD(int) -> a
     void a(com.google.android.gms.internal.hd,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.hf -> com.google.android.gms.internal.cl:
+com.google.android.gms.internal.hf -> com.google.android.gms.internal.cm:
     android.os.IInterface eM() -> c
     void bT() -> a
 com.google.android.gms.internal.hg -> com.google.android.gms.internal.hg:
@@ -14459,7 +14462,7 @@ com.google.android.gms.internal.hg -> com.google.android.gms.internal.hg:
     boolean equals(java.lang.Object) -> equals
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.hh -> com.google.android.gms.internal.cm:
+com.google.android.gms.internal.hh -> com.google.android.gms.internal.cn:
     com.google.android.gms.internal.hg aD(android.os.Parcel) -> a
     com.google.android.gms.internal.hg[] bE(int) -> a
     void a(com.google.android.gms.internal.hg,android.os.Parcel,int) -> a
@@ -14477,7 +14480,7 @@ com.google.android.gms.internal.hi -> com.google.android.gms.internal.hi:
     int hashCode() -> hashCode
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.hj -> com.google.android.gms.internal.cn:
+com.google.android.gms.internal.hj -> com.google.android.gms.internal.co:
     com.google.android.gms.internal.hi aE(android.os.Parcel) -> a
     com.google.android.gms.internal.hi[] bF(int) -> a
     void a(com.google.android.gms.internal.hi,android.os.Parcel,int) -> a
@@ -14498,7 +14501,7 @@ com.google.android.gms.internal.hk -> com.google.android.gms.internal.hk:
     boolean equals(java.lang.Object) -> equals
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.hl -> com.google.android.gms.internal.co:
+com.google.android.gms.internal.hl -> com.google.android.gms.internal.cp:
     com.google.android.gms.internal.hk aF(android.os.Parcel) -> a
     com.google.android.gms.internal.hk[] bG(int) -> a
     void a(com.google.android.gms.internal.hk,android.os.Parcel,int) -> a
@@ -14640,7 +14643,7 @@ com.google.android.gms.internal.hm -> com.google.android.gms.internal.hm:
     java.lang.String toString() -> toString
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.hn -> com.google.android.gms.internal.cp:
+com.google.android.gms.internal.hn -> com.google.android.gms.internal.cq:
     com.google.android.gms.internal.hm aG(android.os.Parcel) -> a
     com.google.android.gms.internal.hm[] bH(int) -> a
     void a(com.google.android.gms.internal.hm,android.os.Parcel,int) -> a
@@ -14663,24 +14666,24 @@ com.google.android.gms.internal.ho -> com.google.android.gms.internal.ho:
     java.util.List ib() -> d
     java.lang.String getPhoneNumber() -> e
     java.lang.String ic() -> f
-com.google.android.gms.internal.hp -> com.google.android.gms.internal.cq:
+com.google.android.gms.internal.hp -> com.google.android.gms.internal.cr:
     com.google.android.gms.internal.ho aH(android.os.Parcel) -> a
     com.google.android.gms.internal.ho[] bI(int) -> a
     void a(com.google.android.gms.internal.ho,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.hq -> com.google.android.gms.internal.cr:
+com.google.android.gms.internal.hq -> com.google.android.gms.internal.cs:
     void K(com.google.android.gms.common.data.DataHolder) -> a
     void L(com.google.android.gms.common.data.DataHolder) -> b
-com.google.android.gms.internal.hq$a -> com.google.android.gms.internal.cr$a:
+com.google.android.gms.internal.hq$a -> com.google.android.gms.internal.cs$a:
     com.google.android.gms.internal.hq Y(android.os.IBinder) -> a
     boolean onTransact(int,android.os.Parcel,android.os.Parcel,int) -> onTransact
-com.google.android.gms.internal.hq$a$a -> com.google.android.gms.internal.cr$a$a:
+com.google.android.gms.internal.hq$a$a -> com.google.android.gms.internal.cs$a$a:
     android.os.IBinder kn -> a
     android.os.IBinder asBinder() -> asBinder
     void K(com.google.android.gms.common.data.DataHolder) -> a
     void L(com.google.android.gms.common.data.DataHolder) -> b
-com.google.android.gms.internal.hr -> com.google.android.gms.internal.cs:
+com.google.android.gms.internal.hr -> com.google.android.gms.internal.ct:
     java.lang.String TAG -> a
     com.google.android.gms.internal.hf Ok -> b
     com.google.android.gms.internal.hs Rj -> c
@@ -14695,7 +14698,7 @@ com.google.android.gms.internal.hs -> com.google.android.gms.internal.hs:
     boolean equals(java.lang.Object) -> equals
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.ht -> com.google.android.gms.internal.ct:
+com.google.android.gms.internal.ht -> com.google.android.gms.internal.cu:
     com.google.android.gms.internal.hs aI(android.os.Parcel) -> a
     com.google.android.gms.internal.hs[] bJ(int) -> a
     void a(com.google.android.gms.internal.hs,android.os.Parcel,int) -> a
@@ -14827,7 +14830,7 @@ com.google.android.gms.internal.ic -> com.google.android.gms.internal.ic:
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
     java.lang.Object freeze() -> a
-com.google.android.gms.internal.id -> com.google.android.gms.internal.cu:
+com.google.android.gms.internal.id -> com.google.android.gms.internal.cv:
     com.google.android.gms.internal.ic aL(android.os.Parcel) -> a
     com.google.android.gms.internal.ic[] bO(int) -> a
     void a(com.google.android.gms.internal.ic,android.os.Parcel,int) -> a
@@ -14861,7 +14864,7 @@ com.google.android.gms.internal.ie -> com.google.android.gms.internal.ie:
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
     java.lang.Object freeze() -> a
-com.google.android.gms.internal.if -> com.google.android.gms.internal.cv:
+com.google.android.gms.internal.if -> com.google.android.gms.internal.cw:
     com.google.android.gms.internal.ie aM(android.os.Parcel) -> a
     com.google.android.gms.internal.ie[] bP(int) -> a
     void a(com.google.android.gms.internal.ie,android.os.Parcel,int) -> a
@@ -15160,61 +15163,61 @@ com.google.android.gms.internal.ih$h -> com.google.android.gms.internal.ih$h:
     int hashCode() -> hashCode
     boolean equals(java.lang.Object) -> equals
     java.lang.Object freeze() -> a
-com.google.android.gms.internal.ii -> com.google.android.gms.internal.cw:
+com.google.android.gms.internal.ii -> com.google.android.gms.internal.cy:
     com.google.android.gms.internal.ih aN(android.os.Parcel) -> a
     com.google.android.gms.internal.ih[] bQ(int) -> a
     void a(com.google.android.gms.internal.ih,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ij -> com.google.android.gms.internal.cy:
+com.google.android.gms.internal.ij -> com.google.android.gms.internal.da:
     com.google.android.gms.internal.ih$a aO(android.os.Parcel) -> a
     com.google.android.gms.internal.ih$a[] bR(int) -> a
     void a(com.google.android.gms.internal.ih$a,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ik -> com.google.android.gms.internal.da:
+com.google.android.gms.internal.ik -> com.google.android.gms.internal.db:
     com.google.android.gms.internal.ih$b aP(android.os.Parcel) -> a
     com.google.android.gms.internal.ih$b[] bS(int) -> a
     void a(com.google.android.gms.internal.ih$b,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.il -> com.google.android.gms.internal.db:
+com.google.android.gms.internal.il -> com.google.android.gms.internal.dc:
     com.google.android.gms.internal.ih$b$a aQ(android.os.Parcel) -> a
     com.google.android.gms.internal.ih$b$a[] bT(int) -> a
     void a(com.google.android.gms.internal.ih$b$a,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.im -> com.google.android.gms.internal.dc:
+com.google.android.gms.internal.im -> com.google.android.gms.internal.dd:
     com.google.android.gms.internal.ih$b$b aR(android.os.Parcel) -> a
     com.google.android.gms.internal.ih$b$b[] bU(int) -> a
     void a(com.google.android.gms.internal.ih$b$b,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.in -> com.google.android.gms.internal.dd:
+com.google.android.gms.internal.in -> com.google.android.gms.internal.de:
     com.google.android.gms.internal.ih$c aS(android.os.Parcel) -> a
     com.google.android.gms.internal.ih$c[] bV(int) -> a
     void a(com.google.android.gms.internal.ih$c,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.io -> com.google.android.gms.internal.de:
+com.google.android.gms.internal.io -> com.google.android.gms.internal.df:
     com.google.android.gms.internal.ih$d aT(android.os.Parcel) -> a
     com.google.android.gms.internal.ih$d[] bW(int) -> a
     void a(com.google.android.gms.internal.ih$d,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ip -> com.google.android.gms.internal.df:
+com.google.android.gms.internal.ip -> com.google.android.gms.internal.dg:
     com.google.android.gms.internal.ih$f aU(android.os.Parcel) -> a
     com.google.android.gms.internal.ih$f[] bX(int) -> a
     void a(com.google.android.gms.internal.ih$f,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.iq -> com.google.android.gms.internal.dg:
+com.google.android.gms.internal.iq -> com.google.android.gms.internal.dh:
     com.google.android.gms.internal.ih$g aV(android.os.Parcel) -> a
     com.google.android.gms.internal.ih$g[] bY(int) -> a
     void a(com.google.android.gms.internal.ih$g,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ir -> com.google.android.gms.internal.dh:
+com.google.android.gms.internal.ir -> com.google.android.gms.internal.di:
     com.google.android.gms.internal.ih$h aW(android.os.Parcel) -> a
     com.google.android.gms.internal.ih$h[] bZ(int) -> a
     void a(com.google.android.gms.internal.ih$h,android.os.Parcel,int) -> a
@@ -15227,7 +15230,7 @@ com.google.android.gms.internal.iv -> com.google.android.gms.internal.iv:
     int getVersionCode() -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.iw -> com.google.android.gms.internal.di:
+com.google.android.gms.internal.iw -> com.google.android.gms.internal.dj:
     com.google.android.gms.internal.iv bl(android.os.Parcel) -> a
     com.google.android.gms.internal.iv[] cx(int) -> a
     void a(com.google.android.gms.internal.iv,android.os.Parcel,int) -> a
@@ -15241,7 +15244,7 @@ com.google.android.gms.internal.ix -> com.google.android.gms.internal.ix:
     int getVersionCode() -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.iy -> com.google.android.gms.internal.dj:
+com.google.android.gms.internal.iy -> com.google.android.gms.internal.dk:
     com.google.android.gms.internal.ix bm(android.os.Parcel) -> a
     com.google.android.gms.internal.ix[] cy(int) -> a
     void a(com.google.android.gms.internal.ix,android.os.Parcel,int) -> a
@@ -15255,7 +15258,7 @@ com.google.android.gms.internal.jk -> com.google.android.gms.internal.jk:
     int getVersionCode() -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.jl -> com.google.android.gms.internal.dk:
+com.google.android.gms.internal.jl -> com.google.android.gms.internal.dl:
     com.google.android.gms.internal.jk bq(android.os.Parcel) -> a
     com.google.android.gms.internal.jk[] cE(int) -> a
     void a(com.google.android.gms.internal.jk,android.os.Parcel,int) -> a
@@ -15270,7 +15273,7 @@ com.google.android.gms.internal.jm -> com.google.android.gms.internal.jm:
     int getVersionCode() -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.jn -> com.google.android.gms.internal.dl:
+com.google.android.gms.internal.jn -> com.google.android.gms.internal.dm:
     com.google.android.gms.internal.jm br(android.os.Parcel) -> a
     com.google.android.gms.internal.jm[] cF(int) -> a
     void a(com.google.android.gms.internal.jm,android.os.Parcel,int) -> a
@@ -15298,13 +15301,13 @@ com.google.android.gms.internal.jp -> com.google.android.gms.internal.jp:
     int getVersionCode() -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.jq -> com.google.android.gms.internal.dm:
+com.google.android.gms.internal.jq -> com.google.android.gms.internal.dn:
     com.google.android.gms.internal.jp bs(android.os.Parcel) -> a
     com.google.android.gms.internal.jp[] cG(int) -> a
     void a(com.google.android.gms.internal.jp,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.jr -> com.google.android.gms.internal.dn:
+com.google.android.gms.internal.jr -> com.google.android.gms.internal.do:
     com.google.android.gms.internal.jo bt(android.os.Parcel) -> a
     com.google.android.gms.internal.jo[] cH(int) -> a
     void a(com.google.android.gms.internal.jo,android.os.Parcel,int) -> a
@@ -15318,7 +15321,7 @@ com.google.android.gms.internal.js -> com.google.android.gms.internal.js:
     int getVersionCode() -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.jt -> com.google.android.gms.internal.do:
+com.google.android.gms.internal.jt -> com.google.android.gms.internal.dp:
     com.google.android.gms.internal.js bu(android.os.Parcel) -> a
     com.google.android.gms.internal.js[] cI(int) -> a
     void a(com.google.android.gms.internal.js,android.os.Parcel,int) -> a
@@ -15332,7 +15335,7 @@ com.google.android.gms.internal.ju -> com.google.android.gms.internal.ju:
     int getVersionCode() -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.jv -> com.google.android.gms.internal.dp:
+com.google.android.gms.internal.jv -> com.google.android.gms.internal.dq:
     com.google.android.gms.internal.ju bv(android.os.Parcel) -> a
     com.google.android.gms.internal.ju[] cJ(int) -> a
     void a(com.google.android.gms.internal.ju,android.os.Parcel,int) -> a
@@ -15346,7 +15349,7 @@ com.google.android.gms.internal.jw -> com.google.android.gms.internal.jw:
     int getVersionCode() -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.jx -> com.google.android.gms.internal.dq:
+com.google.android.gms.internal.jx -> com.google.android.gms.internal.dr:
     com.google.android.gms.internal.jw bw(android.os.Parcel) -> a
     com.google.android.gms.internal.jw[] cK(int) -> a
     void a(com.google.android.gms.internal.jw,android.os.Parcel,int) -> a
@@ -15363,7 +15366,7 @@ com.google.android.gms.internal.jy -> com.google.android.gms.internal.jy:
     int getVersionCode() -> a
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.internal.jz -> com.google.android.gms.internal.dr:
+com.google.android.gms.internal.jz -> com.google.android.gms.internal.ds:
     com.google.android.gms.internal.jy bx(android.os.Parcel) -> a
     com.google.android.gms.internal.jy[] cL(int) -> a
     void a(com.google.android.gms.internal.jy,android.os.Parcel,int) -> a
@@ -15383,7 +15386,7 @@ com.google.android.gms.internal.ki -> com.google.android.gms.internal.ki:
     java.lang.String getPath() -> b
     byte[] getData() -> c
     java.lang.String getSource() -> d
-com.google.android.gms.internal.kj -> com.google.android.gms.internal.ds:
+com.google.android.gms.internal.kj -> com.google.android.gms.internal.dt:
     com.google.android.gms.internal.ki by(android.os.Parcel) -> a
     com.google.android.gms.internal.ki[] cN(int) -> a
     void a(com.google.android.gms.internal.ki,android.os.Parcel,int) -> a
@@ -15401,13 +15404,13 @@ com.google.android.gms.internal.kk -> com.google.android.gms.internal.kk:
     java.lang.String toString() -> toString
     java.lang.String getId() -> a
     java.lang.String getDisplayName() -> b
-com.google.android.gms.internal.kl -> com.google.android.gms.internal.dt:
+com.google.android.gms.internal.kl -> com.google.android.gms.internal.du:
     com.google.android.gms.internal.kk bz(android.os.Parcel) -> a
     com.google.android.gms.internal.kk[] cO(int) -> a
     void a(com.google.android.gms.internal.kk,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
-com.google.android.gms.internal.ko -> com.google.android.gms.internal.du:
+com.google.android.gms.internal.ko -> com.google.android.gms.internal.dv:
     byte[] buffer -> a
     int adT -> b
     int position -> c
@@ -15449,18 +15452,18 @@ com.google.android.gms.internal.ko -> com.google.android.gms.internal.du:
     void C(long) -> e
     int D(long) -> f
     long E(long) -> g
-com.google.android.gms.internal.ko$a -> com.google.android.gms.internal.du$a:
-com.google.android.gms.internal.kp -> com.google.android.gms.internal.dv:
+com.google.android.gms.internal.ko$a -> com.google.android.gms.internal.dv$a:
+com.google.android.gms.internal.kp -> com.google.android.gms.internal.dw:
     java.util.List adU -> m
     int mx() -> d
     void a(com.google.android.gms.internal.ko) -> a
-com.google.android.gms.internal.kr -> com.google.android.gms.internal.dw:
+com.google.android.gms.internal.kr -> com.google.android.gms.internal.dy:
     java.lang.Object adX -> a
     boolean equals(int[],int[]) -> a
     boolean equals(java.lang.Object[],java.lang.Object[]) -> a
     int hashCode(int[]) -> a
     int hashCode(java.lang.Object[]) -> a
-com.google.android.gms.internal.kt -> com.google.android.gms.internal.dy:
+com.google.android.gms.internal.kt -> com.google.android.gms.internal.dz:
     int adY -> n
     int mF() -> e
     int c() -> b
@@ -15469,19 +15472,19 @@ com.google.android.gms.internal.kt -> com.google.android.gms.internal.dy:
     byte[] d(com.google.android.gms.internal.kt) -> a
     void a(com.google.android.gms.internal.kt,byte[],int,int) -> a
     java.lang.String toString() -> toString
-com.google.android.gms.internal.ku -> com.google.android.gms.internal.dz:
+com.google.android.gms.internal.ku -> com.google.android.gms.internal.ea:
     java.lang.String e(com.google.android.gms.internal.kt) -> a
     void a(java.lang.String,java.lang.Object,java.lang.StringBuffer,java.lang.StringBuffer) -> a
     java.lang.String cg(java.lang.String) -> a
     java.lang.String ch(java.lang.String) -> b
     java.lang.String av(java.lang.String) -> c
     void a(byte[],java.lang.StringBuffer) -> a
-com.google.android.gms.internal.kv -> com.google.android.gms.internal.ea:
+com.google.android.gms.internal.kv -> com.google.android.gms.internal.eb:
     int tag -> a
     byte[] adZ -> b
     boolean equals(java.lang.Object) -> equals
     int hashCode() -> hashCode
-com.google.android.gms.internal.kw -> com.google.android.gms.internal.eb:
+com.google.android.gms.internal.kw -> com.google.android.gms.internal.ec:
     int[] aea -> a
     long[] aeb -> b
     float[] aec -> c
@@ -15491,7 +15494,7 @@ com.google.android.gms.internal.kw -> com.google.android.gms.internal.eb:
     byte[][] aeg -> g
     byte[] aeh -> h
     int l(int,int) -> a
-com.google.android.gms.internal.l -> com.google.android.gms.internal.ec:
+com.google.android.gms.internal.l -> com.google.android.gms.internal.ed:
     java.lang.String[] kf -> a
     com.google.android.gms.internal.h kg -> b
     boolean a(android.net.Uri) -> a
@@ -15500,34 +15503,34 @@ com.google.android.gms.internal.l -> com.google.android.gms.internal.ec:
     android.net.Uri a(android.net.Uri,android.content.Context) -> a
     android.net.Uri a(android.net.Uri,java.lang.String,java.lang.String) -> a
     android.net.Uri a(android.net.Uri,android.content.Context,java.lang.String,boolean) -> a
-com.google.android.gms.internal.m -> com.google.android.gms.internal.ed:
-com.google.android.gms.internal.s -> com.google.android.gms.internal.ee:
+com.google.android.gms.internal.m -> com.google.android.gms.internal.ee:
+com.google.android.gms.internal.s -> com.google.android.gms.internal.eg:
     android.os.Bundle a(java.lang.String,java.lang.String,android.os.Bundle) -> a
     android.os.Bundle a(java.lang.String,android.os.Bundle) -> a
-com.google.android.gms.internal.s$a -> com.google.android.gms.internal.ee$a:
+com.google.android.gms.internal.s$a -> com.google.android.gms.internal.eg$a:
     com.google.android.gms.internal.s a(android.os.IBinder) -> a
     boolean onTransact(int,android.os.Parcel,android.os.Parcel,int) -> onTransact
-com.google.android.gms.internal.s$a$a -> com.google.android.gms.internal.ee$a$a:
+com.google.android.gms.internal.s$a$a -> com.google.android.gms.internal.eg$a$a:
     android.os.IBinder kn -> a
     android.os.IBinder asBinder() -> asBinder
     android.os.Bundle a(java.lang.String,java.lang.String,android.os.Bundle) -> a
     android.os.Bundle a(java.lang.String,android.os.Bundle) -> a
-com.google.android.gms.internal.t -> com.google.android.gms.internal.eg:
+com.google.android.gms.internal.t -> com.google.android.gms.internal.eh:
     java.lang.String getId() -> a
     boolean a(boolean) -> a
     java.lang.String c(java.lang.String) -> a
     void b(java.lang.String,boolean) -> a
-com.google.android.gms.internal.t$a -> com.google.android.gms.internal.eg$a:
+com.google.android.gms.internal.t$a -> com.google.android.gms.internal.eh$a:
     com.google.android.gms.internal.t b(android.os.IBinder) -> a
     boolean onTransact(int,android.os.Parcel,android.os.Parcel,int) -> onTransact
-com.google.android.gms.internal.t$a$a -> com.google.android.gms.internal.eg$a$a:
+com.google.android.gms.internal.t$a$a -> com.google.android.gms.internal.eh$a$a:
     android.os.IBinder kn -> a
     android.os.IBinder asBinder() -> asBinder
     java.lang.String getId() -> a
     boolean a(boolean) -> a
     java.lang.String c(java.lang.String) -> a
     void b(java.lang.String,boolean) -> a
-com.google.android.gms.internal.u -> com.google.android.gms.internal.eh:
+com.google.android.gms.internal.u -> com.google.android.gms.internal.ei:
     void P() -> a
 com.google.android.gms.location.ActivityRecognitionResult -> com.google.android.gms.location.ActivityRecognitionResult:
     com.google.android.gms.location.ActivityRecognitionResultCreator CREATOR -> a
@@ -16089,6 +16092,50 @@ com.google.android.gms.plus.PlusClient$Builder -> com.google.android.gms.plus.a$
     com.google.android.gms.plus.internal.i TS -> d
     com.google.android.gms.plus.PlusClient$Builder setScopes(java.lang.String[]) -> a
     com.google.android.gms.plus.PlusClient build() -> a
+com.google.android.gms.plus.PlusOneButton -> com.google.android.gms.plus.PlusOneButton:
+    android.view.View TT -> a
+    int mSize -> b
+    int TU -> c
+    java.lang.String ro -> d
+    int TV -> e
+    com.google.android.gms.plus.PlusOneButton$OnPlusOneClickListener TW -> f
+    int getSize(android.content.Context,android.util.AttributeSet) -> a
+    int getAnnotation(android.content.Context,android.util.AttributeSet) -> b
+    void v(android.content.Context) -> a
+    void initialize(java.lang.String,int) -> a
+    void setOnPlusOneClickListener(com.google.android.gms.plus.PlusOneButton$OnPlusOneClickListener) -> setOnPlusOneClickListener
+    void setAnnotation(int) -> setAnnotation
+    void setSize(int) -> setSize
+    void onMeasure(int,int) -> onMeasure
+    void onLayout(boolean,int,int,int,int) -> onLayout
+    android.view.View a(com.google.android.gms.plus.PlusOneButton) -> a
+    int b(com.google.android.gms.plus.PlusOneButton) -> b
+com.google.android.gms.plus.PlusOneButton$DefaultOnPlusOneClickListener -> com.google.android.gms.plus.PlusOneButton$a:
+    com.google.android.gms.plus.PlusOneButton$OnPlusOneClickListener TX -> b
+    com.google.android.gms.plus.PlusOneButton TY -> a
+    void onClick(android.view.View) -> onClick
+    void onPlusOneClick(android.content.Intent) -> a
+com.google.android.gms.plus.PlusOneButton$OnPlusOneClickListener -> com.google.android.gms.plus.PlusOneButton$b:
+    void onPlusOneClick(android.content.Intent) -> a
+com.google.android.gms.plus.PlusOneDummyView -> com.google.android.gms.plus.b:
+    com.google.android.gms.plus.PlusOneDummyView$d iJ() -> a
+    android.graphics.Point bL(int) -> a
+com.google.android.gms.plus.PlusOneDummyView$1 -> com.google.android.gms.plus.b$1:
+com.google.android.gms.plus.PlusOneDummyView$a -> com.google.android.gms.plus.b$a:
+    android.content.Context mContext -> a
+    android.graphics.drawable.Drawable getDrawable(int) -> a
+    boolean isValid() -> a
+com.google.android.gms.plus.PlusOneDummyView$b -> com.google.android.gms.plus.b$b:
+    android.content.Context mContext -> a
+    android.graphics.drawable.Drawable getDrawable(int) -> a
+    boolean isValid() -> a
+com.google.android.gms.plus.PlusOneDummyView$c -> com.google.android.gms.plus.b$c:
+    android.content.Context mContext -> a
+    android.graphics.drawable.Drawable getDrawable(int) -> a
+    boolean isValid() -> a
+com.google.android.gms.plus.PlusOneDummyView$d -> com.google.android.gms.plus.b$d:
+    android.graphics.drawable.Drawable getDrawable(int) -> a
+    boolean isValid() -> a
 com.google.android.gms.plus.internal.PlusCommonExtras -> com.google.android.gms.plus.internal.PlusCommonExtras:
     java.lang.String TAG -> a
     com.google.android.gms.plus.internal.f CREATOR -> b
@@ -16132,7 +16179,18 @@ com.google.android.gms.plus.internal.b$a$a -> com.google.android.gms.plus.intern
     void bf(java.lang.String) -> b
     void a(int,com.google.android.gms.internal.ih) -> a
     void Z(com.google.android.gms.common.api.Status) -> a
-com.google.android.gms.plus.internal.d -> com.google.android.gms.plus.internal.b:
+com.google.android.gms.plus.internal.c -> com.google.android.gms.plus.internal.b:
+    com.google.android.gms.dynamic.d a(com.google.android.gms.dynamic.d,int,int,java.lang.String,int) -> a
+    com.google.android.gms.dynamic.d a(com.google.android.gms.dynamic.d,int,int,java.lang.String,java.lang.String) -> a
+com.google.android.gms.plus.internal.c$a -> com.google.android.gms.plus.internal.b$a:
+    com.google.android.gms.plus.internal.c aP(android.os.IBinder) -> a
+    boolean onTransact(int,android.os.Parcel,android.os.Parcel,int) -> onTransact
+com.google.android.gms.plus.internal.c$a$a -> com.google.android.gms.plus.internal.b$a$a:
+    android.os.IBinder kn -> a
+    android.os.IBinder asBinder() -> asBinder
+    com.google.android.gms.dynamic.d a(com.google.android.gms.dynamic.d,int,int,java.lang.String,int) -> a
+    com.google.android.gms.dynamic.d a(com.google.android.gms.dynamic.d,int,int,java.lang.String,java.lang.String) -> a
+com.google.android.gms.plus.internal.d -> com.google.android.gms.plus.internal.c:
     void a(com.google.android.gms.plus.internal.b,java.lang.String) -> a
     void a(com.google.android.gms.plus.internal.b,java.lang.String,java.lang.String) -> a
     void b(com.google.android.gms.plus.internal.b,java.lang.String) -> b
@@ -16153,10 +16211,10 @@ com.google.android.gms.plus.internal.d -> com.google.android.gms.plus.internal.b
     java.lang.String iM() -> e
     void e(com.google.android.gms.plus.internal.b,java.lang.String) -> e
     void a(com.google.android.gms.plus.internal.b,com.google.android.gms.internal.gg) -> a
-com.google.android.gms.plus.internal.d$a -> com.google.android.gms.plus.internal.b$a:
+com.google.android.gms.plus.internal.d$a -> com.google.android.gms.plus.internal.c$a:
     com.google.android.gms.plus.internal.d aQ(android.os.IBinder) -> a
     boolean onTransact(int,android.os.Parcel,android.os.Parcel,int) -> onTransact
-com.google.android.gms.plus.internal.d$a$a -> com.google.android.gms.plus.internal.b$a$a:
+com.google.android.gms.plus.internal.d$a$a -> com.google.android.gms.plus.internal.c$a$a:
     android.os.IBinder kn -> a
     android.os.IBinder asBinder() -> asBinder
     void a(com.google.android.gms.plus.internal.b,java.lang.String) -> a
@@ -16179,7 +16237,7 @@ com.google.android.gms.plus.internal.d$a$a -> com.google.android.gms.plus.intern
     java.lang.String iM() -> e
     void e(com.google.android.gms.plus.internal.b,java.lang.String) -> e
     void a(com.google.android.gms.plus.internal.b,com.google.android.gms.internal.gg) -> a
-com.google.android.gms.plus.internal.e -> com.google.android.gms.plus.internal.c:
+com.google.android.gms.plus.internal.e -> com.google.android.gms.plus.internal.d:
     com.google.android.gms.plus.model.people.Person Ub -> d
     com.google.android.gms.plus.internal.h Uc -> e
     java.lang.String getAccountName() -> o
@@ -16189,12 +16247,18 @@ com.google.android.gms.plus.internal.e -> com.google.android.gms.plus.internal.c
     void a(com.google.android.gms.internal.fm,com.google.android.gms.internal.ff$e) -> a
     void a(int,android.os.IBinder,android.os.Bundle) -> a
     android.os.IInterface r(android.os.IBinder) -> a
-com.google.android.gms.plus.internal.f -> com.google.android.gms.plus.internal.d:
+com.google.android.gms.plus.internal.f -> com.google.android.gms.plus.internal.e:
     com.google.android.gms.plus.internal.PlusCommonExtras aJ(android.os.Parcel) -> a
     com.google.android.gms.plus.internal.PlusCommonExtras[] bM(int) -> a
     void a(com.google.android.gms.plus.internal.PlusCommonExtras,android.os.Parcel,int) -> a
     java.lang.Object[] newArray(int) -> newArray
     java.lang.Object createFromParcel(android.os.Parcel) -> createFromParcel
+com.google.android.gms.plus.internal.g -> com.google.android.gms.plus.internal.f:
+    android.content.Context Sz -> a
+    com.google.android.gms.plus.internal.c Uj -> b
+    com.google.android.gms.plus.internal.c D(android.content.Context) -> a
+    android.view.View a(android.content.Context,int,int,java.lang.String,int) -> a
+com.google.android.gms.plus.internal.g$a -> com.google.android.gms.plus.internal.f$a:
 com.google.android.gms.plus.internal.h -> com.google.android.gms.plus.internal.h:
     com.google.android.gms.plus.internal.j CREATOR -> a
     int xH -> b
@@ -16223,7 +16287,7 @@ com.google.android.gms.plus.internal.h -> com.google.android.gms.plus.internal.h
     boolean equals(java.lang.Object) -> equals
     int describeContents() -> describeContents
     void writeToParcel(android.os.Parcel,int) -> writeToParcel
-com.google.android.gms.plus.internal.i -> com.google.android.gms.plus.internal.e:
+com.google.android.gms.plus.internal.i -> com.google.android.gms.plus.internal.g:
     java.lang.String wG -> a
     java.util.ArrayList Us -> b
     java.lang.String[] Ut -> c
@@ -16234,7 +16298,7 @@ com.google.android.gms.plus.internal.i -> com.google.android.gms.plus.internal.e
     com.google.android.gms.plus.internal.PlusCommonExtras Ur -> h
     com.google.android.gms.plus.internal.i e(java.lang.String[]) -> a
     com.google.android.gms.plus.internal.h iZ() -> a
-com.google.android.gms.plus.internal.j -> com.google.android.gms.plus.internal.f:
+com.google.android.gms.plus.internal.j -> com.google.android.gms.plus.internal.i:
     com.google.android.gms.plus.internal.h aK(android.os.Parcel) -> a
     com.google.android.gms.plus.internal.h[] bN(int) -> a
     void a(com.google.android.gms.plus.internal.h,android.os.Parcel,int) -> a
@@ -21928,14 +21992,14 @@ fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable$Callbacks -> fr.c
 li.barter.BarterLiApplication -> li.barter.BarterLiApplication:
     android.content.Context sStaticContext -> a
     com.android.volley.RequestQueue mRequestQueue -> b
-    65:70:android.content.Context getStaticContext() -> a
-    76:107:void onCreate() -> onCreate
-    111:120:void saveCurrentAppVersionIntoPreferences() -> d
-    127:128:void doMigrationFromAlpha() -> e
-    136:146:void readUserInfoFromSharedPref() -> f
-    160:171:void overrideHardwareMenuButton() -> g
-    175:175:com.android.volley.RequestQueue getRequestQueue() -> b
-    184:186:void startChatService() -> c
+    64:69:android.content.Context getStaticContext() -> a
+    75:106:void onCreate() -> onCreate
+    110:119:void saveCurrentAppVersionIntoPreferences() -> d
+    126:127:void doMigrationFromAlpha() -> e
+    135:145:void readUserInfoFromSharedPref() -> f
+    159:170:void overrideHardwareMenuButton() -> g
+    174:174:com.android.volley.RequestQueue getRequestQueue() -> b
+    183:185:void startChatService() -> c
 li.barter.R -> li.barter.R:
 li.barter.R$anim -> li.barter.R$anim:
     int exit_zoom_in -> exit_zoom_in
@@ -22138,6 +22202,7 @@ li.barter.R$color -> li.barter.R$color:
     int outgoing_message -> outgoing_message
     int overlay_black_15p -> overlay_black_15p
     int overlay_black_40p -> overlay_black_40p
+    int overlay_black_90p -> overlay_black_90p
     int overlay_gray_40p -> overlay_gray_40p
     int possible_result_points -> possible_result_points
     int red -> red
@@ -22182,7 +22247,10 @@ li.barter.R$color -> li.barter.R$color:
     int wallet_secondary_text_holo_dark -> wallet_secondary_text_holo_dark
     int white -> white
 li.barter.R$dimen -> li.barter.R$dimen:
+    int ab_height -> ab_height
     int ab_ip_size -> ab_ip_size
+    int ab_user_image_radius -> ab_user_image_radius
+    int ab_user_image_size -> ab_user_image_size
     int activity_margin -> activity_margin
     int big_chat_detail_image_size -> big_chat_detail_image_size
     int big_chat_image_radius -> big_chat_image_radius
@@ -22230,6 +22298,7 @@ li.barter.R$dimen -> li.barter.R$dimen:
     int default_title_indicator_text_size -> default_title_indicator_text_size
     int default_title_indicator_title_padding -> default_title_indicator_title_padding
     int default_title_indicator_top_padding -> default_title_indicator_top_padding
+    int location_pin_size -> location_pin_size
     int margin_huge -> margin_huge
     int margin_large -> margin_large
     int margin_medium -> margin_medium
@@ -22469,7 +22538,9 @@ li.barter.R$drawable -> li.barter.R$drawable:
     int ic_action_search -> ic_action_search
     int ic_action_share -> ic_action_share
     int ic_actionbar -> ic_actionbar
+    int ic_add_graphic -> ic_add_graphic
     int ic_launcher -> ic_launcher
+    int ic_location -> ic_location
     int ic_navigation_drawer -> ic_navigation_drawer
     int ic_plusone_medium_off_client -> ic_plusone_medium_off_client
     int ic_plusone_small_off_client -> ic_plusone_small_off_client
@@ -22518,9 +22589,12 @@ li.barter.R$id -> li.barter.R$id:
     int action_about_select_location -> action_about_select_location
     int action_add_book -> action_add_book
     int action_add_manually -> action_add_manually
+    int action_edit_book -> action_edit_book
     int action_edit_profile -> action_edit_profile
     int action_profile_save -> action_profile_save
     int action_search -> action_search
+    int action_share -> action_share
+    int action_user -> action_user
     int auto_focus -> auto_focus
     int barcode_image_view -> barcode_image_view
     int bold -> bold
@@ -22534,6 +22608,7 @@ li.barter.R$id -> li.barter.R$id:
     int button_google_login -> button_google_login
     int button_logout -> button_logout
     int button_report_bug -> button_report_bug
+    int button_reset_password -> button_reset_password
     int button_send -> button_send
     int button_submit -> button_submit
     int button_submit_enlisting -> button_submit_enlisting
@@ -22579,20 +22654,25 @@ li.barter.R$id -> li.barter.R$id:
     int edit_sell_price -> edit_sell_price
     int edit_text_author -> edit_text_author
     int edit_text_chat_message -> edit_text_chat_message
+    int edit_text_confirmpassword -> edit_text_confirmpassword
     int edit_text_description -> edit_text_description
     int edit_text_email -> edit_text_email
     int edit_text_isbn -> edit_text_isbn
+    int edit_text_newpassword -> edit_text_newpassword
     int edit_text_password -> edit_text_password
     int edit_text_title -> edit_text_title
+    int edit_text_token -> edit_text_token
     int edittext_first_name -> edittext_first_name
     int edittext_last_name -> edittext_last_name
     int edittext_location_name -> edittext_location_name
     int empty_view -> empty_view
-    int empty_view_normal -> empty_view_normal
     int encode_view -> encode_view
+    int facebook_share -> facebook_share
+    int forgot_password -> forgot_password
     int format_text_view -> format_text_view
     int format_text_view_label -> format_text_view_label
     int frame_content -> frame_content
+    int frame_overlay -> frame_overlay
     int grayscale -> grayscale
     int grid_books_around_me -> grid_books_around_me
     int group_hide_on_drawer_open -> group_hide_on_drawer_open
@@ -22600,8 +22680,10 @@ li.barter.R$id -> li.barter.R$id:
     int holo_light -> holo_light
     int hybrid -> hybrid
     int imageView1 -> imageView1
+    int image_add_graphic -> image_add_graphic
     int image_book -> image_book
     int image_book_and_user -> image_book_and_user
+    int image_location -> image_location
     int image_profile_pic -> image_profile_pic
     int image_text -> image_text
     int image_user -> image_user
@@ -22623,6 +22705,7 @@ li.barter.R$id -> li.barter.R$id:
     int label_referral_count -> label_referral_count
     int label_suggest_feature -> label_suggest_feature
     int label_suggested_price -> label_suggested_price
+    int label_token_message -> label_token_message
     int large -> large
     int layout_barter_options -> layout_barter_options
     int layout_barter_options1 -> layout_barter_options1
@@ -22632,6 +22715,7 @@ li.barter.R$id -> li.barter.R$id:
     int list_my_books -> list_my_books
     int list_nav_drawer -> list_nav_drawer
     int match_parent -> match_parent
+    int message_share -> message_share
     int meta_text_view -> meta_text_view
     int meta_text_view_label -> meta_text_view_label
     int monochrome -> monochrome
@@ -22639,10 +22723,12 @@ li.barter.R$id -> li.barter.R$id:
     int none -> none
     int normal -> normal
     int outside -> outside
+    int overlay -> overlay
     int pager_aboutus -> pager_aboutus
     int pager_books -> pager_books
     int pager_profile -> pager_profile
     int picker_subtitle -> picker_subtitle
+    int plus_one_button -> plus_one_button
     int preview_view -> preview_view
     int production -> production
     int ptr_content -> ptr_content
@@ -22666,6 +22752,7 @@ li.barter.R$id -> li.barter.R$id:
     int sandbox -> sandbox
     int satellite -> satellite
     int selectionDetails -> selectionDetails
+    int share -> share
     int sliding_layout -> sliding_layout
     int small -> small
     int spb_interpolator_accelerate -> spb_interpolator_accelerate
@@ -22695,6 +22782,7 @@ li.barter.R$id -> li.barter.R$id:
     int text_description -> text_description
     int text_device_description -> text_device_description
     int text_distance -> text_distance
+    int text_enable_message -> text_enable_message
     int text_feature_description -> text_feature_description
     int text_first_name -> text_first_name
     int text_isbn -> text_isbn
@@ -22704,10 +22792,12 @@ li.barter.R$id -> li.barter.R$id:
     int text_nav_item_title -> text_nav_item_title
     int text_place_address -> text_place_address
     int text_place_name -> text_place_name
+    int text_privacy_important -> text_privacy_important
     int text_publication_date -> text_publication_date
     int text_publication_month -> text_publication_month
     int text_publication_year -> text_publication_year
     int text_referral_count -> text_referral_count
+    int text_select_location -> text_select_location
     int text_suggested_price -> text_suggested_price
     int text_title -> text_title
     int text_try_again -> text_try_again
@@ -22726,6 +22816,7 @@ li.barter.R$id -> li.barter.R$id:
     int view_overlay -> view_overlay
     int view_web -> view_web
     int viewfinder_view -> viewfinder_view
+    int whatsapp_share -> whatsapp_share
     int wrap_content -> wrap_content
 li.barter.R$integer -> li.barter.R$integer:
     int default_circle_indicator_orientation -> default_circle_indicator_orientation
@@ -22783,31 +22874,38 @@ li.barter.R$layout -> li.barter.R$layout:
     int fragment_profile_books -> fragment_profile_books
     int fragment_profile_edit -> fragment_profile_edit
     int fragment_report_bug -> fragment_report_bug
+    int fragment_reset_password -> fragment_reset_password
     int fragment_select_location -> fragment_select_location
     int fragment_show_webview -> fragment_show_webview
     int fragment_suggest_feature -> fragment_suggest_feature
     int fragment_team -> fragment_team
     int fragment_tribute -> fragment_tribute
+    int layout_action_bar_user_image -> layout_action_bar_user_image
     int layout_barter_desc -> layout_barter_desc
     int layout_book_and_user_image -> layout_book_and_user_image
     int layout_book_suggestion_item -> layout_book_suggestion_item
     int layout_books_around_me_empty_view -> layout_books_around_me_empty_view
-    int layout_books_around_me_empty_view_normal -> layout_books_around_me_empty_view_normal
     int layout_books_tab -> layout_books_tab
     int layout_chat_item -> layout_chat_item
+    int layout_dialog_enable_location -> layout_dialog_enable_location
     int layout_dialog_names -> layout_dialog_names
     int layout_dialog_place -> layout_dialog_place
-    int layout_emptyview_onrefresh -> layout_emptyview_onrefresh
     int layout_incoming_chat -> layout_incoming_chat
+    int layout_item_add_graphic -> layout_item_add_graphic
     int layout_item_book -> layout_item_book
     int layout_nav_drawer_item -> layout_nav_drawer_item
+    int layout_nav_drawer_item_share -> layout_nav_drawer_item_share
     int layout_oss_item -> layout_oss_item
     int layout_outgoing_chat -> layout_outgoing_chat
+    int layout_overlay_about_prefered_location -> layout_overlay_about_prefered_location
     int layout_select_location_empty_view -> layout_select_location_empty_view
     int layout_select_place_item -> layout_select_place_item
     int layout_team -> layout_team
 li.barter.R$menu -> li.barter.R$menu:
+    int menu_book_detail -> menu_book_detail
     int menu_books_around_me -> menu_books_around_me
+    int menu_chat_details -> menu_chat_details
+    int menu_logged_in_book_detail -> menu_logged_in_book_detail
     int menu_profile_edit -> menu_profile_edit
     int menu_profile_show -> menu_profile_show
     int menu_scan_book -> menu_scan_book
@@ -22826,11 +22924,9 @@ li.barter.R$string -> li.barter.R$string:
     int about_barterli -> about_barterli
     int about_me -> about_me
     int action_settings -> action_settings
-    int add -> add
     int add_book -> add_book
     int add_book_dialog_head -> add_book_dialog_head
     int add_location_manually -> add_location_manually
-    int add_location_message -> add_location_message
     int add_manually -> add_manually
     int add_new_book_label -> add_new_book_label
     int add_your_own -> add_your_own
@@ -22851,6 +22947,7 @@ li.barter.R$string -> li.barter.R$string:
     int bartertype_label -> bartertype_label
     int block_user_alert_message -> block_user_alert_message
     int book_added -> book_added
+    int book_share_message -> book_share_message
     int build_library -> build_library
     int button_edit_preferred_location -> button_edit_preferred_location
     int button_submit -> button_submit
@@ -22913,6 +23010,7 @@ li.barter.R$string -> li.barter.R$string:
     int common_signin_button_text -> common_signin_button_text
     int common_signin_button_text_long -> common_signin_button_text_long
     int complete_action_using -> complete_action_using
+    int confirm_password_label -> confirm_password_label
     int contents_contact -> contents_contact
     int contents_email -> contents_email
     int contents_location -> contents_location
@@ -22920,8 +23018,6 @@ li.barter.R$string -> li.barter.R$string:
     int contents_sms -> contents_sms
     int contents_text -> contents_text
     int crashalytics_id -> crashalytics_id
-    int crouton_map_message -> crouton_map_message
-    int crouton_prefferedlocation_message -> crouton_prefferedlocation_message
     int decoder_name -> decoder_name
     int delete -> delete
     int delete_chat_alert_message -> delete_chat_alert_message
@@ -22934,19 +23030,25 @@ li.barter.R$string -> li.barter.R$string:
     int editbook_title -> editbook_title
     int editbook_title2 -> editbook_title2
     int email_label -> email_label
+    int enable -> enable
+    int enable_location -> enable_location
+    int enable_location_message -> enable_location_message
     int encoder_name -> encoder_name
     int enter_message -> enter_message
     int error_block_user -> error_block_user
     int error_enter_email -> error_enter_email
     int error_enter_password -> error_enter_password
     int error_enter_title -> error_enter_title
+    int error_enter_token -> error_enter_token
     int error_invalid_email -> error_invalid_email
     int error_not_connected_to_chat_service -> error_not_connected_to_chat_service
     int error_password_minimum_length -> error_password_minimum_length
     int error_required -> error_required
     int error_unable_to_login -> error_unable_to_login
-    int error_unable_to_send_chat -> error_unable_to_send_chat
     int error_unable_to_set_preferred_location -> error_unable_to_set_preferred_location
+    int failed -> failed
+    int forgot_password -> forgot_password
+    int forgot_password_underlined -> forgot_password_underlined
     int foursquare_client_id -> foursquare_client_id
     int foursquare_client_secret -> foursquare_client_secret
     int ga_tracking_id -> ga_tracking_id
@@ -22988,9 +23090,9 @@ li.barter.R$string -> li.barter.R$string:
     int msg_default_type -> msg_default_type
     int my_books -> my_books
     int new_messages -> new_messages
+    int new_password_label -> new_password_label
     int no_books_found -> no_books_found
     int no_books_found_nearby -> no_books_found_nearby
-    int no_books_found_nearby_on_nobooks -> no_books_found_nearby_on_nobooks
     int no_image_text -> no_image_text
     int no_more_books_found -> no_more_books_found
     int no_network_connection -> no_network_connection
@@ -23008,8 +23110,10 @@ li.barter.R$string -> li.barter.R$string:
     int pref_dont_refresh_books -> pref_dont_refresh_books
     int pref_email -> pref_email
     int pref_first_name -> pref_first_name
+    int pref_force_user_refetch -> pref_force_user_refetch
     int pref_last_fetched_latitude -> pref_last_fetched_latitude
     int pref_last_fetched_longitude -> pref_last_fetched_longitude
+    int pref_last_fetched_page -> pref_last_fetched_page
     int pref_last_name -> pref_last_name
     int pref_last_version_code -> pref_last_version_code
     int pref_last_version_name -> pref_last_version_name
@@ -23033,7 +23137,7 @@ li.barter.R$string -> li.barter.R$string:
     int read -> read
     int receiver_network -> receiver_network
     int refresh -> refresh
-    int refresh_page -> refresh_page
+    int reset -> reset
     int result_address_book -> result_address_book
     int result_calendar -> result_calendar
     int result_email_address -> result_email_address
@@ -23057,10 +23161,10 @@ li.barter.R$string -> li.barter.R$string:
     int sell -> sell
     int send -> send
     int sending -> sending
-    int sent -> sent
     int service_chat -> service_chat
     int set_lend_hint -> set_lend_hint
     int set_sell_hint -> set_sell_hint
+    int share -> share
     int share_via -> share_via
     int signup -> signup
     int spb_default_speed -> spb_default_speed
@@ -23070,6 +23174,7 @@ li.barter.R$string -> li.barter.R$string:
     int success_message_for_chatblock -> success_message_for_chatblock
     int suggested_price_label -> suggested_price_label
     int tag_barter_type -> tag_barter_type
+    int tag_resend_on_click -> tag_resend_on_click
     int take_picture -> take_picture
     int team_heading -> team_heading
     int text_bug_title -> text_bug_title
@@ -23083,8 +23188,9 @@ li.barter.R$string -> li.barter.R$string:
     int text_suggest_feature -> text_suggest_feature
     int text_suggest_feature_title -> text_suggest_feature_title
     int title_label -> title_label
+    int token_email_message -> token_email_message
+    int token_label -> token_label
     int tribute_message -> tribute_message
-    int trueflag -> trueflag
     int try_again -> try_again
     int unable_to_create_book -> unable_to_create_book
     int unable_to_fetch_book_info -> unable_to_fetch_book_info
@@ -23100,6 +23206,7 @@ li.barter.R$string -> li.barter.R$string:
     int wifi_changing_network -> wifi_changing_network
     int wifi_ssid_label -> wifi_ssid_label
     int wifi_type_label -> wifi_type_label
+    int your_privacy_is_important -> your_privacy_is_important
 li.barter.R$style -> li.barter.R$style:
     int ActionBar_OverFlow -> ActionBar_OverFlow
     int ActionBar_Solid_Apptheme -> ActionBar_Solid_Apptheme
@@ -23319,44 +23426,44 @@ li.barter.activities.AbstractBarterLiActivity -> li.barter.activities.AbstractBa
     243:245:void onResume() -> onResume
     251:260:void checkAndReportScreenHit() -> a
     java.lang.String getAnalyticsScreenName() -> b
-    277:428:java.lang.Runnable makeRunnableForNavDrawerClick(int) -> c
-    436:448:void logout() -> f
-    454:454:void onInsertComplete(int,java.lang.Object,long) -> a
-    460:479:void onDeleteComplete(int,java.lang.Object,int) -> a
-    485:485:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    491:491:void onUpdateComplete(int,java.lang.Object,int) -> b
-    505:512:void addRequestToQueue(com.android.volley.Request,boolean,int,boolean) -> a
+    277:447:java.lang.Runnable makeRunnableForNavDrawerClick(int) -> c
+    455:467:void logout() -> f
+    473:473:void onInsertComplete(int,java.lang.Object,long) -> a
+    479:498:void onDeleteComplete(int,java.lang.Object,int) -> a
+    504:504:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    510:510:void onUpdateComplete(int,java.lang.Object,int) -> b
+    524:531:void addRequestToQueue(com.android.volley.Request,boolean,int,boolean) -> a
     java.lang.Object getVolleyTag() -> g
-    524:528:void onStop() -> onStop
-    531:534:void setActionBarDisplayOptions(int) -> a
-    542:542:boolean isConnectedToInternet() -> h
-    548:578:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    589:613:void doUpNavigation() -> c
-    624:630:void setActionBarTitle(java.lang.String) -> a
-    639:640:void setActionBarTitle(int) -> b
-    651:654:void showCrouton(java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
-    663:664:void showCrouton(int,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
-    696:697:void cancelAllCroutons() -> i
-    710:715:void finish(boolean) -> a
-    719:720:void finish() -> finish
-    737:757:void loadFragment(int,li.barter.fragments.AbstractBarterLiFragment,java.lang.String,boolean,java.lang.String) -> a
-    772:819:void initDrawer(int,int,boolean) -> a
-    823:828:void onPostCreate(android.os.Bundle) -> onPostCreate
-    832:836:void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
-    840:843:boolean onPrepareOptionsMenu(android.view.Menu) -> onPrepareOptionsMenu
-    848:850:void setOptionsGroupHidden(android.view.Menu,boolean) -> a
-    856:856:boolean hasNavigationDrawer() -> j
-    864:864:boolean isActionBarNavDrawerToggleEnabled() -> k
-    879:886:void setActionBarDrawerToggleEnabled(boolean) -> b
-    892:892:boolean isLoggedIn() -> l
-    897:900:void onWindowFocusChanged(boolean) -> onWindowFocusChanged
-    905:939:void onBackPressed() -> onBackPressed
-    953:953:li.barter.fragments.AbstractBarterLiFragment getCurrentMasterFragment() -> m
-    968:971:void onPostExecute(li.barter.http.IBlRequestContract) -> a
-    986:986:void onAuthError(int,li.barter.http.IBlRequestContract) -> a
-    992:992:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
-    1005:1026:android.view.View getCroutonViewForStyle(android.content.Context,java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
-    1032:1039:void onClick(android.content.DialogInterface,int) -> onClick
+    543:547:void onStop() -> onStop
+    550:553:void setActionBarDisplayOptions(int) -> a
+    561:561:boolean isConnectedToInternet() -> h
+    567:597:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    608:632:void doUpNavigation() -> c
+    643:649:void setActionBarTitle(java.lang.String) -> a
+    658:659:void setActionBarTitle(int) -> b
+    670:674:void showCrouton(java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
+    683:684:void showCrouton(int,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
+    716:717:void cancelAllCroutons() -> i
+    730:735:void finish(boolean) -> a
+    739:740:void finish() -> finish
+    757:777:void loadFragment(int,li.barter.fragments.AbstractBarterLiFragment,java.lang.String,boolean,java.lang.String) -> a
+    792:839:void initDrawer(int,int,boolean) -> a
+    843:848:void onPostCreate(android.os.Bundle) -> onPostCreate
+    852:856:void onConfigurationChanged(android.content.res.Configuration) -> onConfigurationChanged
+    860:863:boolean onPrepareOptionsMenu(android.view.Menu) -> onPrepareOptionsMenu
+    868:870:void setOptionsGroupHidden(android.view.Menu,boolean) -> a
+    876:876:boolean hasNavigationDrawer() -> j
+    884:884:boolean isActionBarNavDrawerToggleEnabled() -> k
+    899:906:void setActionBarDrawerToggleEnabled(boolean) -> b
+    912:912:boolean isLoggedIn() -> l
+    917:920:void onWindowFocusChanged(boolean) -> onWindowFocusChanged
+    925:953:void onBackPressed() -> onBackPressed
+    967:967:li.barter.fragments.AbstractBarterLiFragment getCurrentMasterFragment() -> m
+    980:983:void onPostExecute(li.barter.http.IBlRequestContract) -> a
+    998:998:void onAuthError(int,li.barter.http.IBlRequestContract) -> a
+    1004:1004:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
+    1017:1038:android.view.View getCroutonViewForStyle(android.content.Context,java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
+    1044:1051:void onClick(android.content.DialogInterface,int) -> onClick
     275:275:java.lang.Runnable access$0(li.barter.activities.AbstractBarterLiActivity,int) -> a
     166:166:android.os.Handler access$1(li.barter.activities.AbstractBarterLiActivity) -> a
     133:133:android.support.v4.widget.DrawerLayout access$2(li.barter.activities.AbstractBarterLiActivity) -> b
@@ -23376,11 +23483,17 @@ li.barter.activities.AbstractBarterLiActivity$4 -> li.barter.activities.Abstract
     363:366:void run() -> run
 li.barter.activities.AbstractBarterLiActivity$5 -> li.barter.activities.AbstractBarterLiActivity$5:
     li.barter.activities.AbstractBarterLiActivity this$0 -> a
-    414:417:void run() -> run
+    383:391:void run() -> run
 li.barter.activities.AbstractBarterLiActivity$6 -> li.barter.activities.AbstractBarterLiActivity$6:
     li.barter.activities.AbstractBarterLiActivity this$0 -> a
-    790:794:void onDrawerOpened(android.view.View) -> onDrawerOpened
-    798:802:void onDrawerClosed(android.view.View) -> onDrawerClosed
+    409:413:void run() -> run
+li.barter.activities.AbstractBarterLiActivity$7 -> li.barter.activities.AbstractBarterLiActivity$7:
+    li.barter.activities.AbstractBarterLiActivity this$0 -> a
+    433:436:void run() -> run
+li.barter.activities.AbstractBarterLiActivity$8 -> li.barter.activities.AbstractBarterLiActivity$8:
+    li.barter.activities.AbstractBarterLiActivity this$0 -> a
+    810:814:void onDrawerOpened(android.view.View) -> onDrawerOpened
+    818:822:void onDrawerClosed(android.view.View) -> onDrawerClosed
 li.barter.activities.AbstractBarterLiActivity$AlertStyle -> li.barter.activities.AbstractBarterLiActivity$a:
     li.barter.activities.AbstractBarterLiActivity$AlertStyle ALERT -> a
     li.barter.activities.AbstractBarterLiActivity$AlertStyle INFO -> b
@@ -23396,23 +23509,26 @@ li.barter.activities.ActivityTransition -> li.barter.activities.a:
 li.barter.activities.HomeActivity -> li.barter.activities.HomeActivity:
     li.barter.utils.GooglePlayClientWrapper mGooglePlayClientWrapper -> b
     li.barter.utils.GooglePlusManager mGooglePlusManager -> c
-    82:105:void onCreate(android.os.Bundle) -> onCreate
-    109:114:void onStart() -> onStart
-    118:126:void onResume() -> onResume
-    134:153:void informReferralToServer() -> o
-    157:160:void onStop() -> onStop
-    164:170:void onLocationChanged(android.location.Location) -> a
-    177:180:void loadChatsFragment() -> p
-    191:201:void loadChatDetailFragment(java.lang.String,java.lang.String) -> a
-    208:212:void loadBooksAroundMeFragment() -> c
-    216:216:java.lang.Object getVolleyTag() -> g
-    224:228:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    235:235:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    243:249:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    256:256:li.barter.utils.GooglePlusManager getPlusManager() -> d
-    262:267:void onLogin() -> e
-    271:276:void onLoginError(java.lang.Exception) -> a
-    295:295:java.lang.String getAnalyticsScreenName() -> b
+    android.widget.FrameLayout mOverlayFrameLayout -> d
+    86:110:void onCreate(android.os.Bundle) -> onCreate
+    119:124:void showOverlayView(android.view.View) -> showOverlayView
+    130:132:void hideOverlayView() -> c
+    136:141:void onStart() -> onStart
+    145:153:void onResume() -> onResume
+    161:180:void informReferralToServer() -> p
+    184:187:void onStop() -> onStop
+    191:197:void onLocationChanged(android.location.Location) -> a
+    204:207:void loadChatsFragment() -> q
+    218:228:void loadChatDetailFragment(java.lang.String,java.lang.String) -> a
+    235:239:void loadBooksAroundMeFragment() -> d
+    243:243:java.lang.Object getVolleyTag() -> g
+    251:255:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    262:262:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    268:274:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    281:281:li.barter.utils.GooglePlusManager getPlusManager() -> e
+    287:292:void onLogin() -> o
+    296:301:void onLoginError(java.lang.Exception) -> a
+    320:320:java.lang.String getAnalyticsScreenName() -> b
 li.barter.activities.ScanIsbnActivity -> li.barter.activities.ScanIsbnActivity:
     com.jwetherell.quick_response_code.DecoderActivityHandler mDecoderActivityHandler -> b
     com.jwetherell.quick_response_code.ViewfinderView mViewFinderView -> c
@@ -23443,19 +23559,25 @@ li.barter.activities.ScanIsbnActivity -> li.barter.activities.ScanIsbnActivity:
     297:297:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
     301:301:java.lang.String getAnalyticsScreenName() -> b
 li.barter.adapters.BooksGridAdapter -> li.barter.a.a:
-    56:110:void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
-    115:126:android.view.View newView(android.content.Context,android.database.Cursor,android.view.ViewGroup) -> newView
+    boolean mAddGraphicEnabled -> a
+    int mCount -> b
+    65:65:int getCount() -> getCount
+    71:77:void notifyDataSetChanged() -> notifyDataSetChanged
+    81:81:int getItemViewType(int) -> getItemViewType
+    87:87:int getViewTypeCount() -> getViewTypeCount
+    93:111:android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+    120:122:android.view.View inflateGraphicView(android.view.ViewGroup) -> a
+    130:138:android.view.View inflateBookView(android.view.ViewGroup) -> b
+    145:195:void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
+    201:201:android.view.View newView(android.content.Context,android.database.Cursor,android.view.ViewGroup) -> newView
 li.barter.adapters.ChatDetailAdapter -> li.barter.a.b:
-    java.util.Map mPositionViewTypeMap -> a
-    java.lang.String TAG -> b
-    java.lang.String mChatUserProfilePic -> c
-    70:72:void setChatUserProfilePic(java.lang.String) -> a
-    83:102:void buildMapForCursor(android.database.Cursor) -> a
-    106:108:void notifyDataSetChanged() -> notifyDataSetChanged
-    113:113:int getItemViewType(int) -> getItemViewType
-    119:119:int getViewTypeCount() -> getViewTypeCount
-    126:171:void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
-    177:196:android.view.View newView(android.content.Context,android.database.Cursor,android.view.ViewGroup) -> newView
+    java.lang.String TAG -> a
+    java.lang.String mSendingString -> b
+    java.lang.String mFailedString -> c
+    63:80:int getItemViewType(int) -> getItemViewType
+    88:88:int getViewTypeCount() -> getViewTypeCount
+    95:132:void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
+    138:155:android.view.View newView(android.content.Context,android.database.Cursor,android.view.ViewGroup) -> newView
 li.barter.adapters.ChatsAdapter -> li.barter.a.c:
     java.lang.String mUserNameFormat -> a
     52:78:void bindView(android.view.View,android.content.Context,android.database.Cursor) -> bindView
@@ -23464,10 +23586,11 @@ li.barter.adapters.HomeNavDrawerAdapter -> li.barter.a.d:
     java.lang.String[] mNavDrawerTitles -> a
     java.lang.String[] mNavDrawerDescriptions -> b
     android.view.LayoutInflater mLayoutInflater -> c
-    74:74:int getCount() -> getCount
-    79:79:java.lang.Object getItem(int) -> getItem
-    84:84:long getItemId(int) -> getItemId
-    91:107:android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+    android.content.Context mContext -> d
+    89:89:int getCount() -> getCount
+    94:94:java.lang.Object getItem(int) -> getItem
+    99:99:long getItemId(int) -> getItemId
+    106:126:android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
 li.barter.adapters.OssLicensesAdapter -> li.barter.a.e:
     java.lang.String[] mLicenseStrings -> b
     android.view.LayoutInflater mLayoutInflater -> c
@@ -23500,7 +23623,7 @@ li.barter.adapters.TeamAdapter -> li.barter.a.h:
     63:63:int getCount() -> getCount
     68:68:li.barter.models.Team getItem(int) -> a
     73:73:long getItemId(int) -> getItemId
-    80:105:android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+    80:110:android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
     1:1:java.lang.Object getItem(int) -> getItem
 li.barter.analytics.CampaignTrackingReceiver -> li.barter.analytics.CampaignTrackingReceiver:
     41:48:void onReceive(android.content.Context,android.content.Intent) -> onReceive
@@ -23538,9 +23661,54 @@ li.barter.chat.AbstractRabbitMQConnector$ExchangeType -> li.barter.chat.a$a:
     1:1:li.barter.chat.AbstractRabbitMQConnector$ExchangeType valueOf(java.lang.String) -> valueOf
 li.barter.chat.AbstractRabbitMQConnector$OnDisconnectCallback -> li.barter.chat.a$b:
     void onDisconnect(boolean) -> a
-li.barter.chat.ChatAcknowledge -> li.barter.chat.b:
-    void onChatRequestComplete(boolean) -> a
-li.barter.chat.ChatRabbitMQConnector -> li.barter.chat.c:
+li.barter.chat.ChatNotificationHelper -> li.barter.chat.b:
+    java.lang.Object LOCK -> a
+    int mUnreadMessageCount -> b
+    java.lang.String mCurrentChattingUserId -> c
+    boolean mNotificationsEnabled -> d
+    android.support.v4.app.NotificationCompat$Builder mNotificationBuilder -> e
+    android.app.NotificationManager mNotificationManager -> f
+    android.net.Uri mNotificationSoundUri -> g
+    li.barter.chat.ChatNotificationHelper sInstance -> h
+    98:105:li.barter.chat.ChatNotificationHelper getInstance(android.content.Context) -> a
+    118:119:void setCurrentChattingUserId(java.lang.String) -> a
+    128:129:void setNotificationsEnabled(boolean) -> a
+    137:139:void clearChatNotifications() -> a
+    156:194:void showChatReceivedNotification(android.content.Context,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+li.barter.chat.ChatProcessTask -> li.barter.chat.c:
+    int mProcessType -> a
+    android.content.Context mContext -> b
+    java.lang.String mMessage -> c
+    li.barter.utils.DateFormatter mChatDateFormatter -> d
+    li.barter.utils.DateFormatter mMessageDateFormatter -> e
+    li.barter.chat.ChatProcessTask$SendChatCallback mSendChatCallback -> f
+    140:146:void run() -> run
+    155:221:void saveMessageAndCallback() -> a
+    228:322:void processReceivedMessage() -> b
+    337:358:java.lang.String parseAndStoreChatUserInfo(java.lang.String,org.json.JSONObject) -> a
+    65:65:void access$1(li.barter.chat.ChatProcessTask,int) -> a
+    75:75:void access$2(li.barter.chat.ChatProcessTask,java.lang.String) -> a
+    80:80:void access$3(li.barter.chat.ChatProcessTask,li.barter.utils.DateFormatter) -> a
+    85:85:void access$4(li.barter.chat.ChatProcessTask,li.barter.utils.DateFormatter) -> b
+    90:90:void access$5(li.barter.chat.ChatProcessTask,li.barter.chat.ChatProcessTask$SendChatCallback) -> a
+    65:65:int access$6(li.barter.chat.ChatProcessTask) -> a
+    75:75:java.lang.String access$7(li.barter.chat.ChatProcessTask) -> b
+    80:80:li.barter.utils.DateFormatter access$8(li.barter.chat.ChatProcessTask) -> c
+    85:85:li.barter.utils.DateFormatter access$9(li.barter.chat.ChatProcessTask) -> d
+    90:90:li.barter.chat.ChatProcessTask$SendChatCallback access$10(li.barter.chat.ChatProcessTask) -> e
+li.barter.chat.ChatProcessTask$Builder -> li.barter.chat.c$a:
+    android.content.Context mContext -> a
+    li.barter.chat.ChatProcessTask mChatProcessTask -> b
+    378:379:li.barter.chat.ChatProcessTask$Builder setProcessType(int) -> a
+    383:384:li.barter.chat.ChatProcessTask$Builder setMessage(java.lang.String) -> a
+    388:389:li.barter.chat.ChatProcessTask$Builder setChatDateFormatter(li.barter.utils.DateFormatter) -> a
+    394:395:li.barter.chat.ChatProcessTask$Builder setMessageDateFormatter(li.barter.utils.DateFormatter) -> b
+    399:400:li.barter.chat.ChatProcessTask$Builder setSendChatCallback(li.barter.chat.ChatProcessTask$SendChatCallback) -> a
+    411:433:li.barter.chat.ChatProcessTask build() -> a
+    440:441:li.barter.chat.ChatProcessTask$Builder reset() -> b
+li.barter.chat.ChatProcessTask$SendChatCallback -> li.barter.chat.c$b:
+    void sendChat(java.lang.String,long) -> a
+li.barter.chat.ChatRabbitMQConnector -> li.barter.chat.d:
     java.lang.String mQueue -> h
     com.rabbitmq.client.QueueingConsumer mSubscription -> i
     li.barter.chat.ChatRabbitMQConnector$OnReceiveMessageHandler mOnReceiveMessageHandler -> j
@@ -23558,99 +23726,93 @@ li.barter.chat.ChatRabbitMQConnector -> li.barter.chat.c:
     52:52:android.os.Handler access$2(li.barter.chat.ChatRabbitMQConnector) -> c
     50:50:li.barter.chat.ChatRabbitMQConnector$OnReceiveMessageHandler access$3(li.barter.chat.ChatRabbitMQConnector) -> d
     234:234:void access$4(li.barter.chat.ChatRabbitMQConnector) -> e
-li.barter.chat.ChatRabbitMQConnector$1 -> li.barter.chat.c$1:
+li.barter.chat.ChatRabbitMQConnector$1 -> li.barter.chat.d$1:
     li.barter.chat.ChatRabbitMQConnector this$0 -> a
     68:69:void run() -> run
-li.barter.chat.ChatRabbitMQConnector$2 -> li.barter.chat.c$2:
+li.barter.chat.ChatRabbitMQConnector$2 -> li.barter.chat.d$2:
     li.barter.chat.ChatRabbitMQConnector this$0 -> a
     172:223:void run() -> run
     168:168:li.barter.chat.ChatRabbitMQConnector access$0(li.barter.chat.ChatRabbitMQConnector$2) -> a
-li.barter.chat.ChatRabbitMQConnector$2$1 -> li.barter.chat.c$2$1:
+li.barter.chat.ChatRabbitMQConnector$2$1 -> li.barter.chat.d$2$1:
     li.barter.chat.ChatRabbitMQConnector$2 this$1 -> a
     byte[] val$lastMessage -> b
     197:199:void run() -> run
-li.barter.chat.ChatRabbitMQConnector$OnReceiveMessageHandler -> li.barter.chat.c$a:
+li.barter.chat.ChatRabbitMQConnector$OnReceiveMessageHandler -> li.barter.chat.d$a:
     void onReceiveMessage(byte[]) -> a
-li.barter.chat.ChatRequest -> li.barter.chat.d:
-    li.barter.chat.ChatAcknowledge mAcknowledge -> a
-    59:59:li.barter.chat.ChatAcknowledge getAcknowledge() -> u
 li.barter.chat.ChatService -> li.barter.chat.ChatService:
-    android.os.IBinder mChatServiceBinder -> b
-    java.lang.String mChatSelection -> c
-    java.lang.String mUserSelection -> d
-    li.barter.chat.ChatRabbitMQConnector mMessageConsumer -> e
-    li.barter.utils.DateFormatter mDateFormatter -> f
-    com.android.volley.RequestQueue mRequestQueue -> g
-    li.barter.http.VolleyCallbacks mVolleyCallbacks -> h
-    java.lang.String mQueueName -> i
-    int mCurrentConnectMultiplier -> j
-    li.barter.chat.ChatService$ConnectToChatAsyncTask mConnectTask -> k
-    android.support.v4.app.NotificationCompat$Builder mNotificationBuilder -> l
-    android.app.NotificationManager mNotificationManager -> m
-    android.net.Uri mNotificationSoundUri -> n
-    int mUnreadMessageCount -> o
-    java.util.ArrayDeque mMessageQueue -> p
-    android.os.Handler mHandler -> q
-    java.lang.Runnable mConnectRunnable -> r
-    java.lang.String mCurrentChattingUserId -> s
-    boolean mNotificationsEnabled -> t
-    boolean mIsProcessingMessage -> u
-    java.lang.String mCurrentMessage -> v
-    boolean $assertionsDisabled -> a
-    198:213:void onCreate() -> onCreate
-    236:237:void setCurrentChattingUserId(java.lang.String) -> a
-    253:253:android.os.IBinder onBind(android.content.Intent) -> onBind
-    260:276:int onStartCommand(android.content.Intent,int,int) -> onStartCommand
-    285:352:void connectChatService() -> c
-    358:358:boolean isLoggedIn() -> d
-    363:369:void onDestroy() -> onDestroy
-    376:376:boolean isConnectedToChat() -> a
-    390:437:void sendMessageToUser(java.lang.String,java.lang.String,li.barter.chat.ChatAcknowledge,java.lang.String) -> a
-    445:447:void clearChatNotifications() -> b
-    456:457:void setNotificationsEnabled(boolean) -> b
-    472:489:void onReceiveMessage(byte[]) -> a
-    498:551:void updateChatMessage(java.lang.String) -> b
-    560:625:void processChatMessage(java.lang.String) -> c
-    641:657:java.lang.String parseAndStoreChatUserInfo(java.lang.String,org.json.JSONObject) -> a
-    699:755:void onInsertComplete(int,java.lang.Object,long) -> a
-    761:761:void onDeleteComplete(int,java.lang.Object,int) -> a
-    767:805:void onUpdateComplete(int,java.lang.Object,int) -> b
-    813:820:void queueNextMessageForProcessing() -> e
-    826:826:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    845:866:java.lang.String generateChatId(java.lang.String,java.lang.String) -> a
-    877:877:void onPostExecute(li.barter.http.IBlRequestContract) -> a
-    884:896:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    903:915:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    921:933:void onAuthError(int,li.barter.http.IBlRequestContract) -> a
-    939:951:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
-    966:1001:void showChatReceivedNotification(java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
-    1005:1008:void onDisconnect(boolean) -> a
-    1014:1024:void initMessageConsumer() -> f
-    139:139:li.barter.chat.ChatRabbitMQConnector access$0(li.barter.chat.ChatService) -> a
-    282:282:void access$1(li.barter.chat.ChatService) -> b
-    153:153:void access$2(li.barter.chat.ChatService,int) -> a
-    357:357:boolean access$4(li.barter.chat.ChatService) -> c
-    177:177:void access$5(li.barter.chat.ChatService,java.lang.Runnable) -> a
-    147:147:void access$6(li.barter.chat.ChatService,java.lang.String) -> a
-    157:157:li.barter.chat.ChatService$ConnectToChatAsyncTask access$7(li.barter.chat.ChatService) -> d
-    157:157:void access$8(li.barter.chat.ChatService,li.barter.chat.ChatService$ConnectToChatAsyncTask) -> a
-    147:147:java.lang.String access$9(li.barter.chat.ChatService) -> e
-li.barter.chat.ChatService$2 -> li.barter.chat.ChatService$1:
+    android.os.IBinder mChatServiceBinder -> a
+    li.barter.chat.ChatRabbitMQConnector mMessageConsumer -> b
+    li.barter.utils.DateFormatter mChatDateFormatter -> c
+    li.barter.utils.DateFormatter mMessageDateFormatter -> d
+    com.android.volley.RequestQueue mRequestQueue -> e
+    li.barter.http.VolleyCallbacks mVolleyCallbacks -> f
+    java.lang.String mQueueName -> g
+    int mCurrentConnectMultiplier -> h
+    li.barter.chat.ChatService$ConnectToChatAsyncTask mConnectTask -> i
+    android.os.Handler mHandler -> j
+    java.lang.Runnable mConnectRunnable -> k
+    li.barter.chat.ChatProcessTask$Builder mChatProcessTaskBuilder -> l
+    java.util.concurrent.ExecutorService mChatProcessor -> m
+    156:165:void onCreate() -> onCreate
+    177:179:void setCurrentChattingUserId(java.lang.String) -> a
+    195:195:android.os.IBinder onBind(android.content.Intent) -> onBind
+    202:218:int onStartCommand(android.content.Intent,int,int) -> onStartCommand
+    227:283:void connectChatService() -> c
+    289:289:boolean isLoggedIn() -> d
+    294:301:void onDestroy() -> onDestroy
+    308:308:boolean isConnectedToChat() -> a
+    320:373:void sendMessageToUser(java.lang.String,java.lang.String,java.lang.String) -> a
+    381:382:void clearChatNotifications() -> b
+    391:393:void setNotificationsEnabled(boolean) -> b
+    406:409:java.lang.String generateQueueNameFromUserEmailAndDeviceId(java.lang.String,java.lang.String) -> a
+    416:435:void onReceiveMessage(byte[]) -> a
+    480:480:void onPostExecute(li.barter.http.IBlRequestContract) -> a
+    487:490:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    497:503:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    509:515:void onAuthError(int,li.barter.http.IBlRequestContract) -> a
+    521:527:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
+    533:539:void markChatAsFailed(long) -> a
+    543:546:void onDisconnect(boolean) -> a
+    552:562:void initMessageConsumer() -> e
+    574:574:void onInsertComplete(int,java.lang.Object,long) -> a
+    586:586:void onDeleteComplete(int,java.lang.Object,int) -> a
+    598:598:void onUpdateComplete(int,java.lang.Object,int) -> b
+    609:609:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    121:121:li.barter.chat.ChatRabbitMQConnector access$0(li.barter.chat.ChatService) -> a
+    224:224:void access$1(li.barter.chat.ChatService) -> b
+    137:137:void access$2(li.barter.chat.ChatService,int) -> a
+    288:288:boolean access$3(li.barter.chat.ChatService) -> c
+    145:145:void access$4(li.barter.chat.ChatService,java.lang.Runnable) -> a
+    403:403:java.lang.String access$5(li.barter.chat.ChatService,java.lang.String,java.lang.String) -> a
+    131:131:void access$6(li.barter.chat.ChatService,java.lang.String) -> a
+    141:141:li.barter.chat.ChatService$ConnectToChatAsyncTask access$7(li.barter.chat.ChatService) -> d
+    141:141:void access$8(li.barter.chat.ChatService,li.barter.chat.ChatService$ConnectToChatAsyncTask) -> a
+    131:131:java.lang.String access$9(li.barter.chat.ChatService) -> e
+    129:129:li.barter.http.VolleyCallbacks access$10(li.barter.chat.ChatService) -> f
+    143:143:android.os.Handler access$11(li.barter.chat.ChatService) -> g
+li.barter.chat.ChatService$1 -> li.barter.chat.ChatService$1:
     li.barter.chat.ChatService this$0 -> a
-    295:342:void run() -> run
+    237:273:void run() -> run
+li.barter.chat.ChatService$2 -> li.barter.chat.ChatService$2:
+    li.barter.chat.ChatService this$0 -> a
+    346:363:void sendChat(java.lang.String,long) -> a
+    339:339:li.barter.chat.ChatService access$0(li.barter.chat.ChatService$2) -> a
+li.barter.chat.ChatService$2$1 -> li.barter.chat.ChatService$2$1:
+    li.barter.chat.ChatService$2 this$1 -> a
+    li.barter.http.BlRequest val$request -> b
+    360:361:void run() -> run
 li.barter.chat.ChatService$ChatServiceBinder -> li.barter.chat.ChatService$a:
     li.barter.chat.ChatService this$0 -> a
-    247:247:li.barter.chat.ChatService getService() -> a
+    189:189:li.barter.chat.ChatService getService() -> a
 li.barter.chat.ChatService$ConnectToChatAsyncTask -> li.barter.chat.ChatService$b:
     li.barter.chat.ChatService this$0 -> a
     boolean $assertionsDisabled -> b
-    674:681:java.lang.Void doInBackground(java.lang.String[]) -> a
-    686:692:void onPostExecute(java.lang.Void) -> a
+    451:458:java.lang.Void doInBackground(java.lang.String[]) -> a
+    463:469:void onPostExecute(java.lang.Void) -> a
     1:1:void onPostExecute(java.lang.Object) -> onPostExecute
     1:1:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
 li.barter.data.BarterLiAsyncQueryHandler -> li.barter.b.a:
     java.util.Map mTasks -> a
-    91:98:void startInsert(int,java.lang.Object,java.lang.String,java.lang.String,android.content.ContentValues,boolean,li.barter.data.DBInterface$AsyncDbQueryCallback) -> a
     119:127:void startDelete(int,java.lang.Object,java.lang.String,java.lang.String,java.lang.String[],boolean,li.barter.data.DBInterface$AsyncDbQueryCallback) -> a
     149:158:void startUpdate(int,java.lang.Object,java.lang.String,android.content.ContentValues,java.lang.String,java.lang.String[],boolean,li.barter.data.DBInterface$AsyncDbQueryCallback) -> a
     185:199:void startQuery(int,java.lang.Object,boolean,java.lang.String,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String,java.lang.String,java.lang.String,java.lang.String,li.barter.data.DBInterface$AsyncDbQueryCallback) -> a
@@ -23715,17 +23877,16 @@ li.barter.data.BarterLiAsyncQueryHandler$QueryTask -> li.barter.b.a$c:
     279:279:int access$15(li.barter.data.BarterLiAsyncQueryHandler$QueryTask) -> p
     284:284:java.lang.Object access$16(li.barter.data.BarterLiAsyncQueryHandler$QueryTask) -> q
     291:291:void access$18(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> a
-    300:300:void access$19(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> b
     301:301:void access$20(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,android.content.ContentValues) -> a
     302:302:void access$21(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,boolean) -> a
-    294:294:void access$22(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> c
+    294:294:void access$22(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> b
     295:295:void access$23(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String[]) -> a
     292:292:void access$24(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,boolean) -> b
     293:293:void access$25(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String[]) -> b
-    296:296:void access$26(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> d
-    298:298:void access$27(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> e
-    297:297:void access$28(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> f
-    299:299:void access$29(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> g
+    296:296:void access$26(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> c
+    298:298:void access$27(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> d
+    297:297:void access$28(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> e
+    299:299:void access$29(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,java.lang.String) -> f
     304:304:void access$30(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,boolean) -> c
     289:289:void access$31(li.barter.data.BarterLiAsyncQueryHandler$QueryTask,li.barter.data.DBInterface$AsyncDbQueryCallback) -> a
 li.barter.data.BarterLiAsyncQueryHandler$Type -> li.barter.b.a$d:
@@ -23740,20 +23901,20 @@ li.barter.data.BarterLiSQLiteOpenHelper -> li.barter.b.b:
     java.lang.Object LOCK -> a
     li.barter.data.BarterLiSQLiteOpenHelper sSQLiteOpenHelper -> b
     java.util.concurrent.CopyOnWriteArrayList mActiveLoaders -> c
-    64:75:li.barter.data.BarterLiSQLiteOpenHelper getInstance(android.content.Context) -> a
-    94:106:void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
-    113:130:void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
-    152:153:android.database.Cursor query(boolean,java.lang.String,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
-    172:177:long insert(java.lang.String,java.lang.String,android.content.ContentValues,boolean) -> a
-    195:202:int update(java.lang.String,android.content.ContentValues,java.lang.String,java.lang.String[],boolean) -> a
-    218:224:int delete(java.lang.String,java.lang.String,java.lang.String[],boolean) -> a
-    238:241:li.barter.data.SQLiteLoaderObserver registerLoader(li.barter.data.SQLiteLoader,java.lang.String) -> a
-    246:248:void unregisterLoader(li.barter.data.SQLiteLoaderObserver) -> a
-    257:268:void notifyChange(java.lang.String) -> a
+    70:81:li.barter.data.BarterLiSQLiteOpenHelper getInstance(android.content.Context) -> a
+    100:112:void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
+    119:140:void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
+    150:237:void migrateChats(android.database.sqlite.SQLiteDatabase) -> a
+    259:260:android.database.Cursor query(boolean,java.lang.String,java.lang.String[],java.lang.String,java.lang.String[],java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+    279:284:long insert(java.lang.String,java.lang.String,android.content.ContentValues,boolean) -> a
+    302:309:int update(java.lang.String,android.content.ContentValues,java.lang.String,java.lang.String[],boolean) -> a
+    325:331:int delete(java.lang.String,java.lang.String,java.lang.String[],boolean) -> a
+    345:348:li.barter.data.SQLiteLoaderObserver registerLoader(li.barter.data.SQLiteLoader,java.lang.String) -> a
+    353:355:void unregisterLoader(li.barter.data.SQLiteLoaderObserver) -> a
+    364:375:void notifyChange(java.lang.String) -> a
 li.barter.data.DBInterface -> li.barter.b.c:
     li.barter.data.BarterLiAsyncQueryHandler ASYNC_QUERY_HANDLER -> a
     56:57:long insert(java.lang.String,java.lang.String,android.content.ContentValues,boolean) -> a
-    84:87:void insertAsync(int,java.lang.Object,java.lang.String,java.lang.String,android.content.ContentValues,boolean,li.barter.data.DBInterface$AsyncDbQueryCallback) -> a
     103:104:int update(java.lang.String,android.content.ContentValues,java.lang.String,java.lang.String[],boolean) -> a
     129:132:void updateAsync(int,java.lang.Object,java.lang.String,android.content.ContentValues,java.lang.String,java.lang.String[],boolean,li.barter.data.DBInterface$AsyncDbQueryCallback) -> a
     171:174:void deleteAsync(int,java.lang.Object,java.lang.String,java.lang.String,java.lang.String[],boolean,li.barter.data.DBInterface$AsyncDbQueryCallback) -> a
@@ -23792,11 +23953,11 @@ li.barter.data.SQLiteLoaderObserver -> li.barter.b.e:
     li.barter.data.SQLiteLoader loader -> a
     java.lang.String table -> b
 li.barter.data.TableChatMessages -> li.barter.b.f:
-    39:57:void create(android.database.sqlite.SQLiteDatabase) -> a
-    64:72:void upgrade(android.database.sqlite.SQLiteDatabase,int,int) -> a
+    47:64:void create(android.database.sqlite.SQLiteDatabase) -> a
+    72:158:void upgrade(android.database.sqlite.SQLiteDatabase,int,int) -> a
 li.barter.data.TableChats -> li.barter.b.g:
-    40:53:void create(android.database.sqlite.SQLiteDatabase) -> a
-    60:71:void upgrade(android.database.sqlite.SQLiteDatabase,int,int) -> a
+    40:56:void create(android.database.sqlite.SQLiteDatabase) -> a
+    63:91:void upgrade(android.database.sqlite.SQLiteDatabase,int,int) -> a
 li.barter.data.TableLocations -> li.barter.b.h:
     39:52:void create(android.database.sqlite.SQLiteDatabase) -> a
     59:67:void upgrade(android.database.sqlite.SQLiteDatabase,int,int) -> a
@@ -23812,8 +23973,8 @@ li.barter.data.TableUsers -> li.barter.b.l:
     39:53:void create(android.database.sqlite.SQLiteDatabase) -> a
     60:68:void upgrade(android.database.sqlite.SQLiteDatabase,int,int) -> a
 li.barter.data.ViewChatsWithMessagesAndUsers -> li.barter.b.m:
-    46:86:void create(android.database.sqlite.SQLiteDatabase) -> a
-    93:101:void upgrade(android.database.sqlite.SQLiteDatabase,int,int) -> a
+    46:87:void create(android.database.sqlite.SQLiteDatabase) -> a
+    94:105:void upgrade(android.database.sqlite.SQLiteDatabase,int,int) -> a
 li.barter.data.ViewMyBooksWithLocations -> li.barter.b.n:
     43:47:void upgrade(android.database.sqlite.SQLiteDatabase,int,int) -> a
 li.barter.data.ViewSearchBooksWithLocations -> li.barter.b.o:
@@ -23836,22 +23997,22 @@ li.barter.fragments.AboutMeFragment -> li.barter.c.a:
     boolean mLoadedIndividually -> l
     boolean mLoggedInUser -> m
     android.widget.Button mLogoutButton -> n
-    75:109:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    114:116:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    122:122:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    126:126:java.lang.Object getVolleyTag() -> a
-    134:134:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    141:141:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    147:147:void onInsertComplete(int,java.lang.Object,long) -> a
-    153:153:void onDeleteComplete(int,java.lang.Object,int) -> a
-    159:159:void onUpdateComplete(int,java.lang.Object,int) -> b
-    166:167:void loadUserDetails() -> k
-    172:179:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    186:221:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    226:226:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    234:241:void setUserId(java.lang.String) -> a
-    246:254:java.lang.String getAnalyticsScreenName() -> b
-    261:264:void onClick(android.view.View) -> onClick
+    75:110:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    115:117:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    123:123:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    127:127:java.lang.Object getVolleyTag() -> a
+    135:135:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    142:142:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    148:148:void onInsertComplete(int,java.lang.Object,long) -> a
+    154:154:void onDeleteComplete(int,java.lang.Object,int) -> a
+    160:160:void onUpdateComplete(int,java.lang.Object,int) -> b
+    167:169:void loadUserDetails() -> l
+    174:181:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    188:223:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    228:228:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    236:243:void setUserId(java.lang.String) -> a
+    248:256:java.lang.String getAnalyticsScreenName() -> b
+    263:266:void onClick(android.view.View) -> onClick
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
 li.barter.fragments.AboutUsPagerFragment -> li.barter.c.b:
     li.barter.fragments.AboutUsPagerFragment$AboutUsPageAdapter mAdapter -> e
@@ -23883,39 +24044,40 @@ li.barter.fragments.AbstractBarterLiFragment -> li.barter.c.c:
     boolean mRefreshBooks -> c
     li.barter.fragments.dialogs.AddUserInfoDialogFragment mAddUserInfoDialogFragment -> h
     boolean $assertionsDisabled -> d
-    107:113:void onAttach(android.app.Activity) -> onAttach
-    117:119:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    130:143:void init(android.view.ViewGroup,android.os.Bundle) -> a
-    147:149:void onResume() -> onResume
-    155:164:void checkAndReportScreenHit() -> k
+    109:115:void onAttach(android.app.Activity) -> onAttach
+    119:121:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    132:145:void init(android.view.ViewGroup,android.os.Bundle) -> a
+    149:151:void onResume() -> onResume
+    157:166:void checkAndReportScreenHit() -> l
     java.lang.String getAnalyticsScreenName() -> b
-    173:177:void setActionBarDrawerToggleEnabled(boolean) -> a
-    194:199:void loadFragment(int,li.barter.fragments.AbstractBarterLiFragment,java.lang.String,boolean,java.lang.String) -> a
-    203:205:void onDestroyView() -> onDestroyView
-    209:213:void onDetach() -> onDetach
-    217:221:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    231:231:boolean isConnectedToInternet() -> c
-    245:249:void onStop() -> onStop
-    264:275:void addRequestToQueue(com.android.volley.Request,boolean,int,boolean) -> a
+    175:179:void setActionBarDrawerToggleEnabled(boolean) -> a
+    196:201:void loadFragment(int,li.barter.fragments.AbstractBarterLiFragment,java.lang.String,boolean,java.lang.String) -> a
+    205:207:void onDestroyView() -> onDestroyView
+    211:215:void onDetach() -> onDetach
+    219:223:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    233:233:boolean isConnectedToInternet() -> c
+    247:251:void onStop() -> onStop
+    266:277:void addRequestToQueue(com.android.volley.Request,boolean,int,boolean) -> a
     java.lang.Object getVolleyTag() -> a
-    292:296:void showCrouton(java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
-    305:308:void showCrouton(int,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
-    324:327:void cancelAllCroutons() -> d
-    348:348:boolean isAttached() -> e
-    359:362:void setActionBarTitle(java.lang.String) -> b
-    371:372:void setActionBarTitle(int) -> a
-    397:397:boolean isLoggedIn() -> f
-    406:406:boolean hasFirstName() -> g
-    415:418:void showAddFirstNameDialog() -> h
-    426:434:void onUpNavigate() -> i
-    443:445:void onBackPressed() -> j
-    458:462:void onPostExecute(li.barter.http.IBlRequestContract) -> a
-    477:477:void onAuthError(int,li.barter.http.IBlRequestContract) -> a
-    483:483:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
-    494:499:boolean willHandleDialog(android.content.DialogInterface) -> a
-    512:527:void onDialogClick(android.content.DialogInterface,int) -> a
-    537:560:void updateUserInfo(java.lang.String,java.lang.String) -> a
-    570:573:void hideKeyBoard(android.view.View) -> d
+    294:298:void showCrouton(java.lang.String,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
+    307:310:void showCrouton(int,li.barter.activities.AbstractBarterLiActivity$AlertStyle) -> a
+    326:329:void cancelAllCroutons() -> d
+    350:350:boolean isAttached() -> e
+    361:364:void setActionBarTitle(java.lang.String) -> b
+    373:374:void setActionBarTitle(int) -> a
+    399:399:boolean isLoggedIn() -> f
+    408:408:boolean hasFirstName() -> g
+    417:420:void showAddFirstNameDialog() -> h
+    428:436:void onUpNavigate() -> i
+    445:447:void onBackPressed() -> j
+    460:464:void onPostExecute(li.barter.http.IBlRequestContract) -> a
+    479:479:void onAuthError(int,li.barter.http.IBlRequestContract) -> a
+    485:485:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
+    496:501:boolean willHandleDialog(android.content.DialogInterface) -> a
+    514:529:void onDialogClick(android.content.DialogInterface,int) -> a
+    539:562:void updateUserInfo(java.lang.String,java.lang.String) -> a
+    572:575:void hideKeyBoard(android.view.View) -> d
+    579:583:boolean isLocationServiceEnabled() -> k
 li.barter.fragments.AddOrEditBookFragment -> li.barter.c.d:
     android.widget.EditText mIsbnEditText -> e
     li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView mTitleEditText -> f
@@ -23943,15 +24105,15 @@ li.barter.fragments.AddOrEditBookFragment -> li.barter.c.d:
     236:251:void loadDetailsForIntent(android.os.Bundle) -> a
     255:255:java.lang.Object getVolleyTag() -> a
     265:280:void getBookInfoFromServer(java.lang.String) -> a
-    290:305:void getBookInfoById(java.lang.String,java.lang.String) -> a
+    290:305:void getBookInfoById(java.lang.String,java.lang.String) -> b
     313:324:void setCheckBoxesForBarterTypes(java.util.List) -> a
     334:382:void createBookOnServer(org.json.JSONObject) -> a
     393:432:void updateBookOnServer(org.json.JSONObject) -> b
     446:450:void deleteBookOnServer(org.json.JSONObject) -> c
-    459:467:org.json.JSONArray getBarterTagsArray() -> k
+    459:467:org.json.JSONArray getBarterTagsArray() -> l
     472:476:void onResume() -> onResume
     481:550:void onClick(android.view.View) -> onClick
-    561:594:boolean isInputValid() -> l
+    561:594:boolean isInputValid() -> m
     602:741:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
     747:754:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
     759:765:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
@@ -23976,12 +24138,15 @@ li.barter.fragments.AddOrEditBookFragment$2 -> li.barter.c.d$2:
     539:540:void onClick(android.content.DialogInterface,int) -> onClick
 li.barter.fragments.BarterLiDescriptionFragment -> li.barter.c.e:
     boolean mLoadedIndividually -> e
-    25:27:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    32:32:java.lang.Object getVolleyTag() -> a
-    39:39:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    46:46:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    49:50:li.barter.fragments.BarterLiDescriptionFragment newInstance() -> k
-    56:63:java.lang.String getAnalyticsScreenName() -> b
+    com.google.android.gms.plus.PlusOneButton mPlusOneButton -> f
+    31:35:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    39:42:void onResume() -> onResume
+    46:50:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    53:53:java.lang.Object getVolleyTag() -> a
+    60:60:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    67:67:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    70:71:li.barter.fragments.BarterLiDescriptionFragment newInstance() -> l
+    77:84:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.BookDetailFragment -> li.barter.c.f:
     android.widget.TextView mIsbnTextView -> e
     android.widget.TextView mTitleTextView -> f
@@ -23995,86 +24160,89 @@ li.barter.fragments.BookDetailFragment -> li.barter.c.f:
     android.widget.TextView mBarterTypes -> n
     java.lang.String mId -> o
     java.lang.String mUserId -> p
-    boolean mFromSearch -> q
-    boolean mOwnedByUser -> r
-    boolean mLoadedIndividually -> s
-    java.lang.String mBookSelection -> t
-    87:95:li.barter.fragments.BookDetailFragment newInstance(java.lang.String,java.lang.String,boolean) -> a
-    101:139:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    148:166:void initViews(android.view.View) -> a
-    170:175:void loadBookDetails() -> k
-    180:185:void onBackPressed() -> j
-    189:189:java.lang.Object getVolleyTag() -> a
-    195:199:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    203:223:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    233:233:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    239:239:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    246:246:void onInsertComplete(int,java.lang.Object,long) -> a
-    253:253:void onDeleteComplete(int,java.lang.Object,int) -> a
-    260:260:void onUpdateComplete(int,java.lang.Object,int) -> b
-    266:325:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    334:342:void setBarterCheckboxes(java.lang.String) -> a
-    346:349:java.lang.String getAnalyticsScreenName() -> b
+    java.lang.String mBookTitle -> q
+    boolean mFromSearch -> r
+    boolean mOwnedByUser -> s
+    boolean mLoadedIndividually -> t
+    java.lang.String mBookSelection -> u
+    android.widget.ShareActionProvider mShareActionProvider -> v
+    96:104:li.barter.fragments.BookDetailFragment newInstance(java.lang.String,java.lang.String,boolean) -> a
+    110:148:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    157:175:void initViews(android.view.View) -> a
+    179:184:void loadBookDetails() -> l
+    189:194:void onBackPressed() -> j
+    198:198:java.lang.Object getVolleyTag() -> a
+    204:215:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    222:246:void updateShareIntent(java.lang.String) -> a
+    250:270:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    280:280:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    286:286:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    293:293:void onInsertComplete(int,java.lang.Object,long) -> a
+    300:300:void onDeleteComplete(int,java.lang.Object,int) -> a
+    307:307:void onUpdateComplete(int,java.lang.Object,int) -> b
+    311:313:void onStop() -> onStop
+    319:376:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    385:393:void setBarterCheckboxes(java.lang.String) -> c
+    397:400:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.BooksAroundMeFragment -> li.barter.c.g:
     li.barter.utils.SearchViewNetworkQueryHelper mSearchNetworkQueryHelper -> f
     android.widget.GridView mBooksAroundMeGridView -> g
     li.barter.adapters.BooksGridAdapter mBooksAroundMeAdapter -> h
     int mCurPage -> i
-    boolean mEmptySearchCroutonFlag -> j
-    android.location.Location mLastFetchedLocation -> k
-    boolean mIsLoading -> l
-    boolean mHasLoadedAllItems -> m
-    li.barter.fragments.dialogs.SingleChoiceDialogFragment mAddBookDialogFragment -> n
-    android.widget.SearchView mSearchView -> o
-    android.view.View mEmptyViewOnRefresh -> p
-    android.view.View mEmptyViewNormal -> q
-    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout mPullToRefreshLayout -> r
-    boolean mIsNotSearch -> s
+    android.location.Location mLastFetchedLocation -> j
+    boolean mIsLoading -> k
+    boolean mHasLoadedAllItems -> l
+    li.barter.fragments.dialogs.SingleChoiceDialogFragment mAddBookDialogFragment -> m
+    android.widget.SearchView mSearchView -> n
+    android.view.View mEmptyView -> o
+    boolean mFromPullToRefresh -> p
+    uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout mPullToRefreshLayout -> q
+    li.barter.fragments.dialogs.EnableLocationDialogFragment mEnableLocationDialogFragment -> r
     boolean $assertionsDisabled -> e
-    175:225:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    230:235:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    242:244:void loadBookSearchResults() -> n
-    254:281:void fetchBooksAroundMe(android.location.Location) -> b
-    294:318:void fetchBooksAroundMeForSearch(android.location.Location,int,java.lang.String) -> a
-    322:329:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    333:341:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    351:355:void showAddBookOptions() -> o
-    360:373:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    377:377:java.lang.Object getVolleyTag() -> a
-    382:387:void updateLocation(android.location.Location) -> a
-    397:410:void fetchBooksOnLocationUpdate(android.location.Location) -> c
-    414:416:void onPause() -> onPause
-    424:433:void saveLastFetchedInfoToPref() -> p
-    437:461:void onResume() -> onResume
-    469:479:void readLastFetchedInfoFromPref() -> q
-    489:492:void loadAddOrEditBookFragment(android.os.Bundle) -> a
-    499:520:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    524:530:void onPostExecute(li.barter.http.IBlRequestContract) -> a
-    536:542:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    547:553:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
-    558:561:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    568:578:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    582:585:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    596:614:boolean shouldRefetchBooks(android.location.Location) -> d
-    620:643:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-    650:650:void onInsertComplete(int,java.lang.Object,long) -> a
-    655:673:void onDeleteComplete(int,java.lang.Object,int) -> a
-    680:680:void onUpdateComplete(int,java.lang.Object,int) -> b
-    687:687:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    691:693:void onLoadMore() -> k
-    697:697:boolean isLoading() -> l
-    702:702:boolean hasLoadedAllItems() -> m
-    708:712:boolean willHandleDialog(android.content.DialogInterface) -> a
-    718:738:void onDialogClick(android.content.DialogInterface,int) -> a
-    742:748:void performQuery(android.widget.SearchView,java.lang.String) -> a
-    753:756:void onRefreshStarted(android.view.View) -> a
-    762:768:void reloadNearbyBooks() -> r
-    775:778:void reloadBookWithClearedEmptyView() -> s
-    782:784:boolean onMenuItemActionCollapse(android.view.MenuItem) -> onMenuItemActionCollapse
-    789:790:boolean onMenuItemActionExpand(android.view.MenuItem) -> onMenuItemActionExpand
-    795:795:boolean onClose() -> onClose
-    801:801:java.lang.String getAnalyticsScreenName() -> b
-    807:814:void onClick(android.view.View) -> onClick
+    170:218:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    223:227:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    233:234:void loadBookSearchResults() -> p
+    244:268:void fetchBooksAroundMe(android.location.Location) -> b
+    281:305:void fetchBooksAroundMeForSearch(android.location.Location,int,java.lang.String) -> a
+    309:316:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    320:328:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    338:342:void showAddBookOptions() -> q
+    347:360:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    364:364:java.lang.Object getVolleyTag() -> a
+    369:374:void updateLocation(android.location.Location) -> a
+    384:396:void fetchBooksOnLocationUpdate(android.location.Location) -> c
+    400:402:void onPause() -> onPause
+    411:421:void saveLastFetchedInfoToPref() -> r
+    425:452:void onResume() -> onResume
+    460:464:void showEnableLocationDialog() -> l
+    472:487:void readLastFetchedInfoFromPref() -> s
+    497:500:void loadAddOrEditBookFragment(android.os.Bundle) -> a
+    507:526:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    530:536:void onPostExecute(li.barter.http.IBlRequestContract) -> a
+    542:548:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    553:559:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
+    564:567:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    574:591:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    595:598:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    609:627:boolean shouldRefetchBooks(android.location.Location) -> d
+    633:659:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    666:666:void onInsertComplete(int,java.lang.Object,long) -> a
+    671:690:void onDeleteComplete(int,java.lang.Object,int) -> a
+    697:697:void onUpdateComplete(int,java.lang.Object,int) -> b
+    704:704:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    708:709:void onLoadMore() -> m
+    713:713:boolean isLoading() -> n
+    718:718:boolean hasLoadedAllItems() -> o
+    724:732:boolean willHandleDialog(android.content.DialogInterface) -> a
+    738:769:void onDialogClick(android.content.DialogInterface,int) -> a
+    773:779:void performQuery(android.widget.SearchView,java.lang.String) -> a
+    784:788:void onRefreshStarted(android.view.View) -> a
+    796:801:void reloadNearbyBooks() -> t
+    805:806:boolean onMenuItemActionCollapse(android.view.MenuItem) -> onMenuItemActionCollapse
+    811:811:boolean onMenuItemActionExpand(android.view.MenuItem) -> onMenuItemActionExpand
+    816:816:boolean onClose() -> onClose
+    822:822:java.lang.String getAnalyticsScreenName() -> b
+    828:842:void onClick(android.view.View) -> onClick
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
 li.barter.fragments.BooksPagerFragment -> li.barter.c.h:
     li.barter.fragments.BooksPagerFragment$BookPageAdapter mAdapter -> e
@@ -24083,46 +24251,51 @@ li.barter.fragments.BooksPagerFragment -> li.barter.c.h:
     int mBookPosition -> h
     java.util.ArrayList mIdArray -> i
     java.util.ArrayList mUserIdArray -> j
-    com.sothree.slidinguppanel.SlidingUpPanelLayout mSlidingLayout -> k
-    android.content.IntentFilter mChatButtonIntentFilter -> l
-    li.barter.fragments.BooksPagerFragment$ChatButtonReceiver mChatButtonReceiver -> m
-    boolean mOwnedByUser -> n
-    117:146:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    151:155:void onAttach(android.app.Activity) -> onAttach
-    159:162:void onPause() -> onPause
-    168:172:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    178:202:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    211:212:void loadBookSearchResults() -> k
-    263:263:java.lang.Object getVolleyTag() -> a
-    271:271:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    279:279:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    283:286:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    292:328:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    333:333:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    338:338:void onPageScrollStateChanged(int) -> onPageScrollStateChanged
-    344:344:void onPageScrolled(int,float,int) -> onPageScrolled
-    350:367:void onPageSelected(int) -> onPageSelected
-    371:371:void onPanelSlide(android.view.View,float) -> a
-    375:380:void onPanelExpanded(android.view.View) -> b
-    384:385:void onPanelCollapsed(android.view.View) -> a
-    390:390:void onPanelAnchored(android.view.View) -> c
-    397:400:void setDragHandle(android.view.View) -> e
-    405:410:void onBackPressed() -> j
-    414:414:java.lang.String getAnalyticsScreenName() -> b
+    java.util.ArrayList mBookTitleArray -> k
+    com.sothree.slidinguppanel.SlidingUpPanelLayout mSlidingLayout -> l
+    android.content.IntentFilter mChatButtonIntentFilter -> m
+    li.barter.fragments.BooksPagerFragment$ChatButtonReceiver mChatButtonReceiver -> n
+    boolean mOwnedByUser -> o
+    android.widget.ShareActionProvider mShareActionProvider -> p
+    126:155:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    160:164:void onAttach(android.app.Activity) -> onAttach
+    168:171:void onPause() -> onPause
+    176:192:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    196:219:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    228:230:void loadBookSearchResults() -> l
+    281:281:java.lang.Object getVolleyTag() -> a
+    288:288:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    296:296:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    300:303:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    309:348:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    353:353:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    358:358:void onPageScrollStateChanged(int) -> onPageScrollStateChanged
+    364:364:void onPageScrolled(int,float,int) -> onPageScrolled
+    369:384:void onPageSelected(int) -> onPageSelected
+    393:416:void updateShareIntent(java.lang.String) -> a
+    420:420:void onPanelSlide(android.view.View,float) -> a
+    424:429:void onPanelExpanded(android.view.View) -> b
+    433:434:void onPanelCollapsed(android.view.View) -> a
+    439:439:void onPanelAnchored(android.view.View) -> c
+    443:446:void onDialogClick(android.content.DialogInterface,int) -> a
+    451:451:boolean willHandleDialog(android.content.DialogInterface) -> a
+    462:465:void setDragHandle(android.view.View) -> e
+    470:475:void onBackPressed() -> j
+    479:479:java.lang.String getAnalyticsScreenName() -> b
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-    79:79:int access$1(li.barter.fragments.BooksPagerFragment) -> a
-    91:91:java.util.ArrayList access$2(li.barter.fragments.BooksPagerFragment) -> b
-    90:90:java.util.ArrayList access$3(li.barter.fragments.BooksPagerFragment) -> c
-    97:97:com.sothree.slidinguppanel.SlidingUpPanelLayout access$4(li.barter.fragments.BooksPagerFragment) -> d
+    85:85:int access$1(li.barter.fragments.BooksPagerFragment) -> a
+    97:97:java.util.ArrayList access$2(li.barter.fragments.BooksPagerFragment) -> b
+    96:96:java.util.ArrayList access$3(li.barter.fragments.BooksPagerFragment) -> c
+    104:104:com.sothree.slidinguppanel.SlidingUpPanelLayout access$4(li.barter.fragments.BooksPagerFragment) -> d
 li.barter.fragments.BooksPagerFragment$BookPageAdapter -> li.barter.c.h$a:
     java.util.Map mPositionFragmentMap -> b
     li.barter.fragments.BooksPagerFragment this$0 -> a
-    234:234:int getCount() -> getCount
-    241:244:android.support.v4.app.Fragment getItem(int) -> getItem
-    250:252:void destroyItem(android.view.ViewGroup,int,java.lang.Object) -> destroyItem
+    252:252:int getCount() -> getCount
+    259:262:android.support.v4.app.Fragment getItem(int) -> getItem
+    268:270:void destroyItem(android.view.ViewGroup,int,java.lang.Object) -> destroyItem
 li.barter.fragments.BooksPagerFragment$ChatButtonReceiver -> li.barter.c.h$b:
     li.barter.fragments.BooksPagerFragment this$0 -> a
-    426:437:void onReceive(android.content.Context,android.content.Intent) -> onReceive
+    491:502:void onReceive(android.content.Context,android.content.Intent) -> onReceive
 li.barter.fragments.ChatDetailsFragment -> li.barter.c.i:
     li.barter.adapters.ChatDetailAdapter mChatDetailAdapter -> e
     android.widget.ListView mChatListView -> f
@@ -24133,37 +24306,39 @@ li.barter.fragments.ChatDetailsFragment -> li.barter.c.i:
     boolean mFirstMessage -> k
     java.lang.String mChatSelection -> l
     java.lang.String mUserSelection -> m
-    java.lang.String mChatId -> n
-    java.lang.String mWithUserId -> o
-    li.barter.fragments.ChatDetailsFragment$ConcreteChatAcknowledge mAcknowledge -> p
-    120:154:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    159:161:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    165:182:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    189:195:void onPause() -> onPause
-    202:212:void onBackPressed() -> j
-    216:221:void onResume() -> onResume
-    225:225:java.lang.Object getVolleyTag() -> a
-    234:234:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    242:242:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    248:251:void onServiceConnected(android.content.ComponentName,android.os.IBinder) -> onServiceConnected
-    255:256:void onServiceDisconnected(android.content.ComponentName) -> onServiceDisconnected
-    261:271:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    277:327:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    332:335:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    340:361:void onClick(android.view.View) -> onClick
-    371:373:void setActionEnabled(boolean) -> c
-    409:419:void onChatComplete(boolean) -> b
-    425:425:void onInsertComplete(int,java.lang.Object,long) -> a
-    431:431:void onDeleteComplete(int,java.lang.Object,int) -> a
-    437:437:void onUpdateComplete(int,java.lang.Object,int) -> b
-    443:443:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    447:447:java.lang.String getAnalyticsScreenName() -> b
-    453:471:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    java.lang.String mMessageSelection -> n
+    java.lang.String mChatId -> o
+    java.lang.String mWithUserId -> p
+    java.lang.String mWithUserImage -> q
+    java.lang.String mWithUserName -> r
+    li.barter.widgets.CircleImageView mWithImageView -> s
+    java.text.SimpleDateFormat mFormatter -> t
+    136:172:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    178:187:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    191:193:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    197:214:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    224:229:void loadChattingWithUser() -> l
+    233:238:void onPause() -> onPause
+    243:253:void onBackPressed() -> j
+    257:261:void onResume() -> onResume
+    265:265:java.lang.Object getVolleyTag() -> a
+    274:274:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    282:282:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    288:291:void onServiceConnected(android.content.ComponentName,android.os.IBinder) -> onServiceConnected
+    295:296:void onServiceDisconnected(android.content.ComponentName) -> onServiceDisconnected
+    301:311:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    317:372:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    379:393:void loadUserInfoIntoActionBar() -> m
+    398:401:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    406:417:void onClick(android.view.View) -> onClick
+    428:437:boolean sendChatMessage(java.lang.String) -> a
+    445:445:void onInsertComplete(int,java.lang.Object,long) -> a
+    453:453:void onDeleteComplete(int,java.lang.Object,int) -> a
+    459:459:void onUpdateComplete(int,java.lang.Object,int) -> b
+    465:465:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    469:469:java.lang.String getAnalyticsScreenName() -> b
+    476:500:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-li.barter.fragments.ChatDetailsFragment$ConcreteChatAcknowledge -> li.barter.c.i$a:
-    li.barter.fragments.ChatDetailsFragment mChatDetailsFragment -> a
-    392:397:void onChatRequestComplete(boolean) -> a
-    387:387:void access$1(li.barter.fragments.ChatDetailsFragment$ConcreteChatAcknowledge,li.barter.fragments.ChatDetailsFragment) -> a
 li.barter.fragments.ChatsFragment -> li.barter.c.j:
     li.barter.adapters.ChatsAdapter mChatsAdapter -> e
     android.widget.ListView mChatsListView -> f
@@ -24190,7 +24365,7 @@ li.barter.fragments.ChatsFragment -> li.barter.c.j:
     262:262:java.lang.String getAnalyticsScreenName() -> b
     268:277:void onBackPressed() -> j
     283:291:boolean onItemLongClick(android.widget.AdapterView,android.view.View,int,long) -> onItemLongClick
-    299:303:void showChatOptions() -> k
+    299:303:void showChatOptions() -> l
     308:312:boolean willHandleDialog(android.content.DialogInterface) -> a
     318:405:void onDialogClick(android.content.DialogInterface,int) -> a
     409:416:void deleteChat(java.lang.String) -> a
@@ -24233,7 +24408,7 @@ li.barter.fragments.CollaborateFragment -> li.barter.c.k:
     171:171:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
     177:177:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
     181:188:void sendEmail(java.lang.String[],java.lang.String,java.lang.String) -> a
-    191:192:li.barter.fragments.CollaborateFragment newInstance() -> k
+    191:192:li.barter.fragments.CollaborateFragment newInstance() -> l
     197:200:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.EditProfileFragment -> li.barter.c.l:
     android.widget.TextView mFirstNameTextView -> e
@@ -24249,27 +24424,27 @@ li.barter.fragments.EditProfileFragment -> li.barter.c.l:
     android.net.Uri mGalleryImageCaptureUri -> o
     java.lang.String mAvatarFileName -> p
     li.barter.fragments.dialogs.SingleChoiceDialogFragment mChoosePictureDialogFragment -> q
-    111:179:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    184:185:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    189:213:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    226:235:boolean isInputValid() -> k
-    244:249:void loadPreferredLocation() -> l
-    254:272:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
-    276:278:void onStop() -> onStop
-    282:282:java.lang.Object getVolleyTag() -> a
-    287:303:void onClick(android.view.View) -> onClick
-    309:336:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    343:347:void showChoosePictureSourceDialog() -> m
-    358:372:void setAndSaveImage(android.net.Uri,int) -> a
-    388:418:void saveProfileInfoToServer(java.lang.String,java.lang.String,java.lang.String,java.lang.Boolean,java.lang.String) -> a
-    425:450:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    456:458:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    465:465:void onInsertComplete(int,java.lang.Object,long) -> a
-    472:472:void onDeleteComplete(int,java.lang.Object,int) -> a
-    479:479:void onUpdateComplete(int,java.lang.Object,int) -> b
-    484:489:boolean willHandleDialog(android.content.DialogInterface) -> a
-    495:518:void onDialogClick(android.content.DialogInterface,int) -> a
-    522:522:java.lang.String getAnalyticsScreenName() -> b
+    111:184:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    189:190:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    194:218:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    231:240:boolean isInputValid() -> l
+    249:254:void loadPreferredLocation() -> m
+    259:277:void onQueryComplete(int,java.lang.Object,android.database.Cursor) -> a
+    281:283:void onStop() -> onStop
+    287:287:java.lang.Object getVolleyTag() -> a
+    292:308:void onClick(android.view.View) -> onClick
+    314:341:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    348:352:void showChoosePictureSourceDialog() -> n
+    363:377:void setAndSaveImage(android.net.Uri,int) -> a
+    393:423:void saveProfileInfoToServer(java.lang.String,java.lang.String,java.lang.String,java.lang.Boolean,java.lang.String) -> a
+    430:458:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    464:466:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    473:473:void onInsertComplete(int,java.lang.Object,long) -> a
+    480:480:void onDeleteComplete(int,java.lang.Object,int) -> a
+    487:487:void onUpdateComplete(int,java.lang.Object,int) -> b
+    492:497:boolean willHandleDialog(android.content.DialogInterface) -> a
+    503:526:void onDialogClick(android.content.DialogInterface,int) -> a
+    530:530:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.FragmentTransition -> li.barter.c.m:
     int enterAnimation() -> a
     int exitAnimation() -> b
@@ -24282,20 +24457,27 @@ li.barter.fragments.LoginFragment -> li.barter.c.n:
     android.widget.Button mSubmitButton -> h
     android.widget.EditText mEmailEditText -> i
     android.widget.EditText mPasswordEditText -> j
-    85:115:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    120:123:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    127:127:java.lang.Object getVolleyTag() -> a
-    133:137:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
-    142:182:void onClick(android.view.View) -> onClick
-    192:207:void login(java.lang.String,java.lang.String) -> a
-    217:231:void loginWithProvider(java.lang.String,java.lang.String) -> b
-    242:271:boolean isInputValid() -> l
-    278:364:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    371:374:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    380:386:void call(com.facebook.Session,com.facebook.SessionState,java.lang.Exception) -> call
-    393:400:void onGoogleLogin() -> k
-    409:410:void onGoogleLoginError(java.lang.Exception) -> a
-    421:421:java.lang.String getAnalyticsScreenName() -> b
+    android.widget.TextView mForgotPassword -> k
+    li.barter.fragments.dialogs.AddSingleEditTextDialogFragment mAddSingleEditTextDialogFragment -> l
+    java.lang.String mEmailForPasswordChange -> m
+    95:128:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    133:136:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    140:140:java.lang.Object getVolleyTag() -> a
+    146:150:void onActivityResult(int,int,android.content.Intent) -> onActivityResult
+    155:200:void onClick(android.view.View) -> onClick
+    208:212:void showForgotPasswordDialog() -> m
+    218:223:boolean willHandleDialog(android.content.DialogInterface) -> a
+    229:237:void onDialogClick(android.content.DialogInterface,int) -> a
+    247:255:void callForgotPassword(java.lang.String) -> a
+    265:282:void login(java.lang.String,java.lang.String) -> b
+    292:308:void loginWithProvider(java.lang.String,java.lang.String) -> c
+    319:348:boolean isInputValid() -> n
+    355:472:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    479:482:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    488:494:void call(com.facebook.Session,com.facebook.SessionState,java.lang.Exception) -> call
+    501:508:void onGoogleLogin() -> l
+    517:518:void onGoogleLoginError(java.lang.Exception) -> a
+    529:529:java.lang.String getAnalyticsScreenName() -> b
 li.barter.fragments.MyBooksFragment -> li.barter.c.o:
     android.widget.GridView mBooksAroundMeGridView -> e
     li.barter.adapters.BooksGridAdapter mBooksAroundMeAdapter -> f
@@ -24306,7 +24488,7 @@ li.barter.fragments.MyBooksFragment -> li.barter.c.o:
     113:113:java.lang.Object getVolleyTag() -> a
     121:121:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
     128:128:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    135:136:void loadMyBooks() -> k
+    135:136:void loadMyBooks() -> l
     140:147:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
     153:158:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
     162:166:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
@@ -24323,9 +24505,24 @@ li.barter.fragments.OssLicenseFragment -> li.barter.c.p:
     67:67:java.lang.Object getVolleyTag() -> a
     75:75:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
     82:82:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    85:86:li.barter.fragments.OssLicenseFragment newInstance() -> k
+    85:86:li.barter.fragments.OssLicenseFragment newInstance() -> l
     91:94:java.lang.String getAnalyticsScreenName() -> b
-li.barter.fragments.ProfileFragment -> li.barter.c.q:
+li.barter.fragments.PasswordResetFragment -> li.barter.c.q:
+    int mMinPasswordLength -> e
+    android.widget.Button mResetButton -> f
+    android.widget.EditText mTokenEditText -> g
+    android.widget.EditText mNewPasswordEditText -> h
+    android.widget.EditText mConfirmNewPasswordEditText -> i
+    java.lang.String mEmailId -> j
+    83:102:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    109:109:java.lang.Object getVolleyTag() -> a
+    117:132:void onClick(android.view.View) -> onClick
+    146:164:void callPasswordReset(java.lang.String,java.lang.String,java.lang.String) -> a
+    177:214:boolean isInputValid() -> l
+    221:309:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    316:319:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    324:324:java.lang.String getAnalyticsScreenName() -> b
+li.barter.fragments.ProfileFragment -> li.barter.c.r:
     android.support.v4.app.FragmentTabHost mTabHost -> e
     java.lang.String mUserId -> f
     java.lang.String mImageUrl -> g
@@ -24340,74 +24537,82 @@ li.barter.fragments.ProfileFragment -> li.barter.c.q:
     li.barter.adapters.ProfileFragmentsAdapter mProfileFragmentsAdapter -> p
     java.lang.String mLocationFormat -> q
     boolean mLoadedIndividually -> r
-    101:135:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    144:156:void setUserId(java.lang.String) -> a
-    165:174:void updateTab(li.barter.fragments.AbstractBarterLiFragment) -> a
-    178:200:void initViews(android.view.View) -> a
-    208:238:void updateViewsForUser() -> k
-    246:257:void fetchUserDetailsFromServer(java.lang.String) -> c
-    265:267:void loadUserDetails() -> l
-    272:275:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    279:295:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    302:307:void onBackPressed() -> j
-    311:347:void onClick(android.view.View) -> onClick
-    353:361:void loadChatFragment() -> m
-    365:365:java.lang.Object getVolleyTag() -> a
-    372:385:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    392:392:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    396:403:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
-    409:448:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
-    453:453:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
-    477:489:void onTabChanged(java.lang.String) -> onTabChanged
-    494:494:void onPageScrollStateChanged(int) -> onPageScrollStateChanged
-    500:500:void onPageScrolled(int,float,int) -> onPageScrolled
-    505:530:void onPageSelected(int) -> onPageSelected
-    535:538:java.lang.String getAnalyticsScreenName() -> b
+    li.barter.fragments.dialogs.AddUserInfoDialogFragment mAddUserInfoDialogFragment -> s
+    107:143:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    152:164:void setUserId(java.lang.String) -> a
+    173:182:void updateTab(li.barter.fragments.AbstractBarterLiFragment) -> a
+    186:208:void initViews(android.view.View) -> a
+    216:243:void updateViewsForUser() -> l
+    251:267:void fetchUserDetailsFromServer(java.lang.String) -> c
+    275:277:void loadUserDetails() -> m
+    282:285:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    289:305:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    312:317:void onBackPressed() -> j
+    321:357:void onClick(android.view.View) -> onClick
+    363:371:void loadChatFragment() -> n
+    375:375:java.lang.Object getVolleyTag() -> a
+    382:400:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    407:407:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    411:418:android.support.v4.content.Loader onCreateLoader(int,android.os.Bundle) -> onCreateLoader
+    424:469:void onLoadFinished(android.support.v4.content.Loader,android.database.Cursor) -> a
+    474:474:void onLoaderReset(android.support.v4.content.Loader) -> onLoaderReset
+    498:510:void onTabChanged(java.lang.String) -> onTabChanged
+    515:515:void onPageScrollStateChanged(int) -> onPageScrollStateChanged
+    521:521:void onPageScrolled(int,float,int) -> onPageScrolled
+    529:532:void showAddFirstNameDialog() -> h
+    536:541:boolean willHandleDialog(android.content.DialogInterface) -> a
+    546:561:void onDialogClick(android.content.DialogInterface,int) -> a
+    566:591:void onPageSelected(int) -> onPageSelected
+    596:599:java.lang.String getAnalyticsScreenName() -> b
     1:1:void onLoadFinished(android.support.v4.content.Loader,java.lang.Object) -> onLoadFinished
-li.barter.fragments.ProfileFragment$DummyFragment -> li.barter.c.q$a:
-li.barter.fragments.ReportBugFragment -> li.barter.c.r:
+li.barter.fragments.ProfileFragment$DummyFragment -> li.barter.c.r$a:
+li.barter.fragments.ReportBugFragment -> li.barter.c.s:
     android.widget.EditText mReportedBugTextView -> e
     android.widget.EditText mDeviceInfoTextView -> f
     android.widget.Button mReportBugButton -> g
     android.widget.RadioButton mReportBugSelect -> h
     android.widget.RadioButton mReportSuggestionSelect -> i
-    65:80:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    85:146:void onClick(android.view.View) -> onClick
-    150:150:java.lang.Object getVolleyTag() -> a
-    158:190:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    196:196:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    201:201:java.lang.String getAnalyticsScreenName() -> b
-    206:215:void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
-li.barter.fragments.SelectPreferredLocationFragment -> li.barter.c.s:
+    65:81:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    86:147:void onClick(android.view.View) -> onClick
+    151:151:java.lang.Object getVolleyTag() -> a
+    159:191:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    197:197:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    202:202:java.lang.String getAnalyticsScreenName() -> b
+    207:216:void onCheckedChanged(android.widget.CompoundButton,boolean) -> onCheckedChanged
+li.barter.fragments.SelectPreferredLocationFragment -> li.barter.c.t:
     li.barter.models.Venue[] mVenues -> e
     li.barter.adapters.SelectLocationAdapter mSelectLocationAdapter -> f
     android.widget.ListView mVenueListView -> g
     java.lang.String mFoursquareClientId -> h
     java.lang.String mFoursquareClientSecret -> i
     android.view.View mEmptyView -> j
-    li.barter.fragments.dialogs.AddLocationDialogFragment mAddLocationDialogFragment -> k
-    boolean mEditMode -> l
-    111:160:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
-    165:166:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
-    171:185:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
-    193:195:void showAboutSelectLocationDialog() -> l
-    207:241:void fetchVenuesForLocation(android.location.Location,int) -> a
-    254:276:void fetchVenuesForLocationWithoutCategoryFilter(android.location.Location,int) -> b
-    280:282:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    286:286:java.lang.Object getVolleyTag() -> a
-    291:293:void onPause() -> onPause
-    299:333:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
-    339:349:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    355:366:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
-    371:376:void onBackPressed() -> j
-    390:410:void setUserPreferredLocation(java.lang.String,java.lang.String,double,double,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
-    416:422:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
-    426:426:java.lang.String getAnalyticsScreenName() -> b
-    431:445:void onClick(android.view.View) -> onClick
-    453:456:void showAddLocationDialog() -> k
-    468:473:boolean willHandleDialog(android.content.DialogInterface) -> a
-    486:501:void onDialogClick(android.content.DialogInterface,int) -> a
-li.barter.fragments.TeamFragment -> li.barter.c.t:
+    li.barter.fragments.dialogs.AddSingleEditTextDialogFragment mAddLocationDialogFragment -> k
+    android.view.View mOverlayView -> l
+    boolean mIsOverlayShown -> m
+    li.barter.fragments.dialogs.EnableLocationDialogFragment mEnableLocationDialogFragment -> n
+    116:156:android.view.View onCreateView(android.view.LayoutInflater,android.view.ViewGroup,android.os.Bundle) -> onCreateView
+    165:169:void showEnableLocationDialog() -> l
+    176:177:void onCreateOptionsMenu(android.view.Menu,android.view.MenuInflater) -> onCreateOptionsMenu
+    182:191:boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    200:213:void showOverlay() -> m
+    219:226:void removeOverlay() -> n
+    238:277:void fetchVenuesForLocation(android.location.Location,int) -> a
+    290:308:void fetchVenuesForLocationWithoutCategoryFilter(android.location.Location,int) -> b
+    312:315:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    319:319:java.lang.Object getVolleyTag() -> a
+    324:326:void onPause() -> onPause
+    332:364:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
+    370:378:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
+    384:393:void onOtherError(int,li.barter.http.IBlRequestContract,int) -> a
+    398:403:void onBackPressed() -> j
+    419:438:void setUserPreferredLocation(java.lang.String,java.lang.String,double,double,java.lang.String,java.lang.String,java.lang.String,java.lang.String) -> a
+    444:450:void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+    454:454:java.lang.String getAnalyticsScreenName() -> b
+    459:479:void onClick(android.view.View) -> onClick
+    486:489:void showAddLocationDialog() -> o
+    500:510:boolean willHandleDialog(android.content.DialogInterface) -> a
+    523:552:void onDialogClick(android.content.DialogInterface,int) -> a
+li.barter.fragments.TeamFragment -> li.barter.c.u:
     android.widget.GridView mGridView -> e
     li.barter.models.Team[] mTeams -> f
     li.barter.adapters.TeamAdapter mTeamAdapter -> g
@@ -24417,8 +24622,8 @@ li.barter.fragments.TeamFragment -> li.barter.c.t:
     95:95:java.lang.Object getVolleyTag() -> a
     103:120:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
     127:127:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    130:131:li.barter.fragments.TeamFragment newInstance() -> k
-li.barter.fragments.TributeFragment -> li.barter.c.u:
+    130:131:li.barter.fragments.TeamFragment newInstance() -> l
+li.barter.fragments.TributeFragment -> li.barter.c.v:
     android.widget.TextView mTributeTextView -> e
     android.widget.ImageView mTributeImageView -> f
     java.lang.String mDefaultName -> g
@@ -24428,24 +24633,25 @@ li.barter.fragments.TributeFragment -> li.barter.c.u:
     78:78:java.lang.Object getVolleyTag() -> a
     86:102:void onSuccess(int,li.barter.http.IBlRequestContract,li.barter.http.ResponseInfo) -> a
     108:108:void onBadRequestError(int,li.barter.http.IBlRequestContract,int,java.lang.String,android.os.Bundle) -> a
-    111:112:li.barter.fragments.TributeFragment newInstance() -> k
-li.barter.fragments.dialogs.AddLocationDialogFragment -> li.barter.c.a.a:
+    111:112:li.barter.fragments.TributeFragment newInstance() -> l
+li.barter.fragments.dialogs.AddSingleEditTextDialogFragment -> li.barter.c.a.a:
     int mTitleId -> a
     int mPositiveLabelId -> b
     int mNegativeLabelId -> c
     int mNeutralLabelId -> d
-    android.content.DialogInterface$OnClickListener mClickListener -> e
-    android.content.DialogInterface$OnDismissListener mOnDismissListener -> f
-    int mIconId -> g
-    boolean isCancellable -> h
-    int mTheme -> i
-    android.widget.EditText mLocationNameEditText -> j
-    76:120:android.app.Dialog onCreateDialog(android.os.Bundle) -> onCreateDialog
-    126:139:void onAttach(android.app.Activity) -> onAttach
-    143:147:void onDismiss(android.content.DialogInterface) -> onDismiss
-    152:160:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    167:181:void show(int,int,int,int,int,int,android.support.v4.app.FragmentManager,boolean,java.lang.String) -> a
-    184:184:java.lang.String getLocationName() -> a
+    int mHintLabelId -> e
+    android.content.DialogInterface$OnClickListener mClickListener -> f
+    android.content.DialogInterface$OnDismissListener mOnDismissListener -> g
+    int mIconId -> h
+    boolean isCancellable -> i
+    int mTheme -> j
+    android.widget.EditText mNameEditText -> k
+    79:127:android.app.Dialog onCreateDialog(android.os.Bundle) -> onCreateDialog
+    133:146:void onAttach(android.app.Activity) -> onAttach
+    150:154:void onDismiss(android.content.DialogInterface) -> onDismiss
+    159:168:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    175:190:void show(int,int,int,int,int,int,int,android.support.v4.app.FragmentManager,boolean,java.lang.String) -> a
+    193:193:java.lang.String getName() -> a
 li.barter.fragments.dialogs.AddUserInfoDialogFragment -> li.barter.c.a.b:
     int mTitleId -> a
     int mPositiveLabelId -> b
@@ -24465,10 +24671,10 @@ li.barter.fragments.dialogs.AddUserInfoDialogFragment -> li.barter.c.a.b:
     170:184:void show(int,int,int,int,int,int,android.support.v4.app.FragmentManager,boolean,java.lang.String) -> a
     187:187:java.lang.String getFirstName() -> a
     191:191:java.lang.String getLastName() -> b
-li.barter.fragments.dialogs.AlertDialogFragment -> li.barter.c.a.c:
+li.barter.fragments.dialogs.EnableLocationDialogFragment -> li.barter.c.a.c:
     int mTitleId -> a
-    int mMessageId -> b
-    int mPositiveLabelId -> c
+    int mPositiveLabelId -> b
+    int mMessageId -> c
     int mNegativeLabelId -> d
     int mNeutralLabelId -> e
     android.content.DialogInterface$OnClickListener mClickListener -> f
@@ -24477,11 +24683,11 @@ li.barter.fragments.dialogs.AlertDialogFragment -> li.barter.c.a.c:
     boolean isCancellable -> i
     int mTheme -> j
     java.lang.String[] mMessageParams -> k
-    76:129:android.app.Dialog onCreateDialog(android.os.Bundle) -> onCreateDialog
-    135:148:void onAttach(android.app.Activity) -> onAttach
-    152:156:void onDismiss(android.content.DialogInterface) -> onDismiss
-    161:171:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
-    179:195:void show(int,int,int,int,int,int,int,android.support.v4.app.FragmentManager,boolean,java.lang.String,java.lang.String[]) -> a
+    80:137:android.app.Dialog onCreateDialog(android.os.Bundle) -> onCreateDialog
+    143:156:void onAttach(android.app.Activity) -> onAttach
+    160:164:void onDismiss(android.content.DialogInterface) -> onDismiss
+    169:179:void onSaveInstanceState(android.os.Bundle) -> onSaveInstanceState
+    187:203:void show(int,int,int,int,int,int,int,android.support.v4.app.FragmentManager,boolean,java.lang.String,java.lang.String[]) -> a
 li.barter.fragments.dialogs.SingleChoiceDialogFragment -> li.barter.c.a.d:
     int mTitleId -> a
     android.content.DialogInterface$OnClickListener mClickListener -> b
@@ -24546,32 +24752,33 @@ li.barter.http.HttpConstants$Server -> li.barter.http.e$a:
 li.barter.http.HttpResponseParser -> li.barter.http.f:
     double mEndLatitude -> a
     double mEndLongitude -> b
-    87:176:li.barter.http.ResponseInfo getSuccessResponse(int,java.lang.String) -> a
-    189:189:li.barter.http.ResponseInfo parseReferralResponse(java.lang.String) -> a
-    199:235:li.barter.http.ResponseInfo parseGoogleBookSuggestionsResponse(java.lang.String) -> b
-    249:321:li.barter.http.ResponseInfo parseGoogleBooksBookInfo(java.lang.String) -> c
-    331:331:li.barter.http.ResponseInfo parseAmpqResponse(java.lang.String) -> d
-    342:353:li.barter.http.ResponseInfo parseTributeResponse(java.lang.String) -> e
-    365:433:li.barter.http.ResponseInfo parseUserProfileResponse(java.lang.String) -> f
-    444:459:li.barter.http.ResponseInfo parseTeamResponse(java.lang.String) -> g
-    472:553:li.barter.http.ResponseInfo parseCreateUserResponse(java.lang.String) -> h
-    569:584:java.lang.String parseAndStoreLocation(org.json.JSONObject,boolean) -> a
-    597:630:li.barter.http.ResponseInfo parseSearchBooksResponse(java.lang.String) -> i
-    643:661:li.barter.http.ResponseInfo parseVenuesResponse(java.lang.String) -> j
-    670:673:li.barter.http.ResponseInfo parseBlockUserResponse(java.lang.String) -> k
-    685:695:li.barter.http.ResponseInfo parseSetUserPreferredLocationResponse(java.lang.String) -> l
-    708:729:void readVenueObjectIntoVenue(org.json.JSONObject,li.barter.models.Venue) -> a
-    741:752:void readTeamObjectIntoTeam(org.json.JSONObject,li.barter.models.Team) -> a
-    771:833:java.lang.String readBookDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> a
-    853:879:java.lang.String readUserDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> b
-    897:919:java.lang.String readLocationDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean) -> a
-    929:966:li.barter.http.ResponseInfo parseCreateBookResponse(java.lang.String) -> m
-    971:972:li.barter.http.ResponseInfo parseUpdateBookResponse(java.lang.String) -> n
-    977:978:li.barter.http.ResponseInfo parseDeleteBookResponse(java.lang.String) -> o
-    993:1004:float getDistanceBetweenInKms(double,double,double,double) -> a
-    1018:1026:li.barter.http.ResponseInfo parseReportBugOrSuggestFeatureResponse(java.lang.String) -> p
-    1042:1043:li.barter.http.BlBadRequestError getErrorResponse(int,java.lang.String) -> b
-    1057:1066:li.barter.http.BlBadRequestError parseErrorResponse(int,java.lang.String) -> c
+    94:186:li.barter.http.ResponseInfo getSuccessResponse(int,java.lang.String) -> a
+    199:199:li.barter.http.ResponseInfo parseReferralResponse(java.lang.String) -> a
+    209:245:li.barter.http.ResponseInfo parseGoogleBookSuggestionsResponse(java.lang.String) -> b
+    259:332:li.barter.http.ResponseInfo parseGoogleBooksBookInfo(java.lang.String) -> c
+    342:342:li.barter.http.ResponseInfo parseAmpqResponse(java.lang.String) -> d
+    353:364:li.barter.http.ResponseInfo parseTributeResponse(java.lang.String) -> e
+    376:442:li.barter.http.ResponseInfo parseUserProfileResponse(java.lang.String) -> f
+    453:468:li.barter.http.ResponseInfo parseTeamResponse(java.lang.String) -> g
+    481:562:li.barter.http.ResponseInfo parseCreateUserResponse(java.lang.String) -> h
+    578:593:java.lang.String parseAndStoreLocation(org.json.JSONObject,boolean) -> a
+    606:638:li.barter.http.ResponseInfo parseSearchBooksResponse(java.lang.String) -> i
+    651:669:li.barter.http.ResponseInfo parseVenuesResponse(java.lang.String) -> j
+    675:677:li.barter.http.ResponseInfo parseBlockUserResponse(java.lang.String) -> k
+    683:685:li.barter.http.ResponseInfo parsePasswordResetResponse(java.lang.String) -> l
+    697:707:li.barter.http.ResponseInfo parseSetUserPreferredLocationResponse(java.lang.String) -> m
+    720:741:void readVenueObjectIntoVenue(org.json.JSONObject,li.barter.models.Venue) -> a
+    753:764:void readTeamObjectIntoTeam(org.json.JSONObject,li.barter.models.Team) -> a
+    783:847:java.lang.String readBookDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> a
+    867:893:java.lang.String readUserDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean,boolean) -> b
+    911:933:java.lang.String readLocationDetailsIntoContentValues(org.json.JSONObject,android.content.ContentValues,boolean) -> a
+    943:978:li.barter.http.ResponseInfo parseCreateBookResponse(java.lang.String) -> n
+    983:984:li.barter.http.ResponseInfo parseUpdateBookResponse(java.lang.String) -> o
+    989:990:li.barter.http.ResponseInfo parseDeleteBookResponse(java.lang.String) -> p
+    1005:1013:float getDistanceBetweenInKms(double,double,double,double) -> a
+    1027:1035:li.barter.http.ResponseInfo parseReportBugOrSuggestFeatureResponse(java.lang.String) -> q
+    1051:1052:li.barter.http.BlBadRequestError getErrorResponse(int,java.lang.String) -> b
+    1066:1075:li.barter.http.BlBadRequestError parseErrorResponse(int,java.lang.String) -> c
 li.barter.http.IBlRequestContract -> li.barter.http.g:
     int getRequestId() -> y
     java.util.Map getExtras() -> x
@@ -24657,13 +24864,13 @@ li.barter.utils.AppConstants$DeviceInfo -> li.barter.d.a$a:
     int mCurrentNetworkType -> d
     android.location.Location mLatestLocation -> e
     li.barter.utils.AppConstants$DeviceInfo[] ENUM$VALUES -> f
-    218:221:void reset() -> a
-    224:224:boolean isNetworkConnected() -> b
-    228:229:void setNetworkConnected(boolean) -> a
-    232:232:int getCurrentNetworkType() -> c
-    236:237:void setCurrentNetworkType(int) -> a
-    240:240:android.location.Location getLatestLocation() -> d
-    244:248:void setLatestLocation(android.location.Location) -> a
+    208:211:void reset() -> a
+    214:214:boolean isNetworkConnected() -> b
+    218:219:void setNetworkConnected(boolean) -> a
+    222:222:int getCurrentNetworkType() -> c
+    226:227:void setCurrentNetworkType(int) -> a
+    230:230:android.location.Location getLatestLocation() -> d
+    234:238:void setLatestLocation(android.location.Location) -> a
     1:1:li.barter.utils.AppConstants$DeviceInfo[] values() -> values
     1:1:li.barter.utils.AppConstants$DeviceInfo valueOf(java.lang.String) -> valueOf
 li.barter.utils.AppConstants$UserInfo -> li.barter.d.a$b:
@@ -24676,20 +24883,19 @@ li.barter.utils.AppConstants$UserInfo -> li.barter.d.a$b:
     java.lang.String mDeviceId -> g
     java.lang.String mFirstName -> h
     li.barter.utils.AppConstants$UserInfo[] ENUM$VALUES -> i
-    109:115:void reset() -> a
-    118:118:java.lang.String getAuthToken() -> b
-    122:127:void setAuthToken(java.lang.String) -> a
-    130:130:java.lang.String getEmail() -> c
-    134:139:void setEmail(java.lang.String) -> b
-    142:142:java.lang.String getId() -> d
-    146:151:void setId(java.lang.String) -> c
-    154:154:java.lang.String getProfilePicture() -> e
-    159:165:void setProfilePicture(java.lang.String) -> d
-    168:169:void setDeviceId(java.lang.String) -> e
-    172:172:java.lang.String getDeviceId() -> f
-    177:183:java.lang.String getAuthHeader() -> g
-    187:188:void setFirstName(java.lang.String) -> f
-    191:191:java.lang.String getFirstName() -> h
+    99:105:void reset() -> a
+    108:108:java.lang.String getAuthToken() -> b
+    112:117:void setAuthToken(java.lang.String) -> a
+    120:120:java.lang.String getEmail() -> c
+    124:129:void setEmail(java.lang.String) -> b
+    132:132:java.lang.String getId() -> d
+    136:141:void setId(java.lang.String) -> c
+    149:155:void setProfilePicture(java.lang.String) -> d
+    158:159:void setDeviceId(java.lang.String) -> e
+    162:162:java.lang.String getDeviceId() -> e
+    167:173:java.lang.String getAuthHeader() -> f
+    177:178:void setFirstName(java.lang.String) -> f
+    181:181:java.lang.String getFirstName() -> g
     1:1:li.barter.utils.AppConstants$UserInfo[] values() -> values
     1:1:li.barter.utils.AppConstants$UserInfo valueOf(java.lang.String) -> valueOf
 li.barter.utils.DateFormatter -> li.barter.d.b:
@@ -24747,7 +24953,7 @@ li.barter.utils.GooglePlusManager$1 -> li.barter.d.d$1:
     1:1:void onPostExecute(java.lang.Object) -> onPostExecute
     1:1:java.lang.Object doInBackground(java.lang.Object[]) -> doInBackground
 li.barter.utils.GooglePlusManager$GooglePlusAuthCallback -> li.barter.d.d$a:
-    void onLogin() -> e
+    void onLogin() -> o
     void onLoginError(java.lang.Exception) -> a
 li.barter.utils.LoadMoreHelper -> li.barter.d.e:
     android.widget.AbsListView$OnScrollListener mExternalOnScrollListener -> a
@@ -24763,9 +24969,9 @@ li.barter.utils.LoadMoreHelper -> li.barter.d.e:
     202:207:void onScrollStateChanged(android.widget.AbsListView,int) -> onScrollStateChanged
     213:252:void onScroll(android.widget.AbsListView,int,int,int) -> onScroll
 li.barter.utils.LoadMoreHelper$LoadMoreCallbacks -> li.barter.d.e$a:
-    void onLoadMore() -> k
-    boolean isLoading() -> l
-    boolean hasLoadedAllItems() -> m
+    void onLoadMore() -> m
+    boolean isLoading() -> n
+    boolean hasLoadedAllItems() -> o
 li.barter.utils.LoadMoreHelper$ScrollDirection -> li.barter.d.e$b:
     li.barter.utils.LoadMoreHelper$ScrollDirection UP -> a
     li.barter.utils.LoadMoreHelper$ScrollDirection DOWN -> b
@@ -24829,12 +25035,17 @@ li.barter.utils.SharedPreferenceHelper -> li.barter.d.i:
     346:350:void clearPreferences(android.content.Context) -> a
     360:372:void removeKeys(android.content.Context,int[]) -> a
 li.barter.utils.Utils -> li.barter.d.j:
-    58:74:void setupNetworkInfo(android.content.Context) -> a
-    83:83:boolean isMainThread() -> a
-    95:98:java.lang.String sha1(java.lang.String) -> a
-    227:230:float distanceBetween(android.location.Location,android.location.Location) -> a
-    238:238:long getCurrentEpochTime() -> b
-    262:262:boolean shouldReportScreenHit(long) -> a
+    67:83:void setupNetworkInfo(android.content.Context) -> a
+    92:92:boolean isMainThread() -> a
+    104:107:java.lang.String sha1(java.lang.String) -> a
+    236:239:float distanceBetween(android.location.Location,android.location.Location) -> a
+    247:247:long getCurrentEpochTime() -> b
+    271:271:boolean shouldReportScreenHit(long) -> a
+    291:312:java.lang.String generateChatId(java.lang.String,java.lang.String) -> a
+    324:333:java.lang.String makeUserFullName(java.lang.String,java.lang.String) -> b
+    346:355:boolean containsChild(android.view.ViewGroup,android.view.View) -> a
+    368:375:android.content.Intent createShareIntent(android.content.Context,java.lang.String) -> a
+    387:396:android.content.Intent createAppShareIntent(android.content.Context) -> b
 li.barter.widgets.CircleImageView -> li.barter.widgets.CircleImageView:
     li.barter.widgets.CircleImageView$CircleTarget mCircleTarget -> a
     int mCornerRadius -> b
