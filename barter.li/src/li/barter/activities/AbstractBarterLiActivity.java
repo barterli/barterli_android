@@ -457,7 +457,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
             DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, null, TableChats.NAME, null, null, true, this);
             DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, null, TableChatMessages.NAME, null, null, true, this);
             SharedPreferenceHelper
-                            .removeKeys(this, R.string.pref_auth_token, R.string.pref_email, R.string.pref_description, R.string.pref_location, R.string.pref_first_name, R.string.pref_last_name, R.string.pref_user_id, R.string.pref_profile_image);
+                            .removeKeys(this, R.string.pref_auth_token, R.string.pref_email, R.string.pref_description, R.string.pref_location, R.string.pref_first_name, R.string.pref_last_name, R.string.pref_user_id, R.string.pref_profile_image, R.string.pref_share_token, R.string.pref_referrer, R.string.pref_referrer_count);
             final Intent disconnectChatIntent = new Intent(this, ChatService.class);
             disconnectChatIntent.setAction(AppConstants.ACTION_DISCONNECT_CHAT);
             startService(disconnectChatIntent);
