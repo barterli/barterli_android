@@ -144,8 +144,9 @@ public class TableChatMessages {
 
                         updateTable = String
                                         .format(Locale.US, SQLConstants.UPDATE, NAME, DatabaseColumns.TIMESTAMP_HUMAN
-                                                        + SQLConstants.EQUALS
-                                                        + idTimestampMap.get(rowId), BaseColumns._ID
+                                                        + SQLConstants.EQUALS_QUOTE
+                                                        + idTimestampMap.get(rowId)
+                                                        + SQLConstants.QUOTE, BaseColumns._ID
                                                         + SQLConstants.EQUALS
                                                         + rowId);
                         Logger.d(TAG, "Update table %s", updateTable);
