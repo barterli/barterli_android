@@ -192,7 +192,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mEmptyView.findViewById(R.id.image_add_graphic)
                         .setOnClickListener(this);
 
-        mBooksAroundMeGridView.setEmptyView(mEmptyView);
 
         mCurPage = SharedPreferenceHelper
                         .getInt(getActivity(), R.string.pref_last_fetched_page, 0);
@@ -566,6 +565,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
+        	if(cursor.getCount()==0)
+        	{
+                mBooksAroundMeGridView.setEmptyView(mEmptyView);
+        	}
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
             {
                 mBooksAroundMeAdapter.swapCursor(cursor);
