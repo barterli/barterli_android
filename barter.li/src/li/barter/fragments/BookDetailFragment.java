@@ -218,6 +218,11 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
      * @param bookTitle
      */
     private void updateShareIntent(String bookTitle) {
+        
+        if(mShareActionProvider == null) {
+            return;
+        }
+        
         if (TextUtils.isEmpty(bookTitle)) {
             mShareActionProvider.setShareIntent(Utils
                             .createAppShareIntent(getActivity()));

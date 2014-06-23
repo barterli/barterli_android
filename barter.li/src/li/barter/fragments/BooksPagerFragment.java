@@ -390,6 +390,10 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      */
     private void updateShareIntent(String bookTitle) {
 
+        if(mShareActionProvider == null) {
+            return;
+        }
+        
         if (TextUtils.isEmpty(bookTitle)) {
             mShareActionProvider.setShareIntent(Utils.createAppShareIntent(getActivity()));
             return;
