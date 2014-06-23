@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -48,6 +49,7 @@ import li.barter.activities.HomeActivity;
 import li.barter.adapters.SelectLocationAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.fragments.dialogs.AddSingleEditTextDialogFragment;
+import li.barter.fragments.dialogs.EnableLocationDialogFragment;
 import li.barter.http.BlRequest;
 import li.barter.http.FoursquareCategoryBuilder;
 import li.barter.http.HttpConstants;
@@ -105,6 +107,8 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     private View                            mOverlayView;
 
     private boolean                         mIsOverlayShown;
+    
+    private EnableLocationDialogFragment mEnableLocationDialogFragment;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -119,6 +123,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         mSelectLocationAdapter = new SelectLocationAdapter(getActivity(), null, true);
         mVenueListView.setAdapter(mSelectLocationAdapter);
         mVenueListView.setOnItemClickListener(this);
+        
+        mEnableLocationDialogFragment = (EnableLocationDialogFragment) getFragmentManager()
+                .findFragmentByTag(FragmentTags.DIALOG_ENABLE_LOCATION);
 
         mEmptyView = contentView.findViewById(R.id.empty_view);
         mEmptyView.setVisibility(View.GONE);
@@ -148,6 +155,21 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         setActionBarDrawerToggleEnabled(false);
         return contentView;
     }
+    
+    /**
+     * Show the dialog for the user to add his name, in case it's not already
+     * added
+     */
+    protected void showEnableLocationDialog() {
+
+        mEnableLocationDialogFragment = new EnableLocationDialogFragment();
+        mEnableLocationDialogFragment
+                        .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.enable_location, R.string.enable_location_message, R.string.enable, R.string.cancel, 0, getFragmentManager(), true, FragmentTags.DIALOG_ENABLE_LOCATION);
+
+    }
+    
+
+    
     
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -213,6 +235,12 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     private void fetchVenuesForLocation(final Location location,
                     final int radius) {
 
+    	if(location.getLatitude()==0.0)
+    	{
+    		showEnableLocationDialog();
+    	}
+    	else
+    	{
         final BlRequest request = new BlRequest(Method.GET, HttpConstants.getFoursquareUrl()
                         + ApiEndpoints.FOURSQUARE_VENUES, null, mVolleyCallbacks);
         request.setRequestId(RequestId.FOURSQUARE_VENUES);
@@ -245,6 +273,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
         request.setParams(params);
         addRequestToQueue(request, true, 0, false);
+    	}
     }
 
     /**
@@ -473,6 +502,11 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                                         .equals(dialog)) {
             return true;
         }
+        else if ((mEnableLocationDialogFragment != null)
+                    && mEnableLocationDialogFragment.getDialog()
+                                    .equals(dialog)) {
+        return true;
+    }
         return false;
     }
 
@@ -503,6 +537,18 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                 }
             }
         }
+        else if ((mEnableLocationDialogFragment != null)
+                && mEnableLocationDialogFragment.getDialog()
+                                .equals(dialog)) {
+
+    if (which == DialogInterface.BUTTON_POSITIVE) { // enable location
+        Intent locationOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(locationOptionsIntent);
+
+    } else if (which == DialogInterface.BUTTON_NEGATIVE) { // cancel
+        dialog.cancel();
+    }
+}
     }
 
 }
