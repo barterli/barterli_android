@@ -45,14 +45,19 @@ public class BooksGridAdapter extends CursorAdapter {
     private static final int    VIEW_BOOK    = 0;
     private static final int    VIEW_GRAPHIC = 1;
 
+    private boolean             mAddGraphicEnabled;
+
     private int                 mCount;
 
     /**
      * @param context A reference to the {@link Context}
+     * @param addGraphicEnabled Whether the addGraphic should be added to the
+     *            end of the adapter data set
      */
-    public BooksGridAdapter(final Context context) {
+    public BooksGridAdapter(final Context context, final boolean addGraphicEnabled) {
         super(context, null, 0);
         mCount = 0;
+        mAddGraphicEnabled = addGraphicEnabled;
     }
 
     @Override
@@ -63,23 +68,23 @@ public class BooksGridAdapter extends CursorAdapter {
     @Override
     public void notifyDataSetChanged() {
 
-        if ((mCursor == null)||mCursor.getCount()==0) {
+        if ((mCursor == null) || mCursor.getCount() == 0) {
             mCount = 0;
-        }
-        else {
-            mCount = mCursor.getCount() + 1;//Empty graphic
+        } else {
+            mCount = mCursor.getCount() + (mAddGraphicEnabled ? 1 : 0);//Empty graphic
         }
         super.notifyDataSetChanged();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position == (mCount - 1) ? VIEW_GRAPHIC : VIEW_BOOK;
+        return (mAddGraphicEnabled && (position == (mCount - 1))) ? VIEW_GRAPHIC
+                        : VIEW_BOOK;
     }
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return mAddGraphicEnabled ? 2 : 1;
     }
 
     @Override
