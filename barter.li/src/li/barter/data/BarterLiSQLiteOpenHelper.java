@@ -155,7 +155,8 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
                         .append(DatabaseColumns.TIMESTAMP_EPOCH)
                         .append(SQLConstants.DESCENDING).toString();
         Logger.d(TAG, "Order by %s", orderBy);
-        final Cursor cursor = db.query(false, TableChatMessages.NAME, null, null, null, null, null, orderBy, null);
+        final Cursor cursor = db
+                        .query(false, TableChatMessages.NAME, null, null, null, null, null, orderBy, null);
 
         if (cursor.getCount() > 0) {
 
@@ -228,7 +229,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
             if (chats.size() > 0) {
 
                 for (String eachChat : chats.keySet()) {
-                    insert(TableChats.NAME, null, chats.get(eachChat), true);
+                    db.insert(TableChats.NAME, null, chats.get(eachChat));
                 }
             }
 
