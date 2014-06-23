@@ -150,6 +150,12 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private SearchView                   mSearchView;
 
     private View                         mEmptyView;
+    
+    /**
+     * Flag to indigate pull to refresh so as to disable mEmptyView set for 
+     * the list
+     */
+    private boolean						 mFromPullToRefresh;
 
     /**
      * {@link PullToRefreshLayout} reference
@@ -565,9 +571,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
-        	if(cursor.getCount()==0)
+        	if((cursor.getCount()==0)&&!mFromPullToRefresh)
         	{
                 mBooksAroundMeGridView.setEmptyView(mEmptyView);
+        	}
+        	
+        	if(mFromPullToRefresh)
+        	{
+        		mFromPullToRefresh=false;
         	}
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
             {
@@ -768,6 +779,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     public void onRefreshStarted(View view) {
 
         if (view.getId() == R.id.grid_books_around_me) {
+        	mFromPullToRefresh=true;
             reloadNearbyBooks();
         }
     }
@@ -776,6 +788,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * Reloads nearby books
      */
     private void reloadNearbyBooks() {
+    	
+    	
         mSearchView.setQuery(null, false);
         final Bundle cookie = new Bundle(2);
         cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);

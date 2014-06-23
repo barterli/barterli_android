@@ -63,9 +63,10 @@ public class BooksGridAdapter extends CursorAdapter {
     @Override
     public void notifyDataSetChanged() {
 
-        if (mCursor == null) {
+        if ((mCursor == null)||mCursor.getCount()==0) {
             mCount = 0;
-        } else {
+        }
+        else {
             mCount = mCursor.getCount() + 1;//Empty graphic
         }
         super.notifyDataSetChanged();
