@@ -850,17 +850,6 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
     }
 
-    /**
-     * Workaround for nav drawer indicator disappearing when the search view is
-     * collapsed
-     */
-    public void resetUpState() {
-        if (mIsActionBarNavDrawerToggleEnabled) {
-            getActionBar().setDisplayShowHomeEnabled(true);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
     @Override
     protected void onPostCreate(final Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
