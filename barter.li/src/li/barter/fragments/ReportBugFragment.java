@@ -75,6 +75,7 @@ public class ReportBugFragment extends AbstractBarterLiFragment implements
                         .findViewById(R.id.radio_suggestfeature);
         
         mReportSuggestionSelect.setOnCheckedChangeListener(this);
+        mReportSuggestionSelect.setChecked(true);
         mReportBugButton = (Button) view.findViewById(R.id.button_report_bug);
         mReportBugButton.setOnClickListener(this);
         return view;
