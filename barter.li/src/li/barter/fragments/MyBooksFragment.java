@@ -98,7 +98,7 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
             }
         }
 
-        mBooksAroundMeAdapter = new BooksGridAdapter(getActivity());
+        mBooksAroundMeAdapter = new BooksGridAdapter(getActivity(), false);
         mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
 
         mBooksAroundMeGridView.setOnItemClickListener(this);

@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.adapters.BooksGridAdapter;
@@ -185,7 +186,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                         .listener(this).setup(mPullToRefreshLayout);
         LoadMoreHelper.init(this).on(mBooksAroundMeGridView);
 
-        mBooksAroundMeAdapter = new BooksGridAdapter(getActivity());
+        mBooksAroundMeAdapter = new BooksGridAdapter(getActivity(), true);
         mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
         mBooksAroundMeGridView.setOnItemClickListener(this);
         mBooksAroundMeGridView.setVerticalScrollBarEnabled(false);
@@ -530,6 +531,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         super.onPostExecute(request);
         if (request.getRequestId() == RequestId.SEARCH_BOOKS) {
             mIsLoading = false;
+            mFromPullToRefresh = false;
             mPullToRefreshLayout.setRefreshComplete();
         }
     }
@@ -670,7 +672,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (token == QueryTokens.DELETE_BOOKS_SEARCH_RESULTS) {
 
             assert (cookie != null);
-
+            DBInterface.notifyChange(TableSearchBooks.NAME);
             mCurPage = 0;
             mHasLoadedAllItems = false;
             final Bundle args = (Bundle) cookie;
@@ -680,6 +682,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             assert (cookie != null);
 
+            DBInterface.notifyChange(TableSearchBooks.NAME);
             final Bundle args = (Bundle) cookie;
             fetchBooksAroundMeForSearch((Location) args.getParcelable(Keys.LOCATION), 50, args
                             .getString(Keys.SEARCH));
@@ -772,7 +775,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
         cookie.putString(Keys.SEARCH, query);
         //   Delete the current search results before parsing the old ones
-        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT, cookie, TableSearchBooks.NAME, null, null, true, BooksAroundMeFragment.this);
+        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT, cookie, TableSearchBooks.NAME, null, null, false, BooksAroundMeFragment.this);
 
     }
 
@@ -794,13 +797,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mSearchView.setQuery(null, false);
         final Bundle cookie = new Bundle(2);
         cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
-        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
+        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, false, this);
 
     }
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
         reloadNearbyBooks();
+        ((AbstractBarterLiActivity) getActivity()).resetUpState();
         return true;
     }
 
