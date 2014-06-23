@@ -22,15 +22,18 @@ import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ShareActionProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import li.barter.R;
@@ -51,12 +54,13 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
+import li.barter.utils.Utils;
 
 /**
  * @author Anshul Kamboj Fragment for Paging Books Around Me. Also contains a
  *         Profile that the user can chat directly with the owner
  */
-
 
 public class BooksPagerFragment extends AbstractBarterLiFragment implements
                 LoaderCallbacks<Cursor>, OnPageChangeListener,
@@ -86,11 +90,12 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     private int                  mBookPosition;
 
     /**
-     * These arrays holds bookids and userids for all the books in the pager to
-     * map them
+     * These arrays holds bookids, userids and book titles for all the books in
+     * the pager to map them
      */
     private ArrayList<String>    mIdArray                = new ArrayList<String>();
     private ArrayList<String>    mUserIdArray            = new ArrayList<String>();
+    private ArrayList<String>    mBookTitleArray         = new ArrayList<String>();
 
     /**
      * Used to provide a slide up UI companent to place the user's profile
@@ -107,12 +112,13 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      * Receiver for chat button click events
      */
     private ChatButtonReceiver   mChatButtonReceiver     = new ChatButtonReceiver();
-    
+
     /**
      * for loading the owned user menu i.e with edit options
      */
-    private boolean				mOwnedByUser=false;
-    
+    private boolean              mOwnedByUser            = false;
+
+    private ShareActionProvider  mShareActionProvider;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -145,7 +151,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         }
 
         loadBookSearchResults();
-        
+
         return view;
     }
 
@@ -167,14 +173,23 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        
-       if(mOwnedByUser) {
-            inflater.inflate(R.menu.menu_profile_show, menu);
+        if (mOwnedByUser) {
+            inflater.inflate(R.menu.menu_logged_in_book_detail, menu);
+        } else {
+            inflater.inflate(R.menu.menu_book_detail, menu);
         }
 
+        final MenuItem menuItem = menu.findItem(R.id.action_share);
+        mShareActionProvider = (ShareActionProvider) menuItem
+                        .getActionProvider();
+
+        if (mBookTitleArray != null && mBookTitleArray.size() > 0) {
+            updateShareIntent(mBookTitleArray.get(mBookDetailPager
+                            .getCurrentItem()));
+        } else {
+            updateShareIntent(null);
+        }
     }
-    
-   
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -185,18 +200,17 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
                 return true;
             }
 
-            case R.id.action_edit_profile: {
+            case R.id.action_edit_book: {
 
                 final int currentItem = mBookDetailPager.getCurrentItem();
                 final Bundle args = new Bundle(3);
                 args.putString(Keys.ID, mIdArray.get(currentItem));
                 args.putBoolean(Keys.EDIT_MODE, true);
                 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-                
-    			loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-    					.instantiate(getActivity(), AddOrEditBookFragment.class
-    							.getName(), args), FragmentTags.BS_EDIT_BOOK, true, FragmentTags.BS_BOOKS_AROUND_ME);
-    			
+
+                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), AddOrEditBookFragment.class
+                                                .getName(), args), FragmentTags.BS_EDIT_BOOK, true, FragmentTags.BS_BOOKS_AROUND_ME);
 
                 return true;
             }
@@ -211,7 +225,8 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      * Starts the loader for book search results
      */
     private void loadBookSearchResults() {
-        getLoaderManager().restartLoader(Loaders.SEARCH_BOOKS_ON_PAGER, null, this);
+        getLoaderManager()
+                        .restartLoader(Loaders.SEARCH_BOOKS_ON_PAGER, null, this);
     }
 
     public class BookPageAdapter extends FragmentStatePagerAdapter {
@@ -269,9 +284,9 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onSuccess(int requestId, IBlRequestContract request,
                     ResponseInfo response) {
-    	 
+
     }
-    
+
     @Override
     public void onBadRequestError(int requestId, IBlRequestContract request,
                     int errorCode, String errorMessage,
@@ -296,12 +311,15 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             mBookCounter = cursor.getCount();
             mIdArray.ensureCapacity(mBookCounter);
             mUserIdArray.ensureCapacity(mBookCounter);
+            mBookTitleArray.ensureCapacity(mBookCounter);
             while (cursor.moveToNext()) {
-               
+
                 mIdArray.add(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.ID)));
                 mUserIdArray.add(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.USER_ID)));
+                mBookTitleArray.add(cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.TITLE)));
 
             }
 
@@ -318,12 +336,12 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             if (mBookPosition == 0 && mIdArray.size() > 0) {
                 onPageSelected(mBookPosition);
             }
-            
+
             /*
-             * this has moved from oncreateview to here to prevent the crash on oncreateoptionsmenu
-             * - so the options menu was created before creating the pager object.
+             * this has moved from oncreateview to here to prevent the crash on
+             * oncreateoptionsmenu - so the options menu was created before
+             * creating the pager object.
              */
-            
 
         }
 
@@ -351,20 +369,46 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         if (mUserIdArray.size() > 0
                         && mUserIdArray.get(position)
                                         .equals(UserInfo.INSTANCE.getId())) {
-           mOwnedByUser=true;
-        }
-        else
-        {
-        	 mOwnedByUser=false;
+            mOwnedByUser = true;
+        } else {
+            mOwnedByUser = false;
         }
         getActivity().invalidateOptionsMenu();
-        
+        updateShareIntent(mBookTitleArray.get(position));
         final ProfileFragment fragment = (ProfileFragment) getChildFragmentManager()
                         .findFragmentByTag(FragmentTags.USER_PROFILE);
 
         if (fragment != null) {
             fragment.setUserId(mUserIdArray.get(position));
         }
+    }
+
+    /**
+     * Updates the share intent
+     * 
+     * @param bookTitle
+     */
+    private void updateShareIntent(String bookTitle) {
+
+        if (TextUtils.isEmpty(bookTitle)) {
+            mShareActionProvider.setShareIntent(Utils.createAppShareIntent(getActivity()));
+            return;
+        }
+
+        final String referralId = SharedPreferenceHelper
+                        .getString(getActivity(), R.string.pref_share_token);
+        String appShareUrl = getString(R.string.book_share_message, bookTitle)
+                        .concat(AppConstants.PLAY_STORE_LINK);
+
+        if (!TextUtils.isEmpty(referralId)) {
+            appShareUrl = appShareUrl
+                            .concat(String.format(Locale.US, AppConstants.REFERRER_FORMAT, referralId));
+        }
+
+        final Intent shareIntent = Utils
+                        .createShareIntent(getActivity(), appShareUrl);
+
+        mShareActionProvider.setShareIntent(shareIntent);
     }
 
     @Override
@@ -389,19 +433,21 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     public void onPanelAnchored(View panel) {
 
     }
-    
+
     @Override
     public void onDialogClick(DialogInterface dialog, int which) {
-     ((ProfileFragment)getChildFragmentManager()
-    	        .findFragmentByTag(FragmentTags.USER_PROFILE)).onDialogClick(dialog, which);
+        ((ProfileFragment) getChildFragmentManager()
+                        .findFragmentByTag(FragmentTags.USER_PROFILE))
+                        .onDialogClick(dialog, which);
     }
-    
+
     @Override
     public boolean willHandleDialog(DialogInterface dialog) {
-    	// TODO Auto-generated method stub
-    	 return ((ProfileFragment)getChildFragmentManager()
-        .findFragmentByTag(FragmentTags.USER_PROFILE)).willHandleDialog(dialog);
-    	//return super.willHandleDialog(dialog);
+        // TODO Auto-generated method stub
+        return ((ProfileFragment) getChildFragmentManager()
+                        .findFragmentByTag(FragmentTags.USER_PROFILE))
+                        .willHandleDialog(dialog);
+        //return super.willHandleDialog(dialog);
     }
 
     /**

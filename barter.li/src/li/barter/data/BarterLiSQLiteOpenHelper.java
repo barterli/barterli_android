@@ -147,7 +147,7 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
     private void migrateChats(SQLiteDatabase db) {
 
         //Delete all the old chats
-        delete(TableChats.NAME, null, null, false);
+        db.delete(TableChats.NAME, null, null);
 
         //Build the chats from the chat messages
         final String orderBy = new StringBuilder(DatabaseColumns.CHAT_ID)

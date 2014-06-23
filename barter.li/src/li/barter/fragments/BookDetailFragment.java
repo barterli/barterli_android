@@ -18,6 +18,7 @@ package li.barter.fragments;
 
 import com.squareup.picasso.Picasso;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,7 +32,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
+
+import java.util.Locale;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
@@ -45,6 +49,8 @@ import li.barter.data.TableUserBooks;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
+import li.barter.utils.SharedPreferenceHelper;
+import li.barter.utils.Utils;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
@@ -70,6 +76,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
     private String              mId;
     private String              mUserId;
+    private String              mBookTitle;
     private boolean             mFromSearch;
     private boolean             mOwnedByUser;
 
@@ -82,8 +89,10 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private final String        mBookSelection = DatabaseColumns.ID
                                                                + SQLConstants.EQUALS_ARG;
 
-    public static BookDetailFragment newInstance(String userId,
-                    String id, boolean fromSearch) {
+    private ShareActionProvider mShareActionProvider;
+
+    public static BookDetailFragment newInstance(String userId, String id,
+                    boolean fromSearch) {
         final BookDetailFragment f = new BookDetailFragment();
 
         Bundle args = new Bundle();
@@ -193,9 +202,42 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
 
         if (mOwnedByUser) {
-            Logger.v(TAG, "Inflating Menu");
-            inflater.inflate(R.menu.menu_profile_show, menu);
+            inflater.inflate(R.menu.menu_logged_in_book_detail, menu);
+        } else {
+            inflater.inflate(R.menu.menu_book_detail, menu);
         }
+
+        final MenuItem menuItem = menu.findItem(R.id.action_share);
+        mShareActionProvider = (ShareActionProvider) menuItem
+                        .getActionProvider();
+        updateShareIntent(mBookTitle);
+
+    }
+
+    /**
+     * @param bookTitle
+     */
+    private void updateShareIntent(String bookTitle) {
+        if (TextUtils.isEmpty(bookTitle)) {
+            mShareActionProvider.setShareIntent(Utils
+                            .createAppShareIntent(getActivity()));
+            return;
+        }
+
+        final String referralId = SharedPreferenceHelper
+                        .getString(getActivity(), R.string.pref_share_token);
+        String appShareUrl = getString(R.string.book_share_message, bookTitle)
+                        .concat(AppConstants.PLAY_STORE_LINK);
+
+        if (!TextUtils.isEmpty(referralId)) {
+            appShareUrl = appShareUrl
+                            .concat(String.format(Locale.US, AppConstants.REFERRER_FORMAT, referralId));
+        }
+
+        final Intent shareIntent = Utils
+                        .createShareIntent(getActivity(), appShareUrl);
+
+        mShareActionProvider.setShareIntent(shareIntent);
     }
 
     @Override
@@ -207,7 +249,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 return true;
             }
 
-            case R.id.action_edit_profile: {
+            case R.id.action_edit_book: {
                 final Bundle args = new Bundle(2);
                 args.putString(Keys.ID, mId);
                 args.putBoolean(Keys.EDIT_MODE, true);
@@ -260,6 +302,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER);
+    }
+
+    @Override
     public void onQueryComplete(final int token, final Object cookie,
                     final Cursor cursor) {
 
@@ -269,8 +317,9 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             if (cursor.moveToFirst()) {
                 mIsbnTextView.setText(cursor.getString(cursor
                                 .getColumnIndex(DatabaseColumns.ISBN_10)));
-                mTitleTextView.setText(cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.TITLE)));
+                mBookTitle = cursor.getString(cursor
+                                .getColumnIndex(DatabaseColumns.TITLE));
+                mTitleTextView.setText(mBookTitle);
                 mTitleTextView.setSelected(true);
 
                 mAuthorTextView.setText(cursor.getString(cursor
@@ -315,7 +364,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                     setBarterCheckboxes(barterType);
                 }
             }
-
+            updateShareIntent(mBookTitle);
             cursor.close();
         }
 

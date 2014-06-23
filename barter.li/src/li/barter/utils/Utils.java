@@ -16,6 +16,8 @@
 
 package li.barter.utils;
 
+import com.google.android.gms.internal.cn;
+
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -45,6 +47,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 
+import li.barter.R;
+import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.utils.AppConstants.DeviceInfo;
 
@@ -330,23 +334,66 @@ public class Utils {
     }
 
     /**
-     * Test whether a viewgroup already contains a specific instance of a child view
+     * Test whether a viewgroup already contains a specific instance of a child
+     * view
+     * 
      * @param viewGroup
      * @param view
      * @return
      */
     public static boolean containsChild(ViewGroup viewGroup, View view) {
-        
+
         boolean contains = false;
-        
-        for(int i = 0; i < viewGroup.getChildCount(); i++) {
-            
-            if(viewGroup.getChildAt(i).equals(view)) {
+
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+
+            if (viewGroup.getChildAt(i).equals(view)) {
                 contains = true;
                 break;
             }
         }
         return contains;
+    }
+
+    /**
+     * Creates a share intent
+     * 
+     * @param context
+     * @param shareText The text to share
+     * @return
+     */
+    public static Intent createShareIntent(Context context,
+                    final String shareText) {
+
+        final Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, context
+                        .getString(R.string.subject));
+        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
+
+        shareIntent.setType("text/plain");
+
+        return shareIntent;
+    }
+
+    /**
+     * Creates an intent for sharing the app
+     * 
+     * @param context
+     * @return
+     */
+    public static final Intent createAppShareIntent(Context context) {
+
+        final String referralId = SharedPreferenceHelper
+                        .getString(context, R.string.pref_share_token);
+        String appShareUrl = context.getString(R.string.app_share_message)
+                        .concat(AppConstants.PLAY_STORE_LINK);
+
+        if (!TextUtils.isEmpty(referralId)) {
+            appShareUrl = appShareUrl
+                            .concat(String.format(Locale.US, AppConstants.REFERRER_FORMAT, referralId));
+        }
+
+        return createShareIntent(context, appShareUrl);
     }
 
 }

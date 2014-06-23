@@ -378,21 +378,9 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
                     @Override
                     public void run() {
-                        final String referralId = SharedPreferenceHelper
-                                        .getString(AbstractBarterLiActivity.this, R.string.pref_share_token);
-                        String appShareUrl = getString(R.string.app_share_message)
-                                        .concat(AppConstants.PLAY_STORE_LINK);
 
-                        if (!TextUtils.isEmpty(referralId)) {
-                            appShareUrl = appShareUrl
-                                            .concat(String.format(Locale.US, AppConstants.REFERRER_FORMAT, referralId));
-                        }
-
-                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                        shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.subject));
-                        shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, appShareUrl);
-
-                        shareIntent.setType("text/plain");
+                        Intent shareIntent = Utils
+                                        .createAppShareIntent(AbstractBarterLiActivity.this);
                         try {
                             startActivity(Intent
                                             .createChooser(shareIntent, getString(R.string.share_via)));

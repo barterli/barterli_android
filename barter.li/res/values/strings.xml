@@ -87,7 +87,7 @@
     <string name="scan_barcode_button_label">Scan ISBN BarCode</string>
     <string name="add_new_book_label">Manual Entry</string>
     <string name="search_for_books">Search for books</string>
-    <string name="share">share</string>
+    <string name="share">Share</string>
     <string name="set_sell_hint">Set Price (eg $10)</string>
     <string name="set_lend_hint">Set Lend Price (eg $10)</string>
 
@@ -198,8 +198,9 @@
     </string-array>
 
     <string name="tribute_message">A tribute to Aaron Swartz for inspiring us with his passion</string>
-    <string name="app_share_message">Enter the local book community. Download the android app - </string>
-    <string name="subject">Get access to barter.li</string>
+    <string name="app_share_message">Enter the local book community. Download the android app at &#160;</string>
+    <string name="book_share_message">Found the book, %s, shared on barter.li! Get the app at &#160;</string>
+    <string name="subject">Check this out!</string>
 
     <string-array name="months">
         <item>January</item>
