@@ -350,6 +350,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                                     request.addExtra(Keys.ID, dbRowId);
                                     request.setTag(TAG);
 
+                                    request.getRetryPolicy().setMaxRetries(0); //Don't retry chat requests
+
                                     //Post on main thread
                                     mHandler.post(new Runnable() {
 
