@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginLeft="@dimen/margin_xx_small"
-        android:layout_marginRight="@dimen/margin_x_small"
+        android:layout_marginRight="@dimen/margin_xxxx_small"
         android:background="@drawable/msg_in_bubble"
         android:orientation="vertical" >
 
