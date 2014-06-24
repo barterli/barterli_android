@@ -16,8 +16,6 @@
 
 package li.barter.http;
 
-import com.google.android.gms.internal.im;
-
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,7 +30,6 @@ import android.text.TextUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import li.barter.R;
 import li.barter.data.DBInterface;
 import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
@@ -45,7 +42,6 @@ import li.barter.http.HttpConstants.RequestId;
 import li.barter.models.Team;
 import li.barter.models.Venue;
 import li.barter.utils.AppConstants;
-import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
@@ -980,6 +976,7 @@ public class HttpResponseParser {
 
     private ResponseInfo parseUpdateBookResponse(final String response)
                     throws JSONException {
+        //TODO Parse update book response
         final ResponseInfo responseInfo = new ResponseInfo();
         return responseInfo;
     }
