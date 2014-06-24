@@ -147,7 +147,7 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
 
 	        try {
 	            requestObject.put(HttpConstants.EMAIL, email);
-	            requestObject.put(HttpConstants.PASSWORD, email);
+	            requestObject.put(HttpConstants.PASSWORD, password);
 	            requestObject.put(HttpConstants.TOKEN, token);
 	    		final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
 	   				 + ApiEndpoints.PASSWORD_RESET, requestObject.toString(), mVolleyCallbacks);
