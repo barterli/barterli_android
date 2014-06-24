@@ -246,7 +246,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
      */
 
     private void loadPreferredLocation() {
-        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
+        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE, getTaskTag(), null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
                         + SQLConstants.EQUALS_ARG, new String[] {
             SharedPreferenceHelper
                             .getString(getActivity(), R.string.pref_location)
@@ -277,13 +277,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE);
-    }
-
-    @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 

@@ -63,7 +63,8 @@ public class DBInterface {
     /**
      * Async method for inserting rows into the database
      * 
-     * @param token Unique id for this operation
+     * @param taskId Unique id for this operation
+     * @param tag A tag for task cancellation
      * @param cookie Any extra object to be passed into the query to be returned
      *            when the query completes. Can be <code>null</code>
      * @param table The table to insert into
@@ -77,13 +78,14 @@ public class DBInterface {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    public static void insertAsync(final int token, final Object cookie,
-                    final String table, final String nullColumnHack,
-                    final ContentValues values, final boolean autoNotify,
+    public static void insertAsync(final int taskId, final Object tag,
+                    final Object cookie, final String table,
+                    final String nullColumnHack, final ContentValues values,
+                    final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
         logIfNotOnMainThread();
         ASYNC_QUERY_HANDLER
-                        .startInsert(token, cookie, table, nullColumnHack, values, autoNotify, callback);
+                        .startInsert(taskId, tag, cookie, table, nullColumnHack, values, autoNotify, callback);
     }
 
     /**
@@ -111,6 +113,7 @@ public class DBInterface {
      * Asynchronously updates the table with the given data
      * 
      * @param A unique id for this operation
+     * @param tag A tag for cancelling the request
      * @param cookie Any extra object to be passed into the query to be returned
      *            when the query completes. Can be <code>null</code>
      * @param table The table to update
@@ -121,14 +124,14 @@ public class DBInterface {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    public static void updateAsync(final int token, final Object cookie,
-                    final String table, final ContentValues values,
-                    final String selection, final String[] selectionArgs,
-                    final boolean autoNotify,
+    public static void updateAsync(final int taskId, final Object tag,
+                    final Object cookie, final String table,
+                    final ContentValues values, final String selection,
+                    final String[] selectionArgs, final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
         logIfNotOnMainThread();
         ASYNC_QUERY_HANDLER
-                        .startUpdate(token, cookie, table, values, selection, selectionArgs, autoNotify, callback);
+                        .startUpdate(taskId, tag, cookie, table, values, selection, selectionArgs, autoNotify, callback);
     }
 
     /**
@@ -152,7 +155,8 @@ public class DBInterface {
     /**
      * Asynchronously delete rows from the database
      * 
-     * @param token A unique id for this operation
+     * @param taskId A unique id for this operation
+     * @param tag A tag for tagging the task
      * @param cookie Any extra object to be passed into the query to be returned
      *            when the query completes. Can be <code>null</code>
      * @param table The table to delete from
@@ -163,14 +167,15 @@ public class DBInterface {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    public static void deleteAsync(final int token, final Object cookie,
-                    final String table, final String selection,
-                    final String[] selectionArgs, final boolean autoNotify,
+    public static void deleteAsync(final int taskId, final Object tag,
+                    final Object cookie, final String table,
+                    final String selection, final String[] selectionArgs,
+                    final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
         logIfNotOnMainThread();
         ASYNC_QUERY_HANDLER
-                        .startDelete(token, cookie, table, selection, selectionArgs, autoNotify, callback);
+                        .startDelete(taskId, tag, cookie, table, selection, selectionArgs, autoNotify, callback);
     }
 
     /**
@@ -202,7 +207,8 @@ public class DBInterface {
      * Asynchronously query the given table, returning a Cursor over the result
      * set.
      * 
-     * @param token A unique id for this query
+     * @param taskId A unique id for this query
+     * @param tag An object for tagging tasks
      * @param cookie Any extra object to be passed into the query to be returned
      *            when the query completes. Can be <code>null</code>
      * @param distinct <code>true</code> if dataset should be unique
@@ -217,16 +223,17 @@ public class DBInterface {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    public static void queryAsync(final int token, final Object cookie,
-                    final boolean distinct, final String table,
-                    final String[] columns, final String selection,
-                    final String[] selectionArgs, final String groupBy,
-                    final String having, final String orderBy,
-                    final String limit, final AsyncDbQueryCallback callback) {
+    public static void queryAsync(final int taskId, final Object tag,
+                    final Object cookie, final boolean distinct,
+                    final String table, final String[] columns,
+                    final String selection, final String[] selectionArgs,
+                    final String groupBy, final String having,
+                    final String orderBy, final String limit,
+                    final AsyncDbQueryCallback callback) {
 
         logIfNotOnMainThread();
         ASYNC_QUERY_HANDLER
-                        .startQuery(token, cookie, distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, callback);
+                        .startQuery(taskId, tag, cookie, distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit, callback);
 
     }
 
@@ -242,12 +249,12 @@ public class DBInterface {
     }
 
     /**
-     * Cancels any pending async db operations
+     * Cancels any pending async db operations with a particular tag
      * 
-     * @param token The token to cancel
+     * @param tag The tag for cancellation
      */
-    public static void cancelAsyncQuery(final int token) {
-        ASYNC_QUERY_HANDLER.cancel(token);
+    public static void cancelAll(final Object tag) {
+        ASYNC_QUERY_HANDLER.cancel(tag);
     }
 
     /**
@@ -260,41 +267,41 @@ public class DBInterface {
         /**
          * Method called when an asynchronous insert operation is done
          * 
-         * @param token The token passed into the async mthod
+         * @param taskId The token passed into the async mthod
          * @param cookie Any extra object passed into the query.
          * @param insertRowId The inserted row id, or -1 if it failed
          */
-        public void onInsertComplete(final int token, final Object cookie,
+        public void onInsertComplete(final int taskId, final Object cookie,
                         final long insertRowId);
 
         /**
          * Method called when an asynchronous delete operation is done
          * 
-         * @param token The token passed into the async method
+         * @param taskId The token passed into the async method
          * @param cookie Any extra object passed into the query.
          * @param deleteCount The number of rows deleted
          */
-        public void onDeleteComplete(final int token, final Object cookie,
+        public void onDeleteComplete(final int taskId, final Object cookie,
                         final int deleteCount);
 
         /**
          * Method called when an asynchronous update operation is done
          * 
-         * @param token The token passed into the async method
+         * @param taskId The token passed into the async method
          * @param cookie Any extra object passed into the query.
          * @param updateCount The number of rows updated
          */
-        public void onUpdateComplete(final int token, final Object cookie,
+        public void onUpdateComplete(final int taskId, final Object cookie,
                         final int updateCount);
 
         /**
          * Method called when an asyncronous query operation is done
          * 
-         * @param token The token passed into the async method
+         * @param taskId The token passed into the async method
          * @param cookie Any extra object passed into the query.
          * @param cursor The {@link Cursor} read from the database
          */
-        public void onQueryComplete(final int token, final Object cookie,
+        public void onQueryComplete(final int taskId, final Object cookie,
                         final Cursor cursor);
     }
 

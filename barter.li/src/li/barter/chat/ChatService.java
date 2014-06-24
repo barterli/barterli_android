@@ -533,11 +533,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         final ContentValues values = new ContentValues(1);
         values.put(DatabaseColumns.CHAT_STATUS, ChatStatus.FAILED);
 
-        DBInterface.updateAsync(QueryTokens.UPDATE_MESSAGE_STATUS, null, TableChatMessages.NAME, values, MESSAGE_SELECT_BY_ID, new String[] {
+        DBInterface.updateAsync(QueryTokens.UPDATE_MESSAGE_STATUS, hashCode(), null, TableChatMessages.NAME, values, MESSAGE_SELECT_BY_ID, new String[] {
             String.valueOf(messageDbId)
         }, true, this);
     }
-
+    
     @Override
     public void onDisconnect(final boolean manual) {
         if (!manual) {

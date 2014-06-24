@@ -21,9 +21,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import li.barter.BarterLiApplication;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -51,7 +51,7 @@ class BarterLiAsyncQueryHandler {
     /**
      * Map of tokens to async tasks
      */
-    private final Map<Integer, QueryTask> mTasks;
+    private final Queue<QueryTask> mTaskQueue;
 
     BarterLiAsyncQueryHandler() {
 
@@ -63,13 +63,14 @@ class BarterLiAsyncQueryHandler {
          */
 
         //http://www.javacodegeeks.com/2012/07/android-performance-tweaking-parsearray.html
-        mTasks = new HashMap<Integer, BarterLiAsyncQueryHandler.QueryTask>();
+        mTaskQueue = new LinkedList<BarterLiAsyncQueryHandler.QueryTask>();
     }
 
     /**
      * Method for inserting rows into the database
      * 
-     * @param token Unique id for this operation
+     * @param taskId Unique id for this operation
+     * @param tag An object to tag this task for cancellation
      * @param cookie Any extra object to be passed into the query to be returned
      *            when the query completes. Can be <code>null</code>
      * @param table The table to insert into
@@ -83,24 +84,25 @@ class BarterLiAsyncQueryHandler {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    void startInsert(final int token, final Object cookie, final String table,
-                    final String nullColumnHack, final ContentValues values,
-                    final boolean autoNotify,
+    void startInsert(final int taskId, final Object tag, final Object cookie,
+                    final String table, final String nullColumnHack,
+                    final ContentValues values, final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
-        final QueryTask task = new QueryTask(Type.INSERT, token, cookie, callback);
+        final QueryTask task = new QueryTask(Type.INSERT, taskId, tag, cookie, callback);
         task.mTableName = table;
         task.mNullColumnHack = nullColumnHack;
         task.mValues = values;
         task.mAutoNotify = autoNotify;
-        mTasks.put(token, task);
+        mTaskQueue.add(task);
         new QueryAsyncTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, task);
     }
 
     /**
      * Delete rows from the database
      * 
-     * @param token A unique id for this operation
+     * @param taskId A unique id for this operation
+     * @param tag An object to tag this request for cancellation
      * @param cookie Any extra object to be passed into the query to be returned
      *            when the query completes. Can be <code>null</code>
      * @param table The table to delete from
@@ -111,17 +113,17 @@ class BarterLiAsyncQueryHandler {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    void startDelete(final int token, final Object cookie, final String table,
-                    final String selection, final String[] selectionArgs,
-                    final boolean autoNotify,
+    void startDelete(final int taskId, final Object tag, final Object cookie,
+                    final String table, final String selection,
+                    final String[] selectionArgs, final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
-        final QueryTask task = new QueryTask(Type.DELETE, token, cookie, callback);
+        final QueryTask task = new QueryTask(Type.DELETE, taskId, tag, cookie, callback);
         task.mTableName = table;
         task.mSelection = selection;
         task.mSelectionArgs = selectionArgs;
         task.mAutoNotify = autoNotify;
-        mTasks.put(token, task);
+        mTaskQueue.add(task);
         new QueryAsyncTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, task);
 
     }
@@ -129,7 +131,8 @@ class BarterLiAsyncQueryHandler {
     /**
      * Updates the table with the given data
      * 
-     * @param A unique id for this operation
+     * @param taskId A unique id for this operation
+     * @param tag A tag to cancel this request
      * @param cookie Any extra object to be passed into the query to be returned
      *            when the query completes. Can be <code>null</code>
      * @param table The table to update
@@ -141,18 +144,19 @@ class BarterLiAsyncQueryHandler {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    void startUpdate(final int token, final Object cookie, final String table,
-                    final ContentValues values, final String selection,
-                    final String[] selectionArgs, final boolean autoNotify,
+    void startUpdate(final int taskId, final Object tag, final Object cookie,
+                    final String table, final ContentValues values,
+                    final String selection, final String[] selectionArgs,
+                    final boolean autoNotify,
                     final AsyncDbQueryCallback callback) {
 
-        final QueryTask task = new QueryTask(Type.UPDATE, token, cookie, callback);
+        final QueryTask task = new QueryTask(Type.UPDATE, taskId, tag, cookie, callback);
         task.mTableName = table;
         task.mValues = values;
         task.mSelection = selection;
         task.mSelectionArgs = selectionArgs;
         task.mAutoNotify = autoNotify;
-        mTasks.put(token, task);
+        mTaskQueue.add(task);
         new QueryAsyncTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, task);
 
     }
@@ -160,7 +164,8 @@ class BarterLiAsyncQueryHandler {
     /**
      * Query the given table, returning a Cursor over the result set.
      * 
-     * @param token A unique id for this query
+     * @param taskId A unique id for this query
+     * @param tag A tag for task cancellation
      * @param cookie Any extra object to be passed into the query to be returned
      *            when the query completes. Can be <code>null</code>
      * @param distinct <code>true</code> if dataset should be unique
@@ -175,14 +180,14 @@ class BarterLiAsyncQueryHandler {
      * @param callback A {@link AsyncDbQueryCallback} to be notified when the
      *            async operation finishes
      */
-    void startQuery(final int token, final Object cookie,
+    void startQuery(final int taskId, final Object tag, final Object cookie,
                     final boolean distinct, final String table,
                     final String[] columns, final String selection,
                     final String[] selectionArgs, final String groupBy,
                     final String having, final String orderBy,
                     final String limit, final AsyncDbQueryCallback callback) {
 
-        final QueryTask task = new QueryTask(Type.QUERY, token, cookie, callback);
+        final QueryTask task = new QueryTask(Type.QUERY, taskId, tag, cookie, callback);
         task.mDistinct = distinct;
         task.mTableName = table;
         task.mColumns = columns;
@@ -193,7 +198,7 @@ class BarterLiAsyncQueryHandler {
         task.mOrderBy = orderBy;
         task.mLimit = limit;
 
-        mTasks.put(token, task);
+        mTaskQueue.add(task);
         new QueryAsyncTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, task);
 
     }
@@ -203,17 +208,11 @@ class BarterLiAsyncQueryHandler {
      * 
      * @param token The token to cancel
      */
-    void cancel(final int token) {
+    void cancel(final Object tag) {
 
-        //If the token is not present, we need not iterate through the map at all
-        if (!mTasks.containsKey(token)) {
-            return;
-        }
-        for (final Iterator<Map.Entry<Integer, QueryTask>> it = mTasks
-                        .entrySet().iterator(); it.hasNext();) {
-            final Map.Entry<Integer, QueryTask> entry = it.next();
-            final QueryTask task = entry.getValue();
-            if (task.mToken == token) {
+        for (final Iterator<QueryTask> it = mTaskQueue.iterator(); it.hasNext();) {
+            final QueryTask task = it.next();
+            if (task.mTag.equals(tag)) {
                 task.mCancelled = true;
                 task.mCallback = null;
                 it.remove();
@@ -274,14 +273,19 @@ class BarterLiAsyncQueryHandler {
         private final Type           mType;
 
         /**
-         * The token for the task
+         * The tag to use for cancellation
          */
-        private final int            mToken;
+        private final Object         mTag;
 
         /**
          * Any extra cookie sent along with the query
          */
         private final Object         mCookie;
+
+        /**
+         * An identifier for this task
+         */
+        private final int            mTaskId;
 
         /**
          * Callback for the result of the operation
@@ -307,18 +311,20 @@ class BarterLiAsyncQueryHandler {
          * Construct a Query Task
          * 
          * @param type The {@link Type} of task
-         * @param token The token to pass into the callback
+         * @param taskId An identifier for this task
+         * @param tag An object to tag this request for cancellation
          * @param cookie Any extra object to be passed into the query to be
          *            returned when the query completes. Can be
          *            <code>null</code>
          * @param callback The Callback for when the db query completes
          */
-        private QueryTask(final Type type, final int token, final Object cookie, final AsyncDbQueryCallback callback) {
+        private QueryTask(final Type type, final int taskId, final Object tag, final Object cookie, final AsyncDbQueryCallback callback) {
             mType = type;
-            mToken = token;
+            mTaskId = taskId;
             mCookie = cookie;
             mCallback = callback;
             mCancelled = false;
+            mTag = tag;
         }
 
     }
@@ -384,27 +390,27 @@ class BarterLiAsyncQueryHandler {
                 switch (task.mType) {
 
                     case INSERT: {
-                        task.mCallback.onInsertComplete(task.mToken, task.mCookie, result.mInsertRowId);
+                        task.mCallback.onInsertComplete(task.mTaskId, task.mCookie, result.mInsertRowId);
                         break;
                     }
 
                     case DELETE: {
-                        task.mCallback.onDeleteComplete(task.mToken, task.mCookie, result.mDeleteCount);
+                        task.mCallback.onDeleteComplete(task.mTaskId, task.mCookie, result.mDeleteCount);
                         break;
                     }
 
                     case UPDATE: {
-                        task.mCallback.onUpdateComplete(task.mToken, task.mCookie, result.mUpdateCount);
+                        task.mCallback.onUpdateComplete(task.mTaskId, task.mCookie, result.mUpdateCount);
                         break;
                     }
 
                     case QUERY: {
-                        task.mCallback.onQueryComplete(task.mToken, task.mCookie, result.mCursor);
+                        task.mCallback.onQueryComplete(task.mTaskId, task.mCookie, result.mCursor);
                         break;
                     }
                 }
             }
-            mTasks.remove(task.mToken);
+            mTaskQueue.remove(task);
 
         }
     }

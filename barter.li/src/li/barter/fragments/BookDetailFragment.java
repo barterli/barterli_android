@@ -176,7 +176,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
     private void loadBookDetails() {
 
-        DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, mFromSearch ? TableSearchBooks.NAME
+        DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, getTaskTag(), null, false, mFromSearch ? TableSearchBooks.NAME
                         : TableUserBooks.NAME, null, mBookSelection, new String[] {
             mId
         }, null, null, null, null, this);
@@ -194,7 +194,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 
@@ -304,12 +304,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                     final int updateCount) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER);
     }
 
     @Override

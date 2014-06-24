@@ -16,6 +16,30 @@
 
 package li.barter.fragments;
 
+import com.android.volley.Request.Method;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,32 +71,6 @@ import li.barter.utils.SharedPreferenceHelper;
 import li.barter.widgets.autocomplete.INetworkSuggestCallbacks;
 import li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView;
 import li.barter.widgets.autocomplete.Suggestion;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.database.Cursor;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.EditText;
-
-import com.android.volley.Request.Method;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
@@ -142,7 +140,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 				//Reached here by editing current user's book
 				mdelete.setVisibility(View.VISIBLE);
 				mSubmit.setText("Update");
-				DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, TableUserBooks.NAME, null, mBookSelection, new String[] {
+				DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, getTaskTag(), null, false, TableUserBooks.NAME, null, mBookSelection, new String[] {
 						mId
 				}, null, null, null, null, this);
 
@@ -251,7 +249,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 	}
 
 	@Override
-	protected Object getVolleyTag() {
+	protected Object getTaskTag() {
 		return hashCode();
 	}
 
@@ -708,7 +706,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 		}
 
 		case RequestId.DELETE_BOOK: {
-			DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK, null, TableUserBooks.NAME, mBookSelection, new String[] {
+			DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK, getTaskTag(), null, TableUserBooks.NAME, mBookSelection, new String[] {
 					mId
 			}, true, this);
 
@@ -775,7 +773,7 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			final int deleteCount) {
 
 		if (token == QueryTokens.DELETE_MY_BOOK) {
-			DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK_FROM_SEARCH, null, TableSearchBooks.NAME, mBookSelection, new String[] {
+			DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK_FROM_SEARCH, getTaskTag(), null, TableSearchBooks.NAME, mBookSelection, new String[] {
 					mId
 			}, true, this);
 
@@ -865,12 +863,6 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 				}
 			}
 		}
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		DBInterface.cancelAsyncQuery(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER);
 	}
 
 	/**

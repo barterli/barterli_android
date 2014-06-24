@@ -16,7 +16,47 @@
 
 package li.barter.activities;
 
-import java.util.Locale;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+
+import android.app.ActionBar;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.widget.DrawerLayout;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 import li.barter.R;
@@ -55,46 +95,6 @@ import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
-import android.app.ActionBar;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.database.Cursor;
-import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.widget.DrawerLayout;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.google.android.gms.analytics.HitBuilders.EventBuilder;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 /**
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
@@ -454,8 +454,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
         if (isLoggedIn()) {
             UserInfo.INSTANCE.reset();
-            DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, null, TableChats.NAME, null, null, true, this);
-            DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, null, TableChatMessages.NAME, null, null, true, this);
+            DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, getTaskTag(), null, TableChats.NAME, null, null, true, this);
+            DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, getTaskTag(), null, TableChatMessages.NAME, null, null, true, this);
             SharedPreferenceHelper
                             .removeKeys(this, R.string.pref_auth_token, R.string.pref_email, R.string.pref_description, R.string.pref_location, R.string.pref_first_name, R.string.pref_last_name, R.string.pref_user_id, R.string.pref_profile_image, R.string.pref_share_token, R.string.pref_referrer, R.string.pref_referrer_count);
             final Intent disconnectChatIntent = new Intent(this, ChatService.class);
@@ -522,7 +522,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                     final boolean showErrorOnNoNetwork,
                     final int errorMsgResId, boolean addHeader) {
         if (isConnectedToInternet()) {
-            request.setTag(getVolleyTag());
+            request.setTag(getTaskTag());
             mVolleyCallbacks.queue(request, addHeader);
         } else if (showErrorOnNoNetwork) {
             showCrouton(errorMsgResId != 0 ? errorMsgResId
@@ -531,18 +531,19 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     }
 
     /**
-     * A Tag to add to all Volley requests. This must be unique for all
-     * Fragments types
+     * A Tag to add to all async requests. This must be unique for all Activity
+     * types
      * 
      * @return An Object that's the tag for this fragment
      */
-    protected abstract Object getVolleyTag();
+    protected abstract Object getTaskTag();
 
     @Override
     protected void onStop() {
         super.onStop();
         // Cancel all pending requests because they shouldn't be delivered
-        mVolleyCallbacks.cancelAll(getVolleyTag());
+        mVolleyCallbacks.cancelAll(getTaskTag());
+        DBInterface.cancelAll(getTaskTag());
         setProgressBarIndeterminateVisibility(false);
     }
 

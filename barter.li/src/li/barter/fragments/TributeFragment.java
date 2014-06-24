@@ -74,7 +74,7 @@ public class TributeFragment extends AbstractBarterLiFragment {
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 

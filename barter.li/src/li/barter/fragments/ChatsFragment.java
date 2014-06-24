@@ -148,7 +148,7 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 	}
 
 	@Override
-	protected Object getVolleyTag() {
+	protected Object getTaskTag() {
 		return hashCode();
 	}
 
@@ -406,10 +406,10 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 	
 	private void deleteChat(String chatId)
 	{
-		DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, null, TableChats.NAME, mChatSelectionForDelete, new String[] {
+		DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, getTaskTag(), null, TableChats.NAME, mChatSelectionForDelete, new String[] {
 				chatId
 		}, true, this);
-		DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, null, TableChatMessages.NAME, mChatSelectionForDelete, new String[] {
+		DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, getTaskTag(), null, TableChatMessages.NAME, mChatSelectionForDelete, new String[] {
 				chatId
 		}, true, this);
 		

@@ -275,7 +275,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         // TODO Auto-generated method stub
 
         return hashCode();

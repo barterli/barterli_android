@@ -49,7 +49,7 @@ public class BarterLiDescriptionFragment extends AbstractBarterLiFragment {
     	}
     }
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 

@@ -360,7 +360,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 
@@ -386,7 +386,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             final Bundle cookie = new Bundle(1);
             cookie.putParcelable(Keys.LOCATION, location);
             //   Delete the current search results before parsing the old ones
-            DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, true, this);
+            DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, getTaskTag(), cookie, TableSearchBooks.NAME, null, null, true, this);
         } else {
         	mCurPage = SharedPreferenceHelper
                     .getInt(getActivity(), R.string.pref_last_fetched_page, 0);
@@ -774,7 +774,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
         cookie.putString(Keys.SEARCH, query);
         //   Delete the current search results before parsing the old ones
-        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT, cookie, TableSearchBooks.NAME, null, null, false, BooksAroundMeFragment.this);
+        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT, getTaskTag(), cookie, TableSearchBooks.NAME, null, null, false, BooksAroundMeFragment.this);
 
     }
 
@@ -796,7 +796,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mSearchView.setQuery(null, false);
         final Bundle cookie = new Bundle(2);
         cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
-        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, cookie, TableSearchBooks.NAME, null, null, false, this);
+        DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, getTaskTag(), cookie, TableSearchBooks.NAME, null, null, false, this);
 
     }
 

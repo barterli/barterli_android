@@ -239,7 +239,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 
