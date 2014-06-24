@@ -355,7 +355,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
 
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_location, response.responseBundle
+                            .set(R.string.pref_location, response.responseBundle
                                             .getString(HttpConstants.ID_LOCATION));
 
             onUpNavigate();

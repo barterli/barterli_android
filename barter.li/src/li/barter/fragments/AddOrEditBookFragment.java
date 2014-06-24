@@ -726,10 +726,10 @@ INetworkSuggestCallbacks, OnCheckedChangeListener {
 			UserInfo.INSTANCE.setFirstName(userInfo
 					.getString(HttpConstants.FIRST_NAME));
 			SharedPreferenceHelper
-			.set(getActivity(), R.string.pref_first_name, userInfo
+			.set(R.string.pref_first_name, userInfo
 					.getString(HttpConstants.FIRST_NAME));
 			SharedPreferenceHelper
-			.set(getActivity(), R.string.pref_last_name, userInfo
+			.set(R.string.pref_last_name, userInfo
 					.getString(HttpConstants.LAST_NAME));
 			createBookOnServer(null);
 			break;

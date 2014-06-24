@@ -230,7 +230,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         }
 
         final String referralId = SharedPreferenceHelper
-                        .getString(getActivity(), R.string.pref_share_token);
+                        .getString(R.string.pref_share_token);
         String appShareUrl = getString(R.string.book_share_message, bookTitle)
                         .concat(AppConstants.PLAY_STORE_LINK);
 

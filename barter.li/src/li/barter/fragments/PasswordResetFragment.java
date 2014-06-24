@@ -16,8 +16,21 @@
 
 package li.barter.fragments;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.android.volley.Request.Method;
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import li.barter.BarterLiApplication;
 import li.barter.R;
@@ -39,22 +52,6 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-
-import com.android.volley.Request.Method;
-import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 
 /**
  * @author Anshul Kamboj Fragment to reset the password after receiving the token
@@ -232,36 +229,36 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
                             .getString(HttpConstants.FIRST_NAME));
 
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_auth_token, userInfo
+                            .set(R.string.pref_auth_token, userInfo
                                             .getString(HttpConstants.AUTH_TOKEN));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_email, userInfo
+                            .set(R.string.pref_email, userInfo
                                             .getString(HttpConstants.EMAIL));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_description, userInfo
+                            .set(R.string.pref_description, userInfo
                                             .getString(HttpConstants.DESCRIPTION));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_first_name, userInfo
+                            .set(R.string.pref_first_name, userInfo
                                             .getString(HttpConstants.FIRST_NAME));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_name, userInfo
+                            .set(R.string.pref_last_name, userInfo
                                             .getString(HttpConstants.LAST_NAME));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_user_id, userInfo
+                            .set(R.string.pref_user_id, userInfo
                                             .getString(HttpConstants.ID_USER));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_location, userInfo
+                            .set(R.string.pref_location, userInfo
                                             .getString(HttpConstants.LOCATION));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_profile_image, userInfo
+                            .set(R.string.pref_profile_image, userInfo
                                             .getString(HttpConstants.IMAGE_URL));
             
             SharedPreferenceHelper
-            .set(getActivity(), R.string.pref_referrer_count, userInfo
+            .set(R.string.pref_referrer_count, userInfo
                             .getString(HttpConstants.REFERRAL_COUNT));
             
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_share_token, userInfo
+                            .set(R.string.pref_share_token, userInfo
                                             .getString(HttpConstants.SHARE_TOKEN));
 
             BarterLiApplication.startChatService();

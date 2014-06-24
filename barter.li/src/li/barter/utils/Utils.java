@@ -384,7 +384,7 @@ public class Utils {
     public static final Intent createAppShareIntent(Context context) {
 
         final String referralId = SharedPreferenceHelper
-                        .getString(context, R.string.pref_share_token);
+                        .getString(R.string.pref_share_token);
         String appShareUrl = context.getString(R.string.app_share_message)
                         .concat(AppConstants.PLAY_STORE_LINK);
 

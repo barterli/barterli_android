@@ -68,7 +68,6 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
-import li.barter.utils.Logger;
 import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
 
@@ -134,10 +133,10 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_first_name)) {
+                        .contains(R.string.pref_first_name)) {
             mFirstNameTextView
                             .setText(SharedPreferenceHelper
-                                            .getString(getActivity(), R.string.pref_first_name));
+                                            .getString(R.string.pref_first_name));
         }
         else
         {
@@ -146,19 +145,19 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_last_name)) {
+                        .contains(R.string.pref_last_name)) {
             mLastNameTextView.setText(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_last_name));
+                            .getString(R.string.pref_last_name));
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_description)) {
+                        .contains(R.string.pref_description)) {
             mAboutMeTextView.setText(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_description));
+                            .getString(R.string.pref_description));
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_location)) {
+                        .contains(R.string.pref_location)) {
             loadPreferredLocation();
         }
 
@@ -166,9 +165,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         String mProfileImageUrl = "";
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_profile_image)) {
+                        .contains(R.string.pref_profile_image)) {
             mProfileImageUrl = SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_profile_image);
+                            .getString(R.string.pref_profile_image);
 
         }
         Picasso.with(getActivity()).load(mProfileImageUrl)
@@ -249,7 +248,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE, getTaskTag(), null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
                         + SQLConstants.EQUALS_ARG, new String[] {
             SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_location)
+                            .getString(R.string.pref_location)
         }, null, null, null, null, this);
     }
 
@@ -423,7 +422,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         if (requestId == RequestId.SAVE_USER_PROFILE) {
             
-            SharedPreferenceHelper.set(getActivity(), R.string.pref_force_user_refetch, true);
+            SharedPreferenceHelper.set(R.string.pref_force_user_refetch, true);
             
             final Bundle userInfo = response.responseBundle;
 
@@ -431,15 +430,15 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                             .getString(HttpConstants.FIRST_NAME);
 
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_description, userInfo
+                            .set(R.string.pref_description, userInfo
                                             .getString(HttpConstants.DESCRIPTION));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_first_name, firstName);
+                            .set(R.string.pref_first_name, firstName);
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_name, userInfo
+                            .set(R.string.pref_last_name, userInfo
                                             .getString(HttpConstants.LAST_NAME));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_profile_image, userInfo
+                            .set(R.string.pref_profile_image, userInfo
                                             .getString(HttpConstants.IMAGE_URL));
 
             UserInfo.INSTANCE.setFirstName(firstName);

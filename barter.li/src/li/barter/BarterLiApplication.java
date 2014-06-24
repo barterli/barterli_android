@@ -74,12 +74,11 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
 
         sStaticContext = getApplicationContext();
         if (!SharedPreferenceHelper
-                        .getBoolean(this, R.string.pref_migrated_from_alpha)&&
-                        (SharedPreferenceHelper
-                        .getInt(this, R.string.pref_last_version_code)==0)) {
+                        .getBoolean(R.string.pref_migrated_from_alpha)
+                        && (SharedPreferenceHelper
+                                        .getInt(R.string.pref_last_version_code) == 0)) {
             doMigrationFromAlpha();
-            SharedPreferenceHelper
-                            .set(this, R.string.pref_migrated_from_alpha, true);
+            SharedPreferenceHelper.set(R.string.pref_migrated_from_alpha, true);
         }
         /*
          * Saves the current app version into shared preferences so we can use
@@ -105,14 +104,18 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
 
     };
 
+    /**
+     * Save the current app version info into preferences. This is purely for
+     * future use where we might need to use these values on an app update
+     */
     private void saveCurrentAppVersionIntoPreferences() {
         try {
             PackageInfo info = getPackageManager()
                             .getPackageInfo(getPackageName(), 0);
             SharedPreferenceHelper
-                            .set(this, R.string.pref_last_version_code, info.versionCode);
+                            .set(R.string.pref_last_version_code, info.versionCode);
             SharedPreferenceHelper
-                            .set(this, R.string.pref_last_version_name, info.versionName);
+                            .set(R.string.pref_last_version_name, info.versionName);
         } catch (NameNotFoundException e) {
             //Shouldn't happen
         }
@@ -133,15 +136,15 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
     private void readUserInfoFromSharedPref() {
 
         UserInfo.INSTANCE.setAuthToken(SharedPreferenceHelper
-                        .getString(this, R.string.pref_auth_token));
+                        .getString(R.string.pref_auth_token));
         UserInfo.INSTANCE.setId(SharedPreferenceHelper
-                        .getString(this, R.string.pref_user_id));
+                        .getString(R.string.pref_user_id));
         UserInfo.INSTANCE.setEmail(SharedPreferenceHelper
-                        .getString(this, R.string.pref_email));
+                        .getString(R.string.pref_email));
         UserInfo.INSTANCE.setProfilePicture(SharedPreferenceHelper
-                        .getString(this, R.string.pref_profile_image));
+                        .getString(R.string.pref_profile_image));
         UserInfo.INSTANCE.setFirstName(SharedPreferenceHelper
-                        .getString(this, R.string.pref_first_name));
+                        .getString(R.string.pref_first_name));
     }
 
     /**

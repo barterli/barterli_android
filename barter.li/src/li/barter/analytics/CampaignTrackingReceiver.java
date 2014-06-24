@@ -43,7 +43,7 @@ public class CampaignTrackingReceiver extends BroadcastReceiver {
         
         if(!TextUtils.isEmpty(referrer)) {
             //Store referrer in SharedPreferences for upload later
-            SharedPreferenceHelper.set(context, R.string.pref_referrer, referrer);
+            SharedPreferenceHelper.set(R.string.pref_referrer, referrer);
         }
     }
 

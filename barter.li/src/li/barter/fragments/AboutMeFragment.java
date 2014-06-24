@@ -204,9 +204,9 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
 
                     mReferralCountTextView
                                     .setText(SharedPreferenceHelper
-                                                    .getString(getActivity(), R.string.pref_referrer_count));
+                                                    .getString(R.string.pref_referrer_count));
                     mAboutMeTextView.setText(SharedPreferenceHelper
-                                    .getString(getActivity(), R.string.pref_description));
+                                    .getString(R.string.pref_description));
 
                     mLogoutButton.setVisibility(View.VISIBLE);
                 } else {

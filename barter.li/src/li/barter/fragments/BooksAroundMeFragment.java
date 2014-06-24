@@ -200,7 +200,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
 
         mCurPage = SharedPreferenceHelper
-                        .getInt(getActivity(), R.string.pref_last_fetched_page, 0);
+                        .getInt(R.string.pref_last_fetched_page, 0);
         if (savedInstanceState != null) {
             mLastFetchedLocation = savedInstanceState
                             .getParcelable(Keys.LAST_FETCHED_LOCATION);
@@ -389,7 +389,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, getTaskTag(), cookie, TableSearchBooks.NAME, null, null, true, this);
         } else {
         	mCurPage = SharedPreferenceHelper
-                    .getInt(getActivity(), R.string.pref_last_fetched_page, 0);
+                    .getInt(R.string.pref_last_fetched_page, 0);
             mHasLoadedAllItems = false;
             fetchBooksAroundMe(location);
         }
@@ -408,13 +408,13 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private void saveLastFetchedInfoToPref() {
 
         SharedPreferenceHelper
-                        .set(getActivity(), R.string.pref_last_fetched_page, mCurPage);
+                        .set(R.string.pref_last_fetched_page, mCurPage);
         if (mLastFetchedLocation != null) {
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_fetched_latitude, mLastFetchedLocation
+                            .set(R.string.pref_last_fetched_latitude, mLastFetchedLocation
                                             .getLatitude());
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_fetched_longitude, mLastFetchedLocation
+                            .set(R.string.pref_last_fetched_longitude, mLastFetchedLocation
                                             .getLongitude());
 
         }
@@ -426,14 +426,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         //done to force refresh! just change the value accordingly, default value is false
         if (!SharedPreferenceHelper
-                        .getBoolean(getActivity(), R.string.pref_dont_refresh_books)) {
+                        .getBoolean(R.string.pref_dont_refresh_books)) {
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_fetched_latitude, 0.0);
+                            .set(R.string.pref_last_fetched_latitude, 0.0);
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_fetched_longitude, 0.0);
+                            .set(R.string.pref_last_fetched_longitude, 0.0);
 
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_dont_refresh_books, true);
+                            .set(R.string.pref_dont_refresh_books, true);
 
         }
         if (isLocationServiceEnabled()) {
@@ -478,10 +478,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             }
             mLastFetchedLocation
                             .setLatitude(SharedPreferenceHelper
-                                            .getDouble(getActivity(), R.string.pref_last_fetched_latitude));
+                                            .getDouble(R.string.pref_last_fetched_latitude));
             mLastFetchedLocation
                             .setLongitude(SharedPreferenceHelper
-                                            .getDouble(getActivity(), R.string.pref_last_fetched_longitude));
+                                            .getDouble(R.string.pref_last_fetched_longitude));
         }
 
     }
