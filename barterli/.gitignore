@@ -1,0 +1,16 @@
+/build
+/bin
+/gen
+
+# Crashlytics
+crashlytics.properties
+src/main/res/values/com_crashlytics_export_strings.xml
+
+# API KEYS (Google)
+src/main/res/values/api_keys.xml
+
+# LICENSE
+src/main/res/values/license.xml
+
+src/main/assets/crashlytics-build.properties
+
