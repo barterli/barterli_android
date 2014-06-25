@@ -5,14 +5,14 @@
      -->
 
     <!-- Facebook app Id -->
-    <string name="app_id">123456</string>
+<!--    <string name="app_id">123456</string>-->
 
     <!-- Google API Keys -->
-    <string name="ga_tracking_id">123456</string>
-    <string name="google_maps_v2_api_key">123456</string>
+  <!--  <string name="ga_tracking_id">123456</string>
+    <string name="google_maps_v2_api_key">123456</string>-->
 
     <!--Foursquare API Keys -->
-    <string name="foursquare_client_id">123456</string>
-    <string name="foursquare_client_secret">123456</string>
+<!--    <string name="foursquare_client_id">123456</string>
+    <string name="foursquare_client_secret">123456</string>-->
 
 </resources>
