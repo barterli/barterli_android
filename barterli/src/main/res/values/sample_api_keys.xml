@@ -5,7 +5,7 @@
      -->
 
     <!-- Facebook app Id -->
-    <!--<string name="app_id">123456</string>-->
+    <string name="app_id">123456</string>
 
     <!-- Google API Keys -->
     <string name="ga_tracking_id">123456</string>
