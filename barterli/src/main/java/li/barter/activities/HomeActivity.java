@@ -158,7 +158,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     private void informReferralToServer() {
 
         final String referrer = SharedPreferenceHelper
-                        .getString(this, R.string.pref_referrer);
+                        .getString(R.string.pref_referrer);
 
         if (!TextUtils.isEmpty(referrer)) {
 
@@ -239,7 +239,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 

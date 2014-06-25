@@ -48,6 +48,7 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.analytics.GoogleAnalyticsManager;
+import li.barter.data.DBInterface;
 import li.barter.fragments.dialogs.AddUserInfoDialogFragment;
 import li.barter.http.BlMultiPartRequest;
 import li.barter.http.HttpConstants;
@@ -73,7 +74,7 @@ import li.barter.widgets.TypefaceCache;
 public abstract class AbstractBarterLiFragment extends Fragment implements
                 IHttpCallbacks {
 
-    private static final String       TAG = "AbstractBarterLiFragment";
+    private static final String       TAG           = "AbstractBarterLiFragment";
 
     /**
      * Flag that indicates that this fragment is attached to an Activity
@@ -96,8 +97,8 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      * Whether a screen hit should be reported to analytics
      */
     private boolean                   mShouldReportScreenHit;
-    
-    public boolean				  mRefreshBooks=false;				 
+
+    public boolean                    mRefreshBooks = false;
 
     /**
      * {@link AddUserInfoDialogFragment} for
@@ -246,7 +247,8 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     public void onStop() {
         super.onStop();
         Crouton.clearCroutonsForActivity(getActivity());
-        mVolleyCallbacks.cancelAll(getVolleyTag());
+        mVolleyCallbacks.cancelAll(getTaskTag());
+        DBInterface.cancelAll(getTaskTag());
         getActivity().setProgressBarIndeterminateVisibility(false);
     }
 
@@ -264,7 +266,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
                     final int errorMsgResId, boolean addHeader) {
 
         if (mIsAttached) {
-            request.setTag(getVolleyTag());
+            request.setTag(getTaskTag());
             if (isConnectedToInternet()) {
                 mRequestCounter.incrementAndGet();
                 getActivity().setProgressBarIndeterminateVisibility(true);
@@ -277,12 +279,12 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     }
 
     /**
-     * A Tag to add to all Volley requests. This must be unique for all
-     * Fragments types
+     * A Tag to add to all async tasks. This must be unique for all Fragments
+     * types
      * 
      * @return An Object that's the tag for this fragment
      */
-    protected abstract Object getVolleyTag();
+    protected abstract Object getTaskTag();
 
     /**
      * Display an alert, with a string message
@@ -398,8 +400,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     protected boolean isLoggedIn() {
         return !TextUtils.isEmpty(UserInfo.INSTANCE.getAuthToken());
     }
-    
-   
 
     /**
      * Does the user have a first name
@@ -443,10 +443,9 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     public void onBackPressed() {
 
         getFragmentManager().popBackStack();
-        
+
     }
 
-    
     @Override
     public void onPreExecute(final IBlRequestContract request) {
         mRequestCounter.incrementAndGet();
@@ -560,28 +559,27 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Hides the keyboard
      * 
      * @param view the view from which keyboard was open
      */
-    
-    public void hideKeyBoard(View view)
-    {
-    	InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(
-			      Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+    public void hideKeyBoard(View view) {
+        InputMethodManager imm = (InputMethodManager) getActivity()
+                        .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-    
+
     public boolean isLocationServiceEnabled() {
-        LocationManager lm = (LocationManager)
-                getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria=new Criteria();
-       
+        LocationManager lm = (LocationManager) getActivity()
+                        .getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+
         String provider = lm.getBestProvider(criteria, true);
-        return ((provider!=null) &&
-                !LocationManager.PASSIVE_PROVIDER.equals(provider));
+        return ((provider != null) && !LocationManager.PASSIVE_PROVIDER
+                        .equals(provider));
     }
 
 }

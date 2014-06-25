@@ -90,6 +90,7 @@
     <string name="share">Share</string>
     <string name="set_sell_hint">Set Price (eg $10)</string>
     <string name="set_lend_hint">Set Lend Price (eg $10)</string>
+    <string name="confirm_delete_book">Are you sure you want to delete this book?</string>
 
     <!-- Strings for EditBookDetailsActivity -->
     <string name="isbn_label">ISBN Number</string>
@@ -107,6 +108,7 @@
     <string name="select_a_barter_type">Select at least one barter type to add the book</string>
     <string name="unable_to_fetch_book_info">Unable to fetch book info.</string>
     <string name="unable_to_create_book">Unable to create book</string>
+    <string name="unable_to_delete_book">Unable to delete book</string>
     <string name="not_a_valid_isbn">Not a valid ISBN.</string>
     <string name="unable_to_fetch_books">Unable to fetch books.</string>
     <string name="unable_to_fetch_hangouts">Unable to fetch hangouts.</string>
@@ -228,7 +230,8 @@
     <string name="label_current_location">Preferred Cafe For Book Exchange</string>
     <string name="label_referral_count">Number of installs via me</string>
     <string name="text_edit_profile">Edit</string>
-    <string name="text_save_profile">Save</string>
+    <string name="text_save">Save</string>
+    <string name="text_delete">Delete</string>
     <string name="hint_first_name">First Name</string>
     <string name="hint_last_name">Last Name(optional)</string>
     <string name="label_my_books">My Books</string>

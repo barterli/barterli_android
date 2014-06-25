@@ -53,8 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_margin"
             android:hint="@string/description_label"
-            android:maxLines="@integer/descriptionedittextcount"
             android:inputType="textCapSentences|textAutoComplete|textMultiLine"
+            android:maxLines="@integer/descriptionedittextcount"
             app:fontStyle="regular" />
 
         <li.barter.widgets.TypefacedEditText
@@ -106,23 +106,6 @@
                 android:visibility="gone"
                 app:fontStyle="condensed_regular" />
         </LinearLayout>
-
-        <li.barter.widgets.TypefacedButton
-            android:id="@+id/button_delete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_margin"
-            android:text="@string/delete"
-            android:visibility="gone"
-            app:fontStyle="bold" />
-
-        <li.barter.widgets.TypefacedButton
-            android:id="@+id/button_submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_margin"
-            android:text="@string/submit"
-            app:fontStyle="bold" />
     </LinearLayout>
 
 </ScrollView>

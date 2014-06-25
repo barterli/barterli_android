@@ -16,8 +16,11 @@
 
 package li.barter.fragments;
 
+import com.android.volley.Request.Method;
 import com.squareup.picasso.Picasso;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -39,6 +42,7 @@ import java.util.Locale;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -46,16 +50,20 @@ import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLConstants;
 import li.barter.data.TableSearchBooks;
 import li.barter.data.TableUserBooks;
+import li.barter.fragments.dialogs.AlertDialogFragment;
+import li.barter.http.BlRequest;
+import li.barter.http.HttpConstants;
+import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
-import li.barter.utils.SharedPreferenceHelper;
-import li.barter.utils.Utils;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
+import li.barter.utils.Utils;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
 public class BookDetailFragment extends AbstractBarterLiFragment implements
@@ -79,6 +87,8 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private String              mBookTitle;
     private boolean             mFromSearch;
     private boolean             mOwnedByUser;
+    private AlertDialogFragment mDeleteBookDialogFragment;
+    private boolean             mIsDeletingBook;
 
     /**
      * Whether this fragment has been loaded by itself or as part of a pager/tab
@@ -132,6 +142,9 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             }
         }
 
+        mDeleteBookDialogFragment = (AlertDialogFragment) getFragmentManager()
+                        .findFragmentByTag(FragmentTags.DIALOG_DELETE_BOOK);
+
         final AbstractBarterLiFragment fragment = ((AbstractBarterLiActivity) getActivity())
                         .getCurrentMasterFragment();
 
@@ -176,7 +189,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
     private void loadBookDetails() {
 
-        DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, null, false, mFromSearch ? TableSearchBooks.NAME
+        DBInterface.queryAsync(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER, getTaskTag(), null, false, mFromSearch ? TableSearchBooks.NAME
                         : TableUserBooks.NAME, null, mBookSelection, new String[] {
             mId
         }, null, null, null, null, this);
@@ -194,7 +207,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 
@@ -218,11 +231,11 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
      * @param bookTitle
      */
     private void updateShareIntent(String bookTitle) {
-        
-        if(mShareActionProvider == null) {
+
+        if (mShareActionProvider == null) {
             return;
         }
-        
+
         if (TextUtils.isEmpty(bookTitle)) {
             mShareActionProvider.setShareIntent(Utils
                             .createAppShareIntent(getActivity()));
@@ -230,7 +243,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         }
 
         final String referralId = SharedPreferenceHelper
-                        .getString(getActivity(), R.string.pref_share_token);
+                        .getString(R.string.pref_share_token);
         String appShareUrl = getString(R.string.book_share_message, bookTitle)
                         .concat(AppConstants.PLAY_STORE_LINK);
 
@@ -266,10 +279,25 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 return true;
             }
 
+            case R.id.action_delete_book: {
+                deleteBook();
+                return true;
+            }
+
             default: {
                 return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    /**
+     * Shows the dialog to delete the book
+     */
+    private void deleteBook() {
+
+        mDeleteBookDialogFragment = new AlertDialogFragment();
+        mDeleteBookDialogFragment
+                        .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.delete, R.string.confirm_delete_book, R.string.delete, R.string.cancel, 0, getFragmentManager(), true, FragmentTags.DIALOG_DELETE_BOOK);
     }
 
     @Override
@@ -277,12 +305,48 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                     final IBlRequestContract request,
                     final ResponseInfo response) {
 
+        if (requestId == RequestId.DELETE_BOOK) {
+
+            DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK, getTaskTag(), null, TableUserBooks.NAME, mBookSelection, new String[] {
+                mId
+            }, true, this);
+        }
+
+    }
+
+    /**
+     * Deletes the book to the server
+     */
+    private void deleteBookOnServer() {
+
+        /*
+         * TODO Investigate a better way to fix the hardcoding of Api endpoints.
+         * Do we need the ".json" suffix? That will help with this. Or pass the
+         * book id in params.
+         */
+        final BlRequest deleteBookRequest = new BlRequest(Method.DELETE, HttpConstants.getApiBaseUrl()
+                        + "/books/" + mId, null, mVolleyCallbacks);
+        deleteBookRequest.setRequestId(RequestId.DELETE_BOOK);
+        addRequestToQueue(deleteBookRequest, true, 0, true);
+        mIsDeletingBook = true;
     }
 
     @Override
     public void onBadRequestError(final int requestId,
                     final IBlRequestContract request, final int errorCode,
                     final String errorMessage, final Bundle errorResponseBundle) {
+
+        if (requestId == RequestId.DELETE_BOOK) {
+            showCrouton(errorMessage, AlertStyle.ERROR);
+        }
+    }
+
+    @Override
+    public void onPostExecute(IBlRequestContract request) {
+        super.onPostExecute(request);
+        if (request.getRequestId() == RequestId.DELETE_BOOK) {
+            mIsDeletingBook = false;
+        }
     }
 
     @Override
@@ -295,7 +359,17 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     @Override
     public void onDeleteComplete(final int token, final Object cookie,
                     final int deleteCount) {
-        // TODO Auto-generated method stub
+        if (token == QueryTokens.DELETE_MY_BOOK) {
+            DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK_FROM_SEARCH, getTaskTag(), null, TableSearchBooks.NAME, mBookSelection, new String[] {
+                mId
+            }, true, this);
+
+        } else if (token == QueryTokens.DELETE_MY_BOOK_FROM_SEARCH) {
+            if (isAttached()) {
+                getFragmentManager().popBackStack();
+            }
+
+        }
 
     }
 
@@ -304,12 +378,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                     final int updateCount) {
         // TODO Auto-generated method stub
 
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_BOOK_DETAIL_CURRENT_USER);
     }
 
     @Override
@@ -398,6 +466,27 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             return Screens.BOOK_DETAIL;
         } else {
             return "";
+        }
+    }
+
+    @Override
+    public boolean willHandleDialog(DialogInterface dialog) {
+
+        if (mDeleteBookDialogFragment != null
+                        && mDeleteBookDialogFragment.getDialog().equals(dialog)) {
+            return true;
+        }
+        return super.willHandleDialog(dialog);
+    }
+
+    @Override
+    public void onDialogClick(DialogInterface dialog, int which) {
+
+        if (mDeleteBookDialogFragment != null
+                        && mDeleteBookDialogFragment.getDialog().equals(dialog)) {
+            if (!mIsDeletingBook) {
+                deleteBookOnServer();
+            }
         }
     }
 

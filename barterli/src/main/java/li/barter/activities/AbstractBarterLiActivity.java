@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,47 @@
  ******************************************************************************/
 
 package li.barter.activities;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
+
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+
+import android.app.ActionBar;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.widget.DrawerLayout;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -54,46 +95,6 @@ import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
-import android.app.ActionBar;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.database.Cursor;
-import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.widget.DrawerLayout;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.google.android.gms.analytics.HitBuilders.EventBuilder;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
 
 /**
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
@@ -267,7 +268,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     /**
      * Creates a {@link Runnable} for positing to the Handler for launching the
      * Navigation Drawer click
-     *
+     * 
      * @param position The nav drawer item that was clicked
      * @return a {@link Runnable} to be posted to the Handler thread
      */
@@ -453,8 +454,8 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
         if (isLoggedIn()) {
             UserInfo.INSTANCE.reset();
-            DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, null, TableChats.NAME, null, null, true, this);
-            DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, null, TableChatMessages.NAME, null, null, true, this);
+            DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, getTaskTag(), null, TableChats.NAME, null, null, true, this);
+            DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, getTaskTag(), null, TableChatMessages.NAME, null, null, true, this);
             SharedPreferenceHelper
                             .removeKeys(this, R.string.pref_auth_token, R.string.pref_email, R.string.pref_description, R.string.pref_location, R.string.pref_first_name, R.string.pref_last_name, R.string.pref_user_id, R.string.pref_profile_image, R.string.pref_share_token, R.string.pref_referrer, R.string.pref_referrer_count);
             final Intent disconnectChatIntent = new Intent(this, ChatService.class);
@@ -510,7 +511,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
     /**
      * Add a request on the network queue
-     *
+     * 
      * @param request The {@link Request} to add
      * @param showErrorOnNoNetwork Whether an error toast should be displayed on
      *            no internet connection
@@ -521,7 +522,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
                     final boolean showErrorOnNoNetwork,
                     final int errorMsgResId, boolean addHeader) {
         if (isConnectedToInternet()) {
-            request.setTag(getVolleyTag());
+            request.setTag(getTaskTag());
             mVolleyCallbacks.queue(request, addHeader);
         } else if (showErrorOnNoNetwork) {
             showCrouton(errorMsgResId != 0 ? errorMsgResId
@@ -530,18 +531,19 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     }
 
     /**
-     * A Tag to add to all Volley requests. This must be unique for all
-     * Fragments types
-     *
+     * A Tag to add to all async requests. This must be unique for all Activity
+     * types
+     * 
      * @return An Object that's the tag for this fragment
      */
-    protected abstract Object getVolleyTag();
+    protected abstract Object getTaskTag();
 
     @Override
     protected void onStop() {
         super.onStop();
         // Cancel all pending requests because they shouldn't be delivered
-        mVolleyCallbacks.cancelAll(getVolleyTag());
+        mVolleyCallbacks.cancelAll(getTaskTag());
+        DBInterface.cancelAll(getTaskTag());
         setProgressBarIndeterminateVisibility(false);
     }
 
@@ -553,7 +555,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
     /**
      * Is the device connected to a network or not.
-     *
+     * 
      * @return <code>true</code> if connected, <code>false</code> otherwise
      */
     public boolean isConnectedToInternet() {
@@ -633,7 +635,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     /**
      * Sets the Action bar title, using the desired {@link Typeface} loaded from
      * {@link TypefaceCache}
-     *
+     * 
      * @param title The title to set for the Action Bar
      */
 
@@ -650,7 +652,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     /**
      * Sets the Action bar title, using the desired {@link Typeface} loaded from
      * {@link TypefaceCache}
-     *
+     * 
      * @param titleResId The title string resource Id to set for the Action Bar
      */
     public final void setActionBarTitle(final int titleResId) {
@@ -659,7 +661,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
     /**
      * Display an alert, with a string message
-     *
+     * 
      * @param message The message to display
      * @param style The {@link AlertStyle} of message to display
      */
@@ -674,7 +676,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
     /**
      * Display an alert, with a string message
-     *
+     * 
      * @param messageResId The message to display
      * @param style The {@link AlertStyle} of message to display
      */
@@ -684,7 +686,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
     /**
      * Display an alert, with a string message with infinite time
-     *
+     * 
      * @param message The message to display
      * @param style The {@link AlertStyle} of message to display
      */
@@ -698,7 +700,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
     /**
      * Display an alert, with a string message with infinite time
-     *
+     * 
      * @param messageResId The message to display
      * @param style The {@link AlertStyle} of message to display
      */
@@ -718,7 +720,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     /**
      * Finish the Activity, specifying whether to use custom or default
      * animations
-     *
+     * 
      * @param defaultAnimation <code>true</code> to use Activity default
      *            animation, <code>false</code> to use custom Animation. In
      *            order for the custom Animation to be applied, however, you
@@ -740,7 +742,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
     /**
      * Helper method to load fragments into layout
-     *
+     * 
      * @param containerResId The container resource Id in the content view into
      *            which to load the fragment
      * @param fragment The fragment to load
@@ -778,7 +780,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
     /**
      * Initialize the Navigation Drawer. Call after the content view is set, in
      * onCreate()
-     *
+     * 
      * @param navDrawerResId The resource Id of the navigation drawer
      * @param navListResId The resource id of the list view in the layout which
      *            is the drawer content
@@ -889,7 +891,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * Activity. Has no effect if the Activity never has a Navigation Drawer to
      * begin with. Mainly used to control The Action Bar Drawer toggle from
      * fragments
-     *
+     * 
      * @param enabled <code>true</code> to enable the Action Bar drawer toggle,
      *            <code>false</code> to disable it
      */
@@ -956,7 +958,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
      * fragment in the main content. In a multi-pane layout, returns the
      * fragment in the master container, which is the one responsible for
      * coordination
-     *
+     * 
      * @return <code>null</code> If no fragment is loaded,the
      *         {@link AbstractBarterLiFragment} implementation which is the
      *         current master fragment otherwise
@@ -1004,7 +1006,7 @@ public abstract class AbstractBarterLiActivity extends FragmentActivity
 
     /**
      * Creates a Crouton View based on the style
-     *
+     * 
      * @param context {@link Context} reference to get the
      *            {@link LayoutInflater} reference
      * @param message The message to display

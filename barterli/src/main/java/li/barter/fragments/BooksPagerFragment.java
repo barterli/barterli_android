@@ -173,11 +173,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        if (mOwnedByUser) {
-            inflater.inflate(R.menu.menu_logged_in_book_detail, menu);
-        } else {
-            inflater.inflate(R.menu.menu_book_detail, menu);
-        }
+        inflater.inflate(R.menu.menu_book_detail, menu);
 
         final MenuItem menuItem = menu.findItem(R.id.action_share);
         mShareActionProvider = (ShareActionProvider) menuItem
@@ -197,21 +193,6 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
             case android.R.id.home: {
                 onUpNavigate();
-                return true;
-            }
-
-            case R.id.action_edit_book: {
-
-                final int currentItem = mBookDetailPager.getCurrentItem();
-                final Bundle args = new Bundle(3);
-                args.putString(Keys.ID, mIdArray.get(currentItem));
-                args.putBoolean(Keys.EDIT_MODE, true);
-                args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), AddOrEditBookFragment.class
-                                                .getName(), args), FragmentTags.BS_EDIT_BOOK, true, FragmentTags.BS_BOOKS_AROUND_ME);
-
                 return true;
             }
 
@@ -275,7 +256,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         // TODO Auto-generated method stub
 
         return hashCode();
@@ -373,7 +354,6 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         } else {
             mOwnedByUser = false;
         }
-        getActivity().invalidateOptionsMenu();
         updateShareIntent(mBookTitleArray.get(position));
         final ProfileFragment fragment = (ProfileFragment) getChildFragmentManager()
                         .findFragmentByTag(FragmentTags.USER_PROFILE);
@@ -390,17 +370,18 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      */
     private void updateShareIntent(String bookTitle) {
 
-        if(mShareActionProvider == null) {
+        if (mShareActionProvider == null) {
             return;
         }
-        
+
         if (TextUtils.isEmpty(bookTitle)) {
-            mShareActionProvider.setShareIntent(Utils.createAppShareIntent(getActivity()));
+            mShareActionProvider.setShareIntent(Utils
+                            .createAppShareIntent(getActivity()));
             return;
         }
 
         final String referralId = SharedPreferenceHelper
-                        .getString(getActivity(), R.string.pref_share_token);
+                        .getString(R.string.pref_share_token);
         String appShareUrl = getString(R.string.book_share_message, bookTitle)
                         .concat(AppConstants.PLAY_STORE_LINK);
 

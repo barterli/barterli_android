@@ -10,6 +10,7 @@ import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.fragments.BooksPagerFragment.BookPageAdapter;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -150,7 +151,7 @@ public class AboutUsPagerFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 

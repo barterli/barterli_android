@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -133,10 +133,10 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_first_name)) {
+                        .contains(R.string.pref_first_name)) {
             mFirstNameTextView
                             .setText(SharedPreferenceHelper
-                                            .getString(getActivity(), R.string.pref_first_name));
+                                            .getString(R.string.pref_first_name));
         }
         else
         {
@@ -145,19 +145,19 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_last_name)) {
+                        .contains(R.string.pref_last_name)) {
             mLastNameTextView.setText(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_last_name));
+                            .getString(R.string.pref_last_name));
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_description)) {
+                        .contains(R.string.pref_description)) {
             mAboutMeTextView.setText(SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_description));
+                            .getString(R.string.pref_description));
         }
 
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_location)) {
+                        .contains(R.string.pref_location)) {
             loadPreferredLocation();
         }
 
@@ -165,9 +165,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         String mProfileImageUrl = "";
         if (SharedPreferenceHelper
-                        .contains(getActivity(), R.string.pref_profile_image)) {
+                        .contains(R.string.pref_profile_image)) {
             mProfileImageUrl = SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_profile_image);
+                            .getString(R.string.pref_profile_image);
 
         }
         Picasso.with(getActivity()).load(mProfileImageUrl)
@@ -222,7 +222,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     /**
      * Used to validate input before sending to server. Also sets the error
      * messages on the respective fields.
-     *
+     * 
      * @return <code>true</code> if input is valid, <code>false</code> otherwise
      */
     private boolean isInputValid() {
@@ -245,10 +245,10 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
      */
 
     private void loadPreferredLocation() {
-        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE, null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
+        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE, getTaskTag(), null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
                         + SQLConstants.EQUALS_ARG, new String[] {
             SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_location)
+                            .getString(R.string.pref_location)
         }, null, null, null, null, this);
     }
 
@@ -276,13 +276,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        DBInterface.cancelAsyncQuery(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE);
-    }
-
-    @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 
@@ -352,7 +346,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     /**
      * Set the Profile Image and Save it locally
-     *
+     * 
      * @param uri URI of the image to be saved.
      * @param source_of_image If the image was from Gallery or Camera
      */
@@ -377,7 +371,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     /**
      * Method to update the user profile.
-     *
+     * 
      * @param firstName First Name of the person
      * @param lastName Last Name of the person
      * @param aboutMeDescription A Brief Introduction about the person
@@ -427,24 +421,24 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                     final ResponseInfo response) {
 
         if (requestId == RequestId.SAVE_USER_PROFILE) {
-
-            SharedPreferenceHelper.set(getActivity(), R.string.pref_force_user_refetch, true);
-
+            
+            SharedPreferenceHelper.set(R.string.pref_force_user_refetch, true);
+            
             final Bundle userInfo = response.responseBundle;
 
             final String firstName = userInfo
                             .getString(HttpConstants.FIRST_NAME);
 
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_description, userInfo
+                            .set(R.string.pref_description, userInfo
                                             .getString(HttpConstants.DESCRIPTION));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_first_name, firstName);
+                            .set(R.string.pref_first_name, firstName);
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_name, userInfo
+                            .set(R.string.pref_last_name, userInfo
                                             .getString(HttpConstants.LAST_NAME));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_profile_image, userInfo
+                            .set(R.string.pref_profile_image, userInfo
                                             .getString(HttpConstants.IMAGE_URL));
 
             UserInfo.INSTANCE.setFirstName(firstName);

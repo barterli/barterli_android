@@ -368,6 +368,7 @@ public class AppConstants {
         public static final String DIALOG_ENABLE_LOCATION                          = "dialog_enable_location";
         public static final String DIALOG_ABOUT_LOCATION                           = "dialog_about_location";
         public static final String DIALOG_CHAT_LONGCLICK                           = "dialog_chat_longclick";
+        public static final String DIALOG_DELETE_BOOK                              = "dialog_delete_book";
 
     }
 

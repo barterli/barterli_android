@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,6 +46,7 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
+import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
@@ -58,6 +59,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
@@ -74,7 +76,7 @@ import android.widget.ListView;
 
 /**
  * Activity for displaying all the ongoing chats
- *
+ * 
  * @author Vinay S Shenoy
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
@@ -146,7 +148,7 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 	}
 
 	@Override
-	protected Object getVolleyTag() {
+	protected Object getTaskTag() {
 		return hashCode();
 	}
 
@@ -154,12 +156,12 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 	public void onSuccess(final int requestId,
 			final IBlRequestContract request,
 			final ResponseInfo response) {
-
+		
 		if(requestId==RequestId.BLOCK_CHATS)
 		{
 			showCrouton(R.string.success_message_for_chatblock, AlertStyle.INFO);
 		}
-
+			
 
 	}
 
@@ -316,9 +318,9 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 		if ((mChatDialogFragment != null)
 				&& mChatDialogFragment.getDialog().equals(dialog)) {
 
-			if (which == 0) {
-
-
+			if (which == 0) { 
+				
+				
 				final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
 				// set title
@@ -354,10 +356,10 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 
 				// show it
 				alertDialog.show();
-
-
-
-			} else if (which == 1) {
+				
+				
+				
+			} else if (which == 1) { 
 
 				final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 
@@ -394,35 +396,35 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 
 				// show it
 				alertDialog.show();
-
+				
 
 			}
 		} else {
 			super.onDialogClick(dialog, which);
 		}
 	}
-
+	
 	private void deleteChat(String chatId)
 	{
-		DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, null, TableChats.NAME, mChatSelectionForDelete, new String[] {
+		DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, getTaskTag(), null, TableChats.NAME, mChatSelectionForDelete, new String[] {
 				chatId
 		}, true, this);
-		DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, null, TableChatMessages.NAME, mChatSelectionForDelete, new String[] {
+		DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, getTaskTag(), null, TableChatMessages.NAME, mChatSelectionForDelete, new String[] {
 				chatId
 		}, true, this);
-
+		
 	}
 	/**
-	 * Method to block user on the server using the userId
-	 *
+	 * Method to block user on the server using the userId 
+	 * 
 	 * @param userId representing the user selected
 	 */
 	private void blockUser(final String userId) {
-
+		
 		final JSONObject requestObject = new JSONObject();
 		try {
 			requestObject.put(HttpConstants.USER_ID, userId);
-
+		
 		final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
 				+ ApiEndpoints.CHAT_BLOCK, requestObject.toString(), mVolleyCallbacks);
 		request.setRequestId(RequestId.BLOCK_CHATS);

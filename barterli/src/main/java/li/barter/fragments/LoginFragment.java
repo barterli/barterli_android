@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,12 +49,12 @@ import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.HomeActivity;
-import li.barter.analytics.AnalyticsConstants.ParamKeys;
-import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.analytics.AnalyticsConstants.Actions;
 import li.barter.analytics.AnalyticsConstants.Categories;
+import li.barter.analytics.AnalyticsConstants.ParamKeys;
 import li.barter.analytics.AnalyticsConstants.ParamValues;
 import li.barter.analytics.AnalyticsConstants.Screens;
+import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.fragments.dialogs.AddSingleEditTextDialogFragment;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
@@ -73,20 +73,20 @@ import li.barter.utils.SharedPreferenceHelper;
 public class LoginFragment extends AbstractBarterLiFragment implements
                 OnClickListener, StatusCallback {
 
-    private static final String TAG                = "LoginFragment";
+    private static final String             TAG                = "LoginFragment";
 
     /**
      * Minimum length of the entered password
      */
-    private final int          						 mMinPasswordLength = 8;
-    private Button             						 mFacebookLoginButton;
-    private Button             						 mGoogleLoginButton;
-    private Button             						 mSubmitButton;
-    private EditText           						 mEmailEditText;
-    private EditText           						 mPasswordEditText;
-    private TextView							   	 mForgotPassword;
-    private AddSingleEditTextDialogFragment 		 mAddSingleEditTextDialogFragment;
-    private String 									 mEmailForPasswordChange;
+    private final int                       mMinPasswordLength = 8;
+    private Button                          mFacebookLoginButton;
+    private Button                          mGoogleLoginButton;
+    private Button                          mSubmitButton;
+    private EditText                        mEmailEditText;
+    private EditText                        mPasswordEditText;
+    private TextView                        mForgotPassword;
+    private AddSingleEditTextDialogFragment mAddSingleEditTextDialogFragment;
+    private String                          mEmailForPasswordChange;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -102,7 +102,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
         mEmailEditText = (EditText) view.findViewById(R.id.edit_text_email);
         mPasswordEditText = (EditText) view
                         .findViewById(R.id.edit_text_password);
-        mForgotPassword=(TextView)view.findViewById(R.id.forgot_password);
+        mForgotPassword = (TextView) view.findViewById(R.id.forgot_password);
 
         mForgotPassword.setOnClickListener(this);
 
@@ -135,7 +135,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 
@@ -192,70 +192,67 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             }
 
             case R.id.forgot_password: {
-            	showForgotPasswordDialog();
+                showForgotPasswordDialog();
 
             }
         }
     }
 
+    /**
+     * Show the dialog for the user to enter his email address
+     */
+    private void showForgotPasswordDialog() {
+
+        mAddSingleEditTextDialogFragment = new AddSingleEditTextDialogFragment();
+        mAddSingleEditTextDialogFragment
+                        .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.forgot_password, R.string.submit, R.string.cancel, 0, R.string.email_label, getFragmentManager(), true, FragmentTags.DIALOG_FORGOT_PASSWORD);
+
+    }
+
+    @Override
+    public boolean willHandleDialog(final DialogInterface dialog) {
+
+        if ((mAddSingleEditTextDialogFragment != null)
+                        && mAddSingleEditTextDialogFragment.getDialog()
+                                        .equals(dialog)) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onDialogClick(final DialogInterface dialog, final int which) {
+
+        if ((mAddSingleEditTextDialogFragment != null)
+                        && mAddSingleEditTextDialogFragment.getDialog()
+                                        .equals(dialog)) {
+
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                callForgotPassword(mAddSingleEditTextDialogFragment.getName());
+            }
+        }
+    }
 
     /**
-	 * Show the dialog for the user to enter his email address
-	 */
-	private void showForgotPasswordDialog() {
+     * Call the password_reset Api
+     * 
+     * @param email The entered email
+     */
 
-		mAddSingleEditTextDialogFragment = new AddSingleEditTextDialogFragment();
-		mAddSingleEditTextDialogFragment
-		.show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.forgot_password, R.string.submit, R.string.cancel, 0,R.string.email_label, getFragmentManager(), true, FragmentTags.DIALOG_FORGOT_PASSWORD);
-
-	}
-
-
-	@Override
-	public boolean willHandleDialog(final DialogInterface dialog) {
-
-		if ((mAddSingleEditTextDialogFragment != null)
-				&& mAddSingleEditTextDialogFragment.getDialog()
-				.equals(dialog)) {
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public void onDialogClick(final DialogInterface dialog, final int which) {
-
-		if ((mAddSingleEditTextDialogFragment != null)
-				&& mAddSingleEditTextDialogFragment.getDialog()
-				.equals(dialog)) {
-
-			if (which == DialogInterface.BUTTON_POSITIVE) {
-				callForgotPassword(mAddSingleEditTextDialogFragment.getName());
-			}
-		}
-	}
-
-
-	/**
-	 * Call the password_reset Api
-	 * @param email The entered email
-	 */
-
-	private void callForgotPassword(String email)
-	{
-		final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
-				 + ApiEndpoints.PASSWORD_RESET, null, mVolleyCallbacks);
-		 request.setRequestId(RequestId.PASSWORD_RESET);
-		 mEmailForPasswordChange=email;
-		 final Map<String, String> params = new HashMap<String, String>(1);
-		 params.put(HttpConstants.EMAIL, email);
-		 request.setParams(params);
-		 addRequestToQueue(request, true, 0, true);
-	}
+    private void callForgotPassword(String email) {
+        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getApiBaseUrl()
+                        + ApiEndpoints.PASSWORD_RESET, null, mVolleyCallbacks);
+        request.setRequestId(RequestId.PASSWORD_RESET);
+        mEmailForPasswordChange = email;
+        final Map<String, String> params = new HashMap<String, String>(1);
+        params.put(HttpConstants.EMAIL, email);
+        request.setParams(params);
+        addRequestToQueue(request, true, 0, true);
+    }
 
     /**
      * Call the login Api
-     *
+     * 
      * @param email The entered email
      * @param password The entered password
      */
@@ -268,7 +265,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             requestObject.put(HttpConstants.EMAIL, email);
             requestObject.put(HttpConstants.PASSWORD, password);
             requestObject.put(HttpConstants.DEVICE_ID, UserInfo.INSTANCE
-                    .getDeviceId());
+                            .getDeviceId());
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.CREATE_USER, requestObject.toString(), mVolleyCallbacks);
             request.setRequestId(RequestId.CREATE_USER);
@@ -282,7 +279,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
     /**
      * Call the login Api
-     *
+     * 
      * @param token oath token we get from providers
      * @param provider facebook or google in our case
      */
@@ -294,7 +291,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             requestObject.put(HttpConstants.PROVIDER, provider);
             requestObject.put(HttpConstants.ACCESS_TOKEN, token);
             requestObject.put(HttpConstants.DEVICE_ID, UserInfo.INSTANCE
-                    .getDeviceId());
+                            .getDeviceId());
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
                             + ApiEndpoints.CREATE_USER, requestObject.toString(), mVolleyCallbacks);
             request.setRequestId(RequestId.CREATE_USER);
@@ -309,7 +306,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     /**
      * Validates the text fields for creating a user. Automatically sets the
      * error messages for the text fields
-     *
+     * 
      * @return <code>true</code> If the input is valid, <code>false</code>
      *         otherwise
      */
@@ -364,38 +361,28 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             UserInfo.INSTANCE.setFirstName(userInfo
                             .getString(HttpConstants.FIRST_NAME));
 
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_auth_token, userInfo
-                                            .getString(HttpConstants.AUTH_TOKEN));
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_email, userInfo
-                                            .getString(HttpConstants.EMAIL));
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_description, userInfo
-                                            .getString(HttpConstants.DESCRIPTION));
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_first_name, userInfo
-                                            .getString(HttpConstants.FIRST_NAME));
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_name, userInfo
-                                            .getString(HttpConstants.LAST_NAME));
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_user_id, userInfo
-                                            .getString(HttpConstants.ID_USER));
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_location, userInfo
-                                            .getString(HttpConstants.LOCATION));
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_profile_image, userInfo
-                                            .getString(HttpConstants.IMAGE_URL));
+            SharedPreferenceHelper.set(R.string.pref_auth_token, userInfo
+                            .getString(HttpConstants.AUTH_TOKEN));
+            SharedPreferenceHelper.set(R.string.pref_email, userInfo
+                            .getString(HttpConstants.EMAIL));
+            SharedPreferenceHelper.set(R.string.pref_description, userInfo
+                            .getString(HttpConstants.DESCRIPTION));
+            SharedPreferenceHelper.set(R.string.pref_first_name, userInfo
+                            .getString(HttpConstants.FIRST_NAME));
+            SharedPreferenceHelper.set(R.string.pref_last_name, userInfo
+                            .getString(HttpConstants.LAST_NAME));
+            SharedPreferenceHelper.set(R.string.pref_user_id, userInfo
+                            .getString(HttpConstants.ID_USER));
+            SharedPreferenceHelper.set(R.string.pref_location, userInfo
+                            .getString(HttpConstants.LOCATION));
+            SharedPreferenceHelper.set(R.string.pref_profile_image, userInfo
+                            .getString(HttpConstants.IMAGE_URL));
 
-            SharedPreferenceHelper
-            .set(getActivity(), R.string.pref_referrer_count, userInfo
+            SharedPreferenceHelper.set(R.string.pref_referrer_count, userInfo
                             .getString(HttpConstants.REFERRAL_COUNT));
 
-            SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_share_token, userInfo
-                                            .getString(HttpConstants.SHARE_TOKEN));
+            SharedPreferenceHelper.set(R.string.pref_share_token, userInfo
+                            .getString(HttpConstants.SHARE_TOKEN));
 
             BarterLiApplication.startChatService();
 
@@ -437,36 +424,32 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
         }
 
-        else if(requestId==RequestId.PASSWORD_RESET)
-        {
-        	 Bundle args = new Bundle(1);
+        else if (requestId == RequestId.PASSWORD_RESET) {
+            Bundle args = new Bundle(1);
 
+            args.putString(Keys.EMAIL, mEmailForPasswordChange);
 
-        	 args.putString(Keys.EMAIL, mEmailForPasswordChange);
+            final String tag = getTag();
+            if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
 
-        	 final String tag = getTag();
-             if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), PasswordResetFragment.class
+                                                .getName(), args), FragmentTags.PASSWORD_RESET, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
 
-            	 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                         .instantiate(getActivity(), PasswordResetFragment.class
-                                         .getName(), args), FragmentTags.PASSWORD_RESET, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+            } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
+                args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), PasswordResetFragment.class
+                                                .getName(), args), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+            } else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
+                args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
+                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
+                                .instantiate(getActivity(), PasswordResetFragment.class
+                                                .getName(), args), FragmentTags.LOGIN_TO_CHAT, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
 
-             } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
-            	 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
-            	 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                         .instantiate(getActivity(), PasswordResetFragment.class
-                                         .getName(), args), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
-             } else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
-            	 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
-            	 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                         .instantiate(getActivity(), PasswordResetFragment.class
-                                         .getName(), args), FragmentTags.LOGIN_TO_CHAT, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+            }
 
-             }
-
-         }
-
-
+        }
 
     }
 
@@ -508,7 +491,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
     /**
      * Method called when there is an error while google login
-     *
+     * 
      * @param error The {@link Exception} that occured
      */
     public void onGoogleLoginError(final Exception error) {

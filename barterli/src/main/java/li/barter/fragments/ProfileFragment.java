@@ -216,11 +216,11 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         if (mIsLoggedInUser) {
             mChatImageView.setVisibility(View.GONE);
             mImageUrl = SharedPreferenceHelper
-                            .getString(getActivity(), R.string.pref_profile_image);
+                            .getString(R.string.pref_profile_image);
 
             mOwnerNameTextView
                             .setText(SharedPreferenceHelper
-                                            .getString(getActivity(), R.string.pref_first_name));
+                                            .getString(R.string.pref_first_name));
 
             //Set selected to do marquee if text length is very long
             mOwnerBarterLocationTextView.setSelected(true);
@@ -259,7 +259,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         if (mIsLoggedInUser
                         && SharedPreferenceHelper
-                                        .getBoolean(getActivity(), R.string.pref_force_user_refetch)) {
+                                        .getBoolean(R.string.pref_force_user_refetch)) {
             request.setShouldCache(false);
         }
         addRequestToQueue(request, true, 0, true);
@@ -371,7 +371,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 
@@ -382,10 +382,10 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         if (requestId == RequestId.GET_USER_PROFILE) {
             if (isAttached() && mIsLoggedInUser) {
                 SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_force_user_refetch, false);
+                                .set(R.string.pref_force_user_refetch, false);
                 final Bundle userInfo = response.responseBundle;
                 SharedPreferenceHelper
-                                .set(getActivity(), R.string.pref_referrer_count, userInfo
+                                .set(R.string.pref_referrer_count, userInfo
                                                 .getString(HttpConstants.REFERRAL_COUNT));
 
                 updateViewsForUser();

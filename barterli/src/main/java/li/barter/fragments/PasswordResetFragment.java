@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- *
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,22 @@
  ******************************************************************************/
 
 package li.barter.fragments;
+
+import com.android.volley.Request.Method;
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import li.barter.BarterLiApplication;
 import li.barter.R;
@@ -36,22 +52,6 @@ import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-
-import com.android.volley.Request.Method;
-import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 
 /**
  * @author Anshul Kamboj Fragment to reset the password after receiving the token
@@ -85,28 +85,28 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
         if (extras != null) {
             mEmailId = extras.getString(Keys.EMAIL);
         }
-
+        
         mResetButton = (Button) view
                         .findViewById(R.id.button_reset_password);
         mNewPasswordEditText = (EditText) view.findViewById(R.id.edit_text_newpassword);
         mConfirmNewPasswordEditText = (EditText) view
                         .findViewById(R.id.edit_text_confirmpassword);
         mTokenEditText=(EditText)view.findViewById(R.id.edit_text_token);
-
-
+        
+       
         mResetButton.setOnClickListener(this);
         setActionBarDrawerToggleEnabled(false);
         return view;
     }
 
-
+ 
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 
-
+   
 
     @Override
     public void onClick(final View v) {
@@ -124,31 +124,31 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
                 break;
             }
 
-
+         
         }
     }
-
-
-
-
+    
+    
+    
+	
 	/**
 	 * Call the password_reset Api
 	 * @param email The entered email
 	 */
-
+	
 	private void callPasswordReset(String token,String password,String email)
 	{
 
-
+		 
 		 final JSONObject requestObject = new JSONObject();
 
 	        try {
 	            requestObject.put(HttpConstants.EMAIL, email);
-	            requestObject.put(HttpConstants.PASSWORD, email);
+	            requestObject.put(HttpConstants.PASSWORD, password);
 	            requestObject.put(HttpConstants.TOKEN, token);
 	    		final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
 	   				 + ApiEndpoints.PASSWORD_RESET, requestObject.toString(), mVolleyCallbacks);
-
+	   		
 	   		 request.setRequestId(RequestId.CREATE_USER);
 	   		 addRequestToQueue(request, true, 0, true);
 
@@ -157,15 +157,15 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
 	            Logger.e(TAG, e, "Error building create user json");
 	        }
 
-
+	        
 	}
 
-
+    
 
     /**
      * Validates the text fields for resetting a password. Automatically sets the
      * error messages for the text fields
-     *
+     * 
      * @return <code>true</code> If the input is valid, <code>false</code>
      *         otherwise
      */
@@ -179,14 +179,14 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
 
         if (!isValid) {
         	mNewPasswordEditText.setError(getString(R.string.error_enter_email));
-        }
+        } 
 
         if(isValid)
         {
         	isValid&=!TextUtils.isEmpty(token);
         	 if (!isValid) {
              	mTokenEditText.setError(getString(R.string.error_enter_token));
-             }
+             } 
         }
         if(isValid)
         {
@@ -229,36 +229,36 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
                             .getString(HttpConstants.FIRST_NAME));
 
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_auth_token, userInfo
+                            .set(R.string.pref_auth_token, userInfo
                                             .getString(HttpConstants.AUTH_TOKEN));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_email, userInfo
+                            .set(R.string.pref_email, userInfo
                                             .getString(HttpConstants.EMAIL));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_description, userInfo
+                            .set(R.string.pref_description, userInfo
                                             .getString(HttpConstants.DESCRIPTION));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_first_name, userInfo
+                            .set(R.string.pref_first_name, userInfo
                                             .getString(HttpConstants.FIRST_NAME));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_last_name, userInfo
+                            .set(R.string.pref_last_name, userInfo
                                             .getString(HttpConstants.LAST_NAME));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_user_id, userInfo
+                            .set(R.string.pref_user_id, userInfo
                                             .getString(HttpConstants.ID_USER));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_location, userInfo
+                            .set(R.string.pref_location, userInfo
                                             .getString(HttpConstants.LOCATION));
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_profile_image, userInfo
+                            .set(R.string.pref_profile_image, userInfo
                                             .getString(HttpConstants.IMAGE_URL));
-
+            
             SharedPreferenceHelper
-            .set(getActivity(), R.string.pref_referrer_count, userInfo
+            .set(R.string.pref_referrer_count, userInfo
                             .getString(HttpConstants.REFERRAL_COUNT));
-
+            
             SharedPreferenceHelper
-                            .set(getActivity(), R.string.pref_share_token, userInfo
+                            .set(R.string.pref_share_token, userInfo
                                             .getString(HttpConstants.SHARE_TOKEN));
 
             BarterLiApplication.startChatService();
@@ -300,8 +300,8 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
             }
 
         }
-
-
+        
+       
 
     }
 

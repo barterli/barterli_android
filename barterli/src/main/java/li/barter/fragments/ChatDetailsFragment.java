@@ -261,7 +261,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    protected Object getVolleyTag() {
+    protected Object getTaskTag() {
         return hashCode();
     }
 
@@ -489,7 +489,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
                 if (sendChatMessage(message)) {
                     //Delete the older message from the table
-                    DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGE, null, TableChatMessages.NAME, mMessageSelection, new String[] {
+                    DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGE, getTaskTag(), null, TableChatMessages.NAME, mMessageSelection, new String[] {
                         String.valueOf(dbRowId)
                     }, true, this);
                 } else {

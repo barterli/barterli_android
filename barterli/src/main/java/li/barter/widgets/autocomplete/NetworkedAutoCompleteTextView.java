@@ -36,41 +36,41 @@ import li.barter.widgets.TypefacedAutoCompleteTextView;
  *         when typing from internet
  */
 public class NetworkedAutoCompleteTextView extends
-        TypefacedAutoCompleteTextView implements OnItemClickListener {
+                TypefacedAutoCompleteTextView implements OnItemClickListener {
 
-    private static final String TAG = "NetworkedAutoCompleteTextView";
+    private static final String       TAG = "NetworkedAutoCompleteTextView";
 
     /**
      * The threshold of the search query length at which the network search
      * should be performed
      */
-    private int mSuggestCountThreshold;
+    private int                       mSuggestCountThreshold;
 
     /**
      * The amount of time(in milliseconds) to wait after the user has typed to
      * actually trigger the network search
      */
-    private int mSuggestWaitThreshold;
+    private int                       mSuggestWaitThreshold;
 
     /**
      * The current suggestions used for displaying the dropdowns
      */
-    private List<Suggestion> mSuggestions;
+    private List<Suggestion>          mSuggestions;
 
     /**
      * Handler for posting callbacks for perfoming the search request
      */
-    private Handler mHandler;
+    private Handler                   mHandler;
 
     /**
      * Runnable for perfoming search requests
      */
-    private Runnable mPerformSearchRunnable;
+    private Runnable                  mPerformSearchRunnable;
 
     /**
      * Callbacks for perfomiong search requests
      */
-    private INetworkSuggestCallbacks mNetworkSuggestCallbacks;
+    private INetworkSuggestCallbacks  mNetworkSuggestCallbacks;
 
     /**
      * TextWatcher reference for performing network requests
@@ -80,12 +80,12 @@ public class NetworkedAutoCompleteTextView extends
     /**
      * Whether the network suggestions are enabled or not
      */
-    private boolean mSuggestionsEnabled;
+    private boolean                   mSuggestionsEnabled;
 
     /**
      * Suggestions adapter for providing suggestions
      */
-    private SuggestionsAdapter mSuggestionsAdapter;
+    private SuggestionsAdapter        mSuggestionsAdapter;
 
     /**
      * @param context
@@ -118,7 +118,7 @@ public class NetworkedAutoCompleteTextView extends
      * Enable/Disable the network suggestions
      *
      * @param enabled <code>true</code> to enable network suggestions,
-     *                <code>false</code> to disable them
+     *            <code>false</code> to disable them
      */
     public void setNetworkSuggestionsEnabled(final boolean enabled) {
 
@@ -188,20 +188,20 @@ public class NetworkedAutoCompleteTextView extends
     }
 
     public void setNetworkSuggestCallbacks(
-            final INetworkSuggestCallbacks callbacks) {
+                    final INetworkSuggestCallbacks callbacks) {
         mNetworkSuggestCallbacks = callbacks;
     }
 
     /**
      * Add a new set of suggestions to this TextView
      *
-     * @param query       The query for which the siggestions are fetched
+     * @param query The query for which the siggestions are fetched
      * @param suggestions The list of suggestions to use
-     * @param replace      <code>false</code> to add the new suggestions to the
-     *                    TextView, <code>true</code> to replace the suggestion
+     * @param append <code>false</code> to add the new suggestions to the
+     *            TextView, <code>true</code> to replace the suggestion
      */
     public void onSuggestionsFetched(final String query,
-                                     final Suggestion[] suggestions, final boolean replace) {
+                    final Suggestion[] suggestions, final boolean replace) {
 
         if (mSuggestions == null) {
             mSuggestions = new ArrayList<Suggestion>();
@@ -225,12 +225,12 @@ public class NetworkedAutoCompleteTextView extends
 
         @Override
         public void beforeTextChanged(final CharSequence s, final int start,
-                                      final int count, final int after) {
+                        final int count, final int after) {
         }
 
         @Override
         public void onTextChanged(final CharSequence s, final int start,
-                                  final int before, final int count) {
+                        final int before, final int count) {
 
             if (mSuggestionsEnabled) {
 
@@ -281,7 +281,7 @@ public class NetworkedAutoCompleteTextView extends
             public void run() {
                 if (mNetworkSuggestCallbacks != null) {
                     mNetworkSuggestCallbacks
-                            .performNetworkQuery(NetworkedAutoCompleteTextView.this, query);
+                                    .performNetworkQuery(NetworkedAutoCompleteTextView.this, query);
                 }
             }
         };
@@ -289,9 +289,9 @@ public class NetworkedAutoCompleteTextView extends
 
     @Override
     public void onItemClick(final AdapterView<?> parent, final View view,
-                            final int position, final long id) {
+                    final int position, final long id) {
         final Suggestion suggestion = (Suggestion) mSuggestionsAdapter
-                .getItem(position);
+                        .getItem(position);
 
         if (mNetworkSuggestCallbacks != null) {
             mNetworkSuggestCallbacks.onSuggestionClicked(this, suggestion);
