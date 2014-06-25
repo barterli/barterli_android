@@ -4,13 +4,13 @@
 
 # Crashlytics
 crashlytics.properties
-main/res/values/com_crashlytics_export_strings.xml
+src/main/res/values/com_crashlytics_export_strings.xml
 
 # API KEYS (Google)
-main/res/values/api_keys.xml
+src/main/res/values/api_keys.xml
 
 # LICENSE
-main/res/values/license.xml
+src/main/res/values/license.xml
 
-main/assets/crashlytics-build.properties
+src/main/assets/crashlytics-build.properties
 
