@@ -28,6 +28,10 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "boolean", "USE_CRASHLYTICS", "false"
+            ext.enableCrashLytics = false
+        }
         release {
             runProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
@@ -47,7 +51,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.1.1'
     compile 'com.crashlytics.android:crashlytics:1.+'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
-    compile ('de.keyboardsurfer.android.widget:crouton:1.8.1') {
+    compile('de.keyboardsurfer.android.widget:crouton:1.8.1') {
         exclude module: 'support-v4'
         compile 'com.android.support:support-v4:18.0.0'
     }
