@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="li.barter">
+
+    <application>
+
+        <!-- Meta data for crashlytics -->
+        <meta-data
+            android:name="com.crashlytics.ApiKey"
+            android:value="d8d1b5290f091cd33a1a8526f32634c87e61b067" />
+
+    </application>
+
+</manifest>

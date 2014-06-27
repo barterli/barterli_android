@@ -16,7 +16,7 @@ git clone git@github.com:barterli/barterli_android.git
 ```xml
 <resources>
     <!-- Facebook app Id -->
-    <string name="app_id">FACEBOOK_APP_ID</string>
+    <string name="facebook_app_id">FACEBOOK_APP_ID</string>
 
     <!-- Google API Keys -->
     <string name="ga_tracking_id">GOOGLE_ANALYTICS_TRACKING_ID</string>
@@ -26,8 +26,6 @@ git clone git@github.com:barterli/barterli_android.git
     <string name="foursquare_client_id">FOURSQUARE_CLIENT_ID</string>
     <string name="foursquare_client_secret">FOURSQUARE_CLIENT_SECRET</string>
 
-    <!--    CrashLytics ID-->
-    <string name="crashlytics_id">YOUR_CRASHLYTICS_ID</string>
 </resources>
 ```
 

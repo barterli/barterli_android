@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,9 +19,13 @@ package li.barter;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Bundle;
 import android.provider.Settings.Secure;
+import android.util.Log;
 import android.view.ViewConfiguration;
 
 import com.android.volley.RequestQueue;
@@ -33,7 +37,6 @@ import java.lang.reflect.Field;
 
 import li.barter.chat.ChatService;
 import li.barter.http.IVolleyHelper;
-import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.SharedPreferenceHelper;
@@ -42,7 +45,7 @@ import li.barter.utils.Utils;
 /**
  * Custom Application class which holds some common functionality for the
  * Application
- * 
+ *
  * @author Vinay S Shenoy
  */
 public class BarterLiApplication extends Application implements IVolleyHelper {
@@ -53,9 +56,9 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
      * Maintains a reference to the application context so that it can be
      * referred anywhere wihout fear of leaking. It's a hack, but it works.
      */
-    private static Context      sStaticContext;
+    private static Context sStaticContext;
 
-    private RequestQueue        mRequestQueue;
+    private RequestQueue mRequestQueue;
 
     /**
      * Gets a reference to the application context
@@ -74,9 +77,9 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
 
         sStaticContext = getApplicationContext();
         if (!SharedPreferenceHelper
-                        .getBoolean(R.string.pref_migrated_from_alpha)
-                        && (SharedPreferenceHelper
-                                        .getInt(R.string.pref_last_version_code) == 0)) {
+                .getBoolean(R.string.pref_migrated_from_alpha)
+                && (SharedPreferenceHelper
+                .getInt(R.string.pref_last_version_code) == 0)) {
             doMigrationFromAlpha();
             SharedPreferenceHelper.set(R.string.pref_migrated_from_alpha, true);
         }
@@ -86,7 +89,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
          */
         saveCurrentAppVersionIntoPreferences();
         if (BuildConfig.USE_CRASHLYTICS) {
-            Crashlytics.start(this);
+            startCrashlytics();
         }
 
         overrideHardwareMenuButton();
@@ -95,14 +98,42 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         mRequestQueue = Volley.newRequestQueue(this);
         // Picasso.with(this).setDebugging(true);
         UserInfo.INSTANCE.setDeviceId(Secure.getString(this
-                        .getContentResolver(), Secure.ANDROID_ID));
+                .getContentResolver(), Secure.ANDROID_ID));
         readUserInfoFromSharedPref();
         Utils.setupNetworkInfo(this);
         if (DeviceInfo.INSTANCE.isNetworkConnected()) {
             startChatService();
         }
 
-    };
+    }
+
+    ;
+
+    private void startCrashlytics() {
+        boolean hasValidKey = false;
+        try {
+
+            Context appContext = this;
+            ApplicationInfo ai = appContext.getPackageManager().getApplicationInfo(appContext.getPackageName(),
+                    PackageManager.GET_META_DATA);
+
+            Bundle bundle = ai.metaData;
+            if (bundle != null) {
+                String apiKey = bundle.getString("com.crashlytics.ApiKey");
+                hasValidKey = apiKey != null && !apiKey.equals("0000000000000000000000000000000000000000");
+            }
+
+        } catch (NameNotFoundException e) {
+            Log.e(TAG, "Unexpected NameNotFound.", e);
+        }
+
+        if (hasValidKey) {
+            Crashlytics.start(this);
+        } else {
+            Log.e(TAG, "Crashlytics Manifest is ignored.");
+        }
+    }
+
 
     /**
      * Save the current app version info into preferences. This is purely for
@@ -111,11 +142,11 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
     private void saveCurrentAppVersionIntoPreferences() {
         try {
             PackageInfo info = getPackageManager()
-                            .getPackageInfo(getPackageName(), 0);
+                    .getPackageInfo(getPackageName(), 0);
             SharedPreferenceHelper
-                            .set(R.string.pref_last_version_code, info.versionCode);
+                    .set(R.string.pref_last_version_code, info.versionCode);
             SharedPreferenceHelper
-                            .set(R.string.pref_last_version_name, info.versionName);
+                    .set(R.string.pref_last_version_name, info.versionName);
         } catch (NameNotFoundException e) {
             //Shouldn't happen
         }
@@ -136,15 +167,15 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
     private void readUserInfoFromSharedPref() {
 
         UserInfo.INSTANCE.setAuthToken(SharedPreferenceHelper
-                        .getString(R.string.pref_auth_token));
+                .getString(R.string.pref_auth_token));
         UserInfo.INSTANCE.setId(SharedPreferenceHelper
-                        .getString(R.string.pref_user_id));
+                .getString(R.string.pref_user_id));
         UserInfo.INSTANCE.setEmail(SharedPreferenceHelper
-                        .getString(R.string.pref_email));
+                .getString(R.string.pref_email));
         UserInfo.INSTANCE.setProfilePicture(SharedPreferenceHelper
-                        .getString(R.string.pref_profile_image));
+                .getString(R.string.pref_profile_image));
         UserInfo.INSTANCE.setFirstName(SharedPreferenceHelper
-                        .getString(R.string.pref_first_name));
+                .getString(R.string.pref_first_name));
     }
 
     /**
@@ -161,7 +192,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         try {
             final ViewConfiguration config = ViewConfiguration.get(this);
             final Field menuKeyField = ViewConfiguration.class
-                            .getDeclaredField("sHasPermanentMenuKey");
+                    .getDeclaredField("sHasPermanentMenuKey");
             if (menuKeyField != null) {
                 menuKeyField.setAccessible(true);
                 menuKeyField.setBoolean(config, false);
