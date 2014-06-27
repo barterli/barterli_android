@@ -1,19 +1,22 @@
 [barter.li Android App][1]
 =====================
 
-1. Download our Repo.
+1. Clone the repo. 
 
-2. Add the other projects as library projects.
+```
+git clone git@github.com:barterli/barterli_android.git
+```
 
-3. Remember to update your [SDK and build tools][2] to the latest versions. We use the Renderscript Support Library, which always gets updated to the latest build tools.
+2. Import to [Android Studio][2].
+
+3. Remember to update your [SDK and build tools][3] to the latest versions. We use the Renderscript Support Library, which always gets updated to the latest build tools.
 
 4. You'll need to register a Google Maps Api Keys v2 and add it in a file called api_keys.xml in the res/values folder. Make sure this is not pushed to your repo and keep it local on your machine.
 
 ```xml
 <resources>
-
     <!-- Facebook app Id -->
-    <string name="app_id">123456</string>
+    <string name="app_id">FACEBOOK_APP_ID</string>
 
     <!-- Google API Keys -->
     <string name="ga_tracking_id">GOOGLE_ANALYTICS_TRACKING_ID</string>
@@ -49,4 +52,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 [1]: https://play.google.com/store/apps/details?id=li.barter
-[2]: https://developer.android.com/tools/sdk/tools-notes.html
+[2]: https://developer.android.com/sdk/installing/studio.html
+[3]: https://developer.android.com/tools/sdk/tools-notes.html
