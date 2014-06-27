@@ -35,7 +35,29 @@ git clone git@github.com:barterli/barterli_android.git
 
 - If you do something cool, and you think we can benefit, feel free to send a pull request our way. We'll be updating our contribution guidelines very soon once the stable version of the app is out. The current target is April 13, 2014 for the 1st Alpha Release.
 
-## License
+ATTRIBUTIONS
+------------
+- [Picasso][l1]
+- [ViewPagerIndicator][l2]
+- [SlidingUpPanel][l3]
+- [Enhanced Volley][l4]
+- [Crouton][l5]
+- [Facebook Android SDK][l6]
+- [Android Quick Response Code][l7]
+- [ActionBarPullToRefresh][l8]
+- [Crashlytics][l9]
+
+[l1]: https://github.com/square/picasso
+[l2]: https://github.com/JakeWharton/Android-ViewPagerIndicator
+[l3]: https://github.com/umano/AndroidSlidingUpPanel
+[l4]: https://github.com/vinaysshenoy/enhanced-volley
+[l5]: https://github.com/keyboardsurfer/Crouton
+[l6]: https://github.com/facebook/facebook-android-sdk
+[l7]: https://github.com/phishman3579/android-quick-response-code
+[l8]: https://github.com/chrisbanes/ActionBar-PullToRefresh
+[l9]: https://www.crashlytics.com/
+
+## LICENSE
 
 Copyright (C) 2014 barter.li
 
