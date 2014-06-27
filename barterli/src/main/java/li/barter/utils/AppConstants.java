@@ -33,13 +33,6 @@ import li.barter.http.HttpConstants;
 public class AppConstants {
 
     public static final boolean DEBUG                      = true;
-    /**
-     * Set to <code>true</code> for release builds. Will enable Google Analytics
-     * reporting. Otherwise, Google Analytics will be set to a dry tun version
-     */
-    public static final boolean REPORT_GOOGLE_ANALYTICS    = false;
-
-    public static final boolean ENABLE_CRASHLYTICS         = false;
 
     public static final String  FACEBOOK                   = "facebook";
     public static final String  FBPERMISSIONS[]            = new String[] {

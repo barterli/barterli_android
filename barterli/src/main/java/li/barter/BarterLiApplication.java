@@ -85,7 +85,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
          * it in a future update if necessary
          */
         saveCurrentAppVersionIntoPreferences();
-        if (AppConstants.ENABLE_CRASHLYTICS) {
+        if (BuildConfig.USE_CRASHLYTICS) {
             Crashlytics.start(this);
         }
 

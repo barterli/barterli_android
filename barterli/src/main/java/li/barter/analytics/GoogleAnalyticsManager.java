@@ -26,6 +26,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import li.barter.BarterLiApplication;
+import li.barter.BuildConfig;
 import li.barter.R;
 import li.barter.analytics.AnalyticsConstants.ParamKeys;
 import li.barter.analytics.AnalyticsConstants.ParamValues;
@@ -77,7 +78,7 @@ public class GoogleAnalyticsManager {
 
         final Context context = BarterLiApplication.getStaticContext();
 
-        if (!AppConstants.REPORT_GOOGLE_ANALYTICS) {
+        if (!BuildConfig.REPORT_GOOGLE_ANALYTICS) {
             GoogleAnalytics.getInstance(context).setDryRun(true);
             GoogleAnalytics.getInstance(context).getLogger()
                             .setLogLevel(Logger.LogLevel.VERBOSE);
