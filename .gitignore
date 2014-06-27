@@ -1,7 +1,47 @@
-**/bin
-**/gen
-**/.DS_Store
-/barter.li/res/values/api_keys.xml
-/.metadata/*
-enhanced-volley/.classpath
-barter.li/res/values/license.xml
+# IDE settings files specific per user
+.idea/
+.gradle/
+.metadata/
+.classpath
+.project
+.settings/
+/.idea/workspace.xml
+
+# Mac OS X files
+.DS_Store
+
+# recommended .gitignore from "https://github.com/github/gitignore.git"
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+/bin
+/gen
+*/tmp/
+out/
+build/
+mirror/
+# Local configuration file (sdk path, etc)
+/local.properties
+*.iml
+*/*.iml
+*/*/*.iml
+
+#output
+out*
+
+# Android Lint Tool configuration file
+lint.xml
+
+project.properties
+local.properties
+
+libraries/enhanced-volley/.classpath
