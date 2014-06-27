@@ -105,10 +105,6 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         if (DeviceInfo.INSTANCE.isNetworkConnected()) {
             startChatService();
         }
-
-
-        throw new RuntimeException("Hmmmm");
-
     }
 
     private void startCrashlytics() {
