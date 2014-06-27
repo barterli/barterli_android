@@ -32,8 +32,6 @@ import li.barter.http.HttpConstants;
  */
 public class AppConstants {
 
-    public static final boolean DEBUG                      = true;
-
     public static final String  FACEBOOK                   = "facebook";
     public static final String  FBPERMISSIONS[]            = new String[] {
                                                                "email"

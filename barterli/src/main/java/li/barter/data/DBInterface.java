@@ -20,6 +20,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import li.barter.BarterLiApplication;
+import li.barter.BuildConfig;
 import li.barter.utils.AppConstants;
 import li.barter.utils.Logger;
 import li.barter.utils.Utils;
@@ -322,7 +323,7 @@ public class DBInterface {
      */
     private static void throwIfOnMainThread() {
         if (Utils.isMainThread()) {
-            if (AppConstants.DEBUG) {
+            if (BuildConfig.DEBUG_MODE) {
                 throw new RuntimeException("Accessing database on main thread! Use the async() versions of the methods.");
             } else {
                 Logger.e(TAG, "Accessing database on main thread! Use the async() versions of the methods.");

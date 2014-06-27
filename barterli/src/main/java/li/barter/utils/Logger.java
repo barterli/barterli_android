@@ -25,19 +25,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import li.barter.BuildConfig;
+
 /** Logging helper class. Repurposed from the AOSP Volley source */
 public class Logger {
 
     public static void v(final String tag, final String format,
                     final Object... args) {
-        if (AppConstants.DEBUG) {
+        if (BuildConfig.DEBUG_MODE) {
             Log.v(tag, buildMessage(format, args));
         }
     }
 
     public static void d(final String tag, final String format,
                     final Object... args) {
-        if (AppConstants.DEBUG) {
+        if (BuildConfig.DEBUG_MODE) {
             Log.d(tag, buildMessage(format, args));
         }
     }
@@ -64,7 +66,7 @@ public class Logger {
 
     public static void i(final String tag, final String format,
                     final Object... args) {
-        if (AppConstants.DEBUG) {
+        if (BuildConfig.DEBUG_MODE) {
             Log.i(tag, buildMessage(format, args));
         }
     }

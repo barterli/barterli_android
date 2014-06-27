@@ -90,7 +90,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         }
 
         overrideHardwareMenuButton();
-        VolleyLog.sDebug = AppConstants.DEBUG;
+        VolleyLog.sDebug = BuildConfig.DEBUG_MODE;
 
         mRequestQueue = Volley.newRequestQueue(this);
         // Picasso.with(this).setDebugging(true);
