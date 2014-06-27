@@ -1,42 +1,13 @@
 ECLIPSE ANDROID PROJECT IMPORT SUMMARY
 ======================================
 
-Manifest Merging:
------------------
-Your project uses libraries that provide manifests, and your Eclipse
-project did not explicitly turn on manifest merging. In Android Gradle
-projects, manifests are always merged (meaning that contents from your
-libraries' manifests will be merged into the app manifest. If you had
-manually copied contents from library manifests into your app manifest
-you may need to remove these for the app to build correctly.
-
 Ignored Files:
 --------------
 The following files were *not* copied into the new Gradle project; you
 should evaluate whether these are still needed in your project and if
 so manually move them:
 
-From AndroidQuickResponseCode:
-* .gitignore
-* build.sh
-* default.properties
-From Barter.li:
-* .gitignore
-* LICENSE-2.0.html
-* proguard/
-* proguard/mapping.txt
-From FacebookSDK:
-* build.gradle
-* build.xml
-From SlidingPanelLibrary:
-* build.gradle
-* gradle.properties
-From ViewPagerlibrary:
 * pom.xml
-From enhanced-volley:
-* .gitignore
-* README.md
-* proguard-project.txt
 
 Replaced Jars with Dependencies:
 --------------------------------
@@ -50,59 +21,28 @@ You can disable the jar replacement in the import wizard and try again:
 
 android-support-v4.jar => com.android.support:support-v4:+
 
-Replaced Libraries with Dependencies:
--------------------------------------
-The importer recognized the following library projects as third party
-libraries and replaced them with Gradle dependencies instead. This has
-the advantage that more explicit version information is known, and the
-libraries can be updated automatically. However, it is possible that
-the source files in your project were of an older version than the
-dependency we picked, which could render the project not compileable.
-You can disable the library replacement in the import wizard and try
-again:
-
-google-play-services_lib => [com.google.android.gms:play-services:+]
-
 Moved Files:
 ------------
 Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
-In AndroidQuickResponseCode:
-* AndroidManifest.xml => androidQuickResponseCode/src/main/AndroidManifest.xml
-* assets/ => androidQuickResponseCode/src/main/assets/
-* libs/core.jar => androidQuickResponseCode/libs/core.jar
-* res/ => androidQuickResponseCode/src/main/res/
-* src/ => androidQuickResponseCode/src/main/java/
-In FacebookSDK:
-* AndroidManifest.xml => facebookSDK/src/main/AndroidManifest.xml
-* res/ => facebookSDK/src/main/res/
-* src/ => facebookSDK/src/main/java/
-In SlidingPanelLibrary:
-* AndroidManifest.xml => slidingPanelLibrary/src/main/AndroidManifest.xml
-* libs/nineoldandroids-2.4.0.jar => slidingPanelLibrary/libs/nineoldandroids-2.4.0.jar
-* res/ => slidingPanelLibrary/src/main/res/
-* src/ => slidingPanelLibrary/src/main/java/
-In ViewPagerlibrary:
-* AndroidManifest.xml => viewPagerlibrary/src/main/AndroidManifest.xml
-* res/ => viewPagerlibrary/src/main/res/
-* src/ => viewPagerlibrary/src/main/java/
-In enhanced-volley:
-* AndroidManifest.xml => enhancedvolley/src/main/AndroidManifest.xml
-* lint.xml => enhancedvolley/lint.xml
-* res/ => enhancedvolley/src/main/res/
-* src/ => enhancedvolley/src/main/java/
-In Barter.li:
-* AndroidManifest.xml => barterli/src/main/AndroidManifest.xml
-* assets/ => barterli/src/main/assets/
-* libs/commons-io-1.2.jar => barterli/libs/commons-io-1.2.jar
-* libs/crashlytics.jar => barterli/libs/crashlytics.jar
-* libs/picasso-2.2.0.jar => barterli/libs/picasso-2.2.0.jar
-* libs/rabbitmq-client.jar => barterli/libs/rabbitmq-client.jar
-* lint.xml => barterli/lint.xml
-* proguard-project.txt => barterli/proguard-project.txt
-* res/ => barterli/src/main/res/
-* src/ => barterli/src/main/java/
+* AndroidManifest.xml => library/src/main/AndroidManifest.xml
+* res/ => library/src/main/res/
+* src/ => library/src/main/java/
+
+Missing Android Support Repository:
+-----------------------------------
+Some useful libraries, such as the Android Support Library, are
+installed from a special Maven repository, which should be installed
+via the SDK manager.
+
+It looks like this library is missing from your SDK installation at:
+null
+
+To install it, open the SDK manager, and in the Extras category,
+select "Android Support Repository". You may also want to install the
+"Google Repository" if you want to use libraries like Google Play
+Services.
 
 Next Steps:
 -----------

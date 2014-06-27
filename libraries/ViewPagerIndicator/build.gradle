@@ -2,21 +2,22 @@ apply plugin: 'android-library'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    buildToolsVersion "19.1.0"
+
     defaultConfig {
-        applicationId 'com.jwetherell.quick_response_code'
-        minSdkVersion 5
+        applicationId "com.viewpagerindicator"
+        minSdkVersion 4
+        targetSdkVersion 4
     }
+
     buildTypes {
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-    productFlavors {
-    }
 }
 
 dependencies {
-    compile files('libs/core.jar')
+    compile 'com.android.support:support-v4:19.+'
 }

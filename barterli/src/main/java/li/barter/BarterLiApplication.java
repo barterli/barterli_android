@@ -16,11 +16,6 @@
 
 package li.barter;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.Volley;
-import com.crashlytics.android.Crashlytics;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -28,6 +23,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.provider.Settings.Secure;
 import android.view.ViewConfiguration;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.Volley;
+import com.crashlytics.android.Crashlytics;
 
 import java.lang.reflect.Field;
 
