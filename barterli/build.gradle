@@ -47,16 +47,19 @@ dependencies {
     compile project(':libraries:androidQuickResponseCode')
     compile project(':libraries:facebookSDK')
     compile project(':libraries:enhancedvolley')
-    compile project(':libraries:slidingPanelLibrary')
-    compile project(':libraries:viewPagerlibrary')
-    compile 'com.android.support:support-v4:19.+'
+    compile 'com.android.support:support-v4:20.+'
     compile 'com.google.android.gms:play-services:+'
     compile 'com.squareup.picasso:picasso:2.1.1'
     compile 'com.crashlytics.android:crashlytics:1.+'
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
-    compile ('de.keyboardsurfer.android.widget:crouton:1.8.1') {
+    compile('de.keyboardsurfer.android.widget:crouton:1.8.1') {
         exclude module: 'support-v4'
         compile 'com.android.support:support-v4:18.0.0'
     }
     compile 'com.github.castorflex.smoothprogressbar:library:+'
+    compile('com.sothree.slidinguppanel:library:+') {
+        exclude module: 'support-v4'
+        compile 'com.android.support:support-v4:20.+'
+    }
+    compile 'com.viewpagerindicator:library:2.4.1'
 }
