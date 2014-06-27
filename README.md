@@ -26,6 +26,9 @@ git clone git@github.com:barterli/barterli_android.git
     <string name="foursquare_client_id">FOURSQUARE_CLIENT_ID</string>
     <string name="foursquare_client_secret">FOURSQUARE_CLIENT_SECRET</string>
 
+    <!--Crashlytics id -->
+    <string name="crashlytics_id">CRASHLYTICS_ID</string>
+
 </resources>
 ```
 

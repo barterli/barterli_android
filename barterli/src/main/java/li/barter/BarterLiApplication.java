@@ -88,10 +88,11 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
          * it in a future update if necessary
          */
         saveCurrentAppVersionIntoPreferences();
-        if (BuildConfig.USE_CRASHLYTICS) {
-            startCrashlytics();
-        }
+/*        if (BuildConfig.USE_CRASHLYTICS) {
+            //startCrashlytics();
+        }*/
 
+        startCrashlytics();
         overrideHardwareMenuButton();
         VolleyLog.sDebug = BuildConfig.DEBUG_MODE;
 
@@ -105,9 +106,10 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
             startChatService();
         }
 
-    }
 
-    ;
+        throw new RuntimeException("Hmmmm");
+
+    }
 
     private void startCrashlytics() {
         boolean hasValidKey = false;
@@ -130,7 +132,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
         if (hasValidKey) {
             Crashlytics.start(this);
         } else {
-            Log.e(TAG, "Crashlytics Manifest is ignored.");
+            Log.e(TAG, "Check the crashlytics id in api_keys.");
         }
     }
 

@@ -9,7 +9,9 @@ buildscript {
 }
 
 apply plugin: 'com.android.application'
+/*
 apply plugin: 'crashlytics'
+*/
 
 repositories {
     maven { url 'http://download.crashlytics.com/maven' }
@@ -44,11 +46,6 @@ android {
             ext.enableCrashLytics = true
             runProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
-        }
-    }
-    sourceSets {
-        main {
-            manifest.srcFile 'src/main/AndroidManifest.xml'
         }
     }
 }
