@@ -1,17 +1,17 @@
 [barter.li Android App][1]
 =====================
 
-1. Clone the repo. 
+- Clone the repo. 
 
 ```
 git clone git@github.com:barterli/barterli_android.git
 ```
 
-2. Import to [Android Studio][2].
+- Import to [Android Studio][2].
 
-3. Remember to update your [SDK and build tools][3] to the latest versions. We use the Renderscript Support Library, which always gets updated to the latest build tools.
+- Remember to update your [SDK and build tools][3] to the latest versions. We use the Renderscript Support Library, which always gets updated to the latest build tools.
 
-4. You'll need to register a Google Maps Api Keys v2 and add it in a file called api_keys.xml in the res/values folder. Make sure this is not pushed to your repo and keep it local on your machine.
+- You'll need to register a Google Maps Api Keys v2 and add it in a file called api_keys.xml in the res/values folder. Make sure this is not pushed to your repo and keep it local on your machine.
 
 ```xml
 <resources>
@@ -31,9 +31,9 @@ git clone git@github.com:barterli/barterli_android.git
 </resources>
 ```
 
-5. You are good to go!
+- You are good to go!
 
-6. If you do something cool, and you think we can benefit, feel free to send a pull request our way. We'll be updating our contribution guidelines very soon once the stable version of the app is out. The current target is April 13, 2014 for the 1st Alpha Release.
+- If you do something cool, and you think we can benefit, feel free to send a pull request our way. We'll be updating our contribution guidelines very soon once the stable version of the app is out. The current target is April 13, 2014 for the 1st Alpha Release.
 
 ## License
 
