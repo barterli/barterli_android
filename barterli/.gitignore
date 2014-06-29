@@ -8,3 +8,5 @@ src/main/assets/crashlytics-build.properties
 
 src/main/res/values/api_keys.xml
 src/main/res/values/license.xml
+
+# src/main/AndroidManifest.custom.xml

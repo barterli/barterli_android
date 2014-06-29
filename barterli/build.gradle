@@ -8,8 +8,10 @@ buildscript {
     }
 }
 
-apply plugin: 'android'
+apply plugin: 'com.android.application'
+/*
 apply plugin: 'crashlytics'
+*/
 
 repositories {
     maven { url 'http://download.crashlytics.com/maven' }
@@ -64,7 +66,7 @@ dependencies {
         compile 'com.android.support:support-v4:19.+'
     }
     compile 'com.github.castorflex.smoothprogressbar:library:+'
-    compile('com.sothree.slidinguppanel:library:+') {
+    compile('com.sothree.slidinguppanel:library:1.0.1') {
         exclude module: 'support-v4'
         compile 'com.android.support:support-v4:19.+'
     }

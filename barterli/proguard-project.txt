@@ -37,11 +37,7 @@
 -injars      bin/classes
 -outjars     bin/classes-processed.jar
 -libraryjars /Users/anshul1235/Desktop/data/adt-bundle-mac-x86_64-20140321/sdk/platforms/android-19/android.jar
--libraryjars libs/android-support-v4.jar
--libraryjars libs/commons-io-1.2.jar
--libraryjars libs/crashlytics.jar
--libraryjars libs/picasso-2.2.0.jar
--libraryjars libs/rabbitmq-client.jar
+ -libraryjars libs
 
 -dontwarn android.content.Context
 -dontwarn com.google.android.gms.**
@@ -69,3 +65,4 @@
 -keepattributes Signature
 -keepattributes SourceFile,LineNumberTable
 -keep class android.support.** { *; }
+-keep class com.crashlytics.** { *; }
