@@ -30,8 +30,8 @@
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_medium"
-        app:fontStyle="bold" />
+        android:textSize="@dimen/text_x_large"
+        app:fontStyle="condensed_light" />
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_nav_desc"
