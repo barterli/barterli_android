@@ -24,6 +24,10 @@ android {
     defaultConfig {}
     productFlavors {}
 
+    lintOptions {
+        abortOnError false
+    }
+
     defaultConfig {
         applicationId "li.barter"
         minSdkVersion 14
