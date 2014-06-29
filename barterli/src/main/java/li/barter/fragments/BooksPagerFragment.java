@@ -1,10 +1,6 @@
 
 package li.barter.fragments;
 
-import com.google.android.gms.analytics.HitBuilders.EventBuilder;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -20,8 +16,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,7 +27,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ShareActionProvider;
+
+import com.google.android.gms.analytics.HitBuilders.EventBuilder;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelSlideListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,7 +119,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
      */
     private boolean              mOwnedByUser            = false;
 
-    private ShareActionProvider  mShareActionProvider;
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -176,8 +177,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         inflater.inflate(R.menu.menu_book_detail, menu);
 
         final MenuItem menuItem = menu.findItem(R.id.action_share);
-        mShareActionProvider = (ShareActionProvider) menuItem
-                        .getActionProvider();
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
         if (mBookTitleArray != null && mBookTitleArray.size() > 0) {
             updateShareIntent(mBookTitleArray.get(mBookDetailPager

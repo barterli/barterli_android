@@ -14,7 +14,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Group to hide action items when navigation drawer is opened -->
     <group android:id="@+id/group_hide_on_drawer_open" >
@@ -22,7 +23,7 @@
             android:id="@+id/action_about_select_location"
             android:icon="@drawable/ic_action_about"
             android:orderInCategory="1"
-            android:showAsAction="ifRoom"
+            app:showAsAction="ifRoom"
             android:title="@string/about"/>
     </group>
 
