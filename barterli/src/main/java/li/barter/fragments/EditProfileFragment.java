@@ -70,6 +70,7 @@ import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
+import li.barter.utils.Utils;
 
 /**
  * @author Sharath Pandeshwar
@@ -376,7 +377,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
      * @param lastName Last Name of the person
      * @param aboutMeDescription A Brief Introduction about the person
      * @param shouldIncludePic Should the Profile picture be sent.
-     * @param Path of the image file to be sent, if should be sent.
+     * @param profilePicPath Path of the image file to be sent, if should be sent.
      */
 
     private void saveProfileInfoToServer(final String firstName,
@@ -425,26 +426,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             SharedPreferenceHelper.set(R.string.pref_force_user_refetch, true);
             
             final Bundle userInfo = response.responseBundle;
-
-            final String firstName = userInfo
-                            .getString(HttpConstants.FIRST_NAME);
-
-            SharedPreferenceHelper
-                            .set(R.string.pref_description, userInfo
-                                            .getString(HttpConstants.DESCRIPTION));
-            SharedPreferenceHelper
-                            .set(R.string.pref_first_name, firstName);
-            SharedPreferenceHelper
-                            .set(R.string.pref_last_name, userInfo
-                                            .getString(HttpConstants.LAST_NAME));
-            SharedPreferenceHelper
-                            .set(R.string.pref_profile_image, userInfo
-                                            .getString(HttpConstants.IMAGE_URL));
-
-            UserInfo.INSTANCE.setFirstName(firstName);
-            UserInfo.INSTANCE.setProfilePicture(userInfo
-                            .getString(HttpConstants.IMAGE_URL));
-
+            Utils.updateUserInfoFromBundle(userInfo, true);
             onUpNavigate();
         }
 

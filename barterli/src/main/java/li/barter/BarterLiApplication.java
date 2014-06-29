@@ -25,7 +25,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
-import android.util.Log;
 import android.view.ViewConfiguration;
 
 import com.android.volley.RequestQueue;
@@ -174,6 +173,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
                 .getString(R.string.pref_profile_image));
         UserInfo.INSTANCE.setFirstName(SharedPreferenceHelper
                 .getString(R.string.pref_first_name));
+        UserInfo.INSTANCE.setLastName(SharedPreferenceHelper.getString(R.string.pref_last_name));
     }
 
     /**

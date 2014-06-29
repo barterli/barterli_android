@@ -49,6 +49,7 @@ public class AppConstants {
     public static final String ACTION_SHOW_CHAT_DETAIL = "li.barter.ACTION_SHOW_CHAT_DETAIL";
     public static final String ACTION_DISCONNECT_CHAT = "li.barter.ACTION_DISCONNECT_CHAT";
     public static final String ACTION_CHAT_BUTTON_CLICKED = "li.barter.ACTION_CHAT_BUTTON_CLICKED";
+    public static final String ACTION_USER_INFO_UPDATED = "li.barter.ACTION_USER_INFO_UPDATED";
 
     public static final String JSON = "json";
     public static final String FALSE = "false";
@@ -64,6 +65,9 @@ public class AppConstants {
 
     // Default Book Image url we getting from the server when there is no image
     public static final String DEFAULT_BOOKIMAGE_URL = "1_default.png";
+    public static final String PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=li.barter";
+    public static final String PLAY_STORE_MARKET_LINK = "market://details?id=li.barter";
+    public static final String REFERRER_FORMAT = "&referrer=%s";
 
     /**
      * Singleton to hold frequently accessed info in memory
@@ -81,6 +85,7 @@ public class AppConstants {
         private String mAuthHeader;
         private String mDeviceId;
         private String mFirstName;
+        private String mLastName;
 
         private UserInfo() {
             reset();
@@ -93,6 +98,7 @@ public class AppConstants {
             mId = "";
             mProfilePicture = "";
             mFirstName = "";
+            mLastName = "";
         }
 
         public String getAuthToken() {
@@ -100,6 +106,7 @@ public class AppConstants {
         }
 
         public void setAuthToken(final String authToken) {
+
             if (authToken == null) {
                 mAuthToken = "";
             } else {
@@ -112,6 +119,7 @@ public class AppConstants {
         }
 
         public void setEmail(final String email) {
+
             if (email == null) {
                 mEmail = "";
             } else {
@@ -124,6 +132,7 @@ public class AppConstants {
         }
 
         public void setId(final String id) {
+
             if (id == null) {
                 mId = "";
             } else {
@@ -145,12 +154,12 @@ public class AppConstants {
 
         }
 
-        public void setDeviceId(final String deviceId) {
-            mDeviceId = deviceId;
-        }
-
         public String getDeviceId() {
             return mDeviceId;
+        }
+
+        public void setDeviceId(final String deviceId) {
+            mDeviceId = deviceId;
         }
 
         public String getAuthHeader() {
@@ -164,12 +173,22 @@ public class AppConstants {
             return mAuthHeader;
         }
 
+        public String getFirstName() {
+            return mFirstName;
+        }
+
         public void setFirstName(final String firstName) {
+
             mFirstName = firstName;
         }
 
-        public String getFirstName() {
-            return mFirstName;
+        public String getLastName() {
+            return mLastName;
+        }
+
+        public void setLastName(final String lastName) {
+
+            mLastName = lastName;
         }
 
     }
@@ -434,15 +453,10 @@ public class AppConstants {
      * @author Vinay S Shenoy
      */
     public static interface ChatStatus {
-        //Different types of chat status. Linked to the chat_sending_status of database 
+        //Different types of chat status. Linked to the chat_sending_status of database
         public static final int SENDING = 0;
         public static final int SENT = 1;
         public static final int FAILED = -1;
         public static final int RECEIVED = 2;
     }
-
-    public static final String PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=li.barter";
-    public static final String PLAY_STORE_MARKET_LINK = "market://details?id=li.barter";
-
-    public static final String REFERRER_FORMAT = "&referrer=%s";
 }

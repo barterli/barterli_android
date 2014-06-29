@@ -25,13 +25,13 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableString;
@@ -52,6 +52,7 @@ import com.android.volley.RequestQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import de.keyboardsurfer.android.widget.crouton.Crouton;
+import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.chat.ChatService;
@@ -90,57 +91,73 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
 
     private static final int ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
             | ActionBar.DISPLAY_SHOW_TITLE;
-
-    /**
-     * @author Vinay S Shenoy Enum to handle the different types of Alerts that
-     *         can be shown
-     */
-
-    public enum AlertStyle {
-        ALERT,
-        INFO,
-        ERROR
-    }
-
     /**
      * {@link VolleyCallbacks} for encapsulating Volley request responses
      */
     protected VolleyCallbacks mVolleyCallbacks;
     private AtomicInteger mRequestCounter;
-
     private ActivityTransition mActivityTransition;
-
     /**
      * Drawer Layout that contains the Navigation Drawer
      */
     private DrawerLayout mDrawerLayout;
-
     /**
      * Drawer toggle for Action Bar
      */
     private ActionBarDrawerToggle mDrawerToggle;
-
     /**
      * {@link android.widget.FrameLayout} that provides the navigation items
      */
     private FrameLayout mNavFrameContent;
-
     /**
      * Whether the current activity has a Navigation drawer or not
      */
     private boolean mHasNavigationDrawer;
-
     /**
      * Whether the nav drawer associated with this activity is also associated
      * with the drawer toggle. Is valid only if
      * <code>mHasNavigationDrawer</code> is <code>true</code>
      */
     private boolean mIsActionBarNavDrawerToggleEnabled;
-
     /**
      * Whether a screen hit should be reported to analytics
      */
     private boolean mShouldReportScreenHit;
+
+    /**
+     * Creates a Crouton View based on the style
+     *
+     * @param context {@link Context} reference to get the
+     *                {@link LayoutInflater} reference
+     * @param message The message to display
+     * @param style   The style of Crouton
+     * @return A View to display as a Crouton
+     */
+    private static View getCroutonViewForStyle(final Context context,
+                                               final String message, final AlertStyle style) {
+        int layoutResId = R.layout.crouton_info; //Default layout
+        switch (style) {
+
+            case ALERT: {
+                layoutResId = R.layout.crouton_alert;
+                break;
+            }
+
+            case ERROR: {
+                layoutResId = R.layout.crouton_error;
+                break;
+            }
+
+            case INFO: {
+                layoutResId = R.layout.crouton_info;
+            }
+        }
+        final View croutonText = LayoutInflater.from(context)
+                .inflate(layoutResId, null);
+        ((TextView) croutonText.findViewById(R.id.text_message))
+                .setText(message);
+        return croutonText;
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -231,6 +248,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
             startService(disconnectChatIntent);
             getSupportFragmentManager()
                     .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext()).sendBroadcast(new Intent(AppConstants.ACTION_USER_INFO_UPDATED));
         }
     }
 
@@ -408,7 +426,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     public final void setActionBarTitle(final String title) {
 
         final SpannableString s = new SpannableString(title);
-        s.setSpan(new TypefacedSpan(this, TypefaceCache.BOLD), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.setSpan(new TypefacedSpan(this, TypefaceCache.LIGHT), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance
         final ActionBar actionBar = getActionBar();
@@ -602,7 +620,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         /* In the case that the activity was destroyed in background, the system will take care of reinitializing the fragment for us*/
         NavDrawerFragment fragment = (NavDrawerFragment) getSupportFragmentManager().findFragmentByTag(FragmentTags.NAV_DRAWER);
 
-        if(fragment == null) {
+        if (fragment == null) {
             fragment = (NavDrawerFragment) Fragment.instantiate(this, NavDrawerFragment.class.getName());
             loadFragment(navContentResId, fragment, FragmentTags.NAV_DRAWER, false, null);
         }
@@ -772,41 +790,6 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         //TODO Show generic network error message
     }
 
-    /**
-     * Creates a Crouton View based on the style
-     *
-     * @param context {@link Context} reference to get the
-     *                {@link LayoutInflater} reference
-     * @param message The message to display
-     * @param style   The style of Crouton
-     * @return A View to display as a Crouton
-     */
-    private static View getCroutonViewForStyle(final Context context,
-                                               final String message, final AlertStyle style) {
-        int layoutResId = R.layout.crouton_info; //Default layout
-        switch (style) {
-
-            case ALERT: {
-                layoutResId = R.layout.crouton_alert;
-                break;
-            }
-
-            case ERROR: {
-                layoutResId = R.layout.crouton_error;
-                break;
-            }
-
-            case INFO: {
-                layoutResId = R.layout.crouton_info;
-            }
-        }
-        final View croutonText = LayoutInflater.from(context)
-                .inflate(layoutResId, null);
-        ((TextView) croutonText.findViewById(R.id.text_message))
-                .setText(message);
-        return croutonText;
-    }
-
     @Override
     public void onClick(final DialogInterface dialog, final int which) {
 
@@ -824,5 +807,16 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         if (mHasNavigationDrawer) {
             mDrawerLayout.closeDrawer(mNavFrameContent);
         }
+    }
+
+    /**
+     * @author Vinay S Shenoy Enum to handle the different types of Alerts that
+     *         can be shown
+     */
+
+    public enum AlertStyle {
+        ALERT,
+        INFO,
+        ERROR
     }
 }

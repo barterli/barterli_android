@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/container_profile_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_x_small"
+        android:visibility="gone">
+
+        <li.barter.widgets.CircleImageView
+            android:id="@+id/image_user"
+            android:layout_width="@dimen/book_user_image_size_profile"
+            android:layout_height="@dimen/book_user_image_size_profile"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/app_name"
+            app:borderColor="@color/apptheme_color"
+            app:borderWidth="2dp"
+            app:cornerRadius="@dimen/book_user_image_size_profile" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/image_user"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/margin_x_small"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <li.barter.widgets.TypefacedTextView
+                android:id="@+id/text_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_big"
+                app:fontStyle="light" />
+
+            <li.barter.widgets.TypefacedTextView
+                android:id="@+id/text_user_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_xxx_small"
+                android:ellipsize="end"
+                android:gravity="left"
+                android:singleLine="true"
+                android:textColor="@color/dark_gray"
+                android:textSize="@dimen/text_small"
+                app:fontStyle="condensed_regular" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/container_sign_in_message"
+        layout="@layout/layout_nav_drawer_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</RelativeLayout>

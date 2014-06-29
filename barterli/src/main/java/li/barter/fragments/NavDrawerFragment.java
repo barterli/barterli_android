@@ -2,19 +2,27 @@ package li.barter.fragments;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.android.gms.analytics.HitBuilders;
+import com.squareup.picasso.Picasso;
 
+import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.adapters.NavDrawerAdapter;
@@ -24,6 +32,7 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
 import li.barter.utils.Utils;
+import li.barter.widgets.CircleImageView;
 
 /**
  * Fragment to load in the Navigation Drawer
@@ -32,35 +41,143 @@ import li.barter.utils.Utils;
 public class NavDrawerFragment extends AbstractBarterLiFragment implements AdapterView.OnItemClickListener {
 
     /**
+     * Intent filter for receiving updates whenever the User Info changes
+     */
+    private static final IntentFilter INTENT_FILTER = new IntentFilter(AppConstants.ACTION_USER_INFO_UPDATED);
+    /**
+     * BroadcastReceiver implementation that receives broadcasts when the user info is updated from server
+     */
+    private final BroadcastReceiver mUserInfoUpdatedBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() != null && intent.getAction().equals(AppConstants.ACTION_USER_INFO_UPDATED)) {
+                updateLoggedInStatus();
+            }
+        }
+    };
+    /**
      * ListView to provide Nav drawer content
      */
     private ListView mListView;
-
     /**
      * Drawer Adapter to provide the list view options
      */
     private NavDrawerAdapter mDrawerAdapter;
-
     /**
      * Callback will be triggered whenever the Nav drawer takes an action.  Use to close the drawer layout
      */
     private INavDrawerActionCallback mNavDrawerActionCallback;
-
     /**
      * Callback for delaying the running of nav drawer actions. This is so that the drawer can be closed without jank
      */
     private Handler mHandler;
-
+    /**
+     * Header which shows either the user profile or the Sign In message
+     */
+    private ViewGroup mProfileHeader;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mHandler = new Handler();
+
         mListView = (ListView) inflater.inflate(R.layout.fragment_nav_drawer, container, false);
         mDrawerAdapter = new NavDrawerAdapter(getActivity(), R.array.nav_drawer_titles, R.array.nav_drawer_descriptions);
+
+        mProfileHeader = (ViewGroup) inflater.inflate(R.layout.layout_nav_drawer_header, mListView, false);
+        initProfileHeaderViews();
+
+        mListView.addHeaderView(mProfileHeader, null, true);
         mListView.setAdapter(mDrawerAdapter);
+
         mListView.setOnItemClickListener(this);
         return mListView;
+    }
+
+    /**
+     * Initialize the profile header views. Reads the references to the child views and stores them as tags
+     */
+    private void initProfileHeaderViews() {
+
+        //Get references to the two primary containers
+        final ViewGroup profileContainer = (ViewGroup) mProfileHeader.findViewById(R.id.container_profile_info);
+        mProfileHeader.setTag(R.id.container_profile_info, profileContainer);
+
+        final ViewGroup signInContainer = (ViewGroup) mProfileHeader.findViewById(R.id.container_sign_in_message);
+        mProfileHeader.setTag(R.id.container_sign_in_message, signInContainer);
+
+        //Get references to the individual container children and set tags
+        profileContainer.setTag(R.id.text_user_name, profileContainer.findViewById(R.id.text_user_name));
+        profileContainer.setTag(R.id.text_user_email, profileContainer.findViewById(R.id.text_user_email));
+        profileContainer.setTag(R.id.image_user, profileContainer.findViewById(R.id.image_user));
+
+        TextView textView = (TextView) signInContainer.findViewById(R.id.text_nav_item_title);
+        textView.setText(R.string.text_sign_in);
+        signInContainer.setTag(R.id.text_nav_item_title, textView);
+        textView = (TextView) signInContainer.findViewById(R.id.text_nav_desc);
+        textView.setText(R.string.text_and_start_bartering);
+        signInContainer.setTag(R.id.text_nav_desc, textView);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext()).unregisterReceiver(mUserInfoUpdatedBroadcastReceiver);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext()).registerReceiver(mUserInfoUpdatedBroadcastReceiver, INTENT_FILTER);
+        updateLoggedInStatus();
+    }
+
+    /**
+     * Checks whether the user is logged in or not and updates the status accordingly
+     */
+    private void updateLoggedInStatus() {
+
+        final View profileInfoContainer = (View) mProfileHeader.getTag(R.id.container_profile_info);
+        final View signInMessageContainer = (View) mProfileHeader.getTag(R.id.container_sign_in_message);
+
+
+        final TextView userNameTextView = ((TextView) profileInfoContainer.getTag(R.id.text_user_name));
+        final TextView userEmailTextView = ((TextView) profileInfoContainer.getTag(R.id.text_user_email));
+        final CircleImageView profileImageView = (CircleImageView) profileInfoContainer.getTag(R.id.image_user);
+
+        if (isLoggedIn()) {
+
+            profileInfoContainer.setVisibility(View.VISIBLE);
+            signInMessageContainer.setVisibility(View.GONE);
+
+            userNameTextView.setText(Utils.makeUserFullName(AppConstants.UserInfo.INSTANCE.getFirstName(), AppConstants.UserInfo.INSTANCE.getLastName()));
+            userEmailTextView.setText(AppConstants.UserInfo.INSTANCE.getEmail());
+
+            final String userImageUrl = AppConstants.UserInfo.INSTANCE.getProfilePicture();
+
+            if (!TextUtils.isEmpty(userImageUrl)) {
+                Picasso.with(getActivity())
+                        .load(userImageUrl)
+                        .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
+                        .centerCrop()
+                        .error(R.drawable.pic_avatar)
+                        .into(profileImageView.getTarget());
+            } else {
+                Picasso.with(getActivity())
+                        .load(R.drawable.pic_avatar)
+                        .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
+                        .centerCrop()
+                        .into(profileImageView.getTarget());
+            }
+
+        } else {
+
+            profileInfoContainer.setVisibility(View.GONE);
+            signInMessageContainer.setVisibility(View.VISIBLE);
+            userNameTextView.setText(null);
+            userEmailTextView.setText(null);
+            profileImageView.setImageResource(0);
+        }
     }
 
     @Override
@@ -122,10 +239,10 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                                 .set(AnalyticsConstants.ParamKeys.TYPE, AnalyticsConstants.ParamValues.PROFILE));
                 /*
                  * If the master fragment is already the login fragment, don't
-                 * load it again. TODO Check for Profile Fragment also
+                 * load it again.
                  */
                 if ((masterFragment != null)
-                        && (masterFragment instanceof LoginFragment)) {
+                        && ((masterFragment instanceof LoginFragment) || (masterFragment instanceof ProfileFragment))) {
                     return null;
                 }
                 runnable = new Runnable() {

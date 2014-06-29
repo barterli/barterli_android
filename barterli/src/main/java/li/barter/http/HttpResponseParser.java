@@ -44,7 +44,6 @@ import li.barter.models.Venue;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.Keys;
-import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.widgets.autocomplete.Suggestion;
 
@@ -106,14 +105,12 @@ public class HttpResponseParser {
                 return parseBlockUserResponse(response);
             }
 
-            case RequestId.PASSWORD_RESET: {
+            case RequestId.REQUEST_RESET_TOKEN: {
                 return parsePasswordResetResponse(response);
             }
 
-            case RequestId.CREATE_USER: {
-                return parseCreateUserResponse(response);
-            }
-
+            case RequestId.RESET_USER_PASSWORD:
+            case RequestId.CREATE_USER:
             case RequestId.SAVE_USER_PROFILE: {
                 return parseCreateUserResponse(response);
             }
@@ -196,7 +193,7 @@ public class HttpResponseParser {
     }
 
     /**
-     * @param parsing google book api response
+     * @param response parsing google book api response
      * @return
      */
     private ResponseInfo parseGoogleBookSuggestionsResponse(
@@ -499,7 +496,6 @@ public class HttpResponseParser {
         final String description = JsonUtils
                 .readString(userObject, HttpConstants.DESCRIPTION, false, false);
 
-        UserInfo.INSTANCE.setFirstName(firstName);
         responseBundle.putString(HttpConstants.ID_USER, userId);
         responseBundle.putString(HttpConstants.AUTH_TOKEN, JsonUtils
                 .readString(userObject, HttpConstants.AUTH_TOKEN, true, true));
