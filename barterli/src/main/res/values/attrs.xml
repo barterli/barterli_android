@@ -90,7 +90,7 @@
         <enum name="italic" value="2" />
         <enum name="regular" value="3" />
         <enum name="condensed_regular" value="4" />
-        <enum name="condensed_light" value="5" />
+        <enum name="light" value="5" />
     </attr>
 
     <declare-styleable name="CircleImageView">

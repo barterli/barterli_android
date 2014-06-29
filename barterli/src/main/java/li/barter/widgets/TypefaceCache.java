@@ -33,7 +33,7 @@ public class TypefaceCache {
     public static final String ITALIC = "fonts/Roboto-MediumItalic.ttf";
     public static final String REGULAR = "fonts/Roboto-Regular.ttf";
     public static final String CONDENSED_REGULAR = "fonts/RobotoCondensed-Regular.ttf";
-    public static final String CONDENSED_LIGHT = "fonts/RobotoCondensed-Light.ttf";
+    public static final String LIGHT = "fonts/Roboto-Light.ttf";
 
     public static Typeface get(final AssetManager manager,
                                final int typefaceCode) {
@@ -67,7 +67,7 @@ public class TypefaceCache {
             return 3;
         } else if (typefaceName.equals(CONDENSED_REGULAR)) {
             return 4;
-        } else if (typefaceName.equals(CONDENSED_LIGHT)) {
+        } else if (typefaceName.equals(LIGHT)) {
             return 5;
         } else {
             return 3;
@@ -92,7 +92,7 @@ public class TypefaceCache {
                 return CONDENSED_REGULAR;
 
             case 5:
-                return CONDENSED_LIGHT;
+                return LIGHT;
 
             default:
                 return REGULAR;
