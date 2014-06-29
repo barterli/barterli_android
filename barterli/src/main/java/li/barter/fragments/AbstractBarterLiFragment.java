@@ -160,7 +160,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
 
             if (!TextUtils.isEmpty(analyticsScreenName)) {
                 GoogleAnalyticsManager.getInstance()
-                                .sendScreenHit(getAnalyticsScreenName());
+                                .sendScreenHit(analyticsScreenName);
             }
         }
 

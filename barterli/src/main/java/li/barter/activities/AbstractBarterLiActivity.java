@@ -16,14 +16,7 @@
 
 package li.barter.activities;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.google.android.gms.analytics.HitBuilders.EventBuilder;
-
-import de.keyboardsurfer.android.widget.crouton.Crouton;
-
 import android.app.ActionBar;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -31,12 +24,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
@@ -52,34 +43,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
 import li.barter.R;
-import li.barter.adapters.HomeNavDrawerAdapter;
-import li.barter.analytics.AnalyticsConstants.Actions;
-import li.barter.analytics.AnalyticsConstants.Categories;
-import li.barter.analytics.AnalyticsConstants.ParamKeys;
-import li.barter.analytics.AnalyticsConstants.ParamValues;
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.chat.ChatService;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.TableChatMessages;
 import li.barter.data.TableChats;
-import li.barter.fragments.AboutUsPagerFragment;
 import li.barter.fragments.AbstractBarterLiFragment;
-import li.barter.fragments.ChatsFragment;
 import li.barter.fragments.FragmentTransition;
-import li.barter.fragments.LoginFragment;
-import li.barter.fragments.ProfileFragment;
-import li.barter.fragments.ReportBugFragment;
-import li.barter.fragments.TeamFragment;
+import li.barter.fragments.NavDrawerFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.ResponseInfo;
@@ -102,7 +84,7 @@ import li.barter.widgets.TypefacedSpan;
  */
 public abstract class AbstractBarterLiActivity extends ActionBarActivity
         implements IHttpCallbacks, AsyncDbQueryCallback,
-        OnClickListener {
+        OnClickListener, NavDrawerFragment.INavDrawerActionCallback {
 
     private static final String TAG = "BaseBarterLiActivity";
 
@@ -139,14 +121,9 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     private ActionBarDrawerToggle mDrawerToggle;
 
     /**
-     * {@link ListView} that provides the navigation items
+     * {@link android.widget.FrameLayout} that provides the navigation items
      */
-    private ListView mNavListView;
-
-    /**
-     * {@link BaseAdapter} implementation for Navigation drawer item
-     */
-    private HomeNavDrawerAdapter mNavDrawerAdapter;
+    private FrameLayout mNavFrameContent;
 
     /**
      * Whether the current activity has a Navigation drawer or not
@@ -161,38 +138,9 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     private boolean mIsActionBarNavDrawerToggleEnabled;
 
     /**
-     * Handler for posting callbacks back to the main thread. Used for delaying
-     * launching of nav drawer item until the drawer is closed
-     */
-    private Handler mHandler;
-
-    /**
      * Whether a screen hit should be reported to analytics
      */
     private boolean mShouldReportScreenHit;
-
-    /**
-     * Navigation Drawer Item Click Listener. The Nav list items are loaded from
-     * R.array.nav_drawer_titles
-     */
-    private final OnItemClickListener mNavDrawerItemClickListener = new OnItemClickListener() {
-        @Override
-        public void onItemClick(
-                final AdapterView<?> parent,
-                final View view,
-                final int position,
-                final long id) {
-
-            final Runnable launchRunnable = makeRunnableForNavDrawerClick(position);
-            if (launchRunnable != null) {
-                //Give time for drawer to close before performing the action
-                mHandler.postDelayed(launchRunnable, 220);
-            }
-            mDrawerLayout.closeDrawer(mNavListView);
-
-        }
-
-    };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -200,6 +148,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         mHasNavigationDrawer = false;
         mIsActionBarNavDrawerToggleEnabled = false;
+        /* Here, getClass() might show an Ambiguous method call bug. It's a bug in IntelliJ IDEA 13
+        * http://youtrack.jetbrains.com/issue/IDEA-72835 */
         mActivityTransition = getClass()
                 .getAnnotation(ActivityTransition.class);
 
@@ -230,7 +180,6 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         mVolleyCallbacks = new VolleyCallbacks(requestQueue, this);
         mRequestCounter = new AtomicInteger(0);
         setProgressBarIndeterminateVisibility(false);
-        mHandler = new Handler();
     }
 
     @Override
@@ -265,190 +214,6 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
      * string, or <code>null</code> if you don't want the Activity tracked
      */
     protected abstract String getAnalyticsScreenName();
-
-    /**
-     * Creates a {@link Runnable} for positing to the Handler for launching the
-     * Navigation Drawer click
-     *
-     * @param position The nav drawer item that was clicked
-     * @return a {@link Runnable} to be posted to the Handler thread
-     */
-    private Runnable makeRunnableForNavDrawerClick(final int position) {
-
-        Runnable runnable = null;
-        final AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
-        switch (position) {
-
-            //My Profile
-            case 0: {
-
-                GoogleAnalyticsManager
-                        .getInstance()
-                        .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.PROFILE));
-                /*
-                 * If the master fragment is already the login fragment, don't
-                 * load it again. TODO Check for Profile Fragment also
-                 */
-                if ((masterFragment != null)
-                        && (masterFragment instanceof LoginFragment)) {
-                    return null;
-                }
-                runnable = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        if (isLoggedIn()) {
-                            Bundle args = new Bundle();
-                            args.putString(Keys.USER_ID, UserInfo.INSTANCE
-                                    .getId());
-                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                    .instantiate(AbstractBarterLiActivity.this, ProfileFragment.class
-                                            .getName(), args), FragmentTags.PROFILE_FROM_NAV_DRAWER, true, null);
-
-                        } else {
-
-                            final Bundle loginArgs = new Bundle(1);
-                            loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-
-                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                    .instantiate(AbstractBarterLiActivity.this, LoginFragment.class
-                                            .getName(), loginArgs), FragmentTags.LOGIN_FROM_NAV_DRAWER, true, FragmentTags.BS_BOOKS_AROUND_ME);
-                        }
-
-                    }
-                };
-                break;
-
-            }
-
-            //My Chats
-            case 1: {
-
-                GoogleAnalyticsManager
-                        .getInstance()
-                        .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.CHATS));
-                if ((masterFragment != null)
-                        && (masterFragment instanceof ChatsFragment)) {
-                    return null;
-                }
-
-                //TODO Check for login
-                runnable = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(AbstractBarterLiActivity.this, ChatsFragment.class
-                                        .getName(), null), FragmentTags.CHATS, true, FragmentTags.BS_CHATS);
-                    }
-                };
-                break;
-            }
-
-            //Report Bug
-            case 2: {
-                GoogleAnalyticsManager
-                        .getInstance()
-                        .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.REPORT_BUG));
-                if ((masterFragment != null)
-                        && (masterFragment instanceof ReportBugFragment)) {
-                    return null;
-                }
-
-                runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(AbstractBarterLiActivity.this, ReportBugFragment.class
-                                        .getName(), null), FragmentTags.REPORT_BUGS, true, null);
-                    }
-                };
-                break;
-            }
-
-            //Share
-            case 3: {
-                GoogleAnalyticsManager
-                        .getInstance()
-                        .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.SHARE));
-                runnable = new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        Intent shareIntent = Utils
-                                .createAppShareIntent(AbstractBarterLiActivity.this);
-                        try {
-                            startActivity(Intent
-                                    .createChooser(shareIntent, getString(R.string.share_via)));
-                        } catch (ActivityNotFoundException e) {
-                            //Shouldn't happen
-                        }
-
-                    }
-                };
-
-                break;
-            }
-
-            //Rate Us
-            case 4: {
-                GoogleAnalyticsManager
-                        .getInstance()
-                        .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.RATE_US));
-
-                runnable = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Uri marketUri = Uri
-                                .parse(AppConstants.PLAY_STORE_MARKET_LINK);
-                        Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
-                        startActivity(marketIntent);
-
-                    }
-                };
-
-                break;
-            }
-
-            //About Us
-            case 5: {
-                GoogleAnalyticsManager
-                        .getInstance()
-                        .sendEvent(new EventBuilder(Categories.USAGE, Actions.NAVIGATION_OPTION)
-                                .set(ParamKeys.TYPE, ParamValues.ABOUT_US));
-                if ((masterFragment != null)
-                        && (masterFragment instanceof TeamFragment)) {
-                    return null;
-                }
-
-                runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(AbstractBarterLiActivity.this, AboutUsPagerFragment.class
-                                        .getName(), null), FragmentTags.TEAM, true, null);
-                    }
-                };
-
-                break;
-            }
-
-            default: {
-                runnable = null;
-            }
-        }
-
-        return runnable;
-    }
-
-    ;
 
     /**
      * Disconnects the chat service, clears any local data
@@ -775,7 +540,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         if (addToBackStack) {
             transaction.addToBackStack(backStackTag);
         }
-        transaction.commitAllowingStateLoss();
+        transaction.commit();
     }
 
     /**
@@ -783,12 +548,12 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
      * onCreate()
      *
      * @param navDrawerResId    The resource Id of the navigation drawer
-     * @param navListResId      The resource id of the list view in the layout which
+     * @param navContentResId   The resource id of the content view in the layout which
      *                          is the drawer content
      * @param attachToActionBar Whether the navigation should be associated with
      *                          the Action Bar drawer toggle
      */
-    protected void initDrawer(final int navDrawerResId, final int navListResId,
+    protected void initDrawer(final int navDrawerResId, final int navContentResId,
                               final boolean attachToActionBar) {
 
         mDrawerLayout = (DrawerLayout) findViewById(navDrawerResId);
@@ -796,9 +561,9 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         if (mDrawerLayout == null) {
             throw new IllegalArgumentException("Drawer Layout not found. Check your layout/resource id being sent");
         }
-        mNavListView = (ListView) findViewById(navListResId);
+        mNavFrameContent = (FrameLayout) findViewById(navContentResId);
 
-        if (mNavListView == null) {
+        if (mNavFrameContent == null) {
             throw new IllegalArgumentException("Drawer content not found. Check the layout/resource id being sent");
         }
 
@@ -834,9 +599,13 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                 .getColor(R.color.overlay_black_40p));
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
-        mNavDrawerAdapter = new HomeNavDrawerAdapter(this, R.array.nav_drawer_titles, R.array.nav_drawer_descriptions);
-        mNavListView.setAdapter(mNavDrawerAdapter);
-        mNavListView.setOnItemClickListener(mNavDrawerItemClickListener);
+        /* In the case that the activity was destroyed in background, the system will take care of reinitializing the fragment for us*/
+        NavDrawerFragment fragment = (NavDrawerFragment) getSupportFragmentManager().findFragmentByTag(FragmentTags.NAV_DRAWER);
+
+        if(fragment == null) {
+            fragment = (NavDrawerFragment) Fragment.instantiate(this, NavDrawerFragment.class.getName());
+            loadFragment(navContentResId, fragment, FragmentTags.NAV_DRAWER, false, null);
+        }
 
     }
 
@@ -860,7 +629,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     @Override
     public boolean onPrepareOptionsMenu(final Menu menu) {
         if (mIsActionBarNavDrawerToggleEnabled) {
-            setOptionsGroupHidden(menu, mDrawerLayout.isDrawerOpen(mNavListView));
+            setOptionsGroupHidden(menu, mDrawerLayout.isDrawerOpen(mNavFrameContent));
         }
         return super.onPrepareOptionsMenu(menu);
     }
@@ -1050,4 +819,10 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         }
     }
 
+    @Override
+    public void onActionTaken() {
+        if (mHasNavigationDrawer) {
+            mDrawerLayout.closeDrawer(mNavFrameContent);
+        }
+    }
 }
