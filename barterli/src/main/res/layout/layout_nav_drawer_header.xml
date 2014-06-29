@@ -9,25 +9,25 @@
         android:id="@+id/container_profile_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/margin_x_small"
+        android:padding="@dimen/margin_xx_small"
         android:visibility="gone">
 
         <li.barter.widgets.CircleImageView
             android:id="@+id/image_user"
-            android:layout_width="@dimen/book_user_image_size_profile"
-            android:layout_height="@dimen/book_user_image_size_profile"
-            android:layout_centerVertical="true"
+            android:layout_width="@dimen/profile_header_img_size"
+            android:layout_height="@dimen/profile_header_img_size"
+            android:layout_alignParentTop="true"
             android:contentDescription="@string/app_name"
             app:borderColor="@color/apptheme_color"
             app:borderWidth="2dp"
-            app:cornerRadius="@dimen/book_user_image_size_profile" />
+            app:cornerRadius="@dimen/profile_header_img_size" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/image_user"
-            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_below="@id/image_user"
             android:layout_marginLeft="@dimen/margin_x_small"
+            android:layout_marginTop="@dimen/margin_x_small"
             android:gravity="center_vertical"
             android:orientation="vertical">
 

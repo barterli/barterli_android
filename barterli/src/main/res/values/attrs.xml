@@ -91,6 +91,7 @@
         <enum name="regular" value="3" />
         <enum name="condensed_regular" value="4" />
         <enum name="light" value="5" />
+        <enum name="slab_regular" value="6" />
     </attr>
 
     <declare-styleable name="CircleImageView">

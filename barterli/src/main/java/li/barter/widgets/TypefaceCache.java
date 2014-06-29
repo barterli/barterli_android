@@ -34,6 +34,7 @@ public class TypefaceCache {
     public static final String REGULAR = "fonts/Roboto-Regular.ttf";
     public static final String CONDENSED_REGULAR = "fonts/RobotoCondensed-Regular.ttf";
     public static final String LIGHT = "fonts/Roboto-Light.ttf";
+    public static final String SLAB_REGULAR = "fonts/RobotoSlab-Regular.ttf";
 
     public static Typeface get(final AssetManager manager,
                                final int typefaceCode) {
@@ -69,6 +70,8 @@ public class TypefaceCache {
             return 4;
         } else if (typefaceName.equals(LIGHT)) {
             return 5;
+        } else if (typefaceName.equals(SLAB_REGULAR)) {
+            return 6;
         } else {
             return 3;
         }
@@ -93,6 +96,9 @@ public class TypefaceCache {
 
             case 5:
                 return LIGHT;
+
+            case 6:
+                return SLAB_REGULAR;
 
             default:
                 return REGULAR;

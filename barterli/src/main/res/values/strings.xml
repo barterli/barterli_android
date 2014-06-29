@@ -161,7 +161,7 @@
 
     <!-- Strings for Nav drawer -->
     <string-array name="nav_drawer_titles">
-        <item>My Messages</item>
+        <item>Chats</item>
         <item>Report a Bug</item>
         <item>Share The app</item>
         <item>Rate Us</item>

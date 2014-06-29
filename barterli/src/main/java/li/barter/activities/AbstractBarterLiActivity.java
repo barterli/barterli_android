@@ -426,7 +426,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     public final void setActionBarTitle(final String title) {
 
         final SpannableString s = new SpannableString(title);
-        s.setSpan(new TypefacedSpan(this, TypefaceCache.LIGHT), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.setSpan(new TypefacedSpan(this, TypefaceCache.SLAB_REGULAR), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance
         final ActionBar actionBar = getActionBar();
