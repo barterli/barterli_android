@@ -63,6 +63,6 @@
     <dimen name="text_medium">18sp</dimen>
     <dimen name="text_big">20sp</dimen>
     <dimen name="text_large">22sp</dimen>
-    <dimen name="text_x_large">28sp</dimen>
-
+    <dimen name="text_x_large">24sp</dimen>
+    <dimen name="text_xx_large">28sp</dimen>
 </resources>
