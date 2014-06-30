@@ -23,6 +23,10 @@ repositories {
 
 android {
 
+    packagingOptions {
+        exclude 'LICENSE.txt'
+    }
+
     compileSdkVersion 19
     buildToolsVersion '19.1.0'
     defaultConfig {}
