@@ -5,11 +5,12 @@ import android.widget.GridView;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.util.FragmentTestUtil;
 
-import li.barter.R;
+import li.barter.activities.HomeActivity;
+import li.barter.utils.AppConstants;
 
 import static org.fest.assertions.api.ANDROID.assertThat;
 
@@ -30,11 +31,9 @@ public class BooksAroundMeFragmentTest {
     }
 
     @Test
-    public void createsAndDestroysFragment() throws Exception {
-        FragmentTestUtil.startFragment(fragment);
-        assertThat(fragment).isNotNull();
-        gridView = (GridView) fragment.getActivity().findViewById(R.id.grid_books_around_me);
-        assertThat(gridView).isNotNull();
+    public void shouldHaveFragment() throws Exception {
+        HomeActivity activity = Robolectric.buildActivity(HomeActivity.class).create().visible().get();
+        assertThat(activity.getSupportFragmentManager().findFragmentByTag(AppConstants.FragmentTags.BOOKS_AROUND_ME)).isNotNull();
     }
 
 }
