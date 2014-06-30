@@ -29,6 +29,7 @@ import android.provider.BaseColumns;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -177,7 +178,8 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
         inflater.inflate(R.menu.menu_chat_details, menu);
         final MenuItem menuItem = menu.findItem(R.id.action_user);
-        final View actionView = menuItem.getActionView();
+
+        final View actionView = MenuItemCompat.getActionView(menuItem);
         if (actionView != null) {
             mWithImageView = (CircleImageView) actionView
                             .findViewById(R.id.image_user);

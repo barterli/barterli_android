@@ -43,7 +43,7 @@ import android.widget.TextView;
  * 
  * @author Vinay S Shenoy
  */
-public class HomeNavDrawerAdapter extends BaseAdapter{
+public class NavDrawerAdapter extends BaseAdapter{
 
 	/**
 	 * Navigation Drawer titles
@@ -72,7 +72,7 @@ public class HomeNavDrawerAdapter extends BaseAdapter{
 	 *            contains the strings of the descriptions of the items in the
 	 *            navigation drawer
 	 */
-	public HomeNavDrawerAdapter(final Context context, final int drawerItemTitlesResId, final int drawerItemDescriptionResId) throws IllegalArgumentException {
+	public NavDrawerAdapter(final Context context, final int drawerItemTitlesResId, final int drawerItemDescriptionResId) throws IllegalArgumentException {
 		mLayoutInflater = LayoutInflater.from(context);
 		mNavDrawerTitles = context.getResources()
 				.getStringArray(drawerItemTitlesResId);

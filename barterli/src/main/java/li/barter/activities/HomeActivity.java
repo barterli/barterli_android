@@ -87,7 +87,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         setContentView(R.layout.activity_home);
         mOverlayFrameLayout = (FrameLayout) findViewById(R.id.frame_overlay);
         setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
-        initDrawer(R.id.drawer_layout, R.id.list_nav_drawer, true);
+        initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer, true);
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
         mGooglePlusManager = new GooglePlusManager(this, this);
         if (savedInstanceState == null) {
@@ -240,6 +240,8 @@ public class HomeActivity extends AbstractBarterLiActivity implements
 
     @Override
     protected Object getTaskTag() {
+        /* Here, hashCode() might show an Ambiguous method call bug. It's a bug in IntelliJ IDEA 13
+        * http://youtrack.jetbrains.com/issue/IDEA-72835 */
         return hashCode();
     }
 

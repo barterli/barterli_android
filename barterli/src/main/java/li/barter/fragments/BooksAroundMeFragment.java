@@ -33,6 +33,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -309,7 +310,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         inflater.inflate(R.menu.menu_books_around_me, menu);
         final MenuItem menuItem = menu.findItem(R.id.action_search);
         menuItem.setOnActionExpandListener(this);
-        mSearchView = (SearchView) menuItem.getActionView();
+        mSearchView = (SearchView) MenuItemCompat.getActionView(menuItem);
         mSearchNetworkQueryHelper = new SearchViewNetworkQueryHelper(mSearchView, this);
         mSearchNetworkQueryHelper.setSuggestCountThreshold(3);
         mSearchNetworkQueryHelper.setSuggestWaitThreshold(400);

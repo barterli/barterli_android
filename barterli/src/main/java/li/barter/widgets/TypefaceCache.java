@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,23 +26,25 @@ import java.util.Hashtable;
  */
 public class TypefaceCache {
 
-    private static final Hashtable<String, Typeface> CACHE             = new Hashtable<String, Typeface>();
+    private static final Hashtable<String, Typeface> CACHE = new Hashtable<String, Typeface>();
 
-    public static final String                       BOLD_ITALIC       = "fonts/Roboto-BoldItalic.ttf";
-    public static final String                       BOLD              = "fonts/Roboto-Bold.ttf";
-    public static final String                       ITALIC            = "fonts/Roboto-MediumItalic.ttf";
-    public static final String                       REGULAR           = "fonts/Roboto-Regular.ttf";
-    public static final String                       CONDENSED_REGULAR = "fonts/RobotoCondensed-Regular.ttf";
+    public static final String BOLD_ITALIC = "fonts/Roboto-BoldItalic.ttf";
+    public static final String BOLD = "fonts/Roboto-Bold.ttf";
+    public static final String ITALIC = "fonts/Roboto-MediumItalic.ttf";
+    public static final String REGULAR = "fonts/Roboto-Regular.ttf";
+    public static final String CONDENSED_REGULAR = "fonts/RobotoCondensed-Regular.ttf";
+    public static final String LIGHT = "fonts/Roboto-Light.ttf";
+    public static final String SLAB_REGULAR = "fonts/RobotoSlab-Regular.ttf";
 
     public static Typeface get(final AssetManager manager,
-                    final int typefaceCode) {
+                               final int typefaceCode) {
         synchronized (CACHE) {
 
             final String typefaceName = getTypefaceName(typefaceCode);
 
             if (!CACHE.containsKey(typefaceName)) {
                 final Typeface t = Typeface
-                                .createFromAsset(manager, typefaceName);
+                        .createFromAsset(manager, typefaceName);
                 CACHE.put(typefaceName, t);
             }
             return CACHE.get(typefaceName);
@@ -50,7 +52,7 @@ public class TypefaceCache {
     }
 
     public static Typeface get(final AssetManager manager,
-                    final String typefaceName) {
+                               final String typefaceName) {
         return get(manager, getCodeForTypefaceName(typefaceName));
     }
 
@@ -66,6 +68,10 @@ public class TypefaceCache {
             return 3;
         } else if (typefaceName.equals(CONDENSED_REGULAR)) {
             return 4;
+        } else if (typefaceName.equals(LIGHT)) {
+            return 5;
+        } else if (typefaceName.equals(SLAB_REGULAR)) {
+            return 6;
         } else {
             return 3;
         }
@@ -87,6 +93,12 @@ public class TypefaceCache {
 
             case 4:
                 return CONDENSED_REGULAR;
+
+            case 5:
+                return LIGHT;
+
+            case 6:
+                return SLAB_REGULAR;
 
             default:
                 return REGULAR;

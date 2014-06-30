@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,8 +22,10 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +46,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 
+import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.analytics.GoogleAnalyticsManager;
+import li.barter.http.HttpConstants;
 import li.barter.utils.AppConstants.DeviceInfo;
 
 /**
@@ -61,28 +65,28 @@ public class Utils {
     public static void setupNetworkInfo(final Context context) {
 
         final ConnectivityManager connManager = (ConnectivityManager) context
-                        .getSystemService(Context.CONNECTIVITY_SERVICE);
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
             DeviceInfo.INSTANCE.setNetworkConnected(activeNetwork
-                            .isConnectedOrConnecting());
+                    .isConnectedOrConnecting());
             DeviceInfo.INSTANCE.setCurrentNetworkType(activeNetwork.getType());
         } else {
             DeviceInfo.INSTANCE.setNetworkConnected(false);
             DeviceInfo.INSTANCE
-                            .setCurrentNetworkType(ConnectivityManager.TYPE_DUMMY);
+                    .setCurrentNetworkType(ConnectivityManager.TYPE_DUMMY);
         }
 
         Logger.d(TAG, "Network State Updated Connected: %b Type: %d", DeviceInfo.INSTANCE
-                        .isNetworkConnected(), DeviceInfo.INSTANCE
-                        .getCurrentNetworkType());
+                .isNetworkConnected(), DeviceInfo.INSTANCE
+                .getCurrentNetworkType());
     }
 
     /**
      * Checks if the current thread is the main thread or not
-     * 
+     *
      * @return <code>true</code> if the current thread is the main/UI thread,
-     *         <code>false</code> otherwise
+     * <code>false</code> otherwise
      */
     public static boolean isMainThread() {
         return Looper.getMainLooper() == Looper.myLooper();
@@ -90,13 +94,13 @@ public class Utils {
 
     /**
      * Makes an SHA1 Hash of the given string
-     * 
+     *
      * @param string The string to shash
      * @return The hashed string
      * @throws NoSuchAlgorithmException
      */
     public static String sha1(final String string)
-                    throws NoSuchAlgorithmException {
+            throws NoSuchAlgorithmException {
         final MessageDigest digest = MessageDigest.getInstance("SHA-1");
         digest.reset();
         final byte[] data = digest.digest(string.getBytes());
@@ -202,13 +206,13 @@ public class Utils {
     private static void sendEmail(final Context context, final File attachment) {
 
         if (Environment.getExternalStorageState()
-                        .equals(Environment.MEDIA_MOUNTED)) {
+                .equals(Environment.MEDIA_MOUNTED)) {
             final Uri path = Uri.fromFile(attachment);
             final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
             intent.setType("application/octet-stream");
             intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "barter.li database");
             final String to[] = {
-                "vinaysshenoy@gmail.com"
+                    "vinaysshenoy@gmail.com"
             };
             intent.putExtra(Intent.EXTRA_EMAIL, to);
             intent.putExtra(Intent.EXTRA_TEXT, "Database");
@@ -222,16 +226,16 @@ public class Utils {
 
     /**
      * Gets the distance between two Locations(in metres)
-     * 
+     *
      * @param start The start location
-     * @param end The end location
+     * @param end   The end location
      * @return The distance between two locations(in metres)
      */
     public static float distanceBetween(final Location start, final Location end) {
 
         final float[] results = new float[1];
         Location.distanceBetween(start.getLatitude(), start.getLongitude(), end
-                        .getLatitude(), end.getLongitude(), results);
+                .getLatitude(), end.getLongitude(), results);
         return results[0];
     }
 
@@ -245,10 +249,10 @@ public class Utils {
 
     /**
      * hether a screen hit should be reported
-     * 
+     *
      * @param lastScreenSeenTime The time which the screen was last seen
      * @return <code>true</code> if as screen hit should be reported,
-     *         <code>false</code> otherwise
+     * <code>false</code> otherwise
      */
     public static boolean shouldReportScreenHit(final long lastScreenSeenTime) {
 
@@ -270,13 +274,13 @@ public class Utils {
     /**
      * Generates as chat ID which will be unique for a given sender/receiver
      * pair
-     * 
+     *
      * @param receiverId The receiver of the chat
-     * @param senderId The sender of the chat
+     * @param senderId   The sender of the chat
      * @return The chat Id
      */
     public static String generateChatId(final String receiverId,
-                    final String senderId) {
+                                        final String senderId) {
 
         /*
          * Method of generating the chat ID is simple. First we compare the two
@@ -287,10 +291,10 @@ public class Utils {
         String combined = null;
         if (receiverId.compareTo(senderId) < 0) {
             combined = String
-                            .format(Locale.US, AppConstants.CHAT_ID_FORMAT, receiverId, senderId);
+                    .format(Locale.US, AppConstants.CHAT_ID_FORMAT, receiverId, senderId);
         } else {
             combined = String
-                            .format(Locale.US, AppConstants.CHAT_ID_FORMAT, senderId, receiverId);
+                    .format(Locale.US, AppConstants.CHAT_ID_FORMAT, senderId, receiverId);
         }
 
         String hashed = null;
@@ -310,7 +314,7 @@ public class Utils {
 
     /**
      * Generate a user's name from the first name last name
-     * 
+     *
      * @param firstName
      * @param lastName
      * @return
@@ -332,7 +336,7 @@ public class Utils {
     /**
      * Test whether a viewgroup already contains a specific instance of a child
      * view
-     * 
+     *
      * @param viewGroup
      * @param view
      * @return
@@ -353,17 +357,17 @@ public class Utils {
 
     /**
      * Creates a share intent
-     * 
+     *
      * @param context
      * @param shareText The text to share
      * @return
      */
     public static Intent createShareIntent(Context context,
-                    final String shareText) {
+                                           final String shareText) {
 
         final Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, context
-                        .getString(R.string.subject));
+                .getString(R.string.subject));
         shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareText);
 
         shareIntent.setType("text/plain");
@@ -373,23 +377,68 @@ public class Utils {
 
     /**
      * Creates an intent for sharing the app
-     * 
+     *
      * @param context
      * @return
      */
     public static final Intent createAppShareIntent(Context context) {
 
         final String referralId = SharedPreferenceHelper
-                        .getString(R.string.pref_share_token);
+                .getString(R.string.pref_share_token);
         String appShareUrl = context.getString(R.string.app_share_message)
-                        .concat(AppConstants.PLAY_STORE_LINK);
+                .concat(AppConstants.PLAY_STORE_LINK);
 
         if (!TextUtils.isEmpty(referralId)) {
             appShareUrl = appShareUrl
-                            .concat(String.format(Locale.US, AppConstants.REFERRER_FORMAT, referralId));
+                    .concat(String.format(Locale.US, AppConstants.REFERRER_FORMAT, referralId));
         }
 
         return createShareIntent(context, appShareUrl);
+    }
+
+    /**
+     * Updates the user info & shared preferences from the http response bundle. This is a convenience method to prevent having to duplicate the code
+     *
+     * @param userInfo      A Bundle containing the User Info from server
+     * @param sendBroadcast Whether to send a broadcast with the Intent Action {@link li.barter.utils.AppConstants#ACTION_USER_INFO_UPDATED} once done
+     */
+    public static void updateUserInfoFromBundle(Bundle userInfo, boolean sendBroadcast) {
+
+        AppConstants.UserInfo.INSTANCE.setAuthToken(userInfo
+                .getString(HttpConstants.AUTH_TOKEN));
+        AppConstants.UserInfo.INSTANCE.setEmail(userInfo.getString(HttpConstants.EMAIL));
+        AppConstants.UserInfo.INSTANCE.setId(userInfo.getString(HttpConstants.ID_USER));
+        AppConstants.UserInfo.INSTANCE.setProfilePicture(userInfo
+                .getString(HttpConstants.IMAGE_URL));
+        AppConstants.UserInfo.INSTANCE.setFirstName(userInfo
+                .getString(HttpConstants.FIRST_NAME));
+        AppConstants.UserInfo.INSTANCE.setLastName(userInfo.getString(HttpConstants.LAST_NAME));
+
+        SharedPreferenceHelper.set(R.string.pref_auth_token, userInfo
+                .getString(HttpConstants.AUTH_TOKEN));
+        SharedPreferenceHelper.set(R.string.pref_email, userInfo
+                .getString(HttpConstants.EMAIL));
+        SharedPreferenceHelper.set(R.string.pref_description, userInfo
+                .getString(HttpConstants.DESCRIPTION));
+        SharedPreferenceHelper.set(R.string.pref_first_name, userInfo
+                .getString(HttpConstants.FIRST_NAME));
+        SharedPreferenceHelper.set(R.string.pref_last_name, userInfo
+                .getString(HttpConstants.LAST_NAME));
+        SharedPreferenceHelper.set(R.string.pref_user_id, userInfo
+                .getString(HttpConstants.ID_USER));
+        SharedPreferenceHelper.set(R.string.pref_location, userInfo
+                .getString(HttpConstants.LOCATION));
+        SharedPreferenceHelper.set(R.string.pref_profile_image, userInfo
+                .getString(HttpConstants.IMAGE_URL));
+        SharedPreferenceHelper.set(R.string.pref_referrer_count, userInfo
+                .getString(HttpConstants.REFERRAL_COUNT));
+        SharedPreferenceHelper.set(R.string.pref_share_token, userInfo
+                .getString(HttpConstants.SHARE_TOKEN));
+
+        if (sendBroadcast) {
+            LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext()).sendBroadcast(new Intent(AppConstants.ACTION_USER_INFO_UPDATED));
+        }
+
     }
 
 }

@@ -43,12 +43,11 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/list_nav_drawer"
+    <FrameLayout
+        android:id="@+id/frame_nav_drawer"
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/global_bg"
-        android:cacheColorHint="@color/global_bg" />
+        android:background="@color/global_bg" />
 
 </android.support.v4.widget.DrawerLayout>

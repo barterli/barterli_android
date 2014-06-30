@@ -14,14 +14,15 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:id="@+id/group_hide_on_drawer_open" >
         <item
             android:id="@+id/action_save"
             android:icon="@drawable/ic_action_accept"
             android:orderInCategory="1"
-            android:showAsAction="ifRoom"
+            app:showAsAction="ifRoom"
             android:title="@string/text_save"/>
     </group>
 

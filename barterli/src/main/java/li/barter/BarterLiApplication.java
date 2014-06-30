@@ -25,7 +25,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
-import android.util.Log;
 import android.view.ViewConfiguration;
 
 import com.android.volley.RequestQueue;
@@ -39,6 +38,7 @@ import li.barter.chat.ChatService;
 import li.barter.http.IVolleyHelper;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
 
@@ -88,11 +88,10 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
          * it in a future update if necessary
          */
         saveCurrentAppVersionIntoPreferences();
-/*        if (BuildConfig.USE_CRASHLYTICS) {
-            //startCrashlytics();
-        }*/
+        if (BuildConfig.USE_CRASHLYTICS) {
+            startCrashlytics();
+        }
 
-        startCrashlytics();
         overrideHardwareMenuButton();
         VolleyLog.sDebug = BuildConfig.DEBUG_MODE;
 
@@ -122,13 +121,13 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
             }
 
         } catch (NameNotFoundException e) {
-            Log.e(TAG, "Unexpected NameNotFound.", e);
+            Logger.e(TAG, e, "Unexpected NameNotFound.");
         }
 
         if (hasValidKey) {
             Crashlytics.start(this);
         } else {
-            Log.e(TAG, "Check the crashlytics id in api_keys.");
+            Logger.e(TAG, "Check the crashlytics id in api_keys.");
         }
     }
 
@@ -174,6 +173,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
                 .getString(R.string.pref_profile_image));
         UserInfo.INSTANCE.setFirstName(SharedPreferenceHelper
                 .getString(R.string.pref_first_name));
+        UserInfo.INSTANCE.setLastName(SharedPreferenceHelper.getString(R.string.pref_last_name));
     }
 
     /**
