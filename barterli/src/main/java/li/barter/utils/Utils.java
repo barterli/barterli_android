@@ -16,8 +16,6 @@
 
 package li.barter.utils;
 
-import com.google.android.gms.internal.cn;
-
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -29,7 +27,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -48,7 +45,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 
 import li.barter.R;
-import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.utils.AppConstants.DeviceInfo;
 
