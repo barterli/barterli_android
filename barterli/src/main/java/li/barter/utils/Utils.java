@@ -18,6 +18,7 @@ package li.barter.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -69,7 +70,7 @@ public class Utils {
         final NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
         if (activeNetwork != null) {
             DeviceInfo.INSTANCE.setNetworkConnected(activeNetwork
-                    .isConnectedOrConnecting());
+                                                            .isConnectedOrConnecting());
             DeviceInfo.INSTANCE.setCurrentNetworkType(activeNetwork.getType());
         } else {
             DeviceInfo.INSTANCE.setNetworkConnected(false);
@@ -79,14 +80,14 @@ public class Utils {
 
         Logger.d(TAG, "Network State Updated Connected: %b Type: %d", DeviceInfo.INSTANCE
                 .isNetworkConnected(), DeviceInfo.INSTANCE
-                .getCurrentNetworkType());
+                         .getCurrentNetworkType());
     }
 
     /**
      * Checks if the current thread is the main thread or not
      *
-     * @return <code>true</code> if the current thread is the main/UI thread,
-     * <code>false</code> otherwise
+     * @return <code>true</code> if the current thread is the main/UI thread, <code>false</code>
+     * otherwise
      */
     public static boolean isMainThread() {
         return Looper.getMainLooper() == Looper.myLooper();
@@ -109,7 +110,8 @@ public class Utils {
 
     public static void emailDatabase(final Context context) {
 
-        final File databaseExt = new File(Environment.getExternalStorageDirectory(), "barterli.sqlite");
+        final File databaseExt = new File(Environment.getExternalStorageDirectory(),
+                                          "barterli.sqlite");
 
         if (copyFile(new File("/data/data/li.barter/databases/barterli.sqlite"), databaseExt)) {
             sendEmail(context, databaseExt);
@@ -206,7 +208,7 @@ public class Utils {
     private static void sendEmail(final Context context, final File attachment) {
 
         if (Environment.getExternalStorageState()
-                .equals(Environment.MEDIA_MOUNTED)) {
+                       .equals(Environment.MEDIA_MOUNTED)) {
             final Uri path = Uri.fromFile(attachment);
             final Intent intent = new Intent(android.content.Intent.ACTION_SEND);
             intent.setType("application/octet-stream");
@@ -251,8 +253,7 @@ public class Utils {
      * hether a screen hit should be reported
      *
      * @param lastScreenSeenTime The time which the screen was last seen
-     * @return <code>true</code> if as screen hit should be reported,
-     * <code>false</code> otherwise
+     * @return <code>true</code> if as screen hit should be reported, <code>false</code> otherwise
      */
     public static boolean shouldReportScreenHit(final long lastScreenSeenTime) {
 
@@ -268,12 +269,12 @@ public class Utils {
          * crossed the session timeout
          */
 
-        return ((System.currentTimeMillis() - lastScreenSeenTime) >= GoogleAnalyticsManager.SESSION_TIMEOUT);
+        return ((System
+                .currentTimeMillis() - lastScreenSeenTime) >= GoogleAnalyticsManager.SESSION_TIMEOUT);
     }
 
     /**
-     * Generates as chat ID which will be unique for a given sender/receiver
-     * pair
+     * Generates as chat ID which will be unique for a given sender/receiver pair
      *
      * @param receiverId The receiver of the chat
      * @param senderId   The sender of the chat
@@ -334,8 +335,7 @@ public class Utils {
     }
 
     /**
-     * Test whether a viewgroup already contains a specific instance of a child
-     * view
+     * Test whether a viewgroup already contains a specific instance of a child view
      *
      * @param viewGroup
      * @param view
@@ -386,7 +386,7 @@ public class Utils {
         final String referralId = SharedPreferenceHelper
                 .getString(R.string.pref_share_token);
         String appShareUrl = context.getString(R.string.app_share_message)
-                .concat(AppConstants.PLAY_STORE_LINK);
+                                    .concat(AppConstants.PLAY_STORE_LINK);
 
         if (!TextUtils.isEmpty(referralId)) {
             appShareUrl = appShareUrl
@@ -397,21 +397,24 @@ public class Utils {
     }
 
     /**
-     * Updates the user info & shared preferences from the http response bundle. This is a convenience method to prevent having to duplicate the code
+     * Updates the user info & shared preferences from the http response bundle. This is a
+     * convenience method to prevent having to duplicate the code
      *
      * @param userInfo      A Bundle containing the User Info from server
-     * @param sendBroadcast Whether to send a broadcast with the Intent Action {@link li.barter.utils.AppConstants#ACTION_USER_INFO_UPDATED} once done
+     * @param sendBroadcast Whether to send a broadcast with the Intent Action {@link
+     *                      li.barter.utils.AppConstants#ACTION_USER_INFO_UPDATED} once done
      */
     public static void updateUserInfoFromBundle(Bundle userInfo, boolean sendBroadcast) {
 
         AppConstants.UserInfo.INSTANCE.setAuthToken(userInfo
-                .getString(HttpConstants.AUTH_TOKEN));
+                                                            .getString(HttpConstants.AUTH_TOKEN));
         AppConstants.UserInfo.INSTANCE.setEmail(userInfo.getString(HttpConstants.EMAIL));
         AppConstants.UserInfo.INSTANCE.setId(userInfo.getString(HttpConstants.ID_USER));
         AppConstants.UserInfo.INSTANCE.setProfilePicture(userInfo
-                .getString(HttpConstants.IMAGE_URL));
+                                                                 .getString(
+                                                                         HttpConstants.IMAGE_URL));
         AppConstants.UserInfo.INSTANCE.setFirstName(userInfo
-                .getString(HttpConstants.FIRST_NAME));
+                                                            .getString(HttpConstants.FIRST_NAME));
         AppConstants.UserInfo.INSTANCE.setLastName(userInfo.getString(HttpConstants.LAST_NAME));
 
         SharedPreferenceHelper.set(R.string.pref_auth_token, userInfo
@@ -436,9 +439,53 @@ public class Utils {
                 .getString(HttpConstants.SHARE_TOKEN));
 
         if (sendBroadcast) {
-            LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext()).sendBroadcast(new Intent(AppConstants.ACTION_USER_INFO_UPDATED));
+            LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext())
+                                 .sendBroadcast(new Intent(AppConstants.ACTION_USER_INFO_UPDATED));
         }
 
+    }
+
+    /**
+     * Converts a cursor to a bundle. Field datatypes will be maintained. Floats will be stored in
+     * the Bundle as Doubles, and Integers will be stored as Longs due to Cursor limitationcs
+     *
+     * @param cursor The cursor to convert to a Bundle. This must be positioned to the row to be
+     *               read
+     * @return The converted bundle
+     */
+    public static Bundle cursorToBundle(Cursor cursor) {
+
+        final int columnCount = cursor.getColumnCount();
+        final Bundle bundle = new Bundle(columnCount);
+
+        for (int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+
+            final String columnName = cursor.getColumnName(columnIndex);
+            switch (cursor.getType(columnIndex)) {
+
+                case Cursor.FIELD_TYPE_STRING: {
+                    bundle.putString(columnName, cursor.getString(columnIndex));
+                    break;
+                }
+
+                case Cursor.FIELD_TYPE_BLOB: {
+                    bundle.putByteArray(columnName, cursor.getBlob(columnIndex));
+                    break;
+                }
+
+                case Cursor.FIELD_TYPE_FLOAT: {
+                    bundle.putDouble(columnName, cursor.getDouble(columnIndex));
+                    break;
+                }
+
+                case Cursor.FIELD_TYPE_INTEGER: {
+                    bundle.putLong(columnName, cursor.getLong(columnIndex));
+                    break;
+                }
+            }
+        }
+
+        return bundle;
     }
 
 }

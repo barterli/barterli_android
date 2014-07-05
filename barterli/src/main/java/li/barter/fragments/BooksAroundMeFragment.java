@@ -636,20 +636,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             if (position == mBooksAroundMeAdapter.getCount() - 1) {
                 showAddBookOptions();
             } else {
-                final Cursor cursor = (Cursor) mBooksAroundMeAdapter
-                                .getItem(position);
 
-                final String idBook = cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.ID));
-
-                Logger.d(TAG, "ID:" + idBook);
-
-                final String userId = cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.USER_ID));
-
-                final Bundle showBooksArgs = new Bundle();
-                showBooksArgs.putString(Keys.ID, idBook);
-                showBooksArgs.putString(Keys.USER_ID, userId);
+                final Bundle showBooksArgs = new Bundle(1);
                 showBooksArgs.putInt(Keys.BOOK_POSITION, position);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                                 .instantiate(getActivity(), BooksPagerFragment.class

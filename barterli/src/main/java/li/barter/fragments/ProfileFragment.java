@@ -153,12 +153,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         mIsLoggedInUser = mUserId.equals(UserInfo.INSTANCE.getId());
         updateViewsForUser();
-
-        /*
-         * TODO Add check for whether info has been fetched & savedInstanceState
-         * to prevent fetch on orientation change. Also stop notifying loaders
-         * on every insert during parsing of books
-         */
         fetchUserDetailsFromServer(mUserId);
 
     }
