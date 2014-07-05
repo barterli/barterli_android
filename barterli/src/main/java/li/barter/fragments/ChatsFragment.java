@@ -127,7 +127,7 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 	public void onPause() {
 		super.onPause();
 		if (mBoundToChatService) {
-			mChatService.setNotificationsEnabled(true);
+			mChatService.setChatScreenVisible(true);
 			getActivity().unbindService(this);
 		}
 	}
@@ -247,7 +247,7 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 		mBoundToChatService = true;
 		mChatService = ((ChatServiceBinder) service).getService();
 		mChatService.clearChatNotifications();
-		mChatService.setNotificationsEnabled(false);
+		mChatService.setChatScreenVisible(false);
 	}
 
 	@Override

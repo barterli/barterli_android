@@ -1,12 +1,12 @@
 /**
  * Copyright 2014, barter.li
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,13 +15,6 @@
  */
 
 package li.barter.chat;
-
-import com.android.volley.Request.Method;
-import com.android.volley.RequestQueue;
-
-import org.apache.http.protocol.HTTP;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Service;
 import android.content.ContentValues;
@@ -36,6 +29,13 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
+
+import com.android.volley.Request.Method;
+import com.android.volley.RequestQueue;
+
+import org.apache.http.protocol.HTTP;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Locale;
@@ -71,68 +71,59 @@ import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.DateFormatter;
 import li.barter.utils.Logger;
+import li.barter.utils.SharedPreferenceHelper;
 
 /**
- * Bound service to send and receive chat messages. The service will receive
- * chat messages and update them in the chats database. <br/>
- * <br/>
- * This service needs to be triggered in two cases -
- * <ol>
- * <li>On application launch - This is done in
- * {@link BarterLiApplication#onCreate()}</li>
- * <li>On network connectivity resumed(if it was lost) - This is done in
- * {@link NetworkChangeReceiver#onReceive(Context, Intent)}</li>
- * </ol>
- * <br/>
- * This will take care of keeping it tied to the chat server and listening for
- * messages. <br/>
- * <br/>
- * For publishing messages, however, you need to bind to this service, check if
- * chat is connected and then publish the message
- * 
+ * Bound service to send and receive chat messages. The service will receive chat messages and
+ * update them in the chats database. <br/> <br/> This service needs to be triggered in two cases -
+ * <ol> <li>On application launch - This is done in {@link BarterLiApplication#onCreate()}</li>
+ * <li>On network connectivity resumed(if it was lost) - This is done in {@link
+ * NetworkChangeReceiver#onReceive(Context, Intent)}</li> </ol> <br/> This will take care of keeping
+ * it tied to the chat server and listening for messages. <br/> <br/> For publishing messages,
+ * however, you need to bind to this service, check if chat is connected and then publish the
+ * message
+ *
  * @author Vinay S Shenoy
  */
 public class ChatService extends Service implements OnReceiveMessageHandler,
-                IHttpCallbacks, OnDisconnectCallback, AsyncDbQueryCallback {
-
-    private static final String    TAG                      = "ChatService";
-    private static final String    QUEUE_NAME_FORMAT        = "%s%s";
-    private static final String    VIRTUAL_HOST             = "/";
-    private static final String    EXCHANGE_NAME_FORMAT     = "%sexchange";
-    private static final String    USERNAME                 = "barterli";
-    private static final String    PASSWORD                 = "barter";
+        IHttpCallbacks, OnDisconnectCallback, AsyncDbQueryCallback {
+    private static final String TAG                      = "ChatService";
+    private static final String QUEUE_NAME_FORMAT        = "%s%s";
+    private static final String VIRTUAL_HOST             = "/";
+    private static final String EXCHANGE_NAME_FORMAT     = "%sexchange";
+    private static final String USERNAME                 = "barterli";
+    private static final String PASSWORD                 = "barter";
     /**
-     * Minimum time interval(in seconds) to wait between subsequent connect
-     * attempts
+     * Minimum time interval(in seconds) to wait between subsequent connect attempts
      */
-    private static final int       CONNECT_BACKOFF_INTERVAL = 5;
+    private static final int    CONNECT_BACKOFF_INTERVAL = 5;
 
     /**
      * Maximum multiplier for the connect interval
      */
-    private static final int       MAX_CONNECT_MULTIPLIER   = 180;
+    private static final int MAX_CONNECT_MULTIPLIER = 180;
 
-    private static final String    MESSAGE_SELECT_BY_ID     = BaseColumns._ID
-                                                                            + SQLConstants.EQUALS_ARG;
+    private static final String MESSAGE_SELECT_BY_ID = BaseColumns._ID
+            + SQLConstants.EQUALS_ARG;
 
-    private final IBinder          mChatServiceBinder       = new ChatServiceBinder();
+    private final IBinder mChatServiceBinder = new ChatServiceBinder();
 
     /** {@link ChatRabbitMQConnector} instance for listening to messages */
-    private ChatRabbitMQConnector  mMessageConsumer;
+    private ChatRabbitMQConnector mMessageConsumer;
 
-    private DateFormatter          mChatDateFormatter;
+    private DateFormatter mChatDateFormatter;
 
-    private DateFormatter          mMessageDateFormatter;
+    private DateFormatter mMessageDateFormatter;
 
-    private RequestQueue           mRequestQueue;
+    private RequestQueue mRequestQueue;
 
-    private VolleyCallbacks        mVolleyCallbacks;
+    private VolleyCallbacks mVolleyCallbacks;
 
-    private String                 mQueueName;
+    private String mQueueName;
 
     /**
-     * Current multiplier for connecting to chat. Can vary between 0 to
-     * {@link #MAX_CONNECT_MULTIPLIER}
+     * Current multiplier for connecting to chat. Can vary between 0 to {@link
+     * #MAX_CONNECT_MULTIPLIER}
      */
     private int                    mCurrentConnectMultiplier;
     /**
@@ -140,22 +131,26 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
      */
     private ConnectToChatAsyncTask mConnectTask;
 
-    private Handler                mHandler;
+    private Handler mHandler;
 
-    private Runnable               mConnectRunnable;
+    private Runnable mConnectRunnable;
 
-    private Builder                mChatProcessTaskBuilder;
+    private Builder mChatProcessTaskBuilder;
 
     /**
      * Single thread executor to process incoming chat messages in a queue
      */
-    private ExecutorService        mChatProcessor;
+    private ExecutorService mChatProcessor;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mChatDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, AppConstants.CHAT_TIME_FORMAT);
-        mMessageDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT, AppConstants.MESSAGE_TIME_FORMAT);
+        SharedPreferenceHelper.registerSharedPreferencesChangedListener(
+                ChatNotificationHelper.getInstance(this).getOnSharedPreferenceChangeListener());
+        mChatDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT,
+                                               AppConstants.CHAT_TIME_FORMAT);
+        mMessageDateFormatter = new DateFormatter(AppConstants.TIMESTAMP_FORMAT,
+                                                  AppConstants.MESSAGE_TIME_FORMAT);
         mRequestQueue = ((IVolleyHelper) getApplication()).getRequestQueue();
         mVolleyCallbacks = new VolleyCallbacks(mRequestQueue, this);
         mCurrentConnectMultiplier = 0;
@@ -164,23 +159,41 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         mChatProcessTaskBuilder = new Builder(this);
     }
 
+    /*private void testNotifications(final int count, final long interval) {
+
+        final Handler handler = new Handler();
+
+        for (int i = 1; i <= count; i++) {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ChatNotificationHelper.getInstance(ChatService.this)
+                                          .showChatReceivedNotification(ChatService.this, "same crap",
+                                                                        "with somebody",
+                                                                        "Test User",
+                                                                        "Test Vibration");
+                }
+            }, interval * i);
+
+
+        }
+    }*/
+
     /**
-     * Sets the id of the user the current chat is being done with. Set this to
-     * the user id when the chat detail screen opens, and clear it when the
-     * screen is paused. It is used to hide notifications when the chat message
-     * received is from the user currently being chatted with
-     * 
-     * @param currentChattingUserId The id of the current user being chatted
-     *            with
+     * Sets the id of the user the current chat is being done with. Set this to the user id when the
+     * chat detail screen opens, and clear it when the screen is paused. It is used to hide
+     * notifications when the chat message received is from the user currently being chatted with
+     *
+     * @param currentChattingUserId The id of the current user being chatted with
      */
     public void setCurrentChattingUserId(final String currentChattingUserId) {
         ChatNotificationHelper.getInstance(this)
-                        .setCurrentChattingUserId(currentChattingUserId);
+                              .setCurrentChattingUserId(currentChattingUserId);
     }
 
     /**
      * Binder to connect to the Chat Service
-     * 
+     *
      * @author Vinay S Shenoy
      */
     public class ChatServiceBinder extends Binder {
@@ -197,12 +210,12 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     @Override
     public int onStartCommand(final Intent intent, final int flags,
-                    final int startId) {
+                              final int startId) {
 
         final String action = intent != null ? intent.getAction() : null;
 
         if ((action != null)
-                        && action.equals(AppConstants.ACTION_DISCONNECT_CHAT)) {
+                && action.equals(AppConstants.ACTION_DISCONNECT_CHAT)) {
 
             if (isConnectedToChat()) {
 
@@ -235,8 +248,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                 public void run() {
 
                     if (!isLoggedIn()
-                                    || !DeviceInfo.INSTANCE
-                                                    .isNetworkConnected()) {
+                            || !DeviceInfo.INSTANCE
+                            .isNetworkConnected()) {
 
                         //If there is no internet connection or we are not logged in, we need not attempt to connect
                         mConnectRunnable = null;
@@ -244,16 +257,18 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
                     }
 
                     mQueueName = generateQueueNameFromUserEmailAndDeviceId(UserInfo.INSTANCE
-                                    .getEmail(), UserInfo.INSTANCE
-                                    .getDeviceId());
+                                                                                   .getEmail(),
+                                                                           UserInfo.INSTANCE
+                                                                                   .getDeviceId()
+                    );
 
                     if (mConnectTask == null) {
                         mConnectTask = new ConnectToChatAsyncTask();
                         mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
-                                        .getId());
+                                .getId());
                     } else {
                         final Status connectingStatus = mConnectTask
-                                        .getStatus();
+                                .getStatus();
 
                         if (connectingStatus != Status.RUNNING) {
 
@@ -265,7 +280,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
                             mConnectTask = new ConnectToChatAsyncTask();
                             mConnectTask.execute(USERNAME, PASSWORD, mQueueName, UserInfo.INSTANCE
-                                            .getId());
+                                    .getId());
                         }
                     }
                     mConnectRunnable = null;
@@ -275,9 +290,9 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             };
 
             mHandler.postDelayed(mConnectRunnable, mCurrentConnectMultiplier
-                            * CONNECT_BACKOFF_INTERVAL * 1000);
+                    * CONNECT_BACKOFF_INTERVAL * 1000);
             mCurrentConnectMultiplier = (++mCurrentConnectMultiplier > MAX_CONNECT_MULTIPLIER) ? MAX_CONNECT_MULTIPLIER
-                            : mCurrentConnectMultiplier;
+                    : mCurrentConnectMultiplier;
         }
 
     }
@@ -291,6 +306,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     @Override
     public void onDestroy() {
+        SharedPreferenceHelper.unregisterSharedPreferencesChangedListener(
+                ChatNotificationHelper.getInstance(this).getOnSharedPreferenceChangeListener());
         if (isConnectedToChat()) {
             mMessageConsumer.dispose(true);
             mMessageConsumer = null;
@@ -310,12 +327,12 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     /**
      * Send a message to a user
-     * 
+     *
      * @param toUserId The user Id to send the message to
-     * @param message The message to send
+     * @param message  The message to send
      */
     public void sendMessageToUser(final String toUserId, final String message,
-                    final String timeSentAt) {
+                                  final String timeSentAt) {
 
         if (!isLoggedIn()) {
             return;
@@ -332,36 +349,36 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             requestObject.put(HttpConstants.MESSAGE, message);
 
             final ChatProcessTask chatProcessTask = mChatProcessTaskBuilder
-                            .setProcessType(ChatProcessTask.PROCESS_SEND)
-                            .setMessage(requestObject.toString())
-                            .setMessageDateFormatter(mMessageDateFormatter)
-                            .setChatDateFormatter(mChatDateFormatter)
-                            .setSendChatCallback(new SendChatCallback() {
+                    .setProcessType(ChatProcessTask.PROCESS_SEND)
+                    .setMessage(requestObject.toString())
+                    .setMessageDateFormatter(mMessageDateFormatter)
+                    .setChatDateFormatter(mChatDateFormatter)
+                    .setSendChatCallback(new SendChatCallback() {
+
+                        @Override
+                        public void sendChat(String text,
+
+                                             long dbRowId) {
+
+                            final BlRequest request = new BlRequest(Method.POST, HttpConstants
+                                    .getChangedChatUrl()
+                                    + ApiEndpoints.AMPQ_EVENT_MACHINE, text, mVolleyCallbacks);
+                            request.setRequestId(RequestId.AMPQ);
+                            request.addExtra(Keys.ID, dbRowId);
+                            request.setTag(TAG);
+
+                            request.getRetryPolicy().setMaxRetries(0); //Don't retry chat requests
+
+                            //Post on main thread
+                            mHandler.post(new Runnable() {
 
                                 @Override
-                                public void sendChat(String text,
-
-                                long dbRowId) {
-
-                                    final BlRequest request = new BlRequest(Method.POST, HttpConstants
-                                                    .getChangedChatUrl()
-                                                    + ApiEndpoints.AMPQ_EVENT_MACHINE, text, mVolleyCallbacks);
-                                    request.setRequestId(RequestId.AMPQ);
-                                    request.addExtra(Keys.ID, dbRowId);
-                                    request.setTag(TAG);
-
-                                    request.getRetryPolicy().setMaxRetries(0); //Don't retry chat requests
-
-                                    //Post on main thread
-                                    mHandler.post(new Runnable() {
-
-                                        @Override
-                                        public void run() {
-                                            mVolleyCallbacks.queue(request, true);
-                                        }
-                                    });
+                                public void run() {
+                                    mVolleyCallbacks.queue(request, true);
                                 }
-                            }).build();
+                            });
+                        }
+                    }).build();
 
             mChatProcessTaskBuilder.reset();
             mChatProcessor.submit(chatProcessTask);
@@ -373,8 +390,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     /**
-     * Cancels any notifications being displayed. Call this if the relevant
-     * screen is opened within the app
+     * Cancels any notifications being displayed. Call this if the relevant screen is opened within
+     * the app
      */
     public void clearChatNotifications() {
 
@@ -382,29 +399,28 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     /**
-     * Set notifications enabled
-     * 
-     * @param enabled <code>true</code> to enable notifications,
-     *            <code>false</code> to disable them
+     * Set Chat screen currently visible to the user
+     *
+     * @param visible <code>true</code> to set chat screen visible to the user, <code>false</code>
+     *                to disable them
      */
-    public void setNotificationsEnabled(final boolean enabled) {
+    public void setChatScreenVisible(final boolean visible) {
         ChatNotificationHelper.getInstance(this)
-                        .setNotificationsEnabled(enabled);
+                              .setChatScreenVisible(visible);
     }
 
     /**
-     * Uses the portion of the user's email before the "@" to generate the queue
-     * name
-     * 
+     * Uses the portion of the user's email before the "@" to generate the queue name
+     *
      * @param userEmail The user email
-     * @param deviceId The device Id
+     * @param deviceId  The device Id
      * @return The queue name for the user email
      */
     private String generateQueueNameFromUserEmailAndDeviceId(
-                    final String userEmail, final String deviceId) {
+            final String userEmail, final String deviceId) {
 
         final String emailPart1 = userEmail
-                        .substring(0, userEmail.indexOf("@"));
+                .substring(0, userEmail.indexOf("@"));
         Logger.d(TAG, "User email part 1 %s", emailPart1);
         return String.format(Locale.US, QUEUE_NAME_FORMAT, deviceId, emailPart1);
 
@@ -419,11 +435,11 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             Logger.d(TAG, "Received:" + text);
 
             final ChatProcessTask chatProcessTask = mChatProcessTaskBuilder
-                            .setProcessType(ChatProcessTask.PROCESS_RECEIVE)
-                            .setMessage(text)
-                            .setChatDateFormatter(mChatDateFormatter)
-                            .setMessageDateFormatter(mMessageDateFormatter)
-                            .build();
+                    .setProcessType(ChatProcessTask.PROCESS_RECEIVE)
+                    .setMessage(text)
+                    .setChatDateFormatter(mChatDateFormatter)
+                    .setMessageDateFormatter(mMessageDateFormatter)
+                    .build();
             mChatProcessTaskBuilder.reset();
             mChatProcessor.submit(chatProcessTask);
 
@@ -435,11 +451,10 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     }
 
     /**
-     * Asynchronously connect to Chat Server TODO: Move the connect async task
-     * to the Rabbit MQ Connector The execute() call requires 4 string params -
-     * The username, password, queue name in the same order. All parameters
-     * should be passed. Send an EMPTY STRING if not required
-     * 
+     * Asynchronously connect to Chat Server TODO: Move the connect async task to the Rabbit MQ
+     * Connector The execute() call requires 4 string params - The username, password, queue name in
+     * the same order. All parameters should be passed. Send an EMPTY STRING if not required
+     *
      * @author Vinay S Shenoy
      */
     private class ConnectToChatAsyncTask extends AsyncTask<String, Void, Void> {
@@ -454,7 +469,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
             assert (params[1] != null);
             assert (params[2] != null);
             Logger.v(TAG, "Username %s, Password %s, Queue %s", params[0], params[1], params[2]);
-            mMessageConsumer.connectToRabbitMQ(params[0], params[1], params[2], true, false, false, null);
+            mMessageConsumer
+                    .connectToRabbitMQ(params[0], params[1], params[2], true, false, false, null);
             return null;
         }
 
@@ -481,8 +497,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     @Override
     public void onSuccess(final int requestId,
-                    final IBlRequestContract request,
-                    final ResponseInfo response) {
+                          final IBlRequestContract request,
+                          final ResponseInfo response) {
 
         if (requestId == RequestId.AMPQ) {
             Logger.v(TAG, "Chat sent");
@@ -491,8 +507,8 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     @Override
     public void onBadRequestError(final int requestId,
-                    final IBlRequestContract request, final int errorCode,
-                    final String errorMessage, final Bundle errorResponseBundle) {
+                                  final IBlRequestContract request, final int errorCode,
+                                  final String errorMessage, final Bundle errorResponseBundle) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -504,7 +520,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     @Override
     public void onAuthError(final int requestId,
-                    final IBlRequestContract request) {
+                            final IBlRequestContract request) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -516,7 +532,7 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
 
     @Override
     public void onOtherError(final int requestId,
-                    final IBlRequestContract request, final int errorCode) {
+                             final IBlRequestContract request, final int errorCode) {
 
         if (requestId == RequestId.AMPQ) {
 
@@ -533,11 +549,13 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
         final ContentValues values = new ContentValues(1);
         values.put(DatabaseColumns.CHAT_STATUS, ChatStatus.FAILED);
 
-        DBInterface.updateAsync(QueryTokens.UPDATE_MESSAGE_STATUS, hashCode(), null, TableChatMessages.NAME, values, MESSAGE_SELECT_BY_ID, new String[] {
-            String.valueOf(messageDbId)
-        }, true, this);
+        DBInterface.updateAsync(QueryTokens.UPDATE_MESSAGE_STATUS, hashCode(), null,
+                                TableChatMessages.NAME, values, MESSAGE_SELECT_BY_ID, new String[]{
+                        String.valueOf(messageDbId)
+                }, true, this
+        );
     }
-    
+
     @Override
     public void onDisconnect(final boolean manual) {
         if (!manual) {
@@ -551,9 +569,14 @@ public class ChatService extends Service implements OnReceiveMessageHandler,
     private void initMessageConsumer() {
         if ((mMessageConsumer == null) && isLoggedIn()) {
             mMessageConsumer = new ChatRabbitMQConnector(HttpConstants.getChatUrl(), HttpConstants
-                            .getChatPort(), VIRTUAL_HOST, String
-                            .format(Locale.US, EXCHANGE_NAME_FORMAT, UserInfo.INSTANCE
-                                            .getId()), ExchangeType.FANOUT);
+                    .getChatPort(), VIRTUAL_HOST, String
+                                                                 .format(Locale.US,
+                                                                         EXCHANGE_NAME_FORMAT,
+                                                                         UserInfo.INSTANCE
+                                                                                 .getId()
+                                                                 ),
+                                                         ExchangeType.FANOUT
+            );
 
             mMessageConsumer.setOnReceiveMessageHandler(ChatService.this);
             mMessageConsumer.setOnDisconnectCallback(ChatService.this);

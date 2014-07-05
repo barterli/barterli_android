@@ -18,7 +18,7 @@ import li.barter.utils.SharedPreferenceHelper;
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
 
     /** Reference to ringtone preference to set selected notification ringtone when changed */
-    private RingtonePreference mRingtonePreference;
+    private RingtonePreference mChatRingtonePreference;
 
     /** Chat ringtone preference key */
     private String mChatRingtoneKey;
@@ -29,8 +29,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         addPreferencesFromResource(R.xml.settings);
 
         mChatRingtoneKey = getString(R.string.pref_chat_ringtone);
-        mRingtonePreference = (RingtonePreference) findPreference(mChatRingtoneKey);
-        mRingtonePreference.setOnPreferenceChangeListener(this);
+        mChatRingtonePreference = (RingtonePreference) findPreference(mChatRingtoneKey);
+        mChatRingtonePreference.setOnPreferenceChangeListener(this);
         updateRingtonePreferenceSummary(SharedPreferenceHelper
                                                 .getString(R.string.pref_chat_ringtone));
     }
@@ -48,12 +48,12 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
                     .getRingtone(getActivity(), Uri.parse(selectedRingtoneUriString));
 
             if (selectedRingtone == null) {
-                mRingtonePreference.setSummary(null);
+                mChatRingtonePreference.setSummary(null);
             } else {
-                mRingtonePreference.setSummary(selectedRingtone.getTitle(getActivity()));
+                mChatRingtonePreference.setSummary(selectedRingtone.getTitle(getActivity()));
             }
         } else {
-            mRingtonePreference.setSummary(null);
+            mChatRingtonePreference.setSummary(null);
         }
 
     }
