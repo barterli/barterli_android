@@ -237,6 +237,7 @@
     <string name="hint_last_name">Last Name(optional)</string>
     <string name="label_my_books">My Books</string>
     <string name="profilepage_title">My Profile</string>
+    <string name="book_updated">Book Updated successfully.</string>
 
     <!-- Strings/URLs related to ShowWebViewFragment -->
     <string name="url_google">http://www.google.com</string>

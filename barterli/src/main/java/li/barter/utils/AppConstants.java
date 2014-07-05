@@ -407,9 +407,8 @@ public class AppConstants {
 
         // 1-100 for load queries
         public static final int LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE = 1;
-        public static final int LOAD_LOCATION_FROM_PROFILE_SHOW_PAGE = 2;
-        public static final int LOAD_BOOK_DETAIL_CURRENT_USER        = 3;
-        public static final int LOAD_BOOK_DETAIL_OTHER_USER          = 4;
+        public static final int LOAD_BOOK_DETAIL_FOR_EDIT            = 2;
+        public static final int LOAD_BOOK_DETAIL_FOR_OPEN            = 3;
 
         // 101-200 for insert queries
 
