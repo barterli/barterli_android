@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -35,22 +36,24 @@ import li.barter.utils.Utils;
 import li.barter.widgets.CircleImageView;
 
 /**
- * Fragment to load in the Navigation Drawer
- * Created by vinaysshenoy on 29/6/14.
+ * Fragment to load in the Navigation Drawer Created by vinaysshenoy on 29/6/14.
  */
 public class NavDrawerFragment extends AbstractBarterLiFragment implements AdapterView.OnItemClickListener {
 
     /**
      * Intent filter for receiving updates whenever the User Info changes
      */
-    private static final IntentFilter INTENT_FILTER = new IntentFilter(AppConstants.ACTION_USER_INFO_UPDATED);
+    private static final IntentFilter      INTENT_FILTER                     = new IntentFilter(
+            AppConstants.ACTION_USER_INFO_UPDATED);
     /**
-     * BroadcastReceiver implementation that receives broadcasts when the user info is updated from server
+     * BroadcastReceiver implementation that receives broadcasts when the user info is updated from
+     * server
      */
-    private final BroadcastReceiver mUserInfoUpdatedBroadcastReceiver = new BroadcastReceiver() {
+    private final        BroadcastReceiver mUserInfoUpdatedBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() != null && intent.getAction().equals(AppConstants.ACTION_USER_INFO_UPDATED)) {
+            if (intent.getAction() != null && intent.getAction()
+                                                    .equals(AppConstants.ACTION_USER_INFO_UPDATED)) {
                 updateLoggedInStatus();
             }
         }
@@ -58,23 +61,25 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
     /**
      * ListView to provide Nav drawer content
      */
-    private ListView mListView;
+    private ListView                 mListView;
     /**
      * Drawer Adapter to provide the list view options
      */
-    private NavDrawerAdapter mDrawerAdapter;
+    private NavDrawerAdapter         mDrawerAdapter;
     /**
-     * Callback will be triggered whenever the Nav drawer takes an action.  Use to close the drawer layout
+     * Callback will be triggered whenever the Nav drawer takes an action.  Use to close the drawer
+     * layout
      */
     private INavDrawerActionCallback mNavDrawerActionCallback;
     /**
-     * Callback for delaying the running of nav drawer actions. This is so that the drawer can be closed without jank
+     * Callback for delaying the running of nav drawer actions. This is so that the drawer can be
+     * closed without jank
      */
-    private Handler mHandler;
+    private Handler                  mHandler;
     /**
      * Header which shows either the user profile or the Sign In message
      */
-    private ViewGroup mProfileHeader;
+    private ViewGroup                mProfileHeader;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,9 +87,11 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
         mHandler = new Handler();
 
         mListView = (ListView) inflater.inflate(R.layout.fragment_nav_drawer, container, false);
-        mDrawerAdapter = new NavDrawerAdapter(getActivity(), R.array.nav_drawer_titles, R.array.nav_drawer_descriptions);
+        mDrawerAdapter = new NavDrawerAdapter(getActivity(), R.array.nav_drawer_primary,
+                                              R.array.nav_drawer_secondary);
 
-        mProfileHeader = (ViewGroup) inflater.inflate(R.layout.layout_nav_drawer_header, mListView, false);
+        mProfileHeader = (ViewGroup) inflater
+                .inflate(R.layout.layout_nav_drawer_header, mListView, false);
         initProfileHeaderViews();
 
         mListView.addHeaderView(mProfileHeader, null, true);
@@ -95,40 +102,43 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
     }
 
     /**
-     * Initialize the profile header views. Reads the references to the child views and stores them as tags
+     * Initialize the profile header views. Reads the references to the child views and stores them
+     * as tags
      */
     private void initProfileHeaderViews() {
 
         //Get references to the two primary containers
-        final ViewGroup profileContainer = (ViewGroup) mProfileHeader.findViewById(R.id.container_profile_info);
+        final ViewGroup profileContainer = (ViewGroup) mProfileHeader
+                .findViewById(R.id.container_profile_info);
         mProfileHeader.setTag(R.id.container_profile_info, profileContainer);
 
-        final ViewGroup signInContainer = (ViewGroup) mProfileHeader.findViewById(R.id.container_sign_in_message);
+        final ViewGroup signInContainer = (ViewGroup) mProfileHeader
+                .findViewById(R.id.container_sign_in_message);
         mProfileHeader.setTag(R.id.container_sign_in_message, signInContainer);
 
         //Get references to the individual container children and set tags
-        profileContainer.setTag(R.id.text_user_name, profileContainer.findViewById(R.id.text_user_name));
-        profileContainer.setTag(R.id.text_user_email, profileContainer.findViewById(R.id.text_user_email));
+        profileContainer
+                .setTag(R.id.text_user_name, profileContainer.findViewById(R.id.text_user_name));
         profileContainer.setTag(R.id.image_user, profileContainer.findViewById(R.id.image_user));
 
         TextView textView = (TextView) signInContainer.findViewById(R.id.text_nav_item_title);
         textView.setText(R.string.text_sign_in);
         signInContainer.setTag(R.id.text_nav_item_title, textView);
-        textView = (TextView) signInContainer.findViewById(R.id.text_nav_desc);
-        textView.setText(R.string.text_and_start_bartering);
-        signInContainer.setTag(R.id.text_nav_desc, textView);
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext()).unregisterReceiver(mUserInfoUpdatedBroadcastReceiver);
+        LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext())
+                             .unregisterReceiver(mUserInfoUpdatedBroadcastReceiver);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext()).registerReceiver(mUserInfoUpdatedBroadcastReceiver, INTENT_FILTER);
+        LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext())
+                             .registerReceiver(mUserInfoUpdatedBroadcastReceiver, INTENT_FILTER);
         updateLoggedInStatus();
     }
 
@@ -138,36 +148,41 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
     private void updateLoggedInStatus() {
 
         final View profileInfoContainer = (View) mProfileHeader.getTag(R.id.container_profile_info);
-        final View signInMessageContainer = (View) mProfileHeader.getTag(R.id.container_sign_in_message);
+        final View signInMessageContainer = (View) mProfileHeader
+                .getTag(R.id.container_sign_in_message);
 
 
-        final TextView userNameTextView = ((TextView) profileInfoContainer.getTag(R.id.text_user_name));
-        final TextView userEmailTextView = ((TextView) profileInfoContainer.getTag(R.id.text_user_email));
-        final CircleImageView profileImageView = (CircleImageView) profileInfoContainer.getTag(R.id.image_user);
+        final TextView userNameTextView = ((TextView) profileInfoContainer
+                .getTag(R.id.text_user_name));
+        final CircleImageView profileImageView = (CircleImageView) profileInfoContainer
+                .getTag(R.id.image_user);
 
         if (isLoggedIn()) {
 
             profileInfoContainer.setVisibility(View.VISIBLE);
             signInMessageContainer.setVisibility(View.GONE);
 
-            userNameTextView.setText(Utils.makeUserFullName(AppConstants.UserInfo.INSTANCE.getFirstName(), AppConstants.UserInfo.INSTANCE.getLastName()));
-            userEmailTextView.setText(AppConstants.UserInfo.INSTANCE.getEmail());
+            userNameTextView.setText(Utils.makeUserFullName(
+                    AppConstants.UserInfo.INSTANCE.getFirstName(),
+                    AppConstants.UserInfo.INSTANCE.getLastName()));
 
             final String userImageUrl = AppConstants.UserInfo.INSTANCE.getProfilePicture();
 
             if (!TextUtils.isEmpty(userImageUrl)) {
                 Picasso.with(getActivity())
-                        .load(userImageUrl)
-                        .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                        .centerCrop()
-                        .error(R.drawable.pic_avatar)
-                        .into(profileImageView.getTarget());
+                       .load(userImageUrl)
+                       .resizeDimen(R.dimen.book_user_image_size_profile,
+                                    R.dimen.book_user_image_size_profile)
+                       .centerCrop()
+                       .error(R.drawable.pic_avatar)
+                       .into(profileImageView.getTarget());
             } else {
                 Picasso.with(getActivity())
-                        .load(R.drawable.pic_avatar)
-                        .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                        .centerCrop()
-                        .into(profileImageView.getTarget());
+                       .load(R.drawable.pic_avatar)
+                       .resizeDimen(R.dimen.book_user_image_size_profile,
+                                    R.dimen.book_user_image_size_profile)
+                       .centerCrop()
+                       .into(profileImageView.getTarget());
             }
 
         } else {
@@ -175,7 +190,6 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
             profileInfoContainer.setVisibility(View.GONE);
             signInMessageContainer.setVisibility(View.VISIBLE);
             userNameTextView.setText(null);
-            userEmailTextView.setText(null);
             profileImageView.setImageResource(0);
         }
     }
@@ -217,8 +231,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
     }
 
     /**
-     * Creates a {@link Runnable} for positing to the Handler for launching the
-     * Navigation Drawer click
+     * Creates a {@link Runnable} for positing to the Handler for launching the Navigation Drawer
+     * click
      *
      * @param position The nav drawer item that was clicked
      * @return a {@link Runnable} to be posted to the Handler thread
@@ -226,7 +240,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
     private Runnable makeRunnableForNavDrawerClick(final int position) {
 
         Runnable runnable = null;
-        final AbstractBarterLiFragment masterFragment = ((AbstractBarterLiActivity) getActivity()).getCurrentMasterFragment();
+        final AbstractBarterLiFragment masterFragment = ((AbstractBarterLiActivity) getActivity())
+                .getCurrentMasterFragment();
 
         switch (position) {
 
@@ -235,8 +250,10 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
 
                 GoogleAnalyticsManager
                         .getInstance()
-                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE, AnalyticsConstants.Actions.NAVIGATION_OPTION)
-                                .set(AnalyticsConstants.ParamKeys.TYPE, AnalyticsConstants.ParamValues.PROFILE));
+                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
+                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                           .set(AnalyticsConstants.ParamKeys.TYPE,
+                                                AnalyticsConstants.ParamValues.PROFILE));
                 /*
                  * If the master fragment is already the login fragment, don't
                  * load it again.
@@ -255,17 +272,24 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                                     .getId());
 
                             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                    .instantiate(getActivity(), ProfileFragment.class
-                                            .getName(), args), AppConstants.FragmentTags.PROFILE_FROM_NAV_DRAWER, true, null);
+                                                 .instantiate(getActivity(), ProfileFragment.class
+                                                         .getName(), args),
+                                         AppConstants.FragmentTags.PROFILE_FROM_NAV_DRAWER, true,
+                                         null
+                            );
 
                         } else {
 
                             final Bundle loginArgs = new Bundle(1);
-                            loginArgs.putString(AppConstants.Keys.UP_NAVIGATION_TAG, AppConstants.FragmentTags.BS_BOOKS_AROUND_ME);
+                            loginArgs.putString(AppConstants.Keys.UP_NAVIGATION_TAG,
+                                                AppConstants.FragmentTags.BS_BOOKS_AROUND_ME);
 
                             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                    .instantiate(getActivity(), LoginFragment.class
-                                            .getName(), loginArgs), AppConstants.FragmentTags.LOGIN_FROM_NAV_DRAWER, true, AppConstants.FragmentTags.BS_BOOKS_AROUND_ME);
+                                                 .instantiate(getActivity(), LoginFragment.class
+                                                         .getName(), loginArgs),
+                                         AppConstants.FragmentTags.LOGIN_FROM_NAV_DRAWER, true,
+                                         AppConstants.FragmentTags.BS_BOOKS_AROUND_ME
+                            );
                         }
 
                     }
@@ -274,13 +298,34 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
 
             }
 
-            //My Chats
+            //Find Books
             case 1: {
+
+                if (masterFragment != null && masterFragment instanceof BooksAroundMeFragment) {
+                    return null;
+                }
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+
+                        getFragmentManager()
+                                .popBackStack(AppConstants.FragmentTags.BS_BOOKS_AROUND_ME,
+                                              0);
+                    }
+                };
+
+                break;
+            }
+
+            //My Chats
+            case 2: {
 
                 GoogleAnalyticsManager
                         .getInstance()
-                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE, AnalyticsConstants.Actions.NAVIGATION_OPTION)
-                                .set(AnalyticsConstants.ParamKeys.TYPE, AnalyticsConstants.ParamValues.CHATS));
+                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
+                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                           .set(AnalyticsConstants.ParamKeys.TYPE,
+                                                AnalyticsConstants.ParamValues.CHATS));
                 if ((masterFragment != null)
                         && (masterFragment instanceof ChatsFragment)) {
                     return null;
@@ -292,41 +337,30 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                     @Override
                     public void run() {
                         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), ChatsFragment.class
-                                        .getName(), null), AppConstants.FragmentTags.CHATS, true, AppConstants.FragmentTags.BS_CHATS);
+                                             .instantiate(getActivity(), ChatsFragment.class
+                                                     .getName(), null),
+                                     AppConstants.FragmentTags.CHATS, true,
+                                     AppConstants.FragmentTags.BS_CHATS
+                        );
                     }
                 };
                 break;
             }
 
-            //Report Bug
-            case 2: {
-                GoogleAnalyticsManager
-                        .getInstance()
-                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE, AnalyticsConstants.Actions.NAVIGATION_OPTION)
-                                .set(AnalyticsConstants.ParamKeys.TYPE, AnalyticsConstants.ParamValues.REPORT_BUG));
-                if ((masterFragment != null)
-                        && (masterFragment instanceof ReportBugFragment)) {
-                    return null;
-                }
-
-                runnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), ReportBugFragment.class
-                                        .getName(), null), AppConstants.FragmentTags.REPORT_BUGS, true, null);
-                    }
-                };
+            //Settings
+            case 3: {
+                //TODO: Vinay - Open Settings Activity
                 break;
             }
 
             //Share
-            case 3: {
+            case 4: {
                 GoogleAnalyticsManager
                         .getInstance()
-                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE, AnalyticsConstants.Actions.NAVIGATION_OPTION)
-                                .set(AnalyticsConstants.ParamKeys.TYPE, AnalyticsConstants.ParamValues.SHARE));
+                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
+                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                           .set(AnalyticsConstants.ParamKeys.TYPE,
+                                                AnalyticsConstants.ParamValues.SHARE));
                 runnable = new Runnable() {
 
                     @Override
@@ -336,7 +370,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                                 .createAppShareIntent(getActivity());
                         try {
                             startActivity(Intent
-                                    .createChooser(shareIntent, getString(R.string.share_via)));
+                                                  .createChooser(shareIntent,
+                                                                 getString(R.string.share_via)));
                         } catch (ActivityNotFoundException e) {
                             //Shouldn't happen
                         }
@@ -348,11 +383,13 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
             }
 
             //Rate Us
-            case 4: {
+            case 5: {
                 GoogleAnalyticsManager
                         .getInstance()
-                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE, AnalyticsConstants.Actions.NAVIGATION_OPTION)
-                                .set(AnalyticsConstants.ParamKeys.TYPE, AnalyticsConstants.ParamValues.RATE_US));
+                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
+                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                           .set(AnalyticsConstants.ParamKeys.TYPE,
+                                                AnalyticsConstants.ParamValues.RATE_US));
 
                 runnable = new Runnable() {
 
@@ -369,12 +406,42 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                 break;
             }
 
-            //About Us
-            case 5: {
+            //Send feedback
+            case 6: {
                 GoogleAnalyticsManager
                         .getInstance()
-                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE, AnalyticsConstants.Actions.NAVIGATION_OPTION)
-                                .set(AnalyticsConstants.ParamKeys.TYPE, AnalyticsConstants.ParamValues.ABOUT_US));
+                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
+                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                           .set(AnalyticsConstants.ParamKeys.TYPE,
+                                                AnalyticsConstants.ParamValues.REPORT_BUG));
+                if ((masterFragment != null)
+                        && (masterFragment instanceof ReportBugFragment)) {
+                    return null;
+                }
+
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                                             .instantiate(getActivity(), ReportBugFragment.class
+                                                     .getName(), null),
+                                     AppConstants.FragmentTags.REPORT_BUGS,
+                                     true, null
+                        );
+                    }
+                };
+                break;
+            }
+
+
+            //About Us
+            case 7: {
+                GoogleAnalyticsManager
+                        .getInstance()
+                        .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
+                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                           .set(AnalyticsConstants.ParamKeys.TYPE,
+                                                AnalyticsConstants.ParamValues.ABOUT_US));
                 if ((masterFragment != null)
                         && (masterFragment instanceof TeamFragment)) {
                     return null;
@@ -384,8 +451,11 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                     @Override
                     public void run() {
                         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), AboutUsPagerFragment.class
-                                        .getName(), null), AppConstants.FragmentTags.TEAM, true, null);
+                                             .instantiate(getActivity(), AboutUsPagerFragment.class
+                                                     .getName(), null),
+                                     AppConstants.FragmentTags.TEAM, true,
+                                     null
+                        );
                     }
                 };
 
@@ -405,7 +475,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
         super.onAttach(activity);
 
         if (!(activity instanceof INavDrawerActionCallback)) {
-            throw new IllegalArgumentException("Activity " + activity.toString() + " must implement INavDrawerActionCallback");
+            throw new IllegalArgumentException(
+                    "Activity " + activity.toString() + " must implement INavDrawerActionCallback");
         }
 
         mNavDrawerActionCallback = (INavDrawerActionCallback) activity;

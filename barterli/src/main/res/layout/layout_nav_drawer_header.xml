@@ -1,67 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/container_profile_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/margin_xx_small"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:orientation="horizontal">
 
         <li.barter.widgets.CircleImageView
             android:id="@+id/image_user"
             android:layout_width="@dimen/profile_header_img_size"
             android:layout_height="@dimen/profile_header_img_size"
-            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
             android:contentDescription="@string/app_name"
             app:borderColor="@color/apptheme_color"
             app:borderWidth="2dp"
-            app:cornerRadius="@dimen/profile_header_img_size" />
+            app:cornerRadius="@dimen/profile_header_img_size"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <li.barter.widgets.TypefacedTextView
+            android:id="@+id/text_user_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/image_user"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:layout_toRightOf="@id/image_user"
             android:layout_marginLeft="@dimen/margin_x_small"
             android:layout_marginTop="@dimen/margin_x_small"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_x_large"
+            app:fontStyle="light"/>
 
-            <li.barter.widgets.TypefacedTextView
-                android:id="@+id/text_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:gravity="left"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textSize="@dimen/text_big"
-                app:fontStyle="light" />
-
-            <li.barter.widgets.TypefacedTextView
-                android:id="@+id/text_user_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_xxx_small"
-                android:ellipsize="end"
-                android:gravity="left"
-                android:singleLine="true"
-                android:textColor="@color/dark_gray"
-                android:textSize="@dimen/text_small"
-                app:fontStyle="condensed_regular" />
-
-        </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
     <include
         android:id="@+id/container_sign_in_message"
-        layout="@layout/layout_nav_drawer_item"
+        layout="@layout/layout_nav_drawer_item_primary"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 
-</RelativeLayout>
+</LinearLayout>

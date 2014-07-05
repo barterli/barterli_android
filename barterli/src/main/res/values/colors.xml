@@ -23,7 +23,7 @@
     <color name="incoming_message">#FFFFFFFF</color>
     <color name="outgoing_message">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
-    <color name="transparent">#00FFFFFF</color>
+    <color name="transparent">#00000000</color>
     <color name="dark_gray">#565051</color>
     <color name="silver">#C0C0C0</color>
     <color name="overlay_black_15p">#26000000</color>

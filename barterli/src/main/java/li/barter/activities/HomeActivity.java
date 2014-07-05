@@ -234,7 +234,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
 
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                         .instantiate(this, BooksAroundMeFragment.class
-                                        .getName(), null), FragmentTags.BOOKS_AROUND_ME, false, null);
+                                        .getName(), null), FragmentTags.BOOKS_AROUND_ME, true, FragmentTags.BS_BOOKS_AROUND_ME);
 
     }
 

@@ -648,6 +648,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
+    public void onBackPressed() {
+        getActivity().finish();
+    }
+
+    @Override
     public void onInsertComplete(final int token, final Object cookie,
                     final long insertRowId) {
         // TODO Auto-generated method stub

@@ -157,22 +157,20 @@
     <string name="select_preferred_location_hint">Select your preferred Meeting Location</string>
 
     <string name="text_sign_in">Sign In</string>
-    <string name="text_and_start_bartering">and start bartering</string>
 
-    <!-- Strings for Nav drawer -->
-    <string-array name="nav_drawer_titles">
-        <item>Chats</item>
-        <item>Report a Bug</item>
-        <item>Share The app</item>
-        <item>Rate Us</item>
-        <item>About barter.li</item>
+    <!-- Primary options for nav drawer -->
+    <string-array name="nav_drawer_primary">
+        <item>Find Books</item>
+        <item>My Chats</item>
     </string-array>
-    <string-array name="nav_drawer_descriptions">
-        <item>and friends</item>
-        <item>or suggest a feature</item>
-        <item>with your friends</item>
-        <item>on Google Play</item>
-        <item>and who we are</item>
+
+    <!-- Secondary options for nav drawer-->
+    <string-array name="nav_drawer_secondary">
+        <item>SETTINGS</item>
+        <item>SHARE THE APP</item>
+        <item>RATE US</item>
+        <item>SEND FEEDBACK</item>
+        <item>ABOUT US</item>
     </string-array>
     <string-array name="take_photo_choices">
         <item>Capture from Camera</item>
