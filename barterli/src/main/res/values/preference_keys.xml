@@ -35,5 +35,8 @@
     <string name="pref_dont_refresh_books">pref_dont_refresh_books</string>
     <string name="pref_force_user_refetch">pref_force_user_refetch</string>
     <string name="pref_last_fetched_page">pref_last_fetched_page</string>
+    <string name="pref_enable_chat_notifications">pref_enable_chat_notifications</string>
+    <string name="pref_enable_chat_vibrate">pref_enable_chat_vibrate</string>
+    <string name="pref_chat_ringtone">pref_chat_ringtone</string>
 
 </resources>

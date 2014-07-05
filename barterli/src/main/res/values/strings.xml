@@ -282,4 +282,39 @@
 
     <string name="about_barterli">An open source, community driven, not-for-profit project.\n\n\n We aim to enable sharing of a billion books across the globe.</string>
 
+    <!-- Preference Group Titles -->
+    <string name="pref_group_add_book">Add Book</string>
+    <string name="pref_group_notifications">Chat Notifications</string>
+    <string name="pref_group_barter_lend">Barter &amp; Lend Events</string>
+    <string name="pref_group_sort">Sort</string>
+
+    <!-- Preference Item titles-->
+    <string name="pref_title_default_add_mode">Default mode for adding a new book</string>
+    <string name="pref_title_enabled">Enabled</string>
+    <string name="pref_title_vibrate">Vibrate</string>
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_title_auto_add_to_calendar">Automatically add to Calendar</string>
+    <string name="pref_title_calendar_to_add">Add to</string>
+    <string name="pref_title_reminder">Reminder</string>
+    <string name="pref_title_sort_books">Books by</string>
+
+    <!-- Entries for multi-choice preference items -->
+    <string-array name="pref_choices_reminder">
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>4 hours</item>
+        <item>8 hours</item>
+        <item>12 hours</item>
+        <item>1 day</item>
+    </string-array>
+
+    <string-array name="pref_choices_sort_books">
+        <item>Nearby</item>
+        <item>Newest</item>
+        <item>Alphabetically</item>
+    </string-array>
+
+
+
 </resources>
