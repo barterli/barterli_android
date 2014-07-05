@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import com.squareup.picasso.Picasso;
 import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.activities.SettingsActivity;
 import li.barter.adapters.NavDrawerAdapter;
 import li.barter.analytics.AnalyticsConstants;
 import li.barter.analytics.GoogleAnalyticsManager;
@@ -349,7 +349,13 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
 
             //Settings
             case 3: {
-                //TODO: Vinay - Open Settings Activity
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        final Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                        startActivity(intent);
+                    }
+                };
                 break;
             }
 

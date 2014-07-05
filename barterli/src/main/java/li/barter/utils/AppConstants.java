@@ -343,6 +343,7 @@ public class AppConstants {
         public static final String USER_PROFILE                           = "user_profile";
         public static final String PASSWORD_RESET                         = "password_reset";
         public static final String NAV_DRAWER                             = "nav_drawer";
+        public static final String SETTINGS                               = "settings";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME        = "to_books_around_me";

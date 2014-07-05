@@ -283,13 +283,11 @@
     <string name="about_barterli">An open source, community driven, not-for-profit project.\n\n\n We aim to enable sharing of a billion books across the globe.</string>
 
     <!-- Preference Group Titles -->
-    <string name="pref_group_add_book">Add Book</string>
     <string name="pref_group_notifications">Chat Notifications</string>
     <string name="pref_group_barter_lend">Barter &amp; Lend Events</string>
     <string name="pref_group_sort">Sort</string>
 
     <!-- Preference Item titles-->
-    <string name="pref_title_default_add_mode">Default mode for adding a new book</string>
     <string name="pref_title_enabled">Enabled</string>
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="pref_title_ringtone">Ringtone</string>
