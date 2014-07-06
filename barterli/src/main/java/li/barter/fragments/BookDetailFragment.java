@@ -246,7 +246,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
      */
     private void setBarterOptions() {
 
-        //if (!mOwnedByUser) {
+        if (!mOwnedByUser) {
             mBarterOptionsContainer.setVisibility(View.VISIBLE);
 
             if (mSupportedBarterOptions.contains(AppConstants.BarterType.BARTER)) {
@@ -271,7 +271,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             } else {
                 mBorrowButton.setEnabled(false);
             }
-        //}
+        }
     }
 
     @Override
