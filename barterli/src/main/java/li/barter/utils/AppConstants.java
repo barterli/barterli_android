@@ -374,12 +374,9 @@ public class AppConstants {
      * @author Vinay S Shenoy
      */
     public static interface BarterType {
-        public static final String FREE    = "free";
-        public static final String PRIVATE = "private";
-        public static final String BARTER  = "barter";
-        public static final String SALE    = "sale";
-        public static final String RENT    = "rent";
-        public static final String READ    = "read";
+        public static final String BARTER = "barter";
+        public static final String SALE   = "sale";
+        public static final String LEND   = "lend";
     }
 
     /**

@@ -41,7 +41,6 @@
     <string name="cancel">Cancel</string>
     <string name="about_me">About me</string>
     <string name="my_books">My Books</string>
-    <string name="no_image_text">No Image</string>
     <string name="no_books_found_nearby">Oops! There were no books found near you.</string>
     <string name="no_places_found_nearby">No places found near you</string>
     <string name="loading">loading books please wait &#8230;</string>
@@ -97,7 +96,6 @@
     <string name="title_label">Book Title</string>
     <string name="author_label">Author</string>
     <string name="description_label">Description</string>
-    <string name="bartertype_label">Book Listed For</string>
     <string name="publication_year_label">Publication Year</string>
     <string name="suggested_price_label">Suggested Price</string>
     <string name="publication_month_label">Publication Month</string>
@@ -131,7 +129,18 @@
     <string name="hint_location_name">Enter preferred location name</string>
     <string name="about">About</string>
     <string name="ok">OK</string>
+    <string name="title_unavailable">This book has no name!</string>
+    <string name="author_unavailable">The author is unknown.</string>
+    <string name="by_author" formatted="false">by %s</string>
+    <string name="published_on" formatter="false">Published on %s</string>
+    <string name="description_unavailable">Nothing is known about this book. It\'s a total mystery!</string>
+    <string name="isbn_unavailable">ISBN number not entered.</string>
+    <string name="isbn_number" formatted="false">ISBN Number: %s</string>
+    <string name="publication_date_unavailable">Published a long, long time ago(Really, we don\'t know).</string>
     <!-- Barter Type Options -->
+    <string name="buy_for">Buy for %s</string>
+    <string name="buy">Buy</string>
+    <string name="borrow">Borrow</string>
     <string name="give_away">Give Away</string>
     <string name="barter">Barter</string>
     <string name="sell">Sell</string>
@@ -312,7 +321,6 @@
         <item>Newest</item>
         <item>Alphabetically</item>
     </string-array>
-
 
 
 </resources>

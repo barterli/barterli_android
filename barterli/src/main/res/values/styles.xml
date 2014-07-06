@@ -125,4 +125,9 @@
         <item name="android:indeterminateDrawable">@drawable/apptheme_ratingbar_full_holo_light</item>
     </style>
 
+    <style name="RatingBarAppTheme.Small" parent="android:Widget.Holo.Light.RatingBar.Small">
+        <item name="android:progressDrawable">@drawable/apptheme_ratingbar_small_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/apptheme_ratingbar_small_holo_light</item>
+    </style>
+
 </resources>

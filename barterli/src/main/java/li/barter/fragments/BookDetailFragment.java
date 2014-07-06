@@ -20,7 +20,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -33,12 +32,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
 import com.squareup.picasso.Picasso;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 import li.barter.R;
@@ -61,7 +65,6 @@ import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
-import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
 
@@ -79,13 +82,15 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     private TextView  mTitleTextView;
     private TextView  mAuthorTextView;
     private TextView  mDescriptionTextView;
-    private TextView  mSuggestedPriceLabelTextView;
-    private TextView  mSuggestedPriceTextView;
-    private TextView  mNoImageTextView;
     private ImageView mBookImageView;
     private TextView  mPublicationDateTextView;
-    private TextView  mBarterTypes;
+    private View      mBarterOptionsContainer;
+    private Button    mBarterButton;
+    private Button    mBuyButton;
+    private Button    mBorrowButton;
+    private RatingBar mRatingBar;
 
+    private List<String>        mSupportedBarterOptions;
     private String              mId;
     private String              mBookTitle;
     private boolean             mOwnedByUser;
@@ -136,9 +141,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         } else {
             mLoadedIndividually = true;
         }
-
         setHasOptionsMenu(mLoadedIndividually);
-
         setActionBarDrawerToggleEnabled(false);
         loadBookDetails();
         return view;
@@ -153,17 +156,16 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mIsbnTextView = (TextView) view.findViewById(R.id.text_isbn);
         mTitleTextView = (TextView) view.findViewById(R.id.text_title);
         mAuthorTextView = (TextView) view.findViewById(R.id.text_author);
-        mBarterTypes = (TextView) view.findViewById(R.id.label_barter_types);
-
+        mBarterOptionsContainer = view.findViewById(R.id.container_barter_options);
         mBookImageView = (ImageView) view.findViewById(R.id.book_avatar);
         mDescriptionTextView = (TextView) view
                 .findViewById(R.id.text_description);
 
-        mSuggestedPriceTextView = (TextView) view
-                .findViewById(R.id.text_suggested_price);
-        mNoImageTextView = (TextView) view.findViewById(R.id.image_text);
-        mSuggestedPriceLabelTextView = (TextView) view
-                .findViewById(R.id.label_suggested_price);
+        mBarterButton = (Button) mBarterOptionsContainer.findViewById(R.id.button_barter);
+        mBuyButton = (Button) mBarterOptionsContainer.findViewById(R.id.button_buy);
+        mBorrowButton = (Button) mBarterOptionsContainer.findViewById(R.id.button_borrow);
+
+        mRatingBar = (RatingBar) view.findViewById(R.id.rating_book);
 
         mPublicationDateTextView = (TextView) view
                 .findViewById(R.id.text_publication_date);
@@ -175,59 +177,101 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mId = mBookDetails.getString(DatabaseColumns.ID);
         final String userId = mBookDetails.getString(DatabaseColumns.USER_ID);
 
-        if(userId.equals(AppConstants.UserInfo.INSTANCE.getId())) {
+        if (userId.equals(AppConstants.UserInfo.INSTANCE.getId())) {
             mOwnedByUser = true;
             getActivity().invalidateOptionsMenu();
         }
-        mBookTitle = mBookDetails.getString(DatabaseColumns.TITLE);
 
+
+        final String isbnFormat = getString(R.string.isbn_number);
         final String isbn13 = mBookDetails.getString(DatabaseColumns.ISBN_13);
 
         if (!TextUtils.isEmpty(isbn13)) {
-            mIsbnTextView.setText(isbn13);
+            mIsbnTextView.setText(String.format(isbnFormat, isbn13));
         } else {
-            mIsbnTextView.setText(mBookDetails.getString(DatabaseColumns.ISBN_10));
+
+            final String isbn10 = mBookDetails.getString(DatabaseColumns.ISBN_10);
+            if (!TextUtils.isEmpty(isbn10)) {
+                mIsbnTextView.setText(String.format(isbnFormat, isbn10));
+            }
         }
 
-        mTitleTextView.setText(mBookTitle);
-        mTitleTextView.setSelected(true);
-
-        mAuthorTextView.setText(mBookDetails.getString(DatabaseColumns.AUTHOR));
-
-        mDescriptionTextView.setText(mBookDetails.getString(DatabaseColumns.DESCRIPTION));
-
-        final String value = mBookDetails.getString(DatabaseColumns.VALUE);
-
-        if (!TextUtils.isEmpty(value)) {
-
-            mSuggestedPriceLabelTextView.setVisibility(View.VISIBLE);
-            mSuggestedPriceTextView.setVisibility(View.VISIBLE);
-            mSuggestedPriceTextView.setText(value);
+        mBookTitle = mBookDetails.getString(DatabaseColumns.TITLE);
+        if (!TextUtils.isEmpty(mBookTitle)) {
+            mTitleTextView.setText(mBookTitle);
         }
 
-        mPublicationDateTextView.setText(mBookDetails.getString(DatabaseColumns.PUBLICATION_YEAR));
+        final String author = mBookDetails.getString(DatabaseColumns.AUTHOR);
+        if (!TextUtils.isEmpty(author)) {
+            mAuthorTextView.setText(getString(R.string.by_author, author));
+        }
+
+        final String description = mBookDetails.getString(DatabaseColumns.DESCRIPTION);
+        if (!TextUtils.isEmpty(description)) {
+            mDescriptionTextView.setText(description);
+        }
+
+        final String publicationDate = mBookDetails.getString(DatabaseColumns.PUBLICATION_YEAR);
+        if (!TextUtils.isEmpty(publicationDate)) {
+            mPublicationDateTextView.setText(getString(R.string.published_on, publicationDate));
+        }
 
         final String imageUrl = mBookDetails.getString(DatabaseColumns.IMAGE_URL);
 
         if (TextUtils.isEmpty(imageUrl) || imageUrl.equals(AppConstants.FALSE)) {
-            mBookImageView.setBackgroundColor(Color.WHITE);
-            //TODO: Set default book image instead
-            mNoImageTextView.setVisibility(View.VISIBLE);
+            mBookImageView.setImageBitmap(null);
+            //TODO: Set default book image
         } else {
 
             Picasso.with(getActivity())
                    .load(imageUrl)
                    .fit().into(mBookImageView);
-            mNoImageTextView.setVisibility(View.GONE);
-
         }
 
         final String barterType = mBookDetails.getString(DatabaseColumns.BARTER_TYPE);
 
         if (!TextUtils.isEmpty(barterType)) {
-            setBarterCheckboxes(barterType);
+            mSupportedBarterOptions = Arrays
+                    .asList(barterType.split(AppConstants.BARTER_TYPE_SEPARATOR));
+        } else {
+            mSupportedBarterOptions = Collections.emptyList();
         }
+
+        setBarterOptions();
         updateShareIntent(mBookTitle);
+    }
+
+    /**
+     * Sets the barter options, based on the supported barter typer
+     */
+    private void setBarterOptions() {
+
+        //if (!mOwnedByUser) {
+            mBarterOptionsContainer.setVisibility(View.VISIBLE);
+
+            if (mSupportedBarterOptions.contains(AppConstants.BarterType.BARTER)) {
+                mBarterButton.setEnabled(true);
+            } else {
+                mBarterButton.setEnabled(false);
+            }
+
+            if (mSupportedBarterOptions.contains(AppConstants.BarterType.SALE)) {
+                mBuyButton.setEnabled(true);
+
+                final String value = mBookDetails.getString(DatabaseColumns.VALUE);
+                if (!TextUtils.isEmpty(value)) {
+                    mBuyButton.setText(getString(R.string.buy_for, value));
+                }
+            } else {
+                mBuyButton.setEnabled(false);
+            }
+
+            if (mSupportedBarterOptions.contains(AppConstants.BarterType.LEND)) {
+                mBorrowButton.setEnabled(true);
+            } else {
+                mBorrowButton.setEnabled(false);
+            }
+        //}
     }
 
     @Override
@@ -428,23 +472,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
     @Override
     public void onQueryComplete(final int token, final Object cookie,
                                 final Cursor cursor) {
-    }
-
-    /**
-     * Checks the supported barter type of the book and updates the checkboxes
-     *
-     * @param barterType The barter types supported by the book
-     */
-    private void setBarterCheckboxes(final String barterType) {
-
-        final String[] barterTypes = barterType
-                .split(AppConstants.BARTER_TYPE_SEPARATOR);
-        String barterTypeHashTag = "";
-        for (final String token : barterTypes) {
-            barterTypeHashTag = barterTypeHashTag + "#" + token + " ";
-
-        }
-        mBarterTypes.setText(barterTypeHashTag);
     }
 
     @Override

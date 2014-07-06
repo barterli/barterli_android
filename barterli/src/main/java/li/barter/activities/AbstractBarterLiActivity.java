@@ -48,6 +48,7 @@ import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.ClearCacheRequest;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -94,41 +95,39 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     /**
      * {@link VolleyCallbacks} for encapsulating Volley request responses
      */
-    protected VolleyCallbacks mVolleyCallbacks;
-    private AtomicInteger mRequestCounter;
-    private ActivityTransition mActivityTransition;
+    protected VolleyCallbacks       mVolleyCallbacks;
+    private   AtomicInteger         mRequestCounter;
+    private   ActivityTransition    mActivityTransition;
     /**
      * Drawer Layout that contains the Navigation Drawer
      */
-    private DrawerLayout mDrawerLayout;
+    private   DrawerLayout          mDrawerLayout;
     /**
      * Drawer toggle for Action Bar
      */
-    private ActionBarDrawerToggle mDrawerToggle;
+    private   ActionBarDrawerToggle mDrawerToggle;
     /**
      * {@link android.widget.FrameLayout} that provides the navigation items
      */
-    private FrameLayout mNavFrameContent;
+    private   FrameLayout           mNavFrameContent;
     /**
      * Whether the current activity has a Navigation drawer or not
      */
-    private boolean mHasNavigationDrawer;
+    private   boolean               mHasNavigationDrawer;
     /**
-     * Whether the nav drawer associated with this activity is also associated
-     * with the drawer toggle. Is valid only if
-     * <code>mHasNavigationDrawer</code> is <code>true</code>
+     * Whether the nav drawer associated with this activity is also associated with the drawer
+     * toggle. Is valid only if <code>mHasNavigationDrawer</code> is <code>true</code>
      */
-    private boolean mIsActionBarNavDrawerToggleEnabled;
+    private   boolean               mIsActionBarNavDrawerToggleEnabled;
     /**
      * Whether a screen hit should be reported to analytics
      */
-    private boolean mShouldReportScreenHit;
+    private   boolean               mShouldReportScreenHit;
 
     /**
      * Creates a Crouton View based on the style
      *
-     * @param context {@link Context} reference to get the
-     *                {@link LayoutInflater} reference
+     * @param context {@link Context} reference to get the {@link LayoutInflater} reference
      * @param message The message to display
      * @param style   The style of Crouton
      * @return A View to display as a Crouton
@@ -153,7 +152,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
             }
         }
         final View croutonText = LayoutInflater.from(context)
-                .inflate(layoutResId, null);
+                                               .inflate(layoutResId, null);
         ((TextView) croutonText.findViewById(R.id.text_message))
                 .setText(message);
         return croutonText;
@@ -173,8 +172,10 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         long lastScreenTime = 0l;
         if (savedInstanceState == null) {
             if (mActivityTransition != null) {
-                overridePendingTransition(mActivityTransition.createEnterAnimation(), mActivityTransition
-                        .createExitAnimation());
+                overridePendingTransition(mActivityTransition.createEnterAnimation(),
+                                          mActivityTransition
+                                                  .createExitAnimation()
+                );
             }
         } else {
             lastScreenTime = savedInstanceState.getLong(Keys.LAST_SCREEN_TIME);
@@ -220,15 +221,15 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
 
             if (!TextUtils.isEmpty(analyticsScreenName)) {
                 GoogleAnalyticsManager.getInstance()
-                        .sendScreenHit(getAnalyticsScreenName());
+                                      .sendScreenHit(getAnalyticsScreenName());
             }
         }
 
     }
 
     /**
-     * Gets the screen name for reporting to google analytics. Send empty
-     * string, or <code>null</code> if you don't want the Activity tracked
+     * Gets the screen name for reporting to google analytics. Send empty string, or
+     * <code>null</code> if you don't want the Activity tracked
      */
     protected abstract String getAnalyticsScreenName();
 
@@ -238,17 +239,38 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     public void logout() {
 
         if (isLoggedIn()) {
-            UserInfo.INSTANCE.reset();
-            DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, getTaskTag(), null, TableChats.NAME, null, null, true, this);
-            DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, getTaskTag(), null, TableChatMessages.NAME, null, null, true, this);
-            SharedPreferenceHelper
-                    .removeKeys(this, R.string.pref_auth_token, R.string.pref_email, R.string.pref_description, R.string.pref_location, R.string.pref_first_name, R.string.pref_last_name, R.string.pref_user_id, R.string.pref_profile_image, R.string.pref_share_token, R.string.pref_referrer, R.string.pref_referrer_count);
-            final Intent disconnectChatIntent = new Intent(this, ChatService.class);
-            disconnectChatIntent.setAction(AppConstants.ACTION_DISCONNECT_CHAT);
-            startService(disconnectChatIntent);
-            getSupportFragmentManager()
-                    .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext()).sendBroadcast(new Intent(AppConstants.ACTION_USER_INFO_UPDATED));
+
+            final RequestQueue requestQueue = ((BarterLiApplication) getApplication())
+                    .getRequestQueue();
+            requestQueue.add(new ClearCacheRequest(requestQueue.getCache(), new Runnable() {
+                @Override
+                public void run() {
+                    UserInfo.INSTANCE.reset();
+                    DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, getTaskTag(), null,
+                                            TableChats.NAME, null, null, true,
+                                            AbstractBarterLiActivity.this);
+                    DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, getTaskTag(), null,
+                                            TableChatMessages.NAME, null, null, true,
+                                            AbstractBarterLiActivity.this);
+                    SharedPreferenceHelper
+                            .removeKeys(AbstractBarterLiActivity.this, R.string.pref_auth_token,
+                                        R.string.pref_email, R.string.pref_description,
+                                        R.string.pref_location, R.string.pref_first_name,
+                                        R.string.pref_last_name, R.string.pref_user_id,
+                                        R.string.pref_profile_image, R.string.pref_share_token,
+                                        R.string.pref_referrer, R.string.pref_referrer_count);
+                    final Intent disconnectChatIntent = new Intent(AbstractBarterLiActivity.this,
+                                                                   ChatService.class);
+                    disconnectChatIntent.setAction(AppConstants.ACTION_DISCONNECT_CHAT);
+                    startService(disconnectChatIntent);
+                    getSupportFragmentManager()
+                            .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext())
+                                         .sendBroadcast(
+                                                 new Intent(AppConstants.ACTION_USER_INFO_UPDATED));
+                }
+            }));
+
         }
     }
 
@@ -299,10 +321,10 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
      * Add a request on the network queue
      *
      * @param request              The {@link Request} to add
-     * @param showErrorOnNoNetwork Whether an error toast should be displayed on
-     *                             no internet connection
-     * @param errorMsgResId        String resource Id for error message to show if no
-     *                             internet connection, 0 for a default error message
+     * @param showErrorOnNoNetwork Whether an error toast should be displayed on no internet
+     *                             connection
+     * @param errorMsgResId        String resource Id for error message to show if no internet
+     *                             connection, 0 for a default error message
      */
     protected void addRequestToQueue(final Request<?> request,
                                      final boolean showErrorOnNoNetwork,
@@ -312,13 +334,12 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
             mVolleyCallbacks.queue(request, addHeader);
         } else if (showErrorOnNoNetwork) {
             showCrouton(errorMsgResId != 0 ? errorMsgResId
-                    : R.string.no_network_connection, AlertStyle.ERROR);
+                                : R.string.no_network_connection, AlertStyle.ERROR);
         }
     }
 
     /**
-     * A Tag to add to all async requests. This must be unique for all Activity
-     * types
+     * A Tag to add to all async requests. This must be unique for all Activity types
      *
      * @return An Object that's the tag for this fragment
      */
@@ -386,8 +407,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
     /**
-     * Moves up in the hierarchy using the Support meta data specified in
-     * manifest
+     * Moves up in the hierarchy using the Support meta data specified in manifest
      */
     private void doUpNavigation() {
         final Intent upIntent = NavUtils.getParentActivityIntent(this);
@@ -417,8 +437,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
     /**
-     * Sets the Action bar title, using the desired {@link Typeface} loaded from
-     * {@link TypefaceCache}
+     * Sets the Action bar title, using the desired {@link Typeface} loaded from {@link
+     * TypefaceCache}
      *
      * @param title The title to set for the Action Bar
      */
@@ -426,7 +446,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     public final void setActionBarTitle(final String title) {
 
         final SpannableString s = new SpannableString(title);
-        s.setSpan(new TypefacedSpan(this, TypefaceCache.SLAB_REGULAR), 0, s.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        s.setSpan(new TypefacedSpan(this, TypefaceCache.SLAB_REGULAR), 0, s.length(),
+                  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance
         final ActionBar actionBar = getActionBar();
@@ -434,8 +455,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
     /**
-     * Sets the Action bar title, using the desired {@link Typeface} loaded from
-     * {@link TypefaceCache}
+     * Sets the Action bar title, using the desired {@link Typeface} loaded from {@link
+     * TypefaceCache}
      *
      * @param titleResId The title string resource Id to set for the Action Bar
      */
@@ -453,9 +474,11 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         //Crouton.make(activity, customView, viewGroupResId, configuration)
         //Crouton.make(this, getCroutonViewForStyle(this, message, style)).show();
         Crouton.make(this, getCroutonViewForStyle(this, message, style))
-                .setConfiguration(new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
-                        .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_SHORT)
-                        .build()).show();
+               .setConfiguration(
+                       new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
+                               .setDuration(
+                                       de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_SHORT)
+                               .build()).show();
     }
 
     /**
@@ -476,9 +499,11 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
      */
     public void showInfiniteCrouton(final String message, final AlertStyle style) {
         Crouton.make(this, getCroutonViewForStyle(this, message, style))
-                .setConfiguration(new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
-                        .setDuration(de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
-                        .build()).show();
+               .setConfiguration(
+                       new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
+                               .setDuration(
+                                       de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
+                               .build()).show();
 
     }
 
@@ -494,28 +519,27 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
     /**
-     * Cancels all queued {@link Crouton}s. If there is a {@link Crouton}
-     * displayed currently, it will be the last one displayed.
+     * Cancels all queued {@link Crouton}s. If there is a {@link Crouton} displayed currently, it
+     * will be the last one displayed.
      */
     public void cancelAllCroutons() {
         Crouton.cancelAllCroutons();
     }
 
     /**
-     * Finish the Activity, specifying whether to use custom or default
-     * animations
+     * Finish the Activity, specifying whether to use custom or default animations
      *
-     * @param defaultAnimation <code>true</code> to use Activity default
-     *                         animation, <code>false</code> to use custom Animation. In
-     *                         order for the custom Animation to be applied, however, you
-     *                         must add the {@link ActivityTransition} Annotation to the
-     *                         Activity declaration
+     * @param defaultAnimation <code>true</code> to use Activity default animation,
+     *                         <code>false</code> to use custom Animation. In order for the custom
+     *                         Animation to be applied, however, you must add the {@link
+     *                         ActivityTransition} Annotation to the Activity declaration
      */
     public void finish(final boolean defaultAnimation) {
         super.finish();
         if ((mActivityTransition != null) && !defaultAnimation) {
-            overridePendingTransition(mActivityTransition.destroyEnterAnimation(), mActivityTransition
-                    .destroyExitAnimation());
+            overridePendingTransition(mActivityTransition.destroyEnterAnimation(),
+                                      mActivityTransition
+                                              .destroyExitAnimation());
         }
     }
 
@@ -527,12 +551,11 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     /**
      * Helper method to load fragments into layout
      *
-     * @param containerResId The container resource Id in the content view into
-     *                       which to load the fragment
+     * @param containerResId The container resource Id in the content view into which to load the
+     *                       fragment
      * @param fragment       The fragment to load
      * @param tag            The fragment tag
-     * @param addToBackStack Whether the transaction should be addded to the
-     *                       backstack
+     * @param addToBackStack Whether the transaction should be addded to the backstack
      * @param backStackTag   The tag used for the backstack tag
      */
     public void loadFragment(final int containerResId,
@@ -543,13 +566,14 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         final FragmentTransaction transaction = fragmentManager
                 .beginTransaction();
         final FragmentTransition fragmentTransition = fragment.getClass()
-                .getAnnotation(FragmentTransition.class);
+                                                              .getAnnotation(
+                                                                      FragmentTransition.class);
         if (fragmentTransition != null) {
 
             transaction.setCustomAnimations(fragmentTransition.enterAnimation(), fragmentTransition
                     .exitAnimation(), fragmentTransition
-                    .popEnterAnimation(), fragmentTransition
-                    .popExitAnimation());
+                                                    .popEnterAnimation(), fragmentTransition
+                                                    .popExitAnimation());
 
         }
 
@@ -562,14 +586,13 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
     /**
-     * Initialize the Navigation Drawer. Call after the content view is set, in
-     * onCreate()
+     * Initialize the Navigation Drawer. Call after the content view is set, in onCreate()
      *
      * @param navDrawerResId    The resource Id of the navigation drawer
-     * @param navContentResId   The resource id of the content view in the layout which
-     *                          is the drawer content
-     * @param attachToActionBar Whether the navigation should be associated with
-     *                          the Action Bar drawer toggle
+     * @param navContentResId   The resource id of the content view in the layout which is the
+     *                          drawer content
+     * @param attachToActionBar Whether the navigation should be associated with the Action Bar
+     *                          drawer toggle
      */
     protected void initDrawer(final int navDrawerResId, final int navContentResId,
                               final boolean attachToActionBar) {
@@ -577,18 +600,23 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         mDrawerLayout = (DrawerLayout) findViewById(navDrawerResId);
 
         if (mDrawerLayout == null) {
-            throw new IllegalArgumentException("Drawer Layout not found. Check your layout/resource id being sent");
+            throw new IllegalArgumentException(
+                    "Drawer Layout not found. Check your layout/resource id being sent");
         }
         mNavFrameContent = (FrameLayout) findViewById(navContentResId);
 
         if (mNavFrameContent == null) {
-            throw new IllegalArgumentException("Drawer content not found. Check the layout/resource id being sent");
+            throw new IllegalArgumentException(
+                    "Drawer content not found. Check the layout/resource id being sent");
         }
 
         mHasNavigationDrawer = true;
 
         if (attachToActionBar) {
-            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_navigation_drawer, R.string.drawer_open, R.string.drawer_closed) {
+            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                                                      R.drawable.ic_navigation_drawer,
+                                                      R.string.drawer_open,
+                                                      R.string.drawer_closed) {
 
                 @Override
                 public void onDrawerOpened(final View drawerView) {
@@ -614,14 +642,16 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         }
         // mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         mDrawerLayout.setScrimColor(getResources()
-                .getColor(R.color.overlay_black_40p));
+                                            .getColor(R.color.overlay_black_40p));
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
 
         /* In the case that the activity was destroyed in background, the system will take care of reinitializing the fragment for us*/
-        NavDrawerFragment fragment = (NavDrawerFragment) getSupportFragmentManager().findFragmentByTag(FragmentTags.NAV_DRAWER);
+        NavDrawerFragment fragment = (NavDrawerFragment) getSupportFragmentManager()
+                .findFragmentByTag(FragmentTags.NAV_DRAWER);
 
         if (fragment == null) {
-            fragment = (NavDrawerFragment) Fragment.instantiate(this, NavDrawerFragment.class.getName());
+            fragment = (NavDrawerFragment) Fragment
+                    .instantiate(this, NavDrawerFragment.class.getName());
             loadFragment(navContentResId, fragment, FragmentTags.NAV_DRAWER, false, null);
         }
 
@@ -666,8 +696,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
     /**
-     * Whether the current Activity's Navigation drawer is also associated with
-     * the Action Bar
+     * Whether the current Activity's Navigation drawer is also associated with the Action Bar
      */
     public boolean isActionBarNavDrawerToggleEnabled() {
         return mDrawerToggle == null ? mIsActionBarNavDrawerToggleEnabled
@@ -675,13 +704,12 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
     /**
-     * Use to dynamically enable/disable the Action Bar drawer toggle for the
-     * Activity. Has no effect if the Activity never has a Navigation Drawer to
-     * begin with. Mainly used to control The Action Bar Drawer toggle from
-     * fragments
+     * Use to dynamically enable/disable the Action Bar drawer toggle for the Activity. Has no
+     * effect if the Activity never has a Navigation Drawer to begin with. Mainly used to control
+     * The Action Bar Drawer toggle from fragments
      *
-     * @param enabled <code>true</code> to enable the Action Bar drawer toggle,
-     *                <code>false</code> to disable it
+     * @param enabled <code>true</code> to enable the Action Bar drawer toggle, <code>false</code>
+     *                to disable it
      */
     public void setActionBarDrawerToggleEnabled(final boolean enabled) {
 
@@ -740,14 +768,12 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
     /**
-     * Returns the current master fragment. In single pane layout, this is the
-     * fragment in the main content. In a multi-pane layout, returns the
-     * fragment in the master container, which is the one responsible for
-     * coordination
+     * Returns the current master fragment. In single pane layout, this is the fragment in the main
+     * content. In a multi-pane layout, returns the fragment in the master container, which is the
+     * one responsible for coordination
      *
-     * @return <code>null</code> If no fragment is loaded,the
-     * {@link AbstractBarterLiFragment} implementation which is the
-     * current master fragment otherwise
+     * @return <code>null</code> If no fragment is loaded,the {@link AbstractBarterLiFragment}
+     * implementation which is the current master fragment otherwise
      */
     public AbstractBarterLiFragment getCurrentMasterFragment() {
 
@@ -810,8 +836,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
     /**
-     * @author Vinay S Shenoy Enum to handle the different types of Alerts that
-     *         can be shown
+     * @author Vinay S Shenoy Enum to handle the different types of Alerts that can be shown
      */
 
     public enum AlertStyle {

@@ -45,6 +45,7 @@
         <item name="android:dropDownSpinnerStyle">@style/SpinnerAppTheme</item>
         <item name="android:progressBarStyleHorizontal">@style/ProgressBarAppTheme</item>
         <item name="android:ratingBarStyle">@style/RatingBarAppTheme</item>
+        <item name="android:ratingBarStyleSmall">@style/RatingBarAppTheme.Small</item>
         <item name="android:listChoiceBackgroundIndicator">
             @drawable/apptheme_list_selector_holo_light
         </item>

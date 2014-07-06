@@ -409,8 +409,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             }
 
             bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYear);
-            //            bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
-            //                    .getText().toString());
             if (mIsbnEditText.getText().toString().length() == 13) {
                 bookJson.put(HttpConstants.ISBN_13, mIsbnEditText.getText()
                                                                  .toString());
