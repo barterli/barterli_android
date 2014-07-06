@@ -15,17 +15,17 @@
   limitations under the License.
 -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    android:padding="@dimen/activity_margin" >
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:padding="@dimen/activity_margin">
 
     <LinearLayout
         android:id="@+id/layout_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <li.barter.widgets.autocomplete.NetworkedAutoCompleteTextView
             android:id="@+id/edit_text_title"
@@ -35,7 +35,7 @@
             android:hint="@string/title_label"
             android:inputType="textCapWords"
             android:singleLine="true"
-            app:fontStyle="regular" />
+            app:fontStyle="regular"/>
 
         <li.barter.widgets.TypefacedAutoCompleteTextView
             android:id="@+id/edit_text_author"
@@ -45,7 +45,7 @@
             android:hint="@string/author_label"
             android:inputType="textCapWords"
             android:singleLine="true"
-            app:fontStyle="regular" />
+            app:fontStyle="regular"/>
 
         <li.barter.widgets.TypefacedEditText
             android:id="@+id/edit_text_description"
@@ -55,7 +55,7 @@
             android:hint="@string/description_label"
             android:inputType="textCapSentences|textAutoComplete|textMultiLine"
             android:maxLines="@integer/descriptionedittextcount"
-            app:fontStyle="regular" />
+            app:fontStyle="regular"/>
 
         <li.barter.widgets.TypefacedEditText
             android:id="@+id/edit_text_isbn"
@@ -65,38 +65,39 @@
             android:hint="@string/isbn_label"
             android:inputType="number"
             android:singleLine="true"
-            app:fontStyle="regular" />
+            app:fontStyle="regular"/>
 
         <LinearLayout
             android:id="@+id/layout_barter_options"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_margin"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+
+            <li.barter.widgets.TypefacedCheckBox
+                android:id="@+id/checkbox_barter"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:checked="true"
+                android:text="@string/willing_to_barter"
+                app:fontStyle="condensed_regular"/>
 
-                <li.barter.widgets.TypefacedCheckBox
-                    android:id="@+id/checkbox_barter"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:checked="true"
-                    android:text="@string/barter"
-                    app:fontStyle="condensed_regular" />
+            <li.barter.widgets.TypefacedCheckBox
+                android:id="@+id/checkbox_lend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/willing_to_lend"
+                app:fontStyle="condensed_regular"/>
 
-                <li.barter.widgets.TypefacedCheckBox
-                    android:id="@+id/checkbox_sell"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:checked="false"
-                    android:text="@string/sell"
-                    app:fontStyle="condensed_regular" />
-            </LinearLayout>
+            <li.barter.widgets.TypefacedCheckBox
+                android:id="@+id/checkbox_sell"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/willing_to_sell"
+                app:fontStyle="condensed_regular"/>
 
             <li.barter.widgets.TypefacedEditText
                 android:id="@+id/edit_sell_price"
@@ -104,7 +105,9 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/set_sell_hint"
                 android:visibility="gone"
-                app:fontStyle="condensed_regular" />
+                app:fontStyle="condensed_regular"/>
+
+
         </LinearLayout>
     </LinearLayout>
 

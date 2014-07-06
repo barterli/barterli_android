@@ -137,6 +137,12 @@
     <string name="isbn_unavailable">ISBN number not entered.</string>
     <string name="isbn_number" formatted="false">ISBN Number: %s</string>
     <string name="publication_date_unavailable">Published a long, long time ago(Really, we don\'t know).</string>
+
+    <!-- Barter options when adding/editing a book -->
+    <string name="willing_to_barter">I\'m willing to barter this book for another</string>
+    <string name="willing_to_sell">I\'m willing to sell this book for</string>
+    <string name="willing_to_lend">I\'m willing to lend this book</string>
+
     <!-- Barter Type Options -->
     <string name="buy_for">Buy for %s</string>
     <string name="buy">Buy</string>

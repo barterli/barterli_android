@@ -84,6 +84,7 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private EditText                      mSellPriceEditText;
     private CheckBox                      mBarterCheckBox;
     private CheckBox                      mSellCheckBox;
+    private CheckBox                      mLendCheckBox;
     private CheckBox[]                    mBarterTypeCheckBoxes;
     private String                        mIsbnNumber;
     private boolean                       mHasFetchedDetails;
@@ -245,7 +246,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mTitleEditText.setNetworkSuggestCallbacks(this);
         mTitleEditText.setSuggestCountThreshold(3);
         mTitleEditText.setSuggestWaitThreshold(400);
-        // mTitleEditText.addTextChangedListener(watcher);
         mAuthorEditText = (EditText) view.findViewById(R.id.edit_text_author);
 
         mDescriptionEditText = (EditText) view
@@ -266,16 +266,19 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private void initBarterTypeCheckBoxes(final View view) {
         mBarterCheckBox = (CheckBox) view.findViewById(R.id.checkbox_barter);
         mSellCheckBox = (CheckBox) view.findViewById(R.id.checkbox_sell);
+        mLendCheckBox = (CheckBox) view.findViewById(R.id.checkbox_lend);
 
         // Set the barter tags
         mBarterCheckBox.setTag(R.string.tag_barter_type, BarterType.BARTER);
         mSellCheckBox.setTag(R.string.tag_barter_type, BarterType.SALE);
+        mLendCheckBox.setTag(R.string.tag_barter_type, BarterType.LEND);
 
         mSellCheckBox.setOnCheckedChangeListener(this);
 
-        mBarterTypeCheckBoxes = new CheckBox[2];
+        mBarterTypeCheckBoxes = new CheckBox[3];
         mBarterTypeCheckBoxes[0] = mBarterCheckBox;
         mBarterTypeCheckBoxes[1] = mSellCheckBox;
+        mBarterTypeCheckBoxes[2] = mLendCheckBox;
     }
 
     @Override
@@ -462,8 +465,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             }
 
             bookJson.put(HttpConstants.PUBLICATION_YEAR, mPublicationYear);
-            //            bookJson.put(HttpConstants.DESCRIPTION, mDescriptionEditText
-            //                    .getText().toString());
             if (mIsbnEditText.getText().toString().length() == 13) {
                 bookJson.put(HttpConstants.ISBN_13, mIsbnEditText.getText()
                                                                  .toString());
@@ -501,12 +502,13 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         final JSONArray tagNamesArray = new JSONArray();
 
-        if (mBarterCheckBox.isChecked()) {
-            tagNamesArray.put(mBarterCheckBox.getTag(R.string.tag_barter_type));
+        for (CheckBox checkBox : mBarterTypeCheckBoxes) {
+
+            if (checkBox.isChecked()) {
+                tagNamesArray.put(checkBox.getTag(R.string.tag_barter_type));
+            }
         }
-        if (mSellCheckBox.isChecked()) {
-            tagNamesArray.put(mSellCheckBox.getTag(R.string.tag_barter_type));
-        }
+
         return tagNamesArray;
     }
 
