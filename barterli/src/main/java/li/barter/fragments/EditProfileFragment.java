@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,6 @@
  ******************************************************************************/
 
 package li.barter.fragments;
-
-import com.android.volley.Request.Method;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,11 +38,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.Request.Method;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
-import java.util.Locale;
 
 import li.barter.R;
 import li.barter.analytics.AnalyticsConstants.Screens;
@@ -71,34 +69,36 @@ import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
+import li.barter.widgets.CircleImageView;
 
 /**
  * @author Sharath Pandeshwar
  */
 
-@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
+@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out,
+                    popEnterAnimation = R.anim.zoom_in,
+                    popExitAnimation = R.anim.slide_out_to_right)
 public class EditProfileFragment extends AbstractBarterLiFragment implements
-                OnClickListener, AsyncDbQueryCallback {
+        OnClickListener, AsyncDbQueryCallback {
 
-    private static final String        TAG                     = "EditProfileFragment";
+    private static final String TAG = "EditProfileFragment";
 
-    private TextView                   mFirstNameTextView;
-    private TextView                   mLastNameTextView;
-    private TextView                   mAboutMeTextView;
-    private TextView                   mPreferredLocationTextView;
-    private ImageView                  mProfileImageView;
-    private ImageView                  mEditPreferredLocationImageView;
-    private boolean                    mWasProfileImageChanged = false;
+    private TextView        mFirstNameTextView;
+    private TextView        mLastNameTextView;
+    private TextView        mAboutMeTextView;
+    private TextView        mPreferredLocationTextView;
+    private CircleImageView mProfileImageView;
+    private boolean mWasProfileImageChanged = false;
 
-    private Bitmap                     mCompressedPhoto;
-    private File                       mAvatarfile;
-    private Uri                        mCameraImageCaptureUri;
-    private Uri                        mGalleryImageCaptureUri;
-    private final String               mAvatarFileName         = "barterli_avatar_small.png";
+    private Bitmap mCompressedPhoto;
+    private File   mAvatarfile;
+    private Uri    mCameraImageCaptureUri;
+    private Uri    mGalleryImageCaptureUri;
+    private final String mAvatarFileName = "barterli_avatar_small.png";
 
-    private static final int           PICK_FROM_CAMERA        = 1;
-    private static final int           CROP_FROM_CAMERA        = 2;
-    private static final int           PICK_FROM_FILE          = 3;
+    private static final int PICK_FROM_CAMERA = 1;
+    private static final int CROP_FROM_CAMERA = 2;
+    private static final int PICK_FROM_FILE   = 3;
 
     /**
      * Reference to the Dialog Fragment for selecting the picture type
@@ -107,58 +107,55 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
-                    final ViewGroup container, final Bundle savedInstanceState) {
+                             final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
         final View view = inflater
-                        .inflate(R.layout.fragment_profile_edit, null);
+                .inflate(R.layout.fragment_profile_edit, null);
 
         mFirstNameTextView = (TextView) view.findViewById(R.id.text_first_name);
         mLastNameTextView = (TextView) view.findViewById(R.id.text_last_name);
         mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
         mPreferredLocationTextView = (TextView) view
-                        .findViewById(R.id.text_current_location);
-        mProfileImageView = (ImageView) view
-                        .findViewById(R.id.image_profile_pic);
-        mEditPreferredLocationImageView = (ImageView) view
-                        .findViewById(R.id.button_edit_current_location);
+                .findViewById(R.id.text_current_location);
+        mProfileImageView = (CircleImageView) view
+                .findViewById(R.id.image_profile_pic);
+
+        mPreferredLocationTextView.setOnClickListener(this);
 
         mProfileImageView.setOnClickListener(this);
-        mEditPreferredLocationImageView.setOnClickListener(this);
         mAvatarfile = new File(Environment.getExternalStorageDirectory(), mAvatarFileName);
 
         if (mAvatarfile.exists()) {
             final Bitmap bmp = BitmapFactory.decodeFile(mAvatarfile
-                            .getAbsolutePath());
+                                                                .getAbsolutePath());
             mProfileImageView.setImageBitmap(bmp);
         }
 
         if (SharedPreferenceHelper
-                        .contains(R.string.pref_first_name)) {
+                .contains(R.string.pref_first_name)) {
             mFirstNameTextView
-                            .setText(SharedPreferenceHelper
-                                            .getString(R.string.pref_first_name));
-        }
-        else
-        {
-        	mFirstNameTextView
-            .setText(UserInfo.INSTANCE.getFirstName());
+                    .setText(SharedPreferenceHelper
+                                     .getString(R.string.pref_first_name));
+        } else {
+            mFirstNameTextView
+                    .setText(UserInfo.INSTANCE.getFirstName());
         }
 
         if (SharedPreferenceHelper
-                        .contains(R.string.pref_last_name)) {
+                .contains(R.string.pref_last_name)) {
             mLastNameTextView.setText(SharedPreferenceHelper
-                            .getString(R.string.pref_last_name));
+                                              .getString(R.string.pref_last_name));
         }
 
         if (SharedPreferenceHelper
-                        .contains(R.string.pref_description)) {
+                .contains(R.string.pref_description)) {
             mAboutMeTextView.setText(SharedPreferenceHelper
-                            .getString(R.string.pref_description));
+                                             .getString(R.string.pref_description));
         }
 
         if (SharedPreferenceHelper
-                        .contains(R.string.pref_location)) {
+                .contains(R.string.pref_location)) {
             loadPreferredLocation();
         }
 
@@ -166,21 +163,25 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         String mProfileImageUrl = "";
         if (SharedPreferenceHelper
-                        .contains(R.string.pref_profile_image)) {
+                .contains(R.string.pref_profile_image)) {
             mProfileImageUrl = SharedPreferenceHelper
-                            .getString(R.string.pref_profile_image);
+                    .getString(R.string.pref_profile_image);
 
         }
         Picasso.with(getActivity()).load(mProfileImageUrl)
-                        .centerCrop().fit().error(R.drawable.pic_avatar)
-                        .into(mProfileImageView);
+               .centerCrop()
+               .resizeDimen(R.dimen.edit_profile_img_size, R.dimen.edit_profile_img_size).error(
+                R.drawable.pic_avatar)
+               .into(mProfileImageView.getTarget());
 
         setActionBarDrawerToggleEnabled(false);
         mCameraImageCaptureUri = Uri.fromFile(new File(android.os.Environment
-                        .getExternalStorageDirectory(), "barterli_avatar.jpg"));
+                                                               .getExternalStorageDirectory(),
+                                                       "barterli_avatar.jpg"
+        ));
 
         mChoosePictureDialogFragment = (SingleChoiceDialogFragment) getFragmentManager()
-                        .findFragmentByTag(FragmentTags.DIALOG_TAKE_PICTURE);
+                .findFragmentByTag(FragmentTags.DIALOG_TAKE_PICTURE);
         return view;
     }
 
@@ -202,14 +203,16 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
                 if (isInputValid()) {
                     final String firstName = mFirstNameTextView.getText()
-                                    .toString();
+                                                               .toString();
                     final String lastName = mLastNameTextView.getText()
-                                    .toString();
+                                                             .toString();
                     final String aboutMe = mAboutMeTextView.getText()
-                                    .toString();
+                                                           .toString();
 
-                    saveProfileInfoToServer(firstName, lastName, aboutMe, mWasProfileImageChanged, mAvatarfile
-                                    .getAbsolutePath());
+                    saveProfileInfoToServer(firstName, lastName, aboutMe, mWasProfileImageChanged,
+                                            mAvatarfile
+                                                    .getAbsolutePath()
+                    );
                 }
                 return true;
             }
@@ -221,9 +224,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Used to validate input before sending to server. Also sets the error
-     * messages on the respective fields.
-     * 
+     * Used to validate input before sending to server. Also sets the error messages on the
+     * respective fields.
+     *
      * @return <code>true</code> if input is valid, <code>false</code> otherwise
      */
     private boolean isInputValid() {
@@ -241,34 +244,42 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Load the user's preferred location from DB Table and show it in the
-     * profile page.
+     * Load the user's preferred location from DB Table and show it in the profile page.
      */
 
     private void loadPreferredLocation() {
-        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE, getTaskTag(), null, false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
-                        + SQLConstants.EQUALS_ARG, new String[] {
-            SharedPreferenceHelper
-                            .getString(R.string.pref_location)
-        }, null, null, null, null, this);
+        DBInterface.queryAsync(QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE, getTaskTag(), null,
+                               false, TableLocations.NAME, null, DatabaseColumns.LOCATION_ID
+                        + SQLConstants.EQUALS_ARG, new String[]{
+                        SharedPreferenceHelper
+                                .getString(R.string.pref_location)
+                }, null, null, null, null, this
+        );
     }
 
     @Override
     public void onQueryComplete(final int token, final Object cookie,
-                    final Cursor cursor) {
+                                final Cursor cursor) {
         if (token == QueryTokens.LOAD_LOCATION_FROM_PROFILE_EDIT_PAGE) {
 
             if (cursor.moveToFirst()) {
                 final String mPrefPlaceName = cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.NAME));
+                                                                       .getColumnIndex(
+                                                                               DatabaseColumns.NAME));
                 final String mPrefPlaceAddress = cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.ADDRESS));
+                                                                          .getColumnIndex(
+                                                                                  DatabaseColumns.ADDRESS));
 
-                final String mPrefPlace = String
-                                .format(Locale.US, mPrefPlaceName + ", "
-                                                + mPrefPlaceAddress);
+                if (!TextUtils.isEmpty(mPrefPlaceName)) {
+                    final String preferredLocation = getString(R.string.format_address_underline,
+                                                               mPrefPlaceName,
+                                                               (TextUtils.isEmpty(
+                                                                       mPrefPlaceAddress) ? "" : mPrefPlaceAddress)
+                    );
+                    mPreferredLocationTextView.setText(preferredLocation);
+                }
 
-                mPreferredLocationTextView.setText(mPrefPlace);
+
             }
 
             cursor.close();
@@ -284,12 +295,17 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     @Override
     public void onClick(final View v) {
         switch (v.getId()) {
-            case R.id.button_edit_current_location: {
-            	 final Bundle args = new Bundle();
-                 args.putBoolean(Keys.EDIT_MODE, true);
+            case R.id.text_current_location: {
+                final Bundle args = new Bundle();
+                args.putBoolean(Keys.EDIT_MODE, true);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), SelectPreferredLocationFragment.class
-                                                .getName(), args), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
+                                     .instantiate(getActivity(),
+                                                  SelectPreferredLocationFragment.class
+                                                          .getName(), args
+                                     ),
+                             FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true,
+                             FragmentTags.BS_EDIT_PROFILE
+                );
 
                 break;
             }
@@ -303,7 +319,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,
-                    final Intent data) {
+                                 final Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK) {
@@ -341,14 +357,16 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         mChoosePictureDialogFragment = new SingleChoiceDialogFragment();
         mChoosePictureDialogFragment
-                        .show(AlertDialog.THEME_HOLO_LIGHT, R.array.take_photo_choices, 0, R.string.take_picture, getFragmentManager(), true, FragmentTags.DIALOG_TAKE_PICTURE);
+                .show(AlertDialog.THEME_HOLO_LIGHT, R.array.take_photo_choices, 0,
+                      R.string.take_picture, getFragmentManager(), true,
+                      FragmentTags.DIALOG_TAKE_PICTURE);
 
     }
 
     /**
      * Set the Profile Image and Save it locally
-     * 
-     * @param uri URI of the image to be saved.
+     *
+     * @param uri             URI of the image to be saved.
      * @param source_of_image If the image was from Gallery or Camera
      */
 
@@ -361,7 +379,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         }
 
         mCompressedPhoto = PhotoUtils
-                        .rotateBitmapIfNeededAndCompressIfTold(getActivity(), uri, source_string, true);
+                .rotateBitmapIfNeededAndCompressIfTold(getActivity(), uri, source_string, true);
 
         if (mCompressedPhoto != null) {
             mProfileImageView.setImageBitmap(mCompressedPhoto);
@@ -372,20 +390,20 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     /**
      * Method to update the user profile.
-     * 
-     * @param firstName First Name of the person
-     * @param lastName Last Name of the person
+     *
+     * @param firstName          First Name of the person
+     * @param lastName           Last Name of the person
      * @param aboutMeDescription A Brief Introduction about the person
-     * @param shouldIncludePic Should the Profile picture be sent.
-     * @param profilePicPath Path of the image file to be sent, if should be sent.
+     * @param shouldIncludePic   Should the Profile picture be sent.
+     * @param profilePicPath     Path of the image file to be sent, if should be sent.
      */
 
     private void saveProfileInfoToServer(final String firstName,
-                    final String lastName, final String aboutMeDescription,
-                    final Boolean shouldIncludePic, final String profilePicPath) {
+                                         final String lastName, final String aboutMeDescription,
+                                         final Boolean shouldIncludePic, final String profilePicPath) {
 
         final String url = HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.UPDATE_USER_INFO;
+                + ApiEndpoints.UPDATE_USER_INFO;
 
         final JSONObject mUserProfileObject = new JSONObject();
         final JSONObject mUserProfileMasterObject = new JSONObject();
@@ -393,22 +411,26 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             mUserProfileObject.put(HttpConstants.FIRST_NAME, firstName);
             mUserProfileObject.put(HttpConstants.LAST_NAME, lastName);
             mUserProfileObject
-                            .put(HttpConstants.DESCRIPTION, aboutMeDescription);
+                    .put(HttpConstants.DESCRIPTION, aboutMeDescription);
             mUserProfileMasterObject
-                            .put(HttpConstants.USER, mUserProfileObject);
+                    .put(HttpConstants.USER, mUserProfileObject);
 
-            final BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT, url, null, mVolleyCallbacks);
+            final BlMultiPartRequest updateUserProfileRequest = new BlMultiPartRequest(Method.PUT,
+                                                                                       url, null,
+                                                                                       mVolleyCallbacks);
 
             updateUserProfileRequest
-                            .addMultipartParam(HttpConstants.USER, "application/json", mUserProfileMasterObject
-                                            .toString());
+                    .addMultipartParam(HttpConstants.USER, "application/json",
+                                       mUserProfileMasterObject
+                                               .toString()
+                    );
             if (shouldIncludePic) {
                 updateUserProfileRequest
-                                .addFile(HttpConstants.PROFILE_PIC, profilePicPath);
+                        .addFile(HttpConstants.PROFILE_PIC, profilePicPath);
             }
 
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
-            addRequestToQueue(updateUserProfileRequest, true, 0,true);
+            addRequestToQueue(updateUserProfileRequest, true, 0, true);
 
         } catch (final JSONException e) {
             e.printStackTrace();
@@ -418,13 +440,13 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onSuccess(final int requestId,
-                    final IBlRequestContract request,
-                    final ResponseInfo response) {
+                          final IBlRequestContract request,
+                          final ResponseInfo response) {
 
         if (requestId == RequestId.SAVE_USER_PROFILE) {
-            
+
             SharedPreferenceHelper.set(R.string.pref_force_user_refetch, true);
-            
+
             final Bundle userInfo = response.responseBundle;
             Utils.updateUserInfoFromBundle(userInfo, true);
             onUpNavigate();
@@ -434,29 +456,29 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onBadRequestError(final int requestId,
-                    final IBlRequestContract request, final int errorCode,
-                    final String errorMessage, final Bundle errorResponseBundle) {
+                                  final IBlRequestContract request, final int errorCode,
+                                  final String errorMessage, final Bundle errorResponseBundle) {
         Log.v(TAG, "Volley error");
 
     }
 
     @Override
     public void onInsertComplete(final int token, final Object cookie,
-                    final long insertRowId) {
+                                 final long insertRowId) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onDeleteComplete(final int token, final Object cookie,
-                    final int deleteCount) {
+                                 final int deleteCount) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onUpdateComplete(final int token, final Object cookie,
-                    final int updateCount) {
+                                 final int updateCount) {
         // TODO Auto-generated method stub
 
     }
@@ -465,8 +487,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     public boolean willHandleDialog(final DialogInterface dialog) {
 
         if ((mChoosePictureDialogFragment != null)
-                        && mChoosePictureDialogFragment.getDialog()
-                                        .equals(dialog)) {
+                && mChoosePictureDialogFragment.getDialog()
+                                               .equals(dialog)) {
             return true;
         }
         return super.willHandleDialog(dialog);
@@ -476,15 +498,17 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     public void onDialogClick(final DialogInterface dialog, final int which) {
 
         if ((mChoosePictureDialogFragment != null)
-                        && mChoosePictureDialogFragment.getDialog()
-                                        .equals(dialog)) {
+                && mChoosePictureDialogFragment.getDialog()
+                                               .equals(dialog)) {
 
             if (which == 0) { // Pick from camera
                 final Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraImageCaptureUri);
 
                 try {
-                    startActivityForResult(Intent.createChooser(intent, getString(R.string.complete_action_using)), PICK_FROM_CAMERA);
+                    startActivityForResult(
+                            Intent.createChooser(intent, getString(R.string.complete_action_using)),
+                            PICK_FROM_CAMERA);
                 } catch (final ActivityNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -493,7 +517,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 final Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.complete_action_using)), PICK_FROM_FILE);
+                startActivityForResult(
+                        Intent.createChooser(intent, getString(R.string.complete_action_using)),
+                        PICK_FROM_FILE);
             }
         } else {
             super.onDialogClick(dialog, which);

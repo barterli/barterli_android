@@ -15,84 +15,94 @@
   limitations under the License.
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/transparent" >
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:padding="@dimen/activity_margin">
 
-    <ImageView
-        android:id="@+id/image_profile_pic"
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:layout_margin="@dimen/margin_medium"
-        android:contentDescription="@string/image_profile_pic_description"
-        android:src="@drawable/pic_avatar" />
+
+    <FrameLayout
+        android:id="@+id/container_user_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
+
+        <li.barter.widgets.CircleImageView
+            android:id="@+id/image_profile_pic"
+            android:layout_width="@dimen/edit_profile_img_size"
+            android:layout_height="@dimen/edit_profile_img_size"
+            app:borderColor="@color/light_gray"
+            app:borderWidth="2dp"
+            app:cornerRadius="@dimen/edit_profile_img_size"
+            android:contentDescription="@string/image_profile_pic_description"
+            android:background="@color/transparent"
+            android:alpha="0.35"/>
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/transparent"
+            android:layout_gravity="center"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_action_camera_dark"/>
+
+    </FrameLayout>
+
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/text_first_name"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/image_profile_pic"
-        android:layout_marginRight="@dimen/margin_medium"
-        android:layout_toRightOf="@id/image_profile_pic"
+        android:layout_alignTop="@id/container_user_image"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_toRightOf="@id/container_user_image"
         android:hint="@string/hint_first_name"
         android:singleLine="true"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="regular" />
+        app:fontStyle="regular"/>
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/text_last_name"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/text_first_name"
-        android:layout_marginRight="@dimen/margin_medium"
-        android:layout_toRightOf="@id/image_profile_pic"
+        android:layout_alignLeft="@id/text_first_name"
         android:hint="@string/hint_last_name"
         android:singleLine="true"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="regular" />
+        app:fontStyle="regular"/>
 
-    <li.barter.widgets.TypefacedTextView
-        android:id="@+id/label_about_me"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/image_profile_pic"
-        android:layout_below="@id/image_profile_pic"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:text="@string/label_about_me"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_medium"
-        app:fontStyle="condensed_regular" />
 
     <li.barter.widgets.TypefacedEditText
         android:id="@+id/text_about_me"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/image_profile_pic"
-        android:layout_below="@id/label_about_me"
-        android:layout_marginRight="@dimen/margin_medium"
-        android:hint="@string/text_profile_description"
-        android:inputType="textMultiLine"
-        android:lines="3"
+        android:layout_alignLeft="@id/container_user_image"
+        android:layout_below="@id/container_user_image"
+        android:hint="@string/label_about_me"
+        android:inputType="textAutoComplete|textCapSentences|textMultiLine"
+        android:lines="1"
+        android:maxLines="3"
         android:maxLength="140"
-        android:singleLine="false"
         android:textColor="@color/dark_gray"
-        android:textSize="@dimen/text_small"
-        app:fontStyle="regular" />
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="regular"/>
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/label_current_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/image_profile_pic"
+        android:layout_alignLeft="@id/container_user_image"
         android:layout_below="@id/text_about_me"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/margin_large"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="@string/label_current_location"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_medium"
-        app:fontStyle="condensed_regular" />
+        android:textSize="@dimen/text_small"
+        app:fontStyle="regular"/>
 
     <li.barter.widgets.TypefacedTextView
         android:id="@+id/text_current_location"
@@ -101,22 +111,10 @@
         android:layout_alignLeft="@id/text_about_me"
         android:layout_below="@id/label_current_location"
         android:layout_marginTop="@dimen/margin_minimum"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:text="@string/text_default_current_location"
-        android:textColor="@color/dark_gray"
-        android:textSize="@dimen/text_small"
-        app:fontStyle="regular" />
+        android:text="@string/hint_default_current_location"
+        android:textColor="@color/apptheme_color"
+        android:textSize="@dimen/text_medium"
+        app:fontStyle="light"/>
 
-    <ImageView
-        android:id="@+id/button_edit_current_location"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_below="@+id/text_about_me"
-        android:layout_marginLeft="@dimen/margin_minimum"
-        android:layout_marginTop="@dimen/margin_minimum"
-        android:layout_toRightOf="@id/label_current_location"
-        android:contentDescription="@string/button_edit_preferred_location"
-        android:src="@drawable/ic_action_edit_dark" />
 
 </RelativeLayout>

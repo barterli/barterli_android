@@ -65,7 +65,7 @@
         android:layout_marginTop="@dimen/margin_xxx_small"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="@string/text_default_current_location"
+        android:text="@string/hint_default_current_location"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
         app:fontStyle="regular" />

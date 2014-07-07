@@ -237,11 +237,10 @@
     <string name="local_profile_image">barterli_avatar_small.png</string>
     <string name="image_profile_pic_description">Profile Picture</string>
     <string name="text_default_profile_name">Profile Name</string>
-    <string name="text_profile_description">Short information about you.</string>
     <string name="button_edit_preferred_location">Edit Preferred Location</string>
-    <string name="text_default_current_location">Set your preferred Location</string>
-    <string name="label_about_me">Something About Me</string>
-    <string name="label_current_location">Preferred Cafe For Book Exchange</string>
+    <string name="hint_default_current_location"><u>Tap to set your preferred barter location</u></string>
+    <string name="label_about_me">Let us know a bit about you. :-)</string>
+    <string name="label_current_location">Where would you like to meet to barter?</string>
     <string name="label_referral_count">Number of installs via me</string>
     <string name="text_edit_profile">Edit</string>
     <string name="text_save">Save</string>
@@ -251,6 +250,7 @@
     <string name="label_my_books">My Books</string>
     <string name="profilepage_title">My Profile</string>
     <string name="book_updated">Book Updated successfully.</string>
+    <string name="format_address_underline" formatted="false"><u>%s, %s</u></string>
 
     <!-- Strings/URLs related to ShowWebViewFragment -->
     <string name="url_google">http://www.google.com</string>

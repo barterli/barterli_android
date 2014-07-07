@@ -55,6 +55,7 @@
     <dimen name="ab_user_image_radius">19dp</dimen>
     <dimen name="location_pin_size">256dp</dimen>
     <dimen name="profile_header_img_size">48dp</dimen>
+    <dimen name="edit_profile_img_size">125dp</dimen>
 
     <!-- Dimensions related to books -->
     <dimen name="book_height">155dp</dimen>

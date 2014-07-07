@@ -25,6 +25,7 @@
     <color name="black">#FF000000</color>
     <color name="transparent">#00000000</color>
     <color name="dark_gray">#565051</color>
+    <color name="light_gray">#A4A4A4</color>
     <color name="silver">#C0C0C0</color>
     <color name="overlay_black_15p">#26000000</color>
     <color name="overlay_black_40p">#66000000</color>
