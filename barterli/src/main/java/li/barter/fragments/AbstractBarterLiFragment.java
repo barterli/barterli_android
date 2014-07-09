@@ -208,7 +208,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         mRequestCounter = null;
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onUpNavigate();
@@ -216,7 +216,7 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
         } else {
             return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 
     /**
      * Is the device connected to a network or not.

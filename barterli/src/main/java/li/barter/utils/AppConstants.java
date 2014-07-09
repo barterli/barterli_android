@@ -259,6 +259,7 @@ public class AppConstants {
 
         public static final int SCAN_ISBN = 100;
         public static final int PLUS_LIKE = 101;
+        public static final int LOGIN     = 102;
     }
 
     /**
@@ -344,6 +345,7 @@ public class AppConstants {
         public static final String PASSWORD_RESET                         = "password_reset";
         public static final String NAV_DRAWER                             = "nav_drawer";
         public static final String SETTINGS                               = "settings";
+        public static final String LOGIN                                  = "login";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME        = "to_books_around_me";
@@ -365,6 +367,7 @@ public class AppConstants {
         public static final String DIALOG_ABOUT_LOCATION  = "dialog_about_location";
         public static final String DIALOG_CHAT_LONGCLICK  = "dialog_chat_longclick";
         public static final String DIALOG_DELETE_BOOK     = "dialog_delete_book";
+
 
     }
 

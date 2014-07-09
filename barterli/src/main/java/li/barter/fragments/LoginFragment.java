@@ -16,6 +16,7 @@
 
 package li.barter.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,6 +49,7 @@ import java.util.Map;
 import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.activities.AuthActivity;
 import li.barter.activities.HomeActivity;
 import li.barter.analytics.AnalyticsConstants.Actions;
 import li.barter.analytics.AnalyticsConstants.Categories;
@@ -174,7 +176,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                         .getInstance()
                         .sendEvent(new EventBuilder(Categories.CONVERSION, Actions.SIGN_IN_ATTEMPT)
                                 .set(ParamKeys.TYPE, ParamValues.GOOGLE));
-                ((HomeActivity) getActivity()).getPlusManager().login();
+                ((AuthActivity) getActivity()).getPlusManager().login();
                 break;
             }
 
@@ -370,7 +372,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                                 .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
 
             } else {
-                final String tag = getTag();
+                /*final String tag = getTag();
                 if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
 
                     final Bundle args = new Bundle(1);
@@ -386,8 +388,10 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                     onUpNavigate();
                 } else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
                     onUpNavigate();
-                }
+                }*/
 
+                getActivity().setResult(Activity.RESULT_OK);
+                getActivity().finish();
             }
 
         } else if (requestId == RequestId.REQUEST_RESET_TOKEN) {
@@ -446,7 +450,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
      */
     public void onGoogleLogin() {
 
-        final String googleAccessToken = ((HomeActivity) getActivity())
+        final String googleAccessToken = ((AuthActivity) getActivity())
                 .getPlusManager().getAccessToken();
         Logger.v(TAG, "Google Access Token: %s", googleAccessToken);
 

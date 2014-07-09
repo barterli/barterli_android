@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.activities.AuthActivity;
 import li.barter.activities.SettingsActivity;
 import li.barter.adapters.NavDrawerAdapter;
 import li.barter.analytics.AnalyticsConstants;
@@ -32,6 +34,7 @@ import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
+import li.barter.utils.Logger;
 import li.barter.utils.Utils;
 import li.barter.widgets.CircleImageView;
 
@@ -39,6 +42,8 @@ import li.barter.widgets.CircleImageView;
  * Fragment to load in the Navigation Drawer Created by vinaysshenoy on 29/6/14.
  */
 public class NavDrawerFragment extends AbstractBarterLiFragment implements AdapterView.OnItemClickListener {
+
+    private static final String TAG = "NavDrawerFragment";
 
     /**
      * Intent filter for receiving updates whenever the User Info changes
@@ -280,7 +285,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
 
                         } else {
 
-                            final Bundle loginArgs = new Bundle(1);
+                            /*final Bundle loginArgs = new Bundle(1);
                             loginArgs.putString(AppConstants.Keys.UP_NAVIGATION_TAG,
                                                 AppConstants.FragmentTags.BS_BOOKS_AROUND_ME);
 
@@ -289,7 +294,12 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                                                          .getName(), loginArgs),
                                          AppConstants.FragmentTags.LOGIN_FROM_NAV_DRAWER, true,
                                          AppConstants.FragmentTags.BS_BOOKS_AROUND_ME
-                            );
+                            ); */
+
+                            final Intent loginIntent = new Intent(getActivity(),
+                                                                  AuthActivity.class);
+                            loginIntent.setAction(AuthActivity.ACTION_LOGIN);
+                            startActivityForResult(loginIntent, AppConstants.RequestCodes.LOGIN);
                         }
 
                     }
@@ -495,4 +505,16 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
         public void onActionTaken();
     }
 
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+
+        if (requestCode == AppConstants.RequestCodes.LOGIN) {
+
+            if (resultCode == ActionBarActivity.RESULT_OK) {
+                Logger.d(TAG, "Login completed");
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }

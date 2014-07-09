@@ -16,7 +16,6 @@
 
 package li.barter.activities;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -64,7 +63,7 @@ import li.barter.utils.Utils;
                     destroyEnterAnimation = R.anim.exit_zoom_in,
                     destroyExitAnimation = R.anim.main_activity_exit)
 public class HomeActivity extends AbstractDrawerActivity implements
-        LocationListener, GooglePlusAuthCallback {
+        LocationListener {
 
     private static final String TAG = "HomeActivity";
 
@@ -74,11 +73,6 @@ public class HomeActivity extends AbstractDrawerActivity implements
     private GooglePlayClientWrapper mGooglePlayClientWrapper;
 
     /**
-     * Helper class for connectiong to GooglePlus for login
-     */
-    private GooglePlusManager mGooglePlusManager;
-
-    /**
      * Framelayout for adding overlay views
      */
     private FrameLayout mOverlayFrameLayout;
@@ -86,11 +80,10 @@ public class HomeActivity extends AbstractDrawerActivity implements
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.activity_drawer);
         initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer);
         mOverlayFrameLayout = (FrameLayout) findViewById(R.id.frame_overlay);
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
-        mGooglePlusManager = new GooglePlusManager(this, this);
         if (savedInstanceState == null) {
 
             final String action = getIntent().getAction();
@@ -135,9 +128,7 @@ public class HomeActivity extends AbstractDrawerActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-
         mGooglePlayClientWrapper.onStart();
-        mGooglePlusManager.onActivityStarted();
 
     }
 
@@ -183,7 +174,6 @@ public class HomeActivity extends AbstractDrawerActivity implements
     @Override
     protected void onStop() {
         mGooglePlayClientWrapper.onStop();
-        mGooglePlusManager.onActivityStopped();
         super.onStop();
     }
 
@@ -264,54 +254,6 @@ public class HomeActivity extends AbstractDrawerActivity implements
                                   final IBlRequestContract request, final int errorCode,
                                   final String errorMessage, final Bundle errorResponseBundle) {
 
-    }
-
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode,
-                                 final Intent data) {
-
-        if ((requestCode == GooglePlusManager.CONNECTION_UPDATE_ERROR)
-                && (resultCode == RESULT_OK)) {
-            mGooglePlusManager.onActivityResult();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
-
-    /**
-     * Gets a reference to the Google Plus Manager
-     */
-    public GooglePlusManager getPlusManager() {
-
-        return mGooglePlusManager;
-    }
-
-    @Override
-    public void onLogin() {
-
-        final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
-
-        if ((fragment != null) && (fragment instanceof LoginFragment)) {
-            ((LoginFragment) fragment).onGoogleLogin();
-        }
-    }
-
-    @Override
-    public void onLoginError(final Exception error) {
-        final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
-
-        if ((fragment != null) && (fragment instanceof LoginFragment)) {
-            ((LoginFragment) fragment).onGoogleLoginError(error);
-        }
-    }
-
-    @Override
-    public void onLogout() {
-        final AbstractBarterLiFragment fragment = getCurrentMasterFragment();
-
-        if ((fragment != null) && (fragment instanceof LoginFragment)) {
-            ((LoginFragment) fragment).onGoogleLogout();
-        }
     }
 
     @Override
