@@ -159,8 +159,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         mSubmitChatButton = (ImageButton) view.findViewById(R.id.button_send);
         mSubmitChatButton.setOnClickListener(this);
 
-        setActionBarDrawerToggleEnabled(false);
-
         getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
         getLoaderManager()
                         .restartLoader(Loaders.USER_DETAILS_CHAT_DETAILS, null, this);

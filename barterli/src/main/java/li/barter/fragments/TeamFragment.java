@@ -66,7 +66,6 @@ public class TeamFragment extends AbstractBarterLiFragment {
         mGridView = (GridView) view.findViewById(R.id.team_grid);
 
         
-        setActionBarDrawerToggleEnabled(false);
         // Make a call to server
         try {
 

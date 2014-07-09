@@ -94,7 +94,6 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
 
 
         mResetButton.setOnClickListener(this);
-        setActionBarDrawerToggleEnabled(false);
         return view;
     }
 

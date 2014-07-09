@@ -105,8 +105,6 @@ public class AboutMeFragment extends AbstractBarterLiFragment implements
 
         mLogoutButton.setOnClickListener(this);
 
-        setActionBarDrawerToggleEnabled(false);
-
         return view;
     }
 

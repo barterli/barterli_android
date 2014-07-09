@@ -172,13 +172,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      */
     protected abstract String getAnalyticsScreenName();
 
-    protected void setActionBarDrawerToggleEnabled(final boolean enabled) {
-        final AbstractBarterLiActivity activity = (AbstractBarterLiActivity) getActivity();
-        if (activity.hasNavigationDrawer()) {
-            activity.setActionBarDrawerToggleEnabled(enabled);
-        }
-    }
-
     /**
      * Helper method to load fragments into layout
      * 
@@ -373,25 +366,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
      */
     public final void setActionBarTitle(final int titleResId) {
         setActionBarTitle(getString(titleResId));
-    }
-
-    /**
-     * Sets the Action bar title, using the desired {@link Typeface} loaded from
-     * {@link TypefaceCache}
-     * 
-     * @param titleResId The title string resource Id to set for the Action Bar
-     */
-    public final int getActionBarHeight() {
-        int actionBarHeight = 0;
-        TypedValue tv = new TypedValue();
-        if (getActivity()
-                        .getTheme()
-                        .resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
-            actionBarHeight = TypedValue
-                            .complexToDimensionPixelSize(tv.data, getResources()
-                                            .getDisplayMetrics());
-        }
-        return actionBarHeight;
     }
 
     /**

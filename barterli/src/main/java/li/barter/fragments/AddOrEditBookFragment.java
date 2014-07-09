@@ -160,7 +160,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         }
 
-        setActionBarDrawerToggleEnabled(false);
         return view;
     }
 

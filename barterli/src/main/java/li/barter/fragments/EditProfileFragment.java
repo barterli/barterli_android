@@ -174,7 +174,6 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 R.drawable.pic_avatar)
                .into(mProfileImageView.getTarget());
 
-        setActionBarDrawerToggleEnabled(false);
         mCameraImageCaptureUri = Uri.fromFile(new File(android.os.Environment
                                                                .getExternalStorageDirectory(),
                                                        "barterli_avatar.jpg"

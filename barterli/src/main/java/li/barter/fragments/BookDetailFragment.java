@@ -142,7 +142,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             mLoadedIndividually = true;
         }
         setHasOptionsMenu(mLoadedIndividually);
-        setActionBarDrawerToggleEnabled(false);
         loadBookDetails();
         return view;
     }

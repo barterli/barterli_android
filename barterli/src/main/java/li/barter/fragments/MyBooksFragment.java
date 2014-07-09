@@ -106,8 +106,6 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
 
         mBooksAroundMeGridView.setOnItemClickListener(this);
 
-        setActionBarDrawerToggleEnabled(false);
-
         return view;
     }
 
@@ -144,7 +142,8 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
             return new SQLiteLoader(getActivity(), false, ViewUserBooksWithLocations.NAME, null,
                                     mUserSelection, new String[]{
                     mUserId
-            }, null, null, null, null);
+            }, null, null, null, null
+            );
         } else {
             return null;
         }
@@ -184,9 +183,11 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
             final Bundle showBooksArgs = Utils.cursorToBundle(cursor);
 
             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                    .instantiate(getActivity(), BookDetailFragment.class
-                            .getName(), showBooksArgs), FragmentTags.USER_BOOK_FROM_PROFILE, true,
-                         FragmentTags.BS_EDIT_PROFILE);
+                                 .instantiate(getActivity(), BookDetailFragment.class
+                                         .getName(), showBooksArgs),
+                         FragmentTags.USER_BOOK_FROM_PROFILE, true,
+                         FragmentTags.BS_EDIT_PROFILE
+            );
         }
     }
 

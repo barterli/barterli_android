@@ -118,7 +118,6 @@ LoaderCallbacks<Cursor>, OnItemClickListener,OnItemLongClickListener, ServiceCon
 		mChatsListView.setOnItemLongClickListener(this);
 		mChatDialogFragment = (SingleChoiceDialogFragment) getFragmentManager()
 				.findFragmentByTag(FragmentTags.DIALOG_CHAT_LONGCLICK);
-		setActionBarDrawerToggleEnabled(false);
 		getLoaderManager().restartLoader(Loaders.ALL_CHATS, null, this);
 		return view;
 	}

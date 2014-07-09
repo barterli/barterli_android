@@ -152,7 +152,6 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         } else {
             mSelectLocationAdapter.setVenues(mVenues);
         }
-        setActionBarDrawerToggleEnabled(false);
         return contentView;
     }
     

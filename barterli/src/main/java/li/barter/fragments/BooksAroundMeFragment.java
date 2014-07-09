@@ -215,7 +215,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                         .findFragmentByTag(FragmentTags.DIALOG_ENABLE_LOCATION);
 
         loadBookSearchResults();
-        setActionBarDrawerToggleEnabled(true);
         return contentView;
     }
 

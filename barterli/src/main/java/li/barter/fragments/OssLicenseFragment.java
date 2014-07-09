@@ -58,7 +58,6 @@ public class OssLicenseFragment extends AbstractBarterLiFragment {
                         .inflate(R.layout.fragment_oss_licenses, container, false);
         mLicensesAdapter = new OssLicensesAdapter(getActivity(), R.array.oss_titles);
         mListView.setAdapter(mLicensesAdapter);
-        setActionBarDrawerToggleEnabled(false);
         return mListView;
     }
 

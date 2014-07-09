@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,13 +16,6 @@
 
 package li.barter.activities;
 
-import com.android.volley.Request.Method;
-import com.facebook.AppEventsLogger;
-import com.google.android.gms.location.LocationListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.ActionBar;
 import android.content.Intent;
 import android.location.Location;
@@ -31,6 +24,13 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.android.volley.Request.Method;
+import com.facebook.AppEventsLogger;
+import com.google.android.gms.location.LocationListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
@@ -56,15 +56,17 @@ import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
 
 /**
- * @author Vinay S Shenoy Main Activity for holding the Navigation Drawer and
- *         manages loading different fragments/options menus on Navigation items
- *         clicked
+ * @author Vinay S Shenoy Main Activity for holding the Navigation Drawer and manages loading
+ *         different fragments/options menus on Navigation items clicked
  */
-@ActivityTransition(createEnterAnimation = R.anim.main_activity_launch, createExitAnimation = R.anim.launch_zoom_out, destroyEnterAnimation = R.anim.exit_zoom_in, destroyExitAnimation = R.anim.main_activity_exit)
-public class HomeActivity extends AbstractBarterLiActivity implements
-                LocationListener, GooglePlusAuthCallback {
+@ActivityTransition(createEnterAnimation = R.anim.main_activity_launch,
+                    createExitAnimation = R.anim.launch_zoom_out,
+                    destroyEnterAnimation = R.anim.exit_zoom_in,
+                    destroyExitAnimation = R.anim.main_activity_exit)
+public class HomeActivity extends AbstractDrawerActivity implements
+        LocationListener, GooglePlusAuthCallback {
 
-    private static final String     TAG = "HomeActivity";
+    private static final String TAG = "HomeActivity";
 
     /**
      * Helper for connecting to Google Play Services
@@ -74,20 +76,19 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     /**
      * Helper class for connectiong to GooglePlus for login
      */
-    private GooglePlusManager       mGooglePlusManager;
+    private GooglePlusManager mGooglePlusManager;
 
     /**
      * Framelayout for adding overlay views
      */
-    private FrameLayout             mOverlayFrameLayout;
+    private FrameLayout mOverlayFrameLayout;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer);
         mOverlayFrameLayout = (FrameLayout) findViewById(R.id.frame_overlay);
-        setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
-        initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer, true);
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
         mGooglePlusManager = new GooglePlusManager(this, this);
         if (savedInstanceState == null) {
@@ -100,7 +101,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
                 loadChatsFragment();
             } else if (action.equals(AppConstants.ACTION_SHOW_CHAT_DETAIL)) {
                 loadChatDetailFragment(getIntent().getStringExtra(Keys.CHAT_ID), getIntent()
-                                .getStringExtra(Keys.USER_ID));
+                        .getStringExtra(Keys.USER_ID));
             } else {
                 loadBooksAroundMeFragment();
             }
@@ -111,16 +112,16 @@ public class HomeActivity extends AbstractBarterLiActivity implements
 
     /**
      * Displays an overlay view
-     * 
+     *
      * @param view TODO: Animate the view in
      */
     public void showOverlayView(View view) {
 
-        if(Utils.containsChild(mOverlayFrameLayout, view)) {
+        if (Utils.containsChild(mOverlayFrameLayout, view)) {
             return;
         }
-            mOverlayFrameLayout.addView(view);
-            mOverlayFrameLayout.setVisibility(View.VISIBLE);
+        mOverlayFrameLayout.addView(view);
+        mOverlayFrameLayout.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -158,7 +159,7 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     private void informReferralToServer() {
 
         final String referrer = SharedPreferenceHelper
-                        .getString(R.string.pref_referrer);
+                .getString(R.string.pref_referrer);
 
         if (!TextUtils.isEmpty(referrer)) {
 
@@ -167,10 +168,10 @@ public class HomeActivity extends AbstractBarterLiActivity implements
             try {
                 requestObject.put(HttpConstants.REFERRAL_ID, referrer);
                 requestObject.put(HttpConstants.DEVICE_ID, UserInfo.INSTANCE
-                                .getDeviceId());
+                        .getDeviceId());
 
                 final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                                + ApiEndpoints.REFERRAL, requestObject.toString(), mVolleyCallbacks);
+                        + ApiEndpoints.REFERRAL, requestObject.toString(), mVolleyCallbacks);
                 request.setRequestId(RequestId.REFERRAL);
                 addRequestToQueue(request, false, 0, true);
             } catch (JSONException e) {
@@ -202,16 +203,16 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     private void loadChatsFragment() {
 
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                        .instantiate(this, ChatsFragment.class.getName(), null), FragmentTags.CHATS, false, null);
+                .instantiate(this, ChatsFragment.class.getName(), null), FragmentTags.CHATS, false,
+                     null);
 
     }
 
     /**
      * Loads the {@link ChatDetailsFragment} into the fragment container
-     * 
+     *
      * @param chatId The chat detail to load
-     * @param userId The user Id of the user with which the current user is
-     *            chatting
+     * @param userId The user Id of the user with which the current user is chatting
      */
     private void loadChatDetailFragment(final String chatId, final String userId) {
 
@@ -223,7 +224,8 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         args.putString(Keys.CHAT_ID, chatId);
         args.putString(Keys.USER_ID, userId);
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                        .instantiate(this, ChatDetailsFragment.class.getName(), args), FragmentTags.CHAT_DETAILS, false, null);
+                .instantiate(this, ChatDetailsFragment.class.getName(), args),
+                     FragmentTags.CHAT_DETAILS, false, null);
 
     }
 
@@ -233,8 +235,9 @@ public class HomeActivity extends AbstractBarterLiActivity implements
     public void loadBooksAroundMeFragment() {
 
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                        .instantiate(this, BooksAroundMeFragment.class
-                                        .getName(), null), FragmentTags.BOOKS_AROUND_ME, true, FragmentTags.BS_BOOKS_AROUND_ME);
+                .instantiate(this, BooksAroundMeFragment.class
+                        .getName(), null), FragmentTags.BOOKS_AROUND_ME, true,
+                     FragmentTags.BS_BOOKS_AROUND_ME);
 
     }
 
@@ -247,8 +250,8 @@ public class HomeActivity extends AbstractBarterLiActivity implements
 
     @Override
     public void onSuccess(final int requestId,
-                    final IBlRequestContract request,
-                    final ResponseInfo response) {
+                          final IBlRequestContract request,
+                          final ResponseInfo response) {
 
         if (requestId == RequestId.REFERRAL) {
             SharedPreferenceHelper.removeKeys(this, R.string.pref_referrer);
@@ -258,17 +261,17 @@ public class HomeActivity extends AbstractBarterLiActivity implements
 
     @Override
     public void onBadRequestError(final int requestId,
-                    final IBlRequestContract request, final int errorCode,
-                    final String errorMessage, final Bundle errorResponseBundle) {
+                                  final IBlRequestContract request, final int errorCode,
+                                  final String errorMessage, final Bundle errorResponseBundle) {
 
     }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,
-                    final Intent data) {
+                                 final Intent data) {
 
         if ((requestCode == GooglePlusManager.CONNECTION_UPDATE_ERROR)
-                        && (resultCode == RESULT_OK)) {
+                && (resultCode == RESULT_OK)) {
             mGooglePlusManager.onActivityResult();
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -322,4 +325,8 @@ public class HomeActivity extends AbstractBarterLiActivity implements
         return "";
     }
 
+    @Override
+    protected boolean isDrawerActionBarToggleEnabled() {
+        return true;
+    }
 }

@@ -109,8 +109,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         final View view = inflater.inflate(R.layout.fragment_my_profile, null);
         initViews(view);
 
-        setActionBarDrawerToggleEnabled(false);
-
         final Bundle extras = getArguments();
         mAddUserInfoDialogFragment = (AddUserInfoDialogFragment) getFragmentManager()
                 .findFragmentByTag(FragmentTags.DIALOG_ADD_NAME);

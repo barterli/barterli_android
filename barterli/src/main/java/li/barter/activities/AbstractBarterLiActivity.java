@@ -16,34 +16,27 @@
 
 package li.barter.activities;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -63,7 +56,6 @@ import li.barter.data.TableChatMessages;
 import li.barter.data.TableChats;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.FragmentTransition;
-import li.barter.fragments.NavDrawerFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.IVolleyHelper;
 import li.barter.http.ResponseInfo;
@@ -86,43 +78,23 @@ import li.barter.widgets.TypefacedSpan;
  */
 public abstract class AbstractBarterLiActivity extends ActionBarActivity
         implements IHttpCallbacks, AsyncDbQueryCallback,
-        OnClickListener, NavDrawerFragment.INavDrawerActionCallback {
+        OnClickListener {
 
     private static final String TAG = "BaseBarterLiActivity";
 
     private static final int ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
-            | ActionBar.DISPLAY_SHOW_TITLE;
+            | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_USE_LOGO | ActionBar.DISPLAY_SHOW_HOME;
     /**
      * {@link VolleyCallbacks} for encapsulating Volley request responses
      */
-    protected VolleyCallbacks       mVolleyCallbacks;
-    private   AtomicInteger         mRequestCounter;
-    private   ActivityTransition    mActivityTransition;
-    /**
-     * Drawer Layout that contains the Navigation Drawer
-     */
-    private   DrawerLayout          mDrawerLayout;
-    /**
-     * Drawer toggle for Action Bar
-     */
-    private   ActionBarDrawerToggle mDrawerToggle;
-    /**
-     * {@link android.widget.FrameLayout} that provides the navigation items
-     */
-    private   FrameLayout           mNavFrameContent;
-    /**
-     * Whether the current activity has a Navigation drawer or not
-     */
-    private   boolean               mHasNavigationDrawer;
-    /**
-     * Whether the nav drawer associated with this activity is also associated with the drawer
-     * toggle. Is valid only if <code>mHasNavigationDrawer</code> is <code>true</code>
-     */
-    private   boolean               mIsActionBarNavDrawerToggleEnabled;
+    protected VolleyCallbacks    mVolleyCallbacks;
+    private   AtomicInteger      mRequestCounter;
+    private   ActivityTransition mActivityTransition;
+
     /**
      * Whether a screen hit should be reported to analytics
      */
-    private   boolean               mShouldReportScreenHit;
+    private boolean mShouldReportScreenHit;
 
     /**
      * Creates a Crouton View based on the style
@@ -162,8 +134,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     protected void onCreate(final Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
-        mHasNavigationDrawer = false;
-        mIsActionBarNavDrawerToggleEnabled = false;
+
         /* Here, getClass() might show an Ambiguous method call bug. It's a bug in IntelliJ IDEA 13
         * http://youtrack.jetbrains.com/issue/IDEA-72835 */
         mActivityTransition = getClass()
@@ -187,8 +158,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
             mShouldReportScreenHit = false;
         }
 
-        if (getActionBar() != null) {
-            getActionBar().setDisplayOptions(ACTION_BAR_DISPLAY_MASK);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayOptions(ACTION_BAR_DISPLAY_MASK);
             setActionBarTitle(getTitle().toString());
         }
 
@@ -355,8 +326,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
     public void setActionBarDisplayOptions(final int displayOptions) {
-        if (getActionBar() != null) {
-            getActionBar().setDisplayOptions(displayOptions, ACTION_BAR_DISPLAY_MASK);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayOptions(displayOptions, ACTION_BAR_DISPLAY_MASK);
         }
     }
 
@@ -372,37 +343,30 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
 
-        if (isActionBarNavDrawerToggleEnabled()
-                && mDrawerToggle.onOptionsItemSelected(item)) {
-            // Pass the event to ActionBarDrawerToggle, if it returns
-            // true, then it has handled the app icon touch event
-            return true;
-        } else {
 
-            //Fetch the current primary fragment. If that will handle the Menu click, pass it to that one
-            final AbstractBarterLiFragment currentMainFragment = (AbstractBarterLiFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.frame_content);
+        //Fetch the current primary fragment. If that will handle the Menu click, pass it to that one
+        final AbstractBarterLiFragment currentMainFragment = (AbstractBarterLiFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.frame_content);
 
-            boolean handled = false;
-            if (currentMainFragment != null) {
-                handled = currentMainFragment.onOptionsItemSelected(item);
+        boolean handled = false;
+        if (currentMainFragment != null) {
+            handled = currentMainFragment.onOptionsItemSelected(item);
+        }
+
+        if (!handled) {
+            // To provide Up navigation
+            if (item.getItemId() == android.R.id.home) {
+
+                doUpNavigation();
+                return true;
+            } else {
+                return super.onOptionsItemSelected(item);
             }
-
-            if (!handled) {
-                // To provide Up navigation
-                if (item.getItemId() == android.R.id.home) {
-
-                    doUpNavigation();
-                    return true;
-                } else {
-                    return super.onOptionsItemSelected(item);
-                }
-
-            }
-
-            return handled;
 
         }
+
+        return handled;
+
 
     }
 
@@ -450,7 +414,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                   Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance
-        final ActionBar actionBar = getActionBar();
+        final ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(s);
     }
 
@@ -478,7 +442,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                        new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
                                .setDuration(
                                        de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_SHORT)
-                               .build()).show();
+                               .build()
+               ).show();
     }
 
     /**
@@ -503,7 +468,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                        new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
                                .setDuration(
                                        de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
-                               .build()).show();
+                               .build()
+               ).show();
 
     }
 
@@ -539,7 +505,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         if ((mActivityTransition != null) && !defaultAnimation) {
             overridePendingTransition(mActivityTransition.destroyEnterAnimation(),
                                       mActivityTransition
-                                              .destroyExitAnimation());
+                                              .destroyExitAnimation()
+            );
         }
     }
 
@@ -583,143 +550,6 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
             transaction.addToBackStack(backStackTag);
         }
         transaction.commit();
-    }
-
-    /**
-     * Initialize the Navigation Drawer. Call after the content view is set, in onCreate()
-     *
-     * @param navDrawerResId    The resource Id of the navigation drawer
-     * @param navContentResId   The resource id of the content view in the layout which is the
-     *                          drawer content
-     * @param attachToActionBar Whether the navigation should be associated with the Action Bar
-     *                          drawer toggle
-     */
-    protected void initDrawer(final int navDrawerResId, final int navContentResId,
-                              final boolean attachToActionBar) {
-
-        mDrawerLayout = (DrawerLayout) findViewById(navDrawerResId);
-
-        if (mDrawerLayout == null) {
-            throw new IllegalArgumentException(
-                    "Drawer Layout not found. Check your layout/resource id being sent");
-        }
-        mNavFrameContent = (FrameLayout) findViewById(navContentResId);
-
-        if (mNavFrameContent == null) {
-            throw new IllegalArgumentException(
-                    "Drawer content not found. Check the layout/resource id being sent");
-        }
-
-        mHasNavigationDrawer = true;
-
-        if (attachToActionBar) {
-            mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                                                      R.drawable.ic_navigation_drawer,
-                                                      R.string.drawer_open,
-                                                      R.string.drawer_closed) {
-
-                @Override
-                public void onDrawerOpened(final View drawerView) {
-                    super.onDrawerOpened(drawerView);
-                    //  mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-                    invalidateOptionsMenu();
-
-                }
-
-                @Override
-                public void onDrawerClosed(final View drawerView) {
-                    super.onDrawerClosed(drawerView);
-                    //   mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-                    invalidateOptionsMenu();
-
-                }
-
-            };
-
-            mDrawerLayout.setDrawerListener(mDrawerToggle);
-            getActionBar().setDisplayHomeAsUpEnabled(true);
-            mIsActionBarNavDrawerToggleEnabled = true;
-        }
-        // mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        mDrawerLayout.setScrimColor(getResources()
-                                            .getColor(R.color.overlay_black_40p));
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
-
-        /* In the case that the activity was destroyed in background, the system will take care of reinitializing the fragment for us*/
-        NavDrawerFragment fragment = (NavDrawerFragment) getSupportFragmentManager()
-                .findFragmentByTag(FragmentTags.NAV_DRAWER);
-
-        if (fragment == null) {
-            fragment = (NavDrawerFragment) Fragment
-                    .instantiate(this, NavDrawerFragment.class.getName());
-            loadFragment(navContentResId, fragment, FragmentTags.NAV_DRAWER, false, null);
-        }
-
-    }
-
-    @Override
-    protected void onPostCreate(final Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        if (mIsActionBarNavDrawerToggleEnabled) {
-            mDrawerToggle.syncState();
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(final Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (mIsActionBarNavDrawerToggleEnabled) {
-            mDrawerToggle.onConfigurationChanged(newConfig);
-        }
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(final Menu menu) {
-        if (mIsActionBarNavDrawerToggleEnabled) {
-            setOptionsGroupHidden(menu, mDrawerLayout.isDrawerOpen(mNavFrameContent));
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    private void setOptionsGroupHidden(final Menu menu, final boolean drawerOpen) {
-
-        menu.setGroupEnabled(R.id.group_hide_on_drawer_open, !drawerOpen);
-        menu.setGroupVisible(R.id.group_hide_on_drawer_open, !drawerOpen);
-    }
-
-    /**
-     * Whether the current Activity has a Navigation Drawer
-     */
-    public boolean hasNavigationDrawer() {
-        return mHasNavigationDrawer;
-    }
-
-    /**
-     * Whether the current Activity's Navigation drawer is also associated with the Action Bar
-     */
-    public boolean isActionBarNavDrawerToggleEnabled() {
-        return mDrawerToggle == null ? mIsActionBarNavDrawerToggleEnabled
-                : mDrawerToggle.isDrawerIndicatorEnabled();
-    }
-
-    /**
-     * Use to dynamically enable/disable the Action Bar drawer toggle for the Activity. Has no
-     * effect if the Activity never has a Navigation Drawer to begin with. Mainly used to control
-     * The Action Bar Drawer toggle from fragments
-     *
-     * @param enabled <code>true</code> to enable the Action Bar drawer toggle, <code>false</code>
-     *                to disable it
-     */
-    public void setActionBarDrawerToggleEnabled(final boolean enabled) {
-
-        if (mHasNavigationDrawer) {
-
-            if (mDrawerToggle != null) {
-                mDrawerToggle.setDrawerIndicatorEnabled(enabled);
-            }
-
-        }
     }
 
     /**
@@ -828,12 +658,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         }
     }
 
-    @Override
-    public void onActionTaken() {
-        if (mHasNavigationDrawer) {
-            mDrawerLayout.closeDrawer(mNavFrameContent);
-        }
-    }
+
 
     /**
      * @author Vinay S Shenoy Enum to handle the different types of Alerts that can be shown
