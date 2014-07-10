@@ -31,9 +31,7 @@ public class UserProfileActivity extends AbstractDrawerActivity {
         mUserId = getIntent().getStringExtra(AppConstants.Keys.USER_ID);
         if (TextUtils.isEmpty(mUserId)) {
             finish();
-        }
-
-        if (savedInstanceState == null) {
+        } else if (savedInstanceState == null) {
             loadUserProfileFragment();
         }
     }

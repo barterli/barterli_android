@@ -15,9 +15,9 @@
 
 package li.barter.fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
@@ -31,6 +31,7 @@ import android.widget.GridView;
 import com.google.android.gms.analytics.HitBuilders.EventBuilder;
 
 import li.barter.R;
+import li.barter.activities.BookDetailActivity;
 import li.barter.adapters.BooksGridAdapter;
 import li.barter.analytics.AnalyticsConstants.Actions;
 import li.barter.analytics.AnalyticsConstants.Categories;
@@ -42,12 +43,10 @@ import li.barter.data.SQLiteLoader;
 import li.barter.data.ViewUserBooksWithLocations;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
-import li.barter.utils.Utils;
 
 /**
  * @author Anshul Kamboj
@@ -179,15 +178,20 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
             final Cursor cursor = (Cursor) mBooksAroundMeAdapter
                     .getItem(position);
 
+            final String bookId = cursor.getString(cursor.getColumnIndex(DatabaseColumns.ID));
 
-            final Bundle showBooksArgs = Utils.cursorToBundle(cursor);
+            final Intent bookDetailIntent = new Intent(getActivity(), BookDetailActivity.class);
+            bookDetailIntent.putExtra(Keys.ID, bookId);
+            startActivity(bookDetailIntent);
+
+            /*final Bundle showBooksArgs = Utils.cursorToBundle(cursor);
 
             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                                  .instantiate(getActivity(), BookDetailFragment.class
                                          .getName(), showBooksArgs),
                          FragmentTags.USER_BOOK_FROM_PROFILE, true,
                          FragmentTags.BS_EDIT_PROFILE
-            );
+            );*/
         }
     }
 

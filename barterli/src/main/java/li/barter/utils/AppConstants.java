@@ -314,6 +314,7 @@ public class AppConstants {
          */
         public static final String LAST_SCREEN_TIME = "last_screen_time";
         public static final String OVERLAY_VISIBLE  = "overlay_visible";
+        public static final String BOOK_DETAILS     = "book_details";
     }
 
     /**
@@ -346,6 +347,7 @@ public class AppConstants {
         public static final String NAV_DRAWER                             = "nav_drawer";
         public static final String SETTINGS                               = "settings";
         public static final String LOGIN                                  = "login";
+        public static final String BOOK_DETAIL                            = "book_detail";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME        = "to_books_around_me";
@@ -397,6 +399,7 @@ public class AppConstants {
         public static final int SEARCH_BOOKS_ON_PAGER     = 206;
         public static final int USER_DETAILS_ABOUT_ME     = 207;
         public static final int USER_DETAILS_CHAT_DETAILS = 208;
+        public static final int BOOK_DETAILS              = 209;
     }
 
     /**

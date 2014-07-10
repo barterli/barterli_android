@@ -271,7 +271,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             mAdapter.swapCursor(cursor);
 
             if (cursor.getCount() > 0) {
-                mBookDetailPager.setCurrentItem(mBookPosition);
+                //mBookDetailPager.setCurrentItem(mBookPosition);
 
             /*
              * Viewpager doesn't call on page selected() on the listener if the
@@ -311,8 +311,11 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
     }
 
-    /** Updates the book owner profile for a particular selection
-     * @param position The book page selected */
+    /**
+     * Updates the book owner profile for a particular selection
+     *
+     * @param position The book page selected
+     */
     private void updateUserProfile(int position) {
         final ProfileFragment fragment = (ProfileFragment) getChildFragmentManager()
                 .findFragmentByTag(FragmentTags.USER_PROFILE);
@@ -363,10 +366,6 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPanelExpanded(View panel) {
         setActionBarTitle(R.string.owner_profile);
-        /*
-         * TODO If current user is the user whose profile is being displayed,
-         * show the edit option
-         */
     }
 
     @Override
@@ -381,6 +380,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onDialogClick(DialogInterface dialog, int which) {
+
         ((ProfileFragment) getChildFragmentManager()
                 .findFragmentByTag(FragmentTags.USER_PROFILE))
                 .onDialogClick(dialog, which);
@@ -388,11 +388,10 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
     @Override
     public boolean willHandleDialog(DialogInterface dialog) {
-        // TODO Auto-generated method stub
+
         return ((ProfileFragment) getChildFragmentManager()
                 .findFragmentByTag(FragmentTags.USER_PROFILE))
                 .willHandleDialog(dialog);
-        //return super.willHandleDialog(dialog);
     }
 
     /**

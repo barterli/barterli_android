@@ -128,8 +128,6 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         getActivity().getWindow()
                      .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
                                                | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        mBookDetails = getArguments();
-
         mDeleteBookDialogFragment = (AlertDialogFragment) getFragmentManager()
                 .findFragmentByTag(FragmentTags.DIALOG_DELETE_BOOK);
 
@@ -141,9 +139,27 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         } else {
             mLoadedIndividually = true;
         }
+
+        if(savedInstanceState == null) {
+            mBookDetails = getArguments();
+        } else {
+            mBookDetails = savedInstanceState.getBundle(Keys.BOOK_DETAILS);
+        }
         setHasOptionsMenu(mLoadedIndividually);
         loadBookDetails();
         return view;
+    }
+
+    /** Updates the book details being displayed */
+    public void updateBookDetails(final Bundle bookDetails) {
+        mBookDetails = bookDetails;
+        loadBookDetails();
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle(Keys.BOOK_DETAILS, mBookDetails);
     }
 
     /**
@@ -171,8 +187,12 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
     }
 
+    /** Loads the book details from the arguments bundle */
     private void loadBookDetails() {
 
+        if (mBookDetails == null) {
+            return;
+        }
         mId = mBookDetails.getString(DatabaseColumns.ID);
         final String userId = mBookDetails.getString(DatabaseColumns.USER_ID);
 
@@ -339,7 +359,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case android.R.id.home: {
-                onUpNavigate();
+                getActivity().finish();
                 return true;
             }
 
@@ -491,6 +511,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         }
         return super.willHandleDialog(dialog);
     }
+
 
     @Override
     public void onDialogClick(DialogInterface dialog, int which) {
