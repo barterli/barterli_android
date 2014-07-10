@@ -372,23 +372,6 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                                 .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
 
             } else {
-                /*final String tag = getTag();
-                if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
-
-                    final Bundle args = new Bundle(1);
-                    args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-                    args.putString(Keys.USER_ID, userInfo
-                            .getString(HttpConstants.ID_USER));
-
-                    loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), ProfileFragment.class
-                                    .getName(), args), FragmentTags.PROFILE_FROM_LOGIN, true, FragmentTags.BS_PROFILE);
-
-                } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
-                    onUpNavigate();
-                } else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
-                    onUpNavigate();
-                }*/
 
                 getActivity().setResult(Activity.RESULT_OK);
                 getActivity().finish();

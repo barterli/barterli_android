@@ -101,7 +101,7 @@ public class AuthActivity extends AbstractDrawerActivity implements GooglePlusMa
 
     @Override
     protected Object getTaskTag() {
-        return TAG;
+        return hashCode();
     }
 
     @Override

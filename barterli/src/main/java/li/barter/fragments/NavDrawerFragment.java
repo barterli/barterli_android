@@ -28,6 +28,7 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AuthActivity;
 import li.barter.activities.SettingsActivity;
+import li.barter.activities.UserProfileActivity;
 import li.barter.adapters.NavDrawerAdapter;
 import li.barter.analytics.AnalyticsConstants;
 import li.barter.analytics.GoogleAnalyticsManager;
@@ -272,29 +273,10 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                     @Override
                     public void run() {
                         if (isLoggedIn()) {
-                            Bundle args = new Bundle();
-                            args.putString(AppConstants.Keys.USER_ID, AppConstants.UserInfo.INSTANCE
-                                    .getId());
 
-                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                                 .instantiate(getActivity(), ProfileFragment.class
-                                                         .getName(), args),
-                                         AppConstants.FragmentTags.PROFILE_FROM_NAV_DRAWER, true,
-                                         null
-                            );
+                            launchCurrentUserProfile();
 
                         } else {
-
-                            /*final Bundle loginArgs = new Bundle(1);
-                            loginArgs.putString(AppConstants.Keys.UP_NAVIGATION_TAG,
-                                                AppConstants.FragmentTags.BS_BOOKS_AROUND_ME);
-
-                            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                                 .instantiate(getActivity(), LoginFragment.class
-                                                         .getName(), loginArgs),
-                                         AppConstants.FragmentTags.LOGIN_FROM_NAV_DRAWER, true,
-                                         AppConstants.FragmentTags.BS_BOOKS_AROUND_ME
-                            ); */
 
                             final Intent loginIntent = new Intent(getActivity(),
                                                                   AuthActivity.class);
@@ -511,10 +493,21 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
         if (requestCode == AppConstants.RequestCodes.LOGIN) {
 
             if (resultCode == ActionBarActivity.RESULT_OK) {
-                Logger.d(TAG, "Login completed");
+                launchCurrentUserProfile();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    /**
+     * Launches the current user's profile in the Activity
+     */
+    private void launchCurrentUserProfile() {
+        final Intent userProfileIntent = new Intent(getActivity(),
+                                                    UserProfileActivity.class);
+        userProfileIntent.putExtra(AppConstants.Keys.USER_ID,
+                                   AppConstants.UserInfo.INSTANCE.getId());
+        startActivity(userProfileIntent);
     }
 }

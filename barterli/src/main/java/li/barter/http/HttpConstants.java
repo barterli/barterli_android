@@ -139,7 +139,7 @@ public class HttpConstants {
      * The API version in use by the app
      */
     private static final int API_VERSION = 1;
-    private static Server SERVER = Server.DEV;
+    private static Server SERVER = Server.PRODUCTION;
 
     public static String getApiBaseUrl() {
         return SERVER.mUrl;

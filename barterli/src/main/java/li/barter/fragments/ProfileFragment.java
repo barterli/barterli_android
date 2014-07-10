@@ -280,12 +280,6 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
 
-            case android.R.id.home: {
-
-                onUpNavigate();
-                return true;
-            }
-
             case R.id.action_edit_profile: {
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
                         .instantiate(getActivity(), EditProfileFragment.class
