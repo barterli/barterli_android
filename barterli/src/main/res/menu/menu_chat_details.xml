@@ -6,7 +6,7 @@
     <group android:id="@+id/group_hide_on_drawer_open" >
         <item
             android:id="@+id/action_user"
-            android:actionLayout="@layout/layout_action_bar_user_image"
+            app:actionLayout="@layout/layout_action_bar_user_image"
             app:showAsAction="ifRoom"
             android:title="@string/owner_profile"/>
     </group>
