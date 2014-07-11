@@ -65,7 +65,8 @@ public class AppConstants {
 
     // Default Book Image url we getting from the server when there is no image
     public static final String DEFAULT_BOOKIMAGE_URL  = "1_default.png";
-    public static final String PLAY_STORE_LINK        = "https://play.google.com/store/apps/details?id=li.barter";
+    public static final String PLAY_STORE_LINK        = "https://play.google" +
+            ".com/store/apps/details?id=li.barter";
     public static final String PLAY_STORE_MARKET_LINK = "market://details?id=li.barter";
     public static final String REFERRER_FORMAT        = "&referrer=%s";
 
@@ -328,13 +329,19 @@ public class AppConstants {
         public static final String LOGIN_TO_ADD_BOOK                      = "login_to_add_book";
         public static final String LOGIN_TO_CHAT                          = "login_to_chat";
         public static final String LOGIN_FROM_NAV_DRAWER                  = "login_from_nav_drawer";
-        public static final String SELECT_PREFERRED_LOCATION_FROM_LOGIN   = "select_preferred_location_from_login";
-        public static final String SELECT_PREFERRED_LOCATION_FROM_PROFILE = "select_preferred_location_from_profile";
+        public static final String SELECT_PREFERRED_LOCATION_FROM_LOGIN   =
+                "select_preferred_location_from_login";
+        public static final String SELECT_PREFERRED_LOCATION_FROM_PROFILE =
+                "select_preferred_location_from_profile";
         public static final String REPORT_BUGS                            = "report_bugs";
-        public static final String USER_BOOK_FROM_PROFILE                 = "user_book_from_profile";
-        public static final String MY_BOOK_FROM_ADD_OR_EDIT               = "my_book_from_add_or_edit";
-        public static final String PROFILE_FROM_NAV_DRAWER                = "profile_from_nav_drawer";
-        public static final String PROFILE_FROM_CHAT_DETAILS              = "profile_from_chat_details";
+        public static final String USER_BOOK_FROM_PROFILE                 =
+                "user_book_from_profile";
+        public static final String MY_BOOK_FROM_ADD_OR_EDIT               =
+                "my_book_from_add_or_edit";
+        public static final String PROFILE_FROM_NAV_DRAWER                =
+                "profile_from_nav_drawer";
+        public static final String PROFILE_FROM_CHAT_DETAILS              =
+                "profile_from_chat_details";
         public static final String PROFILE_FROM_LOGIN                     = "profile_from_login";
         public static final String EDIT_PROFILE                           = "edit_profile";
         public static final String CHATS                                  = "chats";
@@ -348,6 +355,7 @@ public class AppConstants {
         public static final String SETTINGS                               = "settings";
         public static final String LOGIN                                  = "login";
         public static final String BOOK_DETAIL                            = "book_detail";
+        public static final String BOOKS_PAGER                            = "books_pager";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME        = "to_books_around_me";

@@ -125,11 +125,19 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
                     .beginTransaction()
                     .replace(R.id.content_user_profile, fragment, FragmentTags.USER_PROFILE)
                     .commit();
+        } else {
+            mBookPosition = savedInstanceState.getInt(Keys.BOOK_POSITION);
         }
 
         loadBookSearchResults();
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Keys.BOOK_POSITION, mBookDetailPager.getCurrentItem());
     }
 
     @Override
@@ -161,21 +169,6 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             updateUserProfile(position);
         } else {
             updateShareIntent(null);
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home: {
-                onUpNavigate();
-                return true;
-            }
-
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
         }
     }
 
@@ -271,7 +264,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             mAdapter.swapCursor(cursor);
 
             if (cursor.getCount() > 0) {
-                //mBookDetailPager.setCurrentItem(mBookPosition);
+                mBookDetailPager.setCurrentItem(mBookPosition);
 
             /*
              * Viewpager doesn't call on page selected() on the listener if the
