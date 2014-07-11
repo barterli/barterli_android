@@ -258,9 +258,10 @@ public class AppConstants {
      */
     public static interface RequestCodes {
 
-        public static final int SCAN_ISBN = 100;
-        public static final int PLUS_LIKE = 101;
-        public static final int LOGIN     = 102;
+        public static final int SCAN_ISBN               = 100;
+        public static final int PLUS_LIKE               = 101;
+        public static final int LOGIN                   = 102;
+        public static final int EDIT_PREFERRED_LOCATION = 103;
     }
 
     /**
@@ -307,6 +308,7 @@ public class AppConstants {
         public static final String BOOK_POSITION         = "book_position";
         public static final String BOOK_COUNT            = "book_count";
         public static final String EMAIL                 = "email";
+        public static final String ONWARD_INTENT         = "onward_intent";
 
         /**
          * The time at which this screen was last seen. Used for google analytics to detect whether
@@ -356,6 +358,8 @@ public class AppConstants {
         public static final String LOGIN                                  = "login";
         public static final String BOOK_DETAIL                            = "book_detail";
         public static final String BOOKS_PAGER                            = "books_pager";
+        public static final String SELECT_PREFERRED_LOCATION              =
+                "select_preferred_location";
 
         /* Tags for fragment backstack popping and providing up navigation */
         public static final String BS_BOOKS_AROUND_ME        = "to_books_around_me";

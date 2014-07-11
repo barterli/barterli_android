@@ -50,7 +50,8 @@ import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.AuthActivity;
-import li.barter.activities.HomeActivity;
+import li.barter.activities.SelectPreferredLocationActivity;
+import li.barter.activities.UserProfileActivity;
 import li.barter.analytics.AnalyticsConstants.Actions;
 import li.barter.analytics.AnalyticsConstants.Categories;
 import li.barter.analytics.AnalyticsConstants.ParamKeys;
@@ -71,7 +72,9 @@ import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.Utils;
 
-@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
+@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out,
+                    popEnterAnimation = R.anim.zoom_in,
+                    popExitAnimation = R.anim.slide_out_to_right)
 public class LoginFragment extends AbstractBarterLiFragment implements
         OnClickListener, StatusCallback {
 
@@ -81,14 +84,14 @@ public class LoginFragment extends AbstractBarterLiFragment implements
      * Minimum length of the entered password
      */
     private final int mMinPasswordLength = 8;
-    private Button mFacebookLoginButton;
-    private Button mGoogleLoginButton;
-    private Button mSubmitButton;
-    private EditText mEmailEditText;
-    private EditText mPasswordEditText;
-    private TextView mForgotPassword;
+    private Button                          mFacebookLoginButton;
+    private Button                          mGoogleLoginButton;
+    private Button                          mSubmitButton;
+    private EditText                        mEmailEditText;
+    private EditText                        mPasswordEditText;
+    private TextView                        mForgotPassword;
     private AddSingleEditTextDialogFragment mAddSingleEditTextDialogFragment;
-    private String mEmailForPasswordChange;
+    private String                          mEmailForPasswordChange;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -145,7 +148,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                                  final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Session.getActiveSession()
-                .onActivityResult(getActivity(), requestCode, resultCode, data);
+               .onActivityResult(getActivity(), requestCode, resultCode, data);
 
     }
 
@@ -158,13 +161,14 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new EventBuilder(Categories.CONVERSION, Actions.SIGN_IN_ATTEMPT)
-                                .set(ParamKeys.TYPE, ParamValues.FACEBOOK));
+                                           .set(ParamKeys.TYPE, ParamValues.FACEBOOK));
                 final Session session = Session.getActiveSession();
                 if (!session.isOpened() && !session.isClosed()) {
                     session.openForRead(new Session.OpenRequest(this)
-                            .setPermissions(Arrays
-                                    .asList(AppConstants.FBPERMISSIONS))
-                            .setCallback(this));
+                                                .setPermissions(Arrays
+                                                                        .asList(AppConstants
+                                                                                        .FBPERMISSIONS))
+                                                .setCallback(this));
                 } else {
                     Session.openActiveSession(getActivity(), this, true, this);
                 }
@@ -175,7 +179,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new EventBuilder(Categories.CONVERSION, Actions.SIGN_IN_ATTEMPT)
-                                .set(ParamKeys.TYPE, ParamValues.GOOGLE));
+                                           .set(ParamKeys.TYPE, ParamValues.GOOGLE));
                 ((AuthActivity) getActivity()).getPlusManager().login();
                 break;
             }
@@ -184,8 +188,10 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 if (isInputValid()) {
                     GoogleAnalyticsManager
                             .getInstance()
-                            .sendEvent(new EventBuilder(Categories.CONVERSION, Actions.SIGN_IN_ATTEMPT)
-                                    .set(ParamKeys.TYPE, ParamValues.EMAIL));
+                            .sendEvent(
+                                    new EventBuilder(Categories.CONVERSION, Actions.SIGN_IN_ATTEMPT)
+                                            .set(ParamKeys.TYPE, ParamValues.EMAIL)
+                            );
                     login(mEmailEditText.getText().toString(), mPasswordEditText
                             .getText().toString());
                 }
@@ -206,7 +212,9 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
         mAddSingleEditTextDialogFragment = new AddSingleEditTextDialogFragment();
         mAddSingleEditTextDialogFragment
-                .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.forgot_password, R.string.submit, R.string.cancel, 0, R.string.email_label, getFragmentManager(), true, FragmentTags.DIALOG_FORGOT_PASSWORD);
+                .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.forgot_password, R.string.submit,
+                      R.string.cancel, 0, R.string.email_label, getFragmentManager(), true,
+                      FragmentTags.DIALOG_FORGOT_PASSWORD);
 
     }
 
@@ -215,7 +223,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
         if ((mAddSingleEditTextDialogFragment != null)
                 && mAddSingleEditTextDialogFragment.getDialog()
-                .equals(dialog)) {
+                                                   .equals(dialog)) {
             return true;
         }
         return false;
@@ -226,7 +234,7 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
         if ((mAddSingleEditTextDialogFragment != null)
                 && mAddSingleEditTextDialogFragment.getDialog()
-                .equals(dialog)) {
+                                                   .equals(dialog)) {
 
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 callForgotPassword(mAddSingleEditTextDialogFragment.getName());
@@ -305,11 +313,10 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Validates the text fields for creating a user. Automatically sets the
-     * error messages for the text fields
+     * Validates the text fields for creating a user. Automatically sets the error messages for the
+     * text fields
      *
-     * @return <code>true</code> If the input is valid, <code>false</code>
-     * otherwise
+     * @return <code>true</code> If the input is valid, <code>false</code> otherwise
      */
     private boolean isInputValid() {
 
@@ -337,7 +344,8 @@ public class LoginFragment extends AbstractBarterLiFragment implements
                 isValid &= (password.length() >= mMinPasswordLength);
                 if (!isValid) {
                     mPasswordEditText
-                            .setError(getString(R.string.error_password_minimum_length, mMinPasswordLength));
+                            .setError(getString(R.string.error_password_minimum_length,
+                                                mMinPasswordLength));
                 }
             }
         }
@@ -358,24 +366,26 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
             final String locationId = userInfo
                     .getString(HttpConstants.LOCATION);
+            Intent onwardIntent;
             if (TextUtils.isEmpty(locationId)) {
-                final Bundle myArgs = getArguments();
-                Bundle preferredLocationArgs = null;
-
-                if (myArgs != null) {
-                    preferredLocationArgs = new Bundle(myArgs);
-                    preferredLocationArgs.putString(Keys.USER_ID, userInfo
-                            .getString(HttpConstants.ID_USER));
-                }
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), SelectPreferredLocationFragment.class
-                                .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
+                onwardIntent = new Intent(getActivity(), SelectPreferredLocationActivity.class);
+                final Intent userProfileIntent = new Intent(getActivity(),
+                                                            UserProfileActivity.class);
+                userProfileIntent.putExtra(AppConstants.Keys.USER_ID, UserInfo.INSTANCE.getId());
+                onwardIntent.putExtra(Keys.ONWARD_INTENT, userProfileIntent);
 
             } else {
 
-                getActivity().setResult(Activity.RESULT_OK);
-                getActivity().finish();
+                onwardIntent = new Intent(getActivity(), UserProfileActivity.class);
+                onwardIntent.putExtra(AppConstants.Keys.USER_ID,
+                                      AppConstants.UserInfo.INSTANCE.getId());
+
             }
+
+            final Intent data = new Intent();
+            data.putExtra(Keys.ONWARD_INTENT, onwardIntent);
+            getActivity().setResult(Activity.RESULT_OK, onwardIntent);
+            getActivity().finish();
 
         } else if (requestId == RequestId.REQUEST_RESET_TOKEN) {
             Bundle args = new Bundle(1);
@@ -386,19 +396,26 @@ public class LoginFragment extends AbstractBarterLiFragment implements
             if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
 
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), PasswordResetFragment.class
-                                .getName(), args), FragmentTags.PASSWORD_RESET, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+                                     .instantiate(getActivity(), PasswordResetFragment.class
+                                             .getName(), args), FragmentTags.PASSWORD_RESET, true,
+                             FragmentTags.LOGIN_FROM_NAV_DRAWER
+                );
 
             } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
                 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), PasswordResetFragment.class
-                                .getName(), args), FragmentTags.LOGIN_TO_ADD_BOOK, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+                                     .instantiate(getActivity(), PasswordResetFragment.class
+                                             .getName(), args), FragmentTags.LOGIN_TO_ADD_BOOK,
+                             true,
+                             FragmentTags.LOGIN_FROM_NAV_DRAWER
+                );
             } else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
                 args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
                 loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), PasswordResetFragment.class
-                                .getName(), args), FragmentTags.LOGIN_TO_CHAT, true, FragmentTags.LOGIN_FROM_NAV_DRAWER);
+                                     .instantiate(getActivity(), PasswordResetFragment.class
+                                             .getName(), args), FragmentTags.LOGIN_TO_CHAT, true,
+                             FragmentTags.LOGIN_FROM_NAV_DRAWER
+                );
 
             }
 

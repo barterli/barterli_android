@@ -106,6 +106,10 @@
             android:label="@string/app_name"/>
 
         <activity
+            android:name="li.barter.activities.SelectPreferredLocationActivity"
+            android:label="@string/app_name"/>
+
+        <activity
             android:name="li.barter.activities.SettingsActivity"
             android:label="@string/app_name"
             android:parentActivityName="li.barter.activities.HomeActivity">

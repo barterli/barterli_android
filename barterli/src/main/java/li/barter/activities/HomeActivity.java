@@ -72,17 +72,11 @@ public class HomeActivity extends AbstractDrawerActivity implements
      */
     private GooglePlayClientWrapper mGooglePlayClientWrapper;
 
-    /**
-     * Framelayout for adding overlay views
-     */
-    private FrameLayout mOverlayFrameLayout;
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
         initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer);
-        mOverlayFrameLayout = (FrameLayout) findViewById(R.id.frame_overlay);
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
         if (savedInstanceState == null) {
 
@@ -101,28 +95,6 @@ public class HomeActivity extends AbstractDrawerActivity implements
 
         }
 
-    }
-
-    /**
-     * Displays an overlay view
-     *
-     * @param view TODO: Animate the view in
-     */
-    public void showOverlayView(View view) {
-
-        if (Utils.containsChild(mOverlayFrameLayout, view)) {
-            return;
-        }
-        mOverlayFrameLayout.addView(view);
-        mOverlayFrameLayout.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Hides the overlay view TODO: Animate the view out
-     */
-    public void hideOverlayView() {
-        mOverlayFrameLayout.removeAllViews();
-        mOverlayFrameLayout.setVisibility(View.GONE);
     }
 
     @Override

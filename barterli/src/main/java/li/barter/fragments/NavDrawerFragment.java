@@ -35,14 +35,14 @@ import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
-import li.barter.utils.Logger;
 import li.barter.utils.Utils;
 import li.barter.widgets.CircleImageView;
 
 /**
  * Fragment to load in the Navigation Drawer Created by vinaysshenoy on 29/6/14.
  */
-public class NavDrawerFragment extends AbstractBarterLiFragment implements AdapterView.OnItemClickListener {
+public class NavDrawerFragment extends AbstractBarterLiFragment implements AdapterView
+        .OnItemClickListener {
 
     private static final String TAG = "NavDrawerFragment";
 
@@ -55,11 +55,13 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
      * BroadcastReceiver implementation that receives broadcasts when the user info is updated from
      * server
      */
-    private final        BroadcastReceiver mUserInfoUpdatedBroadcastReceiver = new BroadcastReceiver() {
+    private final        BroadcastReceiver mUserInfoUpdatedBroadcastReceiver = new
+            BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction() != null && intent.getAction()
-                                                    .equals(AppConstants.ACTION_USER_INFO_UPDATED)) {
+                                                    .equals(AppConstants
+                                                                    .ACTION_USER_INFO_UPDATED)) {
                 updateLoggedInStatus();
             }
         }
@@ -88,7 +90,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
     private ViewGroup                mProfileHeader;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
         mHandler = new Handler();
 
@@ -217,7 +220,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
     }
 
     @Override
-    public void onBadRequestError(int requestId, IBlRequestContract request, int errorCode, String errorMessage, Bundle errorResponseBundle) {
+    public void onBadRequestError(int requestId, IBlRequestContract request, int errorCode,
+                                  String errorMessage, Bundle errorResponseBundle) {
 
     }
 
@@ -257,7 +261,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
-                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                                                AnalyticsConstants.Actions
+                                                                        .NAVIGATION_OPTION)
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.PROFILE));
                 /*
@@ -265,7 +270,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                  * load it again.
                  */
                 if ((masterFragment != null)
-                        && ((masterFragment instanceof LoginFragment) || (masterFragment instanceof ProfileFragment))) {
+                        && ((masterFragment instanceof LoginFragment) || (masterFragment
+                        instanceof ProfileFragment))) {
                     return null;
                 }
                 runnable = new Runnable() {
@@ -315,7 +321,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
-                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                                                AnalyticsConstants.Actions
+                                                                        .NAVIGATION_OPTION)
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.CHATS));
                 if ((masterFragment != null)
@@ -356,7 +363,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
-                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                                                AnalyticsConstants.Actions
+                                                                        .NAVIGATION_OPTION)
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.SHARE));
                 runnable = new Runnable() {
@@ -385,7 +393,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
-                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                                                AnalyticsConstants.Actions
+                                                                        .NAVIGATION_OPTION)
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.RATE_US));
 
@@ -409,7 +418,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
-                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                                                AnalyticsConstants.Actions
+                                                                        .NAVIGATION_OPTION)
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.REPORT_BUG));
                 if ((masterFragment != null)
@@ -437,7 +447,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
-                                                                AnalyticsConstants.Actions.NAVIGATION_OPTION)
+                                                                AnalyticsConstants.Actions
+                                                                        .NAVIGATION_OPTION)
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.ABOUT_US));
                 if ((masterFragment != null)
@@ -493,7 +504,22 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
         if (requestCode == AppConstants.RequestCodes.LOGIN) {
 
             if (resultCode == ActionBarActivity.RESULT_OK) {
-                launchCurrentUserProfile();
+
+                boolean defaultFlow = true;
+                if (data != null) {
+
+                    final Intent onwardIntent = data.getParcelableExtra(
+                            AppConstants.Keys.ONWARD_INTENT);
+
+                    if (onwardIntent != null) {
+                        defaultFlow = false;
+                        startActivity(onwardIntent);
+                    }
+                }
+
+                if (defaultFlow) {
+                    launchCurrentUserProfile();
+                }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);

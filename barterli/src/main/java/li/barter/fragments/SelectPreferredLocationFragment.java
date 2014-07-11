@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2014, barter.li
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,17 +16,13 @@
 
 package li.barter.fragments;
 
-import com.android.volley.Request.Method;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,13 +35,18 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
+import com.android.volley.Request.Method;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
-import li.barter.activities.HomeActivity;
+import li.barter.activities.SelectPreferredLocationActivity;
 import li.barter.adapters.SelectLocationAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.fragments.dialogs.AddSingleEditTextDialogFragment;
@@ -65,65 +66,65 @@ import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 
 /**
- * @author Vinay S Shenoy Fragment for selecting a preferred location for
- *         exchanging books
+ * @author Vinay S Shenoy Fragment for selecting a preferred location for exchanging books
  */
-@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
+@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out,
+                    popEnterAnimation = R.anim.zoom_in,
+                    popExitAnimation = R.anim.slide_out_to_right)
 public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
-                implements OnItemClickListener, OnClickListener {
+        implements OnItemClickListener, OnClickListener {
 
-    private static final String             TAG                     = "SelectPreferredLocationFragment";
+    private static final String TAG = "SelectPreferredLocationFragment";
 
     /**
      * Radius for searching locations
      */
-    private static final int                SEARCH_RADIUS_IN_METERS = 50000;
+    private static final int SEARCH_RADIUS_IN_METERS = 50000;
 
     /**
-     * Foursquare Api versioning parameter. Visit
-     * https://developer.foursquare.com/overview/versioning for more info
+     * Foursquare Api versioning parameter. Visit https://developer.foursquare
+     * .com/overview/versioning for more info
      */
-    private static final String             FOURSQUARE_API_VERSION  = "20140526";
+    private static final String FOURSQUARE_API_VERSION = "20140526";
 
     /**
      * {@link Venue}s used to display nearby places
      */
-    private Venue[]                         mVenues;
+    private Venue[] mVenues;
 
     /**
-     * Adapter for displaying list of locations nearby for selecting as user's
-     * preferred location
+     * Adapter for displaying list of locations nearby for selecting as user's preferred location
      */
-    private SelectLocationAdapter           mSelectLocationAdapter;
+    private SelectLocationAdapter mSelectLocationAdapter;
 
-    private ListView                        mVenueListView;
-    private String                          mFoursquareClientId;
-    private String                          mFoursquareClientSecret;
+    private ListView mVenueListView;
+    private String   mFoursquareClientId;
+    private String   mFoursquareClientSecret;
 
-    private View                            mEmptyView;
+    private View mEmptyView;
 
     private AddSingleEditTextDialogFragment mAddLocationDialogFragment;
 
-    private View                            mOverlayView;
+    private View mOverlayView;
 
-    private boolean                         mIsOverlayShown;
-    
+    private boolean mIsOverlayShown;
+
     private EnableLocationDialogFragment mEnableLocationDialogFragment;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
-                    final ViewGroup container, final Bundle savedInstanceState) {
+                             final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
         final View contentView = inflater
-                        .inflate(R.layout.fragment_select_location, container, false);
+                .inflate(R.layout.fragment_select_location, container, false);
 
         mVenueListView = (ListView) contentView
-                        .findViewById(R.id.list_locations);
+                .findViewById(R.id.list_locations);
         mSelectLocationAdapter = new SelectLocationAdapter(getActivity(), null, true);
         mVenueListView.setAdapter(mSelectLocationAdapter);
         mVenueListView.setOnItemClickListener(this);
-        
+
         mEnableLocationDialogFragment = (EnableLocationDialogFragment) getFragmentManager()
                 .findFragmentByTag(FragmentTags.DIALOG_ENABLE_LOCATION);
 
@@ -131,7 +132,7 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
         mEmptyView.setVisibility(View.GONE);
         mEmptyView.findViewById(R.id.text_try_again).setOnClickListener(this);
         mEmptyView.findViewById(R.id.text_add_manually)
-                        .setOnClickListener(this);
+                  .setOnClickListener(this);
 
         //showInfiniteCrouton(R.string.crouton_prefferedlocation_message, AlertStyle.INFO);
         mFoursquareClientId = getString(R.string.foursquare_client_id);
@@ -139,37 +140,37 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
         if (savedInstanceState != null) {
             mVenues = (Venue[]) savedInstanceState
-                            .getParcelableArray(Keys.LOCATIONS);
+                    .getParcelableArray(Keys.LOCATIONS);
             mIsOverlayShown = savedInstanceState
-                            .getBoolean(Keys.OVERLAY_VISIBLE);
+                    .getBoolean(Keys.OVERLAY_VISIBLE);
         }
 
         if (mIsOverlayShown) {
             showOverlay();
         }
         if ((mVenues == null) || (mVenues.length == 0)) {
-            fetchVenuesForLocation(DeviceInfo.INSTANCE.getLatestLocation(), SEARCH_RADIUS_IN_METERS);
+            fetchVenuesForLocation(DeviceInfo.INSTANCE.getLatestLocation(),
+                                   SEARCH_RADIUS_IN_METERS);
         } else {
             mSelectLocationAdapter.setVenues(mVenues);
         }
         return contentView;
     }
-    
+
     /**
-     * Show the dialog for the user to add his name, in case it's not already
-     * added
+     * Show the dialog for the user to add his name, in case it's not already added
      */
     protected void showEnableLocationDialog() {
 
         mEnableLocationDialogFragment = new EnableLocationDialogFragment();
         mEnableLocationDialogFragment
-                        .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.enable_location, R.string.enable_location_message, R.string.enable, R.string.cancel, 0, getFragmentManager(), true, FragmentTags.DIALOG_ENABLE_LOCATION);
+                .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.enable_location,
+                      R.string.enable_location_message, R.string.enable, R.string.cancel, 0,
+                      getFragmentManager(), true, FragmentTags.DIALOG_ENABLE_LOCATION);
 
     }
-    
 
-    
-    
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_select_location, menu);
@@ -180,11 +181,6 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
         if (item.getItemId() == R.id.action_about_select_location) {
             showOverlay();
-            return true;
-        }
-
-        else if (item.getItemId() == android.R.id.home) {
-            onUpNavigate();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -198,16 +194,16 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
         if (mOverlayView == null) {
             mOverlayView = LayoutInflater
-                            .from(getActivity())
-                            .inflate(R.layout.layout_overlay_about_prefered_location, null);
+                    .from(getActivity())
+                    .inflate(R.layout.layout_overlay_about_prefered_location, null);
         }
 
         final Activity activity = getActivity();
 
-        if (activity instanceof HomeActivity) {
+        if (activity instanceof SelectPreferredLocationActivity) {
             mOverlayView.setOnClickListener(this);
             mIsOverlayShown = true;
-            ((HomeActivity) activity).showOverlayView(mOverlayView);
+            ((SelectPreferredLocationActivity) activity).showOverlayView(mOverlayView);
         }
     }
 
@@ -217,83 +213,78 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
     private void removeOverlay() {
         final Activity activity = getActivity();
 
-        if (activity instanceof HomeActivity) {
+        if (activity instanceof SelectPreferredLocationActivity) {
             mIsOverlayShown = false;
             mOverlayView.setOnClickListener(null);
-            ((HomeActivity) activity).hideOverlayView();
+            ((SelectPreferredLocationActivity) activity).hideOverlayView();
         }
     }
 
     /**
-     * Fetch all the hangouts centered at the current location with the given
-     * radius
-     * 
+     * Fetch all the hangouts centered at the current location with the given radius
+     *
      * @param location The location to search for hangouts
-     * @param radius Tghe search radius(in meters)
+     * @param radius   Tghe search radius(in meters)
      */
     private void fetchVenuesForLocation(final Location location,
-                    final int radius) {
+                                        final int radius) {
 
-    	if(location.getLatitude()==0.0)
-    	{
-    		showEnableLocationDialog();
-    	}
-    	else
-    	{
-        final BlRequest request = new BlRequest(Method.GET, HttpConstants.getFoursquareUrl()
-                        + ApiEndpoints.FOURSQUARE_VENUES, null, mVolleyCallbacks);
-        request.setRequestId(RequestId.FOURSQUARE_VENUES);
+        if (location.getLatitude() == 0.0) {
+            showEnableLocationDialog();
+        } else {
+            final BlRequest request = new BlRequest(Method.GET, HttpConstants.getFoursquareUrl()
+                    + ApiEndpoints.FOURSQUARE_VENUES, null, mVolleyCallbacks);
+            request.setRequestId(RequestId.FOURSQUARE_VENUES);
 
-        final Map<String, String> params = new HashMap<String, String>(7);
+            final Map<String, String> params = new HashMap<String, String>(7);
 
-        params.put(HttpConstants.LL, String.format(Locale.US, "%f,%f", location
-                        .getLatitude(), location.getLongitude()));
+            params.put(HttpConstants.LL, String.format(Locale.US, "%f,%f", location
+                    .getLatitude(), location.getLongitude()));
 
-        params.put(HttpConstants.RADIUS, String.valueOf(radius));
+            params.put(HttpConstants.RADIUS, String.valueOf(radius));
 
-        final String foursquareCategoryFilter = FoursquareCategoryBuilder
-                        .init()
-                        .with(FoursquareCategoryBuilder.ARTS_AND_ENTERTAINMENT)
-                        .with(FoursquareCategoryBuilder.COLLEGE_AND_UNIVERSITY)
-                        .with(FoursquareCategoryBuilder.FOOD)
-                        .with(FoursquareCategoryBuilder.NIGHTLIFE_SPOT)
-                        .with(FoursquareCategoryBuilder.OUTDOORS_AND_RECREATION)
-                        .with(FoursquareCategoryBuilder.PROFESSIONAL_AND_OTHER_PLACES)
-                        .with(FoursquareCategoryBuilder.SHOP_AND_SERVICE)
-                        .with(FoursquareCategoryBuilder.TRAVEL_AND_TRANSPORT)
-                        .build();
+            final String foursquareCategoryFilter = FoursquareCategoryBuilder
+                    .init()
+                    .with(FoursquareCategoryBuilder.ARTS_AND_ENTERTAINMENT)
+                    .with(FoursquareCategoryBuilder.COLLEGE_AND_UNIVERSITY)
+                    .with(FoursquareCategoryBuilder.FOOD)
+                    .with(FoursquareCategoryBuilder.NIGHTLIFE_SPOT)
+                    .with(FoursquareCategoryBuilder.OUTDOORS_AND_RECREATION)
+                    .with(FoursquareCategoryBuilder.PROFESSIONAL_AND_OTHER_PLACES)
+                    .with(FoursquareCategoryBuilder.SHOP_AND_SERVICE)
+                    .with(FoursquareCategoryBuilder.TRAVEL_AND_TRANSPORT)
+                    .build();
 
-        Logger.v(TAG, "Foursquare Category Filter - %s", foursquareCategoryFilter);
-        params.put(HttpConstants.CATEGORY_ID, foursquareCategoryFilter);
-        params.put(HttpConstants.INTENT, HttpConstants.BROWSE);
-        params.put(HttpConstants.CLIENT_ID, mFoursquareClientId);
-        params.put(HttpConstants.CLIENT_SECRET, mFoursquareClientSecret);
-        params.put(HttpConstants.V, FOURSQUARE_API_VERSION);
+            Logger.v(TAG, "Foursquare Category Filter - %s", foursquareCategoryFilter);
+            params.put(HttpConstants.CATEGORY_ID, foursquareCategoryFilter);
+            params.put(HttpConstants.INTENT, HttpConstants.BROWSE);
+            params.put(HttpConstants.CLIENT_ID, mFoursquareClientId);
+            params.put(HttpConstants.CLIENT_SECRET, mFoursquareClientSecret);
+            params.put(HttpConstants.V, FOURSQUARE_API_VERSION);
 
-        request.setParams(params);
-        addRequestToQueue(request, true, 0, false);
-    	}
+            request.setParams(params);
+            addRequestToQueue(request, true, 0, false);
+        }
     }
 
     /**
-     * Fetch all the hangouts centered at the current location with the given
-     * radius without category filter. This is used when there are no places
-     * with the categories supplied .
-     * 
+     * Fetch all the hangouts centered at the current location with the given radius without
+     * category filter. This is used when there are no places with the categories supplied .
+     *
      * @param location The location to search for hangouts
-     * @param radius Tghe search radius(in meters)
+     * @param radius   Tghe search radius(in meters)
      */
     private void fetchVenuesForLocationWithoutCategoryFilter(
-                    final Location location, final int radius) {
+            final Location location, final int radius) {
 
         final BlRequest request = new BlRequest(Method.GET, HttpConstants.getFoursquareUrl()
-                        + ApiEndpoints.FOURSQUARE_VENUES, null, mVolleyCallbacks);
+                + ApiEndpoints.FOURSQUARE_VENUES, null, mVolleyCallbacks);
         request.setRequestId(RequestId.FOURSQUARE_VENUES_WITHOUT_CATEGORIES);
 
         final Map<String, String> params = new HashMap<String, String>(7);
 
         params.put(HttpConstants.LL, String.format(Locale.US, "%f,%f", location
-                        .getLatitude(), location.getLongitude()));
+                .getLatitude(), location.getLongitude()));
 
         params.put(HttpConstants.RADIUS, String.valueOf(radius));
 
@@ -326,20 +317,21 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
     @Override
     public void onSuccess(final int requestId,
-                    final IBlRequestContract request,
-                    final ResponseInfo response) {
+                          final IBlRequestContract request,
+                          final ResponseInfo response) {
         if (requestId == RequestId.FOURSQUARE_VENUES) {
             mVenues = (Venue[]) response.responseBundle
-                            .getParcelableArray(HttpConstants.LOCATIONS);
+                    .getParcelableArray(HttpConstants.LOCATIONS);
             if ((mVenues == null) || (mVenues.length == 0)) {
-                fetchVenuesForLocationWithoutCategoryFilter(DeviceInfo.INSTANCE.getLatestLocation(), SEARCH_RADIUS_IN_METERS);
+                fetchVenuesForLocationWithoutCategoryFilter(DeviceInfo.INSTANCE.getLatestLocation(),
+                                                            SEARCH_RADIUS_IN_METERS);
             } else {
                 mSelectLocationAdapter.setVenues(mVenues);
             }
 
         } else if (requestId == RequestId.FOURSQUARE_VENUES_WITHOUT_CATEGORIES) {
             mVenues = (Venue[]) response.responseBundle
-                            .getParcelableArray(HttpConstants.LOCATIONS);
+                    .getParcelableArray(HttpConstants.LOCATIONS);
             mSelectLocationAdapter.setVenues(mVenues);
             mSelectLocationAdapter.notifyDataSetChanged();
             if ((mVenues == null) || (mVenues.length == 0)) {
@@ -349,23 +341,34 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
                 mSelectLocationAdapter.setVenues(mVenues);
             }
 
-        }
-
-        else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
+        } else if (requestId == RequestId.SET_USER_PREFERRED_LOCATION) {
 
             SharedPreferenceHelper
-                            .set(R.string.pref_location, response.responseBundle
-                                            .getString(HttpConstants.ID_LOCATION));
+                    .set(R.string.pref_location, response.responseBundle
+                            .getString(HttpConstants.ID_LOCATION));
 
-            onUpNavigate();
+
+            final Bundle arguments = getArguments();
+            if (arguments != null) {
+                final Intent onwardIntent = arguments.getParcelable(Keys.ONWARD_INTENT);
+
+                if (onwardIntent != null) {
+                    startActivity(onwardIntent);
+                }
+
+
+            }
+
+            getActivity().setResult(ActionBarActivity.RESULT_OK);
+            getActivity().finish();
 
         }
     }
 
     @Override
     public void onBadRequestError(final int requestId,
-                    final IBlRequestContract request, final int errorCode,
-                    final String errorMessage, final Bundle errorResponseBundle) {
+                                  final IBlRequestContract request, final int errorCode,
+                                  final String errorMessage, final Bundle errorResponseBundle) {
         if (requestId == RequestId.FOURSQUARE_VENUES) {
             showCrouton(R.string.unable_to_fetch_hangouts, AlertStyle.ERROR);
         } else if (requestId == RequestId.FOURSQUARE_VENUES_WITHOUT_CATEGORIES) {
@@ -378,10 +381,11 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
     @Override
     public void onOtherError(int requestId, IBlRequestContract request,
-                    int errorCode) {
+                             int errorCode) {
 
         if (requestId == RequestId.FOURSQUARE_VENUES) {
-            fetchVenuesForLocationWithoutCategoryFilter(DeviceInfo.INSTANCE.getLatestLocation(), SEARCH_RADIUS_IN_METERS);
+            fetchVenuesForLocationWithoutCategoryFilter(DeviceInfo.INSTANCE.getLatestLocation(),
+                                                        SEARCH_RADIUS_IN_METERS);
         } else if (requestId == RequestId.FOURSQUARE_VENUES_WITHOUT_CATEGORIES) {
             showCrouton(R.string.unable_to_fetch_hangouts, AlertStyle.ERROR);
             mEmptyView.setVisibility(View.VISIBLE);
@@ -403,17 +407,17 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
     /**
      * Uploads the user preferred location to server
-     * 
-     * @param name The name of the location
-     * @param address The address of the location
-     * @param latitude The latitude of the location
+     *
+     * @param name      The name of the location
+     * @param address   The address of the location
+     * @param latitude  The latitude of the location
      * @param longitude The longitude of the location
      */
     private void setUserPreferredLocation(final String name,
-                    final String address, final double latitude,
-                    final double longitude, final String city,
-                    final String state, final String country,
-                    final String foursquareId) {
+                                          final String address, final double latitude,
+                                          final double longitude, final String city,
+                                          final String state, final String country,
+                                          final String foursquareId) {
 
         final JSONObject requestBody = new JSONObject();
         try {
@@ -427,7 +431,9 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
             requestBody.put(HttpConstants.FOURSQUARE_ID, foursquareId);
 
             final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                            + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody.toString(), mVolleyCallbacks);
+                    + ApiEndpoints.USER_PREFERRED_LOCATION, requestBody.toString(),
+                                                    mVolleyCallbacks
+            );
             addRequestToQueue(request, true, 0, true);
             request.setRequestId(RequestId.SET_USER_PREFERRED_LOCATION);
         } catch (final JSONException e) {
@@ -438,13 +444,14 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,
-                    long id) {
+                            long id) {
 
         if (parent.getId() == R.id.list_locations) {
 
             final Venue venue = (Venue) mSelectLocationAdapter
-                            .getItem(position);
-            setUserPreferredLocation(venue.name, venue.address, venue.latitude, venue.longitude, venue.city, venue.state, venue.country, venue.foursquareId);
+                    .getItem(position);
+            setUserPreferredLocation(venue.name, venue.address, venue.latitude, venue.longitude,
+                                     venue.city, venue.state, venue.country, venue.foursquareId);
         }
     }
 
@@ -462,7 +469,8 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
             }
 
             case R.id.text_try_again: {
-                fetchVenuesForLocation(DeviceInfo.INSTANCE.getLatestLocation(), SEARCH_RADIUS_IN_METERS);
+                fetchVenuesForLocation(DeviceInfo.INSTANCE.getLatestLocation(),
+                                       SEARCH_RADIUS_IN_METERS);
                 break;
             }
 
@@ -484,70 +492,69 @@ public class SelectPreferredLocationFragment extends AbstractBarterLiFragment
 
         mAddLocationDialogFragment = new AddSingleEditTextDialogFragment();
         mAddLocationDialogFragment
-                        .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.preferred_location, R.string.submit, R.string.cancel, 0, R.string.hint_location_name, getFragmentManager(), true, FragmentTags.DIALOG_ADD_NAME);
+                .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.preferred_location, R.string.submit,
+                      R.string.cancel, 0, R.string.hint_location_name, getFragmentManager(), true,
+                      FragmentTags.DIALOG_ADD_NAME);
     }
 
     /**
      * Whether this fragment will handle the particular dialog click or not
-     * 
+     *
      * @param dialog The dialog that was interacted with
-     * @return <code>true</code> If the fragment will handle it,
-     *         <code>false</code> otherwise
+     * @return <code>true</code> If the fragment will handle it, <code>false</code> otherwise
      */
     public boolean willHandleDialog(final DialogInterface dialog) {
 
         if ((mAddLocationDialogFragment != null)
-                        && mAddLocationDialogFragment.getDialog()
-                                        .equals(dialog)) {
+                && mAddLocationDialogFragment.getDialog()
+                                             .equals(dialog)) {
+            return true;
+        } else if ((mEnableLocationDialogFragment != null)
+                && mEnableLocationDialogFragment.getDialog()
+                                                .equals(dialog)) {
             return true;
         }
-        else if ((mEnableLocationDialogFragment != null)
-                    && mEnableLocationDialogFragment.getDialog()
-                                    .equals(dialog)) {
-        return true;
-    }
         return false;
     }
 
     /**
-     * Handle the click for the dialog. The fragment will receive this call,
-     * only if {@link #willHandleDialog(DialogInterface)} returns
-     * <code>true</code>
-     * 
+     * Handle the click for the dialog. The fragment will receive this call, only if {@link
+     * #willHandleDialog(DialogInterface)} returns <code>true</code>
+     *
      * @param dialog The dialog that was interacted with
-     * @param which The button that was clicked
+     * @param which  The button that was clicked
      */
     public void onDialogClick(final DialogInterface dialog, final int which) {
 
         if ((mAddLocationDialogFragment != null)
-                        && mAddLocationDialogFragment.getDialog()
-                                        .equals(dialog)) {
+                && mAddLocationDialogFragment.getDialog()
+                                             .equals(dialog)) {
 
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 final String locationName = mAddLocationDialogFragment
-                                .getName();
+                        .getName();
                 final double latitude = DeviceInfo.INSTANCE.getLatestLocation()
-                                .getLatitude();
+                                                           .getLatitude();
                 final double longitude = DeviceInfo.INSTANCE
-                                .getLatestLocation().getLongitude();
+                        .getLatestLocation().getLongitude();
 
                 if (!TextUtils.isEmpty(locationName)) {
                     setUserPreferredLocation(locationName, "", latitude, longitude, "", "", "", "");
                 }
             }
-        }
-        else if ((mEnableLocationDialogFragment != null)
+        } else if ((mEnableLocationDialogFragment != null)
                 && mEnableLocationDialogFragment.getDialog()
-                                .equals(dialog)) {
+                                                .equals(dialog)) {
 
-    if (which == DialogInterface.BUTTON_POSITIVE) { // enable location
-        Intent locationOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(locationOptionsIntent);
+            if (which == DialogInterface.BUTTON_POSITIVE) { // enable location
+                Intent locationOptionsIntent = new Intent(
+                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(locationOptionsIntent);
 
-    } else if (which == DialogInterface.BUTTON_NEGATIVE) { // cancel
-        dialog.cancel();
-    }
-}
+            } else if (which == DialogInterface.BUTTON_NEGATIVE) { // cancel
+                dialog.cancel();
+            }
+        }
     }
 
 }

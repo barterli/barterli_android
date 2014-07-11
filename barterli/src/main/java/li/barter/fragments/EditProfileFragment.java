@@ -49,6 +49,7 @@ import org.json.JSONObject;
 import java.io.File;
 
 import li.barter.R;
+import li.barter.activities.SelectPreferredLocationActivity;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -62,6 +63,7 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
@@ -295,17 +297,10 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     public void onClick(final View v) {
         switch (v.getId()) {
             case R.id.text_current_location: {
-                final Bundle args = new Bundle();
-                args.putBoolean(Keys.EDIT_MODE, true);
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                     .instantiate(getActivity(),
-                                                  SelectPreferredLocationFragment.class
-                                                          .getName(), args
-                                     ),
-                             FragmentTags.SELECT_PREFERRED_LOCATION_FROM_PROFILE, true,
-                             FragmentTags.BS_EDIT_PROFILE
-                );
 
+                final Intent editLocationIntent = new Intent(getActivity(),
+                                                             SelectPreferredLocationActivity.class);
+                startActivityForResult(editLocationIntent, AppConstants.RequestCodes.EDIT_PREFERRED_LOCATION);
                 break;
             }
 
@@ -345,6 +340,11 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 }
                 PhotoUtils.saveImage(mCompressedPhoto, "barterli_avatar_small.png");
                 break;
+
+            case AppConstants.RequestCodes.EDIT_PREFERRED_LOCATION: {
+                loadPreferredLocation();
+                break;
+            }
 
         }
     } // End of onActivityResult
