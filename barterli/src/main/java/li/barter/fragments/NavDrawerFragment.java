@@ -27,6 +27,7 @@ import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AuthActivity;
+import li.barter.activities.HomeActivity;
 import li.barter.activities.SettingsActivity;
 import li.barter.activities.UserProfileActivity;
 import li.barter.adapters.NavDrawerAdapter;
@@ -57,15 +58,15 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
      */
     private final        BroadcastReceiver mUserInfoUpdatedBroadcastReceiver = new
             BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction() != null && intent.getAction()
-                                                    .equals(AppConstants
-                                                                    .ACTION_USER_INFO_UPDATED)) {
-                updateLoggedInStatus();
-            }
-        }
-    };
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (intent.getAction() != null && intent.getAction()
+                                                            .equals(AppConstants
+                                                                            .ACTION_USER_INFO_UPDATED)) {
+                        updateLoggedInStatus();
+                    }
+                }
+            };
     /**
      * ListView to provide Nav drawer content
      */
@@ -262,7 +263,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
                                                                 AnalyticsConstants.Actions
-                                                                        .NAVIGATION_OPTION)
+                                                                        .NAVIGATION_OPTION
+                        )
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.PROFILE));
                 /*
@@ -299,16 +301,16 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
             //Find Books
             case 1: {
 
-                if (masterFragment != null && masterFragment instanceof BooksAroundMeFragment) {
+                if (getActivity() != null && getActivity() instanceof HomeActivity) {
                     return null;
                 }
                 runnable = new Runnable() {
                     @Override
                     public void run() {
 
-                        getFragmentManager()
-                                .popBackStack(AppConstants.FragmentTags.BS_BOOKS_AROUND_ME,
-                                              0);
+                        final Intent homeActivity = new Intent(getActivity(), HomeActivity.class);
+                        homeActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(homeActivity);
                     }
                 };
 
@@ -322,7 +324,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
                                                                 AnalyticsConstants.Actions
-                                                                        .NAVIGATION_OPTION)
+                                                                        .NAVIGATION_OPTION
+                        )
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.CHATS));
                 if ((masterFragment != null)
@@ -364,7 +367,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
                                                                 AnalyticsConstants.Actions
-                                                                        .NAVIGATION_OPTION)
+                                                                        .NAVIGATION_OPTION
+                        )
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.SHARE));
                 runnable = new Runnable() {
@@ -394,7 +398,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
                                                                 AnalyticsConstants.Actions
-                                                                        .NAVIGATION_OPTION)
+                                                                        .NAVIGATION_OPTION
+                        )
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.RATE_US));
 
@@ -419,7 +424,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
                                                                 AnalyticsConstants.Actions
-                                                                        .NAVIGATION_OPTION)
+                                                                        .NAVIGATION_OPTION
+                        )
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.REPORT_BUG));
                 if ((masterFragment != null)
@@ -448,7 +454,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                         .getInstance()
                         .sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE,
                                                                 AnalyticsConstants.Actions
-                                                                        .NAVIGATION_OPTION)
+                                                                        .NAVIGATION_OPTION
+                        )
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.ABOUT_US));
                 if ((masterFragment != null)
@@ -534,6 +541,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                                                     UserProfileActivity.class);
         userProfileIntent.putExtra(AppConstants.Keys.USER_ID,
                                    AppConstants.UserInfo.INSTANCE.getId());
+        userProfileIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(userProfileIntent);
     }
 }

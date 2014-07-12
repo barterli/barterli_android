@@ -21,8 +21,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -48,6 +48,7 @@ import java.util.Locale;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.activities.AddOrEditBookActivity;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -127,7 +128,8 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
         getActivity().getWindow()
                      .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                                               | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                                               | WindowManager.LayoutParams
+                             .SOFT_INPUT_STATE_HIDDEN);
         mDeleteBookDialogFragment = (AlertDialogFragment) getFragmentManager()
                 .findFragmentByTag(FragmentTags.DIALOG_DELETE_BOOK);
 
@@ -140,7 +142,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             mLoadedIndividually = true;
         }
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
             mBookDetails = getArguments();
         } else {
             mBookDetails = savedInstanceState.getBundle(Keys.BOOK_DETAILS);
@@ -367,12 +369,13 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 final Bundle args = new Bundle(2);
                 args.putString(Keys.ID, mId);
                 args.putBoolean(Keys.EDIT_MODE, true);
-                args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BOOKS_AROUND_ME);
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                     .instantiate(getActivity(), AddOrEditBookFragment.class
-                                             .getName(), args), FragmentTags.ADD_OR_EDIT_BOOK, true,
-                             FragmentTags.BS_EDIT_BOOK
-                );
+
+                final Intent editBookIntent = new Intent(getActivity(),
+                                                         AddOrEditBookActivity.class);
+                editBookIntent.putExtra(Keys.ID, mId);
+                editBookIntent.putExtra(Keys.EDIT_MODE, true);
+
+                startActivityForResult(editBookIntent, AppConstants.RequestCodes.EDIT_BOOK);
 
                 return true;
             }
@@ -385,6 +388,17 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
             default: {
                 return super.onOptionsItemSelected(item);
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+
+        if (requestCode == AppConstants.RequestCodes.EDIT_BOOK && resultCode == ActionBarActivity
+                .RESULT_OK) {
+            updateBookDetails(data.getExtras());
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 

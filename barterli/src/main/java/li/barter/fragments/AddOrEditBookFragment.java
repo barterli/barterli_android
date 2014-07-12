@@ -16,9 +16,11 @@
 
 package li.barter.fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -121,7 +123,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         mGoogleBooksApiKey = getString(R.string.google_maps_v2_api_key);
         getActivity().getWindow()
                      .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                                               | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                                               | WindowManager.LayoutParams
+                             .SOFT_INPUT_STATE_HIDDEN);
         final Bundle extras = getArguments();
 
         // If extras are null, it means that user has to decided to add the
@@ -623,13 +626,16 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             }
 
             case RequestId.CREATE_BOOK: {
-                Logger.v(TAG, "Created Book Id %s", response.responseBundle
-                        .getString(HttpConstants.ID_BOOK));
 
                 final String bookId = response.responseBundle
                         .getString(HttpConstants.ID);
                 loadBookDetails(QueryTokens.LOAD_BOOK_DETAIL_FOR_OPEN, bookId);
 
+                break;
+            }
+
+            case RequestId.UPDATE_BOOK: {
+                loadBookDetails(QueryTokens.LOAD_BOOK_DETAIL_FOR_OPEN, mId);
                 break;
             }
 
@@ -643,26 +649,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                     mTitleEditText.onSuggestionsFetched((String) request
                             .getExtras().get(Keys.SEARCH), fetchedSuggestions, true);
                 }
-                break;
-
-            }
-
-            case RequestId.UPDATE_BOOK: {
-
-                showCrouton(R.string.book_updated, AlertStyle.ALERT);
-                getFragmentManager().popBackStack();
-                /*final Bundle showBooksArgs = new Bundle(6);
-                showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-                showBooksArgs.putString(Keys.USER_ID, UserInfo.INSTANCE.getId());
-                showBooksArgs.putBoolean(Keys.RELOAD, true);
-                final FragmentManager fm = getActivity()
-                                .getSupportFragmentManager();
-                for (int i = 0; i < fm.getBackStackEntryCount(); i++) {
-                    fm.popBackStack();
-                }
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                .instantiate(getActivity(), BooksAroundMeFragment.class
-                                                .getName(), showBooksArgs), FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT, true, FragmentTags.BS_BOOKS_AROUND_ME);*/
                 break;
 
             }
@@ -739,12 +725,23 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                                 final Cursor cursor) {
         if (token == QueryTokens.LOAD_BOOK_DETAIL_FOR_EDIT) {
             if (cursor.moveToFirst()) {
+
+                /* Force a crash if trying to edit someone else's book. This should not happen in
+                 production */
+                final String userId = cursor
+                        .getString(cursor.getColumnIndex(DatabaseColumns.USER_ID));
+
+                if (!userId.equals(AppConstants.UserInfo.INSTANCE.getId())) {
+                    throw new RuntimeException("Trying to edit someone else's book!");
+                }
                 mIsbnEditText.setText(cursor.getString(cursor
                                                                .getColumnIndex(
                                                                        DatabaseColumns.ISBN_10)));
                 mTitleEditText.setTextWithFilter(cursor.getString(cursor
                                                                           .getColumnIndex(
-                                                                                  DatabaseColumns.TITLE)),
+                                                                                  DatabaseColumns
+                                                                                          .TITLE
+                                                                          )),
                                                  false
                 );
                 mAuthorEditText.setText(cursor.getString(cursor
@@ -752,7 +749,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
                                                                          DatabaseColumns.AUTHOR)));
                 mDescriptionEditText.setText(cursor.getString(cursor
                                                                       .getColumnIndex(
-                                                                              DatabaseColumns.DESCRIPTION)));
+                                                                              DatabaseColumns
+                                                                                      .DESCRIPTION
+                                                                      )));
 
                 mPublicationYear = cursor
                         .getString(cursor
@@ -773,7 +772,9 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
                 final String barterType = cursor.getString(cursor
                                                                    .getColumnIndex(
-                                                                           DatabaseColumns.BARTER_TYPE));
+                                                                           DatabaseColumns
+                                                                                   .BARTER_TYPE
+                                                                   ));
 
                 if (!TextUtils.isEmpty(barterType)) {
                     setBarterCheckboxes(barterType);
@@ -786,13 +787,10 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
             if (cursor.moveToFirst()) {
 
                 final Bundle showBooksArgs = Utils.cursorToBundle(cursor);
-                showBooksArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                     .instantiate(getActivity(), BookDetailFragment.class
-                                             .getName(), showBooksArgs),
-                             FragmentTags.MY_BOOK_FROM_ADD_OR_EDIT,
-                             true, FragmentTags.BS_BOOK_DETAIL
-                );
+                final Intent resultIntent = new Intent();
+                resultIntent.putExtras(showBooksArgs);
+                getActivity().setResult(ActionBarActivity.RESULT_OK, resultIntent);
+                getActivity().finish();
             }
         }
     }
@@ -820,9 +818,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
     /**
      * Function to see if a string is numeric
-     *
-     * @param str
-     * @return
      */
 
     private boolean isNumeric(final String str) {

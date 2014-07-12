@@ -23,10 +23,10 @@ import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,6 +49,8 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.activities.AddOrEditBookActivity;
+import li.barter.activities.BookDetailActivity;
 import li.barter.activities.ScanIsbnActivity;
 import li.barter.activities.SearchBookPagerActivity;
 import li.barter.adapters.BooksGridAdapter;
@@ -60,6 +62,7 @@ import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
+import li.barter.data.DatabaseColumns;
 import li.barter.data.SQLiteLoader;
 import li.barter.data.TableSearchBooks;
 import li.barter.data.ViewSearchBooksWithLocations;
@@ -343,8 +346,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,
                                  final Intent data) {
-        if ((requestCode == RequestCodes.SCAN_ISBN)
-                && (resultCode == ResultCodes.SUCCESS)) {
+        if (requestCode == RequestCodes.SCAN_ISBN
+                && resultCode == ResultCodes.SUCCESS) {
 
             Bundle args = null;
             if (data != null) {
@@ -353,6 +356,14 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             loadAddOrEditBookFragment(args);
 
+        } else if (requestCode == RequestCodes.ADD_BOOK && resultCode == ActionBarActivity
+                .RESULT_OK) {
+
+            final String bookId = data.getStringExtra(DatabaseColumns.ID);
+
+            final Intent bookDetailIntent = new Intent(getActivity(), BookDetailActivity.class);
+            bookDetailIntent.putExtra(Keys.ID, bookId);
+            startActivity(bookDetailIntent);
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -495,10 +506,13 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void loadAddOrEditBookFragment(final Bundle bookInfo) {
 
-        loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                .instantiate(getActivity(), AddOrEditBookFragment.class
-                        .getName(), bookInfo), FragmentTags.ADD_OR_EDIT_BOOK, true,
-                     FragmentTags.BS_BOOKS_AROUND_ME);
+
+        final Intent addBookIntent = new Intent(getActivity(), AddOrEditBookActivity.class);
+        if (bookInfo != null) {
+            addBookIntent.putExtras(bookInfo);
+        }
+        startActivityForResult(addBookIntent, RequestCodes.ADD_BOOK);
+
     }
 
     @Override

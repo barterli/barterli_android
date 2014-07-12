@@ -110,6 +110,10 @@
             android:label="@string/app_name"/>
 
         <activity
+            android:name="li.barter.activities.AddOrEditBookActivity"
+            android:label="@string/app_name"/>
+
+        <activity
             android:name="li.barter.activities.SettingsActivity"
             android:label="@string/app_name"
             android:parentActivityName="li.barter.activities.HomeActivity">
