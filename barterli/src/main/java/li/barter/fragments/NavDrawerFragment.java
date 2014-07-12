@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso;
 
 import li.barter.BarterLiApplication;
 import li.barter.R;
+import li.barter.activities.AboutUsActivity;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AuthActivity;
 import li.barter.activities.HomeActivity;
@@ -301,7 +302,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
             //Find Books
             case 1: {
 
-                if (getActivity() != null && getActivity() instanceof HomeActivity) {
+                if (getActivity() instanceof HomeActivity) {
                     return null;
                 }
                 runnable = new Runnable() {
@@ -458,20 +459,18 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                         )
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.ABOUT_US));
-                if ((masterFragment != null)
-                        && (masterFragment instanceof TeamFragment)) {
+
+                if (getActivity() instanceof AboutUsActivity) {
                     return null;
                 }
 
                 runnable = new Runnable() {
                     @Override
                     public void run() {
-                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                             .instantiate(getActivity(), AboutUsPagerFragment.class
-                                                     .getName(), null),
-                                     AppConstants.FragmentTags.TEAM, true,
-                                     null
-                        );
+
+                        final Intent aboutUsIntent = new Intent(getActivity(), AboutUsActivity.class);
+                        aboutUsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(aboutUsIntent);
                     }
                 };
 
