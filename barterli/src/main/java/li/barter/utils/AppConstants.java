@@ -264,6 +264,7 @@ public class AppConstants {
         public static final int EDIT_PREFERRED_LOCATION = 103;
         public static final int EDIT_BOOK               = 104;
         public static final int ADD_BOOK                = 105;
+        public static final int EDIT_PROFILE            = 106;
     }
 
     /**

@@ -1,0 +1,68 @@
+package li.barter.activities;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+
+import li.barter.R;
+import li.barter.fragments.AbstractBarterLiFragment;
+import li.barter.fragments.EditProfileFragment;
+import li.barter.http.IBlRequestContract;
+import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
+
+/**
+ * Activity to edit the user's profile
+ * <p/>
+ * Created by vinay.shenoy on 12/07/14.
+ */
+public class EditProfileActivity extends AbstractDrawerActivity {
+
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_drawer);
+        initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer);
+        if (savedInstanceState == null) {
+            loadEditProfileFragment();
+        }
+    }
+
+    /**
+     * Loads the Edit user profile fragment into the screen
+     */
+    private void loadEditProfileFragment() {
+
+        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment.instantiate(this,
+                                                                                         EditProfileFragment.class
+                                                                                                 .getName()),
+                     AppConstants.FragmentTags.EDIT_PROFILE, false, null
+        );
+    }
+
+    @Override
+    protected boolean isDrawerActionBarToggleEnabled() {
+        return false;
+    }
+
+    @Override
+    protected String getAnalyticsScreenName() {
+        return null;
+    }
+
+    @Override
+    protected Object getTaskTag() {
+        return hashCode();
+    }
+
+    @Override
+    public void onSuccess(final int requestId, final IBlRequestContract request,
+                          final ResponseInfo response) {
+
+    }
+
+    @Override
+    public void onBadRequestError(final int requestId, final IBlRequestContract request, final
+    int errorCode, final String errorMessage, final Bundle errorResponseBundle) {
+
+    }
+}

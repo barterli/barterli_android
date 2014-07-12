@@ -27,6 +27,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,6 +48,7 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.activities.EditProfileActivity;
 import li.barter.adapters.ProfileFragmentsAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.analytics.GoogleAnalyticsManager;
@@ -281,9 +283,9 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case R.id.action_edit_profile: {
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), EditProfileFragment.class
-                                .getName(), null), FragmentTags.EDIT_PROFILE, true, FragmentTags.BS_EDIT_PROFILE);
+
+                startActivityForResult(new Intent(getActivity(), EditProfileActivity.class),
+                                       AppConstants.RequestCodes.EDIT_PROFILE);
                 return true;
             }
 
@@ -291,6 +293,20 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                 return super.onOptionsItemSelected(item);
             }
         }
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+
+        if(requestCode == AppConstants.RequestCodes.EDIT_PROFILE) {
+
+            if(resultCode == ActionBarActivity.RESULT_OK) {
+                loadUserDetails();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
     }
 
     @Override

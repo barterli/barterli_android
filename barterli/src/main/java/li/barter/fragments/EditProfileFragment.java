@@ -28,7 +28,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,7 +65,6 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.PhotoUtils;
@@ -114,6 +113,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         setHasOptionsMenu(true);
         final View view = inflater
                 .inflate(R.layout.fragment_profile_edit, null);
+        setActionBarTitle(R.string.text_edit_profile);
 
         mFirstNameTextView = (TextView) view.findViewById(R.id.text_first_name);
         mLastNameTextView = (TextView) view.findViewById(R.id.text_last_name);
@@ -196,7 +196,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         switch (item.getItemId()) {
 
             case android.R.id.home: {
-                onUpNavigate();
+                getActivity().finish();
                 return true;
             }
 
@@ -266,16 +266,19 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
             if (cursor.moveToFirst()) {
                 final String mPrefPlaceName = cursor.getString(cursor
                                                                        .getColumnIndex(
-                                                                               DatabaseColumns.NAME));
+                                                                               DatabaseColumns
+                                                                                       .NAME));
                 final String mPrefPlaceAddress = cursor.getString(cursor
                                                                           .getColumnIndex(
-                                                                                  DatabaseColumns.ADDRESS));
+                                                                                  DatabaseColumns
+                                                                                          .ADDRESS));
 
                 if (!TextUtils.isEmpty(mPrefPlaceName)) {
                     final String preferredLocation = getString(R.string.format_address_underline,
                                                                mPrefPlaceName,
                                                                (TextUtils.isEmpty(
-                                                                       mPrefPlaceAddress) ? "" : mPrefPlaceAddress)
+                                                                       mPrefPlaceAddress) ? "" :
+                                                                       mPrefPlaceAddress)
                     );
                     mPreferredLocationTextView.setText(preferredLocation);
                 }
@@ -300,7 +303,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
                 final Intent editLocationIntent = new Intent(getActivity(),
                                                              SelectPreferredLocationActivity.class);
-                startActivityForResult(editLocationIntent, AppConstants.RequestCodes.EDIT_PREFERRED_LOCATION);
+                startActivityForResult(editLocationIntent,
+                                       AppConstants.RequestCodes.EDIT_PREFERRED_LOCATION);
                 break;
             }
 
@@ -399,7 +403,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     private void saveProfileInfoToServer(final String firstName,
                                          final String lastName, final String aboutMeDescription,
-                                         final Boolean shouldIncludePic, final String profilePicPath) {
+                                         final Boolean shouldIncludePic,
+                                         final String profilePicPath) {
 
         final String url = HttpConstants.getApiBaseUrl()
                 + ApiEndpoints.UPDATE_USER_INFO;
@@ -448,7 +453,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
             final Bundle userInfo = response.responseBundle;
             Utils.updateUserInfoFromBundle(userInfo, true);
-            onUpNavigate();
+            getActivity().setResult(ActionBarActivity.RESULT_OK);
+            getActivity().finish();
         }
 
     }
