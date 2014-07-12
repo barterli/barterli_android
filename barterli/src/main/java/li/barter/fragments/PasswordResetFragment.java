@@ -1,23 +1,22 @@
-/*******************************************************************************
- * Copyright 2014, barter.li
+/*
+ * Copyright (C) 2014 barter.li
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and
+  * limitations under the License.
+ */
 
 package li.barter.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,17 +46,17 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.Logger;
 import li.barter.utils.Utils;
 
 /**
- * @author Anshul Kamboj Fragment to reset the password after receiving the token
- *         via email
+ * @author Anshul Kamboj Fragment to reset the password after receiving the token via email
  */
 
-@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
+@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out,
+                    popEnterAnimation = R.anim.zoom_in,
+                    popExitAnimation = R.anim.slide_out_to_right)
 public class PasswordResetFragment extends AbstractBarterLiFragment implements
         OnClickListener {
 
@@ -67,11 +66,11 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
      * Minimum length of the entered password
      */
     private final int mMinPasswordLength = 8;
-    private Button mResetButton;
+    private Button   mResetButton;
     private EditText mTokenEditText;
     private EditText mNewPasswordEditText;
     private EditText mConfirmNewPasswordEditText;
-    private String mEmailId;
+    private String   mEmailId;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -113,9 +112,12 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
                 if (isInputValid()) {
                     GoogleAnalyticsManager
                             .getInstance()
-                            .sendEvent(new EventBuilder(Categories.CONVERSION, Actions.SIGN_IN_ATTEMPT)
-                                    .set(ParamKeys.TYPE, ParamValues.RESET));
-                    callPasswordReset(mTokenEditText.getText().toString(), mNewPasswordEditText.getText().toString(), mEmailId);
+                            .sendEvent(
+                                    new EventBuilder(Categories.CONVERSION, Actions.SIGN_IN_ATTEMPT)
+                                            .set(ParamKeys.TYPE, ParamValues.RESET)
+                            );
+                    callPasswordReset(mTokenEditText.getText().toString(),
+                                      mNewPasswordEditText.getText().toString(), mEmailId);
                 }
                 break;
             }
@@ -156,11 +158,10 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
 
 
     /**
-     * Validates the text fields for resetting a password. Automatically sets the
-     * error messages for the text fields
+     * Validates the text fields for resetting a password. Automatically sets the error messages for
+     * the text fields
      *
-     * @return <code>true</code> If the input is valid, <code>false</code>
-     * otherwise
+     * @return <code>true</code> If the input is valid, <code>false</code> otherwise
      */
     private boolean isInputValid() {
 
@@ -184,7 +185,8 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
             isValid &= (password.length() >= mMinPasswordLength);
             if (!isValid) {
                 mNewPasswordEditText
-                        .setError(getString(R.string.error_password_minimum_length, mMinPasswordLength));
+                        .setError(getString(R.string.error_password_minimum_length,
+                                            mMinPasswordLength));
             }
         }
         if (isValid) {
@@ -209,41 +211,15 @@ public class PasswordResetFragment extends AbstractBarterLiFragment implements
             Utils.updateUserInfoFromBundle(userInfo, true);
             BarterLiApplication.startChatService();
 
-            final String locationId = userInfo
-                    .getString(HttpConstants.LOCATION);
-            if (TextUtils.isEmpty(locationId)) {
-                final Bundle myArgs = getArguments();
-                Bundle preferredLocationArgs = null;
-
-                if (myArgs != null) {
-                    preferredLocationArgs = new Bundle(myArgs);
-                    preferredLocationArgs.putString(Keys.USER_ID, userInfo
-                            .getString(HttpConstants.ID_USER));
-                }
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), SelectPreferredLocationFragment.class
-                                .getName(), preferredLocationArgs), FragmentTags.SELECT_PREFERRED_LOCATION_FROM_LOGIN, true, FragmentTags.BS_PREFERRED_LOCATION);
-
-            } else {
-                final String tag = getTag();
-                if (tag.equals(FragmentTags.PASSWORD_RESET)) {
-
-                    final Bundle args = new Bundle(1);
-                    args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_BOOKS_AROUND_ME);
-                    args.putString(Keys.USER_ID, userInfo
-                            .getString(HttpConstants.ID_USER));
-
-                    loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                            .instantiate(getActivity(), ProfileFragment.class
-                                    .getName(), args), FragmentTags.PROFILE_FROM_LOGIN, true, FragmentTags.BS_PROFILE);
-
-                } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
-                    onUpNavigate();
-                } else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
-                    onUpNavigate();
-                }
-
+            final Intent returnIntent = new Intent();
+            final Bundle arguments = getArguments();
+            if (arguments != null && arguments.containsKey(Keys.ONWARD_INTENT)) {
+                returnIntent
+                        .putExtra(Keys.ONWARD_INTENT, arguments.getParcelable(Keys.ONWARD_INTENT));
             }
+
+            getActivity().setResult(ActionBarActivity.RESULT_OK, returnIntent);
+            getActivity().finish();
 
         }
 

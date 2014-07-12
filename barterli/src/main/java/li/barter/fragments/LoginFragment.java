@@ -1,18 +1,16 @@
-/*******************************************************************************
- * Copyright 2014, barter.li
+/*
+ * Copyright (C) 2014 barter.li
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and
+  * limitations under the License.
+ */
 
 package li.barter.fragments;
 
@@ -21,7 +19,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,8 +48,8 @@ import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.AuthActivity;
+import li.barter.activities.PasswordResetActivity;
 import li.barter.activities.SelectPreferredLocationActivity;
-import li.barter.activities.UserProfileActivity;
 import li.barter.analytics.AnalyticsConstants.Actions;
 import li.barter.analytics.AnalyticsConstants.Categories;
 import li.barter.analytics.AnalyticsConstants.ParamKeys;
@@ -146,9 +144,18 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,
                                  final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == AppConstants.RequestCodes.RESET_PASSWORD && resultCode ==
+                ActionBarActivity.RESULT_OK) {
+
+            getActivity().setResult(ActionBarActivity.RESULT_OK, data);
+            getActivity().finish();
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
         Session.getActiveSession()
                .onActivityResult(getActivity(), requestCode, resultCode, data);
+
 
     }
 
@@ -366,59 +373,28 @@ public class LoginFragment extends AbstractBarterLiFragment implements
 
             final String locationId = userInfo
                     .getString(HttpConstants.LOCATION);
-            Intent onwardIntent;
+            Intent returnIntent = getDefaultOnwardIntent();
             if (TextUtils.isEmpty(locationId)) {
-                onwardIntent = new Intent(getActivity(), SelectPreferredLocationActivity.class);
-                final Intent userProfileIntent = new Intent(getActivity(),
-                                                            UserProfileActivity.class);
-                userProfileIntent.putExtra(AppConstants.Keys.USER_ID, UserInfo.INSTANCE.getId());
-                onwardIntent.putExtra(Keys.ONWARD_INTENT, userProfileIntent);
-
-            } else {
-
-                onwardIntent = new Intent(getActivity(), UserProfileActivity.class);
-                onwardIntent.putExtra(AppConstants.Keys.USER_ID,
-                                      AppConstants.UserInfo.INSTANCE.getId());
-
+                returnIntent = new Intent(getActivity(), SelectPreferredLocationActivity.class);
+                returnIntent.putExtra(Keys.ONWARD_INTENT, getDefaultOnwardIntent());
             }
 
             final Intent data = new Intent();
-            data.putExtra(Keys.ONWARD_INTENT, onwardIntent);
-            getActivity().setResult(Activity.RESULT_OK, onwardIntent);
+            data.putExtra(Keys.ONWARD_INTENT, returnIntent);
+            getActivity().setResult(Activity.RESULT_OK, returnIntent);
             getActivity().finish();
 
         } else if (requestId == RequestId.REQUEST_RESET_TOKEN) {
-            Bundle args = new Bundle(1);
 
-            args.putString(Keys.EMAIL, mEmailForPasswordChange);
+            final Intent resetPasswordIntent = new Intent(getActivity(),
+                                                          PasswordResetActivity.class);
+            resetPasswordIntent.putExtra(Keys.EMAIL, mEmailForPasswordChange);
 
-            final String tag = getTag();
-            if (tag.equals(FragmentTags.LOGIN_FROM_NAV_DRAWER)) {
-
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                     .instantiate(getActivity(), PasswordResetFragment.class
-                                             .getName(), args), FragmentTags.PASSWORD_RESET, true,
-                             FragmentTags.LOGIN_FROM_NAV_DRAWER
-                );
-
-            } else if (tag.equals(FragmentTags.LOGIN_TO_ADD_BOOK)) {
-                args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                     .instantiate(getActivity(), PasswordResetFragment.class
-                                             .getName(), args), FragmentTags.LOGIN_TO_ADD_BOOK,
-                             true,
-                             FragmentTags.LOGIN_FROM_NAV_DRAWER
-                );
-            } else if (tag.equals(FragmentTags.LOGIN_TO_CHAT)) {
-                args.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                     .instantiate(getActivity(), PasswordResetFragment.class
-                                             .getName(), args), FragmentTags.LOGIN_TO_CHAT, true,
-                             FragmentTags.LOGIN_FROM_NAV_DRAWER
-                );
-
+            if(getArguments() != null) {
+                resetPasswordIntent.putExtras(getArguments());
             }
 
+            startActivityForResult(resetPasswordIntent, AppConstants.RequestCodes.RESET_PASSWORD);
         }
 
     }
@@ -479,6 +455,22 @@ public class LoginFragment extends AbstractBarterLiFragment implements
     @Override
     protected String getAnalyticsScreenName() {
         return Screens.LOGIN;
+    }
+
+    /**
+     * If an onward intent has been specified, provides that.
+     * <p/>
+     * Otherwise, just creates a default intent to open the user's profile
+     */
+    private Intent getDefaultOnwardIntent() {
+
+        final Bundle extras = getArguments();
+
+        if (extras != null && extras.containsKey(Keys.ONWARD_INTENT)) {
+            return extras.getParcelable(Keys.ONWARD_INTENT);
+        } else {
+            return null;
+        }
     }
 
 }
