@@ -311,6 +311,7 @@ public class AppConstants {
         public static final String BOOK_COUNT            = "book_count";
         public static final String EMAIL                 = "email";
         public static final String ONWARD_INTENT         = "onward_intent";
+        public static final String FINISH_ON_BACK        = "finish_on_back";
 
         /**
          * The time at which this screen was last seen. Used for google analytics to detect whether
@@ -321,6 +322,7 @@ public class AppConstants {
         public static final String OVERLAY_VISIBLE  = "overlay_visible";
         public static final String BOOK_DETAILS     = "book_details";
         public static final String USER_INFO        = "user_info";
+        public static final String LOAD_CHAT        = "load_chat";
     }
 
     /**

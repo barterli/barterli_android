@@ -22,10 +22,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,11 +65,13 @@ import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
+import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.Logger;
+import li.barter.utils.Utils;
 
 /**
  * Activity for displaying all the ongoing chats
@@ -96,11 +100,19 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     private final String mChatSelectionForDelete = DatabaseColumns.CHAT_ID
             + SQLConstants.EQUALS_ARG;
 
+    /** Whether a chat message should be loaded immediately on opening */
+    private boolean mShouldLoadChat;
+
+    /** Id of the user to load immediately on opening */
+    private String mUserIdToLoad;
+
 
     /**
      * Reference to the Dialog Fragment for selecting the chat options
      */
     private SingleChoiceDialogFragment mChatDialogFragment;
+
+    private final Handler mHandler = new Handler();
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
@@ -117,6 +129,23 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
         mChatsListView.setOnItemLongClickListener(this);
         mChatDialogFragment = (SingleChoiceDialogFragment) getFragmentManager()
                 .findFragmentByTag(FragmentTags.DIALOG_CHAT_LONGCLICK);
+
+        if (savedInstanceState == null) {
+
+            final Bundle args = getArguments();
+
+            if (args != null) {
+                mShouldLoadChat = args.getBoolean(Keys.LOAD_CHAT);
+
+                if (mShouldLoadChat) {
+                    mUserIdToLoad = args.getString(Keys.USER_ID);
+                }
+
+                if (TextUtils.isEmpty(mUserIdToLoad)) {
+                    mShouldLoadChat = false;
+                }
+            }
+        }
         getLoaderManager().restartLoader(Loaders.ALL_CHATS, null, this);
         return view;
     }
@@ -183,7 +212,22 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         if (loader.getId() == Loaders.ALL_CHATS) {
+
             mChatsAdapter.swapCursor(cursor);
+            if (mShouldLoadChat) {
+
+                if (isAttached()) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadChat(mUserIdToLoad);
+                            //We only need to load on very launch of activity
+                            mShouldLoadChat = false;
+                        }
+                    });
+                }
+
+            }
         }
 
     }
@@ -204,33 +248,65 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
 
             final Cursor cursor = (Cursor) mChatsAdapter.getItem(position);
 
-            final Bundle args = new Bundle(2);
-            args.putString(Keys.CHAT_ID, cursor.getString(cursor
-                                                                  .getColumnIndex(
-                                                                          DatabaseColumns
-                                                                                  .CHAT_ID
-                                                                  )));
-            args.putString(Keys.USER_ID, cursor.getString(cursor
-                                                                  .getColumnIndex(
-                                                                          DatabaseColumns
-                                                                                  .USER_ID
-                                                                  )));
+            loadChat(cursor.getString(cursor
+                                              .getColumnIndex(
+                                                      DatabaseColumns
+                                                              .USER_ID
+                                              )), cursor.getString(cursor
+                                                                           .getColumnIndex(
+                                                                                   DatabaseColumns
+                                                                                           .CHAT_ID
+                                                                           )));
+        }
+    }
 
-            ChatDetailsFragment chatDetailsFragment = (ChatDetailsFragment) getFragmentManager()
-                    .findFragmentByTag(FragmentTags.CHAT_DETAILS);
+    /**
+     * Loads a chat directly. This is used in the case where the user directly taps on a chat button
+     * on another user's profile page
+     */
+    private void loadChat(String userId) {
+
+        //TODO: Vinay - Set the actual chat item highlighted
+
+        final String chatId = Utils
+                .generateChatId(userId, AppConstants.UserInfo.INSTANCE.getId());
+
+        loadChat(userId, chatId);
+    }
+
+    /**
+     * Loads the actual chat screen. This is used in the case where the user taps on an item in the
+     * list of chats
+     *
+     * @param userId The user Id of the chat to load
+     * @param chatId The ID of the chat
+     */
+    private void loadChat(String userId, String chatId) {
+
+        final Bundle args = new Bundle(3);
+
+        args.putString(Keys.USER_ID, userId);
+        args.putString(Keys.CHAT_ID, chatId);
+
+        /*If Loaded directly, ensure that pressing back will finish the Activity*/
+        if (mShouldLoadChat) {
+            args.putBoolean(Keys.FINISH_ON_BACK, true);
+        }
+
+        ChatDetailsFragment chatDetailsFragment = (ChatDetailsFragment) getFragmentManager()
+                .findFragmentByTag(FragmentTags.CHAT_DETAILS);
 
             /*Chat details fragment will not be null in case of a multi-pane layout.
              * Makes no sense to instantiate a new fragment. Instead we just update
              * the one that's already visible*/
-            if (chatDetailsFragment != null && chatDetailsFragment.isResumed()) {
-                chatDetailsFragment.updateUserInfo(args);
+        if (chatDetailsFragment != null && chatDetailsFragment.isResumed()) {
+            chatDetailsFragment.updateUserInfo(args);
 
-            } else {
+        } else {
 
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), ChatDetailsFragment.class
-                                .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
-            }
+            loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
+                    .instantiate(getActivity(), ChatDetailsFragment.class
+                            .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
         }
     }
 

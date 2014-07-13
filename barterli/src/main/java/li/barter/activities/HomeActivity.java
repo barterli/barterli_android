@@ -1,22 +1,23 @@
 /*
  * Copyright (C) 2014 barter.li
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and
+  * limitations under the License.
  */
 
 package li.barter.activities;
 
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.view.View;
-import android.widget.FrameLayout;
 
 import com.android.volley.Request.Method;
 import com.facebook.AppEventsLogger;
@@ -30,7 +31,6 @@ import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
 import li.barter.fragments.ChatDetailsFragment;
 import li.barter.fragments.ChatsFragment;
-import li.barter.fragments.LoginFragment;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
@@ -43,10 +43,7 @@ import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
-import li.barter.utils.GooglePlusManager;
-import li.barter.utils.GooglePlusManager.GooglePlusAuthCallback;
 import li.barter.utils.SharedPreferenceHelper;
-import li.barter.utils.Utils;
 
 /**
  * @author Vinay S Shenoy Main Activity for holding the Navigation Drawer and manages loading
@@ -102,7 +99,8 @@ public class HomeActivity extends AbstractDrawerActivity implements
     protected void onResume() {
         super.onResume();
 
-        // Call the 'activateApp' method to log an app event for use in analytics and advertising reporting.  Do so in
+        // Call the 'activateApp' method to log an app event for use in analytics and advertising
+        // reporting.  Do so in
         // the onResume methods of the primary Activities that an app may be launched into.
         AppEventsLogger.activateApp(this);
         if (DeviceInfo.INSTANCE.isNetworkConnected()) {
@@ -159,8 +157,10 @@ public class HomeActivity extends AbstractDrawerActivity implements
     private void loadChatsFragment() {
 
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                .instantiate(this, ChatsFragment.class.getName(), null), FragmentTags.CHATS, false,
-                     null);
+                             .instantiate(this, ChatsFragment.class.getName(), null),
+                     FragmentTags.CHATS, false,
+                     null
+        );
 
     }
 
@@ -180,8 +180,9 @@ public class HomeActivity extends AbstractDrawerActivity implements
         args.putString(Keys.CHAT_ID, chatId);
         args.putString(Keys.USER_ID, userId);
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                .instantiate(this, ChatDetailsFragment.class.getName(), args),
-                     FragmentTags.CHAT_DETAILS, false, null);
+                             .instantiate(this, ChatDetailsFragment.class.getName(), args),
+                     FragmentTags.CHAT_DETAILS, false, null
+        );
 
     }
 
@@ -191,9 +192,10 @@ public class HomeActivity extends AbstractDrawerActivity implements
     public void loadBooksAroundMeFragment() {
 
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                .instantiate(this, BooksAroundMeFragment.class
-                        .getName(), null), FragmentTags.BOOKS_AROUND_ME, true,
-                     FragmentTags.BS_BOOKS_AROUND_ME);
+                             .instantiate(this, BooksAroundMeFragment.class
+                                     .getName(), null), FragmentTags.BOOKS_AROUND_ME, false,
+                     null
+        );
 
     }
 

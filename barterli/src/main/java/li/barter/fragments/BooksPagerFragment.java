@@ -408,12 +408,13 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onBackPressed() {
+    public boolean onBackPressed() {
 
         if (mSlidingLayout.isExpanded()) {
             mSlidingLayout.collapsePane();
+            return true;
         } else {
-            super.onBackPressed();
+            return super.onBackPressed();
         }
     }
 

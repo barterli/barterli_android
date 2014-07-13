@@ -130,6 +130,15 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     /** Bundle which contains the user info to load the chats for */
     private Bundle mUserInfo;
 
+    /**
+     * Whether the Activity should be finished on Back press. This will be used in 2 cases
+     * <p/>
+     * <ol> <li>When the chat screen is opened directly from a user's profile page. In this case,
+     * pressing back shouldn't open the Chats list</li> <li> When the chats screen is opened in a
+     * multipane layout</li> </ol>
+     */
+    private boolean mFinishOnBack;
+
     @Override
     public View onCreateView(final LayoutInflater inflater,
                              final ViewGroup container, final Bundle savedInstanceState) {
@@ -157,9 +166,25 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
             mUserInfo = savedInstanceState.getBundle(Keys.USER_INFO);
         }
 
+        if(getArguments() != null) {
+
+            mFinishOnBack = getArguments().getBoolean(Keys.FINISH_ON_BACK);
+        }
+
         loadChatMessages();
 
         return view;
+    }
+
+    @Override
+    public boolean onBackPressed() {
+
+        if(mFinishOnBack) {
+            getActivity().finish();
+            return true;
+        } else {
+            return super.onBackPressed();
+        }
     }
 
     /** Updates the chat details screen with a new user */

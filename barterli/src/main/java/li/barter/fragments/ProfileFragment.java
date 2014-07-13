@@ -1,11 +1,15 @@
 /*
  * Copyright (C) 2014 barter.li
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and
+  * limitations under the License.
  */
 
 /*******************************************************************************
@@ -58,6 +62,7 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.activities.ChatsActivity;
 import li.barter.activities.EditProfileActivity;
 import li.barter.adapters.ProfileFragmentsAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
@@ -86,7 +91,9 @@ import li.barter.widgets.CircleImageView;
  * @author Anshul Kamboj
  */
 
-@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
+@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out,
+                    popEnterAnimation = R.anim.zoom_in,
+                    popExitAnimation = R.anim.slide_out_to_right)
 public class ProfileFragment extends AbstractBarterLiFragment implements
         LoaderCallbacks<Cursor>, OnClickListener, OnTabChangeListener,
         OnPageChangeListener {
@@ -94,20 +101,20 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     private static final String TAG = "ProfileFragment";
 
     private FragmentTabHost mTabHost;
-    private String mUserId;
-    private String mImageUrl;
-    private ImageView mChatImageView;
+    private String          mUserId;
+    private String          mImageUrl;
+    private ImageView       mChatImageView;
     private CircleImageView mOwnerImageView;
-    private TextView mOwnerNameTextView;
-    private TextView mOwnerBarterLocationTextView;
-    private boolean mIsLoggedInUser;
+    private TextView        mOwnerNameTextView;
+    private TextView        mOwnerBarterLocationTextView;
+    private boolean         mIsLoggedInUser;
     private final String mUserSelection = DatabaseColumns.USER_ID
             + SQLConstants.EQUALS_ARG;
-    private View mDragHandle;
-    private ViewPager mViewPager;
-    private ProfileFragmentsAdapter mProfileFragmentsAdapter;
-    private String mLocationFormat;
-    private boolean mLoadedIndividually;
+    private View                      mDragHandle;
+    private ViewPager                 mViewPager;
+    private ProfileFragmentsAdapter   mProfileFragmentsAdapter;
+    private String                    mLocationFormat;
+    private boolean                   mLoadedIndividually;
     /**
      * {@link AddUserInfoDialogFragment} for
      */
@@ -145,7 +152,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
             setHasOptionsMenu(true);
         } else {
             ((BooksPagerFragment) fragment).setDragHandle(view
-                    .findViewById(R.id.container_profile_info));
+                                                                  .findViewById(
+                                                                          R.id.container_profile_info));
 
             setHasOptionsMenu(false);
         }
@@ -199,9 +207,11 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         mTabHost = (FragmentTabHost) view.findViewById(android.R.id.tabhost);
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
         mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.ABOUT_ME)
-                .setIndicator(getString(R.string.about_me)), DummyFragment.class, null);
+                                .setIndicator(getString(R.string.about_me)), DummyFragment.class,
+                        null);
         mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.MY_BOOKS)
-                .setIndicator(getString(R.string.my_books)), DummyFragment.class, null);
+                                .setIndicator(getString(R.string.my_books)), DummyFragment.class,
+                        null);
         mTabHost.setOnTabChangedListener(this);
 
         mViewPager = (ViewPager) view.findViewById(R.id.pager_profile);
@@ -212,8 +222,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Checks whether the user is the current user or not, and updates the UI
-     * accordingly
+     * Checks whether the user is the current user or not, and updates the UI accordingly
      */
     private void updateViewsForUser() {
 
@@ -224,20 +233,21 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             mOwnerNameTextView
                     .setText(SharedPreferenceHelper
-                            .getString(R.string.pref_first_name));
+                                     .getString(R.string.pref_first_name));
 
             //Set selected to do marquee if text length is very long
             mOwnerBarterLocationTextView.setSelected(true);
 
             if (!TextUtils.isEmpty(mImageUrl)) {
                 Picasso.with(getActivity())
-                        .load(mImageUrl)
-                        .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                        .centerCrop().into(mOwnerImageView.getTarget());
+                       .load(mImageUrl)
+                       .resizeDimen(R.dimen.book_user_image_size_profile,
+                                    R.dimen.book_user_image_size_profile)
+                       .centerCrop().into(mOwnerImageView.getTarget());
             }
 
             updateTab(mProfileFragmentsAdapter.getFragmentAtPosition(mViewPager
-                    .getCurrentItem()));
+                                                                             .getCurrentItem()));
 
         } else {
             mChatImageView.setVisibility(View.VISIBLE);
@@ -308,24 +318,15 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 
-        if(requestCode == AppConstants.RequestCodes.EDIT_PROFILE) {
+        if (requestCode == AppConstants.RequestCodes.EDIT_PROFILE) {
 
-            if(resultCode == ActionBarActivity.RESULT_OK) {
+            if (resultCode == ActionBarActivity.RESULT_OK) {
                 loadUserDetails();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getTag().equals(FragmentTags.PROFILE_FROM_LOGIN)) {
-            onUpNavigate();
-        } else {
-            super.onBackPressed();
-        }
     }
 
     @Override
@@ -345,7 +346,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
                         .getInstance(getActivity())
                         .sendBroadcast(new Intent(AppConstants.ACTION_CHAT_BUTTON_CLICKED));
                 if (hasFirstName()) {
-                    loadChatFragment();
+                    chatWithUser();
                 } else {
                     showAddFirstNameDialog();
                 }
@@ -357,7 +358,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
                 loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                         .instantiate(getActivity(), LoginFragment.class
-                                .getName(), loginArgs), FragmentTags.LOGIN_TO_CHAT, true, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
+                                .getName(), loginArgs), FragmentTags.LOGIN_TO_CHAT, true,
+                             FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
 
             }
         } else {
@@ -367,18 +369,15 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Loads the Chat Fragment to chat with the book owner
+     * Loads the Chat screen to chat with the book owner
      */
-    private void loadChatFragment() {
-        final Bundle args = new Bundle(3);
-        args.putString(Keys.CHAT_ID, Utils
-                .generateChatId(mUserId, UserInfo.INSTANCE.getId()));
-        args.putString(Keys.USER_ID, mUserId);
+    private void chatWithUser() {
 
+        final Intent chatIntent = new Intent(getActivity(), ChatsActivity.class);
+        chatIntent.setAction(ChatsActivity.ACTION_LOAD_CHAT);
 
-        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                .instantiate(getActivity(), ChatDetailsFragment.class
-                        .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
+        chatIntent.putExtra(Keys.USER_ID, mUserId);
+        startActivity(chatIntent);
 
     }
 
@@ -405,7 +404,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         } else if (requestId == RequestId.SAVE_USER_PROFILE) {
             if (isAttached()) {
-                loadChatFragment();
+                chatWithUser();
             }
         }
 
@@ -422,7 +421,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
         if (loaderId == Loaders.USER_DETAILS) {
 
-            return new SQLiteLoader(getActivity(), false, ViewUsersWithLocations.NAME, null, mUserSelection, new String[]{
+            return new SQLiteLoader(getActivity(), false, ViewUsersWithLocations.NAME, null,
+                                    mUserSelection, new String[]{
                     mUserId
             }, null, null, null, null);
         } else {
@@ -439,12 +439,16 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
                 mImageUrl = cursor
                         .getString(cursor
-                                .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
+                                           .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
 
                 final String firstName = cursor.getString(cursor
-                        .getColumnIndex(DatabaseColumns.FIRST_NAME));
+                                                                  .getColumnIndex(
+                                                                          DatabaseColumns
+                                                                                  .FIRST_NAME));
                 final String lastName = cursor.getString(cursor
-                        .getColumnIndex(DatabaseColumns.LAST_NAME));
+                                                                 .getColumnIndex(
+                                                                         DatabaseColumns
+                                                                                 .LAST_NAME));
                 final String fullName = Utils
                         .makeUserFullName(firstName, lastName);
                 mOwnerNameTextView.setText(fullName);
@@ -455,31 +459,37 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
                 mOwnerBarterLocationTextView
                         .setText(String.format(mLocationFormat, cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.NAME)), cursor
-                                .getString(cursor
-                                        .getColumnIndex(DatabaseColumns.ADDRESS))));
+                                                                                         .getColumnIndex(
+                                                                                                 DatabaseColumns.NAME)),
+                                               cursor
+                                                       .getString(cursor
+                                                                          .getColumnIndex(
+                                                                                  DatabaseColumns
+                                                                                          .ADDRESS))));
 
                 //Set selected to do marquee if text length is very long
                 mOwnerBarterLocationTextView.setSelected(true);
 
                 if (!TextUtils.isEmpty(mImageUrl)) {
                     Picasso.with(getActivity())
-                            .load(mImageUrl)
-                            .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                            .centerCrop()
-                            .error(R.drawable.pic_avatar)
-                            .into(mOwnerImageView.getTarget());
+                           .load(mImageUrl)
+                           .resizeDimen(R.dimen.book_user_image_size_profile,
+                                        R.dimen.book_user_image_size_profile)
+                           .centerCrop()
+                           .error(R.drawable.pic_avatar)
+                           .into(mOwnerImageView.getTarget());
                 } else {
                     Picasso.with(getActivity())
-                            .load(R.drawable.pic_avatar)
-                            .resizeDimen(R.dimen.book_user_image_size_profile, R.dimen.book_user_image_size_profile)
-                            .centerCrop()
-                            .into(mOwnerImageView.getTarget());
+                           .load(R.drawable.pic_avatar)
+                           .resizeDimen(R.dimen.book_user_image_size_profile,
+                                        R.dimen.book_user_image_size_profile)
+                           .centerCrop()
+                           .into(mOwnerImageView.getTarget());
                 }
 
                 updateTab(mProfileFragmentsAdapter
-                        .getFragmentAtPosition(mViewPager
-                                .getCurrentItem()));
+                                  .getFragmentAtPosition(mViewPager
+                                                                 .getCurrentItem()));
 
             }
 
@@ -540,21 +550,21 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
     }
 
     /**
-     * Show the dialog for the user to add his name, in case it's not already
-     * added
+     * Show the dialog for the user to add his name, in case it's not already added
      */
     protected void showAddFirstNameDialog() {
 
         mAddUserInfoDialogFragment = new AddUserInfoDialogFragment();
         mAddUserInfoDialogFragment
-                .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.update_info, R.string.submit, R.string.cancel, 0, getFragmentManager(), true, FragmentTags.DIALOG_ADD_NAME);
+                .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.update_info, R.string.submit,
+                      R.string.cancel, 0, getFragmentManager(), true, FragmentTags.DIALOG_ADD_NAME);
     }
 
     public boolean willHandleDialog(final DialogInterface dialog) {
 
         if ((mAddUserInfoDialogFragment != null)
                 && mAddUserInfoDialogFragment.getDialog()
-                .equals(dialog)) {
+                                             .equals(dialog)) {
             return true;
         }
         return false;
@@ -564,7 +574,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         if ((mAddUserInfoDialogFragment != null)
                 && mAddUserInfoDialogFragment.getDialog()
-                .equals(dialog)) {
+                                             .equals(dialog)) {
 
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 final String firstName = mAddUserInfoDialogFragment
@@ -597,14 +607,14 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
             GoogleAnalyticsManager
                     .getInstance()
                     .sendScreenHit(mUserId.equals(UserInfo.INSTANCE
-                            .getId()) ? Screens.ABOUT_CURRENT_USER
-                            : Screens.ABOUT_OTHER_USER);
+                                                          .getId()) ? Screens.ABOUT_CURRENT_USER
+                                           : Screens.ABOUT_OTHER_USER);
         } else {
             GoogleAnalyticsManager
                     .getInstance()
                     .sendScreenHit(mUserId.equals(UserInfo.INSTANCE
-                            .getId()) ? Screens.CURRENT_USER_BOOKS
-                            : Screens.OTHER_USER_BOOKS);
+                                                          .getId()) ? Screens.CURRENT_USER_BOOKS
+                                           : Screens.OTHER_USER_BOOKS);
         }
 
     }

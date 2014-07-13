@@ -1,11 +1,15 @@
 /*
  * Copyright (C) 2014 barter.li
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and
+  * limitations under the License.
  */
 
 package li.barter.activities;
@@ -57,7 +61,6 @@ import li.barter.http.VolleyCallbacks;
 import li.barter.http.VolleyCallbacks.IHttpCallbacks;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.DeviceInfo;
-import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
@@ -77,7 +80,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     private static final String TAG = "BaseBarterLiActivity";
 
     private static final int ACTION_BAR_DISPLAY_MASK = ActionBar.DISPLAY_HOME_AS_UP
-            | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_USE_LOGO | ActionBar.DISPLAY_SHOW_HOME;
+            | ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_USE_LOGO | ActionBar
+            .DISPLAY_SHOW_HOME;
     /**
      * {@link VolleyCallbacks} for encapsulating Volley request responses
      */
@@ -338,9 +342,11 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     public boolean onOptionsItemSelected(final MenuItem item) {
 
 
-        //Fetch the current primary fragment. If that will handle the Menu click, pass it to that one
-        final AbstractBarterLiFragment currentMainFragment = (AbstractBarterLiFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.frame_content);
+        //Fetch the current primary fragment. If that will handle the Menu click,
+        // pass it to that one
+        final AbstractBarterLiFragment currentMainFragment = (AbstractBarterLiFragment)
+                getSupportFragmentManager()
+                        .findFragmentById(R.id.frame_content);
 
         boolean handled = false;
         if (currentMainFragment != null) {
@@ -435,7 +441,9 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                .setConfiguration(
                        new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
                                .setDuration(
-                                       de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_SHORT)
+                                       de.keyboardsurfer.android.widget.crouton.Configuration
+                                               .DURATION_SHORT
+                               )
                                .build()
                ).show();
     }
@@ -461,7 +469,9 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                .setConfiguration(
                        new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
                                .setDuration(
-                                       de.keyboardsurfer.android.widget.crouton.Configuration.DURATION_INFINITE)
+                                       de.keyboardsurfer.android.widget.crouton.Configuration
+                                               .DURATION_INFINITE
+                               )
                                .build()
                ).show();
 
@@ -622,6 +632,22 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     }
 
 
+    @Override
+    public void onBackPressed() {
+
+        /* Get the reference to the current master fragment and check if that will handle
+        onBackPressed. If yes, do nothing. Else, let the Activity handle it. */
+        final AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
+
+        boolean handled = false;
+        if (masterFragment != null && masterFragment.isResumed()) {
+            handled = masterFragment.onBackPressed();
+        }
+
+        if (!handled) {
+            super.onBackPressed();
+        }
+    }
 
     /**
      * @author Vinay S Shenoy Enum to handle the different types of Alerts that can be shown

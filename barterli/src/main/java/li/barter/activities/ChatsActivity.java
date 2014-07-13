@@ -16,6 +16,7 @@ package li.barter.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import li.barter.R;
@@ -33,6 +34,14 @@ import li.barter.utils.AppConstants;
  */
 public class ChatsActivity extends AbstractDrawerActivity {
 
+    public static final String ACTION_LOAD_CHAT = "li.barter.ACTION_LOAD_CHAT";
+
+    /** User id to load a chat for immediately after loading chats list */
+    private String mUserIdToLoad;
+
+    /** Whether a chat should be loaded instantly */
+    private boolean mShouldLoadChat;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,17 +49,43 @@ public class ChatsActivity extends AbstractDrawerActivity {
         initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer);
 
         if (savedInstanceState == null) {
+            checkIfShouldLoadChat();
             loadChatsListFragment();
         }
 
+
+    }
+
+    /** Checks if a particular chat should be loaded immediately */
+    private void checkIfShouldLoadChat() {
+
+        final String action = getIntent().getAction();
+
+        if (action != null && action.equals(ACTION_LOAD_CHAT)) {
+
+            mUserIdToLoad = getIntent().getStringExtra(AppConstants.Keys.USER_ID);
+
+            if (!TextUtils.isEmpty(mUserIdToLoad)) {
+                mShouldLoadChat = true;
+            }
+
+        }
     }
 
     /** Loads the chats fragment into the screen */
     private void loadChatsListFragment() {
 
+        Bundle args = null;
+        if (mShouldLoadChat) {
+            args = new Bundle(2);
+            args.putBoolean(AppConstants.Keys.LOAD_CHAT, true);
+            args.putString(AppConstants.Keys.USER_ID, mUserIdToLoad);
+        }
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment.instantiate(this,
                                                                                          ChatsFragment.class
-                                                                                                 .getName()),
+                                                                                                 .getName(),
+                                                                                         args
+                     ),
                      AppConstants.FragmentTags.CHATS, false, null
         );
     }
@@ -58,7 +93,7 @@ public class ChatsActivity extends AbstractDrawerActivity {
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
 
-        if(item.getItemId() == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         } else {
