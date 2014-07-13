@@ -19,7 +19,7 @@
     <string name="editbook_title">Add Book</string>
     <string name="editbook_title2">Edit Book</string>
     <string name="chat_fragment_title">Chats</string>
-    <string name="Report_fragment_title">Report</string>
+    <string name="Report_fragment_title">Send Feedback</string>
     <string name="Collaborate_fragment_title">Collaborate</string>
     <string name="Opensource_fragment_title">Open Source</string>
     <string name="Aboutus_fragment_title">About us</string>

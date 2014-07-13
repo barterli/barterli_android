@@ -23,7 +23,6 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -44,6 +43,7 @@ import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AuthActivity;
 import li.barter.activities.ChatsActivity;
 import li.barter.activities.HomeActivity;
+import li.barter.activities.SendFeedbackActivity;
 import li.barter.activities.SettingsActivity;
 import li.barter.activities.UserProfileActivity;
 import li.barter.adapters.NavDrawerAdapter;
@@ -345,7 +345,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                         )
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.CHATS));
-                if(activity instanceof ChatsActivity) {
+                if (activity instanceof ChatsActivity) {
                     return null;
                 }
 
@@ -354,7 +354,8 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
 
                     @Override
                     public void run() {
-                        final Intent chatsListIntent = new Intent(getActivity(), ChatsActivity.class);
+                        final Intent chatsListIntent = new Intent(getActivity(),
+                                                                  ChatsActivity.class);
                         chatsListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(chatsListIntent);
                     }
@@ -441,20 +442,15 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                         )
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.REPORT_BUG));
-                if ((masterFragment != null)
-                        && (masterFragment instanceof ReportBugFragment)) {
+                if (activity instanceof SendFeedbackActivity) {
                     return null;
                 }
 
                 runnable = new Runnable() {
                     @Override
                     public void run() {
-                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                             .instantiate(getActivity(), ReportBugFragment.class
-                                                     .getName(), null),
-                                     AppConstants.FragmentTags.REPORT_BUGS,
-                                     true, null
-                        );
+
+                        startActivity(new Intent(getActivity(), SendFeedbackActivity.class));
                     }
                 };
                 break;
