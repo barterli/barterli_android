@@ -42,6 +42,7 @@ import li.barter.R;
 import li.barter.activities.AboutUsActivity;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AuthActivity;
+import li.barter.activities.ChatsActivity;
 import li.barter.activities.HomeActivity;
 import li.barter.activities.SettingsActivity;
 import li.barter.activities.UserProfileActivity;
@@ -268,6 +269,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
         Runnable runnable = null;
         final AbstractBarterLiFragment masterFragment = ((AbstractBarterLiActivity) getActivity())
                 .getCurrentMasterFragment();
+        final Activity activity = getActivity();
 
         switch (position) {
 
@@ -283,14 +285,15 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.PROFILE));
                 /*
-                 * If the master fragment is already the login fragment, don't
-                 * load it again.
+                 * If the current Activity is the User profile Activity and the user id loaded is
+                  * the current user, don't load it again
                  */
-                if ((masterFragment != null)
-                        && ((masterFragment instanceof LoginFragment) || (masterFragment
-                        instanceof ProfileFragment))) {
+                if (activity instanceof UserProfileActivity && ((UserProfileActivity) activity)
+                        .getUserId().equals(
+                                AppConstants.UserInfo.INSTANCE.getId())) {
                     return null;
                 }
+
                 runnable = new Runnable() {
 
                     @Override
@@ -342,8 +345,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
                         )
                                            .set(AnalyticsConstants.ParamKeys.TYPE,
                                                 AnalyticsConstants.ParamValues.CHATS));
-                if ((masterFragment != null)
-                        && (masterFragment instanceof ChatsFragment)) {
+                if(activity instanceof ChatsActivity) {
                     return null;
                 }
 
@@ -352,12 +354,9 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
 
                     @Override
                     public void run() {
-                        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                                             .instantiate(getActivity(), ChatsFragment.class
-                                                     .getName(), null),
-                                     AppConstants.FragmentTags.CHATS, true,
-                                     AppConstants.FragmentTags.BS_CHATS
-                        );
+                        final Intent chatsListIntent = new Intent(getActivity(), ChatsActivity.class);
+                        chatsListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(chatsListIntent);
                     }
                 };
                 break;

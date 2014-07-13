@@ -560,37 +560,6 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         getWindow().setBackgroundDrawable(null);
     }
 
-    @Override
-    public void onBackPressed() {
-
-        final AbstractBarterLiFragment masterFragment = getCurrentMasterFragment();
-
-        final AbstractBarterLiFragment chatDetailFragment = (AbstractBarterLiFragment) getSupportFragmentManager()
-                .findFragmentByTag(FragmentTags.CHAT_DETAILS);
-
-        final AbstractBarterLiFragment chatFragment = (AbstractBarterLiFragment) getSupportFragmentManager()
-                .findFragmentByTag(FragmentTags.CHATS);
-
-        if ((masterFragment != null)
-                && (getSupportFragmentManager()
-                .getBackStackEntryCount() > 0)) {
-
-            masterFragment.onBackPressed();
-
-        } else if ((chatDetailFragment != null)
-                && (getSupportFragmentManager()
-                .getBackStackEntryCount() == 0)) {
-            chatDetailFragment.onBackPressed();
-        } else if ((chatFragment != null)
-                && (getSupportFragmentManager()
-                .getBackStackEntryCount() == 0)) {
-            chatFragment.onBackPressed();
-        } else {
-            super.onBackPressed();
-        }
-
-    }
-
     /**
      * Returns the current master fragment. In single pane layout, this is the fragment in the main
      * content. In a multi-pane layout, returns the fragment in the master container, which is the

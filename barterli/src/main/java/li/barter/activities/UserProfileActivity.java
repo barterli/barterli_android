@@ -13,6 +13,7 @@ package li.barter.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.MenuItem;
 
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
@@ -43,6 +44,22 @@ public class UserProfileActivity extends AbstractDrawerActivity {
             finish();
         } else if (savedInstanceState == null) {
             loadUserProfileFragment();
+        }
+    }
+
+    /** Returns the user id */
+    public String getUserId() {
+        return mUserId;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+
+        if(item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
         }
     }
 

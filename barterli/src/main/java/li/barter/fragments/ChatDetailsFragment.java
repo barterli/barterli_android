@@ -1,16 +1,18 @@
 /*
  * Copyright (C) 2014 barter.li
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and
+  * limitations under the License.
  */
 
 package li.barter.fragments;
-
-import com.squareup.picasso.Picasso;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -20,7 +22,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.BaseColumns;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
@@ -38,13 +39,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.squareup.picasso.Picasso;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
-import li.barter.activities.HomeActivity;
+import li.barter.activities.UserProfileActivity;
 import li.barter.adapters.ChatDetailAdapter;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.chat.ChatService;
@@ -59,7 +62,6 @@ import li.barter.data.TableUsers;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
-import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
@@ -69,100 +71,118 @@ import li.barter.widgets.CircleImageView;
 
 /**
  * Activity for displaying Chat Messages
- * 
+ *
  * @author Vinay S Shenoy
  */
-@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out, popEnterAnimation = R.anim.zoom_in, popExitAnimation = R.anim.slide_out_to_right)
+@FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out,
+                    popEnterAnimation = R.anim.zoom_in,
+                    popExitAnimation = R.anim.slide_out_to_right)
 public class ChatDetailsFragment extends AbstractBarterLiFragment implements
-                ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,
-                AsyncDbQueryCallback, OnItemClickListener {
+        ServiceConnection, LoaderCallbacks<Cursor>, OnClickListener,
+        AsyncDbQueryCallback, OnItemClickListener {
 
-    private static final String TAG               = "ChatDetailsFragment";
+    private static final String TAG = "ChatDetailsFragment";
 
-    private ChatDetailAdapter   mChatDetailAdapter;
+    private ChatDetailAdapter mChatDetailAdapter;
 
-    private ListView            mChatListView;
+    private ListView mChatListView;
 
-    private EditText            mSubmitChatEditText;
+    private EditText mSubmitChatEditText;
 
-    private ImageButton         mSubmitChatButton;
+    private ImageButton mSubmitChatButton;
 
-    private ChatService         mChatService;
+    private ChatService mChatService;
 
-    private boolean             mBoundToChatService;
+    private boolean mBoundToChatService;
 
-    private boolean             mFirstMessage;
+    private final String mChatSelection = DatabaseColumns.CHAT_ID
+            + SQLConstants.EQUALS_ARG;
 
-    private final String        mChatSelection    = DatabaseColumns.CHAT_ID
-                                                                  + SQLConstants.EQUALS_ARG;
+    private final String mUserSelection = DatabaseColumns.USER_ID
+            + SQLConstants.EQUALS_ARG;
 
-    private final String        mUserSelection    = DatabaseColumns.USER_ID
-                                                                  + SQLConstants.EQUALS_ARG;
-
-    private final String        mMessageSelection = BaseColumns._ID
-                                                                  + SQLConstants.EQUALS_ARG;
+    private final String mMessageSelection = BaseColumns._ID
+            + SQLConstants.EQUALS_ARG;
 
     /**
      * The Id of the Chat
      */
-    private String              mChatId;
+    private String mChatId;
 
     /**
      * Id of the user with whom the current user is chatting
      */
-    private String              mWithUserId;
+    private String mWithUserId;
 
     /** Profile image of the user with whom the current user is chatting */
-    private String              mWithUserImage;
+    private String mWithUserImage;
 
     /** Name of the user with whom the current user is chatting */
-    private String              mWithUserName;
+    private String mWithUserName;
 
     /**
      * User with whom the chat is happening
      */
-    private CircleImageView     mWithImageView;
+    private CircleImageView mWithImageView;
 
-    private SimpleDateFormat    mFormatter;
+    private SimpleDateFormat mFormatter;
+
+    /** Bundle which contains the user info to load the chats for */
+    private Bundle mUserInfo;
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
-                    final ViewGroup container, final Bundle savedInstanceState) {
+                             final ViewGroup container, final Bundle savedInstanceState) {
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
         setActionBarTitle(R.string.app_name);
         final View view = inflater
-                        .inflate(R.layout.fragment_chat_details, container, false);
-        /*
-         * getActivity().getWindow()
-         * .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN
-         * | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-         */
+                .inflate(R.layout.fragment_chat_details, container, false);
 
         mFormatter = new SimpleDateFormat(AppConstants.TIMESTAMP_FORMAT, Locale.getDefault());
         mChatListView = (ListView) view.findViewById(R.id.list_chats);
         mChatDetailAdapter = new ChatDetailAdapter(getActivity(), null);
         mChatListView.setAdapter(mChatDetailAdapter);
         mChatListView.setOnItemClickListener(this);
-        mChatId = getArguments().getString(Keys.CHAT_ID);
-        mWithUserId = getArguments().getString(Keys.USER_ID);
-
         mSubmitChatEditText = (EditText) view
-                        .findViewById(R.id.edit_text_chat_message);
+                .findViewById(R.id.edit_text_chat_message);
 
         mSubmitChatButton = (ImageButton) view.findViewById(R.id.button_send);
         mSubmitChatButton.setOnClickListener(this);
 
-        getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
-        getLoaderManager()
-                        .restartLoader(Loaders.USER_DETAILS_CHAT_DETAILS, null, this);
 
         if (savedInstanceState == null) {
-            mFirstMessage = true;
+            mUserInfo = getArguments();
         } else {
-            mFirstMessage = savedInstanceState.getBoolean(Keys.FIRST_MESSAGE);
+            mUserInfo = savedInstanceState.getBundle(Keys.USER_INFO);
         }
+
+        loadChatMessages();
+
         return view;
+    }
+
+    /** Updates the chat details screen with a new user */
+    public void updateUserInfo(Bundle userInfo) {
+        mUserInfo = userInfo;
+        loadChatMessages();
+    }
+
+    @Override
+    public void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle(Keys.USER_INFO, mUserInfo);
+    }
+
+    /** Loads the chat messages based on the User info bundle */
+    private void loadChatMessages() {
+
+        mChatId = mUserInfo.getString(Keys.CHAT_ID);
+        mWithUserId = mUserInfo.getString(Keys.USER_ID);
+
+        getLoaderManager().restartLoader(Loaders.CHAT_DETAILS, null, this);
+        getLoaderManager()
+                .restartLoader(Loaders.USER_DETAILS_CHAT_DETAILS, null, this);
     }
 
     @Override
@@ -174,39 +194,9 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         final View actionView = MenuItemCompat.getActionView(menuItem);
         if (actionView != null) {
             mWithImageView = (CircleImageView) actionView
-                            .findViewById(R.id.image_user);
+                    .findViewById(R.id.image_user);
             mWithImageView.setOnClickListener(this);
             loadUserInfoIntoActionBar();
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(Keys.FIRST_MESSAGE, mFirstMessage);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-
-            case android.R.id.home: {
-
-                final int backStackEntryCount = getFragmentManager()
-
-                .getBackStackEntryCount();
-                if (backStackEntryCount == 0) {
-                    ((HomeActivity) getActivity()).loadBooksAroundMeFragment();
-                } else {
-                    onUpNavigate();
-                }
-                return true;
-
-            }
-
-            default: {
-                return super.onOptionsItemSelected(item);
-            }
         }
     }
 
@@ -215,11 +205,9 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
      */
     private void loadChattingWithUser() {
 
-        final Bundle showUserProfileArgs = new Bundle();
-        showUserProfileArgs.putString(Keys.USER_ID, mWithUserId);
-        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), ProfileFragment.class
-                                        .getName(), showUserProfileArgs), FragmentTags.PROFILE_FROM_CHAT_DETAILS, true, FragmentTags.CHAT_DETAILS);
+        final Intent userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
+        userProfileIntent.putExtra(Keys.USER_ID, mWithUserId);
+        startActivity(userProfileIntent);
     }
 
     @Override
@@ -229,21 +217,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
             mChatService.setCurrentChattingUserId(null);
             getActivity().unbindService(this);
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-
-        final int backStackEntryCount = getFragmentManager()
-
-        .getBackStackEntryCount();
-        if (backStackEntryCount == 0) {
-            ((HomeActivity) getActivity()).loadBooksAroundMeFragment();
-
-        } else {
-            onUpNavigate();
-        }
-
     }
 
     @Override
@@ -261,23 +234,23 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onSuccess(final int requestId,
-                    final IBlRequestContract request,
-                    final ResponseInfo response) {
+                          final IBlRequestContract request,
+                          final ResponseInfo response) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onBadRequestError(final int requestId,
-                    final IBlRequestContract request, final int errorCode,
-                    final String errorMessage, final Bundle errorResponseBundle) {
+                                  final IBlRequestContract request, final int errorCode,
+                                  final String errorMessage, final Bundle errorResponseBundle) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
     public void onServiceConnected(final ComponentName name,
-                    final IBinder service) {
+                                   final IBinder service) {
 
         mBoundToChatService = true;
         mChatService = ((ChatServiceBinder) service).getService();
@@ -293,14 +266,18 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
 
         if (id == Loaders.CHAT_DETAILS) {
-            return new SQLiteLoader(getActivity(), false, TableChatMessages.NAME, null, mChatSelection, new String[] {
-                mChatId
+            return new SQLiteLoader(getActivity(), false, TableChatMessages.NAME, null,
+                                    mChatSelection, new String[]{
+                    mChatId
             }, null, null, DatabaseColumns.TIMESTAMP_EPOCH
-                            + SQLConstants.ASCENDING, null);
+                                            + SQLConstants.ASCENDING, null
+            );
         } else if (id == Loaders.USER_DETAILS_CHAT_DETAILS) {
-            return new SQLiteLoader(getActivity(), false, TableUsers.NAME, null, mUserSelection, new String[] {
-                mWithUserId
-            }, null, null, null, null);
+            return new SQLiteLoader(getActivity(), false, TableUsers.NAME, null, mUserSelection,
+                                    new String[]{
+                                            mWithUserId
+                                    }, null, null, null, null
+            );
         }
         return null;
     }
@@ -311,18 +288,6 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         final int id = loader.getId();
         if (id == Loaders.CHAT_DETAILS) {
 
-            if (mFirstMessage && (cursor.getCount() == 0)) {
-                //First chat message, autofill the edit text with the message
-                mFirstMessage = false;
-                final String bookTitle = getArguments()
-                                .getString(Keys.BOOK_TITLE);
-
-                if (!TextUtils.isEmpty(bookTitle)) {
-                    mSubmitChatEditText
-                                    .setText(getString(R.string.chat_opened_from, bookTitle));
-                }
-            }
-
             if ((mChatDetailAdapter.getCount() == 0) && (cursor.getCount() > 0)) {
                 //Initial load. Swap cursor AND set position to last
                 mChatDetailAdapter.swapCursor(cursor);
@@ -332,10 +297,12 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 if (mChatDetailAdapter.getCount() > 0) {
 
                     final int lastAdapterPosition = mChatDetailAdapter
-                                    .getCount() - 1;
+                            .getCount() - 1;
 
-                    Logger.v(TAG, "Last Adapter Position %d and Last visible position %d", lastAdapterPosition, mChatListView
-                                    .getLastVisiblePosition());
+                    Logger.v(TAG, "Last Adapter Position %d and Last visible position %d",
+                             lastAdapterPosition, mChatListView
+                                    .getLastVisiblePosition()
+                    );
                     /*
                      * Smooth scroll only if there's already some data AND the
                      * last visible position is the last item in the adapter,
@@ -343,7 +310,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                      * has scrolled down to view earlier messages
                      */
                     if ((lastAdapterPosition - 1) == mChatListView
-                                    .getLastVisiblePosition()) {
+                            .getLastVisiblePosition()) {
                         mChatListView.smoothScrollToPosition(lastAdapterPosition);
                     }
                 }
@@ -352,12 +319,14 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         } else if (id == Loaders.USER_DETAILS_CHAT_DETAILS) {
             if (cursor.moveToFirst()) {
                 mWithUserImage = cursor
-                                .getString(cursor
-                                                .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
-                
-                final String firstName = cursor.getString(cursor.getColumnIndex(DatabaseColumns.FIRST_NAME));
-                final String lastName = cursor.getString(cursor.getColumnIndex(DatabaseColumns.LAST_NAME));
-                
+                        .getString(cursor
+                                           .getColumnIndex(DatabaseColumns.PROFILE_PICTURE));
+
+                final String firstName = cursor
+                        .getString(cursor.getColumnIndex(DatabaseColumns.FIRST_NAME));
+                final String lastName = cursor
+                        .getString(cursor.getColumnIndex(DatabaseColumns.LAST_NAME));
+
                 mWithUserName = Utils.makeUserFullName(firstName, lastName);
                 loadUserInfoIntoActionBar();
 
@@ -374,10 +343,10 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
             if (!TextUtils.isEmpty(mWithUserImage)) {
                 Picasso.with(getActivity())
-                                .load(mWithUserImage)
-                                .error(R.drawable.pic_avatar)
-                                .resizeDimen(R.dimen.ab_user_image_size, R.dimen.ab_user_image_size)
-                                .centerCrop().into(mWithImageView.getTarget());
+                       .load(mWithUserImage)
+                       .error(R.drawable.pic_avatar)
+                       .resizeDimen(R.dimen.ab_user_image_size, R.dimen.ab_user_image_size)
+                       .centerCrop().into(mWithImageView.getTarget());
             }
         }
 
@@ -412,10 +381,9 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
     /**
      * Send a chat message to the user the current user is chatting with
-     * 
+     *
      * @param message The message to send.
-     * @return <code>true</code> If the message was sent, <code>false</code>
-     *         otherwise
+     * @return <code>true</code> If the message was sent, <code>false</code> otherwise
      */
     private boolean sendChatMessage(String message) {
 
@@ -465,27 +433,30 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,
-                    long id) {
+                            long id) {
 
         if (parent.getId() == R.id.list_chats) {
 
             final boolean resendOnClick = (Boolean) view
-                            .getTag(R.string.tag_resend_on_click);
+                    .getTag(R.string.tag_resend_on_click);
 
             if (resendOnClick) {
                 final Cursor cursor = (Cursor) mChatDetailAdapter
-                                .getItem(position);
+                        .getItem(position);
 
                 final int dbRowId = cursor.getInt(cursor
-                                .getColumnIndex(BaseColumns._ID));
+                                                          .getColumnIndex(BaseColumns._ID));
                 final String message = cursor.getString(cursor
-                                .getColumnIndex(DatabaseColumns.MESSAGE));
+                                                                .getColumnIndex(
+                                                                        DatabaseColumns.MESSAGE));
 
                 if (sendChatMessage(message)) {
                     //Delete the older message from the table
-                    DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGE, getTaskTag(), null, TableChatMessages.NAME, mMessageSelection, new String[] {
-                        String.valueOf(dbRowId)
-                    }, true, this);
+                    DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGE, getTaskTag(), null,
+                                            TableChatMessages.NAME, mMessageSelection, new String[]{
+                                    String.valueOf(dbRowId)
+                            }, true, this
+                    );
                 } else {
                     showCrouton(R.string.error_not_connected_to_chat_service, AlertStyle.ERROR);
                 }

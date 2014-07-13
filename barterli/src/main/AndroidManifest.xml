@@ -72,6 +72,9 @@
         </activity>
 
         <activity
+            android:name="li.barter.activities.ChatsActivity"
+            android:label="@string/app_name"/>
+        <activity
             android:name="li.barter.activities.AuthActivity"
             android:label="@string/app_name"
             android:parentActivityName="li.barter.activities.HomeActivity">
@@ -83,13 +86,7 @@
 
         <activity
             android:name="li.barter.activities.UserProfileActivity"
-            android:label="@string/app_name"
-            android:parentActivityName="li.barter.activities.HomeActivity">
-
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="li.barter.activities.HomeActivity"/>
-        </activity>
+            android:label="@string/app_name"/>
 
         <activity
             android:name="li.barter.activities.BookDetailActivity"

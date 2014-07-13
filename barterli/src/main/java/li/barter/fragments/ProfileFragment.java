@@ -374,6 +374,8 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         args.putString(Keys.CHAT_ID, Utils
                 .generateChatId(mUserId, UserInfo.INSTANCE.getId()));
         args.putString(Keys.USER_ID, mUserId);
+
+
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                 .instantiate(getActivity(), ChatDetailsFragment.class
                         .getName(), args), FragmentTags.CHAT_DETAILS, true, null);

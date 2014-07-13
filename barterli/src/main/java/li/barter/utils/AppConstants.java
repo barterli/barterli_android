@@ -1,11 +1,15 @@
 /*
  * Copyright (C) 2014 barter.li
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the
+ * License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific language governing permissions and
+  * limitations under the License.
  */
 
 package li.barter.utils;
@@ -300,7 +304,6 @@ public class AppConstants {
         public static final String LOCATION              = "location";
         public static final String SEARCH                = "search";
         public static final String LAST_FETCHED_LOCATION = "last_fetched_location";
-        public static final String FIRST_MESSAGE         = "first_message";
         public static final String EDIT_MODE             = "edit_mode";
         public static final String NO_BOOKS_FLAG_KEY     = "no_books_flag_key";
         public static final String HAS_LOADED_ALL_ITEMS  = "has_loaded_all_items";
@@ -317,6 +320,7 @@ public class AppConstants {
         public static final String LAST_SCREEN_TIME = "last_screen_time";
         public static final String OVERLAY_VISIBLE  = "overlay_visible";
         public static final String BOOK_DETAILS     = "book_details";
+        public static final String USER_INFO        = "user_info";
     }
 
     /**

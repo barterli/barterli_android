@@ -65,7 +65,6 @@
     <string name="send">Send</string>
     <string name="enter_message">Enter your message</string>
     <string name="new_messages">%d new messages!</string>
-    <string name="chat_opened_from" formatted="false">This chat was opened from %s.</string>
     <string name="take_picture">Take Picture</string>
     <string name="add_book_dialog_head">Add Book</string>
     <string name="chat_longclick_dialog_head">Chat Options</string>
