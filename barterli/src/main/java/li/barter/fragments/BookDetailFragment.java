@@ -472,7 +472,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
         } else if (token == QueryTokens.DELETE_MY_BOOK_FROM_SEARCH) {
             if (isAttached()) {
-                getFragmentManager().popBackStack();
+                getActivity().finish();
             }
 
         }

@@ -402,23 +402,6 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
     }
 
     /**
-     * Pops the fragment from the backstack, checking to see if the bundle args have {@linkplain
-     * Keys#UP_NAVIGATION_TAG} which gives the name of the backstack tag to pop to. This is mainly
-     * for providing Up navigation
-     */
-    public void onUpNavigate() {
-        final Bundle args = getArguments();
-
-        if ((args != null) && args.containsKey(Keys.UP_NAVIGATION_TAG)) {
-            getFragmentManager()
-                    .popBackStack(args.getString(Keys.UP_NAVIGATION_TAG),
-                                  FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        } else {
-            getFragmentManager().popBackStack();
-        }
-    }
-
-    /**
      * Handles the behaviour for onBackPressed().
      *
      * @return <code>true</code> If the fragment will handle onBackPressed
