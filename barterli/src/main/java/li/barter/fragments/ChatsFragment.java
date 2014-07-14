@@ -248,15 +248,11 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
 
             final Cursor cursor = (Cursor) mChatsAdapter.getItem(position);
 
-            loadChat(cursor.getString(cursor
-                                              .getColumnIndex(
-                                                      DatabaseColumns
-                                                              .USER_ID
-                                              )), cursor.getString(cursor
-                                                                           .getColumnIndex(
-                                                                                   DatabaseColumns
-                                                                                           .CHAT_ID
-                                                                           )));
+            loadChat(
+                    cursor.getString(cursor.getColumnIndex(DatabaseColumns.USER_ID)),
+                    cursor.getString(cursor.getColumnIndex(DatabaseColumns.CHAT_ID)),
+                    true
+            );
         }
     }
 
@@ -271,17 +267,19 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
         final String chatId = Utils
                 .generateChatId(userId, AppConstants.UserInfo.INSTANCE.getId());
 
-        loadChat(userId, chatId);
+        loadChat(userId, chatId, false);
     }
 
     /**
      * Loads the actual chat screen. This is used in the case where the user taps on an item in the
      * list of chats
      *
-     * @param userId The user Id of the chat to load
-     * @param chatId The ID of the chat
+     * @param userId    The user Id of the chat to load
+     * @param chatId    The ID of the chat
+     * @param fromClick Whether the chat was loaded as a result of a click on the list. Will be used
+     *                  to decide whether to animate the detail fragment in
      */
-    private void loadChat(String userId, String chatId) {
+    private void loadChat(String userId, String chatId, boolean fromClick) {
 
         final Bundle args = new Bundle(3);
 
@@ -306,7 +304,7 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
 
             loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
                     .instantiate(getActivity(), ChatDetailsFragment.class
-                            .getName(), args), FragmentTags.CHAT_DETAILS, true, null);
+                            .getName(), args), FragmentTags.CHAT_DETAILS, true, null, fromClick);
         }
     }
 

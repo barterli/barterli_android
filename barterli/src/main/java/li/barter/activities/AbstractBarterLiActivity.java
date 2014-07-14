@@ -236,7 +236,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                     LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext())
                                          .sendBroadcast(
                                                  new Intent(AppConstants.ACTION_USER_INFO_UPDATED));
-                    final Intent homeIntent = new Intent(AbstractBarterLiActivity.this, HomeActivity.class);
+                    final Intent homeIntent = new Intent(AbstractBarterLiActivity.this,
+                                                         HomeActivity.class);
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
                 }
@@ -535,19 +536,46 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                              final AbstractBarterLiFragment fragment, final String tag,
                              final boolean addToBackStack, final String backStackTag) {
 
+        loadFragment(containerResId, fragment, tag, addToBackStack, backStackTag, false);
+    }
+
+    /**
+     * Helper method to load fragments into layout
+     *
+     * @param containerResId The container resource Id in the content view into which to load the
+     *                       fragment
+     * @param fragment       The fragment to load
+     * @param tag            The fragment tag
+     * @param addToBackStack Whether the transaction should be addded to the backstack
+     * @param backStackTag   The tag used for the backstack tag
+     * @param customAnimate  Whether to provide a custom animation for the Fragment. If
+     *                       <code>true</code>, the Fragment also needs to be annotated with a
+     *                       {@linkplain li.barter.fragments.FragmentTransition} annotation which
+     *                       describes the transition to perform. If <code>false</code>, will use
+     *                       default fragment transition
+     */
+    public void loadFragment(final int containerResId,
+                             final AbstractBarterLiFragment fragment, final String tag,
+                             final boolean addToBackStack, final String backStackTag,
+                             final boolean customAnimate) {
+
         final FragmentManager fragmentManager = getSupportFragmentManager();
         final FragmentTransaction transaction = fragmentManager
                 .beginTransaction();
-        final FragmentTransition fragmentTransition = fragment.getClass()
-                                                              .getAnnotation(
-                                                                      FragmentTransition.class);
-        if (fragmentTransition != null) {
 
-            transaction.setCustomAnimations(fragmentTransition.enterAnimation(), fragmentTransition
-                    .exitAnimation(), fragmentTransition
-                                                    .popEnterAnimation(), fragmentTransition
-                                                    .popExitAnimation());
+        if (customAnimate) {
+            final FragmentTransition fragmentTransition = fragment.getClass()
+                                                                  .getAnnotation(
+                                                                          FragmentTransition.class);
+            if (fragmentTransition != null) {
 
+                transaction
+                        .setCustomAnimations(fragmentTransition.enterAnimation(), fragmentTransition
+                                .exitAnimation(), fragmentTransition
+                                                     .popEnterAnimation(), fragmentTransition
+                                                     .popExitAnimation());
+
+            }
         }
 
         transaction.replace(containerResId, fragment, tag);

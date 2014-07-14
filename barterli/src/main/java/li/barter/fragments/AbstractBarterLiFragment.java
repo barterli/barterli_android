@@ -187,6 +187,32 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
 
     }
 
+    /**
+     * Helper method to load fragments into layout
+     *
+     * @param containerResId The container resource Id in the content view into which to load the
+     *                       fragment
+     * @param fragment       The fragment to load
+     * @param tag            The fragment tag
+     * @param addToBackStack Whether the transaction should be addded to the backstack
+     * @param backStackTag   The tag used for the backstack tag
+     * @param customAnimate  Whether to provide a custom animation for the Fragment. If
+     *                       <code>true</code>, the Fragment also needs to be annotated with a
+     *                       {@linkplain li.barter.fragments.FragmentTransition} annotation which
+     *                       describes the transition to perform. If <code>false</code>, will use
+     *                       default fragment transition
+     */
+    public void loadFragment(final int containerResId,
+                             final AbstractBarterLiFragment fragment, final String tag,
+                             final boolean addToBackStack, final String backStackTag, final boolean customAnimate) {
+
+        if (mIsAttached) {
+            ((AbstractBarterLiActivity) getActivity())
+                    .loadFragment(containerResId, fragment, tag, addToBackStack, backStackTag, customAnimate);
+        }
+
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -518,7 +544,8 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
             updateUserProfileRequest
                     .addMultipartParam(HttpConstants.USER, "application/json",
                                        mUserProfileMasterObject
-                                               .toString());
+                                               .toString()
+                    );
 
             updateUserProfileRequest.setRequestId(RequestId.SAVE_USER_PROFILE);
             addRequestToQueue(updateUserProfileRequest, true, 0, true);
