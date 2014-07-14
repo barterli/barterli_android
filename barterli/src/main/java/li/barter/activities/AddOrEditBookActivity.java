@@ -10,6 +10,7 @@
 
 package li.barter.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
@@ -89,5 +90,21 @@ public class AddOrEditBookActivity extends AbstractDrawerActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+
+        if(requestCode == AppConstants.RequestCodes.LOGIN_TO_ADD_BOOK) {
+
+            final AddOrEditBookFragment fragment = (AddOrEditBookFragment) getCurrentMasterFragment();
+
+            if(fragment != null && fragment.isAttached()) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

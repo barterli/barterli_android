@@ -10,6 +10,8 @@
 
 package li.barter.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.view.MenuItem;
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksPagerFragment;
+import li.barter.fragments.ProfileFragment;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
@@ -96,5 +99,21 @@ public class SearchBookPagerActivity extends AbstractDrawerActivity {
     public void onBadRequestError(final int requestId, final IBlRequestContract request, final
     int errorCode, final String errorMessage, final Bundle errorResponseBundle) {
 
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+
+        if(requestCode == AppConstants.RequestCodes.LOGIN_TO_CHAT) {
+
+            final BooksPagerFragment fragment = (BooksPagerFragment) getCurrentMasterFragment();
+
+            if(fragment != null && fragment.isAttached()) {
+                fragment.onActivityResult(requestCode, resultCode, data);
+            }
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

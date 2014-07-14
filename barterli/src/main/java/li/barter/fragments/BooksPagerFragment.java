@@ -331,8 +331,6 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
     /**
      * Updates the share intent
-     *
-     * @param bookTitle
      */
     private void updateShareIntent(String bookTitle) {
 
@@ -446,4 +444,21 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         }
     }
 
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+
+        if (requestCode == AppConstants.RequestCodes.LOGIN_TO_CHAT) {
+
+            final ProfileFragment profileFragment = (ProfileFragment) getChildFragmentManager().findFragmentByTag(FragmentTags.USER_PROFILE);
+
+            if (profileFragment != null && profileFragment.isAttached()) {
+
+                profileFragment.onActivityResult(requestCode, resultCode, data);
+            }
+
+
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
 }

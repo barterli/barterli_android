@@ -29,6 +29,7 @@
 
 package li.barter.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,7 +42,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,6 +62,7 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
+import li.barter.activities.AuthActivity;
 import li.barter.activities.ChatsActivity;
 import li.barter.activities.EditProfileActivity;
 import li.barter.adapters.ProfileFragmentsAdapter;
@@ -320,10 +321,17 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
         if (requestCode == AppConstants.RequestCodes.EDIT_PROFILE) {
 
-            if (resultCode == ActionBarActivity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 loadUserDetails();
             }
-        } else {
+        } else if(requestCode == AppConstants.RequestCodes.LOGIN_TO_CHAT) {
+
+            if(resultCode == Activity.RESULT_OK) {
+                chatWithUser();
+            }
+        }
+
+        else {
             super.onActivityResult(requestCode, resultCode, data);
         }
 
@@ -353,17 +361,9 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
             } else {
 
-                final Bundle loginArgs = new Bundle(1);
-                loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
-
-                loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                        .instantiate(getActivity(), LoginFragment.class
-                                .getName(), loginArgs), FragmentTags.LOGIN_TO_CHAT, true,
-                             FragmentTags.BS_LOGIN_FROM_BOOK_DETAIL);
-
+                final Intent intent = new Intent(getActivity(), AuthActivity.class);
+                getActivity().startActivityForResult(intent, AppConstants.RequestCodes.LOGIN_TO_CHAT);
             }
-        } else {
-            // Show Login Fragment
         }
 
     }

@@ -263,6 +263,8 @@ public class AppConstants {
         public static final int EDIT_PROFILE            = 106;
         public static final int ONWARD                  = 107;
         public static final int RESET_PASSWORD          = 108;
+        public static final int LOGIN_TO_ADD_BOOK       = 109;
+        public static final int LOGIN_TO_CHAT           = 110;
     }
 
     /**
@@ -293,7 +295,6 @@ public class AppConstants {
         public static final String TYPE                  = "type";
         public static final String UP_NAVIGATION_TAG     = "up_navigation_tag";
         public static final String HAS_FETCHED_INFO      = "has_fetched_info";
-        public static final String SUBMIT_ON_RESUME      = "submit_on_resumt";
         public static final String LOCATIONS             = "locations";
         public static final String ID                    = "id";
         public static final String FROM_SEARCH           = "from_search";
@@ -329,51 +330,24 @@ public class AppConstants {
      * @author Vinay S Shenoy
      */
     public static interface FragmentTags {
-        public static final String BOOKS_AROUND_ME                        = "books_around_me";
-        public static final String ADD_OR_EDIT_BOOK                       = "add_or_edit_book";
-        public static final String LOGIN_TO_ADD_BOOK                      = "login_to_add_book";
-        public static final String LOGIN_TO_CHAT                          = "login_to_chat";
-        public static final String LOGIN_FROM_NAV_DRAWER                  = "login_from_nav_drawer";
-        public static final String SELECT_PREFERRED_LOCATION_FROM_LOGIN   =
-                "select_preferred_location_from_login";
-        public static final String SELECT_PREFERRED_LOCATION_FROM_PROFILE =
-                "select_preferred_location_from_profile";
-        public static final String REPORT_BUGS                            = "report_bugs";
-        public static final String USER_BOOK_FROM_PROFILE                 =
-                "user_book_from_profile";
-        public static final String MY_BOOK_FROM_ADD_OR_EDIT               =
-                "my_book_from_add_or_edit";
-        public static final String PROFILE_FROM_NAV_DRAWER                =
-                "profile_from_nav_drawer";
-        public static final String PROFILE_FROM_CHAT_DETAILS              =
-                "profile_from_chat_details";
-        public static final String PROFILE_FROM_LOGIN                     = "profile_from_login";
-        public static final String EDIT_PROFILE                           = "edit_profile";
-        public static final String CHATS                                  = "chats";
-        public static final String CHAT_DETAILS                           = "chat_details";
-        public static final String ABOUT_ME                               = "about_me";
-        public static final String MY_BOOKS                               = "my_books";
-        public static final String USER_PROFILE                           = "user_profile";
-        public static final String PASSWORD_RESET                         = "password_reset";
-        public static final String NAV_DRAWER                             = "nav_drawer";
-        public static final String SETTINGS                               = "settings";
-        public static final String LOGIN                                  = "login";
-        public static final String BOOK_DETAIL                            = "book_detail";
-        public static final String BOOKS_PAGER                            = "books_pager";
-        public static final String SELECT_PREFERRED_LOCATION              =
+        public static final String BOOKS_AROUND_ME           = "books_around_me";
+        public static final String ADD_OR_EDIT_BOOK          = "add_or_edit_book";
+        public static final String REPORT_BUGS               = "report_bugs";
+        public static final String EDIT_PROFILE              = "edit_profile";
+        public static final String CHATS                     = "chats";
+        public static final String CHAT_DETAILS              = "chat_details";
+        public static final String ABOUT_ME                  = "about_me";
+        public static final String MY_BOOKS                  = "my_books";
+        public static final String USER_PROFILE              = "user_profile";
+        public static final String PASSWORD_RESET            = "password_reset";
+        public static final String NAV_DRAWER                = "nav_drawer";
+        public static final String SETTINGS                  = "settings";
+        public static final String LOGIN                     = "login";
+        public static final String BOOK_DETAIL               = "book_detail";
+        public static final String BOOKS_PAGER               = "books_pager";
+        public static final String SELECT_PREFERRED_LOCATION =
                 "select_preferred_location";
-        public static final String ABOUT_US                               = "about_us";
-
-        /* Tags for fragment backstack popping and providing up navigation */
-        public static final String BS_BOOKS_AROUND_ME        = "to_books_around_me";
-        public static final String BS_ADD_BOOK               = "to_add_book";
-        public static final String BS_PREFERRED_LOCATION     = "to_preferred_location";
-        public static final String BS_EDIT_PROFILE           = "to_edit_profile";
-        public static final String BS_CHATS                  = "to_chats";
-        public static final String BS_EDIT_BOOK              = "to_edit_book";
-        public static final String BS_PROFILE                = "to_profile";
-        public static final String BS_BOOK_DETAIL            = "to_book_detail";
-        public static final String BS_LOGIN_FROM_BOOK_DETAIL = "to_login_from_book_detail";
+        public static final String ABOUT_US                  = "about_us";
 
         /* Tags for Dialog fragments */
         public static final String DIALOG_TAKE_PICTURE    = "dialog_take_picture";
@@ -381,10 +355,8 @@ public class AppConstants {
         public static final String DIALOG_FORGOT_PASSWORD = "dialog_add_name";
         public static final String DIALOG_ADD_BOOK        = "dialog_add_book";
         public static final String DIALOG_ENABLE_LOCATION = "dialog_enable_location";
-        public static final String DIALOG_ABOUT_LOCATION  = "dialog_about_location";
         public static final String DIALOG_CHAT_LONGCLICK  = "dialog_chat_longclick";
         public static final String DIALOG_DELETE_BOOK     = "dialog_delete_book";
-
 
     }
 

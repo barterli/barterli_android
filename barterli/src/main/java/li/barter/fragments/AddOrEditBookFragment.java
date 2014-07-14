@@ -10,10 +10,10 @@
 
 package li.barter.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -40,6 +40,7 @@ import java.util.Map;
 
 import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
+import li.barter.activities.AuthActivity;
 import li.barter.analytics.AnalyticsConstants.Screens;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
@@ -55,7 +56,6 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.BarterType;
-import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.Logger;
@@ -92,13 +92,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     private String mGoogleBooksApiKey;
     private final String mBookSelection = DatabaseColumns.ID
             + SQLConstants.EQUALS_ARG;
-
-    /**
-     * On resume, if <code>true</code> and the user has logged in, immediately perform the request
-     * to add the book to server. This is to handle where the case where tries to add a book without
-     * logging in and we move to the login flow
-     */
-    private boolean mShouldSubmitOnResume;
 
     /**
      * Whether a upload request is happening
@@ -151,12 +144,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         }
 
-        if (savedInstanceState != null) {
-            mShouldSubmitOnResume = savedInstanceState
-                    .getBoolean(Keys.SUBMIT_ON_RESUME);
-
-        }
-
         return view;
     }
 
@@ -200,16 +187,8 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
             if (!isLoggedIn()) {
 
-                mShouldSubmitOnResume = true;
-                final Bundle loginArgs = new Bundle(1);
-                loginArgs.putString(Keys.UP_NAVIGATION_TAG, FragmentTags.BS_ADD_BOOK);
-
-                loadFragment(mContainerViewId, (AbstractBarterLiFragment) Fragment
-                                     .instantiate(getActivity(), LoginFragment.class
-                                             .getName(), loginArgs), FragmentTags.LOGIN_TO_ADD_BOOK,
-                             true,
-                             FragmentTags.BS_ADD_BOOK
-                );
+                final Intent loginIntent = new Intent(getActivity(), AuthActivity.class);
+                getActivity().startActivityForResult(loginIntent, AppConstants.RequestCodes.LOGIN_TO_ADD_BOOK);
 
             } else {
 
@@ -281,7 +260,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(Keys.HAS_FETCHED_INFO, mHasFetchedDetails);
-        outState.putBoolean(Keys.SUBMIT_ON_RESUME, mShouldSubmitOnResume);
     }
 
     /**
@@ -388,10 +366,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
      */
     private void createBookOnServer(final JSONObject locationObject) {
 
-        if (mShouldSubmitOnResume) {
-            mShouldSubmitOnResume = false;
-        }
-
         try {
 
             final JSONObject requestObject = new JSONObject();
@@ -434,6 +408,20 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
 
         } catch (final JSONException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+
+        if (requestCode == AppConstants.RequestCodes.LOGIN_TO_ADD_BOOK) {
+
+            if (resultCode == Activity.RESULT_OK) {
+
+                checkAndFinishBookSubmitTask();
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -506,14 +494,6 @@ public class AddOrEditBookFragment extends AbstractBarterLiFragment implements
         }
 
         return tagNamesArray;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mShouldSubmitOnResume && isLoggedIn()) {
-            createBookOnServer(null);
-        }
     }
 
     /**
