@@ -209,6 +209,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
 
         if (isLoggedIn()) {
 
+            //TODO: Vinay - Add Dialog about chat messages being lost
             final RequestQueue requestQueue = ((BarterLiApplication) getApplication())
                     .getRequestQueue();
             requestQueue.add(new ClearCacheRequest(requestQueue.getCache(), new Runnable() {
@@ -232,11 +233,12 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                                                                    ChatService.class);
                     disconnectChatIntent.setAction(AppConstants.ACTION_DISCONNECT_CHAT);
                     startService(disconnectChatIntent);
-                    getSupportFragmentManager()
-                            .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext())
                                          .sendBroadcast(
                                                  new Intent(AppConstants.ACTION_USER_INFO_UPDATED));
+                    final Intent homeIntent = new Intent(AbstractBarterLiActivity.this, HomeActivity.class);
+                    homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(homeIntent);
                 }
             }));
 
