@@ -29,18 +29,14 @@ import org.json.JSONObject;
 import li.barter.R;
 import li.barter.fragments.AbstractBarterLiFragment;
 import li.barter.fragments.BooksAroundMeFragment;
-import li.barter.fragments.ChatDetailsFragment;
-import li.barter.fragments.ChatsFragment;
 import li.barter.http.BlRequest;
 import li.barter.http.HttpConstants;
 import li.barter.http.HttpConstants.ApiEndpoints;
 import li.barter.http.HttpConstants.RequestId;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
-import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.DeviceInfo;
 import li.barter.utils.AppConstants.FragmentTags;
-import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.GooglePlayClientWrapper;
 import li.barter.utils.SharedPreferenceHelper;
@@ -67,23 +63,13 @@ public class HomeActivity extends AbstractDrawerActivity implements
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-        initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer);
-        mGooglePlayClientWrapper = new GooglePlayClientWrapper(this, this);
+        initDrawer(R.id.drawer_layout,
+                   R.id.frame_nav_drawer);
+        mGooglePlayClientWrapper = new GooglePlayClientWrapper(this,
+                                                               this);
         if (savedInstanceState == null) {
 
-            final String action = getIntent().getAction();
-
-            if (action == null) {
-                loadBooksAroundMeFragment();
-            } else if (action.equals(AppConstants.ACTION_SHOW_ALL_CHATS)) {
-                loadChatsFragment();
-            } else if (action.equals(AppConstants.ACTION_SHOW_CHAT_DETAIL)) {
-                loadChatDetailFragment(getIntent().getStringExtra(Keys.CHAT_ID), getIntent()
-                        .getStringExtra(Keys.USER_ID));
-            } else {
-                loadBooksAroundMeFragment();
-            }
-
+            loadBooksAroundMeFragment();
         }
 
     }
@@ -121,14 +107,22 @@ public class HomeActivity extends AbstractDrawerActivity implements
             final JSONObject requestObject = new JSONObject();
 
             try {
-                requestObject.put(HttpConstants.REFERRAL_ID, referrer);
-                requestObject.put(HttpConstants.DEVICE_ID, UserInfo.INSTANCE
-                        .getDeviceId());
+                requestObject.put(HttpConstants.REFERRAL_ID,
+                                  referrer);
+                requestObject.put(HttpConstants.DEVICE_ID,
+                                  UserInfo.INSTANCE
+                                          .getDeviceId());
 
-                final BlRequest request = new BlRequest(Method.POST, HttpConstants.getApiBaseUrl()
-                        + ApiEndpoints.REFERRAL, requestObject.toString(), mVolleyCallbacks);
+                final BlRequest request = new BlRequest(Method.POST,
+                                                        HttpConstants.getApiBaseUrl()
+                                                                + ApiEndpoints.REFERRAL,
+                                                        requestObject.toString(),
+                                                        mVolleyCallbacks);
                 request.setRequestId(RequestId.REFERRAL);
-                addRequestToQueue(request, false, 0, true);
+                addRequestToQueue(request,
+                                  false,
+                                  0,
+                                  true);
             } catch (JSONException e) {
             }
 
@@ -152,48 +146,18 @@ public class HomeActivity extends AbstractDrawerActivity implements
     }
 
     /**
-     * Loads the {@link ChatsFragment} into the fragment container
-     */
-    private void loadChatsFragment() {
-
-        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                             .instantiate(this, ChatsFragment.class.getName(), null),
-                     FragmentTags.CHATS, false,
-                     null
-        );
-
-    }
-
-    /**
-     * Loads the {@link ChatDetailsFragment} into the fragment container
-     *
-     * @param chatId The chat detail to load
-     * @param userId The user Id of the user with which the current user is chatting
-     */
-    private void loadChatDetailFragment(final String chatId, final String userId) {
-
-        if (TextUtils.isEmpty(chatId) || TextUtils.isEmpty(userId)) {
-            finish();
-        }
-
-        final Bundle args = new Bundle(2);
-        args.putString(Keys.CHAT_ID, chatId);
-        args.putString(Keys.USER_ID, userId);
-        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                             .instantiate(this, ChatDetailsFragment.class.getName(), args),
-                     FragmentTags.CHAT_DETAILS, false, null
-        );
-
-    }
-
-    /**
      * Loads the {@link BooksAroundMeFragment} into the fragment container
      */
     public void loadBooksAroundMeFragment() {
 
-        loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment
-                             .instantiate(this, BooksAroundMeFragment.class
-                                     .getName(), null), FragmentTags.BOOKS_AROUND_ME, false,
+        loadFragment(R.id.frame_content,
+                     (AbstractBarterLiFragment) Fragment
+                             .instantiate(this,
+                                          BooksAroundMeFragment.class
+                                                  .getName(),
+                                          null),
+                     FragmentTags.BOOKS_AROUND_ME,
+                     false,
                      null
         );
 
@@ -212,15 +176,18 @@ public class HomeActivity extends AbstractDrawerActivity implements
                           final ResponseInfo response) {
 
         if (requestId == RequestId.REFERRAL) {
-            SharedPreferenceHelper.removeKeys(this, R.string.pref_referrer);
+            SharedPreferenceHelper.removeKeys(this,
+                                              R.string.pref_referrer);
         }
 
     }
 
     @Override
     public void onBadRequestError(final int requestId,
-                                  final IBlRequestContract request, final int errorCode,
-                                  final String errorMessage, final Bundle errorResponseBundle) {
+                                  final IBlRequestContract request,
+                                  final int errorCode,
+                                  final String errorMessage,
+                                  final Bundle errorResponseBundle) {
 
     }
 

@@ -11,5 +11,5 @@
 <translate xmlns:android="http://schemas.android.com/apk/res/android"
     android:duration="@integer/long_anim_time"
     android:fromXDelta="100%p"
-    android:interpolator="@android:anim/decelerate_interpolator"
+    android:interpolator="@android:anim/accelerate_decelerate_interpolator"
     android:toXDelta="0" />

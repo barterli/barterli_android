@@ -37,14 +37,13 @@ public class AppConstants {
     public static final String GOOGLE          = "google";
     public static final String MANUAL          = "manual";
 
+    //All timestamps from API are in this format - ISO 8601
     public static final String TIMESTAMP_FORMAT      = "yyyy-MM-dd'T'HH:mm:ssZ";
     public static final String CHAT_TIME_FORMAT      = "dd MMM, h:mm a";
     public static final String MESSAGE_TIME_FORMAT   = "h:mm a";
     public static final String CHAT_ID_FORMAT        = "%s#%s";
     public static final String BARTER_TYPE_SEPARATOR = ",";
 
-    public static final String ACTION_SHOW_ALL_CHATS      = "li.barter.ACTION_SHOW_ALL_CHATS";
-    public static final String ACTION_SHOW_CHAT_DETAIL    = "li.barter.ACTION_SHOW_CHAT_DETAIL";
     public static final String ACTION_DISCONNECT_CHAT     = "li.barter.ACTION_DISCONNECT_CHAT";
     public static final String ACTION_CHAT_BUTTON_CLICKED = "li.barter.ACTION_CHAT_BUTTON_CLICKED";
     public static final String ACTION_USER_INFO_UPDATED   = "li.barter.ACTION_USER_INFO_UPDATED";
@@ -63,8 +62,7 @@ public class AppConstants {
 
     // Default Book Image url we getting from the server when there is no image
     public static final String DEFAULT_BOOKIMAGE_URL  = "1_default.png";
-    public static final String PLAY_STORE_LINK        = "https://play.google" +
-            ".com/store/apps/details?id=li.barter";
+    public static final String PLAY_STORE_LINK        = "https://play.google.com/store/apps/details?id=li.barter";
     public static final String PLAY_STORE_MARKET_LINK = "market://details?id=li.barter";
     public static final String REFERRER_FORMAT        = "&referrer=%s";
 

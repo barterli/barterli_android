@@ -23,6 +23,7 @@ import android.text.TextUtils;
 
 import li.barter.BarterLiApplication;
 import li.barter.R;
+import li.barter.activities.ChatsActivity;
 import li.barter.activities.HomeActivity;
 import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.Keys;
@@ -208,14 +209,14 @@ class ChatNotificationHelper {
 
         if (mChatScreenVisible) {
             mUnreadMessageCount++;
-            final Intent resultIntent = new Intent(context, HomeActivity.class);
+            final Intent resultIntent = new Intent(context, ChatsActivity.class);
             if (mUnreadMessageCount == 1) {
                 mNotificationBuilder.setSmallIcon(R.drawable.ic_launcher)
                                     .setContentTitle(senderName)
                                     .setContentText(messageText)
                                     .setAutoCancel(true);
-                resultIntent.setAction(AppConstants.ACTION_SHOW_CHAT_DETAIL);
-                resultIntent.putExtra(Keys.CHAT_ID, chatId);
+                resultIntent.setAction(ChatsActivity.ACTION_LOAD_CHAT);
+                resultIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 resultIntent.putExtra(Keys.USER_ID, withUserId);
 
             } else {
@@ -225,7 +226,7 @@ class ChatNotificationHelper {
                                 context.getString(R.string.new_messages, mUnreadMessageCount))
                         .setContentText(messageText)
                         .setAutoCancel(true);
-                resultIntent.setAction(AppConstants.ACTION_SHOW_ALL_CHATS);
+                resultIntent.setAction(null);
             }
 
             mNotificationBuilder.setSound(mNotificationSoundUri);

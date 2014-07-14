@@ -72,17 +72,16 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
      * BroadcastReceiver implementation that receives broadcasts when the user info is updated from
      * server
      */
-    private final        BroadcastReceiver mUserInfoUpdatedBroadcastReceiver = new
-            BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    if (intent.getAction() != null && intent.getAction()
-                                                            .equals(AppConstants
-                                                                            .ACTION_USER_INFO_UPDATED)) {
-                        updateLoggedInStatus();
-                    }
-                }
-            };
+    private final        BroadcastReceiver mUserInfoUpdatedBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction() != null && intent.getAction()
+                                                    .equals(AppConstants
+                                                                    .ACTION_USER_INFO_UPDATED)) {
+                updateLoggedInStatus();
+            }
+        }
+    };
     /**
      * ListView to provide Nav drawer content
      */
@@ -266,9 +265,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
      */
     private Runnable makeRunnableForNavDrawerClick(final int position) {
 
-        Runnable runnable = null;
-        final AbstractBarterLiFragment masterFragment = ((AbstractBarterLiActivity) getActivity())
-                .getCurrentMasterFragment();
+        Runnable runnable;
         final Activity activity = getActivity();
 
         switch (position) {
