@@ -19,6 +19,7 @@
         android:id="@+id/image_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/transparent"
         android:contentDescription="@string/app_name" />
 
     <li.barter.widgets.CircleImageView

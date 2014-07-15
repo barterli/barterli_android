@@ -10,10 +10,6 @@
 
 package li.barter.widgets;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Picasso.LoadedFrom;
-import com.squareup.picasso.Target;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -34,12 +30,16 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso.LoadedFrom;
+import com.squareup.picasso.Target;
+
 import li.barter.R;
 
 /**
- * Custom ImageView to draw the content in a circular way. Works ONLY when
- * {@link #setImageBitmap(android.graphics.Bitmap)} method is used
- * 
+ * Custom ImageView to draw the content in a circular way. Works ONLY when {@link
+ * #setImageBitmap(android.graphics.Bitmap)} method is used
+ *
  * @author Vinay S Shenoy
  */
 public class CircleImageView extends ImageView {
@@ -50,14 +50,14 @@ public class CircleImageView extends ImageView {
     private static final int     DEFAULT_BORDER_COLOR  = Color.BLACK;
     private static final boolean DEFAULT_USE_VIGNETTE  = false;
 
-    private static final String  TAG                   = "CircleImageView";
+    private static final String TAG = "CircleImageView";
 
-    private CircleTarget         mCircleTarget;
-    private int                  mCornerRadius;
-    private int                  mMargin;
-    private int                  mBorderWidth;
-    private int                  mBorderColor;
-    private boolean              mUseVignette;
+    private CircleTarget mCircleTarget;
+    private int          mCornerRadius;
+    private int          mMargin;
+    private int          mBorderWidth;
+    private int          mBorderColor;
+    private boolean      mUseVignette;
 
     /**
      * @param context
@@ -101,17 +101,17 @@ public class CircleImageView extends ImageView {
 
         if (attrs != null) {
             final TypedArray styledAttrs = context
-                            .obtainStyledAttributes(attrs, R.styleable.CircleImageView);
+                    .obtainStyledAttributes(attrs, R.styleable.CircleImageView);
             mCornerRadius = (int) styledAttrs
-                            .getDimension(R.styleable.CircleImageView_cornerRadius, mCornerRadius);
+                    .getDimension(R.styleable.CircleImageView_cornerRadius, mCornerRadius);
             mMargin = (int) styledAttrs
-                            .getDimension(R.styleable.CircleImageView_margin, mMargin);
+                    .getDimension(R.styleable.CircleImageView_margin, mMargin);
             mUseVignette = styledAttrs
-                            .getBoolean(R.styleable.CircleImageView_useVignette, mUseVignette);
+                    .getBoolean(R.styleable.CircleImageView_useVignette, mUseVignette);
             mBorderWidth = (int) styledAttrs
-                            .getDimension(R.styleable.CircleImageView_borderWidth, mBorderWidth);
+                    .getDimension(R.styleable.CircleImageView_borderWidth, mBorderWidth);
             mBorderColor = styledAttrs
-                            .getColor(R.styleable.CircleImageView_borderColor, mBorderColor);
+                    .getColor(R.styleable.CircleImageView_borderColor, mBorderColor);
             styledAttrs.recycle();
         }
     }
@@ -125,17 +125,18 @@ public class CircleImageView extends ImageView {
 
     private class StreamDrawable extends Drawable {
 
-        private final float   mCornerRadius;
-        private final RectF   mRect = new RectF();
+        private final float mCornerRadius;
+        private final RectF mRect = new RectF();
 
         /* Rect used for drawing the actual inner image if a border has been set */
-        private RectF         mInnerRect;
-        private BitmapShader  mBitmapShader;
-        private final Paint   mPaint;
-        private final int     mMargin;
-        private final int     mBorderWidth;
-        private final int     mBorderColor;
-        private final boolean mUseVignette;
+        private       RectF        mBorderRect;
+        private       RectF        mImageRect;
+        private       BitmapShader mBitmapShader;
+        private final Paint        mPaint;
+        private final int          mMargin;
+        private final int          mBorderWidth;
+        private final int          mBorderColor;
+        private final boolean      mUseVignette;
 
         StreamDrawable(Bitmap bitmap, float cornerRadius, int margin, boolean useVignette, int borderWidth, int borderColor) {
             mCornerRadius = cornerRadius;
@@ -145,7 +146,8 @@ public class CircleImageView extends ImageView {
             mBorderColor = borderColor;
 
             if (borderWidth > 0) {
-                mInnerRect = new RectF();
+                mBorderRect = new RectF();
+                mImageRect = new RectF();
             }
 
             mPaint = new Paint();
@@ -157,8 +159,6 @@ public class CircleImageView extends ImageView {
 
         /**
          * Creates a bitmap shader with a bitmap
-         * 
-         * @param bitmap
          */
         private BitmapShader getShaderForBitmap(Bitmap bitmap) {
             return new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
@@ -175,19 +175,22 @@ public class CircleImageView extends ImageView {
         protected void onBoundsChange(Rect bounds) {
             super.onBoundsChange(bounds);
             mRect.set(mMargin, mMargin, bounds.width() - mMargin, bounds
-                            .height() - mMargin);
+                    .height() - mMargin);
 
             if (mBorderWidth > 0) {
-                mInnerRect.set(mRect.left + mBorderWidth, mRect.top
-                                + mBorderWidth, mRect.right - mBorderWidth, mRect.bottom
-                                - mBorderWidth);
+                mBorderRect.set(mRect.left + mBorderWidth, mRect.top
+                        + mBorderWidth, mRect.right - mBorderWidth, mRect.bottom
+                                        - mBorderWidth);
+                mImageRect.set(mBorderRect.left + mBorderWidth, mBorderRect.top
+                        + mBorderWidth, mBorderRect.right - mBorderWidth, mBorderRect.bottom
+                                       - mBorderWidth);
             }
 
             if (mUseVignette) {
                 RadialGradient vignette = new RadialGradient(mRect.centerX(), mRect
-                                .centerY() * 1.0f / 0.7f, mRect.centerX() * 1.3f, new int[] {
+                        .centerY() * 1.0f / 0.7f, mRect.centerX() * 1.3f, new int[]{
                         0, 0, 0x7f000000
-                }, new float[] {
+                }, new float[]{
                         0.0f, 0.7f, 1.0f
                 }, Shader.TileMode.CLAMP);
 
@@ -207,11 +210,15 @@ public class CircleImageView extends ImageView {
                 Shader shader = mPaint.getShader();
                 mPaint.setShader(null);
                 mPaint.setColor(mBorderColor);
-                canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
+                mPaint.setStrokeWidth(mBorderWidth);
+                mPaint.setStyle(Paint.Style.STROKE);
+                canvas.drawRoundRect(mBorderRect, mCornerRadius, mCornerRadius, mPaint);
                 mPaint.setShader(shader);
-                canvas.drawRoundRect(mInnerRect, mCornerRadius, mCornerRadius, mPaint);
+                mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                canvas.drawRoundRect(mImageRect, mCornerRadius, mCornerRadius, mPaint);
 
             } else {
+                mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                 canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
             }
         }
@@ -247,9 +254,8 @@ public class CircleImageView extends ImageView {
     }
 
     /**
-     * Custom {@link Target} implementation for loading images via
-     * {@link Picasso}
-     * 
+     * Custom {@link Target} implementation for loading images via {@link Picasso}
+     *
      * @author Vinay S Shenoy
      */
     public static class CircleTarget implements Target {
@@ -271,7 +277,7 @@ public class CircleImageView extends ImageView {
                 return false;
             } else {
                 CircleImageView theirImageView = ((CircleTarget) o)
-                                .getImageView();
+                        .getImageView();
                 return mCircleImageView.equals(theirImageView);
             }
         }
