@@ -39,7 +39,7 @@ public class BarterLiDescriptionFragment extends AbstractBarterLiFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                     Bundle savedInstanceState) {
         mLoadedIndividually = false;
-        final View view = inflater.inflate(R.layout.layout_barter_desc, null);
+        final View view = inflater.inflate(R.layout.fragment_barter_desc, null);
         mPlusOneButton=(PlusOneButton)view.findViewById(R.id.plus_one_button);
  
         return view;

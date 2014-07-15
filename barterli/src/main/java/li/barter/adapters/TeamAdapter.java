@@ -10,40 +10,39 @@
 
 package li.barter.adapters;
 
-import com.squareup.picasso.Picasso;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
 import li.barter.R;
-import li.barter.data.DatabaseColumns;
 import li.barter.models.Team;
 import li.barter.widgets.CircleImageView;
 
 /**
  * Adapter for displaying OSS Licenses
- * 
+ *
  * @author Vinay S Shenoy
  */
 public class TeamAdapter extends BaseAdapter {
 
-    private static final String  TAG = "TeamAdapter";
+    private static final String TAG = "TeamAdapter";
 
     /**
      * A String array containing the Linces to display
      */
-    private final Team[]         mTeamMembers;
+    private final Team[] mTeamMembers;
 
     /**
      * A reference to the {@link LayoutInflater} to inflating layouts
      */
     private final LayoutInflater mLayoutInflater;
 
-    private final Context        mContext;
+    private final Context mContext;
 
     public TeamAdapter(final Context context, final Team[] mTeams) {
 
@@ -69,37 +68,36 @@ public class TeamAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, final View convertView,
-                    final ViewGroup parent) {
+                        final ViewGroup parent) {
 
         View view = convertView;
 
         if (view == null) {
             view = mLayoutInflater.inflate(R.layout.layout_team, parent, false);
-            view.setTag(R.id.team_desc+position, view.findViewById(R.id.team_desc));
-            view.setTag(R.id.team_name+position, view.findViewById(R.id.team_name));
-            view.setTag(R.id.team_image+position, view.findViewById(R.id.team_image));
+            view.setTag(R.id.team_desc, view.findViewById(R.id.team_desc));
+            view.setTag(R.id.team_name, view.findViewById(R.id.team_name));
+            view.setTag(R.id.team_image, view.findViewById(R.id.team_image));
 
-        }
-        else {
-            view.setTag(R.id.team_desc+position, view.findViewById(R.id.team_desc));
-            view.setTag(R.id.team_name+position, view.findViewById(R.id.team_name));
-            view.setTag(R.id.team_image+position, view.findViewById(R.id.team_image));
+        } else {
+            view.setTag(R.id.team_desc, view.findViewById(R.id.team_desc));
+            view.setTag(R.id.team_name, view.findViewById(R.id.team_name));
+            view.setTag(R.id.team_image, view.findViewById(R.id.team_image));
         }
         final Team teamMember = getItem(position);
-        ((TextView) view.getTag(R.id.team_name+position)).setText(teamMember.getName());
-        ((TextView) view.getTag(R.id.team_desc+position)).setText(teamMember
-                        .getDescription());
+        ((TextView) view.getTag(R.id.team_name)).setText(teamMember.getName());
+        ((TextView) view.getTag(R.id.team_desc)).setText(teamMember
+                                                                 .getDescription());
 
-        
-        CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.team_image+position);
-        
-      	
-           
+
+        CircleImageView circleImageView = (CircleImageView) view.getTag(R.id.team_image);
+
+        circleImageView.setImageResource(0);
+
         Picasso.with(mContext).load(teamMember.getImageUrl())
-                        .error(R.drawable.pic_avatar)
-                        .resizeDimen(R.dimen.big_chat_detail_image_size, R.dimen.big_chat_detail_image_size)
-                        .centerCrop()
-                        .into(circleImageView.getTarget());
+               .error(R.drawable.pic_avatar)
+               .resizeDimen(R.dimen.big_chat_detail_image_size, R.dimen.big_chat_detail_image_size)
+               .centerCrop()
+               .into(circleImageView.getTarget());
 
         return view;
     }

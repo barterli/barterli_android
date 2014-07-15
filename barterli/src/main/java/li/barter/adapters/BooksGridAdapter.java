@@ -173,9 +173,12 @@ public class BooksGridAdapter extends CursorAdapter {
         final String ownerImageUrl = cursor.getString(cursor
                         .getColumnIndex(DatabaseColumns.BOOK_OWNER_IMAGE_URL));
 
+        final CircleImageView circleImageView = (CircleImageView) view
+                .getTag(R.id.image_user);
+
         if (!TextUtils.isEmpty(ownerImageUrl)) {
-            final CircleImageView circleImageView = (CircleImageView) view
-                            .getTag(R.id.image_user);
+
+            circleImageView.setImageResource(0);
 
             Picasso.with(context)
                             .load(ownerImageUrl)
