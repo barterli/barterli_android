@@ -53,9 +53,12 @@
                 android:layout_marginTop="@dimen/margin_xx_small"
                 android:contentDescription="@string/app_name"
                 android:gravity="center_vertical"
-                app:borderColor="@color/apptheme_color"
-                app:borderWidth="2dp"
-                app:cornerRadius="@dimen/book_user_image_size_profile" />
+                app:borderColor="@color/white"
+                app:borderWidth="1dp"
+                app:cornerRadius="@dimen/book_user_image_size_profile"
+                android:shadowRadius="1.5"
+                android:shadowDx="0.0"
+                android:shadowDy="1.5"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

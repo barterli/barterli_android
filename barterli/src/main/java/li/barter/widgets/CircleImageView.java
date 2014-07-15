@@ -17,17 +17,14 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.graphics.ComposeShader;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
-import android.graphics.RadialGradient;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -44,11 +41,14 @@ import li.barter.R;
  */
 public class CircleImageView extends ImageView {
 
-    private static final int     DEFAULT_CORNER_RADIUS = 25;               //dips
-    private static final int     DEFAULT_MARGIN        = 0;                //dips
-    private static final int     DEFAULT_BORDER_WIDTH  = 0;                //dips
-    private static final int     DEFAULT_BORDER_COLOR  = Color.BLACK;
-    private static final boolean DEFAULT_USE_VIGNETTE  = false;
+    private static final int   DEFAULT_CORNER_RADIUS = 25;               //dips
+    private static final int   DEFAULT_MARGIN        = 0;                //dips
+    private static final int   DEFAULT_BORDER_WIDTH  = 0;                //dips
+    private static final int   DEFAULT_BORDER_COLOR  = Color.BLACK;
+    private static final float DEFAULT_SHADOW_RADIUS = 0f;
+    private static final float DEFAULT_SHADOW_DX     = 0f;
+    private static final float DEFAULT_SHADOW_DY     = 2.0f;
+    private static final int   DEFAULT_SHADOW_COLOR  = Color.DKGRAY;
 
     private static final String TAG = "CircleImageView";
 
@@ -57,7 +57,10 @@ public class CircleImageView extends ImageView {
     private int          mMargin;
     private int          mBorderWidth;
     private int          mBorderColor;
-    private boolean      mUseVignette;
+    private float        mShadowRadius;
+    private float        mShadowDx;
+    private float        mShadowDy;
+    private int          mShadowColor;
 
     /**
      * @param context
@@ -95,23 +98,39 @@ public class CircleImageView extends ImageView {
         final float density = context.getResources().getDisplayMetrics().density;
         mCornerRadius = (int) (DEFAULT_CORNER_RADIUS * density + 0.5f);
         mMargin = (int) (DEFAULT_MARGIN * density + 0.5f);
-        mUseVignette = DEFAULT_USE_VIGNETTE;
         mBorderWidth = (int) (DEFAULT_BORDER_WIDTH * density + 0.5f);
         mBorderColor = DEFAULT_BORDER_COLOR;
 
         if (attrs != null) {
-            final TypedArray styledAttrs = context
+            TypedArray styledAttrs = context
                     .obtainStyledAttributes(attrs, R.styleable.CircleImageView);
             mCornerRadius = (int) styledAttrs
                     .getDimension(R.styleable.CircleImageView_cornerRadius, mCornerRadius);
             mMargin = (int) styledAttrs
                     .getDimension(R.styleable.CircleImageView_margin, mMargin);
-            mUseVignette = styledAttrs
-                    .getBoolean(R.styleable.CircleImageView_useVignette, mUseVignette);
             mBorderWidth = (int) styledAttrs
                     .getDimension(R.styleable.CircleImageView_borderWidth, mBorderWidth);
             mBorderColor = styledAttrs
                     .getColor(R.styleable.CircleImageView_borderColor, mBorderColor);
+            styledAttrs.recycle();
+
+            final int[] shadowAttributes = new int[]{
+                    android.R.attr.shadowColor,
+                    android.R.attr.shadowDx,
+                    android.R.attr.shadowDy,
+                    android.R.attr.shadowRadius
+            };
+            styledAttrs = context.obtainStyledAttributes(
+                    attrs,
+                    shadowAttributes
+            );
+
+            //The attributes have to parsed in the same order
+            mShadowColor = styledAttrs.getColor(0, DEFAULT_SHADOW_COLOR);
+            mShadowDx = styledAttrs.getFloat(1, DEFAULT_SHADOW_DX);
+            mShadowDy = styledAttrs.getFloat(2, DEFAULT_SHADOW_DY);
+            mShadowRadius = styledAttrs.getFloat(3, DEFAULT_SHADOW_RADIUS);
+
             styledAttrs.recycle();
         }
     }
@@ -136,11 +155,9 @@ public class CircleImageView extends ImageView {
         private final int          mMargin;
         private final int          mBorderWidth;
         private final int          mBorderColor;
-        private final boolean      mUseVignette;
 
-        StreamDrawable(Bitmap bitmap, float cornerRadius, int margin, boolean useVignette, int borderWidth, int borderColor) {
+        StreamDrawable(Bitmap bitmap, float cornerRadius, int margin, int borderWidth, int borderColor) {
             mCornerRadius = cornerRadius;
-            mUseVignette = useVignette;
             mBitmapShader = getShaderForBitmap(bitmap);
             mBorderWidth = borderWidth;
             mBorderColor = borderColor;
@@ -148,6 +165,12 @@ public class CircleImageView extends ImageView {
             if (borderWidth > 0) {
                 mBorderRect = new RectF();
                 mImageRect = new RectF();
+            }
+
+            if (mShadowRadius > 0f) {
+
+                //We need to set layer type for shadows to work
+                setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             }
 
             mPaint = new Paint();
@@ -177,47 +200,98 @@ public class CircleImageView extends ImageView {
             mRect.set(mMargin, mMargin, bounds.width() - mMargin, bounds
                     .height() - mMargin);
 
+            //Needs to be called before initializing the border rects
+            if (mShadowRadius > 0f) {
+                adjustOuterRectForShadows();
+            }
+
             if (mBorderWidth > 0) {
-                mBorderRect.set(mRect.left + mBorderWidth, mRect.top
-                        + mBorderWidth, mRect.right - mBorderWidth, mRect.bottom
-                                        - mBorderWidth);
-                mImageRect.set(mBorderRect.left + mBorderWidth, mBorderRect.top
-                        + mBorderWidth, mBorderRect.right - mBorderWidth, mBorderRect.bottom
-                                       - mBorderWidth);
+                initRectsForBorders();
             }
 
-            if (mUseVignette) {
-                RadialGradient vignette = new RadialGradient(mRect.centerX(), mRect
-                        .centerY() * 1.0f / 0.7f, mRect.centerX() * 1.3f, new int[]{
-                        0, 0, 0x7f000000
-                }, new float[]{
-                        0.0f, 0.7f, 1.0f
-                }, Shader.TileMode.CLAMP);
+        }
 
-                Matrix oval = new Matrix();
-                oval.setScale(1.0f, 0.7f);
-                vignette.setLocalMatrix(oval);
+        /**
+         * For borders, we draw both the border and the bitmap separately to prevent overdraw.
+         * <p/>
+         * We need to create separate Rects for drawing both items. This method initializes them
+         */
+        private void initRectsForBorders() {
 
-                mPaint.setShader(new ComposeShader(mBitmapShader, vignette, PorterDuff.Mode.SRC_OVER));
+            mBorderRect.set(mRect.left + mBorderWidth, mRect.top
+                    + mBorderWidth, mRect.right - mBorderWidth, mRect.bottom
+                                    - mBorderWidth);
+            mImageRect.set(mBorderRect.left + mBorderWidth, mBorderRect.top
+                    + mBorderWidth, mBorderRect.right - mBorderWidth, mBorderRect.bottom
+                                   - mBorderWidth);
+        }
+
+        /**
+         * If we enable shadows, we need to adjust the outer rect to account for the shadow size in
+         * order to prevent clipping
+         */
+        private void adjustOuterRectForShadows() {
+
+            //Adjust for dX
+            if (mShadowDx > 0f) {
+
+                /*Shadows will be offset to the right, we need to increase the right bounds*/
+                mRect.right -= mShadowDx;
+
+            } else if (mShadowDx < 0f) {
+
+                /*Shadows will be offset to the left, we need to increase the left bounds*/
+                mRect.left += mShadowDx;
             }
+
+            //Adjust for dY
+            if (mShadowDy > 0f) {
+
+                /*Shadows will be offset to the bottom, we need to increase the bottom bounds*/
+                mRect.bottom -= mShadowDy;
+            } else if (mShadowDy < 0f) {
+
+                /*Shadows will be offset to the top, we need to increase the top bounds*/
+                mRect.top += mShadowDy;
+            }
+
+
         }
 
         @Override
         public void draw(Canvas canvas) {
 
+            Shader curShader = mPaint.getShader();
+            if (mShadowRadius > 0f) {
+                mPaint.setShadowLayer(mShadowRadius, mShadowDx, mShadowDy, mShadowColor);
+            }
+
             if (mBorderWidth > 0) {
 
-                Shader shader = mPaint.getShader();
+                //Draw the border
                 mPaint.setShader(null);
                 mPaint.setColor(mBorderColor);
                 mPaint.setStrokeWidth(mBorderWidth);
                 mPaint.setStyle(Paint.Style.STROKE);
                 canvas.drawRoundRect(mBorderRect, mCornerRadius, mCornerRadius, mPaint);
-                mPaint.setShader(shader);
+
+                //Disable shadows because we don't want the shadow to be drawn again using the bitmap shader
+                mPaint.setShadowLayer(0f, 0f, 0f, mShadowColor);
+
+                mPaint.setShader(curShader);
                 mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                 canvas.drawRoundRect(mImageRect, mCornerRadius, mCornerRadius, mPaint);
 
             } else {
+                //Draw an empty rect to draw the shadow
+                if(mShadowRadius > 0f) {
+                    mPaint.setShader(null);
+                    mPaint.setStyle(Paint.Style.STROKE);
+                    mPaint.setStrokeWidth(0);
+                    canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
+                    mPaint.setShader(curShader);
+                }
+
                 mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
                 canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
             }
@@ -245,11 +319,10 @@ public class CircleImageView extends ImageView {
         final Drawable content = getDrawable();
 
         if (content instanceof StreamDrawable) {
-
             ((StreamDrawable) content).updateBitmap(bm);
         } else {
             setImageDrawable(null);
-            setImageDrawable(new StreamDrawable(bm, mCornerRadius, mMargin, mUseVignette, mBorderWidth, mBorderColor));
+            setImageDrawable(new StreamDrawable(bm, mCornerRadius, mMargin, mBorderWidth, mBorderColor));
         }
     }
 

@@ -30,9 +30,12 @@
             android:layout_height="@dimen/profile_header_img_size"
             android:layout_centerVertical="true"
             android:contentDescription="@string/app_name"
-            app:borderColor="@color/apptheme_color"
-            app:borderWidth="2dp"
-            app:cornerRadius="@dimen/profile_header_img_size"/>
+            app:borderColor="@color/white"
+            app:borderWidth="1dp"
+            app:cornerRadius="@dimen/profile_header_img_size"
+            android:shadowRadius="1.5"
+            android:shadowDx="0.0"
+            android:shadowDy="1.5"/>
 
         <li.barter.widgets.TypefacedTextView
             android:id="@+id/text_user_name"
