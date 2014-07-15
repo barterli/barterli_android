@@ -236,23 +236,23 @@ public class CircleImageView extends ImageView {
             if (mShadowDx > 0f) {
 
                 /*Shadows will be offset to the right, we need to increase the right bounds*/
-                mRect.right -= mShadowDx;
+                mRect.right -= mShadowRadius;
 
             } else if (mShadowDx < 0f) {
 
                 /*Shadows will be offset to the left, we need to increase the left bounds*/
-                mRect.left += mShadowDx;
+                mRect.left += mShadowRadius;
             }
 
             //Adjust for dY
             if (mShadowDy > 0f) {
 
                 /*Shadows will be offset to the bottom, we need to increase the bottom bounds*/
-                mRect.bottom -= mShadowDy;
+                mRect.bottom -= mShadowRadius;
             } else if (mShadowDy < 0f) {
 
                 /*Shadows will be offset to the top, we need to increase the top bounds*/
-                mRect.top += mShadowDy;
+                mRect.top += mShadowRadius;
             }
 
 
