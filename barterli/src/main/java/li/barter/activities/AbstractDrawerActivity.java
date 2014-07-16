@@ -11,6 +11,7 @@
 package li.barter.activities;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -48,6 +49,11 @@ public abstract class AbstractDrawerActivity extends AbstractBarterLiActivity im
     private FrameLayout           mNavFrameContent;
 
     /**
+     * Whether the drawer is loaded on screen, or off screen
+     */
+    private boolean mIsDrawerLoadedOnScreen;
+
+    /**
      * Whether the drawer has been initialized or not.
      */
     private boolean mDrawerInitialized;
@@ -55,10 +61,15 @@ public abstract class AbstractDrawerActivity extends AbstractBarterLiActivity im
     /**
      * Initializes the Navigation drawer. Call this in onCreate() of your Activity AFTER setting the
      * content view
+     *
+     * @param drawerLayoutResId  The layout res id of the drawer
+     * @param drawerContentResId The layout res id of the drawer content
+     * @param isDrawerLockedOpen Whether the drawer is loaded directly on screen(for ex, in the case
+     *                           of tablets) or whether it should be loaded off the screen
      */
-    protected void initDrawer(final int drawerLayoutResId, final int drawerContentResId) {
+    protected void initDrawer(final int drawerLayoutResId, final int drawerContentResId, final boolean isDrawerLockedOpen) {
 
-        mDrawerInitialized = true;
+        mIsDrawerLoadedOnScreen = isDrawerLockedOpen;
         mDrawerLayout = (DrawerLayout) findViewById(drawerLayoutResId);
 
         if (mDrawerLayout == null) {
@@ -101,9 +112,18 @@ public abstract class AbstractDrawerActivity extends AbstractBarterLiActivity im
             mDrawerToggle.setDrawerIndicatorEnabled(true);
 
         }
-        mDrawerLayout.setScrimColor(getResources()
-                                            .getColor(R.color.overlay_black_40p));
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
+
+        if (isDrawerLockedOpen) {
+
+            mDrawerLayout.setScrimColor(Color.TRANSPARENT);
+            mDrawerLayout.setDrawerShadow(null, Gravity.START);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.START);
+        } else {
+            mDrawerLayout.setScrimColor(getResources()
+                                                .getColor(R.color.overlay_black_40p));
+            mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.START);
+        }
 
         /* In the case that the activity was destroyed in background, the system will take care of reinitializing the fragment for us*/
         NavDrawerFragment fragment = (NavDrawerFragment) getSupportFragmentManager()
@@ -112,10 +132,25 @@ public abstract class AbstractDrawerActivity extends AbstractBarterLiActivity im
         if (fragment == null) {
             fragment = (NavDrawerFragment) Fragment
                     .instantiate(this, NavDrawerFragment.class.getName());
-            loadFragment(R.id.frame_nav_drawer, fragment, AppConstants.FragmentTags.NAV_DRAWER,
+            loadFragment(drawerContentResId, fragment, AppConstants.FragmentTags.NAV_DRAWER,
                          false, null);
+
+        } else {
+
+            loadFragment(drawerContentResId, fragment, AppConstants.FragmentTags.NAV_DRAWER,
+                         false, null, false, true);
         }
 
+        mDrawerInitialized = true;
+
+    }
+
+    /**
+     * Whether the drawer is loaded directly on screen(for ex, in the case of tablets) or whether it
+     * is loaded off the screen
+     */
+    public boolean isDrawerLoadedOnScreen() {
+        return mIsDrawerLoadedOnScreen;
     }
 
     @Override
@@ -179,6 +214,9 @@ public abstract class AbstractDrawerActivity extends AbstractBarterLiActivity im
 
     @Override
     public void onActionTaken() {
-        mDrawerLayout.closeDrawer(mNavFrameContent);
+
+        if(!mIsDrawerLoadedOnScreen) {
+            mDrawerLayout.closeDrawer(mNavFrameContent);
+        }
     }
 }

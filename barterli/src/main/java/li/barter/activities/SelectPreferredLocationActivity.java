@@ -41,7 +41,7 @@ public class SelectPreferredLocationActivity extends AbstractDrawerActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-        initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer);
+        initDrawer(R.id.drawer_layout, isMultipane() ? R.id.frame_side_content : R.id.frame_nav_drawer, isMultipane());
         mOverlayFrameLayout = (FrameLayout) findViewById(R.id.frame_overlay);
         if (savedInstanceState == null) {
             loadSelectPreferredLocationFragment();

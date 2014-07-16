@@ -95,6 +95,11 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     private boolean mShouldReportScreenHit;
 
     /**
+     * Whether the current layout is a multipane layout or not
+     */
+    private boolean mMultipaneLayout;
+
+    /**
      * Creates a Crouton View based on the style
      *
      * @param context {@link Context} reference to get the {@link LayoutInflater} reference
@@ -133,6 +138,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
+        mMultipaneLayout = getResources().getBoolean(R.bool.multipane);
+
         /* Here, getClass() might show an Ambiguous method call bug. It's a bug in IntelliJ IDEA 13
         * http://youtrack.jetbrains.com/issue/IDEA-72835 */
         mActivityTransition = getClass()
@@ -167,6 +174,11 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         mVolleyCallbacks = new VolleyCallbacks(requestQueue, this);
         mRequestCounter = new AtomicInteger(0);
         setProgressBarIndeterminateVisibility(false);
+    }
+
+    /** Whether the current layout is a multipane layout or not */
+    public boolean isMultipane() {
+        return mMultipaneLayout;
     }
 
     @Override
@@ -559,7 +571,38 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                              final boolean addToBackStack, final String backStackTag,
                              final boolean customAnimate) {
 
+        loadFragment(containerResId, fragment, tag, addToBackStack, backStackTag, customAnimate, false);
+
+    }
+
+    /**
+     * Helper method to load fragments into layout
+     *
+     * @param containerResId The container resource Id in the content view into which to load the
+     *                       fragment
+     * @param fragment       The fragment to load
+     * @param tag            The fragment tag
+     * @param addToBackStack Whether the transaction should be addded to the backstack
+     * @param backStackTag   The tag used for the backstack tag
+     * @param customAnimate  Whether to provide a custom animation for the Fragment. If
+     *                       <code>true</code>, the Fragment also needs to be annotated with a
+     *                       {@linkplain li.barter.fragments.FragmentTransition} annotation which
+     *                       describes the transition to perform. If <code>false</code>, will use
+     *                       default fragment transition
+     * @param remove         Whether the fragment should be removed before adding it
+     */
+    public void loadFragment(final int containerResId,
+                             final AbstractBarterLiFragment fragment, final String tag,
+                             final boolean addToBackStack, final String backStackTag,
+                             final boolean customAnimate, final boolean remove) {
+
         final FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if (remove) {
+            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            fragmentManager.beginTransaction().remove(fragment).commit();
+            fragmentManager.executePendingTransactions();
+        }
         final FragmentTransaction transaction = fragmentManager
                 .beginTransaction();
 
@@ -577,6 +620,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
 
             }
         }
+
 
         transaction.replace(containerResId, fragment, tag);
 

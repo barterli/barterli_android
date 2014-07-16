@@ -39,7 +39,7 @@ public class SearchBookPagerActivity extends AbstractDrawerActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-        initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer);
+        initDrawer(R.id.drawer_layout, isMultipane() ? R.id.frame_side_content : R.id.frame_nav_drawer, isMultipane());
         mStartingBookPosition = getIntent().getIntExtra(AppConstants.Keys.BOOK_POSITION, 0);
         if (savedInstanceState == null) {
             loadBooksPagerFragment();

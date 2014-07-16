@@ -45,7 +45,7 @@ public class AuthActivity extends AbstractDrawerActivity implements GooglePlusMa
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-        initDrawer(R.id.drawer_layout, R.id.frame_nav_drawer);
+        initDrawer(R.id.drawer_layout, isMultipane() ? R.id.frame_side_content : R.id.frame_nav_drawer, isMultipane());
         mGooglePlusManager = new GooglePlusManager(this, this);
         if (savedInstanceState == null) {
             loadLoginFragment();

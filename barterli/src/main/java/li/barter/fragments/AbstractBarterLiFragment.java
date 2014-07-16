@@ -23,7 +23,6 @@ import android.location.Criteria;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -410,6 +409,19 @@ public abstract class AbstractBarterLiFragment extends Fragment implements
 
         return false;
 
+    }
+
+    /**
+     * Whether the fragment is loaded into a multipane layout
+     */
+    public boolean isMultipane() {
+
+        if (isAttached()) {
+            return ((AbstractBarterLiActivity) getActivity()).isMultipane();
+        }
+
+        //Incorrect call if it reaches here
+        return false;
     }
 
     @Override
