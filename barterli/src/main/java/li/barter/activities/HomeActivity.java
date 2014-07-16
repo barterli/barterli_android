@@ -17,7 +17,9 @@ package li.barter.activities;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 
 import com.android.volley.Request.Method;
 import com.facebook.AppEventsLogger;
@@ -66,8 +68,12 @@ public class HomeActivity extends AbstractDrawerActivity implements
         initDrawer(R.id.drawer_layout, isMultipane() ? R.id.frame_side_content : R.id.frame_nav_drawer, isMultipane());
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this,
                                                                this);
-        if (savedInstanceState == null) {
 
+        if (isMultipane()) {
+            setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_USE_LOGO | ActionBar
+                    .DISPLAY_SHOW_HOME);
+        }
+        if (savedInstanceState == null) {
             loadBooksAroundMeFragment();
         }
 
@@ -110,13 +116,15 @@ public class HomeActivity extends AbstractDrawerActivity implements
                                   referrer);
                 requestObject.put(HttpConstants.DEVICE_ID,
                                   UserInfo.INSTANCE
-                                          .getDeviceId());
+                                          .getDeviceId()
+                );
 
                 final BlRequest request = new BlRequest(Method.POST,
                                                         HttpConstants.getApiBaseUrl()
                                                                 + ApiEndpoints.REFERRAL,
                                                         requestObject.toString(),
-                                                        mVolleyCallbacks);
+                                                        mVolleyCallbacks
+                );
                 request.setRequestId(RequestId.REFERRAL);
                 addRequestToQueue(request,
                                   false,
@@ -154,12 +162,26 @@ public class HomeActivity extends AbstractDrawerActivity implements
                              .instantiate(this,
                                           BooksAroundMeFragment.class
                                                   .getName(),
-                                          null),
+                                          null
+                             ),
                      FragmentTags.BOOKS_AROUND_ME,
                      false,
                      null
         );
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+
+        if (isMultipane() && item.getItemId() == android.R.id.home) {
+
+            /* If it's a multipane layout, the drawer is already loaded
+            *  and the drawer toggle is disabled. */
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -204,7 +226,7 @@ public class HomeActivity extends AbstractDrawerActivity implements
     @Override
     protected boolean isDrawerActionBarToggleEnabled() {
 
-        if(isMultipane()) {
+        if (isMultipane()) {
 
             return false;
         }

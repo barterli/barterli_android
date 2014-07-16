@@ -54,11 +54,6 @@ public abstract class AbstractDrawerActivity extends AbstractBarterLiActivity im
     private boolean mIsDrawerLoadedOnScreen;
 
     /**
-     * Whether the drawer has been initialized or not.
-     */
-    private boolean mDrawerInitialized;
-
-    /**
      * Initializes the Navigation drawer. Call this in onCreate() of your Activity AFTER setting the
      * content view
      *
@@ -83,7 +78,7 @@ public abstract class AbstractDrawerActivity extends AbstractBarterLiActivity im
                     "Drawer content with id R.id.frame_nav_drawer not found. Check the layout/resource id being sent");
         }
 
-        if (isDrawerActionBarToggleEnabled()) {
+        if (isDrawerActionBarToggleEnabled() && !isDrawerLockedOpen) {
             mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                                                       R.drawable.ic_navigation_drawer,
                                                       R.string.drawer_open,
@@ -141,8 +136,6 @@ public abstract class AbstractDrawerActivity extends AbstractBarterLiActivity im
                          false, null, false, true);
         }
 
-        mDrawerInitialized = true;
-
     }
 
     /**
@@ -151,15 +144,6 @@ public abstract class AbstractDrawerActivity extends AbstractBarterLiActivity im
      */
     public boolean isDrawerLoadedOnScreen() {
         return mIsDrawerLoadedOnScreen;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!mDrawerInitialized) {
-            throw new RuntimeException(
-                    "Drawer not initialized! Are you sure you are calling initDrawer() in your Activity's onCreate()?");
-        }
     }
 
     /**
