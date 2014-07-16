@@ -25,11 +25,18 @@
             android:background="@color/transparent"
             android:layout_alignParentLeft="true"/>
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_toRightOf="@id/frame_side_content"
+            android:layout_height="match_parent"
+            android:background="@color/light_gray"/>
+
         <FrameLayout
             android:id="@+id/frame_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@id/frame_side_content"
+            android:layout_toRightOf="@id/divider"
             android:background="@color/transparent"/>
 
         <FrameLayout
