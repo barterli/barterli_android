@@ -9,7 +9,6 @@
   ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
@@ -23,22 +22,22 @@
         android:layout_margin="@dimen/margin_minimum"
         android:orientation="horizontal" >
 
-        <li.barter.widgets.TypefacedRadioButton
+        <RadioButton
             android:id="@+id/radio_reportbug"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Report Bug"
-            app:fontStyle="condensed_regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
-        <li.barter.widgets.TypefacedRadioButton
+        <RadioButton
             android:id="@+id/radio_suggestfeature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Suggest Feature"
-            app:fontStyle="condensed_regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
     </RadioGroup>
 
-    <li.barter.widgets.TypefacedEditText
+    <EditText
         android:id="@+id/text_bug_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,9 +47,9 @@
         android:lines="6"
         android:singleLine="false"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="regular" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
     
-    <li.barter.widgets.TypefacedEditText
+    <EditText
         android:id="@+id/text_device_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,18 +59,18 @@
         android:lines="6"
         android:singleLine="false"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="regular" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-    <li.barter.widgets.TypefacedButton
+    <Button
         android:id="@+id/button_report_bug"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:text="@string/button_submit"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="bold" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold" />
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/label_personal_info_warning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -80,6 +79,6 @@
         android:text="@string/no_personal_info_bug_and_suggest"
         android:textColor="@color/red"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="italic" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto.MediumItalic" />
 
 </LinearLayout>

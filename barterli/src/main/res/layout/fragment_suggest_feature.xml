@@ -15,7 +15,7 @@
     android:background="@color/transparent"
     android:orientation="vertical" >
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/label_suggest_feature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,9 +23,9 @@
         android:text="@string/text_suggest_feature"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_large"
-        app:fontStyle="condensed_regular" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
-    <li.barter.widgets.TypefacedEditText
+    <EditText
         android:id="@+id/text_feature_description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -35,18 +35,18 @@
         android:lines="6"
         android:singleLine="false"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="regular" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-    <li.barter.widgets.TypefacedButton
+    <Button
         android:id="@+id/button_submit_feature"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_medium"
         android:text="@string/button_submit"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="bold" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold" />
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/label_personal_info_warning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,6 +55,6 @@
         android:text="@string/no_personal_info_suggest"
         android:textColor="@color/red"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="italic" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto.MediumItalic" />
 
 </LinearLayout>

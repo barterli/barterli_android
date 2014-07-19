@@ -69,6 +69,8 @@ import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
 import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * @author Vinay S Shenoy Base class for inheriting all other Activities from
@@ -85,9 +87,9 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     /**
      * {@link VolleyCallbacks} for encapsulating Volley request responses
      */
-    protected VolleyCallbacks    mVolleyCallbacks;
-    private   AtomicInteger      mRequestCounter;
-    private   ActivityTransition mActivityTransition;
+    protected VolleyCallbacks mVolleyCallbacks;
+    private AtomicInteger mRequestCounter;
+    private ActivityTransition mActivityTransition;
 
     /**
      * Whether a screen hit should be reported to analytics
@@ -127,7 +129,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
             }
         }
         final View croutonText = LayoutInflater.from(context)
-                                               .inflate(layoutResId, null);
+                .inflate(layoutResId, null);
         ((TextView) croutonText.findViewById(R.id.text_message))
                 .setText(message);
         return croutonText;
@@ -137,6 +139,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
     protected void onCreate(final Bundle savedInstanceState) {
         getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
+
 
         mMultipaneLayout = getResources().getBoolean(R.bool.multipane);
 
@@ -149,8 +152,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         if (savedInstanceState == null) {
             if (mActivityTransition != null) {
                 overridePendingTransition(mActivityTransition.createEnterAnimation(),
-                                          mActivityTransition
-                                                  .createExitAnimation()
+                        mActivityTransition
+                                .createExitAnimation()
                 );
             }
         } else {
@@ -176,7 +179,14 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         setProgressBarIndeterminateVisibility(false);
     }
 
-    /** Whether the current layout is a multipane layout or not */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(new CalligraphyContextWrapper(newBase));
+    }
+
+    /**
+     * Whether the current layout is a multipane layout or not
+     */
     public boolean isMultipane() {
         return mMultipaneLayout;
     }
@@ -202,7 +212,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
 
             if (!TextUtils.isEmpty(analyticsScreenName)) {
                 GoogleAnalyticsManager.getInstance()
-                                      .sendScreenHit(getAnalyticsScreenName());
+                        .sendScreenHit(getAnalyticsScreenName());
             }
         }
 
@@ -229,27 +239,27 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
                 public void run() {
                     UserInfo.INSTANCE.reset();
                     DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, getTaskTag(), null,
-                                            TableChats.NAME, null, null, true,
-                                            AbstractBarterLiActivity.this);
+                            TableChats.NAME, null, null, true,
+                            AbstractBarterLiActivity.this);
                     DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, getTaskTag(), null,
-                                            TableChatMessages.NAME, null, null, true,
-                                            AbstractBarterLiActivity.this);
+                            TableChatMessages.NAME, null, null, true,
+                            AbstractBarterLiActivity.this);
                     SharedPreferenceHelper
                             .removeKeys(AbstractBarterLiActivity.this, R.string.pref_auth_token,
-                                        R.string.pref_email, R.string.pref_description,
-                                        R.string.pref_location, R.string.pref_first_name,
-                                        R.string.pref_last_name, R.string.pref_user_id,
-                                        R.string.pref_profile_image, R.string.pref_share_token,
-                                        R.string.pref_referrer, R.string.pref_referrer_count);
+                                    R.string.pref_email, R.string.pref_description,
+                                    R.string.pref_location, R.string.pref_first_name,
+                                    R.string.pref_last_name, R.string.pref_user_id,
+                                    R.string.pref_profile_image, R.string.pref_share_token,
+                                    R.string.pref_referrer, R.string.pref_referrer_count);
                     final Intent disconnectChatIntent = new Intent(AbstractBarterLiActivity.this,
-                                                                   ChatService.class);
+                            ChatService.class);
                     disconnectChatIntent.setAction(AppConstants.ACTION_DISCONNECT_CHAT);
                     startService(disconnectChatIntent);
                     LocalBroadcastManager.getInstance(BarterLiApplication.getStaticContext())
-                                         .sendBroadcast(
-                                                 new Intent(AppConstants.ACTION_USER_INFO_UPDATED));
+                            .sendBroadcast(
+                                    new Intent(AppConstants.ACTION_USER_INFO_UPDATED));
                     final Intent homeIntent = new Intent(AbstractBarterLiActivity.this,
-                                                         HomeActivity.class);
+                            HomeActivity.class);
                     homeIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(homeIntent);
                 }
@@ -318,7 +328,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
             mVolleyCallbacks.queue(request, addHeader);
         } else if (showErrorOnNoNetwork) {
             showCrouton(errorMsgResId != 0 ? errorMsgResId
-                                : R.string.no_network_connection, AlertStyle.ERROR);
+                    : R.string.no_network_connection, AlertStyle.ERROR);
         }
     }
 
@@ -426,7 +436,7 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
 
         final SpannableString s = new SpannableString(title);
         s.setSpan(new TypefacedSpan(this, TypefaceCache.SLAB_REGULAR), 0, s.length(),
-                  Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // Update the action bar title with the TypefaceSpan instance
         final ActionBar actionBar = getSupportActionBar();
@@ -453,14 +463,14 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         //Crouton.make(activity, customView, viewGroupResId, configuration)
         //Crouton.make(this, getCroutonViewForStyle(this, message, style)).show();
         Crouton.make(this, getCroutonViewForStyle(this, message, style))
-               .setConfiguration(
-                       new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
-                               .setDuration(
-                                       de.keyboardsurfer.android.widget.crouton.Configuration
-                                               .DURATION_SHORT
-                               )
-                               .build()
-               ).show();
+                .setConfiguration(
+                        new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
+                                .setDuration(
+                                        de.keyboardsurfer.android.widget.crouton.Configuration
+                                                .DURATION_SHORT
+                                )
+                                .build()
+                ).show();
     }
 
     /**
@@ -481,14 +491,14 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
      */
     public void showInfiniteCrouton(final String message, final AlertStyle style) {
         Crouton.make(this, getCroutonViewForStyle(this, message, style))
-               .setConfiguration(
-                       new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
-                               .setDuration(
-                                       de.keyboardsurfer.android.widget.crouton.Configuration
-                                               .DURATION_INFINITE
-                               )
-                               .build()
-               ).show();
+                .setConfiguration(
+                        new de.keyboardsurfer.android.widget.crouton.Configuration.Builder()
+                                .setDuration(
+                                        de.keyboardsurfer.android.widget.crouton.Configuration
+                                                .DURATION_INFINITE
+                                )
+                                .build()
+                ).show();
 
     }
 
@@ -523,8 +533,8 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
         super.finish();
         if ((mActivityTransition != null) && !defaultAnimation) {
             overridePendingTransition(mActivityTransition.destroyEnterAnimation(),
-                                      mActivityTransition
-                                              .destroyExitAnimation()
+                    mActivityTransition
+                            .destroyExitAnimation()
             );
         }
     }
@@ -608,15 +618,15 @@ public abstract class AbstractBarterLiActivity extends ActionBarActivity
 
         if (customAnimate) {
             final FragmentTransition fragmentTransition = fragment.getClass()
-                                                                  .getAnnotation(
-                                                                          FragmentTransition.class);
+                    .getAnnotation(
+                            FragmentTransition.class);
             if (fragmentTransition != null) {
 
                 transaction
                         .setCustomAnimations(fragmentTransition.enterAnimation(), fragmentTransition
                                 .exitAnimation(), fragmentTransition
-                                                     .popEnterAnimation(), fragmentTransition
-                                                     .popExitAnimation());
+                                .popEnterAnimation(), fragmentTransition
+                                .popExitAnimation());
 
             }
         }

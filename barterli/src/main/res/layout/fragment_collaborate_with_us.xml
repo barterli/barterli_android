@@ -9,7 +9,6 @@
   ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
@@ -19,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/label_collaborate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +26,7 @@
             android:text="@string/text_collaborate"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_large"
-            app:fontStyle="condensed_regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
         <RadioGroup
             android:id="@+id/radio_enlist_options"
@@ -37,56 +36,56 @@
             android:layout_margin="@dimen/margin_minimum"
             android:orientation="vertical" >
 
-            <li.barter.widgets.TypefacedRadioButton
+            <RadioButton
                 android:id="@+id/radio_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/campus_ambassador"
-                app:fontStyle="condensed_regular" />
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
-            <li.barter.widgets.TypefacedRadioButton
+            <RadioButton
                 android:id="@+id/radio_designer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/designer"
-                app:fontStyle="condensed_regular" />
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
-            <li.barter.widgets.TypefacedRadioButton
+            <RadioButton
                 android:id="@+id/radio_developer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/developer"
-                app:fontStyle="condensed_regular" />
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
             
-            <li.barter.widgets.TypefacedRadioButton
+            <RadioButton
                 android:id="@+id/radio_marketing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/marketing"
-                app:fontStyle="condensed_regular" />
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
             
 
-            <li.barter.widgets.TypefacedRadioButton
+            <RadioButton
                 android:id="@+id/radio_product_evangelist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/product_evangelist"
-                app:fontStyle="condensed_regular" />
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
             
             
-            <li.barter.widgets.TypefacedRadioButton
+            <RadioButton
                 android:id="@+id/radio_sponsor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sponsor"
-                app:fontStyle="condensed_regular" />
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
             
             
              
         </RadioGroup>
 
-        <li.barter.widgets.TypefacedEditText
+        <EditText
             android:id="@+id/text_about_me"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -97,9 +96,9 @@
             android:lines="4"
             android:singleLine="false"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedButton
+        <Button
             android:id="@+id/button_submit_enlisting"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -107,7 +106,7 @@
             android:layout_margin="@dimen/margin_medium"
             android:text="@string/button_submit"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="bold" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold" />
     </RelativeLayout>
 
 </ScrollView>

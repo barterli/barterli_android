@@ -84,41 +84,41 @@
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <li.barter.widgets.TypefacedButton
+            <Button
                 android:id="@+id/button_barter"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/button_text_color"
-                app:fontStyle="bold"
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold"
                 android:enabled="false"
                 android:textSize="@dimen/text_medium"
                 android:text="@string/barter"/>
 
-            <li.barter.widgets.TypefacedButton
+            <Button
                 android:id="@+id/button_buy"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/button_text_color"
-                app:fontStyle="bold"
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold"
                 android:enabled="false"
                 android:textSize="@dimen/text_medium"
                 android:text="@string/buy"/>
 
-            <li.barter.widgets.TypefacedButton
+            <Button
                 android:id="@+id/button_borrow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/button_text_color"
-                app:fontStyle="bold"
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold"
                 android:enabled="false"
                 android:textSize="@dimen/text_medium"
                 android:text="@string/borrow"/>
         </LinearLayout>
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_publication_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -127,9 +127,9 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:textSize="@dimen/text_small"
             android:hint="@string/publication_date_unavailable"
-            app:fontStyle="condensed_regular"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_isbn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -137,17 +137,17 @@
             android:layout_below="@id/text_publication_date"
             android:layout_marginTop="@dimen/margin_medium"
             android:textSize="@dimen/text_small"
-            app:fontStyle="condensed_regular"
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed"
             android:hint="@string/isbn_unavailable"/>
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/text_isbn"
             android:layout_marginTop="@dimen/margin_large"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="regular"
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto"
             android:hint="@string/description_unavailable"/>
 
     </RelativeLayout>
