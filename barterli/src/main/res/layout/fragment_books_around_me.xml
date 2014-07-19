@@ -23,15 +23,15 @@
             android:layout_height="match_parent"
             android:paddingLeft="@dimen/margin_xx_small"
             android:paddingRight="@dimen/margin_xx_small"
-            android:paddingBottom="@dimen/margin_xx_small"
-            android:paddingTop="@dimen/margin_x_small"
+            android:paddingBottom="@dimen/margin_xxx_small"
+            android:paddingTop="@dimen/margin_xxx_small"
             android:background="@color/transparent"
             android:cacheColorHint="@color/transparent"
-            android:gravity="center"
-            android:horizontalSpacing="@dimen/margin_x_small"
-            android:numColumns="@integer/grid_col_count"
+            android:horizontalSpacing="@dimen/grid_spacing"
+            android:columnWidth="@dimen/grid_item_width"
+            android:numColumns="auto_fit"
+            android:verticalSpacing="@dimen/grid_spacing" />
 
-            android:verticalSpacing="@dimen/margin_x_small" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <include
