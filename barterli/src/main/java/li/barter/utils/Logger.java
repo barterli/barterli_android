@@ -34,11 +34,14 @@ public class Logger {
      * @param object
      * @param message
      */
-    public static void v(Object object, String message) {
+    public static void v(String tag, String message) {
         if (BuildConfig.DEBUG_MODE) {
-            Log.v(getTag(object), message);
+            Log.v(tag, message);
         }
-        Crashlytics.log(1, getTag(object), message);
+
+        if (BuildConfig.USE_CRASHLYTICS) {
+            Crashlytics.log(1, tag, message);
+        }
     }
 
     public static void v(final String tag, final String format,
@@ -54,11 +57,14 @@ public class Logger {
      * @param object
      * @param message
      */
-    public static void d(Object object, String message) {
+    public static void d(String tag, String message) {
         if (BuildConfig.DEBUG_MODE) {
-            Log.d(getTag(object), message);
+            Log.d(tag, message);
         }
-        Crashlytics.log(1, getTag(object), message);
+
+        if (BuildConfig.USE_CRASHLYTICS) {
+            Crashlytics.log(1, tag, message);
+        }
     }
 
     public static void d(final String tag, final String format,
@@ -75,19 +81,23 @@ public class Logger {
      * @param message
      * @param throwable
      */
-    public static void e(Object object, String message, Throwable throwable) {
+    public static void e(String tag, String message, Throwable throwable) {
+
         if (BuildConfig.DEBUG_MODE) {
             if (message != null) {
-                Log.e(getTag(object), message, throwable);
+                Log.e(tag, message, throwable);
             } else {
-                Log.e(getTag(object), null + " ", throwable);
+                Log.e(tag, null + " ", throwable);
             }
         }
-        Crashlytics.logException(throwable);
+
+        if (BuildConfig.USE_CRASHLYTICS) {
+            Crashlytics.logException(throwable);
+        }
     }
 
-    public static void e(Object object, Throwable throwable) {
-        e(object, null, throwable);
+    public static void e(String tag, Throwable throwable) {
+        e(tag, null, throwable);
     }
 
     public static void e(Throwable throwable) {
