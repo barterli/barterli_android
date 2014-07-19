@@ -28,7 +28,6 @@
             android:id="@+id/image_user"
             android:layout_width="@dimen/profile_header_img_size"
             android:layout_height="@dimen/profile_header_img_size"
-            android:layout_centerVertical="true"
             android:contentDescription="@string/app_name"
             app:borderColor="@color/white"
             app:borderWidth="1dp"
@@ -37,19 +36,18 @@
             android:shadowDx="1.25"
             android:shadowDy="1.5"/>
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:gravity="left|center_vertical"
-            android:layout_toRightOf="@id/image_user"
             android:layout_marginLeft="@dimen/margin_x_small"
             android:layout_marginTop="@dimen/margin_x_small"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/text_x_large"
-            app:fontStyle="light"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Light" />
 
     </LinearLayout>
 

@@ -23,7 +23,7 @@
         android:background="@drawable/msg_in_bubble"
         android:orientation="vertical" >
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_chat_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,9 +33,9 @@
             android:textColor="@color/incoming_message"
             android:textColorLink="@color/incoming_message"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/chat_ack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_micro"
             android:visibility="visible"
-            app:fontStyle="regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
     </LinearLayout>
 
 </RelativeLayout>

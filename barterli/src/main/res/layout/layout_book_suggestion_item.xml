@@ -21,7 +21,7 @@
         android:layout_height="58dp"
         android:contentDescription="@string/app_name" />
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/text_book_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,6 +32,6 @@
         android:maxLines="2"
         android:textColor="@color/black"
         android:textSize="@dimen/text_small"
-        app:fontStyle="condensed_regular" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
 </LinearLayout>

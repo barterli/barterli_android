@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2014 barter.li
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
@@ -9,11 +8,10 @@
   ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:padding="@dimen/activity_margin">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:padding="@dimen/activity_margin">
 
     <LinearLayout
         android:id="@+id/layout_container"
@@ -29,9 +27,9 @@
             android:hint="@string/title_label"
             android:inputType="textCapWords"
             android:singleLine="true"
-            app:fontStyle="regular"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedAutoCompleteTextView
+        <AutoCompleteTextView
             android:id="@+id/edit_text_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,9 +37,9 @@
             android:hint="@string/author_label"
             android:inputType="textCapWords"
             android:singleLine="true"
-            app:fontStyle="regular"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedEditText
+        <EditText
             android:id="@+id/edit_text_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,9 +47,9 @@
             android:hint="@string/description_label"
             android:inputType="textCapSentences|textAutoComplete|textMultiLine"
             android:maxLines="@integer/descriptionedittextcount"
-            app:fontStyle="regular"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedEditText
+        <EditText
             android:id="@+id/edit_text_isbn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +57,7 @@
             android:hint="@string/isbn_label"
             android:inputType="number"
             android:singleLine="true"
-            app:fontStyle="regular"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
         <LinearLayout
             android:id="@+id/layout_barter_options"
@@ -69,37 +67,37 @@
             android:orientation="vertical">
 
 
-            <li.barter.widgets.TypefacedCheckBox
+            <CheckBox
                 android:id="@+id/checkbox_barter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/willing_to_barter"
-                app:fontStyle="condensed_regular"/>
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
-            <li.barter.widgets.TypefacedCheckBox
+            <CheckBox
                 android:id="@+id/checkbox_lend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/willing_to_lend"
-                app:fontStyle="condensed_regular"/>
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
-            <li.barter.widgets.TypefacedCheckBox
+            <CheckBox
                 android:id="@+id/checkbox_sell"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="@string/willing_to_sell"
-                app:fontStyle="condensed_regular"/>
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
-            <li.barter.widgets.TypefacedEditText
+            <EditText
                 android:id="@+id/edit_sell_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/set_sell_hint"
                 android:visibility="gone"
-                app:fontStyle="condensed_regular"/>
+                android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
 
 
         </LinearLayout>

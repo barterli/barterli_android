@@ -35,6 +35,7 @@ import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.Logger;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Custom Application class which holds some common functionality for the
@@ -68,6 +69,8 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
 
     @Override
     public void onCreate() {
+
+        CalligraphyConfig.initDefault(R.attr.fontPath);
 
         sStaticContext = getApplicationContext();
         if (!SharedPreferenceHelper

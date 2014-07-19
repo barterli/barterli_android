@@ -20,14 +20,14 @@
         android:layout_height="48dp"
         android:background="?android:attr/colorBackground" >
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@id/ptr_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="condensed_regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
     </FrameLayout>
 
     <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
