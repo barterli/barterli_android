@@ -37,7 +37,7 @@
         android:orientation="vertical"
         android:paddingLeft="@dimen/margin_medium" >
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,9 +46,9 @@
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="@dimen/text_large"
-            app:fontStyle="regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_chat_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,9 +57,9 @@
             android:singleLine="true"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_chat_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
             android:singleLine="true"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_small"
-            app:fontStyle="condensed_regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed" />
     </LinearLayout>
 
 </LinearLayout>

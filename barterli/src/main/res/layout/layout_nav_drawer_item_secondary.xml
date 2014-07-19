@@ -19,14 +19,13 @@
               android:paddingRight="@dimen/activity_margin"
               android:paddingTop="@dimen/margin_x_small">
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/text_nav_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left|center_vertical"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
-        app:fontStyle="regular"/>
-
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
 </LinearLayout>

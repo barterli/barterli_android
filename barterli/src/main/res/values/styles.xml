@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2014 barter.li
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
@@ -8,7 +7,8 @@
   ~
   ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <style name="SmoothProgressBar" parent="android:Widget.Holo.ProgressBar.Horizontal">
         <item name="spb_color">@color/spb_default_color</item>
@@ -110,18 +110,54 @@
     </style>
 
     <style name="ProgressBarAppTheme" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/apptheme_progress_horizontal_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/apptheme_progress_indeterminate_horizontal_holo_light</item>
+        <item name="android:progressDrawable">@drawable/apptheme_progress_horizontal_holo_light
+        </item>
+        <item name="android:indeterminateDrawable">
+            @drawable/apptheme_progress_indeterminate_horizontal_holo_light
+        </item>
     </style>
 
     <style name="RatingBarAppTheme" parent="android:Widget.Holo.Light.RatingBar">
         <item name="android:progressDrawable">@drawable/apptheme_ratingbar_full_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/apptheme_ratingbar_full_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/apptheme_ratingbar_full_holo_light
+        </item>
     </style>
 
     <style name="RatingBarAppTheme.Small" parent="android:Widget.Holo.Light.RatingBar.Small">
         <item name="android:progressDrawable">@drawable/apptheme_ratingbar_small_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/apptheme_ratingbar_small_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/apptheme_ratingbar_small_holo_light
+        </item>
+    </style>
+
+    <!-- By default regular roboto font -->
+    <style name="TextAppearance.FontPath.Roboto" parent="android:TextAppearance">
+        <item name="fontPath">@string/roboto_regular</item>
+    </style>
+
+    <style name="TextAppearance.FontPath.Roboto.Light" parent="android:TextAppearance">
+        <item name="fontPath">@string/roboto_light</item>
+    </style>
+
+    <style name="TextAppearance.FontPath.Roboto.Bold" parent="android:TextAppearance">
+        <item name="fontPath">@string/roboto_bold</item>
+    </style>
+
+    <style name="TextAppearance.FontPath.Roboto.BoldItalic" parent="android:TextAppearance">
+        <item name="fontPath">@string/roboto_bold_italic</item>
+    </style>
+
+    <style name="TextAppearance.FontPath.Roboto.MediumItalic" parent="android:TextAppearance">
+        <item name="fontPath">@string/roboto_medium_italic</item>
+    </style>
+
+    <!-- By default regular condensed font -->
+    <style name="TextAppearance.FontPath.Roboto.Condensed" parent="android:TextAppearance">
+        <item name="fontPath">@string/roboto_condensed_regular</item>
+    </style>
+
+    <!-- By default regular slab font -->
+    <style name="TextAppearance.FontPath.Roboto.Slab" parent="android:TextAppearance">
+        <item name="fontPath">@string/roboto_slab_regular</item>
     </style>
 
 </resources>

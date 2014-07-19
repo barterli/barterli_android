@@ -25,7 +25,7 @@
         android:layout_margin="@dimen/margin_medium"
         layout="@layout/layout_item_add_graphic" />
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/label_no_books_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,9 +35,9 @@
         android:text="@string/no_books_found_nearby"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_large"
-        app:fontStyle="italic" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto.MediumItalic" />
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/text_add_your_own"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,9 +48,9 @@
         android:text="@string/add_your_own"
         android:textColor="@color/apptheme_color"
         android:textSize="@dimen/text_large"
-        app:fontStyle="bold" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold"/>
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/label_or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,9 +60,9 @@
         android:text="@string/or"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_big"
-        app:fontStyle="regular" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto"/>
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/text_try_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -73,6 +73,6 @@
         android:text="@string/try_again"
         android:textColor="@color/apptheme_color"
         android:textSize="@dimen/text_large"
-        app:fontStyle="bold" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold"/>
 
 </RelativeLayout>

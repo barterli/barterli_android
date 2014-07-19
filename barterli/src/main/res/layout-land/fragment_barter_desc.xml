@@ -25,7 +25,7 @@
         android:contentDescription="@string/app_name"
         android:src="@drawable/barterli_team_icon"/>
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/about_barterli"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

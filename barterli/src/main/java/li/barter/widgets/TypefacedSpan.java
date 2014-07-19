@@ -24,27 +24,23 @@ public class TypefacedSpan extends MetricAffectingSpan {
     private final Typeface mTypeface;
 
     public TypefacedSpan(final Context context, final String typefaceName) {
-
         mTypeface = TypefaceCache.get(context.getAssets(), typefaceName);
     }
 
     @Override
     public void updateMeasureState(final TextPaint p) {
-
-        p.setTypeface(mTypeface);
-
-        // Note: This flag is required for proper typeface rendering
-        p.setFlags(p.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
-
+        applyPaint(p);
     }
 
     @Override
     public void updateDrawState(final TextPaint tp) {
+        applyPaint(tp);
+    }
 
-        tp.setTypeface(mTypeface);
-
+    private void applyPaint(final Paint paint) {
+        paint.setTypeface(mTypeface);
         // Note: This flag is required for proper typeface rendering
-        tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+        paint.setFlags(paint.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
     }
 
 }

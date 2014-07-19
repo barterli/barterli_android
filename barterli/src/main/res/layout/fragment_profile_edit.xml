@@ -49,7 +49,7 @@
         </FrameLayout>
 
 
-        <li.barter.widgets.TypefacedEditText
+        <EditText
             android:id="@+id/text_first_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,9 +59,9 @@
             android:hint="@string/hint_first_name"
             android:singleLine="true"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="regular"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedEditText
+        <EditText
             android:id="@+id/text_last_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,10 +70,10 @@
             android:hint="@string/hint_last_name"
             android:singleLine="true"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="regular"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
 
-        <li.barter.widgets.TypefacedEditText
+        <EditText
             android:id="@+id/text_about_me"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,9 +86,9 @@
             android:maxLength="140"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="regular"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/label_current_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -100,9 +100,9 @@
             android:text="@string/label_current_location"
             android:textColor="@color/black"
             android:textSize="@dimen/text_small"
-            app:fontStyle="regular"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_current_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -112,8 +112,7 @@
             android:text="@string/hint_default_current_location"
             android:textColor="@color/apptheme_color"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="light"/>
-
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
     </RelativeLayout>
 </ScrollView>
