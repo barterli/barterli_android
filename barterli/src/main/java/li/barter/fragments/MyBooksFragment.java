@@ -63,19 +63,19 @@ import li.barter.utils.Logger;
  */
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out,
-                    popEnterAnimation = R.anim.zoom_in,
-                    popExitAnimation = R.anim.slide_out_to_right)
+        popEnterAnimation = R.anim.zoom_in,
+        popExitAnimation = R.anim.slide_out_to_right)
 public class MyBooksFragment extends AbstractBarterLiFragment implements
         LoaderCallbacks<Cursor>, OnItemClickListener {
 
     private static final String TAG = "MyBooksFragment";
 
-    private GridView mBooksAroundMeGridView;
+    private GridView mGridProfileBooks;
 
     /**
      * {@link BooksGridAdapter} instance for the Books
      */
-    private BooksGridAdapter mBooksAroundMeAdapter;
+    private BooksGridAdapter mProfileBooksAdapter;
 
     private String mUserId;
 
@@ -92,8 +92,8 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
         final View view = inflater
                 .inflate(R.layout.fragment_profile_books, null);
 
-        mBooksAroundMeGridView = (GridView) view
-                .findViewById(R.id.list_my_books);
+        mGridProfileBooks = (GridView) view
+                .findViewById(R.id.grid_profile_books);
 
         if (savedInstanceState != null) {
             final String savedUserId = savedInstanceState
@@ -110,10 +110,10 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
             }
         }
 
-        mBooksAroundMeAdapter = new BooksGridAdapter(getActivity(), false);
-        mBooksAroundMeGridView.setAdapter(mBooksAroundMeAdapter);
+        mProfileBooksAdapter = new BooksGridAdapter(getActivity(), false);
+        mGridProfileBooks.setAdapter(mProfileBooksAdapter);
 
-        mBooksAroundMeGridView.setOnItemClickListener(this);
+        mGridProfileBooks.setOnItemClickListener(this);
 
         return view;
     }
@@ -149,7 +149,7 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
     public Loader<Cursor> onCreateLoader(final int loaderId, final Bundle args) {
         if (loaderId == Loaders.GET_MY_BOOKS) {
             return new SQLiteLoader(getActivity(), false, ViewUserBooksWithLocations.NAME, null,
-                                    mUserSelection, new String[]{
+                    mUserSelection, new String[]{
                     mUserId
             }, null, null, null, null
             );
@@ -162,16 +162,15 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         if (loader.getId() == Loaders.GET_MY_BOOKS) {
             Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-            mBooksAroundMeAdapter.swapCursor(cursor);
+            mProfileBooksAdapter.swapCursor(cursor);
         }
-
     }
 
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
         if (loader.getId() == Loaders.GET_MY_BOOKS) {
-            mBooksAroundMeAdapter.swapCursor(null);
-            mBooksAroundMeGridView.setAdapter(null);
+            mProfileBooksAdapter.swapCursor(null);
+            mGridProfileBooks.setAdapter(null);
         }
     }
 
@@ -179,13 +178,13 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
     public void onItemClick(final AdapterView<?> parent, final View view,
                             final int position, final long id) {
 
-        if (parent.getId() == R.id.list_my_books) {
+        if (parent.getId() == R.id.grid_profile_books) {
 
             if (!mUserId.equals(UserInfo.INSTANCE.getId())) {
                 GoogleAnalyticsManager.getInstance().sendEvent(
                         new EventBuilder(Categories.USAGE, Actions.BOOK_PROFILE_CLICK));
             }
-            final Cursor cursor = (Cursor) mBooksAroundMeAdapter
+            final Cursor cursor = (Cursor) mProfileBooksAdapter
                     .getItem(position);
 
             final String bookId = cursor.getString(cursor.getColumnIndex(DatabaseColumns.ID));
@@ -226,7 +225,7 @@ public class MyBooksFragment extends AbstractBarterLiFragment implements
     protected String getAnalyticsScreenName() {
         if (mLoadedIndividually) {
             return mUserId.equals(UserInfo.INSTANCE
-                                          .getId()) ? Screens.CURRENT_USER_BOOKS : Screens.OTHER_USER_BOOKS;
+                    .getId()) ? Screens.CURRENT_USER_BOOKS : Screens.OTHER_USER_BOOKS;
         } else {
             return "";
         }

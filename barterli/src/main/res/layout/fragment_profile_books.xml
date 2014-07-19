@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2014 barter.li
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
@@ -10,16 +9,16 @@
   -->
 
 <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/list_my_books"
+    android:id="@+id/grid_profile_books"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/margin_xx_small"
-    android:layout_marginRight="@dimen/margin_xx_small"
-    android:background="@color/global_bg"
-    android:cacheColorHint="@color/transparent"
-    android:horizontalSpacing="@dimen/margin_x_small"
-    android:numColumns="@integer/grid_col_count"
-    android:paddingBottom="@dimen/margin_xx_small"
+    android:paddingLeft="@dimen/margin_xx_small"
+    android:paddingRight="@dimen/margin_xx_small"
+    android:paddingBottom="@dimen/margin_xxx_small"
     android:paddingTop="@dimen/margin_xx_small"
-    android:verticalSpacing="@dimen/margin_x_small" />
+    android:background="@color/transparent"
+    android:cacheColorHint="@color/transparent"
+    android:horizontalSpacing="@dimen/grid_spacing"
+    android:columnWidth="@dimen/grid_item_width"
+    android:numColumns="auto_fit"
+    android:verticalSpacing="@dimen/grid_spacing" />

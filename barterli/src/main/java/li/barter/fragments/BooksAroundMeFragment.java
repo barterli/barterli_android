@@ -581,8 +581,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
                 mBooksAroundMeAdapter.swapCursor(cursor);
             }
+            hideRefreshing();
         }
-        hideRefreshing();
+
     }
 
     @Override
