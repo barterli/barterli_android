@@ -13,54 +13,119 @@ package li.barter.utils;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import li.barter.BuildConfig;
 
-/** Logging helper class. Repurposed from the AOSP Volley source */
+/**
+ * Logging helper class. Repurposed from the AOSP Volley source
+ */
 public class Logger {
 
+    public static final String DEFAULT_TAG = "Barter.Li";
+
+    /**
+     * Pass object "this" and message to print
+     *
+     * @param object
+     * @param message
+     */
+    public static void v(Object object, String message) {
+        if (BuildConfig.DEBUG_MODE) {
+            Log.v(getTag(object), message);
+        }
+        Crashlytics.log(1, getTag(object), message);
+    }
+
     public static void v(final String tag, final String format,
-                    final Object... args) {
+                         final Object... args) {
         if (BuildConfig.DEBUG_MODE) {
             Log.v(tag, buildMessage(format, args));
         }
     }
 
+    /**
+     * Pass object "this" and message to print
+     *
+     * @param object
+     * @param message
+     */
+    public static void d(Object object, String message) {
+        if (BuildConfig.DEBUG_MODE) {
+            Log.d(getTag(object), message);
+        }
+        Crashlytics.log(1, getTag(object), message);
+    }
+
     public static void d(final String tag, final String format,
-                    final Object... args) {
+                         final Object... args) {
         if (BuildConfig.DEBUG_MODE) {
             Log.d(tag, buildMessage(format, args));
         }
     }
 
+    /**
+     * Pass object "this" print message and exception
+     *
+     * @param object
+     * @param message
+     * @param throwable
+     */
+    public static void e(Object object, String message, Throwable throwable) {
+        if (BuildConfig.DEBUG_MODE) {
+            if (message != null) {
+                Log.e(getTag(object), message, throwable);
+            } else {
+                Log.e(getTag(object), null + " ", throwable);
+            }
+        }
+        Crashlytics.logException(throwable);
+    }
+
+    public static void e(Object object, Throwable throwable) {
+        e(object, null, throwable);
+    }
+
+    public static void e(Throwable throwable) {
+        e(null, null, throwable);
+    }
+
     public static void e(final String tag, final String format,
-                    final Object... args) {
+                         final Object... args) {
         Log.e(tag, buildMessage(format, args));
     }
 
     public static void e(final String tag, final Throwable tr,
-                    final String format, final Object... args) {
+                         final String format, final Object... args) {
         Log.e(tag, buildMessage(format, args), tr);
     }
 
     public static void w(final String tag, final String format,
-                    final Object... args) {
+                         final Object... args) {
         Log.w(tag, buildMessage(format, args));
     }
 
     public static void w(final String tag, final Throwable tr,
-                    final String format, final Object... args) {
+                         final String format, final Object... args) {
         Log.w(tag, buildMessage(format, args), tr);
     }
 
     public static void i(final String tag, final String format,
-                    final Object... args) {
+                         final Object... args) {
         if (BuildConfig.DEBUG_MODE) {
             Log.i(tag, buildMessage(format, args));
         }
+    }
+
+    public static String getTag(Object object) {
+        if (object == null) {
+            return DEFAULT_TAG;
+        }
+        return object.getClass().getSimpleName();
     }
 
     /**
@@ -68,11 +133,11 @@ public class Logger {
      * calling thread ID and method name.
      */
     private static String buildMessage(final String format,
-                    final Object... args) {
+                                       final Object... args) {
         final String msg = (args == null) ? format : String
-                        .format(Locale.US, format, args);
+                .format(Locale.US, format, args);
         final StackTraceElement[] trace = new Throwable().fillInStackTrace()
-                        .getStackTrace();
+                .getStackTrace();
 
         String caller = "<unknown>";
         // Walk up the stack looking for the first caller outside of VolleyLog.
@@ -82,16 +147,16 @@ public class Logger {
             if (!clazz.equals(Logger.class)) {
                 String callingClass = trace[i].getClassName();
                 callingClass = callingClass.substring(callingClass
-                                .lastIndexOf('.') + 1);
+                        .lastIndexOf('.') + 1);
                 callingClass = callingClass.substring(callingClass
-                                .lastIndexOf('$') + 1);
+                        .lastIndexOf('$') + 1);
 
                 caller = callingClass + "." + trace[i].getMethodName();
                 break;
             }
         }
         return String.format(Locale.US, "[%d] %s: %s", Thread.currentThread()
-                        .getId(), caller, msg);
+                .getId(), caller, msg);
     }
 
     /**
@@ -100,18 +165,18 @@ public class Logger {
      */
     public static class MarkerLog {
 
-        private static final String TAG                         = "MarkerLog";
+        private static final String TAG = "MarkerLog";
 
         /**
          * Minimum duration from first marker to last in an marker log to
          * warrant logging.
          */
-        private static final long   MIN_DURATION_FOR_LOGGING_MS = 0;
+        private static final long MIN_DURATION_FOR_LOGGING_MS = 0;
 
         private static class Marker {
             public final String name;
-            public final long   thread;
-            public final long   time;
+            public final long thread;
+            public final long time;
 
             public Marker(final String name, final long thread, final long time) {
                 this.name = name;
@@ -120,24 +185,26 @@ public class Logger {
             }
         }
 
-        private final List<Marker> mMarkers  = new ArrayList<Marker>();
-        private boolean            mFinished = false;
+        private final List<Marker> mMarkers = new ArrayList<Marker>();
+        private boolean mFinished = false;
 
-        /** Adds a marker to this log with the specified name. */
+        /**
+         * Adds a marker to this log with the specified name.
+         */
         public synchronized void add(final String name, final long threadId) {
             if (mFinished) {
                 throw new IllegalStateException("Marker added to finished log");
             }
 
             mMarkers.add(new Marker(name, threadId, SystemClock
-                            .elapsedRealtime()));
+                    .elapsedRealtime()));
         }
 
         /**
          * Closes the log, dumping it to logcat if the time difference between
          * the first and last markers is greater than
          * {@link #MIN_DURATION_FOR_LOGGING_MS}.
-         * 
+         *
          * @param header Header string to print above the marker log.
          */
         public synchronized void finish(final String header) {
