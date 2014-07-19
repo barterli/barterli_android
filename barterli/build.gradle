@@ -86,7 +86,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:+'
     compile 'com.squareup.picasso:picasso:2.+'
     compile 'com.crashlytics.android:crashlytics:1.+'
-    compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
+
     compile('de.keyboardsurfer.android.widget:crouton:1.+') {
         exclude module: 'support-v4'
         compile 'com.android.support:support-v4:19.+'
@@ -126,6 +126,7 @@ dependencies {
         exclude module: 'wagon-provider-api'
     }
     androidTestCompile 'com.squareup:fest-android:1.0.+'
+    compile 'uk.co.chrisjenx:calligraphy:0.7.2'
 }
 
 apply plugin: 'idea'

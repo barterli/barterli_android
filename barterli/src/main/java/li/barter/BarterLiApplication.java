@@ -152,7 +152,7 @@ public class BarterLiApplication extends Application implements IVolleyHelper {
     }
 
     /**
-     * Reads the previously fetched auth token from Shared Preferencesand stores
+     * Reads the previously fetched auth token from Shared Preferences and stores
      * it in the Singleton for in memory access
      */
     private void readUserInfoFromSharedPref() {
