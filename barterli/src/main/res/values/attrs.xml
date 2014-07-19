@@ -96,20 +96,5 @@
         <attr name="borderColor" format="color" />
 
     </declare-styleable>
-    <declare-styleable name="TypefacedTextView">
-        <attr name="fontStyle" />
-    </declare-styleable>
-    <declare-styleable name="TypefacedButton">
-        <attr name="fontStyle" />
-    </declare-styleable>
-    <declare-styleable name="TypefacedAutoCompleteTextView">
-        <attr name="fontStyle" />
-    </declare-styleable>
-    <declare-styleable name="TypefacedEditText">
-        <attr name="fontStyle" />
-    </declare-styleable>
-    <declare-styleable name="TypefacedCheckBox">
-        <attr name="fontStyle" />
-    </declare-styleable>
 
 </resources>

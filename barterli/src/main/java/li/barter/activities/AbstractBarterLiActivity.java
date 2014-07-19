@@ -71,6 +71,8 @@ import li.barter.widgets.TypefaceCache;
 import li.barter.widgets.TypefacedSpan;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
 
 /**
  * @author Vinay S Shenoy Base class for inheriting all other Activities from

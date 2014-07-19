@@ -34,7 +34,7 @@
             android:paddingBottom="2dp"
             android:background="@drawable/background_container_drop_shadow"/>
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,9 +46,9 @@
             android:gravity="left|center_vertical"
             android:textColor="@color/black"
             android:textSize="@dimen/text_big"
-            app:fontStyle="slab_regular"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Slab" />
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_small"
             android:hint="@string/author_unavailable"
-            app:fontStyle="light"/>
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto.Light" />
 
         <RatingBar
             android:id="@+id/rating_book"

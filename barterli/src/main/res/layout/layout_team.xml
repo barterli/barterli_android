@@ -37,9 +37,10 @@
         android:layout_alignWithParentIfMissing="true"
         android:layout_toRightOf="@id/team_image"
         android:gravity="center_vertical"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/team_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -49,9 +50,9 @@
         android:layout_centerHorizontal="true"
         android:textColor="@color/dark_gray"
         android:textSize="@dimen/text_small"
-        app:fontStyle="regular" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-    <li.barter.widgets.TypefacedTextView
+    <TextView
         android:id="@+id/team_name"
         android:layout_width="match_parent"
         android:layout_height="26dip"
@@ -60,6 +61,6 @@
         android:gravity="center_horizontal"
         android:textColor="@color/black"
         android:textSize="@dimen/text_medium"
-        app:fontStyle="bold" />
+        android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold" />
 
 </RelativeLayout>

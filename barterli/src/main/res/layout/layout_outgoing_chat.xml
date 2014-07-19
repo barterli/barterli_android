@@ -9,7 +9,6 @@
   ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/li.barter"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/transparent" >
@@ -23,7 +22,7 @@
         android:background="@drawable/msg_out_bubble"
         android:orientation="vertical" >
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/text_chat_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,16 +32,16 @@
             android:textColor="@color/white"
             android:textColorLink="@color/outgoing_message"
             android:textSize="@dimen/text_medium"
-            app:fontStyle="regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
 
-        <li.barter.widgets.TypefacedTextView
+        <TextView
             android:id="@+id/chat_ack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/dark_gray"
             android:textSize="@dimen/text_micro"
             android:visibility="visible"
-            app:fontStyle="regular" />
+            android:textAppearance="@style/TextAppearance.FontPath.Roboto" />
     </LinearLayout>
 
 </RelativeLayout>
