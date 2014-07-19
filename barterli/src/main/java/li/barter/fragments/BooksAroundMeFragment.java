@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -83,9 +84,8 @@ import li.barter.utils.SearchViewNetworkQueryHelper;
 import li.barter.utils.SearchViewNetworkQueryHelper.NetworkCallbacks;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
+;
 
 /**
  * @author Vinay S Shenoy Fragment for displaying Books Around Me. Also contains a Map that the user
@@ -93,9 +93,8 @@ import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
  */
 public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         LoaderCallbacks<Cursor>, AsyncDbQueryCallback,
-        OnItemClickListener, LoadMoreCallbacks, NetworkCallbacks,
-        OnRefreshListener, OnCloseListener, OnActionExpandListener,
-        OnClickListener {
+        OnItemClickListener, LoadMoreCallbacks, NetworkCallbacks, OnCloseListener, OnActionExpandListener,
+        OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "BooksAroundMeFragment";
 
@@ -144,18 +143,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      * Action Bar SearchView
      */
     private SearchView mSearchView;
-
     private View mEmptyView;
-
-    /**
-     * Flag to indigate pull to refresh so as to disable mEmptyView set for the list
-     */
-    private boolean mFromPullToRefresh;
-
-    /**
-     * {@link PullToRefreshLayout} reference
-     */
-    private PullToRefreshLayout mPullToRefreshLayout;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private EnableLocationDialogFragment mEnableLocationDialogFragment;
 
@@ -169,15 +158,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
                 .inflate(R.layout.fragment_books_around_me, container, false);
 
         setActionBarTitle(R.string.app_name);
-
-        mPullToRefreshLayout = (PullToRefreshLayout) contentView
-                .findViewById(R.id.ptr_layout);
-
+        setUpRefreshLayout(contentView);
         mBooksAroundMeGridView = (GridView) contentView
                 .findViewById(R.id.grid_books_around_me);
 
-        ActionBarPullToRefresh.from(getActivity()).allChildrenArePullable()
-                              .listener(this).setup(mPullToRefreshLayout);
         LoadMoreHelper.init(this).on(mBooksAroundMeGridView);
 
         mBooksAroundMeAdapter = new BooksGridAdapter(getActivity(), true);
@@ -189,10 +173,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         mEmptyView.findViewById(R.id.text_try_again).setOnClickListener(this);
         mEmptyView.findViewById(R.id.text_add_your_own)
-                  .setOnClickListener(this);
+                .setOnClickListener(this);
         mEmptyView.findViewById(R.id.image_add_graphic)
-                  .setOnClickListener(this);
-
+                .setOnClickListener(this);
 
         mCurPage = SharedPreferenceHelper
                 .getInt(R.string.pref_last_fetched_page, 0);
@@ -210,6 +193,15 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         loadBookSearchResults();
         return contentView;
+    }
+
+    private void setUpRefreshLayout(View view){
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorScheme(R.color.apptheme_color,
+                R.color.red,
+                R.color.silver,
+                R.color.apptheme_color);
     }
 
     @Override
@@ -244,9 +236,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             final Map<String, String> params = new HashMap<String, String>(2);
             params.put(HttpConstants.LATITUDE, String.valueOf(center
-                                                                      .getLatitude()));
+                    .getLatitude()));
             params.put(HttpConstants.LONGITUDE, String.valueOf(center
-                                                                       .getLongitude()));
+                    .getLongitude()));
 
             Logger.d(TAG, center.getLatitude() + "  " + center.getLongitude());
             final int pageToFetch = mCurPage + 1;
@@ -280,9 +272,9 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             final Map<String, String> params = new HashMap<String, String>(2);
             params.put(HttpConstants.LATITUDE, String.valueOf(center
-                                                                      .getLatitude()));
+                    .getLatitude()));
             params.put(HttpConstants.LONGITUDE, String.valueOf(center
-                                                                       .getLongitude()));
+                    .getLongitude()));
             params.put(HttpConstants.SEARCH, bookname);
             params.put(HttpConstants.PERLIMIT, String
                     .valueOf(AppConstants.DEFAULT_ITEM_COUNT));
@@ -295,7 +287,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             request.setParams(params);
             addRequestToQueue(request, true, 0, true);
         }
-
     }
 
     @Override
@@ -332,8 +323,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mAddBookDialogFragment = new SingleChoiceDialogFragment();
         mAddBookDialogFragment
                 .show(AlertDialog.THEME_HOLO_LIGHT, R.array.add_book_choices, 0,
-                      R.string.add_book_dialog_head, getFragmentManager(), true,
-                      FragmentTags.DIALOG_ADD_BOOK);
+                        R.string.add_book_dialog_head, getFragmentManager(), true,
+                        FragmentTags.DIALOG_ADD_BOOK);
 
     }
 
@@ -391,7 +382,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             //   Delete the current search results before parsing the old ones
             DBInterface
                     .deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, getTaskTag(),
-                                 cookie, TableSearchBooks.NAME, null, null, true, this);
+                            cookie, TableSearchBooks.NAME, null, null, true, this);
         } else {
             mCurPage = SharedPreferenceHelper
                     .getInt(R.string.pref_last_fetched_page, 0);
@@ -464,8 +455,8 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         mEnableLocationDialogFragment = new EnableLocationDialogFragment();
         mEnableLocationDialogFragment
                 .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.enable_location,
-                      R.string.enable_location_message, R.string.enable, R.string.cancel, 0,
-                      getFragmentManager(), true, FragmentTags.DIALOG_ENABLE_LOCATION);
+                        R.string.enable_location_message, R.string.enable, R.string.cancel, 0,
+                        getFragmentManager(), true, FragmentTags.DIALOG_ENABLE_LOCATION);
 
     }
 
@@ -484,10 +475,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             }
             mLastFetchedLocation
                     .setLatitude(SharedPreferenceHelper
-                                         .getDouble(R.string.pref_last_fetched_latitude));
+                            .getDouble(R.string.pref_last_fetched_latitude));
             mLastFetchedLocation
                     .setLongitude(SharedPreferenceHelper
-                                          .getDouble(R.string.pref_last_fetched_longitude));
+                            .getDouble(R.string.pref_last_fetched_longitude));
         }
 
     }
@@ -517,7 +508,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         if (requestId == RequestId.SEARCH_BOOKS) {
 
             mLastFetchedLocation = (Location) request.getExtras()
-                                                     .get(Keys.LOCATION);
+                    .get(Keys.LOCATION);
 
             mCurPage++;
 
@@ -540,8 +531,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         super.onPostExecute(request);
         if (request.getRequestId() == RequestId.SEARCH_BOOKS) {
             mIsLoading = false;
-            mFromPullToRefresh = false;
-            mPullToRefreshLayout.setRefreshComplete();
+            hideRefreshing();
         }
     }
 
@@ -573,7 +563,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (loaderId == Loaders.SEARCH_BOOKS) {
             return new SQLiteLoader(getActivity(), false, ViewSearchBooksWithLocations.NAME, null,
-                                    null, null, null, null, null, null);
+                    null, null, null, null, null, null);
         } else {
             return null;
         }
@@ -584,19 +574,15 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
         if (loader.getId() == Loaders.SEARCH_BOOKS) {
 
-            if ((cursor.getCount() == 0) && !mFromPullToRefresh) {
+            if ((cursor.getCount() == 0)) {
                 mBooksAroundMeGridView.setEmptyView(mEmptyView);
-            }
-
-            if (mFromPullToRefresh) {
-                mFromPullToRefresh = false;
-            }
-            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-            {
+            } else {
+                Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
                 mBooksAroundMeAdapter.swapCursor(cursor);
             }
-
+            hideRefreshing();
         }
+
     }
 
     @Override
@@ -645,7 +631,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             } else {
 
                 final Intent booksPagerIntent = new Intent(getActivity(),
-                                                           SearchBookPagerActivity.class);
+                        SearchBookPagerActivity.class);
                 booksPagerIntent.putExtra(Keys.BOOK_POSITION, position);
                 startActivity(booksPagerIntent);
             }
@@ -721,7 +707,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             return true;
         } else if ((mEnableLocationDialogFragment != null)
                 && mEnableLocationDialogFragment.getDialog()
-                                                .equals(dialog)) {
+                .equals(dialog)) {
             return true;
         }
         return super.willHandleDialog(dialog);
@@ -735,22 +721,22 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             if (which == 0) { // scan book
                 startActivityForResult(new Intent(getActivity(), ScanIsbnActivity.class),
-                                       RequestCodes.SCAN_ISBN);
+                        RequestCodes.SCAN_ISBN);
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new EventBuilder(Categories.USAGE, Actions.ADD_BOOK)
-                                           .set(ParamKeys.TYPE, ParamValues.SCAN));
+                                .set(ParamKeys.TYPE, ParamValues.SCAN));
 
             } else if (which == 1) { // add book manually
                 loadAddOrEditBookFragment(null);
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new EventBuilder(Categories.USAGE, Actions.ADD_BOOK)
-                                           .set(ParamKeys.TYPE, ParamValues.MANUAL));
+                                .set(ParamKeys.TYPE, ParamValues.MANUAL));
             }
         } else if ((mEnableLocationDialogFragment != null)
                 && mEnableLocationDialogFragment.getDialog()
-                                                .equals(dialog)) {
+                .equals(dialog)) {
 
             if (which == DialogInterface.BUTTON_POSITIVE) { // enable location
                 Intent locationOptionsIntent = new Intent(
@@ -772,18 +758,15 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         cookie.putString(Keys.SEARCH, query);
         //   Delete the current search results before parsing the old ones
         DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS_FROM_EDITTEXT,
-                                getTaskTag(), cookie, TableSearchBooks.NAME, null, null, false,
-                                BooksAroundMeFragment.this);
+                getTaskTag(), cookie, TableSearchBooks.NAME, null, null, false,
+                BooksAroundMeFragment.this);
 
     }
 
     @Override
-    public void onRefreshStarted(View view) {
-
-        if (view.getId() == R.id.grid_books_around_me) {
-            mFromPullToRefresh = true;
-            reloadNearbyBooks();
-        }
+    public void onRefresh() {
+        mSwipeRefreshLayout.setEnabled(false);
+        reloadNearbyBooks();
     }
 
     /**
@@ -791,13 +774,21 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
      */
     private void reloadNearbyBooks() {
 
-
         mSearchView.setQuery(null, false);
         final Bundle cookie = new Bundle(2);
         cookie.putParcelable(Keys.LOCATION, mLastFetchedLocation);
         DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_BOOKS_SEARCH_RESULTS, getTaskTag(),
-                                cookie, TableSearchBooks.NAME, null, null, false, this);
+                cookie, TableSearchBooks.NAME, null, null, false, this);
 
+    }
+
+    private void showRefreshing(){
+        //mSwipeRefreshLayout.setRefreshing(true);
+    }
+
+    private void hideRefreshing(){
+        mSwipeRefreshLayout.setEnabled(true);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -818,7 +809,6 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     @Override
     protected String getAnalyticsScreenName() {
-
         return Screens.BOOKS_AROUND_ME;
     }
 
@@ -840,5 +830,4 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             }
         }
     }
-
 }

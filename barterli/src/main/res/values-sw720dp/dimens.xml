@@ -11,13 +11,8 @@
 
 <resources>
 
-    <dimen name="grid_item_width">150dp</dimen>
-    <dimen name="grid_item_height">200dp</dimen>
-    <dimen name="grid_spacing">6dp</dimen>
+    <dimen name="grid_item_width">200dp</dimen>
+    <dimen name="grid_item_height">250dp</dimen>
+    <dimen name="grid_spacing">10dp</dimen>
 
-    <!-- Dimensions related to books -->
-    <dimen name="book_height">194dp</dimen>
-    <dimen name="book_width">129dp</dimen>
-    <dimen name="book_image_width">126dp</dimen>
-    <dimen name="book_image_height">191dp</dimen>
 </resources>
