@@ -23,6 +23,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -275,19 +276,27 @@ public class RoundedCornerImageView extends ImageView {
 
     }
 
+    /** Custom drawable class that takes care of the actual drawing */
     private class StreamDrawable extends Drawable {
 
         private final RectF mRect = new RectF();
 
-        /* Rect used for drawing the actual inner image if a border has been set */
-        private       RectF        mBorderRect;
-        private       RectF        mImageRect;
+        /** Rect used for drawing the shadow */
+        private RectF mShadowRect;
+
+        /** Rect used for drawing the border */
+        private RectF mBorderRect;
+
+        /** Rect used for drawing the actual image */
+        private RectF mImageRect;
+
         private       BitmapShader mBitmapShader;
         private final Paint        mPaint;
         private       int          mBorderWidth;
         private       int          mBorderColor;
         private       boolean      mFullCircle;
         private       float        mCornerRadius;
+
 
         StreamDrawable(Bitmap bitmap, float cornerRadius, boolean fullCircle, int borderWidth, int borderColor) {
             mCornerRadius = cornerRadius;
@@ -303,8 +312,13 @@ public class RoundedCornerImageView extends ImageView {
 
             if (mShadowRadius > 0f) {
 
-                //We need to set layer type for shadows to work
-                setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                mShadowRect = new RectF();
+                if (Build.VERSION.SDK_INT >= 14) {
+                    /* We need to set layer type for shadows to work
+                     * on ICS and above
+                     */
+                    setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+                }
             }
 
             mPaint = new Paint();
