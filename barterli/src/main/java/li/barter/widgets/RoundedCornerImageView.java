@@ -41,26 +41,27 @@ import li.barter.R;
  */
 public class RoundedCornerImageView extends ImageView {
 
-    private static final int   DEFAULT_CORNER_RADIUS = 25;               //dips
-    private static final int   DEFAULT_MARGIN        = 0;                //dips
-    private static final int   DEFAULT_BORDER_WIDTH  = 0;                //dips
-    private static final int   DEFAULT_BORDER_COLOR  = Color.BLACK;
-    private static final float DEFAULT_SHADOW_RADIUS = 0f;
-    private static final float DEFAULT_SHADOW_DX     = 0f;
-    private static final float DEFAULT_SHADOW_DY     = 2.0f;
-    private static final int   DEFAULT_SHADOW_COLOR  = Color.DKGRAY;
+    private static final int     DEFAULT_CORNER_RADIUS = 5;               //dips
+    private static final int     DEFAULT_BORDER_WIDTH  = 0;                //dips
+    private static final int     DEFAULT_BORDER_COLOR  = Color.BLACK;
+    private static final float   DEFAULT_SHADOW_RADIUS = 0f;
+    private static final float   DEFAULT_SHADOW_DX     = 1.0f;
+    private static final float   DEFAULT_SHADOW_DY     = 2.0f;
+    private static final int     DEFAULT_SHADOW_COLOR  = Color.DKGRAY;
+    private static final boolean DEFAULT_FULL_CIRCLE   = false;
+
 
     private static final String TAG = "CircleImageView";
 
     private CircleTarget mCircleTarget;
     private int          mCornerRadius;
-    private int          mMargin;
     private int          mBorderWidth;
     private int          mBorderColor;
     private float        mShadowRadius;
     private float        mShadowDx;
     private float        mShadowDy;
     private int          mShadowColor;
+    private boolean      mFullCircle;
 
     /**
      * @param context
@@ -97,21 +98,21 @@ public class RoundedCornerImageView extends ImageView {
 
         final float density = context.getResources().getDisplayMetrics().density;
         mCornerRadius = (int) (DEFAULT_CORNER_RADIUS * density + 0.5f);
-        mMargin = (int) (DEFAULT_MARGIN * density + 0.5f);
         mBorderWidth = (int) (DEFAULT_BORDER_WIDTH * density + 0.5f);
         mBorderColor = DEFAULT_BORDER_COLOR;
+        mFullCircle = DEFAULT_FULL_CIRCLE;
 
         if (attrs != null) {
             TypedArray styledAttrs = context
                     .obtainStyledAttributes(attrs, R.styleable.RoundedCornerImageView);
             mCornerRadius = (int) styledAttrs
                     .getDimension(R.styleable.RoundedCornerImageView_cornerRadius, mCornerRadius);
-            mMargin = (int) styledAttrs
-                    .getDimension(R.styleable.RoundedCornerImageView_margin, mMargin);
             mBorderWidth = (int) styledAttrs
                     .getDimension(R.styleable.RoundedCornerImageView_borderWidth, mBorderWidth);
             mBorderColor = styledAttrs
                     .getColor(R.styleable.RoundedCornerImageView_borderColor, mBorderColor);
+            mFullCircle = styledAttrs
+                    .getBoolean(R.styleable.RoundedCornerImageView_fullCircle, mFullCircle);
             styledAttrs.recycle();
 
             final int[] shadowAttributes = new int[]{
@@ -138,7 +139,7 @@ public class RoundedCornerImageView extends ImageView {
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
 
-        if(mShadowDx == 0 && mShadowDy == 0) {
+        if (mShadowDx == 0 && mShadowDy == 0) {
             //We can use normal measuring in this case
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         } else {
@@ -147,14 +148,14 @@ public class RoundedCornerImageView extends ImageView {
             int requiredWidth = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
             int requiredHeight = getPaddingBottom() + getPaddingTop() + getSuggestedMinimumHeight();
 
-            if(mShadowDx != 0) {
+            if (mShadowDx != 0) {
                 //The shadow has some x-offset. We need to set the new width
                 final int absShadowDx = (int) (mShadowDx * density + 0.5f);
                 requiredWidth += absShadowDx;
                 requiredWidth = resolveSizeAndState(requiredWidth, widthMeasureSpec, 1);
             }
 
-            if(mShadowDy != 0) {
+            if (mShadowDy != 0) {
                 //The shadow has some y-offset. We need to set the new height
                 final int absShadowDy = (int) (mShadowDy * density + 0.5f);
                 requiredHeight += absShadowDy;
@@ -172,9 +173,78 @@ public class RoundedCornerImageView extends ImageView {
         return mCircleTarget;
     }
 
+    @Override
+    public void setImageBitmap(Bitmap bm) {
+
+        final Drawable content = getDrawable();
+
+        if (content instanceof StreamDrawable) {
+            ((StreamDrawable) content).updateBitmap(bm);
+        } else {
+            setImageDrawable(null);
+            setImageDrawable(new StreamDrawable(bm, mCornerRadius, mFullCircle, mBorderWidth, mBorderColor));
+        }
+    }
+
+    /**
+     * Custom {@link Target} implementation for loading images via {@link Picasso}
+     *
+     * @author Vinay S Shenoy
+     */
+    public static class CircleTarget implements Target {
+
+        private RoundedCornerImageView mRoundedCornerImageView;
+
+        public CircleTarget(RoundedCornerImageView roundedCornerImageView) {
+            if (roundedCornerImageView == null) {
+                throw new IllegalArgumentException("ImageView is null");
+            }
+
+            mRoundedCornerImageView = roundedCornerImageView;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+
+            if (o == null || !(o instanceof CircleTarget)) {
+                return false;
+            } else {
+                RoundedCornerImageView theirImageView = ((CircleTarget) o)
+                        .getImageView();
+                return mRoundedCornerImageView.equals(theirImageView);
+            }
+        }
+
+        public RoundedCornerImageView getImageView() {
+            return mRoundedCornerImageView;
+        }
+
+        @Override
+        public int hashCode() {
+            return 41 * mRoundedCornerImageView.hashCode();
+        }
+
+        @Override
+        public void onBitmapFailed(Drawable errorDrawable) {
+            // TODO Use custom StreamDrawable instead
+
+        }
+
+        @Override
+        public void onBitmapLoaded(Bitmap bitmap, LoadedFrom from) {
+            mRoundedCornerImageView.setImageBitmap(bitmap);
+        }
+
+        @Override
+        public void onPrepareLoad(Drawable prepareDrawable) {
+            // TODO what to do here?
+
+        }
+
+    }
+
     private class StreamDrawable extends Drawable {
 
-        private final float mCornerRadius;
         private final RectF mRect = new RectF();
 
         /* Rect used for drawing the actual inner image if a border has been set */
@@ -182,15 +252,17 @@ public class RoundedCornerImageView extends ImageView {
         private       RectF        mImageRect;
         private       BitmapShader mBitmapShader;
         private final Paint        mPaint;
-        private final int          mMargin;
-        private final int          mBorderWidth;
-        private final int          mBorderColor;
+        private       int          mBorderWidth;
+        private       int          mBorderColor;
+        private       boolean      mFullCircle;
+        private       float        mCornerRadius;
 
-        StreamDrawable(Bitmap bitmap, float cornerRadius, int margin, int borderWidth, int borderColor) {
+        StreamDrawable(Bitmap bitmap, float cornerRadius, boolean fullCircle, int borderWidth, int borderColor) {
             mCornerRadius = cornerRadius;
             mBitmapShader = getShaderForBitmap(bitmap);
             mBorderWidth = borderWidth;
             mBorderColor = borderColor;
+            mFullCircle = fullCircle;
 
             if (borderWidth > 0) {
                 mBorderRect = new RectF();
@@ -207,7 +279,6 @@ public class RoundedCornerImageView extends ImageView {
             mPaint.setAntiAlias(true);
             mPaint.setShader(mBitmapShader);
 
-            mMargin = margin;
         }
 
         /**
@@ -227,8 +298,12 @@ public class RoundedCornerImageView extends ImageView {
         @Override
         protected void onBoundsChange(Rect bounds) {
             super.onBoundsChange(bounds);
-            mRect.set(mMargin, mMargin, bounds.width() - mMargin, bounds
-                    .height() - mMargin);
+            mRect.set(0, 0, bounds.width(), bounds
+                    .height());
+
+            if (mFullCircle) {
+                mCornerRadius = Math.abs(mRect.left - mRect.right) / 2;
+            }
 
             //Needs to be called before initializing the border rects
             if (mShadowRadius > 0f) {
@@ -314,7 +389,7 @@ public class RoundedCornerImageView extends ImageView {
 
             } else {
                 //Draw an empty rect to draw the shadow
-                if(mShadowRadius > 0f) {
+                if (mShadowRadius > 0f) {
                     mPaint.setShader(null);
                     mPaint.setStyle(Paint.Style.STROKE);
                     mPaint.setStrokeWidth(0);
@@ -341,76 +416,6 @@ public class RoundedCornerImageView extends ImageView {
         public void setColorFilter(ColorFilter cf) {
             mPaint.setColorFilter(cf);
         }
-    }
-
-    @Override
-    public void setImageBitmap(Bitmap bm) {
-
-        final Drawable content = getDrawable();
-
-        if (content instanceof StreamDrawable) {
-            ((StreamDrawable) content).updateBitmap(bm);
-        } else {
-            setImageDrawable(null);
-            setImageDrawable(new StreamDrawable(bm, mCornerRadius, mMargin, mBorderWidth, mBorderColor));
-        }
-    }
-
-    /**
-     * Custom {@link Target} implementation for loading images via {@link Picasso}
-     *
-     * @author Vinay S Shenoy
-     */
-    public static class CircleTarget implements Target {
-
-        private RoundedCornerImageView mRoundedCornerImageView;
-
-        public CircleTarget(RoundedCornerImageView roundedCornerImageView) {
-            if (roundedCornerImageView == null) {
-                throw new IllegalArgumentException("ImageView is null");
-            }
-
-            mRoundedCornerImageView = roundedCornerImageView;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-
-            if (o == null || !(o instanceof CircleTarget)) {
-                return false;
-            } else {
-                RoundedCornerImageView theirImageView = ((CircleTarget) o)
-                        .getImageView();
-                return mRoundedCornerImageView.equals(theirImageView);
-            }
-        }
-
-        public RoundedCornerImageView getImageView() {
-            return mRoundedCornerImageView;
-        }
-
-        @Override
-        public int hashCode() {
-            return 41 * mRoundedCornerImageView.hashCode();
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-            // TODO Use custom StreamDrawable instead
-
-        }
-
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, LoadedFrom from) {
-            mRoundedCornerImageView.setImageBitmap(bitmap);
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable prepareDrawable) {
-            // TODO what to do here?
-
-        }
-
     }
 
 }

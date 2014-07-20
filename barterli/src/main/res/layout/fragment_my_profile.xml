@@ -55,7 +55,7 @@
                 android:gravity="center_vertical"
                 app:borderColor="@color/white"
                 app:borderWidth="1dp"
-                app:cornerRadius="@dimen/book_user_image_size_profile"
+                app:fullCircle="true"
                 android:shadowRadius="2.5"
                 android:shadowDx="1.25"
                 android:shadowDy="1.5"/>
