@@ -139,30 +139,62 @@ public class RoundedCornerImageView extends ImageView {
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
 
-        if (mShadowDx == 0 && mShadowDy == 0) {
-            //We can use normal measuring in this case
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        } else {
+        final float density = getContext().getResources().getDisplayMetrics().density;
+        int requiredWidth = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
+        int requiredHeight = getPaddingBottom() + getPaddingTop() + getSuggestedMinimumHeight();
+        int wMeasureSpec = widthMeasureSpec;
+        int hMeasureSpec = heightMeasureSpec;
 
-            final float density = getContext().getResources().getDisplayMetrics().density;
-            int requiredWidth = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
-            int requiredHeight = getPaddingBottom() + getPaddingTop() + getSuggestedMinimumHeight();
+        //We can use normal measuring in this case
+        requiredWidth = resolveSizeAndState(
+                requiredWidth,
+                wMeasureSpec,
+                1
+        );
+        requiredHeight = resolveSizeAndState(
+                requiredHeight,
+                hMeasureSpec,
+                0
+        );
 
-            if (mShadowDx != 0) {
-                //The shadow has some x-offset. We need to set the new width
-                final int absShadowDx = (int) (mShadowDx * density + 0.5f);
-                requiredWidth += absShadowDx;
-                requiredWidth = resolveSizeAndState(requiredWidth, widthMeasureSpec, 1);
+        /* If it's required to be a circle, set both height & width to be the
+         * minimum of the two. This needs to be done BEFORE the bounds calculation
+         * for shadows
+         * */
+        if (mFullCircle) {
+
+            if (requiredHeight > requiredWidth) {
+                requiredHeight = requiredWidth;
+                hMeasureSpec = widthMeasureSpec;
+            } else {
+                requiredWidth = requiredHeight;
+                wMeasureSpec = hMeasureSpec;
             }
 
-            if (mShadowDy != 0) {
-                //The shadow has some y-offset. We need to set the new height
-                final int absShadowDy = (int) (mShadowDy * density + 0.5f);
-                requiredHeight += absShadowDy;
-                requiredHeight = resolveSizeAndState(requiredHeight, heightMeasureSpec, 0);
-            }
-            setMeasuredDimension(requiredWidth, requiredHeight);
         }
+
+        if (mShadowDx != 0) {
+            //The shadow has some x-offset. We need to set the new width
+            final int absShadowDx = (int) (mShadowDx * density + 0.5f);
+            requiredWidth += absShadowDx;
+            requiredWidth = resolveSizeAndState(
+                    requiredWidth,
+                    wMeasureSpec,
+                    1);
+        }
+
+        if (mShadowDy != 0) {
+            //The shadow has some y-offset. We need to set the new height
+            final int absShadowDy = (int) (mShadowDy * density + 0.5f);
+            requiredHeight += absShadowDy;
+            requiredHeight = resolveSizeAndState(
+                    requiredHeight,
+                    hMeasureSpec,
+                    0
+            );
+        }
+
+        setMeasuredDimension(requiredWidth, requiredHeight);
 
     }
 

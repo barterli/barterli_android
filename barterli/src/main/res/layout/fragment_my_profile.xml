@@ -45,7 +45,7 @@
 
             <li.barter.widgets.RoundedCornerImageView
                 android:id="@+id/image_user"
-                android:layout_width="@dimen/book_user_image_size_profile"
+                android:layout_width="96dp"
                 android:layout_height="@dimen/book_user_image_size_profile"
                 android:layout_marginBottom="@dimen/margin_xx_small"
                 android:layout_marginLeft="@dimen/activity_margin"
