@@ -9,8 +9,10 @@
   -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/grid_item_height"
-    android:background="@drawable/background_container_drop_shadow">
+    android:layout_height="@dimen/book_height"
+    android:background="@drawable/background_container_drop_shadow"
+    android:paddingBottom="2dp"
+    android:paddingRight="1dp">
 
 
     <include

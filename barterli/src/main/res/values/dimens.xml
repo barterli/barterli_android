@@ -52,13 +52,8 @@
     <dimen name="edit_profile_img_size">125dp</dimen>
 
     <!-- Dimensions related to books -->
-    <dimen name="book_height">155dp</dimen>
-    <dimen name="book_width">103dp</dimen>
-    <dimen name="book_image_width">101dp</dimen>
-    <dimen name="book_image_height">153dp</dimen>
-
-    <dimen name="grid_item_width">110dp</dimen>
-    <dimen name="grid_item_height">170dp</dimen>
+    <dimen name="book_height">170dp</dimen>
+    <dimen name="book_width">110dp</dimen>
     <dimen name="grid_spacing">6dp</dimen>
 
     <!-- Text sizes -->

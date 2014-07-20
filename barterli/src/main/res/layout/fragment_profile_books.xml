@@ -19,6 +19,6 @@
     android:background="@color/transparent"
     android:cacheColorHint="@color/transparent"
     android:horizontalSpacing="@dimen/grid_spacing"
-    android:columnWidth="@dimen/grid_item_width"
+    android:columnWidth="@dimen/book_width"
     android:numColumns="auto_fit"
     android:verticalSpacing="@dimen/grid_spacing" />

@@ -73,8 +73,8 @@
 
             <ImageView
                 android:id="@+id/book_avatar"
-                android:layout_width="@dimen/book_image_width"
-                android:layout_height="@dimen/book_image_height"
+                android:layout_width="@dimen/book_width"
+                android:layout_height="@dimen/book_height"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="@dimen/margin_minimum"
