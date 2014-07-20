@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import li.barter.R;
 import li.barter.models.Team;
-import li.barter.widgets.CircleImageView;
+import li.barter.widgets.RoundedCornerImageView;
 
 /**
  * Adapter for displaying OSS Licenses
@@ -89,15 +89,15 @@ public class TeamAdapter extends BaseAdapter {
                                                                  .getDescription());
 
 
-        CircleImageView circleImageView = (CircleImageView) view.getTag(R.id.team_image);
+        RoundedCornerImageView roundedCornerImageView = (RoundedCornerImageView) view.getTag(R.id.team_image);
 
-        circleImageView.setImageResource(0);
+        roundedCornerImageView.setImageResource(0);
 
         Picasso.with(mContext).load(teamMember.getImageUrl())
                .error(R.drawable.pic_avatar)
                .resizeDimen(R.dimen.big_chat_detail_image_size, R.dimen.big_chat_detail_image_size)
                .centerCrop()
-               .into(circleImageView.getTarget());
+               .into(roundedCornerImageView.getTarget());
 
         return view;
     }

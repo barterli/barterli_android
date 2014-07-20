@@ -39,7 +39,6 @@ import com.squareup.picasso.Picasso;
 import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AboutUsActivity;
-import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AuthActivity;
 import li.barter.activities.ChatsActivity;
 import li.barter.activities.HomeActivity;
@@ -53,7 +52,7 @@ import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
 import li.barter.utils.Utils;
-import li.barter.widgets.CircleImageView;
+import li.barter.widgets.RoundedCornerImageView;
 
 /**
  * Fragment to load in the Navigation Drawer Created by vinaysshenoy on 29/6/14.
@@ -179,7 +178,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
 
         final TextView userNameTextView = ((TextView) profileInfoContainer
                 .getTag(R.id.text_user_name));
-        final CircleImageView profileImageView = (CircleImageView) profileInfoContainer
+        final RoundedCornerImageView profileImageView = (RoundedCornerImageView) profileInfoContainer
                 .getTag(R.id.image_user);
 
         if (isLoggedIn()) {

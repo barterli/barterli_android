@@ -14,7 +14,7 @@
     android:background="@drawable/background_container_drop_shadow"
     android:padding="6dip" >
 
-    <li.barter.widgets.CircleImageView
+    <li.barter.widgets.RoundedCornerImageView
         android:id="@+id/team_image"
         android:layout_width="@dimen/big_chat_detail_image_size"
         android:layout_height="@dimen/big_chat_detail_image_size"

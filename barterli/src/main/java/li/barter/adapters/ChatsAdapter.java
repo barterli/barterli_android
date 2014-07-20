@@ -18,11 +18,10 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
-import li.barter.widgets.CircleImageView;
+import li.barter.widgets.RoundedCornerImageView;
 
 /**
  * Adapter for displaying list of all ongoing chats
@@ -58,14 +57,14 @@ public class ChatsAdapter extends CursorAdapter {
                                         .getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN)));
 
         
-        CircleImageView circleImageView=(CircleImageView) view.getTag(R.id.image_user);
+        RoundedCornerImageView roundedCornerImageView =(RoundedCornerImageView) view.getTag(R.id.image_user);
         
    	 Picasso.with(context)
         .load(cursor.getString(cursor
               .getColumnIndex(DatabaseColumns.PROFILE_PICTURE)))
          .error(R.drawable.pic_avatar)
         .resizeDimen(R.dimen.big_chat_detail_image_size, R.dimen.big_chat_detail_image_size)
-        .centerCrop().into(circleImageView.getTarget());
+        .centerCrop().into(roundedCornerImageView.getTarget());
         
         
 

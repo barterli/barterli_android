@@ -86,7 +86,7 @@ import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
-import li.barter.widgets.CircleImageView;
+import li.barter.widgets.RoundedCornerImageView;
 
 /**
  * @author Anshul Kamboj
@@ -101,14 +101,14 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
     private static final String TAG = "ProfileFragment";
 
-    private FragmentTabHost mTabHost;
-    private String          mUserId;
-    private String          mImageUrl;
-    private ImageView       mChatImageView;
-    private CircleImageView mOwnerImageView;
-    private TextView        mOwnerNameTextView;
-    private TextView        mOwnerBarterLocationTextView;
-    private boolean         mIsLoggedInUser;
+    private FragmentTabHost        mTabHost;
+    private String                 mUserId;
+    private String                 mImageUrl;
+    private ImageView              mChatImageView;
+    private RoundedCornerImageView mOwnerImageView;
+    private TextView               mOwnerNameTextView;
+    private TextView               mOwnerBarterLocationTextView;
+    private boolean                mIsLoggedInUser;
     private final String mUserSelection = DatabaseColumns.USER_ID
             + SQLConstants.EQUALS_ARG;
     private View                      mDragHandle;
@@ -196,7 +196,7 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
 
     private void initViews(final View view) {
 
-        mOwnerImageView = (CircleImageView) view.findViewById(R.id.image_user);
+        mOwnerImageView = (RoundedCornerImageView) view.findViewById(R.id.image_user);
         mChatImageView = (ImageView) view.findViewById(R.id.chat_with_owner);
 
         mChatImageView.setOnClickListener(this);
@@ -209,10 +209,12 @@ public class ProfileFragment extends AbstractBarterLiFragment implements
         mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
         mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.ABOUT_ME)
                                 .setIndicator(getString(R.string.about_me)), DummyFragment.class,
-                        null);
+                        null
+        );
         mTabHost.addTab(mTabHost.newTabSpec(FragmentTags.MY_BOOKS)
                                 .setIndicator(getString(R.string.my_books)), DummyFragment.class,
-                        null);
+                        null
+        );
         mTabHost.setOnTabChangedListener(this);
 
         mViewPager = (ViewPager) view.findViewById(R.id.pager_profile);

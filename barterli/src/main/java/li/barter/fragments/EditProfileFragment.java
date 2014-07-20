@@ -64,7 +64,7 @@ import li.barter.utils.AppConstants.UserInfo;
 import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
-import li.barter.widgets.CircleImageView;
+import li.barter.widgets.RoundedCornerImageView;
 
 /**
  * @author Sharath Pandeshwar
@@ -78,11 +78,11 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     private static final String TAG = "EditProfileFragment";
 
-    private TextView        mFirstNameTextView;
-    private TextView        mLastNameTextView;
-    private TextView        mAboutMeTextView;
-    private TextView        mPreferredLocationTextView;
-    private CircleImageView mProfileImageView;
+    private TextView               mFirstNameTextView;
+    private TextView               mLastNameTextView;
+    private TextView               mAboutMeTextView;
+    private TextView               mPreferredLocationTextView;
+    private RoundedCornerImageView mProfileImageView;
     private boolean mWasProfileImageChanged = false;
 
     private Bitmap mCompressedPhoto;
@@ -114,7 +114,7 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
         mPreferredLocationTextView = (TextView) view
                 .findViewById(R.id.text_current_location);
-        mProfileImageView = (CircleImageView) view
+        mProfileImageView = (RoundedCornerImageView) view
                 .findViewById(R.id.image_profile_pic);
 
         mPreferredLocationTextView.setOnClickListener(this);

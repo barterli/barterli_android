@@ -43,7 +43,7 @@
             android:layout_toLeftOf="@id/chat_with_owner"
             android:orientation="horizontal" >
 
-            <li.barter.widgets.CircleImageView
+            <li.barter.widgets.RoundedCornerImageView
                 android:id="@+id/image_user"
                 android:layout_width="@dimen/book_user_image_size_profile"
                 android:layout_height="@dimen/book_user_image_size_profile"

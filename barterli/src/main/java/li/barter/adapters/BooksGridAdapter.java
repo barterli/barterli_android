@@ -25,7 +25,7 @@ import android.widget.TextView;
 import li.barter.R;
 import li.barter.data.DatabaseColumns;
 import li.barter.utils.AppConstants;
-import li.barter.widgets.CircleImageView;
+import li.barter.widgets.RoundedCornerImageView;
 
 /**
  * Adapter used to display information for books around me
@@ -173,17 +173,17 @@ public class BooksGridAdapter extends CursorAdapter {
         final String ownerImageUrl = cursor.getString(cursor
                         .getColumnIndex(DatabaseColumns.BOOK_OWNER_IMAGE_URL));
 
-        final CircleImageView circleImageView = (CircleImageView) view
+        final RoundedCornerImageView roundedCornerImageView = (RoundedCornerImageView) view
                 .getTag(R.id.image_user);
 
         if (!TextUtils.isEmpty(ownerImageUrl)) {
 
-            circleImageView.setImageResource(0);
+            roundedCornerImageView.setImageResource(0);
 
             Picasso.with(context)
                             .load(ownerImageUrl)
                             .resizeDimen(R.dimen.book_user_image_size, R.dimen.book_user_image_size)
-                            .centerCrop().into(circleImageView.getTarget());
+                            .centerCrop().into(roundedCornerImageView.getTarget());
 
         } else {
             //TODO DIsplay default image for user

@@ -67,7 +67,7 @@ import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.Logger;
 import li.barter.utils.Utils;
-import li.barter.widgets.CircleImageView;
+import li.barter.widgets.RoundedCornerImageView;
 
 /**
  * Activity for displaying Chat Messages
@@ -123,7 +123,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     /**
      * User with whom the chat is happening
      */
-    private CircleImageView mWithImageView;
+    private RoundedCornerImageView mWithImageView;
 
     private SimpleDateFormat mFormatter;
 
@@ -166,7 +166,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
             mUserInfo = savedInstanceState.getBundle(Keys.USER_INFO);
         }
 
-        if(getArguments() != null) {
+        if (getArguments() != null) {
 
             mFinishOnBack = getArguments().getBoolean(Keys.FINISH_ON_BACK);
         }
@@ -179,7 +179,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     @Override
     public boolean onBackPressed() {
 
-        if(mFinishOnBack) {
+        if (mFinishOnBack) {
             getActivity().finish();
             return true;
         } else {
@@ -218,7 +218,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
         final View actionView = MenuItemCompat.getActionView(menuItem);
         if (actionView != null) {
-            mWithImageView = (CircleImageView) actionView
+            mWithImageView = (RoundedCornerImageView) actionView
                     .findViewById(R.id.image_user);
             mWithImageView.setOnClickListener(this);
             loadUserInfoIntoActionBar();

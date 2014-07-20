@@ -39,7 +39,7 @@ import li.barter.R;
  *
  * @author Vinay S Shenoy
  */
-public class CircleImageView extends ImageView {
+public class RoundedCornerImageView extends ImageView {
 
     private static final int   DEFAULT_CORNER_RADIUS = 25;               //dips
     private static final int   DEFAULT_MARGIN        = 0;                //dips
@@ -65,7 +65,7 @@ public class CircleImageView extends ImageView {
     /**
      * @param context
      */
-    public CircleImageView(Context context) {
+    public RoundedCornerImageView(Context context) {
         super(context);
         init(context, null);
     }
@@ -74,7 +74,7 @@ public class CircleImageView extends ImageView {
      * @param context
      * @param attrs
      */
-    public CircleImageView(Context context, AttributeSet attrs) {
+    public RoundedCornerImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
@@ -84,7 +84,7 @@ public class CircleImageView extends ImageView {
      * @param attrs
      * @param defStyle
      */
-    public CircleImageView(Context context, AttributeSet attrs, int defStyle) {
+    public RoundedCornerImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs);
     }
@@ -103,15 +103,15 @@ public class CircleImageView extends ImageView {
 
         if (attrs != null) {
             TypedArray styledAttrs = context
-                    .obtainStyledAttributes(attrs, R.styleable.CircleImageView);
+                    .obtainStyledAttributes(attrs, R.styleable.RoundedCornerImageView);
             mCornerRadius = (int) styledAttrs
-                    .getDimension(R.styleable.CircleImageView_cornerRadius, mCornerRadius);
+                    .getDimension(R.styleable.RoundedCornerImageView_cornerRadius, mCornerRadius);
             mMargin = (int) styledAttrs
-                    .getDimension(R.styleable.CircleImageView_margin, mMargin);
+                    .getDimension(R.styleable.RoundedCornerImageView_margin, mMargin);
             mBorderWidth = (int) styledAttrs
-                    .getDimension(R.styleable.CircleImageView_borderWidth, mBorderWidth);
+                    .getDimension(R.styleable.RoundedCornerImageView_borderWidth, mBorderWidth);
             mBorderColor = styledAttrs
-                    .getColor(R.styleable.CircleImageView_borderColor, mBorderColor);
+                    .getColor(R.styleable.RoundedCornerImageView_borderColor, mBorderColor);
             styledAttrs.recycle();
 
             final int[] shadowAttributes = new int[]{
@@ -133,6 +133,36 @@ public class CircleImageView extends ImageView {
 
             styledAttrs.recycle();
         }
+    }
+
+    @Override
+    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+
+        if(mShadowDx == 0 && mShadowDy == 0) {
+            //We can use normal measuring in this case
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        } else {
+
+            final float density = getContext().getResources().getDisplayMetrics().density;
+            int requiredWidth = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
+            int requiredHeight = getPaddingBottom() + getPaddingTop() + getSuggestedMinimumHeight();
+
+            if(mShadowDx != 0) {
+                //The shadow has some x-offset. We need to set the new width
+                final int absShadowDx = (int) (mShadowDx * density + 0.5f);
+                requiredWidth += absShadowDx;
+                requiredWidth = resolveSizeAndState(requiredWidth, widthMeasureSpec, 1);
+            }
+
+            if(mShadowDy != 0) {
+                //The shadow has some y-offset. We need to set the new height
+                final int absShadowDy = (int) (mShadowDy * density + 0.5f);
+                requiredHeight += absShadowDy;
+                requiredHeight = resolveSizeAndState(requiredHeight, heightMeasureSpec, 0);
+            }
+            setMeasuredDimension(requiredWidth, requiredHeight);
+        }
+
     }
 
     public CircleTarget getTarget() {
@@ -333,14 +363,14 @@ public class CircleImageView extends ImageView {
      */
     public static class CircleTarget implements Target {
 
-        private CircleImageView mCircleImageView;
+        private RoundedCornerImageView mRoundedCornerImageView;
 
-        public CircleTarget(CircleImageView circleImageView) {
-            if (circleImageView == null) {
+        public CircleTarget(RoundedCornerImageView roundedCornerImageView) {
+            if (roundedCornerImageView == null) {
                 throw new IllegalArgumentException("ImageView is null");
             }
 
-            mCircleImageView = circleImageView;
+            mRoundedCornerImageView = roundedCornerImageView;
         }
 
         @Override
@@ -349,19 +379,19 @@ public class CircleImageView extends ImageView {
             if (o == null || !(o instanceof CircleTarget)) {
                 return false;
             } else {
-                CircleImageView theirImageView = ((CircleTarget) o)
+                RoundedCornerImageView theirImageView = ((CircleTarget) o)
                         .getImageView();
-                return mCircleImageView.equals(theirImageView);
+                return mRoundedCornerImageView.equals(theirImageView);
             }
         }
 
-        public CircleImageView getImageView() {
-            return mCircleImageView;
+        public RoundedCornerImageView getImageView() {
+            return mRoundedCornerImageView;
         }
 
         @Override
         public int hashCode() {
-            return 41 * mCircleImageView.hashCode();
+            return 41 * mRoundedCornerImageView.hashCode();
         }
 
         @Override
@@ -372,7 +402,7 @@ public class CircleImageView extends ImageView {
 
         @Override
         public void onBitmapLoaded(Bitmap bitmap, LoadedFrom from) {
-            mCircleImageView.setImageBitmap(bitmap);
+            mRoundedCornerImageView.setImageBitmap(bitmap);
         }
 
         @Override
