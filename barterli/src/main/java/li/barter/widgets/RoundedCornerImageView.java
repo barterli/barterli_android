@@ -11,6 +11,7 @@
 package li.barter.widgets;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -45,11 +46,10 @@ public class RoundedCornerImageView extends ImageView {
     private static final int     DEFAULT_CORNER_RADIUS = 5;               //dips
     private static final int     DEFAULT_BORDER_WIDTH  = 0;                //dips
     private static final int     DEFAULT_BORDER_COLOR  = Color.BLACK;
-    private static final float   DEFAULT_SHADOW_RADIUS = 0f;
-    private static final float   DEFAULT_SHADOW_DX     = 1.0f;
-    private static final float   DEFAULT_SHADOW_DY     = 2.0f;
-    private static final int     DEFAULT_SHADOW_COLOR  = Color.DKGRAY;
+    private static final int     DEFAULT_SHADOW_WIDTH  = 0; //dips
+    private static final int     DEFAULT_SHADOW_COLOR  = 0xB3444444; //70% dark gray
     private static final boolean DEFAULT_FULL_CIRCLE   = false;
+    private static final float   DEFAULT_SHADOW_RADIUS = 0.5f;
 
 
     private static final String TAG = "CircleImageView";
@@ -58,9 +58,8 @@ public class RoundedCornerImageView extends ImageView {
     private int          mCornerRadius;
     private int          mBorderWidth;
     private int          mBorderColor;
+    private int          mShadowWidth;
     private float        mShadowRadius;
-    private float        mShadowDx;
-    private float        mShadowDy;
     private int          mShadowColor;
     private boolean      mFullCircle;
 
@@ -97,102 +96,116 @@ public class RoundedCornerImageView extends ImageView {
      */
     private void init(Context context, AttributeSet attrs) {
 
-        final float density = context.getResources().getDisplayMetrics().density;
-        mCornerRadius = (int) (DEFAULT_CORNER_RADIUS * density + 0.5f);
-        mBorderWidth = (int) (DEFAULT_BORDER_WIDTH * density + 0.5f);
+        mCornerRadius = dpToPx(DEFAULT_CORNER_RADIUS);
+        int borderWidthInDips = DEFAULT_BORDER_WIDTH;
         mBorderColor = DEFAULT_BORDER_COLOR;
         mFullCircle = DEFAULT_FULL_CIRCLE;
+        int shadowWidthInDips = DEFAULT_SHADOW_WIDTH;
+        mShadowColor = DEFAULT_SHADOW_COLOR;
+        mShadowRadius = DEFAULT_SHADOW_RADIUS;
+
 
         if (attrs != null) {
             TypedArray styledAttrs = context
                     .obtainStyledAttributes(attrs, R.styleable.RoundedCornerImageView);
             mCornerRadius = (int) styledAttrs
                     .getDimension(R.styleable.RoundedCornerImageView_cornerRadius, mCornerRadius);
-            mBorderWidth = (int) styledAttrs
-                    .getDimension(R.styleable.RoundedCornerImageView_borderWidth, mBorderWidth);
             mBorderColor = styledAttrs
                     .getColor(R.styleable.RoundedCornerImageView_borderColor, mBorderColor);
             mFullCircle = styledAttrs
                     .getBoolean(R.styleable.RoundedCornerImageView_fullCircle, mFullCircle);
-            styledAttrs.recycle();
+            mShadowColor = styledAttrs
+                    .getColor(R.styleable.RoundedCornerImageView_shadowColor, mShadowColor);
+            mShadowRadius = styledAttrs
+                    .getFloat(R.styleable.RoundedCornerImageView_shadowRadius, mShadowRadius);
 
-            final int[] shadowAttributes = new int[]{
-                    android.R.attr.shadowColor,
-                    android.R.attr.shadowDx,
-                    android.R.attr.shadowDy,
-                    android.R.attr.shadowRadius
-            };
-            styledAttrs = context.obtainStyledAttributes(
-                    attrs,
-                    shadowAttributes
-            );
-
-            //The attributes have to parsed in the same order
-            mShadowColor = styledAttrs.getColor(0, DEFAULT_SHADOW_COLOR);
-            mShadowDx = styledAttrs.getFloat(1, DEFAULT_SHADOW_DX);
-            mShadowDy = styledAttrs.getFloat(2, DEFAULT_SHADOW_DY);
-            mShadowRadius = styledAttrs.getFloat(3, DEFAULT_SHADOW_RADIUS);
+            int dimension = (int) styledAttrs
+                    .getDimension(R.styleable.RoundedCornerImageView_borderWidth, borderWidthInDips);
+            borderWidthInDips = pxToDp(dimension);
+            dimension = (int) styledAttrs
+                    .getDimension(R.styleable.RoundedCornerImageView_shadowWidth, shadowWidthInDips);
+            shadowWidthInDips = pxToDp(dimension);
 
             styledAttrs.recycle();
+        }
+
+        clampBorderAndShadowWidths(borderWidthInDips, shadowWidthInDips);
+        mBorderWidth = dpToPx(borderWidthInDips);
+        mShadowWidth = dpToPx(shadowWidthInDips);
+
+    }
+
+    /**
+     * Converts a raw pixel value to a dp value, based on the device density
+     */
+    private static int pxToDp(int px) {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    /**
+     * Converts a raw dp value to a pixel value, based on the device density
+     */
+    public static int dpToPx(int dp) {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+
+    /**
+     * Clamps the widths of the border & shadow(if set) to a sane max. This modifies the passed in
+     * paramters if needed
+     * <p/>
+     * Currently, border is allowed to be [1,5] dp and shadow is allowed to be [1,3] dp
+     * <p/>
+     * If they exceed their maximums, they are set to the max value. If they go below the minimums,
+     * they are set to 0
+     *
+     * @param borderWidthInDips The set border width in dips
+     * @param shadowWidthInDips The set shadow width in dips
+     */
+    private void clampBorderAndShadowWidths(int borderWidthInDips, int shadowWidthInDips) {
+
+        if (borderWidthInDips > 5) {
+            borderWidthInDips = 5;
+        } else if (borderWidthInDips < 0) {
+            borderWidthInDips = 0;
+        }
+
+        if (shadowWidthInDips > 3) {
+            shadowWidthInDips = 3;
+        } else if (shadowWidthInDips < 0) {
+            shadowWidthInDips = 0;
         }
     }
 
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
 
-        final float density = getContext().getResources().getDisplayMetrics().density;
         int requiredWidth = getPaddingLeft() + getPaddingRight() + getSuggestedMinimumWidth();
         int requiredHeight = getPaddingBottom() + getPaddingTop() + getSuggestedMinimumHeight();
-        int wMeasureSpec = widthMeasureSpec;
-        int hMeasureSpec = heightMeasureSpec;
 
         //We can use normal measuring in this case
         requiredWidth = resolveSizeAndState(
                 requiredWidth,
-                wMeasureSpec,
+                widthMeasureSpec,
                 1
         );
         requiredHeight = resolveSizeAndState(
                 requiredHeight,
-                hMeasureSpec,
+                heightMeasureSpec,
                 0
         );
 
         /* If it's required to be a circle, set both height & width to be the
-         * minimum of the two. This needs to be done BEFORE the bounds calculation
-         * for shadows
+         * minimum of the two.
          * */
         if (mFullCircle) {
 
             if (requiredHeight > requiredWidth) {
                 requiredHeight = requiredWidth;
-                hMeasureSpec = widthMeasureSpec;
             } else {
                 requiredWidth = requiredHeight;
-                wMeasureSpec = hMeasureSpec;
             }
 
-        }
-
-        if (mShadowDx != 0) {
-            //The shadow has some x-offset. We need to set the new width
-            final int absShadowDx = (int) (mShadowDx * density + 0.5f);
-            requiredWidth += absShadowDx;
-            requiredWidth = resolveSizeAndState(
-                    requiredWidth,
-                    wMeasureSpec,
-                    1);
-        }
-
-        if (mShadowDy != 0) {
-            //The shadow has some y-offset. We need to set the new height
-            final int absShadowDy = (int) (mShadowDy * density + 0.5f);
-            requiredHeight += absShadowDy;
-            requiredHeight = resolveSizeAndState(
-                    requiredHeight,
-                    hMeasureSpec,
-                    0
-            );
         }
 
         setMeasuredDimension(requiredWidth, requiredHeight);
@@ -215,7 +228,7 @@ public class RoundedCornerImageView extends ImageView {
             ((StreamDrawable) content).updateBitmap(bm);
         } else {
             setImageDrawable(null);
-            setImageDrawable(new StreamDrawable(bm, mCornerRadius, mFullCircle, mBorderWidth, mBorderColor));
+            setImageDrawable(new StreamDrawable(bm, mCornerRadius, mFullCircle, mBorderWidth, mBorderColor, mShadowWidth, mShadowColor, mShadowRadius));
         }
     }
 
@@ -281,9 +294,6 @@ public class RoundedCornerImageView extends ImageView {
 
         private final RectF mRect = new RectF();
 
-        /** Rect used for drawing the shadow */
-        private RectF mShadowRect;
-
         /** Rect used for drawing the border */
         private RectF mBorderRect;
 
@@ -296,23 +306,26 @@ public class RoundedCornerImageView extends ImageView {
         private       int          mBorderColor;
         private       boolean      mFullCircle;
         private       float        mCornerRadius;
+        private       int          mShadowWidth;
+        private       int          mShadowColor;
+        private       float        mShadowRadius;
 
 
-        StreamDrawable(Bitmap bitmap, float cornerRadius, boolean fullCircle, int borderWidth, int borderColor) {
+        StreamDrawable(Bitmap bitmap, float cornerRadius, boolean fullCircle, int borderWidth, int borderColor, int shadowWidth, int shadowColor, float shadowRadius) {
             mCornerRadius = cornerRadius;
             mBitmapShader = getShaderForBitmap(bitmap);
             mBorderWidth = borderWidth;
             mBorderColor = borderColor;
             mFullCircle = fullCircle;
+            mShadowColor = shadowColor;
+            mShadowRadius = shadowRadius;
+            mShadowWidth = shadowWidth;
 
-            if (borderWidth > 0) {
-                mBorderRect = new RectF();
-                mImageRect = new RectF();
-            }
+            mBorderRect = new RectF();
+            mImageRect = new RectF();
 
-            if (mShadowRadius > 0f) {
+            if (mShadowWidth > 0f) {
 
-                mShadowRect = new RectF();
                 if (Build.VERSION.SDK_INT >= 14) {
                     /* We need to set layer type for shadows to work
                      * on ICS and above
@@ -323,7 +336,6 @@ public class RoundedCornerImageView extends ImageView {
 
             mPaint = new Paint();
             mPaint.setAntiAlias(true);
-            mPaint.setShader(mBitmapShader);
 
         }
 
@@ -337,12 +349,12 @@ public class RoundedCornerImageView extends ImageView {
         public void updateBitmap(Bitmap bitmap) {
 
             mBitmapShader = getShaderForBitmap(bitmap);
-            mPaint.setShader(mBitmapShader);
             invalidate();
         }
 
         @Override
         protected void onBoundsChange(Rect bounds) {
+
             super.onBoundsChange(bounds);
             mRect.set(0, 0, bounds.width(), bounds
                     .height());
@@ -351,100 +363,100 @@ public class RoundedCornerImageView extends ImageView {
                 mCornerRadius = Math.abs(mRect.left - mRect.right) / 2;
             }
 
-            //Needs to be called before initializing the border rects
-            if (mShadowRadius > 0f) {
-                adjustOuterRectForShadows();
-            }
-
             if (mBorderWidth > 0) {
-                initRectsForBorders();
+                initRectsWithBorders();
+            } else {
+                initRectsWithoutBorders();
             }
 
         }
 
         /**
-         * For borders, we draw both the border and the bitmap separately to prevent overdraw.
-         * <p/>
-         * We need to create separate Rects for drawing both items. This method initializes them
+         * Initializes the rects without borders, taking shadows into account
          */
-        private void initRectsForBorders() {
+        private void initRectsWithoutBorders() {
 
-            mBorderRect.set(mRect.left + mBorderWidth, mRect.top
-                    + mBorderWidth, mRect.right - mBorderWidth, mRect.bottom
-                                    - mBorderWidth);
-            mImageRect.set(mBorderRect.left + mBorderWidth, mBorderRect.top
-                    + mBorderWidth, mBorderRect.right - mBorderWidth, mBorderRect.bottom
-                                   - mBorderWidth);
+            mImageRect.set(mRect);
+            if (mShadowWidth > 0) {
+
+                /* Shadows will be drawn to the right & bottom,
+                 * so adjust the image rect on the right & bottom
+                 */
+                mImageRect.right -= mShadowWidth;
+                mImageRect.bottom -= mShadowWidth;
+            }
         }
 
         /**
-         * If we enable shadows, we need to adjust the outer rect to account for the shadow size in
-         * order to prevent clipping
+         * Initialize the rects with borders, taking shadows into account
          */
-        private void adjustOuterRectForShadows() {
+        private void initRectsWithBorders() {
 
-            //Adjust for dX
-            if (mShadowDx > 0f) {
+            mBorderRect.set(mRect);
+            mBorderRect.left += mBorderWidth;
+            mBorderRect.top += mBorderWidth;
+            mBorderRect.right -= mBorderWidth;
+            mBorderRect.bottom -= mBorderWidth;
 
-                /*Shadows will be offset to the right, we need to increase the right bounds*/
-                mRect.right -= mShadowRadius;
+            if (mShadowWidth > 0) {
 
-            } else if (mShadowDx < 0f) {
 
-                /*Shadows will be offset to the left, we need to increase the left bounds*/
-                mRect.left += mShadowRadius;
+                /* Shadows will be drawn to the right & bottom,
+                 * so adjust the border rect on the right & bottom.
+                 *
+                 * Since the image rect is calculated from the
+                 * border rect, the dimens will be accounted for.
+                 */
+                mBorderRect.right -= mShadowWidth;
+                mBorderRect.bottom -= mShadowWidth;
             }
 
-            //Adjust for dY
-            if (mShadowDy > 0f) {
-
-                /*Shadows will be offset to the bottom, we need to increase the bottom bounds*/
-                mRect.bottom -= mShadowRadius;
-            } else if (mShadowDy < 0f) {
-
-                /*Shadows will be offset to the top, we need to increase the top bounds*/
-                mRect.top += mShadowRadius;
-            }
-
-
+            mImageRect.set(
+                    mBorderRect.left + mBorderWidth,
+                    mBorderRect.top + mBorderWidth,
+                    mBorderRect.right - mBorderWidth,
+                    mBorderRect.bottom - mBorderWidth);
         }
 
         @Override
         public void draw(Canvas canvas) {
 
-            Shader curShader = mPaint.getShader();
-            if (mShadowRadius > 0f) {
-                mPaint.setShadowLayer(mShadowRadius, mShadowDx, mShadowDy, mShadowColor);
-            }
+            mPaint.setShader(null);
+            drawBorders(canvas);
+            drawImage(canvas);
+
+        }
+
+        /**
+         * Draw the image on the canvas based on the View attributes
+         *
+         * @param canvas The canvas to draw the image on
+         */
+        private void drawImage(final Canvas canvas) {
+
+            mPaint.setShader(mBitmapShader);
+            mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+            canvas.drawRoundRect(mImageRect, mCornerRadius, mCornerRadius, mPaint);
+        }
+
+        /**
+         * Draw the borders on the canvas based on the view attributes
+         *
+         * @param canvas The canvas to draw the borders on
+         */
+        private void drawBorders(final Canvas canvas) {
 
             if (mBorderWidth > 0) {
-
-                //Draw the border
                 mPaint.setShader(null);
                 mPaint.setColor(mBorderColor);
                 mPaint.setStrokeWidth(mBorderWidth);
                 mPaint.setStyle(Paint.Style.STROKE);
-                canvas.drawRoundRect(mBorderRect, mCornerRadius, mCornerRadius, mPaint);
 
-                //Disable shadows because we don't want the shadow to be drawn again using the bitmap shader
-                mPaint.setShadowLayer(0f, 0f, 0f, mShadowColor);
-
-                mPaint.setShader(curShader);
-                mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-                canvas.drawRoundRect(mImageRect, mCornerRadius, mCornerRadius, mPaint);
-
-            } else {
-                //Draw an empty rect to draw the shadow
-                if (mShadowRadius > 0f) {
-                    mPaint.setShader(null);
-                    mPaint.setStyle(Paint.Style.STROKE);
-                    mPaint.setStrokeWidth(0);
-                    canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
-                    mPaint.setShader(curShader);
+                if (mShadowWidth > 0) {
+                    mPaint.setShadowLayer(mShadowRadius, mShadowWidth, mShadowWidth, mShadowColor);
                 }
-
-                mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-                canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
+                canvas.drawRoundRect(mBorderRect, mCornerRadius, mCornerRadius, mPaint);
+                mPaint.setShadowLayer(0f, 0f, 0f, mShadowColor);
             }
         }
 
