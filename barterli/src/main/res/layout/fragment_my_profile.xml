@@ -56,9 +56,9 @@
                 app:borderColor="@color/white"
                 app:borderWidth="2dp"
                 app:fullCircle="true"
-                app:shadowWidth="1dp"
-                app:shadowRadius="0.01"
-                app:shadowColor="@color/overlay_gray_40p"/>
+                app:shadowWidth="1.5dp"
+                app:shadowRadius="2.5"
+                app:shadowColor="@color/image_shadow_color"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

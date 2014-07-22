@@ -30,11 +30,12 @@
             android:layout_height="@dimen/profile_header_img_size"
             android:contentDescription="@string/app_name"
             app:borderColor="@color/white"
-            app:borderWidth="1dp"
-            app:cornerRadius="@dimen/profile_header_img_size"
-            android:shadowRadius="2.5"
-            android:shadowDx="1.25"
-            android:shadowDy="1.5"/>
+            app:borderWidth="2dp"
+            app:fullCircle="true"
+            app:shadowWidth="1.5dp"
+            app:shadowRadius="2.5"
+            app:shadowColor="@color/image_shadow_color"
+            />
 
         <TextView
             android:id="@+id/text_user_name"

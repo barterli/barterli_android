@@ -422,7 +422,7 @@ public class RoundedCornerImageView extends ImageView {
         public void draw(Canvas canvas) {
 
             mPaint.setShader(null);
-            drawBorders(canvas);
+            drawBordersAndShadow(canvas);
             drawImage(canvas);
 
         }
@@ -440,11 +440,11 @@ public class RoundedCornerImageView extends ImageView {
         }
 
         /**
-         * Draw the borders on the canvas based on the view attributes
+         * Draw the borders & shadows on the canvas based on the view attributes
          *
          * @param canvas The canvas to draw the borders on
          */
-        private void drawBorders(final Canvas canvas) {
+        private void drawBordersAndShadow(final Canvas canvas) {
 
             if (mBorderWidth > 0) {
                 mPaint.setShader(null);
@@ -458,6 +458,7 @@ public class RoundedCornerImageView extends ImageView {
                 canvas.drawRoundRect(mBorderRect, mCornerRadius, mCornerRadius, mPaint);
                 mPaint.setShadowLayer(0f, 0f, 0f, mShadowColor);
             }
+
         }
 
         @Override

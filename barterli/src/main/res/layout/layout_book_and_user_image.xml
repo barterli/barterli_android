@@ -34,6 +34,9 @@
         android:contentDescription="@string/app_name"
         app:borderColor="@color/white"
         app:borderWidth="@dimen/book_user_image_border"
-        app:cornerRadius="@dimen/book_user_image_corner_radius" />
+        app:shadowRadius="0.05"
+        app:shadowColor="@color/image_shadow_color"
+        app:shadowWidth="1dp"
+        app:fullCircle="true" />
 
 </FrameLayout>
