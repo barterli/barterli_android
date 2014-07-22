@@ -51,6 +51,7 @@ import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AvatarBitmapTransformation;
 import li.barter.utils.Utils;
 import li.barter.widgets.RoundedCornerImageView;
 
@@ -195,18 +196,20 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
             if (!TextUtils.isEmpty(userImageUrl)) {
                 Picasso.with(getActivity())
                        .load(userImageUrl)
-                       .resizeDimen(R.dimen.book_user_image_size_profile,
+                        .transform(new AvatarBitmapTransformation())
+                       /*.resizeDimen(R.dimen.book_user_image_size_profile,
                                     R.dimen.book_user_image_size_profile)
-                       .centerCrop()
-                       .error(R.drawable.pic_avatar)
-                       .into(profileImageView.getTarget());
+                       .centerInside()*/
+                        .error(R.drawable.pic_avatar)
+                        .into(profileImageView.getTarget());
             } else {
                 Picasso.with(getActivity())
                        .load(R.drawable.pic_avatar)
-                       .resizeDimen(R.dimen.book_user_image_size_profile,
+                        .transform(new AvatarBitmapTransformation())
+                       /*.resizeDimen(R.dimen.book_user_image_size_profile,
                                     R.dimen.book_user_image_size_profile)
-                       .centerCrop()
-                       .into(profileImageView.getTarget());
+                       .centerInside()*/
+                        .into(profileImageView.getTarget());
             }
 
         } else {
