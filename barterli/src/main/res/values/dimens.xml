@@ -27,10 +27,8 @@
     <dimen name="width_item_border">1dp</dimen>
     <dimen name="nav_drawer_width">240dp</dimen>
 
-
     <dimen name="team_member_height">150dp</dimen>
     <dimen name="team_member_width">140dp</dimen>
-
 
     <dimen name="chats_item_height">80dp</dimen>
     <dimen name="chat_detail_image_size">50dp</dimen>
@@ -62,4 +60,6 @@
     <dimen name="text_large">22sp</dimen>
     <dimen name="text_x_large">24sp</dimen>
     <dimen name="text_xx_large">28sp</dimen>
+
+    <dimen name="avatar_size">64dp</dimen>
 </resources>

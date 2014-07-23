@@ -15,21 +15,52 @@ import android.graphics.Bitmap;
 import com.squareup.picasso.Transformation;
 
 /**
- * Class that transforms a Bitmap into a square based on the shortest dimension
+ * Class that transforms a Bitmap into a square based on the shortest dimension and a desired avatar
+ * size.
+ * <p/>
+ * This class works by taking desired avatar size(in pixels) in the constructor. When the Bitmap is
+ * passed to it, it scales the Bitmap's shortest dimension to the avatar size, maintaining the aspect
+ * ratio. In then crops the Bitmap to form a square image
  * <p/>
  * Created by vinay.shenoy on 22/07/14.
  */
-public class AvatarBitmapTransformation implements Transformation{
+public class AvatarBitmapTransformation implements Transformation {
+
+    /**
+     * Desired avatar size in pixels
+     */
+    private int mAvatarSize;
+
+    /**
+     * Construct an instance of AvatarTransformation method, setting the desired avatar size
+     *
+     * @param avatarSize The size(in pixels) to transform the avatar into
+     */
+    public AvatarBitmapTransformation(final int avatarSize) {
+        mAvatarSize = avatarSize;
+    }
 
     @Override
     public Bitmap transform(final Bitmap source) {
 
-        int size = Math.min(source.getWidth(), source.getHeight());
-        int x = (source.getWidth() - size) / 2;
-        int y = (source.getHeight() - size) / 2;
-        Bitmap result = Bitmap.createBitmap(source, x, y, size, size);
-        if (result != source) {
+        final int shortestWidth = Math.min(source.getWidth(), source.getHeight());
+        final float scaleFactor = mAvatarSize / (float) shortestWidth;
+
+        final Bitmap scaledBitmap = Bitmap.createScaledBitmap(
+                source,
+                (int) (source.getWidth() * scaleFactor),
+                (int) (source.getHeight() * scaleFactor),
+                true);
+
+        if(scaledBitmap != source) {
             source.recycle();
+        }
+        final int size = Math.min(scaledBitmap.getWidth(), scaledBitmap.getHeight());
+        final int x = (scaledBitmap.getWidth() - size) / 2;
+        final int y = (scaledBitmap.getHeight() - size) / 2;
+        final Bitmap result = Bitmap.createBitmap(scaledBitmap, x, y, size, size);
+        if (result != scaledBitmap) {
+            scaledBitmap.recycle();
         }
         return result;
     }

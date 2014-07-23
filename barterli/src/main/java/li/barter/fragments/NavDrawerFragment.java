@@ -105,6 +105,9 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
      */
     private ViewGroup                mProfileHeader;
 
+    /** Avatar size(in pixels) */
+    private int mAvatarSize;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -123,6 +126,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
         mListView.setAdapter(mDrawerAdapter);
 
         mListView.setOnItemClickListener(this);
+        mAvatarSize = getResources().getDimensionPixelSize(R.dimen.avatar_size);
         return mListView;
     }
 
@@ -196,7 +200,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
             if (!TextUtils.isEmpty(userImageUrl)) {
                 Picasso.with(getActivity())
                        .load(userImageUrl)
-                        .transform(new AvatarBitmapTransformation())
+                        .transform(new AvatarBitmapTransformation(mAvatarSize))
                        /*.resizeDimen(R.dimen.book_user_image_size_profile,
                                     R.dimen.book_user_image_size_profile)
                        .centerInside()*/
@@ -205,7 +209,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
             } else {
                 Picasso.with(getActivity())
                        .load(R.drawable.pic_avatar)
-                        .transform(new AvatarBitmapTransformation())
+                        .transform(new AvatarBitmapTransformation(mAvatarSize))
                        /*.resizeDimen(R.dimen.book_user_image_size_profile,
                                     R.dimen.book_user_image_size_profile)
                        .centerInside()*/
