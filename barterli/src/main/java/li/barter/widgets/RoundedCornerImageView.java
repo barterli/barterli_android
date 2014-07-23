@@ -300,9 +300,6 @@ public class RoundedCornerImageView extends ImageView {
         /** Rect used for drawing the actual image */
         private RectF mImageRect;
 
-        /** Rect used for drawing shadows */
-        private RectF mShadowRect;
-
         private       BitmapShader mBitmapShader;
         private final Paint        mPaint;
         private       int          mBorderWidth;
@@ -326,7 +323,6 @@ public class RoundedCornerImageView extends ImageView {
 
             mBorderRect = new RectF();
             mImageRect = new RectF();
-            mShadowRect = new RectF();
 
             if (mShadowWidth > 0f) {
 
@@ -367,27 +363,11 @@ public class RoundedCornerImageView extends ImageView {
                 mCornerRadius = Math.abs(mRect.left - mRect.right) / 2;
             }
 
-            if(mShadowWidth > 0) {
-                initShadowRect();
-            }
-
             if (mBorderWidth > 0) {
                 initRectsWithBorders();
             } else {
                 initRectsWithoutBorders();
             }
-
-        }
-
-        /**
-         * Initializes the Rect for drawing shadows */
-        private void initShadowRect() {
-
-            mShadowRect.set(mRect);
-            mShadowRect.right -= mShadowWidth;
-            mShadowRect.left += mShadowWidth;
-            mShadowRect.bottom -= mShadowWidth;
-            mShadowRect.top += mShadowWidth;
 
         }
 
@@ -466,15 +446,14 @@ public class RoundedCornerImageView extends ImageView {
          */
         private void drawBordersAndShadow(final Canvas canvas) {
 
-
             if (mBorderWidth > 0) {
+                mPaint.setShader(null);
                 mPaint.setColor(mBorderColor);
                 mPaint.setStrokeWidth(mBorderWidth);
                 mPaint.setStyle(Paint.Style.STROKE);
 
                 if (mShadowWidth > 0) {
-
-                    //mPaint.setShadowLayer(mShadowRadius, mShadowWidth, mShadowWidth, mShadowColor);
+                    mPaint.setShadowLayer(mShadowRadius, mShadowWidth, mShadowWidth, mShadowColor);
                 }
                 canvas.drawRoundRect(mBorderRect, mCornerRadius, mCornerRadius, mPaint);
                 mPaint.setShadowLayer(0f, 0f, 0f, mShadowColor);
