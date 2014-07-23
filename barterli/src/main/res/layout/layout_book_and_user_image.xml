@@ -10,19 +10,19 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/margin_xxx_small"
-    android:layout_marginRight="@dimen/margin_xxx_small"
-    android:background="@color/transparent" >
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_marginLeft="@dimen/margin_xxx_small"
+             android:layout_marginRight="@dimen/margin_xxx_small"
+             android:background="@color/transparent">
 
     <ImageView
         android:id="@+id/image_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent"
-        android:contentDescription="@string/app_name" />
+        android:contentDescription="@string/app_name"/>
 
     <li.barter.widgets.RoundedCornerImageView
         android:id="@+id/image_user"
@@ -34,9 +34,6 @@
         android:contentDescription="@string/app_name"
         app:borderColor="@color/white"
         app:borderWidth="@dimen/book_user_image_border"
-        app:shadowRadius="0.05"
-        app:shadowColor="@color/image_shadow_color"
-        app:shadowWidth="1dp"
-        app:fullCircle="true" />
+        app:fullCircle="true"/>
 
 </FrameLayout>
