@@ -27,7 +27,7 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true">
 
-            <li.barter.widgets.CircleImageView
+            <li.barter.widgets.RoundedCornerImageView
                 android:id="@+id/image_profile_pic"
                 android:layout_width="@dimen/edit_profile_img_size"
                 android:layout_height="@dimen/edit_profile_img_size"

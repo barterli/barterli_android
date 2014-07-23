@@ -8,14 +8,13 @@
   ~
   ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
+
 <resources>
-
-    <string name="drawer_open">drawer_open</string>
-    <string name="drawer_closed">drawer_closed</string>
-
-    <!-- View tag keys. These don't need values -->
-    <string name="tag_barter_type" />
-    <string name="tag_resend_on_click" />
-    <string name="tag_avatar_transformation" />
-
+    <string name="roboto_bold">fonts/Roboto-Bold.ttf</string>
+    <string name="roboto_bold_italic">fonts/Roboto-BoldItalic.ttf</string>
+    <string name="roboto_light">fonts/Roboto-Light.ttf</string>
+    <string name="roboto_medium_italic">fonts/Roboto-MediumItalic.ttf</string>
+    <string name="roboto_regular">fonts/Roboto-Regular.ttf</string>
+    <string name="roboto_condensed_regular">fonts/RobotoCondensed-Regular.ttf</string>
+    <string name="roboto_slab_regular">fonts/RobotoSlab-Regular.ttf</string>
 </resources>

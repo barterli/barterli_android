@@ -89,12 +89,14 @@
         <enum name="slab_regular" value="6" />
     </attr>
 
-    <declare-styleable name="CircleImageView">
+    <declare-styleable name="RoundedCornerImageView">
         <attr name="cornerRadius" format="dimension" />
-        <attr name="margin" format="dimension" />
         <attr name="borderWidth" format="dimension" />
         <attr name="borderColor" format="color" />
-
+        <attr name="fullCircle" format="boolean" />
+        <attr name="shadowWidth" format="dimension" />
+        <attr name="shadowColor" format="color" />
+        <attr name="shadowRadius" format="float" />
     </declare-styleable>
 
 </resources>

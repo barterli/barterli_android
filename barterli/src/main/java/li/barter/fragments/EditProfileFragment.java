@@ -61,10 +61,11 @@ import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.FragmentTags;
 import li.barter.utils.AppConstants.QueryTokens;
 import li.barter.utils.AppConstants.UserInfo;
+import li.barter.utils.AvatarBitmapTransformation;
 import li.barter.utils.PhotoUtils;
 import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
-import li.barter.widgets.CircleImageView;
+import li.barter.widgets.RoundedCornerImageView;
 
 /**
  * @author Sharath Pandeshwar
@@ -78,11 +79,11 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
     private static final String TAG = "EditProfileFragment";
 
-    private TextView        mFirstNameTextView;
-    private TextView        mLastNameTextView;
-    private TextView        mAboutMeTextView;
-    private TextView        mPreferredLocationTextView;
-    private CircleImageView mProfileImageView;
+    private TextView               mFirstNameTextView;
+    private TextView               mLastNameTextView;
+    private TextView               mAboutMeTextView;
+    private TextView               mPreferredLocationTextView;
+    private RoundedCornerImageView mProfileImageView;
     private boolean mWasProfileImageChanged = false;
 
     private Bitmap mCompressedPhoto;
@@ -94,6 +95,9 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
     private static final int PICK_FROM_CAMERA = 1;
     private static final int CROP_FROM_CAMERA = 2;
     private static final int PICK_FROM_FILE   = 3;
+
+    private AvatarBitmapTransformation mAvatarBitmapTransformation;
+
 
     /**
      * Reference to the Dialog Fragment for selecting the picture type
@@ -108,13 +112,14 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
         final View view = inflater
                 .inflate(R.layout.fragment_profile_edit, null);
         setActionBarTitle(R.string.text_edit_profile);
+        mAvatarBitmapTransformation = new AvatarBitmapTransformation(AvatarBitmapTransformation.AvatarSize.LARGE);
 
         mFirstNameTextView = (TextView) view.findViewById(R.id.text_first_name);
         mLastNameTextView = (TextView) view.findViewById(R.id.text_last_name);
         mAboutMeTextView = (TextView) view.findViewById(R.id.text_about_me);
         mPreferredLocationTextView = (TextView) view
                 .findViewById(R.id.text_current_location);
-        mProfileImageView = (CircleImageView) view
+        mProfileImageView = (RoundedCornerImageView) view
                 .findViewById(R.id.image_profile_pic);
 
         mPreferredLocationTextView.setOnClickListener(this);
@@ -165,9 +170,8 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
 
         }
         Picasso.with(getActivity()).load(mProfileImageUrl)
-               .centerCrop()
-               .resizeDimen(R.dimen.edit_profile_img_size, R.dimen.edit_profile_img_size).error(
-                R.drawable.pic_avatar)
+               .transform(mAvatarBitmapTransformation)
+               .error(R.drawable.pic_avatar)
                .into(mProfileImageView.getTarget());
 
         mCameraImageCaptureUri = Uri.fromFile(new File(android.os.Environment
@@ -261,11 +265,13 @@ public class EditProfileFragment extends AbstractBarterLiFragment implements
                 final String mPrefPlaceName = cursor.getString(cursor
                                                                        .getColumnIndex(
                                                                                DatabaseColumns
-                                                                                       .NAME));
+                                                                                       .NAME
+                                                                       ));
                 final String mPrefPlaceAddress = cursor.getString(cursor
                                                                           .getColumnIndex(
                                                                                   DatabaseColumns
-                                                                                          .ADDRESS));
+                                                                                          .ADDRESS
+                                                                          ));
 
                 if (!TextUtils.isEmpty(mPrefPlaceName)) {
                     final String preferredLocation = getString(R.string.format_address_underline,

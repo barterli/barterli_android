@@ -39,7 +39,6 @@ import com.squareup.picasso.Picasso;
 import li.barter.BarterLiApplication;
 import li.barter.R;
 import li.barter.activities.AboutUsActivity;
-import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AuthActivity;
 import li.barter.activities.ChatsActivity;
 import li.barter.activities.HomeActivity;
@@ -52,8 +51,9 @@ import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.http.IBlRequestContract;
 import li.barter.http.ResponseInfo;
 import li.barter.utils.AppConstants;
+import li.barter.utils.AvatarBitmapTransformation;
 import li.barter.utils.Utils;
-import li.barter.widgets.CircleImageView;
+import li.barter.widgets.RoundedCornerImageView;
 
 /**
  * Fragment to load in the Navigation Drawer Created by vinaysshenoy on 29/6/14.
@@ -105,12 +105,18 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
      */
     private ViewGroup                mProfileHeader;
 
+    /**
+     * Bitmap transformation for loading images from picasso
+     */
+    private AvatarBitmapTransformation mAvatarBitmapTransformation;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         mHandler = new Handler();
 
+        mAvatarBitmapTransformation = new AvatarBitmapTransformation(AvatarBitmapTransformation.AvatarSize.SMALL);
         mListView = (ListView) inflater.inflate(R.layout.fragment_nav_drawer, container, false);
         mDrawerAdapter = new NavDrawerAdapter(getActivity(), R.array.nav_drawer_primary,
                                               R.array.nav_drawer_secondary);
@@ -179,7 +185,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
 
         final TextView userNameTextView = ((TextView) profileInfoContainer
                 .getTag(R.id.text_user_name));
-        final CircleImageView profileImageView = (CircleImageView) profileInfoContainer
+        final RoundedCornerImageView profileImageView = (RoundedCornerImageView) profileInfoContainer
                 .getTag(R.id.image_user);
 
         if (isLoggedIn()) {
@@ -196,17 +202,13 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
             if (!TextUtils.isEmpty(userImageUrl)) {
                 Picasso.with(getActivity())
                        .load(userImageUrl)
-                       .resizeDimen(R.dimen.book_user_image_size_profile,
-                                    R.dimen.book_user_image_size_profile)
-                       .centerCrop()
+                       .transform(mAvatarBitmapTransformation)
                        .error(R.drawable.pic_avatar)
                        .into(profileImageView.getTarget());
             } else {
                 Picasso.with(getActivity())
                        .load(R.drawable.pic_avatar)
-                       .resizeDimen(R.dimen.book_user_image_size_profile,
-                                    R.dimen.book_user_image_size_profile)
-                       .centerCrop()
+                       .transform(mAvatarBitmapTransformation)
                        .into(profileImageView.getTarget());
             }
 

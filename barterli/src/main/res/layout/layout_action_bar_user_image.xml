@@ -10,12 +10,12 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/margin_xx_small" >
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:padding="@dimen/margin_xx_small">
 
-    <li.barter.widgets.CircleImageView
+    <li.barter.widgets.RoundedCornerImageView
         android:id="@+id/image_user"
         android:layout_width="@dimen/ab_user_image_size"
         android:layout_height="@dimen/ab_user_image_size"
@@ -24,6 +24,7 @@
         android:src="@drawable/pic_avatar"
         app:borderColor="@color/white"
         app:borderWidth="@dimen/book_user_image_border"
-        app:cornerRadius="@dimen/chat_image_corner_radius" />
+        app:fullCircle="true"
+        />
 
 </FrameLayout>
