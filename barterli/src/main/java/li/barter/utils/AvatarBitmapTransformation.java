@@ -30,6 +30,15 @@ import li.barter.R;
 public class AvatarBitmapTransformation implements Transformation {
 
     /**
+     * We test if an image is square or not by comparing the width to the height. In some cases, the
+     * image might be almost square in which case, it is okay not to crop it and just scale it.
+     * <p/>
+     * This field will be used to control how to decide whether an image is square or not. In case
+     * the ratio of the shortest is >= this value, it is taken as a square image and not cropped
+     */
+    private static final float MAX_ALLOWED_SQUARE_FACTOR = 0.95f;
+
+    /**
      * An enum that indicates the class of avatar this transformation generates
      */
     public enum AvatarSize {
@@ -65,7 +74,7 @@ public class AvatarBitmapTransformation implements Transformation {
     @Override
     public Bitmap transform(final Bitmap source) {
 
-        final boolean alreadySquare = (source.getWidth() == source.getHeight());
+        final boolean alreadySquare = isSquareImage(source.getWidth(), source.getHeight());
 
         final int avatarSizeInPixels = BarterLiApplication
                 .getStaticContext()
@@ -113,5 +122,21 @@ public class AvatarBitmapTransformation implements Transformation {
     @Override
     public String key() {
         return mAvatarSize.key;
+    }
+
+    /**
+     * Checks if the given image is a square or not
+     *
+     * @param sourceWidth  The width of the source image
+     * @param sourceHeight The height of the source image
+     */
+    private static boolean isSquareImage(final int sourceWidth, final int sourceHeight) {
+
+        if(sourceHeight > sourceWidth) {
+            return (sourceWidth/sourceHeight) >= MAX_ALLOWED_SQUARE_FACTOR;
+        } else {
+            return (sourceHeight/sourceWidth) >= MAX_ALLOWED_SQUARE_FACTOR;
+        }
+
     }
 }
