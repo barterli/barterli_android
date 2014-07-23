@@ -105,8 +105,10 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
      */
     private ViewGroup                mProfileHeader;
 
-    /** Avatar size(in pixels) */
-    private int mAvatarSize;
+    /**
+     * Bitmap transformation for loading images from picasso
+     */
+    private AvatarBitmapTransformation mAvatarBitmapTransformation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,6 +116,7 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
 
         mHandler = new Handler();
 
+        mAvatarBitmapTransformation = new AvatarBitmapTransformation(AvatarBitmapTransformation.AvatarSize.SMALL);
         mListView = (ListView) inflater.inflate(R.layout.fragment_nav_drawer, container, false);
         mDrawerAdapter = new NavDrawerAdapter(getActivity(), R.array.nav_drawer_primary,
                                               R.array.nav_drawer_secondary);
@@ -126,7 +129,6 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
         mListView.setAdapter(mDrawerAdapter);
 
         mListView.setOnItemClickListener(this);
-        mAvatarSize = getResources().getDimensionPixelSize(R.dimen.avatar_size);
         return mListView;
     }
 
@@ -200,20 +202,14 @@ public class NavDrawerFragment extends AbstractBarterLiFragment implements Adapt
             if (!TextUtils.isEmpty(userImageUrl)) {
                 Picasso.with(getActivity())
                        .load(userImageUrl)
-                        .transform(new AvatarBitmapTransformation(mAvatarSize))
-                       /*.resizeDimen(R.dimen.book_user_image_size_profile,
-                                    R.dimen.book_user_image_size_profile)
-                       .centerInside()*/
-                        .error(R.drawable.pic_avatar)
-                        .into(profileImageView.getTarget());
+                       .transform(mAvatarBitmapTransformation)
+                       .error(R.drawable.pic_avatar)
+                       .into(profileImageView.getTarget());
             } else {
                 Picasso.with(getActivity())
                        .load(R.drawable.pic_avatar)
-                        .transform(new AvatarBitmapTransformation(mAvatarSize))
-                       /*.resizeDimen(R.dimen.book_user_image_size_profile,
-                                    R.dimen.book_user_image_size_profile)
-                       .centerInside()*/
-                        .into(profileImageView.getTarget());
+                       .transform(mAvatarBitmapTransformation)
+                       .into(profileImageView.getTarget());
             }
 
         } else {

@@ -61,5 +61,10 @@
     <dimen name="text_x_large">24sp</dimen>
     <dimen name="text_xx_large">28sp</dimen>
 
-    <dimen name="avatar_size">64dp</dimen>
+    <dimen name="avatar_large">96dp</dimen>
+    <dimen name="avatar_medium">64dp</dimen>
+    <dimen name="avatar_small">48dp</dimen>
+    <dimen name="avatar_ab_chat">38dp</dimen>
+    <dimen name="avatar_x_small">24dp</dimen>
+
 </resources>

@@ -14,37 +14,64 @@ import android.graphics.Bitmap;
 
 import com.squareup.picasso.Transformation;
 
+import li.barter.BarterLiApplication;
+import li.barter.R;
+
 /**
  * Class that transforms a Bitmap into a square based on the shortest dimension and a desired avatar
  * size.
  * <p/>
  * This class works by taking desired avatar size(in pixels) in the constructor. When the Bitmap is
- * passed to it, it scales the Bitmap's shortest dimension to the avatar size, maintaining the aspect
- * ratio. In then crops the Bitmap to form a square image
+ * passed to it, it scales the Bitmap's shortest dimension to the avatar size, maintaining the
+ * aspect ratio. In then crops the Bitmap to form a square image
  * <p/>
  * Created by vinay.shenoy on 22/07/14.
  */
 public class AvatarBitmapTransformation implements Transformation {
 
     /**
-     * Desired avatar size in pixels
+     * An enum that indicates the class of avatar this transformation generates
      */
-    private int mAvatarSize;
+    public enum AvatarSize {
+        LARGE(R.dimen.avatar_large, "avatar_large"),
+        MEDIUM(R.dimen.avatar_medium, "avatar_medium"),
+        SMALL(R.dimen.avatar_small, "avatar_small"),
+        AB_CHAT(R.dimen.avatar_ab_chat, "avatar_ab_chat"),
+        X_SMALL(R.dimen.avatar_x_small, "avatar_x_small");
+
+        public final int    dimenResId;
+        public final String key;
+
+        private AvatarSize(int dimenResId, String key) {
+            this.dimenResId = dimenResId;
+            this.key = key;
+        }
+    }
+
+    /**
+     * Desired avatar size
+     */
+    private AvatarSize mAvatarSize;
 
     /**
      * Construct an instance of AvatarTransformation method, setting the desired avatar size
      *
-     * @param avatarSize The size(in pixels) to transform the avatar into
+     * @param avatarSize The class of avatar size you want to generate
      */
-    public AvatarBitmapTransformation(final int avatarSize) {
+    public AvatarBitmapTransformation(final AvatarSize avatarSize) {
         mAvatarSize = avatarSize;
     }
 
     @Override
     public Bitmap transform(final Bitmap source) {
 
+        final boolean alreadySquare = (source.getWidth() == source.getHeight());
+
+        final int avatarSizeInPixels = BarterLiApplication
+                .getStaticContext()
+                .getResources().getDimensionPixelSize(mAvatarSize.dimenResId);
         final int shortestWidth = Math.min(source.getWidth(), source.getHeight());
-        final float scaleFactor = mAvatarSize / (float) shortestWidth;
+        final float scaleFactor = avatarSizeInPixels / (float) shortestWidth;
 
         final Bitmap scaledBitmap = Bitmap.createScaledBitmap(
                 source,
@@ -52,21 +79,39 @@ public class AvatarBitmapTransformation implements Transformation {
                 (int) (source.getHeight() * scaleFactor),
                 true);
 
-        if(scaledBitmap != source) {
+        if (scaledBitmap != source) {
             source.recycle();
         }
-        final int size = Math.min(scaledBitmap.getWidth(), scaledBitmap.getHeight());
-        final int x = (scaledBitmap.getWidth() - size) / 2;
-        final int y = (scaledBitmap.getHeight() - size) / 2;
-        final Bitmap result = Bitmap.createBitmap(scaledBitmap, x, y, size, size);
-        if (result != scaledBitmap) {
-            scaledBitmap.recycle();
+
+        if (alreadySquare) {
+            //Already square, no need to crop
+            return scaledBitmap;
+        } else {
+            final int size = Math.min(scaledBitmap.getWidth(), scaledBitmap.getHeight());
+
+            //Start x,y positions to crop the bitmap
+            int x = 0;
+            int y = 0;
+
+            if (size == scaledBitmap.getWidth()) {
+            /* Portrait picture, crop the bottom and top parts */
+                y = (scaledBitmap.getHeight() - size) / 2;
+
+            } else {
+
+            /* Landscape picture, crop the right and left zones */
+                x = (scaledBitmap.getWidth() - size) / 2;
+            }
+            final Bitmap result = Bitmap.createBitmap(scaledBitmap, x, y, size, size);
+            if (result != scaledBitmap) {
+                scaledBitmap.recycle();
+            }
+            return result;
         }
-        return result;
     }
 
     @Override
     public String key() {
-        return "avatar";
+        return mAvatarSize.key;
     }
 }

@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import li.barter.R;
 import li.barter.models.Team;
+import li.barter.utils.AvatarBitmapTransformation;
 import li.barter.widgets.RoundedCornerImageView;
 
 /**
@@ -77,11 +78,7 @@ public class TeamAdapter extends BaseAdapter {
             view.setTag(R.id.team_desc, view.findViewById(R.id.team_desc));
             view.setTag(R.id.team_name, view.findViewById(R.id.team_name));
             view.setTag(R.id.team_image, view.findViewById(R.id.team_image));
-
-        } else {
-            view.setTag(R.id.team_desc, view.findViewById(R.id.team_desc));
-            view.setTag(R.id.team_name, view.findViewById(R.id.team_name));
-            view.setTag(R.id.team_image, view.findViewById(R.id.team_image));
+            view.setTag(R.string.tag_avatar_transformation, new AvatarBitmapTransformation(AvatarBitmapTransformation.AvatarSize.SMALL));
         }
         final Team teamMember = getItem(position);
         ((TextView) view.getTag(R.id.team_name)).setText(teamMember.getName());
@@ -89,14 +86,14 @@ public class TeamAdapter extends BaseAdapter {
                                                                  .getDescription());
 
 
-        RoundedCornerImageView roundedCornerImageView = (RoundedCornerImageView) view.getTag(R.id.team_image);
-
+        final RoundedCornerImageView roundedCornerImageView = (RoundedCornerImageView) view.getTag(R.id.team_image);
         roundedCornerImageView.setImageResource(0);
+
+        final AvatarBitmapTransformation bitmapTransformation = (AvatarBitmapTransformation) view.getTag(R.string.tag_avatar_transformation);
 
         Picasso.with(mContext).load(teamMember.getImageUrl())
                .error(R.drawable.pic_avatar)
-               .resizeDimen(R.dimen.big_chat_detail_image_size, R.dimen.big_chat_detail_image_size)
-               .centerCrop()
+               .transform(bitmapTransformation)
                .into(roundedCornerImageView.getTarget());
 
         return view;

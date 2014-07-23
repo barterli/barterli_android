@@ -16,5 +16,6 @@
     <!-- View tag keys. These don't need values -->
     <string name="tag_barter_type" />
     <string name="tag_resend_on_click" />
+    <string name="tag_avatar_transformation" />
 
 </resources>

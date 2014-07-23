@@ -65,6 +65,7 @@ import li.barter.utils.AppConstants;
 import li.barter.utils.AppConstants.Keys;
 import li.barter.utils.AppConstants.Loaders;
 import li.barter.utils.AppConstants.QueryTokens;
+import li.barter.utils.AvatarBitmapTransformation;
 import li.barter.utils.Logger;
 import li.barter.utils.Utils;
 import li.barter.widgets.RoundedCornerImageView;
@@ -94,6 +95,8 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
     private ChatService mChatService;
 
     private boolean mBoundToChatService;
+
+    private AvatarBitmapTransformation mAvatarBitmapTransformation;
 
     private final String mChatSelection = DatabaseColumns.CHAT_ID
             + SQLConstants.EQUALS_ARG;
@@ -145,6 +148,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         init(container, savedInstanceState);
         setHasOptionsMenu(true);
         setActionBarTitle(R.string.app_name);
+        mAvatarBitmapTransformation = new AvatarBitmapTransformation(AvatarBitmapTransformation.AvatarSize.AB_CHAT);
         final View view = inflater
                 .inflate(R.layout.fragment_chat_details, container, false);
 
@@ -370,8 +374,8 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
                 Picasso.with(getActivity())
                        .load(mWithUserImage)
                        .error(R.drawable.pic_avatar)
-                       .resizeDimen(R.dimen.ab_user_image_size, R.dimen.ab_user_image_size)
-                       .centerCrop().into(mWithImageView.getTarget());
+                       .transform(mAvatarBitmapTransformation)
+                       .into(mWithImageView.getTarget());
             }
         }
 
