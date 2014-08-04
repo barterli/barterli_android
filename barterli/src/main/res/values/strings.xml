@@ -321,14 +321,4 @@
         <item>Alphabetically</item>
     </string-array>
 
-    <string name="roboto_bold">fonts/Roboto-Bold.ttf</string>
-    <string name="roboto_bold_italic">fonts/Roboto-BoldItalic.ttf</string>
-    <string name="roboto_light">fonts/Roboto-Light.ttf</string>
-    <string name="roboto_medium_italic">fonts/Roboto-MediumItalic.ttf</string>
-    <string name="roboto_regular">fonts/Roboto-Regular.ttf</string>
-    <string name="roboto_condensed_regular">fonts/RobotoCondensed-Regular.ttf</string>
-    <string name="roboto_slab_regular">fonts/RobotoSlab-Regular.ttf</string>
-
-    <!-- badri was here -->
-
 </resources>
