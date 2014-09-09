@@ -15,5 +15,5 @@
 
     <!-- Dimensions related to books -->
     <dimen name="book_height">213dp</dimen>
-    <dimen name="book_width">138dp</dimen>
+<!--    <dimen name="book_width">138dp</dimen>-->
 </resources>

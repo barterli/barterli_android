@@ -37,10 +37,14 @@ public class ChatsActivity extends AbstractDrawerActivity {
 
     public static final String ACTION_LOAD_CHAT = "li.barter.ACTION_LOAD_CHAT";
 
-    /** User id to load a chat for immediately after loading chats list */
+    /**
+     * User id to load a chat for immediately after loading chats list
+     */
     private String mUserIdToLoad;
 
-    /** Whether a chat should be loaded instantly */
+    /**
+     * Whether a chat should be loaded instantly
+     */
     private boolean mShouldLoadChat;
 
     @Override
@@ -54,10 +58,11 @@ public class ChatsActivity extends AbstractDrawerActivity {
             loadChatsListFragment();
         }
 
-
     }
 
-    /** Checks if a particular chat should be loaded immediately */
+    /**
+     * Checks if a particular chat should be loaded immediately
+     */
     private void checkIfShouldLoadChat() {
 
         final String action = getIntent().getAction();
@@ -73,7 +78,9 @@ public class ChatsActivity extends AbstractDrawerActivity {
         }
     }
 
-    /** Loads the chats fragment into the screen */
+    /**
+     * Loads the chats fragment into the screen
+     */
     private void loadChatsListFragment() {
 
         Bundle args = null;
@@ -83,11 +90,11 @@ public class ChatsActivity extends AbstractDrawerActivity {
             args.putString(AppConstants.Keys.USER_ID, mUserIdToLoad);
         }
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment.instantiate(this,
-                                                                                         ChatsFragment.class
-                                                                                                 .getName(),
-                                                                                         args
-                     ),
-                     AppConstants.FragmentTags.CHATS, false, null
+                        ChatsFragment.class
+                                .getName(),
+                        args
+                ),
+                AppConstants.FragmentTags.CHATS, false, null
         );
     }
 
