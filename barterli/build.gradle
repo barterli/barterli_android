@@ -7,15 +7,13 @@ buildscript {
 
     dependencies {
         classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
-        classpath 'org.robolectric:robolectric-gradle-plugin:0.11.+'
+        classpath 'org.robolectric:robolectric-gradle-plugin:0.12.+'
     }
 }
 
 apply plugin: 'com.android.application'
 apply plugin: 'robolectric'
-/*
-apply plugin: 'crashlytics'
-*/
+/*apply plugin: 'crashlytics'*/
 
 repositories {
     maven { url 'http://download.crashlytics.com/maven' }
@@ -27,8 +25,8 @@ android {
         exclude 'LICENSE.txt'
     }
 
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
+    compileSdkVersion 20
+    buildToolsVersion '20.0.0'
     defaultConfig {}
     productFlavors {}
 
@@ -39,7 +37,7 @@ android {
     defaultConfig {
         applicationId "li.barter"
         minSdkVersion 14
-        targetSdkVersion 19
+        targetSdkVersion 20
         versionCode 8
         versionName "1.0.5"
         testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
