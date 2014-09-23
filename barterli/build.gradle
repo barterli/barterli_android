@@ -38,13 +38,8 @@ android {
         applicationId "li.barter"
         minSdkVersion 14
         targetSdkVersion 20
-<<<<<<< HEAD
-        versionCode 8
-        versionName "1.0.5"
-=======
         versionCode 9
         versionName "1.1"
->>>>>>> Readied code for release with Android Studio
         testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
     }
 
