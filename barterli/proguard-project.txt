@@ -33,11 +33,11 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
-
--injars      bin/classes
--outjars     bin/classes-processed.jar
--libraryjars /Users/anshul1235/Desktop/data/adt-bundle-mac-x86_64-20140321/sdk/platforms/android-19/android.jar
- -libraryjars libs
+-dontobfuscate
+-injars      build/intermediates/classes/release
+-outjars     build/intermediates/classes/release/classes-processed.jar
+-libraryjars //Applications/Android Studio.app/sdk/platforms/android-20/android.jar
+-libraryjars libs
 
 -dontwarn android.content.Context
 -dontwarn com.google.android.gms.**

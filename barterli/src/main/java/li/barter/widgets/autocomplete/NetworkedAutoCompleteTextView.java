@@ -18,6 +18,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import java.util.ArrayList;
@@ -131,7 +132,8 @@ public class NetworkedAutoCompleteTextView extends
 
             mSuggestionsAdapter.setDisplaySuggestionsEnabled(false);
             setNetworkSuggestionsEnabled(false);
-            setAdapter(null);
+            final ArrayAdapter dummyAdapter = null;
+            setAdapter(dummyAdapter);
             setText(text);
             setAdapter(mSuggestionsAdapter);
             setNetworkSuggestionsEnabled(true);
@@ -143,19 +145,7 @@ public class NetworkedAutoCompleteTextView extends
      */
     public void setTextWithFilter(int resId, boolean filter) {
 
-        /*
-         * If filter is disabled, temporarily disable suggestions, set the text,
-         * and reenable suggestions. This will need to be set to true later on if the text changes.
-         */
-        if (!filter) {
-
-            mSuggestionsAdapter.setDisplaySuggestionsEnabled(false);
-            setNetworkSuggestionsEnabled(false);
-            setAdapter(null);
-            setText(resId);
-            setAdapter(mSuggestionsAdapter);
-            setNetworkSuggestionsEnabled(true);
-        }
+        setTextWithFilter(getContext().getString(resId), filter);
     }
 
     public int getSuggestCountThreshold() {
@@ -188,7 +178,7 @@ public class NetworkedAutoCompleteTextView extends
      *
      * @param query       The query for which the siggestions are fetched
      * @param suggestions The list of suggestions to use
-     * @param append      <code>false</code> to add the new suggestions to the
+     * @param replace      <code>false</code> to add the new suggestions to the
      *                    TextView, <code>true</code> to replace the suggestion
      */
     public void onSuggestionsFetched(final String query,

@@ -38,9 +38,18 @@ android {
         applicationId "li.barter"
         minSdkVersion 14
         targetSdkVersion 20
+<<<<<<< HEAD
         versionCode 8
         versionName "1.0.5"
+=======
+        versionCode 9
+        versionName "1.1"
+>>>>>>> Readied code for release with Android Studio
         testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+    }
+
+    signingConfigs {
+        release
     }
 
     sourceSets {
@@ -57,11 +66,13 @@ android {
             ext.enableCrashLytics = false
         }
         release {
+            signingConfig signingConfigs.release
             buildConfigField "boolean", "USE_CRASHLYTICS", "true"
             buildConfigField "boolean", "REPORT_GOOGLE_ANALYTICS", "true"
             buildConfigField "boolean", "DEBUG_MODE", "false"
             ext.enableCrashLytics = true
             runProguard true
+            zipAlign true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
         }
     }
@@ -79,8 +90,8 @@ dependencies {
     compile project(':libraries:facebookSDK')
     compile project(':libraries:enhancedvolley')
     compile project(':libraries:ViewPagerIndicator')
-    compile 'com.android.support:support-v4:19.+'
-    compile 'com.android.support:appcompat-v7:19+'
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:appcompat-v7:20.+'
     compile 'com.google.android.gms:play-services:4.4+'
     compile 'com.squareup.picasso:picasso:2.+'
     compile 'com.crashlytics.android:crashlytics:1.+'
@@ -134,3 +145,19 @@ idea {
         testOutputDir = file('build/test-classes/debug')
     }
 }
+
+/*
+ * This loads the properties for keystore signing. Look at release.properties.sample to make your own.
+ * DO NOT modify the file directly. Make a copy called 'release.properties' and edit that.
+ *
+ * Copy the keystore to the project root directory first.
+ *
+ * If you commit the keystore password to Git by calling it some other name or editing the
+ * sample file, you will need to stand in the corner.
+ **/
+def props = new Properties()
+props.load(new FileInputStream(rootProject.file("release.properties")))
+android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
+android.signingConfigs.release.storePassword props.keyStorePassword
+android.signingConfigs.release.keyAlias props.keyAlias
+android.signingConfigs.release.keyPassword props.keyAliasPassword
