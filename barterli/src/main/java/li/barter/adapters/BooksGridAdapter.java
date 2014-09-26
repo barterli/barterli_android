@@ -93,8 +93,10 @@ public class BooksGridAdapter extends CursorAdapter {
                 view = inflateBookView(parent);
             }
 
-            mCursor.moveToPosition(position);
-            bindView(view, parent.getContext(), mCursor);
+            if(!mCursor.isClosed()) {
+                mCursor.moveToPosition(position);
+                bindView(view, parent.getContext(), mCursor);
+            }
 
         } else if (viewType == VIEW_GRAPHIC) {
 
