@@ -33,6 +33,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.android.volley.Request.Method;
+import com.google.android.gms.analytics.HitBuilders;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
@@ -44,7 +45,9 @@ import li.barter.R;
 import li.barter.activities.AbstractBarterLiActivity;
 import li.barter.activities.AbstractBarterLiActivity.AlertStyle;
 import li.barter.activities.AddOrEditBookActivity;
+import li.barter.analytics.AnalyticsConstants;
 import li.barter.analytics.AnalyticsConstants.Screens;
+import li.barter.analytics.GoogleAnalyticsManager;
 import li.barter.data.DBInterface;
 import li.barter.data.DBInterface.AsyncDbQueryCallback;
 import li.barter.data.DatabaseColumns;
@@ -537,12 +540,14 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
         if (id == R.id.button_barter) {
 
+            GoogleAnalyticsManager.getInstance().sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE, AnalyticsConstants.Actions.BARTER_BOOK_FROM_DETAIL));
             final Intent chatIntent = new Intent(AppConstants.ACTION_LAUNCH_CHAT);
             chatIntent.putExtra(Keys.CHAT_MESSAGE, getString(R.string.barter_book));
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(chatIntent);
 
         } else if (id == R.id.button_buy) {
 
+            GoogleAnalyticsManager.getInstance().sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE, AnalyticsConstants.Actions.BUY_BOOK_FROM_DETAIL));
             final Intent chatIntent = new Intent(AppConstants.ACTION_LAUNCH_CHAT);
             chatIntent.putExtra(Keys.CHAT_MESSAGE, getString(R.string.buy_book));
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(chatIntent);
