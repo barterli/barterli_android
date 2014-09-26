@@ -195,7 +195,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         return contentView;
     }
 
-    private void setUpRefreshLayout(View view){
+    private void setUpRefreshLayout(View view) {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorScheme(R.color.apptheme_color,
@@ -782,11 +782,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     }
 
-    private void showRefreshing(){
+    private void showRefreshing() {
         //mSwipeRefreshLayout.setRefreshing(true);
     }
 
-    private void hideRefreshing(){
+    private void hideRefreshing() {
         mSwipeRefreshLayout.setEnabled(true);
         mSwipeRefreshLayout.setRefreshing(false);
     }
