@@ -100,9 +100,20 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
             AppConstants.ACTION_CHAT_BUTTON_CLICKED);
 
     /**
+     * Intent filter for button click events in book detail
+     */
+    private final IntentFilter mChatLaunchIntentFilter = new IntentFilter(
+            AppConstants.ACTION_LAUNCH_CHAT);
+
+    /**
      * Receiver for chat button click events
      */
     private ChatButtonReceiver mChatButtonReceiver = new ChatButtonReceiver();
+
+    /**
+     * Receiver for book detail buy/borrow events
+     */
+    private ChatLaunchReceiver mChatLaunchReceiver = new ChatLaunchReceiver();
 
     private ShareActionProvider mShareActionProvider;
 
@@ -151,18 +162,23 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onResume() {
+        super.onResume();
         LocalBroadcastManager
-                .getInstance(activity)
+                .getInstance(getActivity())
                 .registerReceiver(mChatButtonReceiver, mChatButtonIntentFilter);
+        LocalBroadcastManager
+                .getInstance(getActivity())
+                .registerReceiver(mChatLaunchReceiver, mChatLaunchIntentFilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(getActivity())
-                             .unregisterReceiver(mChatButtonReceiver);
+                .unregisterReceiver(mChatButtonReceiver);
+        LocalBroadcastManager.getInstance(getActivity())
+                .unregisterReceiver(mChatLaunchReceiver);
     }
 
     @Override
@@ -190,7 +206,9 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
                 .restartLoader(Loaders.SEARCH_BOOKS_ON_PAGER, null, this);
     }
 
-    /** Pager Adapter to page between books for Search */
+    /**
+     * Pager Adapter to page between books for Search
+     */
     public class BookPageAdapter extends FragmentPagerAdapter {
 
         private Cursor mCursor;
@@ -229,7 +247,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
         public String getBookTitleForPosition(int position) {
             mCursor.moveToPosition(position);
             return mCursor.getString(mCursor
-                                             .getColumnIndex(DatabaseColumns.TITLE));
+                    .getColumnIndex(DatabaseColumns.TITLE));
         }
 
         public String getUserIdForPosition(int position) {
@@ -261,7 +279,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
     public Loader<Cursor> onCreateLoader(int loaderId, Bundle arg1) {
         if (loaderId == Loaders.SEARCH_BOOKS_ON_PAGER) {
             return new SQLiteLoader(getActivity(), false, TableSearchBooks.NAME, null, null, null,
-                                    null, null, null, null);
+                    null, null, null, null);
         } else {
             return null;
         }
@@ -340,7 +358,7 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
         if (TextUtils.isEmpty(bookTitle)) {
             mShareActionProvider.setShareIntent(Utils
-                                                        .createAppShareIntent(getActivity()));
+                    .createAppShareIntent(getActivity()));
             return;
         }
 
@@ -434,12 +452,12 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new EventBuilder(Categories.USAGE, Actions.CHAT_INITIALIZATION)
-                                           .set(ParamKeys.TYPE, ParamValues.PROFILE));
+                                .set(ParamKeys.TYPE, ParamValues.PROFILE));
             } else {
                 GoogleAnalyticsManager
                         .getInstance()
                         .sendEvent(new EventBuilder(Categories.USAGE, Actions.CHAT_INITIALIZATION)
-                                           .set(ParamKeys.TYPE, ParamValues.BOOK));
+                                .set(ParamKeys.TYPE, ParamValues.BOOK));
             }
         }
     }
@@ -459,6 +477,28 @@ public class BooksPagerFragment extends AbstractBarterLiFragment implements
 
         } else {
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    /**
+     * Custom class that handles broadcast intents to launch the chat screen
+     */
+    private final class ChatLaunchReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            final String action = intent.getAction();
+
+            if (AppConstants.ACTION_LAUNCH_CHAT.equals(action)) {
+
+                final String prefilledChatMessage = intent.getStringExtra(Keys.CHAT_MESSAGE);
+
+                final ProfileFragment fragment = (ProfileFragment) getChildFragmentManager().findFragmentByTag(FragmentTags.USER_PROFILE);
+                if (fragment != null) {
+                    fragment.chatWithUser(prefilledChatMessage);
+                }
+            }
         }
     }
 }

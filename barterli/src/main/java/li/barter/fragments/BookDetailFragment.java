@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.ShareActionProvider;
@@ -64,33 +65,34 @@ import li.barter.utils.SharedPreferenceHelper;
 import li.barter.utils.Utils;
 
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out,
-                    popEnterAnimation = R.anim.zoom_in,
-                    popExitAnimation = R.anim.slide_out_to_right)
+        popEnterAnimation = R.anim.zoom_in,
+        popExitAnimation = R.anim.slide_out_to_right)
 public class BookDetailFragment extends AbstractBarterLiFragment implements
-        AsyncDbQueryCallback {
+        AsyncDbQueryCallback, View.OnClickListener {
 
     private static final String TAG = "BookDetailFragment";
 
     private static final String BOOK_SELECTION = DatabaseColumns.ID + SQLConstants.EQUALS_ARG;
 
-    private TextView  mIsbnTextView;
-    private TextView  mTitleTextView;
-    private TextView  mAuthorTextView;
-    private TextView  mDescriptionTextView;
+    private TextView mIsbnTextView;
+    private TextView mTitleTextView;
+    private TextView mAuthorTextView;
+    private TextView mDescriptionTextView;
     private ImageView mBookImageView;
-    private TextView  mPublicationDateTextView;
-    private View      mBarterOptionsContainer;
-    private Button    mBarterButton;
-    private Button    mBuyButton;
-    private Button    mBorrowButton;
+    private TextView mPublicationDateTextView;
+    private View mBarterOptionsContainer;
+    private Button mBarterButton;
+    private Button mBuyButton;
+    private Button mBorrowButton;
     private RatingBar mRatingBar;
 
-    private List<String>        mSupportedBarterOptions;
-    private String              mId;
-    private String              mBookTitle;
-    private boolean             mOwnedByUser;
+    private List<String> mSupportedBarterOptions;
+    private String mId;
+    private String mBookTitle;
+    private boolean mOwnedByUser;
     private AlertDialogFragment mDeleteBookDialogFragment;
-    private boolean             mIsDeletingBook;
+    private boolean mIsDeletingBook;
+    private String mUserId;
 
     /**
      * Whether this fragment has been loaded by itself or as part of a pager/tab setup
@@ -121,9 +123,9 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         initViews(view);
 
         getActivity().getWindow()
-                     .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                                               | WindowManager.LayoutParams
-                             .SOFT_INPUT_STATE_HIDDEN);
+                .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                        | WindowManager.LayoutParams
+                        .SOFT_INPUT_STATE_HIDDEN);
         mDeleteBookDialogFragment = (AlertDialogFragment) getFragmentManager()
                 .findFragmentByTag(FragmentTags.DIALOG_DELETE_BOOK);
 
@@ -146,7 +148,9 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         return view;
     }
 
-    /** Updates the book details being displayed */
+    /**
+     * Updates the book details being displayed
+     */
     public void updateBookDetails(final Bundle bookDetails) {
         mBookDetails = bookDetails;
         loadBookDetails();
@@ -173,7 +177,9 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 .findViewById(R.id.text_description);
 
         mBarterButton = (Button) mBarterOptionsContainer.findViewById(R.id.button_barter);
+        mBarterButton.setOnClickListener(this);
         mBuyButton = (Button) mBarterOptionsContainer.findViewById(R.id.button_buy);
+        mBuyButton.setOnClickListener(this);
         mBorrowButton = (Button) mBarterOptionsContainer.findViewById(R.id.button_borrow);
 
         mRatingBar = (RatingBar) view.findViewById(R.id.rating_book);
@@ -183,16 +189,18 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
     }
 
-    /** Loads the book details from the arguments bundle */
+    /**
+     * Loads the book details from the arguments bundle
+     */
     private void loadBookDetails() {
 
         if (mBookDetails == null) {
             return;
         }
         mId = mBookDetails.getString(DatabaseColumns.ID);
-        final String userId = mBookDetails.getString(DatabaseColumns.USER_ID);
+        mUserId = mBookDetails.getString(DatabaseColumns.USER_ID);
 
-        if (userId.equals(AppConstants.UserInfo.INSTANCE.getId())) {
+        if (mUserId.equals(AppConstants.UserInfo.INSTANCE.getId())) {
             mOwnedByUser = true;
             getActivity().invalidateOptionsMenu();
         }
@@ -239,8 +247,8 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         } else {
 
             Picasso.with(getActivity())
-                   .load(imageUrl)
-                   .fit().into(mBookImageView);
+                    .load(imageUrl)
+                    .fit().into(mBookImageView);
         }
 
         final String barterType = mBookDetails.getString(DatabaseColumns.BARTER_TYPE);
@@ -320,7 +328,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
         if (TextUtils.isEmpty(bookTitle)) {
             mShareActionProvider.setShareIntent(Utils
-                                                        .createAppShareIntent(getActivity()));
+                    .createAppShareIntent(getActivity()));
             return;
         }
 
@@ -355,7 +363,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
                 args.putBoolean(Keys.EDIT_MODE, true);
 
                 final Intent editBookIntent = new Intent(getActivity(),
-                                                         AddOrEditBookActivity.class);
+                        AddOrEditBookActivity.class);
                 editBookIntent.putExtra(Keys.ID, mId);
                 editBookIntent.putExtra(Keys.EDIT_MODE, true);
 
@@ -394,8 +402,8 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         mDeleteBookDialogFragment = new AlertDialogFragment();
         mDeleteBookDialogFragment
                 .show(AlertDialog.THEME_HOLO_LIGHT, 0, R.string.delete,
-                      R.string.confirm_delete_book, R.string.delete, R.string.cancel, 0,
-                      getFragmentManager(), true, FragmentTags.DIALOG_DELETE_BOOK);
+                        R.string.confirm_delete_book, R.string.delete, R.string.cancel, 0,
+                        getFragmentManager(), true, FragmentTags.DIALOG_DELETE_BOOK);
     }
 
     @Override
@@ -406,7 +414,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         if (requestId == RequestId.DELETE_BOOK) {
 
             DBInterface.deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK, getTaskTag(), null,
-                                    TableUserBooks.NAME, BOOK_SELECTION, new String[]{
+                    TableUserBooks.NAME, BOOK_SELECTION, new String[]{
                             mId
                     }, true, this
             );
@@ -425,9 +433,9 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
          * book id in params.
          */
         final BlRequest deleteBookRequest = new BlRequest(Method.DELETE,
-                                                          HttpConstants.getApiBaseUrl()
-                                                                  + "/books/" + mId, null,
-                                                          mVolleyCallbacks
+                HttpConstants.getApiBaseUrl()
+                        + "/books/" + mId, null,
+                mVolleyCallbacks
         );
         deleteBookRequest.setRequestId(RequestId.DELETE_BOOK);
         addRequestToQueue(deleteBookRequest, true, 0, true);
@@ -465,7 +473,7 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         if (token == QueryTokens.DELETE_MY_BOOK) {
             DBInterface
                     .deleteAsync(AppConstants.QueryTokens.DELETE_MY_BOOK_FROM_SEARCH, getTaskTag(),
-                                 null, TableSearchBooks.NAME, BOOK_SELECTION, new String[]{
+                            null, TableSearchBooks.NAME, BOOK_SELECTION, new String[]{
                                     mId
                             }, true, this
                     );
@@ -522,4 +530,22 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
         }
     }
 
+    @Override
+    public void onClick(View view) {
+
+        final int id = view.getId();
+
+        if (id == R.id.button_barter) {
+
+            final Intent chatIntent = new Intent(AppConstants.ACTION_LAUNCH_CHAT);
+            chatIntent.putExtra(Keys.CHAT_MESSAGE, getString(R.string.barter_book));
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(chatIntent);
+
+        } else if (id == R.id.button_buy) {
+
+            final Intent chatIntent = new Intent(AppConstants.ACTION_LAUNCH_CHAT);
+            chatIntent.putExtra(Keys.CHAT_MESSAGE, getString(R.string.buy_book));
+            LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(chatIntent);
+        }
+    }
 }

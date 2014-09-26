@@ -48,9 +48,9 @@ import li.barter.utils.SharedPreferenceHelper;
  *         different fragments/options menus on Navigation items clicked
  */
 @ActivityTransition(createEnterAnimation = R.anim.main_activity_launch,
-                    createExitAnimation = R.anim.launch_zoom_out,
-                    destroyEnterAnimation = R.anim.exit_zoom_in,
-                    destroyExitAnimation = R.anim.main_activity_exit)
+        createExitAnimation = R.anim.launch_zoom_out,
+        destroyEnterAnimation = R.anim.exit_zoom_in,
+        destroyExitAnimation = R.anim.main_activity_exit)
 public class HomeActivity extends AbstractDrawerActivity implements
         LocationListener {
 
@@ -67,7 +67,7 @@ public class HomeActivity extends AbstractDrawerActivity implements
         setContentView(R.layout.activity_drawer);
         initDrawer(R.id.drawer_layout, isMultipane() ? R.id.frame_side_content : R.id.frame_nav_drawer, isMultipane());
         mGooglePlayClientWrapper = new GooglePlayClientWrapper(this,
-                                                               this);
+                this);
 
         if (isMultipane()) {
             setActionBarDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_USE_LOGO | ActionBar
@@ -113,23 +113,23 @@ public class HomeActivity extends AbstractDrawerActivity implements
 
             try {
                 requestObject.put(HttpConstants.REFERRAL_ID,
-                                  referrer);
+                        referrer);
                 requestObject.put(HttpConstants.DEVICE_ID,
-                                  UserInfo.INSTANCE
-                                          .getDeviceId()
+                        UserInfo.INSTANCE
+                                .getDeviceId()
                 );
 
                 final BlRequest request = new BlRequest(Method.POST,
-                                                        HttpConstants.getApiBaseUrl()
-                                                                + ApiEndpoints.REFERRAL,
-                                                        requestObject.toString(),
-                                                        mVolleyCallbacks
+                        HttpConstants.getApiBaseUrl()
+                                + ApiEndpoints.REFERRAL,
+                        requestObject.toString(),
+                        mVolleyCallbacks
                 );
                 request.setRequestId(RequestId.REFERRAL);
                 addRequestToQueue(request,
-                                  false,
-                                  0,
-                                  true);
+                        false,
+                        0,
+                        true);
             } catch (JSONException e) {
             }
 
@@ -158,15 +158,15 @@ public class HomeActivity extends AbstractDrawerActivity implements
     public void loadBooksAroundMeFragment() {
 
         loadFragment(R.id.frame_content,
-                     (AbstractBarterLiFragment) Fragment
-                             .instantiate(this,
-                                          BooksAroundMeFragment.class
-                                                  .getName(),
-                                          null
-                             ),
-                     FragmentTags.BOOKS_AROUND_ME,
-                     false,
-                     null
+                (AbstractBarterLiFragment) Fragment
+                        .instantiate(this,
+                                BooksAroundMeFragment.class
+                                        .getName(),
+                                null
+                        ),
+                FragmentTags.BOOKS_AROUND_ME,
+                false,
+                null
         );
 
     }
@@ -198,7 +198,7 @@ public class HomeActivity extends AbstractDrawerActivity implements
 
         if (requestId == RequestId.REFERRAL) {
             SharedPreferenceHelper.removeKeys(this,
-                                              R.string.pref_referrer);
+                    R.string.pref_referrer);
         }
 
     }
