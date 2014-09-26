@@ -8,11 +8,14 @@
   ~ Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:padding="@dimen/activity_margin">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:paddingTop="@dimen/activity_margin"
+    android:paddingLeft="@dimen/activity_margin"
+    android:paddingRight="@dimen/activity_margin"
+    android:paddingBottom="@dimen/margin_xx_small">
 
     <RelativeLayout
         android:id="@+id/layout_container"
@@ -32,7 +35,7 @@
             android:paddingRight="1dp"
             android:paddingTop="1dp"
             android:paddingBottom="2dp"
-            android:background="@drawable/background_container_drop_shadow"/>
+            android:background="@drawable/background_container_drop_shadow" />
 
         <TextView
             android:id="@+id/text_title"
@@ -68,11 +71,11 @@
             android:stepSize="0.5"
             android:numStars="5"
             android:rating="0"
+            android:visibility="gone"
             style="@style/RatingBarAppTheme.Small"
             android:isIndicator="true"
             android:layout_below="@id/text_author"
-            android:layout_alignLeft="@id/text_author"
-            />
+            android:layout_alignLeft="@id/text_author" />
 
         <LinearLayout
             android:id="@+id/container_barter_options"
@@ -93,7 +96,7 @@
                 android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold"
                 android:enabled="false"
                 android:textSize="@dimen/text_medium"
-                android:text="@string/barter"/>
+                android:text="@string/barter" />
 
             <Button
                 android:id="@+id/button_buy"
@@ -104,7 +107,7 @@
                 android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold"
                 android:enabled="false"
                 android:textSize="@dimen/text_medium"
-                android:text="@string/buy"/>
+                android:text="@string/buy" />
 
             <Button
                 android:id="@+id/button_borrow"
@@ -114,8 +117,9 @@
                 android:textColor="@color/button_text_color"
                 android:textAppearance="@style/TextAppearance.FontPath.Roboto.Bold"
                 android:enabled="false"
+                android:visibility="gone"
                 android:textSize="@dimen/text_medium"
-                android:text="@string/borrow"/>
+                android:text="@string/borrow" />
         </LinearLayout>
 
         <TextView
@@ -138,7 +142,7 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:textSize="@dimen/text_small"
             android:textAppearance="@style/TextAppearance.FontPath.Roboto.Condensed"
-            android:hint="@string/isbn_unavailable"/>
+            android:hint="@string/isbn_unavailable" />
 
         <TextView
             android:id="@+id/text_description"
@@ -148,7 +152,7 @@
             android:layout_marginTop="@dimen/margin_large"
             android:textSize="@dimen/text_medium"
             android:textAppearance="@style/TextAppearance.FontPath.Roboto"
-            android:hint="@string/description_unavailable"/>
+            android:hint="@string/description_unavailable" />
 
     </RelativeLayout>
 
