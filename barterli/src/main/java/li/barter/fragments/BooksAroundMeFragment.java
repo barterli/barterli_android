@@ -394,6 +394,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPause() {
         super.onPause();
+        if(mEnableLocationDialogFragment != null) {
+            mEnableLocationDialogFragment.dismiss();
+            mEnableLocationDialogFragment = null;
+        }
         saveLastFetchedInfoToPref();
     }
 
@@ -442,7 +446,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             }
 
         } else {
-            showEnableLocationDialog();
+                showEnableLocationDialog();
         }
 
     }
