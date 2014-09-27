@@ -394,7 +394,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPause() {
         super.onPause();
-        if(mEnableLocationDialogFragment != null) {
+        if (mEnableLocationDialogFragment != null) {
             mEnableLocationDialogFragment.dismiss();
             mEnableLocationDialogFragment = null;
         }
@@ -446,7 +446,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
             }
 
         } else {
-                showEnableLocationDialog();
+            showEnableLocationDialog();
         }
 
     }
@@ -580,10 +580,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             if ((cursor.getCount() == 0)) {
                 mBooksAroundMeGridView.setEmptyView(mEmptyView);
-            } else {
-                Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-                mBooksAroundMeAdapter.swapCursor(cursor);
             }
+            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
+            mBooksAroundMeAdapter.swapCursor(cursor);
+
             hideRefreshing();
         }
 
