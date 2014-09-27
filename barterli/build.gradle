@@ -1,0 +1,158 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url 'http://download.crashlytics.com/maven' }
+    }
+
+    dependencies {
+        classpath 'com.crashlytics.tools.gradle:crashlytics-gradle:1.+'
+        classpath 'org.robolectric:robolectric-gradle-plugin:0.12.+'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'robolectric'
+/*apply plugin: 'crashlytics'*/
+
+repositories {
+    maven { url 'http://download.crashlytics.com/maven' }
+}
+
+android {
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+    }
+
+    compileSdkVersion 20
+    buildToolsVersion '20.0.0'
+    defaultConfig {}
+    productFlavors {}
+
+    lintOptions {
+        abortOnError false
+    }
+
+    defaultConfig {
+        applicationId "li.barter"
+        minSdkVersion 14
+        targetSdkVersion 20
+        versionCode 9
+        versionName "1.1"
+        testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
+    }
+
+    signingConfigs {
+        release
+    }
+
+    sourceSets {
+        androidTest {
+            setRoot('src/test')
+        }
+    }
+
+    buildTypes {
+        debug {
+            buildConfigField "boolean", "USE_CRASHLYTICS", "false"
+            buildConfigField "boolean", "REPORT_GOOGLE_ANALYTICS", "false"
+            buildConfigField "boolean", "DEBUG_MODE", "true"
+            ext.enableCrashLytics = false
+        }
+        release {
+            signingConfig signingConfigs.release
+            buildConfigField "boolean", "USE_CRASHLYTICS", "true"
+            buildConfigField "boolean", "REPORT_GOOGLE_ANALYTICS", "true"
+            buildConfigField "boolean", "DEBUG_MODE", "false"
+            ext.enableCrashLytics = true
+            runProguard true
+            zipAlign true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-project.txt'
+        }
+    }
+
+}
+
+robolectric {
+    include '**/*Test.class'
+    exclude '**/espresso/**/*.class'
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':libraries:androidQuickResponseCode')
+    compile project(':libraries:facebookSDK')
+    compile project(':libraries:enhancedvolley')
+    compile project(':libraries:ViewPagerIndicator')
+    compile 'com.android.support:support-v4:20.+'
+    compile 'com.android.support:appcompat-v7:20.+'
+    compile 'com.google.android.gms:play-services:4.4+'
+    compile 'com.squareup.picasso:picasso:2.+'
+    compile 'com.crashlytics.android:crashlytics:1.+'
+    compile 'uk.co.chrisjenx:calligraphy:+'
+
+    compile('de.keyboardsurfer.android.widget:crouton:1.+') {
+        exclude module: 'support-v4'
+        compile 'com.android.support:support-v4:19.+'
+    }
+    compile 'com.github.castorflex.smoothprogressbar:library:+'
+    compile('com.sothree.slidinguppanel:library:1.0.1') {
+        exclude module: 'support-v4'
+        compile 'com.android.support:support-v4:19.+'
+    }
+
+    androidTestCompile 'com.google.guava:guava:14.0.1',
+            'com.squareup.dagger:dagger:1.1.0',
+            'org.hamcrest:hamcrest-integration:1.1',
+            'org.hamcrest:hamcrest-core:1.1',
+            'org.hamcrest:hamcrest-library:1.1'
+
+    androidTestCompile('junit:junit:4.11') {
+        exclude module: 'hamcrest-core'
+    }
+    androidTestCompile('org.robolectric:robolectric:2.3') {
+        exclude module: 'classworlds'
+        exclude module: 'maven-artifact'
+        exclude module: 'maven-artifact-manager'
+        exclude module: 'maven-error-diagnostics'
+        exclude module: 'maven-model'
+        exclude module: 'maven-plugin-registry'
+        exclude module: 'maven-profile'
+        exclude module: 'maven-project'
+        exclude module: 'maven-settings'
+        exclude module: 'nekohtml'
+        exclude module: 'plexus-container-default'
+        exclude module: 'plexus-interpolation'
+        exclude module: 'plexus-utils'
+        exclude module: 'wagon-file'
+        exclude module: 'wagon-http-lightweight'
+        exclude module: 'wagon-http-shared'
+        exclude module: 'wagon-provider-api'
+    }
+    androidTestCompile 'com.squareup:fest-android:1.0.+'
+}
+
+apply plugin: 'idea'
+
+idea {
+    module {
+        testOutputDir = file('build/test-classes/debug')
+    }
+}
+
+/*
+ * This loads the properties for keystore signing. Look at release.properties.sample to make your own.
+ * DO NOT modify the file directly. Make a copy called 'release.properties' and edit that.
+ *
+ * Copy the keystore to the project root directory first.
+ *
+ * If you commit the keystore password to Git by calling it some other name or editing the
+ * sample file, you will need to stand in the corner.
+ **/
+def props = new Properties()
+props.load(new FileInputStream(rootProject.file("release.properties")))
+android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
+android.signingConfigs.release.storePassword props.keyStorePassword
+android.signingConfigs.release.keyAlias props.keyAlias
+android.signingConfigs.release.keyPassword props.keyAliasPassword
