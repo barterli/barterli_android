@@ -198,7 +198,7 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     private void setUpRefreshLayout(View view) {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeColors(R.color.apptheme_color,
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.apptheme_color,
                 R.color.red,
                 R.color.silver,
                 R.color.apptheme_color);
