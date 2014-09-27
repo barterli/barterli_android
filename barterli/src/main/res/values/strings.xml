@@ -159,8 +159,8 @@
     <string name="password_label">Password</string>
     <string name="share_via">Share Via</string>
 
-    <string name="barter_book">Hey, I\'d like to barter this book for one of my own.</string>
-    <string name="buy_book">Hello! I\'d like to buy this book.</string>
+    <string name="barter_book">Hey, I\'d like to barter %s for one of my own.</string>
+    <string name="buy_book">Hello! I\'d like to buy %s.</string>
 
     <!-- Strings for TakeLatLongActivity -->
     <string name="lat_long">Location</string>

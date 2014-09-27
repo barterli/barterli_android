@@ -542,14 +542,14 @@ public class BookDetailFragment extends AbstractBarterLiFragment implements
 
             GoogleAnalyticsManager.getInstance().sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE, AnalyticsConstants.Actions.BARTER_BOOK_FROM_DETAIL));
             final Intent chatIntent = new Intent(AppConstants.ACTION_LAUNCH_CHAT);
-            chatIntent.putExtra(Keys.CHAT_MESSAGE, getString(R.string.barter_book));
+            chatIntent.putExtra(Keys.CHAT_MESSAGE, getString(R.string.barter_book, mTitleTextView.getText()));
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(chatIntent);
 
         } else if (id == R.id.button_buy) {
 
             GoogleAnalyticsManager.getInstance().sendEvent(new HitBuilders.EventBuilder(AnalyticsConstants.Categories.USAGE, AnalyticsConstants.Actions.BUY_BOOK_FROM_DETAIL));
             final Intent chatIntent = new Intent(AppConstants.ACTION_LAUNCH_CHAT);
-            chatIntent.putExtra(Keys.CHAT_MESSAGE, getString(R.string.buy_book));
+            chatIntent.putExtra(Keys.CHAT_MESSAGE, getString(R.string.buy_book, mTitleTextView.getText()));
             LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(chatIntent);
         }
     }
