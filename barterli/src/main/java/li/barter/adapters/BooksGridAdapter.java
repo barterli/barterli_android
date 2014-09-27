@@ -37,12 +37,12 @@ public class BooksGridAdapter extends CursorAdapter {
 
     private static final String TAG = "BooksGridAdapter";
 
-    private static final int VIEW_BOOK    = 0;
+    private static final int VIEW_BOOK = 0;
     private static final int VIEW_GRAPHIC = 1;
 
     private boolean mAddGraphicEnabled;
 
-    private int mCount;
+    private int mCount = 0;
 
     /**
      * @param context           A reference to the {@link Context}
@@ -63,11 +63,13 @@ public class BooksGridAdapter extends CursorAdapter {
     @Override
     public void notifyDataSetChanged() {
 
-        if ((mCursor == null) || mCursor.getCount() == 0) {
-            mCount = 0;
-        } else {
-            mCount = mCursor.getCount() + (mAddGraphicEnabled ? 1 : 0);//Empty graphic
+        mCount = 0;
+        if (mCursor != null && !mCursor.isClosed()) {
+            if (mCursor.getCount() > 0) {
+                mCount = mCursor.getCount() + (mAddGraphicEnabled ? 1 : 0);//Empty graphic
+            }
         }
+
         super.notifyDataSetChanged();
     }
 
@@ -93,7 +95,7 @@ public class BooksGridAdapter extends CursorAdapter {
                 view = inflateBookView(parent);
             }
 
-            if(!mCursor.isClosed()) {
+            if (!mCursor.isClosed()) {
                 mCursor.moveToPosition(position);
                 bindView(view, parent.getContext(), mCursor);
             }
@@ -125,7 +127,7 @@ public class BooksGridAdapter extends CursorAdapter {
      */
     private View inflateBookView(ViewGroup parent) {
         final View view = LayoutInflater.from(parent.getContext())
-                                        .inflate(R.layout.layout_item_book, parent, false);
+                .inflate(R.layout.layout_item_book, parent, false);
 
         view.setTag(R.id.image_book, view.findViewById(R.id.image_book));
         view.setTag(R.id.text_book_name, view.findViewById(R.id.text_book_name));
@@ -142,14 +144,14 @@ public class BooksGridAdapter extends CursorAdapter {
 
         ((TextView) view.getTag(R.id.text_book_name))
                 .setText(cursor.getString(cursor
-                                                  .getColumnIndex(DatabaseColumns.TITLE)));
+                        .getColumnIndex(DatabaseColumns.TITLE)));
 
         ((TextView) view.getTag(R.id.text_book_author))
                 .setText(cursor.getString(cursor
-                                                  .getColumnIndex(DatabaseColumns.AUTHOR)));
+                        .getColumnIndex(DatabaseColumns.AUTHOR)));
 
         final String bookImageUrl = cursor.getString(cursor
-                                                             .getColumnIndex(DatabaseColumns.IMAGE_URL));
+                .getColumnIndex(DatabaseColumns.IMAGE_URL));
 
         //if book image not present
         if (bookImageUrl == null || bookImageUrl.contains(AppConstants.FALSE)) {
@@ -162,11 +164,11 @@ public class BooksGridAdapter extends CursorAdapter {
             // this gives blank image. Its a hack for disabling caching issue for no image present book
 
             Picasso.with(context).load(bookImageUrl).fit()
-                   .into((ImageView) view.getTag(R.id.image_book));
+                    .into((ImageView) view.getTag(R.id.image_book));
         } else {
 
             Picasso.with(context).load(bookImageUrl).fit()
-                   .into((ImageView) view.getTag(R.id.image_book));
+                    .into((ImageView) view.getTag(R.id.image_book));
             ((TextView) view.getTag(R.id.text_book_name))
                     .setVisibility(View.GONE);
             ((TextView) view.getTag(R.id.text_book_author))
@@ -175,7 +177,7 @@ public class BooksGridAdapter extends CursorAdapter {
         }
 
         final String ownerImageUrl = cursor.getString(cursor
-                                                              .getColumnIndex(DatabaseColumns.BOOK_OWNER_IMAGE_URL));
+                .getColumnIndex(DatabaseColumns.BOOK_OWNER_IMAGE_URL));
 
         final RoundedCornerImageView roundedCornerImageView = (RoundedCornerImageView) view
                 .getTag(R.id.image_user);
@@ -187,9 +189,9 @@ public class BooksGridAdapter extends CursorAdapter {
             roundedCornerImageView.setImageResource(0);
 
             Picasso.with(context)
-                   .load(ownerImageUrl)
-                   .transform(bitmapTransformation)
-                   .into(roundedCornerImageView.getTarget());
+                    .load(ownerImageUrl)
+                    .transform(bitmapTransformation)
+                    .into(roundedCornerImageView.getTarget());
 
         } else {
             //TODO DIsplay default image for user
