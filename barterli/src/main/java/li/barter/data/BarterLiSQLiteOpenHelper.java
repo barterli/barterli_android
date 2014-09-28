@@ -61,12 +61,9 @@ class BarterLiSQLiteOpenHelper extends SQLiteOpenHelper {
      */
     static BarterLiSQLiteOpenHelper getInstance(final Context context) {
 
-        synchronized (LOCK) {
-
-            if (sSQLiteOpenHelper == null) {
-
-                synchronized (LOCK) {
-
+        if(sSQLiteOpenHelper == null) {
+            synchronized (BarterLiSQLiteOpenHelper.class) {
+                if(sSQLiteOpenHelper == null) {
                     sSQLiteOpenHelper = new BarterLiSQLiteOpenHelper(context.getApplicationContext(), DB_NAME, null, DB_VERSION);
                 }
             }
