@@ -101,8 +101,40 @@ public class ChatSerializer {
      *
      * @param cursor The cursor pointing to the Chat messages table
      * @param writer The Json writer that is used to write out the chats
+     * @throws java.io.IOException
      */
-    private void writeChatMessagesOut(final Cursor cursor, final JsonWriter writer) {
+    private void writeChatMessagesOut(final Cursor cursor, final JsonWriter writer) throws IOException {
 
+        writer.name("messages");
+        writer.beginArray();
+
+        while (cursor.moveToNext()) {
+            writeSingleMessageOut(cursor, writer);
+        }
+
+        writer.endArray();
+    }
+
+    /**
+     * Write individual messages out to the stream
+     *
+     * @param cursor The cursor forwarded to the message to write
+     * @param writer The Json writer that is used to write out the chats
+     * @throws java.io.IOException
+     */
+    private void writeSingleMessageOut(final Cursor cursor, final JsonWriter writer) throws IOException {
+
+        writer.beginObject();
+        writer.name("chat_id").value(cursor.getString(cursor.getColumnIndex(DatabaseColumns.CHAT_ID)));
+        writer.name("sender_id").value(cursor.getString(cursor.getColumnIndex(DatabaseColumns.SENDER_ID)));
+        writer.name("receiver_id").value(cursor.getString(cursor.getColumnIndex(DatabaseColumns.RECEIVER_ID)));
+        writer.name("user_id").value(cursor.getString(cursor.getColumnIndex(DatabaseColumns.USER_ID)));
+        writer.name("sent_at").value(cursor.getString(cursor.getColumnIndex(DatabaseColumns.SENT_AT)));
+        writer.name("message").value(cursor.getString(cursor.getColumnIndex(DatabaseColumns.MESSAGE)));
+        writer.name("timestamp").value(cursor.getString(cursor.getColumnIndex(DatabaseColumns.TIMESTAMP)));
+        writer.name("timestamp_human").value(cursor.getString(cursor.getColumnIndex(DatabaseColumns.TIMESTAMP_HUMAN)));
+        writer.name("timestamp_epoch").value(cursor.getLong(cursor.getColumnIndex(DatabaseColumns.TIMESTAMP_EPOCH)));
+        writer.name("chat_status").value(cursor.getLong(cursor.getColumnIndex(DatabaseColumns.CHAT_STATUS)));
+        writer.endObject();
     }
 }
