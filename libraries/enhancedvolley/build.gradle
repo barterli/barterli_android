@@ -1,15 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion '19.1.0'
-    defaultConfig {
-        applicationId 'com.vinaysshenoy.volleyenhanced'
-        minSdkVersion 8
-    }
+    compileSdkVersion 21
+    buildToolsVersion "22"
+
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -18,5 +15,5 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:19.+'
+    compile 'com.android.support:support-v4:22.0.0'
 }
