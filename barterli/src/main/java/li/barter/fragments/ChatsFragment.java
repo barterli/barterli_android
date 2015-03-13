@@ -79,8 +79,8 @@ import li.barter.utils.Utils;
  * @author Vinay S Shenoy
  */
 @FragmentTransition(enterAnimation = R.anim.slide_in_from_right, exitAnimation = R.anim.zoom_out,
-                    popEnterAnimation = R.anim.zoom_in,
-                    popExitAnimation = R.anim.slide_out_to_right)
+        popEnterAnimation = R.anim.zoom_in,
+        popExitAnimation = R.anim.slide_out_to_right)
 public class ChatsFragment extends AbstractBarterLiFragment implements
         LoaderCallbacks<Cursor>, OnItemClickListener, OnItemLongClickListener, ServiceConnection,
         AsyncDbQueryCallback {
@@ -100,11 +100,20 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     private final String mChatSelectionForDelete = DatabaseColumns.CHAT_ID
             + SQLConstants.EQUALS_ARG;
 
-    /** Whether a chat message should be loaded immediately on opening */
+    /**
+     * Whether a chat message should be loaded immediately on opening
+     */
     private boolean mShouldLoadChat;
 
-    /** Id of the user to load immediately on opening */
+    /**
+     * Id of the user to load immediately on opening
+     */
     private String mUserIdToLoad;
+
+    /**
+     * Chat message to prefill in the text box if chat is loaded directly
+     */
+    private String mPreloadedChatMessage;
 
 
     /**
@@ -139,10 +148,12 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
 
                 if (mShouldLoadChat) {
                     mUserIdToLoad = args.getString(Keys.USER_ID);
+                    mPreloadedChatMessage = args.getString(Keys.CHAT_MESSAGE);
                 }
 
                 if (TextUtils.isEmpty(mUserIdToLoad)) {
                     mShouldLoadChat = false;
+                    mPreloadedChatMessage = null;
                 }
             }
         }
@@ -202,7 +213,7 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
         if (id == Loaders.ALL_CHATS) {
             return new SQLiteLoader(getActivity(), false, ViewChatsWithMessagesAndUsers.NAME, null,
-                                    null, null, null, null, DatabaseColumns.TIMESTAMP_EPOCH
+                    null, null, null, null, DatabaseColumns.TIMESTAMP_EPOCH
                     + SQLConstants.DESCENDING, null
             );
         }
@@ -213,20 +224,22 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor cursor) {
         if (loader.getId() == Loaders.ALL_CHATS) {
 
-            mChatsAdapter.swapCursor(cursor);
             if (mShouldLoadChat) {
 
                 if (isAttached()) {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            loadChat(mUserIdToLoad);
+                            loadChat(mUserIdToLoad, mPreloadedChatMessage);
                             //We only need to load on very launch of activity
                             mShouldLoadChat = false;
+                            mPreloadedChatMessage = null;
                         }
                     });
                 }
 
+            } else {
+                mChatsAdapter.swapCursor(cursor);
             }
         }
 
@@ -251,7 +264,8 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
             loadChat(
                     cursor.getString(cursor.getColumnIndex(DatabaseColumns.USER_ID)),
                     cursor.getString(cursor.getColumnIndex(DatabaseColumns.CHAT_ID)),
-                    true
+                    true,
+                    null
             );
         }
     }
@@ -260,31 +274,33 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
      * Loads a chat directly. This is used in the case where the user directly taps on a chat button
      * on another user's profile page
      */
-    private void loadChat(String userId) {
+    private void loadChat(String userId, String prefilledChatMessage) {
 
         //TODO: Vinay - Set the actual chat item highlighted
 
         final String chatId = Utils
                 .generateChatId(userId, AppConstants.UserInfo.INSTANCE.getId());
 
-        loadChat(userId, chatId, false);
+        loadChat(userId, chatId, false, prefilledChatMessage);
     }
 
     /**
      * Loads the actual chat screen. This is used in the case where the user taps on an item in the
      * list of chats
      *
-     * @param userId    The user Id of the chat to load
-     * @param chatId    The ID of the chat
-     * @param fromClick Whether the chat was loaded as a result of a click on the list. Will be used
-     *                  to decide whether to animate the detail fragment in
+     * @param userId               The user Id of the chat to load
+     * @param chatId               The ID of the chat
+     * @param fromClick            Whether the chat was loaded as a result of a click on the list. Will be used
+     *                             to decide whether to animate the detail fragment in
+     * @param prefilledChatMessage Any message to prefill when loading it in
      */
-    private void loadChat(String userId, String chatId, boolean fromClick) {
+    private void loadChat(String userId, String chatId, boolean fromClick, String prefilledChatMessage) {
 
-        final Bundle args = new Bundle(3);
+        final Bundle args = new Bundle(4);
 
         args.putString(Keys.USER_ID, userId);
         args.putString(Keys.CHAT_ID, chatId);
+        args.putString(Keys.CHAT_MESSAGE, prefilledChatMessage);
 
         /*If Loaded directly, ensure that pressing back will finish the Activity*/
         if (mShouldLoadChat) {
@@ -336,9 +352,9 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
 
 
         mDeleteChatId = cursor.getString(cursor
-                                                 .getColumnIndex(DatabaseColumns.CHAT_ID));
+                .getColumnIndex(DatabaseColumns.CHAT_ID));
         mBlockUserId = cursor.getString(cursor
-                                                .getColumnIndex(DatabaseColumns.USER_ID));
+                .getColumnIndex(DatabaseColumns.USER_ID));
         showChatOptions();
         return true;
     }
@@ -351,8 +367,8 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
         mChatDialogFragment = new SingleChoiceDialogFragment();
         mChatDialogFragment
                 .show(AlertDialog.THEME_HOLO_LIGHT, R.array.chat_longclick_choices, 0,
-                      R.string.chat_longclick_dialog_head, getFragmentManager(), true,
-                      FragmentTags.DIALOG_CHAT_LONGCLICK);
+                        R.string.chat_longclick_dialog_head, getFragmentManager(), true,
+                        FragmentTags.DIALOG_CHAT_LONGCLICK);
 
     }
 
@@ -461,12 +477,12 @@ public class ChatsFragment extends AbstractBarterLiFragment implements
 
     private void deleteChat(String chatId) {
         DBInterface.deleteAsync(QueryTokens.DELETE_CHATS, getTaskTag(), null, TableChats.NAME,
-                                mChatSelectionForDelete, new String[]{
+                mChatSelectionForDelete, new String[]{
                         chatId
                 }, true, this
         );
         DBInterface.deleteAsync(QueryTokens.DELETE_CHAT_MESSAGES, getTaskTag(), null,
-                                TableChatMessages.NAME, mChatSelectionForDelete, new String[]{
+                TableChatMessages.NAME, mChatSelectionForDelete, new String[]{
                         chatId
                 }, true, this
         );

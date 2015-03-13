@@ -29,18 +29,18 @@ import li.barter.utils.AppConstants.UserInfo;
 
 /**
  * Class for managing Google Analytics
- * 
+ *
  * @author Vinay S Shenoy
  */
 public class GoogleAnalyticsManager {
 
-    private static final String           TAG             = "GoogleAnalyticsManager";
-    private static final Object           LOCK            = new Object();
-    public static final int               SESSION_TIMEOUT = 300;                     //seconds
+    private static final String TAG = "GoogleAnalyticsManager";
+    private static final Object LOCK = new Object();
+    public static final int SESSION_TIMEOUT = 300;                     //seconds
 
     private static GoogleAnalyticsManager sInstance;
 
-    private Tracker                       mApplicationTracker;
+    private Tracker mApplicationTracker;
 
     private GoogleAnalyticsManager() {
 
@@ -49,14 +49,15 @@ public class GoogleAnalyticsManager {
 
     /**
      * @return the instance of {@link GoogleAnalyticsManager}, creating it if
-     *         necessary
+     * necessary
      */
     public static GoogleAnalyticsManager getInstance() {
 
-        synchronized (LOCK) {
+        if (sInstance == null) {
 
-            if (sInstance == null) {
-                synchronized (LOCK) {
+            synchronized (LOCK) {
+
+                if (sInstance == null) {
                     sInstance = new GoogleAnalyticsManager();
                 }
             }
@@ -75,14 +76,14 @@ public class GoogleAnalyticsManager {
         if (!BuildConfig.REPORT_GOOGLE_ANALYTICS) {
             GoogleAnalytics.getInstance(context).setDryRun(true);
             GoogleAnalytics.getInstance(context).getLogger()
-                            .setLogLevel(Logger.LogLevel.VERBOSE);
+                    .setLogLevel(Logger.LogLevel.VERBOSE);
         } else {
             GoogleAnalytics.getInstance(context).setDryRun(false);
             GoogleAnalytics.getInstance(context).getLogger()
-                            .setLogLevel(Logger.LogLevel.ERROR);
+                    .setLogLevel(Logger.LogLevel.ERROR);
         }
         mApplicationTracker = GoogleAnalytics.getInstance(context)
-                        .newTracker(context.getString(R.string.ga_tracking_id));
+                .newTracker(context.getString(R.string.ga_tracking_id));
 
         //We will track manually since we use Fragments
         mApplicationTracker.enableAutoActivityTracking(false);
@@ -92,7 +93,7 @@ public class GoogleAnalyticsManager {
 
     /**
      * Inform a screen hit to Google Analytics
-     * 
+     *
      * @param screenName A name for the screen
      */
     public void sendScreenHit(String screenName) {
@@ -100,20 +101,20 @@ public class GoogleAnalyticsManager {
         mApplicationTracker.setScreenName(screenName);
         final ScreenViewBuilder screenViewBuilder = new ScreenViewBuilder();
         screenViewBuilder.set(ParamKeys.LOGGED_IN, TextUtils
-                        .isEmpty(UserInfo.INSTANCE.getId()) ? ParamValues.NO
-                        : ParamValues.YES);
+                .isEmpty(UserInfo.INSTANCE.getId()) ? ParamValues.NO
+                : ParamValues.YES);
         mApplicationTracker.send(screenViewBuilder.build());
     }
 
     /**
      * Inform an event to Google Analytics
-     * 
+     *
      * @param builder
      */
     public void sendEvent(EventBuilder builder) {
 
         builder.set(ParamKeys.LOGGED_IN, TextUtils.isEmpty(UserInfo.INSTANCE
-                        .getId()) ? ParamValues.NO : ParamValues.YES);
+                .getId()) ? ParamValues.NO : ParamValues.YES);
         mApplicationTracker.send(builder.build());
     }
 }

@@ -47,6 +47,12 @@ public class ChatsActivity extends AbstractDrawerActivity {
      */
     private boolean mShouldLoadChat;
 
+    /**
+     * In the case of loading a chat message directly,
+     * the message that should be displayed as soon as it opens
+     */
+    private String mPrefilledChatMessage;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +79,7 @@ public class ChatsActivity extends AbstractDrawerActivity {
 
             if (!TextUtils.isEmpty(mUserIdToLoad)) {
                 mShouldLoadChat = true;
+                mPrefilledChatMessage = getIntent().getStringExtra(AppConstants.Keys.CHAT_MESSAGE);
             }
 
         }
@@ -85,9 +92,10 @@ public class ChatsActivity extends AbstractDrawerActivity {
 
         Bundle args = null;
         if (mShouldLoadChat) {
-            args = new Bundle(2);
+            args = new Bundle(3);
             args.putBoolean(AppConstants.Keys.LOAD_CHAT, true);
             args.putString(AppConstants.Keys.USER_ID, mUserIdToLoad);
+            args.putString(AppConstants.Keys.CHAT_MESSAGE, mPrefilledChatMessage);
         }
         loadFragment(R.id.frame_content, (AbstractBarterLiFragment) Fragment.instantiate(this,
                         ChatsFragment.class

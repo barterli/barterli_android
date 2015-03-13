@@ -165,6 +165,7 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
 
 
         if (savedInstanceState == null) {
+            preloadMessage();
             mUserInfo = getArguments();
         } else {
             mUserInfo = savedInstanceState.getBundle(Keys.USER_INFO);
@@ -178,6 +179,19 @@ public class ChatDetailsFragment extends AbstractBarterLiFragment implements
         loadChatMessages();
 
         return view;
+    }
+
+    /**
+     * Checks if there's a message that needs to be preloaded
+     * when creating this fragment
+     * */
+    private void preloadMessage() {
+
+        final Bundle args = getArguments();
+
+        if(null != args && args.containsKey(Keys.CHAT_MESSAGE)) {
+            mSubmitChatEditText.setText(args.getString(Keys.CHAT_MESSAGE));
+        }
     }
 
     @Override

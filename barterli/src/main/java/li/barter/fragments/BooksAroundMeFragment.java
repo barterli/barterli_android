@@ -195,10 +195,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
         return contentView;
     }
 
-    private void setUpRefreshLayout(View view){
+    private void setUpRefreshLayout(View view) {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorScheme(R.color.apptheme_color,
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.apptheme_color,
                 R.color.red,
                 R.color.silver,
                 R.color.apptheme_color);
@@ -394,6 +394,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
     @Override
     public void onPause() {
         super.onPause();
+        if (mEnableLocationDialogFragment != null) {
+            mEnableLocationDialogFragment.dismiss();
+            mEnableLocationDialogFragment = null;
+        }
         saveLastFetchedInfoToPref();
     }
 
@@ -576,10 +580,10 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
             if ((cursor.getCount() == 0)) {
                 mBooksAroundMeGridView.setEmptyView(mEmptyView);
-            } else {
-                Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
-                mBooksAroundMeAdapter.swapCursor(cursor);
             }
+            Logger.d(TAG, "Cursor Loaded with count: %d", cursor.getCount());
+            mBooksAroundMeAdapter.swapCursor(cursor);
+
             hideRefreshing();
         }
 
@@ -782,11 +786,11 @@ public class BooksAroundMeFragment extends AbstractBarterLiFragment implements
 
     }
 
-    private void showRefreshing(){
+    private void showRefreshing() {
         //mSwipeRefreshLayout.setRefreshing(true);
     }
 
-    private void hideRefreshing(){
+    private void hideRefreshing() {
         mSwipeRefreshLayout.setEnabled(true);
         mSwipeRefreshLayout.setRefreshing(false);
     }
